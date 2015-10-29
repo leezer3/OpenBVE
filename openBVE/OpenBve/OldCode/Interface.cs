@@ -3,7 +3,6 @@ using System.Globalization;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenTK.Input;
-//using Tao.Sdl;
 
 namespace OpenBve {
 	internal static class Interface {

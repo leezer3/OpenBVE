@@ -202,7 +202,7 @@ namespace OpenBve {
 			}
 			// modes
 			comboboxMode.Items.Clear();
-			comboboxMode.Items.AddRange(new string[] { "", "", "" });
+			comboboxMode.Items.AddRange(new object[] { "", "", "" });
 			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == Interface.GameMode.Expert ? 2 : 1;
 			// review last game
 			{
@@ -242,7 +242,7 @@ namespace OpenBve {
 				}
 			}
 			comboboxBlackBoxFormat.Items.Clear();
-			comboboxBlackBoxFormat.Items.AddRange(new string[] { "", "" });
+			comboboxBlackBoxFormat.Items.AddRange(new object[] { "", "" });
 			comboboxBlackBoxFormat.SelectedIndex = 1;
 			if (Game.BlackBoxEntryCount == 0) {
 				labelBlackBox.Enabled = false;
@@ -276,7 +276,7 @@ namespace OpenBve {
 			comboboxFullscreenBits.Items.Add("32");
 			comboboxFullscreenBits.SelectedIndex = Interface.CurrentOptions.FullscreenBits == 16 ? 0 : 1;
 			comboboxInterpolation.Items.Clear();
-			comboboxInterpolation.Items.AddRange(new string[] { "", "", "", "", "", "" });
+			comboboxInterpolation.Items.AddRange(new object[] { "", "", "", "", "", "" });
 			if ((int)Interface.CurrentOptions.Interpolation >= 0 & (int)Interface.CurrentOptions.Interpolation < comboboxInterpolation.Items.Count) {
 				comboboxInterpolation.SelectedIndex = (int)Interface.CurrentOptions.Interpolation;
 			} else {
@@ -299,7 +299,7 @@ namespace OpenBve {
 			updownAntiAliasing.Value = (decimal)Interface.CurrentOptions.AntiAliasingLevel;
 			updownDistance.Value = (decimal)Interface.CurrentOptions.ViewingDistance;
 			comboboxMotionBlur.Items.Clear();
-			comboboxMotionBlur.Items.AddRange(new string[] { "", "", "", "" });
+			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;

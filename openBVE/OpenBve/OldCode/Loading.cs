@@ -37,8 +37,6 @@ namespace OpenBve {
 			Loader = new Thread(new ThreadStart(LoadThreaded));
 			Loader.IsBackground = true;
 			Loader.Start();
-//			LoadThreaded();
-			return;
 		}
 
 		// get railway folder
@@ -56,7 +54,6 @@ namespace OpenBve {
 				}
 			} catch { }
 			return Application.StartupPath;
-//			return null;
 		}
 
 		// load threaded

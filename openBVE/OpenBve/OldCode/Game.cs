@@ -1354,7 +1354,7 @@ namespace OpenBve {
 						decelerationStart *= 1.25;
 						decelerationStep *= 1.25;
 					}
-					bool forceBrakeMode = false;
+					
 					if (spd > 0.0 & spd > brakestart) {
 						dec = decelerationStep + 0.1 * (spd - brakestart);
 					}
@@ -1585,7 +1585,7 @@ namespace OpenBve {
 						decelerationStart *= 0.3;
 					}
 					double brakeModeBrakeThreshold = 0.75 * decelerationStart + 0.25 * decelerationCruise;
-					if (!BrakeMode & dec > decelerationStart | BrakeMode & dec > brakeModeBrakeThreshold | forceBrakeMode) {
+					if (!BrakeMode & dec > decelerationStart | BrakeMode & dec > brakeModeBrakeThreshold | false) {
 						// brake
 						BrakeMode = true;
 						double decdiff = -acc - dec;

@@ -606,9 +606,7 @@ namespace OpenBve {
 				} else {
 					m = x + w + 64.0f;
 				}
-				x = m + 8.0f;
-                //pictureboxJoysticks.Invalidate();
-                
+				x = m + 8.0f;               
 			}
 		}
 	}
