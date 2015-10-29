@@ -707,6 +707,7 @@ namespace OpenBve {
 			string[] Files = System.IO.Directory.GetFiles(Folder);
 			for (int i = 0; i < Files.Length; i++) {
 				string a = System.IO.Path.GetFileName(Files[i]);
+                if (a == null) return Sounds;
 				if (a.Length > FileStart.Length + FileEnd.Length) {
 					if (a.StartsWith(FileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(FileEnd, StringComparison.OrdinalIgnoreCase)) {
 						string b = a.Substring(FileStart.Length, a.Length - FileEnd.Length - FileStart.Length);

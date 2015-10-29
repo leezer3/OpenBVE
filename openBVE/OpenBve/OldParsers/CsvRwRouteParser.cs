@@ -416,8 +416,8 @@ namespace OpenBve {
 			PreprocessChrRndSub(FileName, IsRW, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
 			Data.UnitOfSpeed = 0.277777777777778;
-			PreprocessOptions(FileName, IsRW, Encoding, Expressions, ref Data, ref UnitOfLength);
-			PreprocessSortByTrackPosition(FileName, IsRW, UnitOfLength, ref Expressions);
+			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength);
+			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
 			ParseRouteForData(FileName, IsRW, Encoding, Expressions, TrainPath, ObjectPath, SoundPath, UnitOfLength, ref Data, PreviewOnly);
 			Game.RouteUnitOfLength = UnitOfLength;
 		}
@@ -928,7 +928,7 @@ namespace OpenBve {
 		}
 
 		// preprocess options
-		private static void PreprocessOptions(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength) {
+		private static void PreprocessOptions(bool IsRW, Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = "";
 			bool SectionAlwaysPrefix = false;
@@ -1110,7 +1110,7 @@ namespace OpenBve {
 			internal double TrackPosition;
 			internal Expression Expression;
 		}
-		private static void PreprocessSortByTrackPosition(string FileName, bool IsRW, double[] UnitFactors, ref Expression[] Expressions) {
+		private static void PreprocessSortByTrackPosition(bool IsRW, double[] UnitFactors, ref Expression[] Expressions) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
 			int n = 0;
@@ -4693,50 +4693,54 @@ namespace OpenBve {
 			}
 			string Name = System.IO.Path.GetFileNameWithoutExtension(BaseFile);
 			Textures.Texture[] Textures = new Textures.Texture[] { };
-			string[] Files = System.IO.Directory.GetFiles(Folder);
-			for (int i = 0; i < Files.Length; i++) {
-				string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
-				if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase)) {
-					if (a.Length > Name.Length) {
-						string b = a.Substring(Name.Length).TrimStart();
-						int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j)) {
-							if (j >= 0) {
-								string c = System.IO.Path.GetExtension(Files[i]);
-								switch (c.ToLowerInvariant()) {
-									case ".bmp":
-									case ".gif":
-									case ".jpg":
-									case ".jpeg":
-									case ".png":
-									case ".tif":
-									case ".tiff":
-										if (j >= Textures.Length) {
-											int n = Textures.Length;
-											Array.Resize<Textures.Texture>(ref Textures, j + 1);
-											for (int k = n; k < j; k++) {
-												Textures[k] = null;
-											}
-										}
-										if (IsGlowTexture) {
-											OpenBveApi.Textures.Texture texture;
-											if (Program.CurrentHost.LoadTexture(Files[i], null, out texture)) {
-												if (texture.BitsPerPixel == 32) {
-													byte[] bytes = texture.Bytes;
-													InvertLightness(bytes);
-													texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes);
-												}
-												Textures[j] = OpenBve.Textures.RegisterTexture(texture);
-											}
-										} else {
-											OpenBve.Textures.RegisterTexture(Files[i], new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Textures[j]);
-										}
-										break;
-								}
-							}
-						}
-					}
-				}
-			} return Textures;
+		    if (Folder == null) return Textures;
+		    string[] Files = System.IO.Directory.GetFiles(Folder);
+		    for (int i = 0; i < Files.Length; i++) {
+		        string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
+                if (a == null) return Textures;
+		        if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase)) {
+		            if (a.Length > Name.Length) {
+		                string b = a.Substring(Name.Length).TrimStart();
+		                int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j)) {
+		                    if (j >= 0) {
+		                        string c = System.IO.Path.GetExtension(Files[i]);
+                                if (c == null) return Textures;
+		                        switch (c.ToLowerInvariant()) {
+		                            case ".bmp":
+		                            case ".gif":
+		                            case ".jpg":
+		                            case ".jpeg":
+		                            case ".png":
+		                            case ".tif":
+		                            case ".tiff":
+		                                if (j >= Textures.Length) {
+		                                    int n = Textures.Length;
+		                                    Array.Resize<Textures.Texture>(ref Textures, j + 1);
+		                                    for (int k = n; k < j; k++) {
+		                                        Textures[k] = null;
+		                                    }
+		                                }
+		                                if (IsGlowTexture) {
+		                                    OpenBveApi.Textures.Texture texture;
+		                                    if (Program.CurrentHost.LoadTexture(Files[i], null, out texture)) {
+		                                        if (texture.BitsPerPixel == 32) {
+		                                            byte[] bytes = texture.Bytes;
+		                                            InvertLightness(bytes);
+		                                            texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes);
+		                                        }
+		                                        Textures[j] = OpenBve.Textures.RegisterTexture(texture);
+		                                    }
+		                                } else {
+		                                    OpenBve.Textures.RegisterTexture(Files[i], new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Textures[j]);
+		                                }
+		                                break;
+		                        }
+		                    }
+		                }
+		            }
+		        }
+		    }
+		    return Textures;
 		}
 		
 		private static void InvertLightness(byte[] bytes) {

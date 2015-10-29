@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class TrainDatParser {
