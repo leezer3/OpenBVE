@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+# SharpDevelop 3.2.0.5777
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectBender", "ObjectBender\ObjectBender.csproj", "{BD5997E4-736B-4FDC-9837-752BA446F78A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Debug|x86.Build.0 = Debug|x86
+		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Debug|x86.ActiveCfg = Debug|x86
+		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Release|x86.Build.0 = Release|x86
+		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+EndGlobal

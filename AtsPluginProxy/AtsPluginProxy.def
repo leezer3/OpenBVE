@@ -1,0 +1,19 @@
+EXPORTS
+	LoadDLL
+	UnloadDLL
+	Load
+	Dispose
+	GetPluginVersion
+	SetVehicleSpec
+	Initialize
+	Elapse
+	SetPower
+	SetBrake
+	SetReverser
+	KeyDown
+	KeyUp
+	HornBlow
+	DoorOpen
+	DoorClose
+	SetSignal
+	SetBeaconData

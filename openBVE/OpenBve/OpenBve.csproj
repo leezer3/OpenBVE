@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{34743421-2EB8-4F68-9600-AEAE79AECFA5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenBve</RootNamespace>
+    <AssemblyName>OpenBve</AssemblyName>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <RunSourceAnalysis>False</RunSourceAnalysis>
+    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\opentk-develop\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="System\Timer.cs" />
+    <None Include="Graphics\Camera.cs" />
+    <Compile Include="Audio\Sounds.Convert.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Audio\Sounds.cs" />
+    <Compile Include="Audio\Sounds.SoundBuffer.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Audio\Sounds.SoundOrigin.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Audio\Sounds.SoundSource.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Audio\Sounds.Update.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Fonts.cs" />
+    <Compile Include="Graphics\Renderer.cs" />
+    <Compile Include="Graphics\Renderer.Loading.cs">
+      <DependentUpon>Renderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer.Primitives.cs">
+      <DependentUpon>Renderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer.Strings.cs">
+      <DependentUpon>Renderer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Screen.cs" />
+    <Compile Include="Graphics\Textures.cs" />
+    <Compile Include="Graphics\Textures.Texture.cs">
+      <DependentUpon>Textures.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Textures.TextureOrigin.cs">
+      <DependentUpon>Textures.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\formImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formImage.Designer.cs">
+      <DependentUpon>formImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\formMain.AddOns.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formMain.Controls.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formMain.Designer.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\formMain.Options.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formMain.Review.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\formMain.Start.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OldCode\FunctionScripts.cs" />
+    <Compile Include="OldCode\Game.cs" />
+    <Compile Include="OldCode\Illustrations.cs" />
+    <Compile Include="OldCode\Interface.cs" />
+    <Compile Include="OldCode\LegacyPlugin.cs">
+      <DependentUpon>PluginManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\Loading.cs" />
+    <Compile Include="OldCode\MainLoop.cs" />
+    <Compile Include="OldCode\NetPlugin.cs">
+      <DependentUpon>PluginManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\NewCode\GameWindow.cs" />
+    <Compile Include="OldCode\ObjectManager.cs" />
+    <Compile Include="OldCode\PluginManager.cs" />
+    <Compile Include="OldCode\Renderer.cs" />
+    <Compile Include="OldCode\Timers.cs" />
+    <Compile Include="OldCode\Timetable.cs" />
+    <Compile Include="OldCode\TrackManager.cs" />
+    <Compile Include="OldCode\TrainManager.cs" />
+    <Compile Include="OldCode\World.cs" />
+    <Compile Include="OldParsers\AnimatedObjectParser.cs" />
+    <Compile Include="OldParsers\ExtensionsCfgParser.cs" />
+    <Compile Include="OldParsers\Panel2CfgParser.cs" />
+    <Compile Include="OldParsers\CsvB3dObjectParser.cs" />
+    <Compile Include="OldParsers\CsvRwRouteParser.cs" />
+    <Compile Include="OldParsers\SoundCfgParser.cs" />
+    <Compile Include="OldParsers\WaveParser.cs" />
+    <Compile Include="OldParsers\XObjectParser.cs" />
+    <Compile Include="OldParsers\PanelCfgParser.cs" />
+    <Compile Include="System\FileSystem.cs" />
+    <Compile Include="System\ManagedContent.cs" />
+    <Compile Include="System\Host.cs" />
+    <Compile Include="System\Joysticks.cs" />
+    <Compile Include="System\Plugins.cs" />
+    <Compile Include="System\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="OldCode\formImage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>formImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OldCode\formMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>formMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="OldParsers\TrainDatParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
