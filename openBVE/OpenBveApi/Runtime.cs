@@ -775,6 +775,7 @@ namespace OpenBveApi.Runtime {
 	// --- door change ---
 	
 	/// <summary>Represents the state of the doors.</summary>
+	[Flags]
 	public enum DoorStates {
 		/// <summary>No door is open.</summary>
 		None = 0,

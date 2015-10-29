@@ -573,9 +573,7 @@ namespace OpenBve {
 			double NormalForceAcceleration = UpY * Game.RouteAccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
-            //Our coeffiecient of static friction is normally approx 0.35 (Wheels on steel rail)
-            //Our adhesion multiplier is: 1.0
-			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
+		    return coefficient * AdhesionMultiplier * NormalForceAcceleration;
 		}
 		private static double GetCriticalWheelSlipAccelerationForFrictionBrake(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed) {
 			double NormalForceAcceleration = UpY * Game.RouteAccelerationDueToGravity;
@@ -1864,6 +1862,7 @@ namespace OpenBve {
 			}
 		}
 		/// <summary>Specifies enumerated constants that can be combined to represent doors states.</summary>
+		[Flags]
 		internal enum TrainDoorState {
 			None = 0,
 			/// <summary>Fully closed doors are present in the train.</summary>
@@ -2812,19 +2811,25 @@ namespace OpenBve {
 				}
 				// power
 				double wheelspin = 0.0;
-				double wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(Train, i, Train.Cars[i].FrontAxle.Follower.AdhesionMultiplier, Train.Cars[i].FrontAxle.Follower.WorldUp.Y, Train.Cars[i].Specs.CurrentSpeed);
-				double wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(Train, i, Train.Cars[i].RearAxle.Follower.AdhesionMultiplier, Train.Cars[i].RearAxle.Follower.WorldUp.Y, Train.Cars[i].Specs.CurrentSpeed);
-				double wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(Train, i, Train.Cars[i].FrontAxle.Follower.AdhesionMultiplier, Train.Cars[i].FrontAxle.Follower.WorldUp.Y, Train.Cars[i].Specs.CurrentSpeed);
-				double wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(Train, i, Train.Cars[i].RearAxle.Follower.AdhesionMultiplier, Train.Cars[i].RearAxle.Follower.WorldUp.Y, Train.Cars[i].Specs.CurrentSpeed);
-				if (Train.Cars[i].Derailed) {
-					wheelSlipAccelerationMotorFront = 0.0;
-					wheelSlipAccelerationBrakeFront = 0.0;
-				}
-				if (Train.Cars[i].Derailed) {
-					wheelSlipAccelerationMotorRear = 0.0;
-					wheelSlipAccelerationBrakeRear = 0.0;
-				}
-				if (DecelerationDueToMotor[i] == 0.0) {
+			    double wheelSlipAccelerationMotorFront;
+			    double wheelSlipAccelerationMotorRear;
+			    double wheelSlipAccelerationBrakeFront;
+			    double wheelSlipAccelerationBrakeRear;
+			    if (Train.Cars[i].Derailed)
+			    {
+			        wheelSlipAccelerationMotorFront = 0.0;
+			        wheelSlipAccelerationBrakeFront = 0.0;
+			        wheelSlipAccelerationMotorRear = 0.0;
+			        wheelSlipAccelerationBrakeRear = 0.0;
+			    }
+			    else
+			    {
+			        wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(Train, i,Train.Cars[i].FrontAxle.Follower.AdhesionMultiplier, Train.Cars[i].FrontAxle.Follower.WorldUp.Y,Train.Cars[i].Specs.CurrentSpeed);
+			        wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(Train, i,Train.Cars[i].RearAxle.Follower.AdhesionMultiplier, Train.Cars[i].RearAxle.Follower.WorldUp.Y,Train.Cars[i].Specs.CurrentSpeed);
+			        wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(Train, i,Train.Cars[i].FrontAxle.Follower.AdhesionMultiplier, Train.Cars[i].FrontAxle.Follower.WorldUp.Y,Train.Cars[i].Specs.CurrentSpeed);
+			        wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(Train, i,Train.Cars[i].RearAxle.Follower.AdhesionMultiplier, Train.Cars[i].RearAxle.Follower.WorldUp.Y,Train.Cars[i].Specs.CurrentSpeed);
+			    }
+			    if (DecelerationDueToMotor[i] == 0.0) {
 					double a;
 					if (Train.Cars[i].Specs.IsMotorCar) {
 						if (DecelerationDueToMotor[i] == 0.0) {

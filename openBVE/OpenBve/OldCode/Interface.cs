@@ -1466,7 +1466,9 @@ namespace OpenBve {
 			Keyboard = 1,
 			Joystick = 2
 		}
-		internal enum KeyboardModifier {
+
+	    [Flags]
+	    internal enum KeyboardModifier {
 			None = 0,
 			Shift = 1,
 			Ctrl = 2,

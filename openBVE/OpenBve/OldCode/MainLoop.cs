@@ -16,18 +16,12 @@ namespace OpenBve {
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 	    internal static bool OpenTKWindow;
 	    internal static formMain.MainDialogResult currentResult;
-        //internal static FormGLControl testForm = new FormGLControl();
-		// --------------------------------
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 		    currentResult = result;   
 		    if (OpenTKWindow == false)
 		    {
-                //Toolkit.Init();
-
-
-                
                 GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 		        
                  /*
