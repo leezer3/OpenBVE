@@ -1,9 +1,4 @@
-﻿using System;
-//using Tao.Sdl;
-using OpenTK;
-using OpenTK.Input;
-
-namespace OpenBve {
+﻿namespace OpenBve {
 	/// <summary>Provides functions for dealing with joysticks.</summary>
 	internal static class Joysticks {
 		

@@ -544,17 +544,18 @@ namespace OpenBve {
 				double f = Train.Cars[CarIndex].Specs.AccelerationCurvesMultiplier;
 				if (Speed <= 0.0) {
 					return f * a0;
-				} else if (Speed < s1) {
+				}
+                if (Speed < s1) {
 					double t = Speed / s1;
 					return f * (a0 * (1.0 - t) + a1 * t);
-				} else if (Speed < s2) {
-					return f * s1 * a1 / Speed;
-				} else {
-                    return f * s1 * a1 * Math.Pow(s2, e2 - 1.0) * Math.Pow(Speed, -e2);
 				}
-			} else {
-				return 0.0;
-			}
+                if (Speed < s2) {
+					return f * s1 * a1 / Speed;
+				}
+                return f * s1 * a1 * Math.Pow(s2, e2 - 1.0) * Math.Pow(Speed, -e2);
+				
+			} 
+			return 0.0;
 		}
 
 		// get resistance

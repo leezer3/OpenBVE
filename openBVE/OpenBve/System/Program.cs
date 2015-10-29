@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 using OpenTK;
-using OpenTK.Graphics;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
