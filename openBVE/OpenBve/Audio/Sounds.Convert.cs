@@ -15,28 +15,33 @@ namespace OpenBve {
 			float[][] samples;
 			if (sound.Bytes.Length == 1 || sound.Bytes[0].Length == 0) {
 				return sound.Bytes[0];
-			} else if (sound.BitsPerSample == 8) {
-				samples = new float[sound.Bytes.Length][];
-				for (int i = 0; i < sound.Bytes.Length; i++) {
-					samples[i] = new float[sound.Bytes[i].Length];
-					for (int j = 0; j < sound.Bytes[i].Length; j++) {
-						byte value = sound.Bytes[i][j];
-						samples[i][j] = ((float)value - 128.0f) / (value < 128 ? 128.0f : 127.0f);
-					}
-				}
-			} else if (sound.BitsPerSample == 16) {
-				samples = new float[sound.Bytes.Length][];
-				for (int i = 0; i < sound.Bytes.Length; i++) {
-					samples[i] = new float[sound.Bytes[i].Length >> 1];
-					for (int j = 0; j < sound.Bytes[i].Length; j += 2) {
-						short value = (short)(ushort)((int)sound.Bytes[i][j] | ((int)sound.Bytes[i][j + 1] << 8));
-						samples[i][j >> 1] = (float)value / (value < 0 ? 32768.0f : 32767.0f);
-					}
-				}
-			} else {
-				throw new NotSupportedException();
 			}
-			/*
+		    switch (sound.BitsPerSample)
+		    {
+		        case 8:
+		            samples = new float[sound.Bytes.Length][];
+		            for (int i = 0; i < sound.Bytes.Length; i++) {
+		                samples[i] = new float[sound.Bytes[i].Length];
+		                for (int j = 0; j < sound.Bytes[i].Length; j++) {
+		                    byte value = sound.Bytes[i][j];
+		                    samples[i][j] = ((float)value - 128.0f) / (value < 128 ? 128.0f : 127.0f);
+		                }
+		            }
+		            break;
+		        case 16:
+		            samples = new float[sound.Bytes.Length][];
+		            for (int i = 0; i < sound.Bytes.Length; i++) {
+		                samples[i] = new float[sound.Bytes[i].Length >> 1];
+		                for (int j = 0; j < sound.Bytes[i].Length; j += 2) {
+		                    short value = (short)(ushort)((int)sound.Bytes[i][j] | ((int)sound.Bytes[i][j + 1] << 8));
+		                    samples[i][j >> 1] = (float)value / (value < 0 ? 32768.0f : 32767.0f);
+		                }
+		            }
+		            break;
+		        default:
+		            throw new NotSupportedException();
+		    }
+		    /*
 			 * Mix floating-point samples to mono.
 			 * */
 			float[] mix = GetNormalizedMonoMix(samples);

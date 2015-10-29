@@ -963,23 +963,26 @@ namespace OpenBve {
 									m--;
 									if (m < 0) {
 										throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-									} else if (m == 0) {
-										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
-										p[n] = Expression.Substring(t, j - t);
-										n++;
-										string a = Expression.Substring(0, i).Trim();
-										string c = Expression.Substring(j + 1).Trim();
-										System.Text.StringBuilder r = new System.Text.StringBuilder();
-										for (int k = 0; k < n; k++) {
-											p[k] = GetFunctionNotationFromInfixNotation(p[k], true);
-											if (k > 0) r.Append(',');
-											r.Append(p[k]);
-										}
-										Expression = a + "[" + r.ToString() + "]" + c;
-										s = i + r.Length + 2;
-										q = true;
 									}
-									break;
+							        if (m == 0)
+							        {
+							            if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
+							            p[n] = Expression.Substring(t, j - t);
+							            n++;
+							            string a = Expression.Substring(0, i).Trim();
+							            string c = Expression.Substring(j + 1).Trim();
+							            System.Text.StringBuilder r = new System.Text.StringBuilder();
+							            for (int k = 0; k < n; k++)
+							            {
+							                p[k] = GetFunctionNotationFromInfixNotation(p[k], true);
+							                if (k > 0) r.Append(',');
+							                r.Append(p[k]);
+							            }
+							            Expression = a + "[" + r.ToString() + "]" + c;
+							            s = i + r.Length + 2;
+							            q = true;
+							        }
+							        break;
 								case ',':
 									if (m == 1) {
 										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
@@ -1017,12 +1020,16 @@ namespace OpenBve {
 								n--;
 								if (n < 0) {
 									throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
-								} else if (n == 0) {
-									string a = Expression.Substring(0, i).Trim();
-									string b = Expression.Substring(i + 1, j - i - 1).Trim();
-									string c = Expression.Substring(j + 1).Trim();
-									return GetFunctionNotationFromInfixNotation(a + GetFunctionNotationFromInfixNotation(b, false) + c, false);
-								} break;
+								}
+						        if (n == 0)
+						        {
+						            string a = Expression.Substring(0, i).Trim();
+						            string b = Expression.Substring(i + 1, j - i - 1).Trim();
+						            string c = Expression.Substring(j + 1).Trim();
+						            return GetFunctionNotationFromInfixNotation(a + GetFunctionNotationFromInfixNotation(b, false) + c,
+						                false);
+						        }
+						        break;
 						} j++;
 					}
 					throw new System.IO.InvalidDataException("No closing parenthesis found in " + Expression);
@@ -1197,7 +1204,8 @@ namespace OpenBve {
 										m--;
 										if (m < 0) {
 											throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-										} else if (m == 0) {
+										} 
+                                        if (m == 0) {
 											q = true;
 										}
 										break;
@@ -1233,7 +1241,8 @@ namespace OpenBve {
 			for (i = 0; i < n; i++) {
 				if (a[i].Length == 0) {
 					throw new System.IO.InvalidDataException("An empty argument is invalid in " + f + " in " + Expression);
-				} else if (a[i].IndexOf(' ') >= 0) {
+				} 
+                if (a[i].IndexOf(' ') >= 0) {
 					throw new System.IO.InvalidDataException("An argument containing a space is invalid in " + f + " in " + Expression);
 				}
 				a[i] = GetPostfixNotationFromFunctionNotation(a[i]).Trim();
@@ -1241,65 +1250,69 @@ namespace OpenBve {
 			switch (f.ToLowerInvariant()) {
 					// arithmetic
 				case "plus":
-					if (n == 0) {
-						return "0";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						if (a[1].EndsWith(" *")) {
-							return a[1] + " " + a[0] + " +";
-						} else {
-							return a[0] + " " + a[1] + " +";
-						}
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " +");
-						}
-						return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "0";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        if (a[1].EndsWith(" *")) {
+					            return a[1] + " " + a[0] + " +";
+					        } else {
+					            return a[0] + " " + a[1] + " +";
+					        }
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i] + " +");
+					        }
+					        return t.ToString();
 					}
 				case "subtract":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " -";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
-					}
+					} 
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "times":
-					if (n == 0) {
-						return "1";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " *";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " *");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " *");
-						}
-						return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "1";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        return a[0] + " " + a[1] + " *";
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " *");
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i] + " *");
+					        }
+					        return t.ToString();
 					}
 				case "divide":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " /";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
-					}
+					} 
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "power":
-					if (n == 0) {
-						return "1";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " power";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1]);
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i]);
-						}
-						for (i = 0; i < n - 1; i++) {
-							t.Append(" power");
-						}
-						return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "1";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        return a[0] + " " + a[1] + " power";
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1]);
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i]);
+					        }
+					        for (i = 0; i < n - 1; i++) {
+					            t.Append(" power");
+					        }
+					        return t.ToString();
 					}
 					// math
 				case "quotient":
@@ -1308,9 +1321,8 @@ namespace OpenBve {
 				case "max":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " " + f;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
-					}
+					} 
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "minus":
 				case "reciprocal":
 				case "floor":
@@ -1327,9 +1339,8 @@ namespace OpenBve {
 				case "arctan":
 					if (n == 1) {
 						return a[0] + " " + f;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
-					}
+					} 
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// comparisons
 				case "equal":
 				case "unequal":
@@ -1348,60 +1359,63 @@ namespace OpenBve {
 								default: g = "halt"; break;
 						}
 						return a[0] + " " + a[1] + " " + g;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "if":
 					if (n == 3) {
 						return a[0] + " " + a[1] + " " + a[2] + " ?";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 3 arguments in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 3 arguments in " + Expression);
 					// logical
 				case "not":
 					if (n == 1) {
 						return a[0] + " !";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "and":
-					if (n == 0) {
-						return "1";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " &";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " &");
-						} return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "1";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        return a[0] + " " + a[1] + " &";
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i] + " &");
+					        } return t.ToString();
 					}
 				case "or":
-					if (n == 0) {
-						return "0";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " |";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " |");
-						} return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "0";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        return a[0] + " " + a[1] + " |";
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i] + " |");
+					        } return t.ToString();
 					}
 				case "xor":
-					if (n == 0) {
-						return "0";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " ^";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " ^");
-						} return t.ToString();
+					switch (n)
+					{
+					    case 0:
+					        return "0";
+					    case 1:
+					        return a[0];
+					    case 2:
+					        return a[0] + " " + a[1] + " ^";
+					    default:
+					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+					        for (i = 2; i < n; i++) {
+					            t.Append(" " + a[i] + " ^");
+					        } return t.ToString();
 					}
 					// train
 				case "distance":
@@ -1426,15 +1440,13 @@ namespace OpenBve {
 				case "straightairpipe":
 					if (n == 1) {
 						return a[0] + " " + f.ToLowerInvariant() + "index";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "pluginstate":
 					if (n == 1) {
 						return a[0] + " pluginstate";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
-					}
+					} 
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// not supported
 				default:
 					throw new System.IO.InvalidDataException("The function " + f + " is not supported in " + Expression);

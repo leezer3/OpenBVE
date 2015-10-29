@@ -20,14 +20,10 @@ namespace OpenBve {
 			bool rpnUsed = false;
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
-				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim();
-				} else {
-					Lines[i] = Lines[i].Trim();
-				}
-				if (Lines[i].IndexOf("functionrpn", StringComparison.OrdinalIgnoreCase) >= 0) {
-					rpnUsed = true;
-				}
+                //Trim out comments
+                Lines[i] = j >= 0 ? Lines[i].Substring(0, j).Trim() : Lines[i].Trim();
+                //Test whether RPN functions have been used
+                rpnUsed = Lines[i].IndexOf("functionrpn", StringComparison.OrdinalIgnoreCase) >= 0;
 			}
 			if (rpnUsed) {
 				Interface.AddMessage(Interface.MessageType.Error, false, "An animated object file contains RPN functions. These were never meant to be used directly, only for debugging. They won't be supported indefinately. Please get rid of them in file " + FileName);

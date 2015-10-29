@@ -8,7 +8,7 @@ namespace OpenBve {
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		/// <param name="mode">The sound model.</param>
+		/// <param name="model">The sound model.</param>
 		internal static void Update(double timeElapsed, SoundModels model) {
 			if (model == SoundModels.Linear) {
 				UpdateLinearModel(timeElapsed);
@@ -176,7 +176,7 @@ namespace OpenBve {
 						AL.Source(Sources[i].OpenAlSourceName, ALSourcef.Pitch, (float)Sources[i].Pitch);
 						AL.Source(Sources[i].OpenAlSourceName, ALSourcef.Gain, (float)gain);
 						if (Sources[i].State != SoundSourceState.Playing) {
-							AL.Source(Sources[i].OpenAlSourceName, ALSourceb.Looping, Sources[i].Looped ? true : false);
+							AL.Source(Sources[i].OpenAlSourceName, ALSourceb.Looping, Sources[i].Looped);
 							AL.SourcePlay(Sources[i].OpenAlSourceName);
 							Sources[i].State = SoundSourceState.Playing;
 						}
@@ -517,7 +517,7 @@ namespace OpenBve {
 					AL.Source(source.OpenAlSourceName, ALSourcef.Pitch, (float)source.Pitch);
 					AL.Source(source.OpenAlSourceName, ALSourcef.Gain, (float)gain);
 					if (source.State != SoundSourceState.Playing) {
-						AL.Source(source.OpenAlSourceName, ALSourceb.Looping, source.Looped ? true : false);
+						AL.Source(source.OpenAlSourceName, ALSourceb.Looping, source.Looped);
 						AL.SourcePlay(source.OpenAlSourceName);
 						source.State = SoundSourceState.Playing;
 					}
