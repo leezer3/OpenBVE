@@ -21,8 +21,16 @@ namespace OpenBve
         //We need to explicitly specify the default constructor
         public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, string openbve, GameWindowFlags @default): base (width,height,currentGraphicsMode,openbve,@default)
         {
+            try
+            {
+                System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
+                this.Icon = ico;
+            }
+            catch
+            {
+            }
         }
-        
+
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -555,6 +563,8 @@ namespace OpenBve
         private static readonly object jobLock = new object();
         private static Queue<ThreadStart> jobs;
         private static Queue<object> locks;
+        
+
         internal static void RunInRenderThread(ThreadStart job)
         {
             object locker = new object();
