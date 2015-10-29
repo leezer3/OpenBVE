@@ -2424,7 +2424,7 @@ namespace OpenBve {
 														if (Arguments.Length > 2) {
 															Interface.AddMessage(Interface.MessageType.Warning, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														}
-														string f = System.IO.Path.Combine(ObjectPath, Arguments[0]);
+														string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 														Bve4SignalData Signal = new Bve4SignalData();
 														Signal.BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														Signal.GlowObject = null;
@@ -2438,7 +2438,7 @@ namespace OpenBve {
 																if (Interface.ContainsInvalidPathChars(Arguments[1])) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																} else {
-																	f = System.IO.Path.Combine(ObjectPath, Arguments[1]);
+																	f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[1]);
 																	Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 																	if (Signal.GlowObject != null) {
 																		Signal.GlowTextures = LoadAllTextures(f, true);
