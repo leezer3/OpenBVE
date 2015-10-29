@@ -1,11 +1,13 @@
 ﻿#pragma warning disable 0659, 0661
 
+using System;
 using System.Drawing;
 
 namespace OpenBve {
 	internal static partial class Textures {
 		
 		/// <summary>Represents how the texture wraps on each axis.</summary>
+		[Flags]
 		internal enum OpenGlTextureWrapMode {
 			/// <summary>The texture is clamped to edge on both axes.</summary>
 			/// <remarks>The numerical value is 0.</remarks>

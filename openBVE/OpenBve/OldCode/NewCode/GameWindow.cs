@@ -6,9 +6,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
-using OpenTK.Input;
-using ButtonState = OpenTK.Input.ButtonState;
-
 
 namespace OpenBve
 {

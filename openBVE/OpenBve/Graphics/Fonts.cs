@@ -117,11 +117,11 @@ namespace OpenBve {
 		internal class OpenGlFont {
 			// --- members ---
 			/// <summary>The underlying font.</summary>
-			private Font Font;
+			private readonly Font Font;
 			/// <summary>The size of the underlying font in pixels.</summary>
 			internal float FontSize;
 			/// <summary>The 4352 tables containing 256 character each to make up 1114112 codepoints.</summary>
-			private OpenGlFontTable[] Tables;
+			private readonly OpenGlFontTable[] Tables;
 			// --- constructors ---
 			/// <summary>Creates a new font.</summary>
 			/// <param name="family">The font family.</param>

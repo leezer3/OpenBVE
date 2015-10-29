@@ -149,19 +149,12 @@ namespace OpenBve
                     {
                         int[] names = new int[1];
                         GL.GenTextures(1, names);
-                        ErrorCode error = GL.GetError();
                         GL.BindTexture(TextureTarget.Texture2D, names[0]);
-                        
-                        error = GL.GetError();
                         handle.OpenGlTextures[(int)wrap].Name = names[0];
                         handle.Width = texture.Width;
                         handle.Height = texture.Height;
                         handle.Transparency = texture.GetTransparencyType();
                         texture = UpsizeToPowerOfTwo(texture);
-
-                        //						int newWidth = Math.Min(texture.Width, 256);
-                        //						int newHeight = Math.Min(texture.Height, 256);
-                        //						texture = Resize(texture, newWidth, newHeight);
 
                         switch (Interface.CurrentOptions.Interpolation)
                         {

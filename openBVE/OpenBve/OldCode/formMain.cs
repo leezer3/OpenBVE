@@ -49,16 +49,7 @@ namespace OpenBve {
 				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				this.CenterToScreen();
 			}
-			#pragma warning disable 0162 // Unreachable code
-			if (Program.IsDevelopmentVersion) {
-				labelVersion.Text = "v" + Application.ProductVersion + Program.VersionSuffix + " (development)";
-				labelVersion.BackColor = Color.Firebrick;
-				panelInfo.BackColor = Color.Firebrick;
-				linkHomepage.BackColor = Color.Firebrick;
-			} else {
-				labelVersion.Text = "v" + Application.ProductVersion + Program.VersionSuffix;
-			}
-			#pragma warning restore 0162 // Unreachable code
+			labelVersion.Text = "v" + Application.ProductVersion + Program.VersionSuffix;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
 			try {

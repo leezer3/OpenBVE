@@ -1540,8 +1540,6 @@ namespace OpenBve {
 									double early = 0.0;
 									if (Game.Stations[i].ArrivalTime >= 0.0) {
 										early = (Game.Stations[i].ArrivalTime - Train.TimetableDelta) - Train.StationArrivalTime;
-									} else {
-										early = 0.0;
 									}
 									string s;
 									if (early < -1.0) {
@@ -2224,7 +2222,8 @@ namespace OpenBve {
 								p = 0.0;
 							} else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl) {
 								/// delay-filling control
-								double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
+								//Variable f is never used, so don't calculate it
+								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 								double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
@@ -2931,9 +2930,8 @@ namespace OpenBve {
 					}
 				}
 				// brake
-				bool wheellock = false;
-				if (wheelspin == 0.0 & Train.Cars[i].Derailed) wheellock = true;
-				if (!Train.Cars[i].Derailed & wheelspin == 0.0) {
+			    bool wheellock = wheelspin == 0.0 & Train.Cars[i].Derailed;
+			    if (!Train.Cars[i].Derailed & wheelspin == 0.0) {
 					double a;
 					// motor
 					if (Train.Cars[i].Specs.IsMotorCar & DecelerationDueToMotor[i] != 0.0) {
