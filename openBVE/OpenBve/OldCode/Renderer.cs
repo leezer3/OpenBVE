@@ -1,12 +1,10 @@
 ﻿using System;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenBve;
 using Vector3 = OpenBveApi.Math.Vector3;
-//using Vector3 = OpenBveApi.Math.Vector3;
+
 namespace OpenBve
 {
     internal static partial class Renderer
@@ -1048,23 +1046,23 @@ namespace OpenBve
                 {
                     World.CurrentBackground = World.TargetBackground;
                     World.TargetBackgroundCountdown = -1.0;
-                    RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f, scale);
+                    RenderBackground(World.CurrentBackground, 1.0f, scale);
                 }
                 else
                 {
-                    RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f, scale);
+                    RenderBackground(World.CurrentBackground, 1.0f, scale);
                     SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
                     float Alpha = (float)(1.0 - World.TargetBackgroundCountdown / World.TargetBackgroundDefaultCountdown);
-                    RenderBackground(World.TargetBackground, dx, dy, dz, Alpha, scale);
+                    RenderBackground(World.TargetBackground, Alpha, scale);
                 }
             }
             else
             {
                 // single
-                RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f, scale);
+                RenderBackground(World.CurrentBackground, 1.0f, scale);
             }
         }
-        private static void RenderBackground(World.Background Data, double dx, double dy, double dz, float Alpha, float scale)
+        private static void RenderBackground(World.Background Data, float Alpha, float scale)
         {
             if (Data.Texture != null && Textures.LoadTexture(Data.Texture, Textures.OpenGlTextureWrapMode.RepeatClamp))
             {

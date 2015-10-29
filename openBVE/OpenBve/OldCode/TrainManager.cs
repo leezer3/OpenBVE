@@ -375,7 +375,9 @@ namespace OpenBve {
 			Automatic = 1,
 			Manual = 2
 		}
-		internal enum DefaultSafetySystems {
+
+	    [Flags]
+	    internal enum DefaultSafetySystems {
 			AtsSn = 1,
 			AtsP = 2,
 			Atc = 4,

@@ -1842,7 +1842,9 @@ namespace OpenBve {
 			internal Textures.Texture BackgroundTexture;
 			internal Textures.Texture OverlayTexture;
 		}
-		internal enum HudTransition {
+
+	    [Flags]
+	    internal enum HudTransition {
 			None = 0,
 			Move = 1,
 			Fade = 2,
