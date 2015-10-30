@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace OpenBve {
     public static class CPreciseTimer
     {
-        internal static bool UseEnvTicks = true;
+        internal static bool UseEnvTicks;
 
         //UNSAFE ZONE//
         [DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall), System.Security.SuppressUnmanagedCodeSecurity]

@@ -310,7 +310,9 @@ namespace OpenBve {
 					try {
 						string[] Files = System.IO.Directory.GetFiles(Folder);
 						Array.Sort<string>(Files);
-						for (int i = 0; i < Files.Length; i++) {
+						for (int i = 0; i < Files.Length; i++)
+						{
+						    if (Files[i] == null) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension) {
 								case ".rw":
@@ -384,16 +386,14 @@ namespace OpenBve {
 		private void listviewRouteRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewRouteRecently.SelectedItems.Count == 1) {
 				string t = listviewRouteRecently.SelectedItems[0].Tag as string;
-				if (t != null) {
-					if (System.IO.File.Exists(t)) {
-						Result.RouteFile = t;
-					    /*if (Type.GetType("Mono.Runtime") != null)
+			    if (t == null) return;
+			    if (!System.IO.File.Exists(t)) return;
+			    Result.RouteFile = t;
+			    /*if (Type.GetType("Mono.Runtime") != null)
 					    {
 					        MessageBox.Show("Please press OK- This works around a mono crash.");
 					    } */
-					    ShowRoute(false);
-					}
-				}
+			    ShowRoute(false);
 			}
 		}
 
@@ -412,32 +412,31 @@ namespace OpenBve {
 		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e) {
 			if (comboboxRouteEncoding.Tag == null) {
 				int i = comboboxRouteEncoding.SelectedIndex;
-				if (i >= 0 & i < EncodingCodepages.Length) {
-					Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
-					if (i == 0) {
-						// remove from cache
-						for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-							if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
-								Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-								Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
-								break;
-							}
-						}
-					} else {
-						// add to cache
-						int j; for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-							if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
-								Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
-								break;
-							}
-						} if (j == Interface.CurrentOptions.RouteEncodings.Length) {
-							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
-							Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
-							Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
-						}
-					}
-					ShowRoute(true);
-				}
+			    if (!(i >= 0 & i < EncodingCodepages.Length)) return;
+			    Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
+			    if (i == 0) {
+			        // remove from cache
+			        for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
+			            if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
+			                Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
+			                Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
+			                break;
+			            }
+			        }
+			    } else {
+			        // add to cache
+			        int j; for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
+			            if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
+			                Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+			                break;
+			            }
+			        } if (j == Interface.CurrentOptions.RouteEncodings.Length) {
+			            Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
+			            Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+			            Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
+			        }
+			    }
+			    ShowRoute(true);
 			}
 		}
 		private void buttonRouteEncodingLatin1_Click(object sender, EventArgs e) {
@@ -983,12 +982,13 @@ namespace OpenBve {
 							}
 						} break;
 					} else {
-						System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-						if (Info != null) {
-							Folder = Info.FullName;
-						} else {
-							break;
-						}
+					    if (Folder == null) continue;
+					    System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					    if (Info != null) {
+					        Folder = Info.FullName;
+					    } else {
+					        break;
+					    }
 					}
 				}
 			} catch { }
