@@ -399,7 +399,7 @@ namespace OpenBve {
 				}
 			}
 			/// <summary>Is called when the aspect in the current or any of the upcoming sections changes.</summary>
-			/// <param name="data">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
+			/// <param name="signal">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
 			/// <remarks>This function should not be called directly. Call UpdateSignal instead.</remarks>
 			internal abstract void SetSignal(SignalData[] signal);
 			/// <summary>Called when the train passes a beacon.</summary>
@@ -434,7 +434,7 @@ namespace OpenBve {
 				}
 			}
 			/// <summary>Called when the train passes a beacon.</summary>
-			/// <param name="data">The beacon data.</param>
+			/// <param name="beacon">The beacon data.</param>
 			/// <remarks>This function should not be called directly. Call UpdateBeacon instead.</remarks>
 			internal abstract void SetBeacon(BeaconData beacon);
 			/// <summary>Updates the AI.</summary>

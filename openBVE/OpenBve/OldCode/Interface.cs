@@ -1288,6 +1288,7 @@ namespace OpenBve {
         internal static VirtualKeys SecurityToVirtualKey(Command cmd)
         {
             string cmdname = Enum.GetName(typeof(Command), cmd);
+            if (cmdname == null) throw new ArgumentNullException("cmdname");
             if (!cmdname.StartsWith("Security", StringComparison.InvariantCulture))
                 throw new ArgumentException("Command is not a security command.", "cmd");
             string ending = cmdname.Substring(8).ToUpperInvariant();

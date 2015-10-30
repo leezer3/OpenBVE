@@ -47,7 +47,7 @@ namespace Plugin {
 			// --- constructors ---
 			/// <summary>Creates a new compatibility limit.</summary>
 			/// <param name="limit">The speed limit.</param>
-			/// <param name="position">The track position.</param>
+			/// <param name="location">The track position.</param>
 			internal CompatibilityLimit(double limit, double location) {
 				this.Limit = limit;
 				this.Location = location;

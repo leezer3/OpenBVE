@@ -131,14 +131,14 @@ namespace OpenBve {
 									}
 								}
 							} break;
-						} else {
-							System.IO.DirectoryInfo info = System.IO.Directory.GetParent(folder);
-							if (info != null) {
-								folder = info.FullName;
-							} else {
-								break;
-							}
 						}
+					    if (folder == null) continue;
+					    System.IO.DirectoryInfo info = System.IO.Directory.GetParent(folder);
+					    if (info != null) {
+					        folder = info.FullName;
+					    } else {
+					        break;
+					    }
 					}
 				}
 				Game.Reset(false);

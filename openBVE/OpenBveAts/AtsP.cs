@@ -105,13 +105,13 @@ namespace Plugin {
 				}
 			}
 			/// <summary>Sets the position of the red signal.</summary>
-			/// <param name="distance">The position.</param>
+			/// <param name="position">The position.</param>
 			internal void SetRedSignal(double position) {
 				this.Position = position;
 				this.TargetSpeed = 0.0;
 			}
 			/// <summary>Sets the position of the green signal.</summary>
-			/// <param name="distance">The position.</param>
+			/// <param name="position">The position.</param>
 			internal void SetGreenSignal(double position) {
 				this.Position = position;
 				this.TargetSpeed = double.MaxValue;
@@ -149,7 +149,7 @@ namespace Plugin {
 			// --- constructors ---
 			/// <summary>Creates a new compatibility limit.</summary>
 			/// <param name="limit">The speed limit.</param>
-			/// <param name="position">The track position.</param>
+			/// <param name="location">The track position.</param>
 			internal CompatibilityLimit(double limit, double location) {
 				this.Limit = limit;
 				this.Location = location;

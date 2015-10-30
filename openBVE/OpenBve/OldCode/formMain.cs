@@ -19,12 +19,14 @@ namespace OpenBve {
 			internal System.Text.Encoding TrainEncoding;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial) {
-			formMain Dialog = new formMain();
-			Dialog.Result = initial;
-			Dialog.ShowDialog();
-			MainDialogResult result = Dialog.Result;
-			Dialog.Dispose();
-			return result;
+		        using (formMain Dialog = new formMain())
+		        {
+		            Dialog.Result = initial;
+		            Dialog.ShowDialog();
+		            MainDialogResult result = Dialog.Result;
+		            Dialog.Dispose();
+                    return result;
+		        }
 		}
 
 		// members

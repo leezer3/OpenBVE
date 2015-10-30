@@ -704,8 +704,12 @@ namespace OpenBve {
 			{
 			    
 				this.Cursor = Cursors.WaitCursor;
-				Application.DoEvents();
-				// determine encoding
+			    //Calling Application.DoEvents seems to cause a crash on some Mono systems....
+                //As far as I can tell, it's not actually doing anything useful
+                //I think the original intention was probably to allow the GUI to update a little faster??
+			    //Application.DoEvents();
+			    
+			    // determine encoding
 				if (!UserSelectedEncoding) {
 					comboboxRouteEncoding.Tag = new object();
 					comboboxRouteEncoding.SelectedIndex = 0;

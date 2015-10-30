@@ -48,9 +48,10 @@ namespace OpenBve {
 					if (System.IO.Directory.Exists(Subfolder)) {
 						return Subfolder;
 					}
-					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-					if (Info == null) break;
-					Folder = Info.FullName;
+				    if (Folder == null) continue;
+				    System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+				    if (Info == null) break;
+				    Folder = Info.FullName;
 				}
 			} catch { }
 			return Application.StartupPath;
