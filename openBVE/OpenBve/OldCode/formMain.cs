@@ -307,6 +307,8 @@ namespace OpenBve {
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
+		    checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
+		    checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
 			{
@@ -568,6 +570,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;
+		    Interface.CurrentOptions.LoadInAdvance = checkBoxLoadInAdvance.Checked;
+		    Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
