@@ -42,7 +42,7 @@ namespace OpenBve {
 			Application.SetCompatibleTextRenderingDefault(false);
 			//--- determine the running environment ---
             //I wonder if disabling this hack will stop the craashing on Linux....
-			//CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
+			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
             //Doesn't appear to, but Mono have fixed the button appearance bug
 			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
 			CurrentHost = new Host();

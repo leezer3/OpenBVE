@@ -346,6 +346,12 @@ namespace OpenBve {
 					#endif
 				}
 			}
+		    if (Program.CurrentlyRunningOnMono)
+		    {
+                //HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
+		        tabcontrolRouteSelection.SelectedTab = tabpageRouteBrowse;
+		        tabcontrolTrainSelection.SelectedTab = tabpageTrainBrowse;
+		    }
 			// lists
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			// result
