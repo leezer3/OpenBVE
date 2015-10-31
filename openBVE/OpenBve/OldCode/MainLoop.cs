@@ -135,6 +135,7 @@ namespace OpenBve {
 	    private static OpenTK.Input.KeyboardState currentKeyboardState;
         private static OpenTK.Input.KeyboardState previousKeyboardState;
 		internal static void ProcessKeyboard() {
+
             //Load the current keyboard state from OpenTK
             var keyboardState = OpenTK.Input.Keyboard.GetState();
 	        currentKeyboardState = keyboardState;
@@ -143,6 +144,7 @@ namespace OpenBve {
             if (keyboardState[Key.LShift] | keyboardState[Key.RShift]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
             if (keyboardState[Key.LControl] | keyboardState[Key.RControl]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
             if (keyboardState[Key.LAlt] | keyboardState[Key.RAlt]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
+
             //Traverse the controls array
 		    for (int i = 0; i < Interface.CurrentControls.Length; i++)
 		    {

@@ -134,6 +134,8 @@ namespace OpenBve {
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
+                //Sleep for 10ms to allow route loading locks to release
+                Thread.Sleep(10);
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
 					string Folder = Program.FileSystem.GetDataFolder("Compatibility", "PreTrain");
