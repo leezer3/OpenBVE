@@ -239,7 +239,10 @@ namespace OpenBve {
 			Sounds.Deinitialize();
 			Joysticks.Deinitialize();
 			Screen.Deinitialize();
-            currentGameWindow.Dispose();
+		    if (currentGameWindow != null)
+		    {
+		        currentGameWindow.Dispose();
+		    }
 		}
 		
 		/// <summary>Provides the API with lookup directories for all installed packages.</summary>

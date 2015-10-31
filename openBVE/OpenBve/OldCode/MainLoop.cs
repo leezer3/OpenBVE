@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Forms;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using ButtonState = OpenTK.Input.ButtonState;
 
 namespace OpenBve {
 	internal static class MainLoop {
@@ -54,11 +56,13 @@ namespace OpenBve {
 		            Program.currentGameWindow.TargetUpdateFrequency = 0;
                     Program.currentGameWindow.TargetRenderFrequency = 0;
                     Program.currentGameWindow.Title = "OpenBVE";
-                    
-		            
-
-
-		            //testForm.Show();
+		        }
+		        if (Program.currentGameWindow == null)
+		        {
+		            MessageBox.Show("An error occured whilst attempting to launch the graphics subsystem." + Environment.NewLine +
+                                    "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Program.RestartArguments = " ";
+		            return;
 		        }
                 if (Interface.CurrentOptions.VerticalSynchronization)
                 {
