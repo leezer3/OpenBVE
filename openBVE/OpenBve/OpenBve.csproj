@@ -81,6 +81,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Renderer\Background.cs" />
+    <Compile Include="Graphics\Renderer\Lamp.cs" />
+    <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="System\Timer.cs" />
     <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
