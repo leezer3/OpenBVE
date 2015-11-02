@@ -37,7 +37,9 @@ namespace OpenBve {
 		/// <param name="args">The command-line arguments.</param>
 		[STAThread]
 		private static void Main(string[] args) {
-            Toolkit.Init();
+            var options = new ToolkitOptions();
+            options.Backend = PlatformBackend.PreferNative;
+            Toolkit.Init(options);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			//--- determine the running environment ---

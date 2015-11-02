@@ -89,7 +89,7 @@ namespace OpenBve {
 			OpenAlDevice = Alc.OpenDevice(null);
 			if (OpenAlDevice != IntPtr.Zero)
 			{
-			    Toolkit.Init();
+			    //Toolkit.Init();
                 //int[] context2 = null;
                 OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
                 //OpenAlContext = Alc.CreateContext(OpenAlDevice, IntPtr.Zero);

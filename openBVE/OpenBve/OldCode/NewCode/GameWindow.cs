@@ -559,6 +559,9 @@ namespace OpenBve
             GL.MatrixMode(MatrixMode.Projection);
             SetupSimulation();
         }
+
+        internal static readonly object LoadingLock = new object();
+        internal static bool LoadingRemakeCurrent = false;
         private static bool JobAvailable = false;
         private static readonly object jobLock = new object();
         private static Queue<ThreadStart> jobs;

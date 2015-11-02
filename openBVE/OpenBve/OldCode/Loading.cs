@@ -80,20 +80,14 @@ namespace OpenBve {
 		}
 		private static void LoadEverythingThreaded() {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
-//			if (RailwayFolder == null) {
-//				Interface.AddMessage(Interface.MessageType.Critical, false, "The Railway folder could not be found. Please check your folder structure.");
-//				return;
-//			}
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
 			// reset
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			World.CameraTrackFollower = new TrackManager.TrackFollower();
-			World.CameraTrackFollower.Train = null;
-			World.CameraTrackFollower.CarIndex = -1;
-			World.CameraMode = World.CameraViewMode.Interior;
+		    World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
+		    World.CameraMode = World.CameraViewMode.Interior;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
@@ -122,9 +116,8 @@ namespace OpenBve {
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
-				TrainManager.Trains[k] = new TrainManager.Train();
-				TrainManager.Trains[k].TrainIndex = k;
-				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0) {
+			    TrainManager.Trains[k] = new TrainManager.Train {TrainIndex = k};
+			    if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0) {
 					TrainManager.Trains[k].State = TrainManager.TrainState.Bogus;
 				} else {
 					TrainManager.Trains[k].State = TrainManager.TrainState.Pending;
@@ -135,7 +128,7 @@ namespace OpenBve {
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
                 //Sleep for 10ms to allow route loading locks to release
-                Thread.Sleep(10);
+			    Thread.Sleep(20);
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
 					string Folder = Program.FileSystem.GetDataFolder("Compatibility", "PreTrain");
