@@ -97,7 +97,7 @@ namespace OpenBve
                 if (!DisplayListAvailable)
                 {
                     BackgroundDisplayList = GL.GenLists(1);
-                    GL.NewList(BackgroundDisplayList, ListMode.CompileAndExecute);
+                    GL.NewList(BackgroundDisplayList, ListMode.Compile);
                     float y0, y1;
                     if (Data.KeepAspectRatio)
                     {
@@ -167,6 +167,8 @@ namespace OpenBve
                         // finish
                         textureX += textureIncrement;
                     }
+                    GL.EndList();
+                    GL.CallList(BackgroundDisplayList);
                     GL.Disable(EnableCap.Texture2D);
                     TexturingEnabled = false;
                     if (!BlendEnabled)
@@ -174,12 +176,19 @@ namespace OpenBve
                         GL.Enable(EnableCap.Blend);
                         BlendEnabled = true;
                     }
-                    GL.EndList();
+                    
                     DisplayListAvailable = true;
                 }
                 else
                 {
                     GL.CallList(BackgroundDisplayList);
+                    GL.Disable(EnableCap.Texture2D);
+                    TexturingEnabled = false;
+                    if (!BlendEnabled)
+                    {
+                        GL.Enable(EnableCap.Blend);
+                        BlendEnabled = true;
+                    }
                 }
             }
         }

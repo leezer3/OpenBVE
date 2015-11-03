@@ -82,7 +82,7 @@ namespace OpenBve
             }
             
                 Renderer.RenderScene(TimeElapsed);
-                
+                Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
                 Program.currentGameWindow.SwapBuffers();
 
                 Game.UpdateBlackBox();
@@ -198,7 +198,7 @@ namespace OpenBve
             Game.UpdateScore(TimeElapsed);
             Game.UpdateMessages();
             Game.UpdateScoreMessages(TimeElapsed);
-            Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+            
             RenderTimeElapsed += TimeElapsed;
             RenderRealTimeElapsed += RealTimeElapsed;
             if (loadComplete && !firstFrame)

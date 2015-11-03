@@ -425,9 +425,10 @@ namespace OpenBve
             int count = 0;
             for (int i = 0; i < RegisteredTexturesCount; i++)
             {
-                for (int j = 0; j < RegisteredTextures[i].OpenGlTextures.Length; j++)
+                if (RegisteredTextures[i] == null) continue;
+                foreach (OpenGlTexture t in RegisteredTextures[i].OpenGlTextures)
                 {
-                    if (RegisteredTextures[i].OpenGlTextures[j].Valid)
+                    if (t.Valid)
                     {
                         count++;
                         break;

@@ -89,10 +89,7 @@ namespace OpenBve {
 			OpenAlDevice = Alc.OpenDevice(null);
 			if (OpenAlDevice != IntPtr.Zero)
 			{
-			    //Toolkit.Init();
-                //int[] context2 = null;
                 OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
-                //OpenAlContext = Alc.CreateContext(OpenAlDevice, IntPtr.Zero);
 				if (OpenAlContext != ContextHandle.Zero) {
 					Alc.MakeContextCurrent(OpenAlContext);
 					try {
@@ -102,18 +99,15 @@ namespace OpenBve {
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return true;
-				} else {
-					Alc.CloseDevice(OpenAlDevice);
-					OpenAlDevice = IntPtr.Zero;
-					MessageBox.Show("The OpenAL context could not be created.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					return false;
 				}
-			} else
-			{
-			    OpenAlContext = ContextHandle.Zero;
-				MessageBox.Show("The OpenAL sound device could not be opened.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				return false;
+			    Alc.CloseDevice(OpenAlDevice);
+			    OpenAlDevice = IntPtr.Zero;
+			    MessageBox.Show("The OpenAL context could not be created.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			    return false;
 			}
+		    OpenAlContext = ContextHandle.Zero;
+		    MessageBox.Show("The OpenAL sound device could not be opened.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+		    return false;
 		}
 		
 		/// <summary>Deinitializes audio.</summary>
@@ -139,14 +133,14 @@ namespace OpenBve {
 		/// <param name="radius">The default effective radius.</param>
 		/// <returns>The handle to the sound buffer.</returns>
 		internal static SoundBuffer RegisterBuffer(string path, double radius) {
-			for (int i = 0; i < BufferCount; i++) {
-				if (Buffers[i].Origin is PathOrigin) {
-					if (((PathOrigin)Buffers[i].Origin).Path == path) {
-						return Buffers[i];
-					}
-				}
+			for (int i = 0; i < BufferCount; i++)
+			{
+			    if (!(Buffers[i].Origin is PathOrigin)) continue;
+			    if (((PathOrigin)Buffers[i].Origin).Path == path) {
+			        return Buffers[i];
+			    }
 			}
-			if (Buffers.Length == BufferCount) {
+		    if (Buffers.Length == BufferCount) {
 				Array.Resize<SoundBuffer>(ref Buffers, Buffers.Length << 1);
 			}
 			Buffers[BufferCount] = new SoundBuffer(path, radius);
@@ -176,23 +170,23 @@ namespace OpenBve {
 		internal static bool LoadBuffer(SoundBuffer buffer) {
 			if (buffer.Loaded) {
 				return true;
-			} else if (buffer.Ignore) {
-				return false;
-			} else {
-				OpenBveApi.Sounds.Sound sound;
-				if (buffer.Origin.GetSound(out sound)) {
-					if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16) {
-						byte[] bytes = GetMonoMix(sound);
-						AL.GenBuffers(1, out buffer.OpenAlBufferName);
-						ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-						AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-						buffer.Duration = sound.Duration;
-						buffer.Loaded = true;
-						return true;
-					}
-				}
 			}
-			buffer.Ignore = true;
+		    if (buffer.Ignore) {
+		        return false;
+		    }
+		    OpenBveApi.Sounds.Sound sound;
+		    if (buffer.Origin.GetSound(out sound)) {
+		        if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16) {
+		            byte[] bytes = GetMonoMix(sound);
+		            AL.GenBuffers(1, out buffer.OpenAlBufferName);
+		            ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
+		            AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
+		            buffer.Duration = sound.Duration;
+		            buffer.Loaded = true;
+		            return true;
+		        }
+		    }
+		    buffer.Ignore = true;
 			return false;
 		}
 		
