@@ -1,9 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -19,111 +17,10 @@ namespace OpenBve
             DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
         }
 
-
-
-        // first frame behavior
-        internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
+        internal static OutputMode CurrentOutputMode = OutputMode.Default;
+        //Set LoadTextureImmediatelyMode to NotYet for the first frame
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 
-        // transparency
-        internal enum TransparencyMode
-        {
-            /// <summary>Textures using color-key transparency are considered opaque, producing good performance but crisp outlines. Partially transparent faces are rendered in a single pass with z-buffer writes disabled, producing good performance but more depth-sorting issues.</summary>
-            Performance = 0,
-            /// <summary>Textures using color-key transparency are considered opaque, producing good performance but crisp outlines. Partially transparent faces are rendered in two passes, the first rendering only opaque pixels with z-buffer writes enabled, and the second rendering only partially transparent pixels with z-buffer writes disabled, producing best quality but worse performance.</summary>
-            Intermediate = 1,
-            /// <summary>Textures using color-key transparency are considered partially transparent. All partially transparent faces are rendered in two passes, the first rendering only opaque pixels with z-buffer writes enabled, and the second rendering only partially transparent pixels with z-buffer writes disabled, producing best quality but worse performance.</summary>
-            Quality = 2
-        }
-
-        // output mode
-        internal enum OutputMode
-        {
-            Default = 0,
-            Debug = 1,
-            None = 2
-        }
-        internal static OutputMode CurrentOutputMode = OutputMode.Default;
-
-        // object list
-        private struct Object
-        {
-            internal int ObjectIndex;
-            internal ObjectListReference[] FaceListReferences;
-            internal ObjectType Type;
-        }
-        private static Object[] Objects = new Object[256];
-        private static int ObjectCount = 0;
-
-        private enum ObjectListType : byte
-        {
-            /// <summary>The face is fully opaque and originates from an object that is part of the static scenery.</summary>
-            StaticOpaque = 1,
-            /// <summary>The face is fully opaque and originates from an object that is part of the dynamic scenery or of a train exterior.</summary>
-            DynamicOpaque = 2,
-            /// <summary>The face is partly transparent and originates from an object that is part of the scenery or of a train exterior.</summary>
-            DynamicAlpha = 3,
-            /// <summary>The face is fully opaque and originates from an object that is part of the cab.</summary>
-            OverlayOpaque = 4,
-            /// <summary>The face is partly transparent and originates from an object that is part of the cab.</summary>
-            OverlayAlpha = 5
-        }
-        internal enum ObjectType : byte
-        {
-            /// <summary>The object is part of the static scenery. The matching ObjectListType is StaticOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Static = 1,
-            /// <summary>The object is part of the animated scenery or of a train exterior. The matching ObjectListType is DynamicOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Dynamic = 2,
-            /// <summary>The object is part of the cab. The matching ObjectListType is OverlayOpaque for fully opaque faces, and OverlayAlpha for all other faces.</summary>
-            Overlay = 3
-        }
-
-        private struct ObjectListReference
-        {
-            /// <summary>The type of list.</summary>
-            internal readonly ObjectListType Type;
-            /// <summary>The index in the specified list.</summary>
-            internal int Index;
-            internal ObjectListReference(ObjectListType type, int index)
-            {
-                this.Type = type;
-                this.Index = index;
-            }
-        }
-        private class ObjectFace
-        {
-            internal int ObjectListIndex;
-            internal int ObjectIndex;
-            internal int FaceIndex;
-            internal double Distance;
-            internal Textures.OpenGlTextureWrapMode Wrap;
-        }
-        private class ObjectList
-        {
-            internal ObjectFace[] Faces;
-            internal int FaceCount;
-            internal ObjectList()
-            {
-                this.Faces = new ObjectFace[256];
-                this.FaceCount = 0;
-            }
-        }
-        private class ObjectGroup
-        {
-            internal readonly ObjectList List;
-            internal int OpenGlDisplayList;
-            internal bool OpenGlDisplayListAvailable;
-            internal Vector3 WorldPosition;
-            internal bool Update;
-            internal ObjectGroup()
-            {
-                this.List = new ObjectList();
-                this.OpenGlDisplayList = 0;
-                this.OpenGlDisplayListAvailable = false;
-                this.WorldPosition = new Vector3(0.0, 0.0, 0.0);
-                this.Update = true;
-            }
-        }
 
         // the static opaque lists
         /// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
@@ -176,144 +73,7 @@ namespace OpenBve
         private static Textures.Texture TextureLogo = null;
 
         // constants
-        private const float inv255 = 1.0f / 255.0f;
-
-        // reset
-        internal static void Reset()
-        {
-            LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
-            Objects = new Object[256];
-            ObjectCount = 0;
-            StaticOpaque = new ObjectGroup[] { };
-            StaticOpaqueForceUpdate = true;
-            DynamicOpaque = new ObjectList();
-            DynamicAlpha = new ObjectList();
-            OverlayOpaque = new ObjectList();
-            OverlayAlpha = new ObjectList();
-            OptionLighting = true;
-            OptionAmbientColor = new Color24(160, 160, 160);
-            OptionDiffuseColor = new Color24(160, 160, 160);
-            OptionLightPosition = new World.Vector3Df(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
-            OptionLightingResultingAmount = 1.0f;
-            OptionClock = false;
-            OptionBrakeSystems = false;
-        }
-
-        // initialize
-        internal static void Initialize()
-        {
-            // opengl
-            GL.ShadeModel(ShadingModel.Smooth);
-            GL.ClearColor(Color4.Black);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Enable(EnableCap.DepthTest);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            GL.DepthFunc(DepthFunction.Lequal);
-            GL.Hint(HintTarget.FogHint, HintMode.Fastest);
-            GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
-            GL.Disable(EnableCap.Dither);
-            GL.CullFace(CullFaceMode.Front);
-            GL.Enable(EnableCap.CullFace); CullEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            // hud
-            Interface.LoadHUD();
-            string Path = Program.FileSystem.GetDataFolder("In-game");
-            Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "logo.png"), out TextureLogo);
-            // opengl
-            //GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            //GL.PushMatrix();
-            Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
-            //GL.PopMatrix();
-            // prepare rendering logo
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.Blend); BlendEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Fog);
-
-            /*
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PushMatrix();
-            GL.LoadIdentity();
-            //GL.Ortho(0.0, (double)Screen.Width, 0.0, (double)Screen.Height, -1.0, 1.0);
-            GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height,0.0, -1.0, 1.0);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.PushMatrix();
-            GL.LoadIdentity();
-            // render logo
-            DrawLoadingScreen();
-            // finalize
-            GL.PopMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PopMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.Disable(EnableCap.Blend); BlendEnabled = false;*/
-        }
-
-        // deinitialize
-        internal static void Deinitialize()
-        {
-            ClearDisplayLists();
-        }
-
-        // clear display lists
-        internal static void ClearDisplayLists()
-        {
-            for (int i = 0; i < StaticOpaque.Length; i++)
-            {
-                if (StaticOpaque[i] != null)
-                {
-                    if (StaticOpaque[i].OpenGlDisplayListAvailable)
-                    {
-                        GL.DeleteLists(StaticOpaque[i].OpenGlDisplayList, 1);
-                        StaticOpaque[i].OpenGlDisplayListAvailable = false;
-                    }
-                }
-            }
-            StaticOpaqueForceUpdate = true;
-        }
-
-        // initialize lighting
-        internal static void InitializeLighting()
-        {
-            GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
-            GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-            GL.CullFace(CullFaceMode.Front); CullEnabled = true; // possibly undocumented, but required for correct lighting
-            GL.Enable(EnableCap.Light0);
-            GL.Enable(EnableCap.ColorMaterial);
-            GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
-            GL.ShadeModel(ShadingModel.Smooth);
-            float x = ((float)OptionAmbientColor.R + (float)OptionAmbientColor.G + (float)OptionAmbientColor.B);
-            float y = ((float)OptionDiffuseColor.R + (float)OptionDiffuseColor.G + (float)OptionDiffuseColor.B);
-            if (x < y) x = y;
-            OptionLightingResultingAmount = 0.00208333333333333f * x;
-            if (OptionLightingResultingAmount > 1.0f) OptionLightingResultingAmount = 1.0f;
-            GL.Enable(EnableCap.Lighting); LightingEnabled = true;
-            GL.DepthFunc(DepthFunction.Lequal);
-        }
-
-        // reset opengl state
-        private static void ResetOpenGlState()
-        {
-            LastBoundTexture = null;
-            GL.Enable(EnableCap.CullFace); CullEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            GL.Disable(EnableCap.Blend); BlendEnabled = false;
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthMask(true);
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }); EmissiveEnabled = false;
-            SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-        }
+        private const float inv255 = 1.0f / 255.0f;       
 
         // render scene
         internal static byte[] PixelBuffer = null;
@@ -706,34 +466,8 @@ namespace OpenBve
         }
 
         // set alpha func
-        private static void SetAlphaFunc(AlphaFunction Comparison, float Value)
-        {
-            AlphaTestEnabled = true;
-            AlphaFuncComparison = Comparison;
-            AlphaFuncValue = Value;
-            GL.AlphaFunc(Comparison, Value);
-            GL.Enable(EnableCap.AlphaTest);
-        }
-        private static void UnsetAlphaFunc()
-        {
-            AlphaTestEnabled = false;
-            GL.Disable(EnableCap.AlphaTest);
-        }
-        private static void RestoreAlphaFunc()
-        {
-            if (AlphaTestEnabled)
-            {
-                GL.AlphaFunc(AlphaFuncComparison, AlphaFuncValue);
-                GL.Enable(EnableCap.AlphaTest);
-            }
-            else
-            {
-                GL.Disable(EnableCap.AlphaTest);
-            }
-        }
-
-        // render face
-
+        
+        /// <summary> Stores the last bound OpenGL texture</summary>
         private static Textures.OpenGlTexture LastBoundTexture = null;
 
         private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ)
@@ -1009,85 +743,8 @@ namespace OpenBve
             }
         }
 
-        // render background
-
-
         // render fullscreen motion blur
-        private static void RenderFullscreenMotionBlur()
-        {
-            int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-            int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
-            // render
-            if (PixelBufferOpenGlTextureIndex >= 0)
-            {
-                double strength;
-                switch (Interface.CurrentOptions.MotionBlur)
-                {
-                    case Interface.MotionBlurMode.Low: strength = 0.0025; break;
-                    case Interface.MotionBlurMode.Medium: strength = 0.0040; break;
-                    case Interface.MotionBlurMode.High: strength = 0.0064; break;
-                    default: strength = 0.0040; break;
-                }
-                double speed = Math.Abs(World.CameraSpeed);
-                double denominator = strength * Game.InfoFrameRate * Math.Sqrt(speed);
-                float factor;
-                if (denominator > 0.001)
-                {
-                    factor = (float)Math.Exp(-1.0 / denominator);
-                }
-                else
-                {
-                    factor = 0.0f;
-                }
-                // initialize
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-                if (!BlendEnabled)
-                {
-                    GL.Enable(EnableCap.Blend);
-                    BlendEnabled = true;
-                }
-                if (LightingEnabled)
-                {
-                    GL.Disable(EnableCap.Lighting);
-                    LightingEnabled = false;
-                }
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.PushMatrix();
-                GL.LoadIdentity();
-                GL.Ortho(0.0, (double)Screen.Width, 0.0, (double)Screen.Height, -1.0, 1.0);
-                GL.MatrixMode(MatrixMode.Modelview);
-                GL.PushMatrix();
-                GL.LoadIdentity();
-                if (!TexturingEnabled)
-                {
-                    GL.Enable(EnableCap.Texture2D);
-                    TexturingEnabled = true;
-                }
-                // render
-                GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
-                GL.Color4(1.0f, 1.0f, 1.0f, factor);
-                GL.Begin(PrimitiveType.Polygon);
-                GL.TexCoord2(0.0, 0.0);
-                GL.Vertex2(0.0, 0.0);
-                GL.TexCoord2(0.0, 1.0);
-                GL.Vertex2(0.0, (double)h);
-                GL.TexCoord2(1.0, 1.0);
-                GL.Vertex2((double)w, (double)h);
-                GL.TexCoord2(1.0, 0.0);
-                GL.Vertex2((double)w, 0.0);
-                GL.End();
-                // finalize
-                GL.PopMatrix();
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.PopMatrix();
-                GL.MatrixMode(MatrixMode.Modelview);
-            }
-            // retrieve buffer
-            {
-                GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
-                GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb8, 0, 0, w, h, 0);
-            }
-        }
+
 
         // get color
         private static void CreateBackColor(Color32 Original, Game.MessageColor SystemColor, out float R, out float G, out float B, out float A)
@@ -1176,48 +833,6 @@ namespace OpenBve
             }
             A = inv255 * (float)Original.A;
         }
-
-        // render overlay texture
-        //		private static void RenderOverlayTexture(Textures.Texture texture, double ax, double ay, double bx, double by) {
-        //			double nay = (double)Screen.Height - ay;
-        //			double nby = (double)Screen.Height - by;
-        //			if (Textures.LoadTexture(texture)) {
-        //				if (!TexturingEnabled) {
-        //					GL.Enable(Gl.GL_TEXTURE_2D);
-        //					TexturingEnabled = true;
-        //				}
-        //				GL.BindTexture(Gl.GL_TEXTURE_2D, texture.OpenGlTextureName);
-        //			} else if (TexturingEnabled) {
-        //				GL.Disable(Gl.GL_TEXTURE_2D);
-        //				TexturingEnabled = false;
-        //			}
-        //			GL.Begin(PrimitiveType.Quads);
-        //			GL.TexCoord2(0.0, 1.0);
-        //			GL.Vertex2(ax, nby);
-        //			GL.TexCoord2(0.0, 0.0);
-        //			GL.Vertex2(ax, nay);
-        //			GL.TexCoord2(1.0, 0.0);
-        //			GL.Vertex2(bx, nay);
-        //			GL.TexCoord2(1.0, 1.0);
-        //			GL.Vertex2(bx, nby);
-        //			GL.End();
-        //		}
-
-        // render overlay solid
-        //		private static void RenderOverlaySolid(double ax, double ay, double bx, double by) {
-        //			double nay = (double)Screen.Height - ay;
-        //			double nby = (double)Screen.Height - by;
-        //			if (TexturingEnabled) {
-        //				GL.Disable(Gl.GL_TEXTURE_2D);
-        //				TexturingEnabled = false;
-        //			}
-        //			GL.Begin(PrimitiveType.Quads);
-        //			GL.Vertex2(ax, nby);
-        //			GL.Vertex2(ax, nay);
-        //			GL.Vertex2(bx, nay);
-        //			GL.Vertex2(bx, nby);
-        //			GL.End();
-        //		}
 
         // re-add objects
         internal static void ReAddObjects()

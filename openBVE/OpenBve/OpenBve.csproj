@@ -82,8 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\Renderer\Background.cs" />
+    <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
+    <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
+    <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="System\Timer.cs" />
     <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
