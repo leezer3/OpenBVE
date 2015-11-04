@@ -70,7 +70,7 @@ namespace OpenBve {
 			treeviewRouteAddOns.Sort();
 			treeviewRouteAddOns.EndUpdate();
 		}
-		private void AddRoutes(TreeNodeCollection collection, string path, string[] keywords, string[] metadata) {
+		private void AddRoutes(TreeNodeCollection collection, string path, ICollection<string> keywords, string[] metadata) {
 			if (Directory.Exists(path)) {
 				string[] directories = Directory.GetDirectories(path);
 				foreach (string directory in directories) {
@@ -78,7 +78,7 @@ namespace OpenBve {
 					node.ImageKey = "folder";
 					node.SelectedImageKey = "folder";
 					string title = Path.GetFileNameWithoutExtension(directory);
-					if (keywords.Length != 0) {
+					if (keywords.Count != 0) {
 						List<string> remaining = new List<string>();
 						foreach (string keyword in keywords) {
 							if (title != null && title.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) < 0) {
@@ -949,7 +949,7 @@ namespace OpenBve {
 				return;
 			}
             
-			string Folder = null;
+			string Folder;
 			try {
 				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
 				if (Game.TrainName[0] == '$') {
@@ -985,15 +985,14 @@ namespace OpenBve {
 								return;
 							}
 						} break;
-					} else {
-					    if (Folder == null) continue;
-					    System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-					    if (Info != null) {
-					        Folder = Info.FullName;
-					    } else {
-					        break;
-					    }
 					}
+				    if (Folder == null) continue;
+				    System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+				    if (Info != null) {
+				        Folder = Info.FullName;
+				    } else {
+				        break;
+				    }
 				}
 			} catch { }
 			/// train not found

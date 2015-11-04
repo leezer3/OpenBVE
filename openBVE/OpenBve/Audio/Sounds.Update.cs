@@ -252,9 +252,9 @@ namespace OpenBve {
 		}
 		
 		private class SoundSourceAttenuation : IComparable<SoundSourceAttenuation> {
-			internal SoundSource Source;
+			internal readonly SoundSource Source;
 			internal double Gain;
-			internal double Distance;
+			internal readonly double Distance;
 			internal SoundSourceAttenuation(SoundSource source, double gain, double distance) {
 				this.Source = source;
 				this.Gain = gain;

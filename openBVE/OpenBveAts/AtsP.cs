@@ -118,7 +118,7 @@ namespace Plugin {
 			}
 			/// <summary>Sets a speed limit and the position of the speed limit.</summary>
 			/// <param name="speed">The speed.</param>
-			/// <param name="distance">The position.</param>
+			/// <param name="position">The position.</param>
 			internal void SetLimit(double speed, double position) {
 				this.Position = position;
 				this.TargetSpeed = speed;

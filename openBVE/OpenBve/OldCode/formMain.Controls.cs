@@ -174,8 +174,6 @@ namespace OpenBve {
 						} else {
 							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_hat_invalid");
 						} break;
-					default:
-						break;
 				}
 				return t;
 			} 
@@ -340,11 +338,15 @@ namespace OpenBve {
 
 		// import
 		private void buttonControlsImport_Click(object sender, EventArgs e) {
-			OpenFileDialog Dialog = new OpenFileDialog();
-			Dialog.CheckFileExists = true;
-			//Dialog.InitialDirectory = Interface.GetControlsFolder();
-			Dialog.Filter = Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
-			if (Dialog.ShowDialog() == DialogResult.OK) {
+		    OpenFileDialog Dialog = new OpenFileDialog
+		    {
+		        CheckFileExists = true,
+		        Filter =
+		            Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
+		            Interface.GetInterfaceString("dialog_allfiles") + "|*"
+		    };
+		    //Dialog.InitialDirectory = Interface.GetControlsFolder();
+		    if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
 					Interface.LoadControls(Dialog.FileName, out Interface.CurrentControls);
 					for (int i = 0; i < listviewControls.SelectedItems.Count; i++) {
@@ -366,11 +368,14 @@ namespace OpenBve {
 
 		// export
 		private void buttonControlsExport_Click(object sender, EventArgs e) {
-			SaveFileDialog Dialog = new SaveFileDialog();
-			Dialog.OverwritePrompt = true;
-			//Dialog.InitialDirectory = Interface.GetControlsFolder();
-			Dialog.Filter = Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
-			if (Dialog.ShowDialog() == DialogResult.OK) {
+		    SaveFileDialog Dialog = new SaveFileDialog
+		    {
+		        OverwritePrompt = true,
+		        Filter =
+		            Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
+		            Interface.GetInterfaceString("dialog_allfiles") + "|*"
+		    };
+		    if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
 					Interface.SaveControls(Dialog.FileName);
 				} catch (Exception ex) {

@@ -178,13 +178,12 @@ namespace OpenBve {
 		private static uint RoundToPowerOfTwo(uint value) {
 			if (value == 0) {
 				throw new ArgumentException();
-			} else {
-				value -= 1;
-				for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
-					value |= value >> i;
-				}
-				return value + 1;
 			}
+		    value -= 1;
+		    for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
+		        value |= value >> i;
+		    }
+		    return value + 1;
 		}
 		
 	}

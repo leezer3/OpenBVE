@@ -10,8 +10,7 @@ namespace OpenBve {
 
         // show image dialog
         internal static void ShowImageDialog(Image Image) {
-            formImage Dialog = new formImage();
-            Dialog.CurrentImage = Image;
+            formImage Dialog = new formImage {CurrentImage = Image};
             Dialog.ShowDialog();
             Dialog.Dispose();
         }

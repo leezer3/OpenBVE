@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
@@ -38,24 +37,26 @@ namespace Plugin {
 						width = reader.ReadInt32();
 						height = reader.ReadInt32();
 						return true;
-					} else if (identifier1 == 0x38464947 & ((identifier2 & 0xFFFF) == 0x6137 | (identifier2 & 0xFFFF) == 0x6139)) {
-						/* GIF */
-						stream.Position = 6;
-						width = (int)reader.ReadUInt16();
-						height = (int)reader.ReadUInt16();
-						return true;
-					} else if (identifier1 == 0x474E5089 & identifier2 == 0x0A1A0A0D) {
-						/* PNG */
-						if (reader.ReadUInt32() == 0x0D000000) {
-							if (reader.ReadUInt32() == 0x52444849) {
-								uint bigWidth = reader.ReadUInt32();
-								uint bigHeight = reader.ReadUInt32();
-								width = (int)((bigWidth >> 24) | ((bigWidth >> 8) & 0xFF00) | ((bigWidth & 0xFF00) << 8) | (bigWidth << 24));
-								height = (int)((bigHeight >> 24) | ((bigHeight >> 8) & 0xFF00) | ((bigHeight & 0xFF00) << 8) | (bigHeight << 24));
-								return true;
-							}
-						}
 					}
+				    if (identifier1 == 0x38464947 & ((identifier2 & 0xFFFF) == 0x6137 | (identifier2 & 0xFFFF) == 0x6139)) {
+				        /* GIF */
+				        stream.Position = 6;
+				        width = (int)reader.ReadUInt16();
+				        height = (int)reader.ReadUInt16();
+				        return true;
+				    }
+				    if (identifier1 == 0x474E5089 & identifier2 == 0x0A1A0A0D) {
+				        /* PNG */
+				        if (reader.ReadUInt32() == 0x0D000000) {
+				            if (reader.ReadUInt32() == 0x52444849) {
+				                uint bigWidth = reader.ReadUInt32();
+				                uint bigHeight = reader.ReadUInt32();
+				                width = (int)((bigWidth >> 24) | ((bigWidth >> 8) & 0xFF00) | ((bigWidth & 0xFF00) << 8) | (bigWidth << 24));
+				                height = (int)((bigHeight >> 24) | ((bigHeight >> 8) & 0xFF00) | ((bigHeight & 0xFF00) << 8) | (bigHeight << 24));
+				                return true;
+				            }
+				        }
+				    }
 				}
 			}
 			using (Image image = Image.FromFile(path)) {

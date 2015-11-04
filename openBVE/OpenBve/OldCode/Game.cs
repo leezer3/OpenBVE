@@ -1116,7 +1116,7 @@ namespace OpenBve {
 			private double CurrentInterval;
 			private bool BrakeMode;
 			private double CurrentSpeedFactor;
-			private double PersonalitySpeedFactor;
+			private readonly double PersonalitySpeedFactor;
 			private int PowerNotchAtWhichWheelSlipIsObserved;
 			private int LastStation;
 			// functions
@@ -1454,8 +1454,7 @@ namespace OpenBve {
 													} else if (this.CurrentSpeedFactor < 1.0) {
 														dist -= 5.0;
 													}
-													double edec;
-													edec = spd * spd / (2.0 * dist);
+												    var edec = spd * spd / (2.0 * dist);
 													if (edec > dec) dec = edec;
 												}
 											}
@@ -1475,8 +1474,7 @@ namespace OpenBve {
 													} else if (this.CurrentSpeedFactor < 1.0) {
 														dist -= 5.0;
 													}
-													double edec;
-													edec = spd * spd / (2.0 * dist);
+												    var edec = spd * spd / (2.0 * dist);
 													if (edec > dec) dec = edec;
 												}
 											}
@@ -1570,8 +1568,7 @@ namespace OpenBve {
 									} else if (this.CurrentSpeedFactor < 1.0) {
 										dist -= 5.0;
 									}
-									double edec;
-									edec = spd * spd / (2.0 * dist);
+								    var edec = spd * spd / (2.0 * dist);
 									if (edec > dec) dec = edec;
 								} else {
 									dec = BrakeDeceleration;

@@ -17,9 +17,9 @@ namespace OpenBve {
 		}
 		
 		// --- members ---
-		private string PluginFolder;
-		private string TrainFolder;
-		private IRuntime Api;
+		private readonly string PluginFolder;
+		private readonly string TrainFolder;
+		private readonly IRuntime Api;
 		private SoundHandleEx[] SoundHandles;
 		private int SoundHandlesCount;
 		

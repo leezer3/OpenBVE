@@ -115,9 +115,8 @@ namespace OpenBve {
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
 			string[] flags = System.IO.Directory.GetFiles(flagsFolder);
 			// route selection
-			listviewRouteFiles.SmallImageList = new ImageList();
-			listviewRouteFiles.SmallImageList.TransparentColor = Color.White;
-			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
+		    listviewRouteFiles.SmallImageList = new ImageList {TransparentColor = Color.White};
+		    if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
 			treeviewRouteAddOns.ImageList = new ImageList();
@@ -132,9 +131,8 @@ namespace OpenBve {
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
-			listviewRouteRecently.SmallImageList = new ImageList();
-			listviewRouteRecently.SmallImageList.TransparentColor = Color.White;
-			if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
+		    listviewRouteRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+		    if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++) {
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
 				Item.ImageKey = "route";
@@ -142,9 +140,8 @@ namespace OpenBve {
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// train selection
-			listviewTrainFolders.SmallImageList = new ImageList();
-			listviewTrainFolders.SmallImageList.TransparentColor = Color.White;
-			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
+		    listviewTrainFolders.SmallImageList = new ImageList {TransparentColor = Color.White};
+		    if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
 			treeviewTrainAddOns.ImageList = new ImageList();
@@ -159,9 +156,8 @@ namespace OpenBve {
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
 			listviewTrainRecently.Columns.Add("");
-			listviewTrainRecently.SmallImageList = new ImageList();
-			listviewTrainRecently.SmallImageList.TransparentColor = Color.White;
-			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
+		    listviewTrainRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+		    if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++) {
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
 				Item.ImageKey = "train";
@@ -253,9 +249,8 @@ namespace OpenBve {
 				buttonBlackBoxExport.Enabled = false;
 			}
 			// controls
-			listviewControls.SmallImageList = new ImageList();
-			listviewControls.SmallImageList.TransparentColor = Color.White;
-			if (KeyboardIcon != null) listviewControls.SmallImageList.Images.Add("keyboard", KeyboardIcon);
+		    listviewControls.SmallImageList = new ImageList {TransparentColor = Color.White};
+		    if (KeyboardIcon != null) listviewControls.SmallImageList.Images.Add("keyboard", KeyboardIcon);
 			if (MouseIcon != null) listviewControls.SmallImageList.Images.Add("mouse", MouseIcon);
 			if (JoystickIcon != null) listviewControls.SmallImageList.Images.Add("joystick", JoystickIcon);
 			if (GamepadIcon != null) listviewControls.SmallImageList.Images.Add("gamepad", GamepadIcon);
@@ -947,16 +942,17 @@ namespace OpenBve {
 							UpdateJoystickDetails();
 							UpdateControlListElement(listviewControls.Items[j], j, true);
 							return;
-						} else if (a > 0.75) {
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = 1;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
 						}
+					    if (a > 0.75) {
+					        Interface.CurrentControls[j].Device = k;
+					        Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+					        Interface.CurrentControls[j].Element = i;
+					        Interface.CurrentControls[j].Direction = 1;
+					        radiobuttonJoystick.Focus();
+					        UpdateJoystickDetails();
+					        UpdateControlListElement(listviewControls.Items[j], j, true);
+					        return;
+					    }
 					}
                     int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
 					for (int i = 0; i < buttons; i++) {
@@ -1044,11 +1040,8 @@ namespace OpenBve {
 		                return false;
 		            }
 		        }
-		        else
-		        {
-		            Box.Image = Box.ErrorImage;
-		            return false;
-		        }
+		        Box.Image = Box.ErrorImage;
+		        return false;
 		    }
 		    catch
 		    {

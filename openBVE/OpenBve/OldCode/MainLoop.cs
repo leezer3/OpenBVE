@@ -82,7 +82,7 @@ namespace OpenBve {
 
 		// repeats
 		private struct ControlRepeat {
-			internal int ControlIndex;
+			internal readonly int ControlIndex;
 			internal double Countdown;
 			internal ControlRepeat(int controlIndex, double countdown) {
 				this.ControlIndex = controlIndex;

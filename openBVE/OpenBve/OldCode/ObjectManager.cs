@@ -807,8 +807,7 @@ namespace OpenBve {
 				#endif
 				if (!System.IO.Path.HasExtension(FileName)) {
 					while (true) {
-						string f;
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+					    var f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
 						if (System.IO.File.Exists(f)) {
 							FileName = f;
 							break;

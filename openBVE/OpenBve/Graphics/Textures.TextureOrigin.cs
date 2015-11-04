@@ -25,34 +25,36 @@ namespace OpenBve {
 			/// <param name="a">The first origin.</param>
 			/// <param name="b">The second origin.</param>
 			/// <returns>Whether the two origins are equal.</returns>
-			public static bool operator ==(TextureOrigin a, TextureOrigin b) {
-				if (a is PathOrigin & b is PathOrigin) {
+			public static bool operator ==(TextureOrigin a, TextureOrigin b)
+			{
+			    if (a is PathOrigin & b is PathOrigin) {
 					return (PathOrigin)a == (PathOrigin)b;
-				} else {
-					return object.ReferenceEquals(a, b);
 				}
+			    return object.ReferenceEquals(a, b);
 			}
-			/// <summary>Checks whether two origins are unequal.</summary>
+
+		    /// <summary>Checks whether two origins are unequal.</summary>
 			/// <param name="a">The first origin.</param>
 			/// <param name="b">The second origin.</param>
 			/// <returns>Whether the two origins are unequal.</returns>
-			public static bool operator !=(TextureOrigin a, TextureOrigin b) {
-				if (a is PathOrigin & b is PathOrigin) {
+			public static bool operator !=(TextureOrigin a, TextureOrigin b)
+		    {
+		        if (a is PathOrigin & b is PathOrigin) {
 					return (PathOrigin)a != (PathOrigin)b;
-				} else {
-					return !object.ReferenceEquals(a, b);
 				}
-			}
-			/// <summary>Checks whether this instance is equal to the specified object.</summary>
+		        return !object.ReferenceEquals(a, b);
+		    }
+
+		    /// <summary>Checks whether this instance is equal to the specified object.</summary>
 			/// <param name="obj">The object.</param>
 			/// <returns>Whether this instance is equal to the specified object.</returns>
-			public override bool Equals(object obj) {
-				if (this is PathOrigin & obj is PathOrigin) {
+			public override bool Equals(object obj)
+		    {
+		        if (this is PathOrigin & obj is PathOrigin) {
 					return (PathOrigin)this == (PathOrigin)obj;
-				} else {
-					return object.ReferenceEquals(this, obj);
 				}
-			}
+		        return object.ReferenceEquals(this, obj);
+		    }
 		}
 		
 		
@@ -75,15 +77,16 @@ namespace OpenBve {
 			/// <summary>Gets the texture from this origin.</summary>
 			/// <param name="texture">Receives the texture.</param>
 			/// <returns>Whether the texture could be obtained successfully.</returns>
-			internal override bool GetTexture(out OpenBveApi.Textures.Texture texture) {
-				if (!Program.CurrentHost.LoadTexture(this.Path, this.Parameters, out texture)) {
+			internal override bool GetTexture(out OpenBveApi.Textures.Texture texture)
+			{
+			    if (!Program.CurrentHost.LoadTexture(this.Path, this.Parameters, out texture)) {
 					texture = null;
 					return false;
-				} else {
-					return true;
 				}
+			    return true;
 			}
-			// --- operators ---
+
+		    // --- operators ---
 			/// <summary>Checks whether two origins are equal.</summary>
 			/// <param name="a">The first origin.</param>
 			/// <param name="b">The second origin.</param>
@@ -172,18 +175,17 @@ namespace OpenBve {
 					}
 					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw);
 					return true;
-				} else {
-					/*
+				}
+			    /*
 					 * The stride is invalid. This indicates that the
 					 * CLI either does not implement the conversion to
 					 * 32-bit BGRA correctly, or that the CLI has
 					 * applied additional padding that we do not
 					 * support.
 					 * */
-					bitmap.UnlockBits(data);
-					texture = null;
-					return false;
-				}
+			    bitmap.UnlockBits(data);
+			    texture = null;
+			    return false;
 			}
 		}
 		

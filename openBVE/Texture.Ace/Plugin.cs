@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
@@ -34,15 +33,15 @@ namespace Plugin {
 		/// <summary>Checks whether the plugin can load the specified texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <returns>Whether the plugin can load the specified texture.</returns>
-		public override bool CanLoadTexture(string path) {
-			if (File.Exists(path)) {
+		public override bool CanLoadTexture(string path)
+		{
+		    if (File.Exists(path)) {
 				return CanLoadFile(path);
-			} else {
-				return false;
 			}
+		    return false;
 		}
-		
-		/// <summary>Loads the specified texture.</summary>
+
+	    /// <summary>Loads the specified texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>

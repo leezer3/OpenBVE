@@ -140,80 +140,78 @@ namespace OpenBve
                 return true;
             if (handle.Ignore)
                 return false;
-            else
+            OpenBveApi.Textures.Texture texture;
+            if (handle.Origin.GetTexture(out texture))
             {
-                OpenBveApi.Textures.Texture texture;
-                if (handle.Origin.GetTexture(out texture))
+                if (texture.BitsPerPixel == 32)
                 {
-                    if (texture.BitsPerPixel == 32)
-                    {
-                        int[] names = new int[1];
-                        GL.GenTextures(1, names);
-                        GL.BindTexture(TextureTarget.Texture2D, names[0]);
-                        handle.OpenGlTextures[(int)wrap].Name = names[0];
-                        handle.Width = texture.Width;
-                        handle.Height = texture.Height;
-                        handle.Transparency = texture.GetTransparencyType();
-                        texture = UpsizeToPowerOfTwo(texture);
+                    int[] names = new int[1];
+                    GL.GenTextures(1, names);
+                    GL.BindTexture(TextureTarget.Texture2D, names[0]);
+                    handle.OpenGlTextures[(int)wrap].Name = names[0];
+                    handle.Width = texture.Width;
+                    handle.Height = texture.Height;
+                    handle.Transparency = texture.GetTransparencyType();
+                    texture = UpsizeToPowerOfTwo(texture);
 
-                        switch (Interface.CurrentOptions.Interpolation)
-                        {
-                            case Interface.InterpolationMode.NearestNeighbor:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
-                                break;
-                            case Interface.InterpolationMode.Bilinear:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
-                                break;
-                            case Interface.InterpolationMode.NearestNeighborMipmapped:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
-                                break;
-                            case Interface.InterpolationMode.BilinearMipmapped:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
-                                break;
-                            case Interface.InterpolationMode.TrilinearMipmapped:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
-                                break;
-                            default:
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-                                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
-                                break;
-                        }
-                        if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0)
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
-                        }
-                        else
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.ClampToEdge);
-                        }
-                        if ((wrap & OpenGlTextureWrapMode.ClampRepeat) != 0)
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
-                        }
-                        else
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
-                        }
-                        if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor && Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear)
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
-                        }
-                        else
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
-                        }
-                        if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.AnisotropicFiltering)
-                        {
-                            GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
-                        }
-                        if (handle.Transparency == OpenBveApi.Textures.TextureTransparencyType.Opaque)
-                        {
-                            /*
+                    switch (Interface.CurrentOptions.Interpolation)
+                    {
+                        case Interface.InterpolationMode.NearestNeighbor:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+                            break;
+                        case Interface.InterpolationMode.Bilinear:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+                            break;
+                        case Interface.InterpolationMode.NearestNeighborMipmapped:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+                            break;
+                        case Interface.InterpolationMode.BilinearMipmapped:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+                            break;
+                        case Interface.InterpolationMode.TrilinearMipmapped:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+                            break;
+                        default:
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+                            break;
+                    }
+                    if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0)
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
+                    }
+                    else
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.ClampToEdge);
+                    }
+                    if ((wrap & OpenGlTextureWrapMode.ClampRepeat) != 0)
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
+                    }
+                    else
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
+                    }
+                    if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor && Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear)
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
+                    }
+                    else
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+                    }
+                    if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.AnisotropicFiltering)
+                    {
+                        GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
+                    }
+                    if (handle.Transparency == OpenBveApi.Textures.TextureTransparencyType.Opaque)
+                    {
+                        /*
                              * If the texture is fully opaque, the alpha channel is not used.
                              * If the graphics driver and card support 24-bits per channel,
                              * it is best to convert the bitmap data to that format in order
@@ -221,45 +219,44 @@ namespace OpenBve
                              * format, it will likely be upconverted to 32-bits per channel
                              * again, and this is wasted effort.
                              * */
-                            int width = texture.Width;
-                            int height = texture.Height;
-                            int stride = (3 * (width + 1) >> 2) << 2;
-                            byte[] oldBytes = texture.Bytes;
-                            byte[] newBytes = new byte[stride * texture.Height];
-                            int i = 0, j = 0;
-                            for (int y = 0; y < height; y++)
-                            {
-                                for (int x = 0; x < width; x++)
-                                {
-                                    newBytes[j + 0] = oldBytes[i + 0];
-                                    newBytes[j + 1] = oldBytes[i + 1];
-                                    newBytes[j + 2] = oldBytes[i + 2];
-                                    i += 4;
-                                    j += 3;
-                                }
-                                j += stride - 3 * width;
-                            }
-                            GL.TexImage2D(TextureTarget.Texture2D, 0,
-                                PixelInternalFormat.Rgb8,
-                                texture.Width, texture.Height, 0,
-                                OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
-                                PixelType.UnsignedByte, newBytes);
-                        }
-                        else
+                        int width = texture.Width;
+                        int height = texture.Height;
+                        int stride = (3 * (width + 1) >> 2) << 2;
+                        byte[] oldBytes = texture.Bytes;
+                        byte[] newBytes = new byte[stride * texture.Height];
+                        int i = 0, j = 0;
+                        for (int y = 0; y < height; y++)
                         {
-                            /*
+                            for (int x = 0; x < width; x++)
+                            {
+                                newBytes[j + 0] = oldBytes[i + 0];
+                                newBytes[j + 1] = oldBytes[i + 1];
+                                newBytes[j + 2] = oldBytes[i + 2];
+                                i += 4;
+                                j += 3;
+                            }
+                            j += stride - 3 * width;
+                        }
+                        GL.TexImage2D(TextureTarget.Texture2D, 0,
+                            PixelInternalFormat.Rgb8,
+                            texture.Width, texture.Height, 0,
+                            OpenTK.Graphics.OpenGL.PixelFormat.Rgb,
+                            PixelType.UnsignedByte, newBytes);
+                    }
+                    else
+                    {
+                        /*
                              * The texture uses its alpha channel, so send the bitmap data
                              * in 32-bits per channel as-is.
                              * */
-                            GL.TexImage2D(TextureTarget.Texture2D, 0,
-                                PixelInternalFormat.Rgba8,
-                                texture.Width, texture.Height, 0,
-                                OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
-                                PixelType.UnsignedByte, texture.Bytes);
-                        }
-                        handle.OpenGlTextures[(int)wrap].Valid = true;
-                        return true;
+                        GL.TexImage2D(TextureTarget.Texture2D, 0,
+                            PixelInternalFormat.Rgba8,
+                            texture.Width, texture.Height, 0,
+                            OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
+                            PixelType.UnsignedByte, texture.Bytes);
                     }
+                    handle.OpenGlTextures[(int)wrap].Valid = true;
+                    return true;
                 }
             }
             handle.Ignore = true;
@@ -325,55 +322,52 @@ namespace OpenBve
                 return texture;
             if (texture.BitsPerPixel != 32)
                 throw new NotSupportedException("The number of bits per pixel is not supported.");
-            else
-            {
-                OpenBveApi.Textures.TextureTransparencyType type = texture.GetTransparencyType();
-                /*
+            OpenBveApi.Textures.TextureTransparencyType type = texture.GetTransparencyType();
+            /*
                  * Convert the texture into a bitmap.
                  * */
-                Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-                Marshal.Copy(texture.Bytes, 0, data.Scan0, texture.Bytes.Length);
-                bitmap.UnlockBits(data);
-                /*
+            Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+            Marshal.Copy(texture.Bytes, 0, data.Scan0, texture.Bytes.Length);
+            bitmap.UnlockBits(data);
+            /*
                  * Scale the bitmap.
                  * */
-                Bitmap scaledBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                Graphics graphics = Graphics.FromImage(scaledBitmap);
-                graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                graphics.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, texture.Width, texture.Height), GraphicsUnit.Pixel);
-                graphics.Dispose();
-                bitmap.Dispose();
-                /*
+            Bitmap scaledBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Graphics graphics = Graphics.FromImage(scaledBitmap);
+            graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            graphics.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, texture.Width, texture.Height), GraphicsUnit.Pixel);
+            graphics.Dispose();
+            bitmap.Dispose();
+            /*
                  * Convert the bitmap into a texture.
                  * */
-                data = scaledBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, scaledBitmap.PixelFormat);
-                byte[] bytes = new byte[4 * width * height];
-                Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-                scaledBitmap.UnlockBits(data);
-                scaledBitmap.Dispose();
-                /*
+            data = scaledBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, scaledBitmap.PixelFormat);
+            byte[] bytes = new byte[4 * width * height];
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+            scaledBitmap.UnlockBits(data);
+            scaledBitmap.Dispose();
+            /*
                  * Ensure opaque and partially transparent
                  * textures have valid alpha components.
                  * */
-                if (type == OpenBveApi.Textures.TextureTransparencyType.Opaque)
+            if (type == OpenBveApi.Textures.TextureTransparencyType.Opaque)
+            {
+                for (int i = 3; i < bytes.Length; i += 4)
                 {
-                    for (int i = 3; i < bytes.Length; i += 4)
-                    {
-                        bytes[i] = 255;
-                    }
+                    bytes[i] = 255;
                 }
-                else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial)
-                {
-                    for (int i = 3; i < bytes.Length; i += 4)
-                    {
-                        bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
-                    }
-                }
-                OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes);
-                return result;
             }
+            else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial)
+            {
+                for (int i = 3; i < bytes.Length; i += 4)
+                {
+                    bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
+                }
+            }
+            OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes);
+            return result;
         }
 
 

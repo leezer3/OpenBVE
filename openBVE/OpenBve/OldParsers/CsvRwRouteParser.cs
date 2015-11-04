@@ -4688,7 +4688,7 @@ namespace OpenBve {
 		/// <returns>All textures matching the base file.</returns>
 		private static Textures.Texture[] LoadAllTextures(string BaseFile, bool IsGlowTexture) {
 			string Folder = System.IO.Path.GetDirectoryName(BaseFile);
-			if (!System.IO.Directory.Exists(Folder)) {
+			if (Folder != null && !System.IO.Directory.Exists(Folder)) {
 				return new Textures.Texture[] { };
 			}
 			string Name = System.IO.Path.GetFileNameWithoutExtension(BaseFile);

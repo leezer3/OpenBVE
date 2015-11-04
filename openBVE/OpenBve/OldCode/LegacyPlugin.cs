@@ -114,9 +114,9 @@ namespace OpenBve {
 		}
 		
 		// --- members ---
-		private string PluginFile;
-		private int[] Sound;
-		private int[] LastSound;
+		private readonly string PluginFile;
+		private readonly int[] Sound;
+		private readonly int[] LastSound;
 		private GCHandle PanelHandle;
 		private GCHandle SoundHandle;
 		

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections;
+using System.Windows.Forms;
 
 namespace OpenBve {
 	internal partial class formMain {
@@ -7,8 +8,9 @@ namespace OpenBve {
 		/// <param name="country">The country in en-US.</param>
 		/// <param name="fallback">The fallback in case the flag is not defined.</param>
 		/// <returns>The flag.</returns>
-		private static string GetFlagFromEnUsCountry(string country, string fallback) {
-			if (country != null) {
+		private static string GetFlagFromEnUsCountry(string country, string fallback)
+		{
+		    if (country != null) {
 				switch (country.ToLowerInvariant()) {
 						case "austria": return "AT";
 						case "belgium": return "BE";
@@ -35,12 +37,11 @@ namespace OpenBve {
 						case "united states": return "US";
 						default: return fallback;
 				}
-			} else {
-				return fallback;
 			}
+		    return fallback;
 		}
-		
-		private class RemoveIfPossibleAttribute { }
+
+	    private class RemoveIfPossibleAttribute { }
 		
 		private void Group(TreeNodeCollection collection) {
 			/* Group folders that have same text */
@@ -106,12 +107,11 @@ namespace OpenBve {
 			}
 		}
 		
-		private int Count(TreeNodeCollection collection) {
+		private int Count(ICollection collection) {
 			int count = collection.Count;
-			foreach (TreeNode node in collection) {
-				count += Count(node.Nodes);
-			}
-			return count;
+		    foreach (TreeNode node in collection)
+		        count += Count(node.Nodes);
+		    return count;
 		}
 		
 		private void Expand(TreeNodeCollection collection, int total) {

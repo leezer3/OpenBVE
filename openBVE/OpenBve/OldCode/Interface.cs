@@ -1654,8 +1654,6 @@ namespace OpenBve {
 								break;
 						}
 						break;
-					default:
-						break;
 				}
 				Builder.Append("\n");
 			}

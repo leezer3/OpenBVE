@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 
@@ -11,7 +10,7 @@ namespace OpenBve {
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
-		internal static void DrawRectangle(Textures.Texture texture, Point point, Size size, Nullable<Color128> color) {
+		internal static void DrawRectangle(Textures.Texture texture, Point point, Size size, Color128? color) {
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
 			if (texture == null || !Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
 				GL.Disable(EnableCap.Texture2D);

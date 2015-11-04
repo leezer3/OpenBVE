@@ -960,7 +960,7 @@ namespace OpenBve
                                         {
                                             continue;
                                         }
-                                        else if (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver == 0)
+                                        if (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver == 0)
                                         {
                                             sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandlePowerNull;
                                         }
@@ -975,7 +975,7 @@ namespace OpenBve
                                         {
                                             continue;
                                         }
-                                        else if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+                                        if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
                                         {
                                             if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
                                             {
@@ -1020,7 +1020,7 @@ namespace OpenBve
                                         {
                                             continue;
                                         }
-                                        else if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
+                                        if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
                                         {
                                             sc = Game.MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
                                         }
@@ -1295,10 +1295,9 @@ namespace OpenBve
                                         }
                                     }
                                     { // text
-                                        float u, v;
                                         System.Drawing.Size size = MeasureString(Interface.CurrentHudElements[i].Font, t);
-                                        u = size.Width;
-                                        v = size.Height;
+                                        float u = size.Width;
+                                        float v = size.Height;
                                         double p = Math.Round(Interface.CurrentHudElements[i].TextAlignment.X < 0 ? x : Interface.CurrentHudElements[i].TextAlignment.X == 0 ? x + 0.5 * (w - u) : x + w - u);
                                         double q = Math.Round(Interface.CurrentHudElements[i].TextAlignment.Y < 0 ? y : Interface.CurrentHudElements[i].TextAlignment.Y == 0 ? y + 0.5 * (h - v) : y + h - v);
                                         p += Interface.CurrentHudElements[i].TextPosition.X;

@@ -49,20 +49,24 @@ namespace OpenBve {
 			 * Convert floating-point samples to integer samples.
 			 */
 			byte[] result;
-			if (sound.BitsPerSample == 8) {
-				result = new byte[mix.Length];
-				for (int i = 0; i < mix.Length; i++) {
-					result[i] = (byte)((mix[i] < 0.0f ? 128.0f : 127.0f) * mix[i] + 128.0f);
-				}
-			} else if (sound.BitsPerSample == 16) {
-				result = new byte[2 * mix.Length];
-				for (int i = 0; i < mix.Length; i++) {
-					int value = (int)(ushort)(short)((mix[i] < 0.0f ? 32768.0f : 32767.0f) * mix[i]);
-					result[2 * i + 0] = (byte)value;
-					result[2 * i + 1] = (byte)(value >> 8);
-				}
-			} else {
-				throw new NotSupportedException();
+			switch (sound.BitsPerSample)
+			{
+			    case 8:
+			        result = new byte[mix.Length];
+			        for (int i = 0; i < mix.Length; i++) {
+			            result[i] = (byte)((mix[i] < 0.0f ? 128.0f : 127.0f) * mix[i] + 128.0f);
+			        }
+			        break;
+			    case 16:
+			        result = new byte[2 * mix.Length];
+			        for (int i = 0; i < mix.Length; i++) {
+			            int value = (int)(ushort)(short)((mix[i] < 0.0f ? 32768.0f : 32767.0f) * mix[i]);
+			            result[2 * i + 0] = (byte)value;
+			            result[2 * i + 1] = (byte)(value >> 8);
+			        }
+			        break;
+			    default:
+			        throw new NotSupportedException();
 			}
 			return result;
 		}
@@ -95,23 +99,26 @@ namespace OpenBve {
 			float[][] remainingSamples = new float[samples.Length][];
 			int remainingSamplesUsed = 0;
 			for (int i = 0; i < samples.Length; i++) {
-				if (channelVolume[i] > silentThreshold * totalVolume) {
-					channelVolume[remainingSamplesUsed] = channelVolume[i];
-					remainingSamples[remainingSamplesUsed] = samples[i];
-					remainingSamplesUsed++;
-				}
+			    if (!(channelVolume[i] > silentThreshold*totalVolume)) continue;
+			    channelVolume[remainingSamplesUsed] = channelVolume[i];
+			    remainingSamples[remainingSamplesUsed] = samples[i];
+			    remainingSamplesUsed++;
 			}
-			if (remainingSamplesUsed == 1) {
-				return remainingSamples[0];
-			} else if (remainingSamplesUsed == 0) {
-				remainingSamples = samples;
-				remainingSamplesUsed = samples.Length;
-			} else {
-				totalVolume = 0.0f;
-				for (int i = 0; i < samples.Length; i++) {
-					totalVolume += channelVolume[i];
-				}
-				totalVolume /= remainingSamplesUsed;
+			switch (remainingSamplesUsed)
+			{
+			    case 1:
+			        return remainingSamples[0];
+			    case 0:
+			        remainingSamples = samples;
+			        remainingSamplesUsed = samples.Length;
+			        break;
+			    default:
+			        totalVolume = 0.0f;
+			        for (int i = 0; i < samples.Length; i++) {
+			            totalVolume += channelVolume[i];
+			        }
+			        totalVolume /= remainingSamplesUsed;
+			        break;
 			}
 			// --- produce a mono mix from all remaining channels ---
 			float[] mix = new float[remainingSamples[0].Length];

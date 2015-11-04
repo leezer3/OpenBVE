@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 
 namespace OpenBveApi.Runtime {
 	
@@ -79,14 +78,14 @@ namespace OpenBveApi.Runtime {
 	public class LoadProperties {
 		// --- members ---
 		/// <summary>The absolute path to the plugin folder.</summary>
-		private string MyPluginFolder;
+		private readonly string MyPluginFolder;
 		/// <summary>The absolute path to the train folder.</summary>
-		private string MyTrainFolder;
+		private readonly string MyTrainFolder;
 		/// <summary>The array of panel variables.</summary>
 		private int[] MyPanel;
 		/// <summary>The callback function for playing sounds.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
-		private PlaySoundDelegate MyPlaySound;
+		private readonly PlaySoundDelegate MyPlaySound;
 		/// <summary>The extent to which the plugin supports the AI.</summary>
 		private AISupport MyAISupport;
 		/// <summary>The reason why the plugin failed loading.</summary>
@@ -167,15 +166,15 @@ namespace OpenBveApi.Runtime {
 	public class VehicleSpecs {
 		// --- members ---
 		/// <summary>The number of power notches the train has.</summary>
-		private int MyPowerNotches;
+		private readonly int MyPowerNotches;
 		/// <summary>The type of brake the train uses.</summary>
-		private BrakeTypes MyBrakeType;
+		private readonly BrakeTypes MyBrakeType;
 		/// <summary>Whether the train has a hold brake.</summary>
-		private bool MyHasHoldBrake;
+		private readonly bool MyHasHoldBrake;
 		/// <summary>The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
-		private int MyBrakeNotches;
+		private readonly int MyBrakeNotches;
 		/// <summary>The number of cars the train has.</summary>
-		private int MyCars;
+		private readonly int MyCars;
 		// --- properties ---
 		/// <summary>Gets the number of power notches the train has.</summary>
 		public int PowerNotches {
@@ -204,12 +203,12 @@ namespace OpenBveApi.Runtime {
 		/// <summary>Gets the index of the brake notch that corresponds to B1 or LAP.</summary>
 		/// <remarks>For trains without a hold brake, this returns 1. For trains with a hold brake, this returns 2.</remarks>
 		public int AtsNotch {
-			get {
-				if (this.MyHasHoldBrake) {
+			get
+			{
+			    if (this.MyHasHoldBrake) {
 					return 2;
-				} else {
-					return 1;
 				}
+			    return 1;
 			}
 		}
 		/// <summary>Gets the index of the brake notch that corresponds to 70% of the available brake notches.</summary>
@@ -292,7 +291,7 @@ namespace OpenBveApi.Runtime {
 	public class Time {
 		// --- members ---
 		/// <summary>The time in seconds.</summary>
-		private double MyValue;
+		private readonly double MyValue;
 		// --- properties ---
 		/// <summary>Gets the time in seconds.</summary>
 		public double Seconds {
@@ -339,23 +338,23 @@ namespace OpenBveApi.Runtime {
 	public class VehicleState {
 		// --- members ---
 		/// <summary>The location of the front of the train, in meters.</summary>
-		private double MyLocation;
+		private readonly double MyLocation;
 		/// <summary>The speed of the train.</summary>
-		private Speed MySpeed;
+		private readonly Speed MySpeed;
 		/// <summary>The pressure in the brake cylinder, in pascal.</summary>
-		private double MyBcPressure;
+		private readonly double MyBcPressure;
 		/// <summary>The pressure in the main reservoir, in pascal.</summary>
-		private double MyMrPressure;
+		private readonly double MyMrPressure;
 		/// <summary>The pressure in the emergency reservoir, in pascal.</summary>
-		private double MyErPressure;
+		private readonly double MyErPressure;
 		/// <summary>The pressure in the brake pipe, in pascal.</summary>
-		private double MyBpPressure;
+		private readonly double MyBpPressure;
 		/// <summary>The pressure in the straight air pipe, in pascal.</summary>
-		private double MySapPressure;
+		private readonly double MySapPressure;
         
-        private double MyRadius;
-	    private double MyCant;
-	    private double MyPitch;
+        private readonly double MyRadius;
+	    private readonly double MyCant;
+	    private readonly double MyPitch;
 	    
 		// --- properties ---
 		/// <summary>Gets the location of the front of the train, in meters.</summary>
@@ -413,7 +412,7 @@ namespace OpenBveApi.Runtime {
         {
             get
             {
-                return this.Cant;
+                return this.MyCant;
             }
         }
         /// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
@@ -477,11 +476,11 @@ namespace OpenBveApi.Runtime {
 	public class PrecedingVehicleState {
 		// --- members ---
 		/// <summary>The location of the back of the preceding train, in meters.</summary>
-		private double MyLocation;
+		private readonly double MyLocation;
 		/// <summary>The distance from the front of the current train to the back of the preceding train, in meters.</summary>
-		private double MyDistance;
+		private readonly double MyDistance;
 		/// <summary>The current speed of the preceding train.</summary>
-		private Speed MySpeed;
+		private readonly Speed MySpeed;
 		// --- properties ---
 		/// <summary>Gets the location of the back of the preceding train, in meters.</summary>
 		public double Location {
@@ -579,21 +578,21 @@ namespace OpenBveApi.Runtime {
 	public class ElapseData {
 		// --- members ---
 		/// <summary>The state of the train.</summary>
-		private VehicleState MyVehicle;
+		private readonly VehicleState MyVehicle;
 		/// <summary>The state of the preceding train, or a null reference if there is no preceding train.</summary>
-		private PrecedingVehicleState MyPrecedingVehicle;
+		private readonly PrecedingVehicleState MyPrecedingVehicle;
 		/// <summary>The virtual handles.</summary>
 		private Handles MyHandles;
 		/// <summary>The current absolute time.</summary>
-		private Time MyTotalTime;
+		private readonly Time MyTotalTime;
 		/// <summary>The elapsed time since the last call to Elapse.</summary>
-		private Time MyElapsedTime;
+		private readonly Time MyElapsedTime;
 		/// <summary>The debug message the plugin wants the host application to display.</summary>
 		private string MyDebugMessage;
         /// <summary>Whether the plugin requests that time acceleration is disabled.</summary>
 	    private bool MyDisableTimeAcceleration;
         /// <summary>Stores the list of current stations.</summary>
-	    private List<Station> MyStations;
+	    private readonly List<Station> MyStations;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="vehicle">The state of the train.</param>
@@ -794,9 +793,9 @@ namespace OpenBveApi.Runtime {
 	public class SignalData {
 		// --- members ---
 		/// <summary>The aspect of the signal or section.</summary>
-		private int MyAspect;
+		private readonly int MyAspect;
 		/// <summary>The underlying section. Possible values are 0 for the current section, 1 for the upcoming section, or higher values for sections further ahead.</summary>
-		private double MyDistance;
+		private readonly double MyDistance;
 		// --- properties ---
 		/// <summary>Gets the aspect of the signal or section.</summary>
 		public int Aspect {
@@ -827,11 +826,11 @@ namespace OpenBveApi.Runtime {
 	public class BeaconData {
 		// --- members ---
 		/// <summary>The type of beacon.</summary>
-		private int MyType;
+		private readonly int MyType;
 		/// <summary>Optional data the beacon transmits.</summary>
-		private int MyOptional;
+		private readonly int MyOptional;
 		/// <summary>The section the beacon is attached to.</summary>
-		private SignalData MySignal;
+		private readonly SignalData MySignal;
 		// --- properties ---
 		/// <summary>Gets the type of beacon.</summary>
 		public int Type {

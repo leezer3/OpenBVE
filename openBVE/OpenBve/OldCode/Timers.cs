@@ -13,7 +13,7 @@ namespace OpenBve {
         private static extern bool QueryPerformanceCounter(ref long PerformanceCount);  //gets the number of elapsed ticks for future calculations
         //UNSAFE ZONE//
 
-        static long _ticksPerSecond = 0;  //initialize variables
+        static readonly long _ticksPerSecond = 0;  //initialize variables
         static long _previousElapsedTime = 0;
 
         static CPreciseTimer()
