@@ -220,7 +220,6 @@ namespace OpenBve {
 				MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}
-			Sounds.Initialize();
 			// begin HACK //
 			const double degrees = 0.0174532925199433;
 			World.VerticalViewingAngle = 45.0 * degrees;

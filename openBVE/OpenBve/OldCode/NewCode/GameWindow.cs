@@ -221,6 +221,7 @@ namespace OpenBve
 
         private void SetupSimulation()
         {
+            Sounds.Initialize();
             Renderer.InitializeLighting();
             Timetable.CreateTimetable();
             for (int i = 0; i < Interface.MessageCount; i++)
@@ -513,6 +514,7 @@ namespace OpenBve
                     Game.AddDebugMessage(warnings.ToString() + " warning(s)", 10.0);
                 }
             }
+            
             loadComplete = true;
             RenderRealTimeElapsed = 0.0;
             RenderTimeElapsed = 0.0;
