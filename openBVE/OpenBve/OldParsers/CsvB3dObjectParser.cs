@@ -62,11 +62,16 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new World.Vertex[] { };
-			// read lines
+		    ObjectManager.StaticObject Object = new ObjectManager.StaticObject
+		    {
+		        Mesh =
+		        {
+		            Faces = new World.MeshFace[] {},
+		            Materials = new World.MeshMaterial[] {},
+		            Vertices = new World.Vertex[] {}
+		        }
+		    };
+		    // read lines
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
@@ -223,9 +228,8 @@ namespace OpenBve {
 									if (q) {
 										int f = Builder.Faces.Length;
 										Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new World.MeshFace();
-										Builder.Faces[f].Vertices = new World.MeshFaceVertex[Arguments.Length];
-										while (Builder.Vertices.Length > Normals.Length) {
+									    Builder.Faces[f] = new World.MeshFace {Vertices = new World.MeshFaceVertex[Arguments.Length]};
+									    while (Builder.Vertices.Length > Normals.Length) {
 											Array.Resize<World.Vector3Df>(ref Normals, Normals.Length << 1);
 										}
 										for (int j = 0; j < Arguments.Length; j++) {
@@ -482,14 +486,16 @@ namespace OpenBve {
 								int m = Builder.Materials.Length;
 								Array.Resize<Material>(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
-									Builder.Materials[j].Color = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
-									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
-									Builder.Materials[j].DaytimeTexture = Builder.Materials[0].DaytimeTexture;
-									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
-									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
-									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+								    Builder.Materials[j] = new Material(Builder.Materials[j - m])
+								    {
+								        Color = new Color32((byte) r, (byte) g, (byte) b, (byte) a),
+								        BlendMode = Builder.Materials[0].BlendMode,
+								        GlowAttenuationData = Builder.Materials[0].GlowAttenuationData,
+								        DaytimeTexture = Builder.Materials[0].DaytimeTexture,
+								        NighttimeTexture = Builder.Materials[0].NighttimeTexture,
+								        TransparentColor = Builder.Materials[0].TransparentColor,
+								        TransparentColorUsed = Builder.Materials[0].TransparentColorUsed
+								    };
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;

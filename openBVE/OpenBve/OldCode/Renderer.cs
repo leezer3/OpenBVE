@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -248,16 +249,23 @@ namespace OpenBve
                 StaticOpaqueForceUpdate = false;
                 for (int i = 0; i < StaticOpaque.Length; i++)
                 {
+                    if (StaticOpaque[i] != null && StaticOpaque[i].OpenGlDisplayListAvailable)
+                    {
+                        ResetOpenGlState();
+                        GL.PushMatrix();
+                        GL.Translate(StaticOpaque[i].WorldPosition.X - World.AbsoluteCameraPosition.X, StaticOpaque[i].WorldPosition.Y - World.AbsoluteCameraPosition.Y, StaticOpaque[i].WorldPosition.Z - World.AbsoluteCameraPosition.Z);
+                        GL.CallList(StaticOpaque[i].OpenGlDisplayList);
+                        GL.PopMatrix();
+                    }
+                }
+                //Update bounding box positions now we've rendered the objects
+                int currentBox = 0;
+                for (int i = 0; i < StaticOpaque.Length; i++)
+                {
                     if (StaticOpaque[i] != null)
                     {
-                        if (StaticOpaque[i].OpenGlDisplayListAvailable)
-                        {
-                            ResetOpenGlState();
-                            GL.PushMatrix();
-                            GL.Translate(StaticOpaque[i].WorldPosition.X - World.AbsoluteCameraPosition.X, StaticOpaque[i].WorldPosition.Y - World.AbsoluteCameraPosition.Y, StaticOpaque[i].WorldPosition.Z - World.AbsoluteCameraPosition.Z);
-                            GL.CallList(StaticOpaque[i].OpenGlDisplayList);
-                            GL.PopMatrix();
-                        }
+                        currentBox++;
+                        
                     }
                 }
             }
@@ -852,7 +860,10 @@ namespace OpenBve
             }
         }
 
-        // show object
+        /// <summary>
+        /// Makes an object visible within the world</summary>
+        /// <param name="ObjectIndex">The object's index</param>
+        /// <param name="Type">Whether this is a static or dynamic object</param>
         internal static void ShowObject(int ObjectIndex, ObjectType Type)
         {
             if (ObjectManager.Objects[ObjectIndex] == null)
@@ -1015,6 +1026,28 @@ namespace OpenBve
                         StaticOpaque[groupIndex].Update = true;
                         Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(listType, newIndex);
                         Game.InfoStaticOpaqueFaceCount++;
+
+                        /*
+                         * Check if the given object has a bounding box, and insert it to the end of the list of bounding boxes if required
+                         */
+                        if (ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox != null)
+                        {
+                            int Index = list.BoundingBoxes.Length;
+                            for (int j = 0; j < list.BoundingBoxes.Length; j++)
+                            {
+                                if (list.Faces[j] == null)
+                                {
+                                    Index = j;
+                                    break;
+                                }
+                            }
+                            if (Index == list.BoundingBoxes.Length)
+                            {
+                                Array.Resize<BoundingBox>(ref list.BoundingBoxes, list.BoundingBoxes.Length << 1);
+                            }
+                            list.BoundingBoxes[Index].Lower = ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox[0];
+                            list.BoundingBoxes[Index].Lower = ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox[1];
+                        }
                     }
                     else
                     {

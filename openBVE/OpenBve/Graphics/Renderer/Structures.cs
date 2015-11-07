@@ -82,6 +82,12 @@ namespace OpenBve
                 this.Index = index;
             }
         }
+
+        private class BoundingBox
+        {
+            internal Vector3 Upper;
+            internal Vector3 Lower;
+        }
         private class ObjectFace
         {
             internal int ObjectListIndex;
@@ -94,10 +100,12 @@ namespace OpenBve
         {
             internal ObjectFace[] Faces;
             internal int FaceCount;
+            internal BoundingBox[] BoundingBoxes;
             internal ObjectList()
             {
                 this.Faces = new ObjectFace[256];
                 this.FaceCount = 0;
+                this.BoundingBoxes = new BoundingBox[256];
             }
         }
         private class ObjectGroup

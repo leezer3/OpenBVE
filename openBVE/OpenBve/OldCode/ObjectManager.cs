@@ -20,6 +20,10 @@ namespace OpenBve {
 			internal short GroupIndex;
 			/// <summary>Whether the object is dynamic, i.e. not static.</summary>
 			internal bool Dynamic;
+            /// <summary> Stores the author for this object.</summary>
+		    internal string Author;
+            /// <summary> Stores the copyright information for this object.</summary>
+		    internal string Copyright;
 		}
 		internal static StaticObject[] Objects = new StaticObject[16];
 		internal static int ObjectsUsed;
@@ -41,31 +45,33 @@ namespace OpenBve {
 			internal double CurrentAngle;
 			internal double CurrentValue;
 			internal double CurrentTimeDelta;
-			internal Damping(double NaturalFrequency, double DampingRatio) {
-				if (NaturalFrequency < 0.0) {
+			internal Damping(double NaturalFrequency, double DampingRatio)
+			{
+			    if (NaturalFrequency < 0.0) {
 					throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
-				} else if (DampingRatio < 0.0) {
-					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
-				} else {
-					this.NaturalFrequency = NaturalFrequency;
-					this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-					this.DampingRatio = DampingRatio;
-					if (DampingRatio < 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-					} else if (DampingRatio == 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency;
-					} else {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-					}
-					this.OriginalAngle = 0.0;
-					this.OriginalDerivative = 0.0;
-					this.TargetAngle = 0.0;
-					this.CurrentAngle = 0.0;
-					this.CurrentValue = 1.0;
-					this.CurrentTimeDelta = 0.0;
 				}
+			    if (DampingRatio < 0.0) {
+			        throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
+			    }
+			    this.NaturalFrequency = NaturalFrequency;
+			    this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
+			    this.DampingRatio = DampingRatio;
+			    if (DampingRatio < 1.0) {
+			        this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
+			    } else if (DampingRatio == 1.0) {
+			        this.NaturalDampingFrequency = NaturalFrequency;
+			    } else {
+			        this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
+			    }
+			    this.OriginalAngle = 0.0;
+			    this.OriginalDerivative = 0.0;
+			    this.TargetAngle = 0.0;
+			    this.CurrentAngle = 0.0;
+			    this.CurrentValue = 1.0;
+			    this.CurrentTimeDelta = 0.0;
 			}
-			internal Damping Clone() {
+
+		    internal Damping Clone() {
 				return (Damping)this.MemberwiseClone();
 			}
 		}
@@ -117,9 +123,8 @@ namespace OpenBve {
 				return true;
 			}
 			internal AnimatedObject Clone() {
-				AnimatedObject Result = new AnimatedObject();
-				Result.States = new AnimatedObjectState[this.States.Length];
-				for (int i = 0; i < this.States.Length; i++) {
+			    AnimatedObject Result = new AnimatedObject {States = new AnimatedObjectState[this.States.Length]};
+			    for (int i = 0; i < this.States.Length; i++) {
 					Result.States[i].Position = this.States[i].Position;
 					Result.States[i].Object = CloneObject(this.States[i].Object);
 				}
@@ -822,6 +827,11 @@ namespace OpenBve {
 							FileName = f;
 							break;
 						}
+                        f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".xml");
+                        if (System.IO.File.Exists(f))
+                        {
+                            FileName = f;
+                        }
 						break;
 					}
 				}
@@ -837,6 +847,9 @@ namespace OpenBve {
 					case ".animated":
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
 						break;
+                    case ".xml":
+                        Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        break;
 					default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
@@ -887,6 +900,13 @@ namespace OpenBve {
 					case ".animated":
 						Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 						return null;
+                        /*
+                         * This will require implementing a specific static object load function- Leave alone for the moment
+                         * 
+                    case ".xml":
+                        Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        break;
+                         */
 					default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
@@ -1350,35 +1370,37 @@ namespace OpenBve {
 		}
 
 		// join objects
-		internal static void JoinObjects(ref StaticObject Base, StaticObject Add) {
-			if (Base == null & Add == null) {
+		internal static void JoinObjects(ref StaticObject Base, StaticObject Add)
+		{
+		    if (Base == null & Add == null) {
 				return;
-			} else if (Base == null) {
-				Base = CloneObject(Add);
-			} else if (Add != null) {
-				int mf = Base.Mesh.Faces.Length;
-				int mm = Base.Mesh.Materials.Length;
-				int mv = Base.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
-				Array.Resize<World.Vertex>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
-				for (int i = 0; i < Add.Mesh.Faces.Length; i++) {
-					Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
-					for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++) {
-						Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Base.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Add.Mesh.Materials.Length; i++) {
-					Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
-				}
-				for (int i = 0; i < Add.Mesh.Vertices.Length; i++) {
-					Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
-				}
 			}
+		    if (Base == null) {
+		        Base = CloneObject(Add);
+		    } else if (Add != null) {
+		        int mf = Base.Mesh.Faces.Length;
+		        int mm = Base.Mesh.Materials.Length;
+		        int mv = Base.Mesh.Vertices.Length;
+		        Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
+		        Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
+		        Array.Resize<World.Vertex>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+		        for (int i = 0; i < Add.Mesh.Faces.Length; i++) {
+		            Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
+		            for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++) {
+		                Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+		            }
+		            Base.Mesh.Faces[mf + i].Material += (ushort)mm;
+		        }
+		        for (int i = 0; i < Add.Mesh.Materials.Length; i++) {
+		            Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
+		        }
+		        for (int i = 0; i < Add.Mesh.Vertices.Length; i++) {
+		            Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
+		        }
+		    }
 		}
 
-		// create object
+	    // create object
 		internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
 			CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
 		}
@@ -1533,13 +1555,15 @@ namespace OpenBve {
 		/// <returns></returns>
 		internal static StaticObject CloneObject(StaticObject Prototype, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture) {
 			if (Prototype == null) return null;
-			StaticObject Result = new StaticObject();
-			Result.StartingDistance = Prototype.StartingDistance;
-			Result.EndingDistance = Prototype.EndingDistance;
-			Result.Dynamic = Prototype.Dynamic;
-			// vertices
-			Result.Mesh.Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length];
-			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
+		    StaticObject Result = new StaticObject
+		    {
+		        StartingDistance = Prototype.StartingDistance,
+		        EndingDistance = Prototype.EndingDistance,
+		        Dynamic = Prototype.Dynamic,
+		        Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
+		    };
+		    // vertices
+		    for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
 				Result.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
 			}
 			// faces
@@ -1626,8 +1650,7 @@ namespace OpenBve {
 		internal static void UpdateVisibility(double TrackPosition) {
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			int m = ObjectsSortedByEnd.Length;
-			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
+		    double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
 			if (d < 0.0) {
 				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
 				if (ObjectsSortedByEndPointer >= n) ObjectsSortedByEndPointer = n - 1;

@@ -1,4 +1,9 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+
+
 namespace OpenBve {
 	internal static class Screen {
 		
@@ -7,10 +12,10 @@ namespace OpenBve {
 		/// <summary>Whether the screen is initialized.</summary>
 		private static bool Initialized = false;
 		
-		/// <summary>The fixed width of the screen.</summary>
+		/// <summary>Stores the current width of the screen.</summary>
 		internal static int Width = 0;
 		
-		/// <summary>The fixed height of the screen.</summary>
+		/// <summary>Stores the current height of the screen.</summary>
 		internal static int Height = 0;
 		
 		/// <summary>Whether the screen is set to fullscreen mode.</summary>
@@ -19,8 +24,8 @@ namespace OpenBve {
 		
 		// --- functions ---
 		
-		/// <summary>Initializes the screen. A call to SDL_Init must have been made before calling this function. A call to Deinitialize must be made when terminating the program.</summary>
-		/// <returns>Whether initializing the screen was successful.</returns>
+		/// <summary>Initializes the default values of the screen.</summary>
+		/// <returns>True (To be removed).</returns>
 		internal static bool Initialize()
 		{
                 // --- video mode ---
@@ -40,36 +45,55 @@ namespace OpenBve {
 		
 		/// <summary>Changes to or from fullscreen mode.</summary>
 		internal static void ToggleFullscreen() {
-            /*
+            
 			Fullscreen = !Fullscreen;
 			// begin HACK //
 			Renderer.ClearDisplayLists();
-			if (World.MouseGrabEnabled) {
-				Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_OFF);
-			}
+			
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Lighting);
 			Renderer.LightingEnabled = false;
 			Textures.UnloadAllTextures();
-			if (Fullscreen) {
-				Sdl.SDL_SetVideoMode(Interface.CurrentOptions.FullscreenWidth, Interface.CurrentOptions.FullscreenHeight, Interface.CurrentOptions.FullscreenBits, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF | Sdl.SDL_FULLSCREEN);
-				Width = Interface.CurrentOptions.FullscreenWidth;
-				Height = Interface.CurrentOptions.FullscreenHeight;
+			if (Fullscreen)
+			{
+                
+                IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+                
+			    for (int i = 0; i < resolutions.Count; i++)
+			    {
+			        //Test each resolution
+			        if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
+			            resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
+			            resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
+			        {
+			            OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
+			            Program.currentGameWindow.Width = resolutions[i].Width;
+			            Program.currentGameWindow.Height = resolutions[i].Height;
+                        Screen.Width = Interface.CurrentOptions.FullscreenWidth;
+                        Screen.Height = Interface.CurrentOptions.FullscreenHeight;
+                        Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+			        }
+			    }
+			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
+			    {
+                    MessageBox.Show("An error occured whilst attempting to switch to fullscreen mode." + System.Environment.NewLine +
+                        "Please check your fullscreen resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			        Fullscreen = false;
+			    }
 			} else {
-				Sdl.SDL_SetVideoMode(Interface.CurrentOptions.WindowWidth, Interface.CurrentOptions.WindowHeight, 32, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF);
-				Width = Interface.CurrentOptions.WindowWidth;
-				Height = Interface.CurrentOptions.WindowHeight;
+                OpenTK.DisplayDevice.Default.RestoreResolution();
+                Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
+                Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
+			    Program.currentGameWindow.WindowState = WindowState.Normal;
+                Screen.Width = Interface.CurrentOptions.WindowWidth;
+                Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}
 			Renderer.InitializeLighting();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
 			MainLoop.InitializeMotionBlur();
 			Timetable.CreateTimetable();
 			Timetable.UpdateCustomTimetable(null, null);
-			if (World.MouseGrabEnabled) {
-				Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_ON);
-			}
-			World.MouseGrabTarget = new World.Vector2D(0.0, 0.0);
-			World.MouseGrabIgnoreOnce = true;
+			
 			World.InitializeCameraRestriction();
 			if (Renderer.OptionBackfaceCulling)
 			{
@@ -79,7 +103,7 @@ namespace OpenBve {
 			}
 			Renderer.ReAddObjects();
 			// end HACK //
-             */
+             
 		}
              
 		

@@ -237,6 +237,7 @@ namespace OpenBve {
 			internal Vertex[] Vertices;
 			internal MeshMaterial[] Materials;
 			internal MeshFace[] Faces;
+		    internal Vector3[] BoundingBox;
 			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 			/// <param name="Vertices">The vertices that make up one face.</param>
 			/// <param name="Color">The color to be applied on the face.</param>
@@ -250,6 +251,7 @@ namespace OpenBve {
 				for (int i = 0; i < Vertices.Length; i++) {
 					this.Faces[0].Vertices[i].Index = (ushort)i;
 				}
+			    this.BoundingBox = new Vector3[2];
 			}
 			/// <summary>Creates a mesh consisting of the specified vertices, faces and color.</summary>
 			/// <param name="Vertices">The vertices used.</param>
@@ -263,6 +265,7 @@ namespace OpenBve {
 				for (int i = 0; i < FaceVertices.Length; i++) {
 					this.Faces[i] = new MeshFace(FaceVertices[i]);
 				}
+                this.BoundingBox = new Vector3[2];
 			}
 		}
 
@@ -578,8 +581,23 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static bool PerformCameraRestrictionTest() {
-			if (World.CameraRestriction == CameraRestrictionMode.On) {
+        /// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
+        /// <returns>True if we are able to move the camera, false otherwise</returns>
+	    internal static bool PerformBoundingBoxTest(ref ObjectManager.StaticObject bounding, ref Vector3 cameraLocation)
+        {
+            if (cameraLocation.X < bounding.Mesh.BoundingBox[0].X || cameraLocation.X > bounding.Mesh.BoundingBox[1].X ||
+                cameraLocation.Y < bounding.Mesh.BoundingBox[0].Y || cameraLocation.Y > bounding.Mesh.BoundingBox[1].Y ||
+                cameraLocation.Z < bounding.Mesh.BoundingBox[0].Z || cameraLocation.Z > bounding.Mesh.BoundingBox[1].Z)
+            {
+                //Our bounding boxes do not intersect
+                return true;
+            }
+            return false;
+        }
+
+		internal static bool PerformCameraRestrictionTest()
+		{
+		    if (World.CameraRestriction == CameraRestrictionMode.On) {
 				Vector3[] p = new Vector3[] { CameraRestrictionBottomLeft, CameraRestrictionTopRight };
 				Vector2D[] r = new Vector2D[2];
 				for (int j = 0; j < 2; j++) {
@@ -600,12 +618,11 @@ namespace OpenBve {
 					r[j].Y = ey / (ez * Math.Tan(0.5 * VerticalViewingAngle));
 				}
 				return r[0].X <= -1.0025 & r[1].X >= 1.0025 & r[0].Y <= -1.0025 & r[1].Y >= 1.0025;
-			} else {
-				return true;
 			}
+		    return true;
 		}
 
-		// update absolute camera
+	    // update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
 			double zm = World.CameraCurrentAlignment.Zoom;
