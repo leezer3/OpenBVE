@@ -82,9 +82,10 @@ namespace OpenBve {
 			    }
 			} else {
                 OpenTK.DisplayDevice.Default.RestoreResolution();
+                Program.currentGameWindow.WindowState = WindowState.Normal;
                 Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
                 Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
-			    Program.currentGameWindow.WindowState = WindowState.Normal;
+			    
                 Screen.Width = Interface.CurrentOptions.WindowWidth;
                 Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}

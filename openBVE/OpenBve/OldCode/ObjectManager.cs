@@ -380,7 +380,7 @@ namespace OpenBve {
                     {
                         Interface.AddMessage(Interface.MessageType.Error, false,
                             "An error occcured whilst parsing script " + Object.TranslateZScriptFile);
-                        Object.TranslateYScriptFile = null;
+                        Object.TranslateZScriptFile = null;
                         return;
                     }
                 }

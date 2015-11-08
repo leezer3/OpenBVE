@@ -61,6 +61,7 @@ namespace OpenBve
             {
                 try
                 {
+                    //The only exceptions thrown were these when it barfed
                     PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
                     if (source != null && source.Path == path && source.Parameters == parameters)
                     {
@@ -70,7 +71,6 @@ namespace OpenBve
                 }
                 catch
                 {
-                    
                 }
                 
             }
