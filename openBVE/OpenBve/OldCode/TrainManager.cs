@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	internal static class TrainManager {
+	public static class TrainManager {
 		
 		// axle
 		internal struct Axle {
@@ -429,7 +429,7 @@ namespace OpenBve {
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
-		internal class Train {
+		public class Train {
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
 			internal int TrainIndex;

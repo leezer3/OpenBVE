@@ -1,11 +1,24 @@
 ﻿using System;
+using CSScriptLibrary;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	internal static class ObjectManager {
-
+	public static class ObjectManager
+	{
 		// unified objects
 		internal abstract class UnifiedObject { }
+        /// <summary>Interfaces with the CS Script Library </summary>
+        public interface AnimationScript
+        {
+            /// <summary> Call to execute this script </summary>
+            /// <param name="Train">A reference to the nearest train</param>
+            /// <param name="Position">The object's absolute in world position</param>
+            /// <param name="TrackPosition">The object's track position</param>
+            /// <param name="SectionIndex"></param>
+            /// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
+            /// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
+            double ExecuteScript(TrainManager.Train Train, Vector3 Position, double TrackPosition,int SectionIndex,bool IsPartOfTrain,double TimeElapsed);
+        }
 
 		// static objects
 		internal class StaticObject : UnifiedObject {
@@ -79,7 +92,10 @@ namespace OpenBve {
 			internal Vector3 Position;
 			internal ObjectManager.StaticObject Object;
 		}
-		internal class AnimatedObject {
+
+        
+
+	    internal class AnimatedObject {
 			// states
 			internal AnimatedObjectState[] States;
 			internal FunctionScripts.FunctionScript StateFunction;
@@ -90,6 +106,7 @@ namespace OpenBve {
 			internal FunctionScripts.FunctionScript TranslateXFunction;
 			internal FunctionScripts.FunctionScript TranslateYFunction;
 			internal FunctionScripts.FunctionScript TranslateZFunction;
+		    
 			internal Vector3 RotateXDirection;
 			internal Vector3 RotateYDirection;
 			internal Vector3 RotateZDirection;
@@ -113,6 +130,20 @@ namespace OpenBve {
 			internal double CurrentTrackZOffset;
 			internal double SecondsSinceLastUpdate;
 			internal int ObjectIndex;
+
+            //This section holds script files executed by CSSCript
+            /// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
+            internal string TranslateXScriptFile;
+            internal bool TranslateXScriptLoaded;
+	        internal AnimationScript TranslateXAnimationScript;
+            /// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
+            internal string TranslateYScriptFile;
+	        internal bool TranslateYScriptLoaded;
+            internal AnimationScript TranslateYAnimationScript;
+            /// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
+            internal string TranslateZScriptFile;
+	        internal bool TranslateZScriptLoaded;
+            internal AnimationScript TranslateZAnimationScript;
 			// methods
 			internal bool IsFreeOfFunctions() {
 				if (this.StateFunction != null) return false;
@@ -120,6 +151,7 @@ namespace OpenBve {
 				if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 				if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
 				if (this.LEDFunction != null) return false;
+			    if (this.TranslateXScriptFile != null | this.TranslateYScriptFile != null | this.TranslateZScriptFile != null) return false;
 				return true;
 			}
 			internal AnimatedObject Clone() {
@@ -128,6 +160,7 @@ namespace OpenBve {
 					Result.States[i].Position = this.States[i].Position;
 					Result.States[i].Object = CloneObject(this.States[i].Object);
 				}
+			    Result.TranslateXScriptFile = this.TranslateXScriptFile;
 				Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
 				Result.CurrentState = this.CurrentState;
 				Result.TranslateZDirection = this.TranslateZDirection;
@@ -239,7 +272,40 @@ namespace OpenBve {
 				Position.Y += x * ry;
 				Position.Z += x * rz;
 			}
-			if (Object.TranslateYFunction != null) {
+		    else if (Object.TranslateXScriptFile != null)
+		    {
+		        //Translate X Script
+		        if (Object.TranslateXAnimationScript == null)
+		        {
+		            //Load the script if required
+		            try
+		            {
+		                CSScript.GlobalSettings.TargetFramework = "v4.0";
+		                Object.TranslateXAnimationScript = CSScript.LoadCodeFrom(Object.TranslateXScriptFile)
+		                    .CreateObject("OpenBVEScript")
+		                    .AlignToInterface<AnimationScript>(true);
+		            }
+		            catch
+		            {
+		                Interface.AddMessage(Interface.MessageType.Error, false,
+		                    "An error occcured whilst parsing script " + Object.TranslateXScriptFile);
+		                Object.TranslateXScriptFile = null;
+		                return;
+		            }
+		        }
+		        double x;
+		        x = Object.TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+		            IsPartOfTrain, TimeElapsed);
+		        double rx = Object.TranslateXDirection.X, ry = Object.TranslateXDirection.Y, rz = Object.TranslateXDirection.Z;
+		        World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+		            Side.Z);
+		        Position.X += x*rx;
+		        Position.Y += x*ry;
+		        Position.Z += x*rz;
+		    }
+
+
+		    if (Object.TranslateYFunction != null) {
 				double y;
 				if (UpdateFunctions) {
 					y = Object.TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
@@ -252,6 +318,38 @@ namespace OpenBve {
 				Position.Y += y * ry;
 				Position.Z += y * rz;
 			}
+            else if (Object.TranslateYScriptFile != null)
+            {
+                //Translate X Script
+                if (Object.TranslateYAnimationScript == null)
+                {
+                    //Load the script if required
+                    try
+                    {
+                        CSScript.GlobalSettings.TargetFramework = "v4.0";
+                        Object.TranslateYAnimationScript = CSScript.LoadCodeFrom(Object.TranslateYScriptFile)
+                            .CreateObject("OpenBVEScript")
+                            .AlignToInterface<AnimationScript>(true);
+                    }
+                    catch
+                    {
+                        Interface.AddMessage(Interface.MessageType.Error, false,
+                            "An error occcured whilst parsing script " + Object.TranslateYScriptFile);
+                        Object.TranslateYScriptFile = null;
+                        return;
+                    }
+                }
+                double y;
+                y = Object.TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+                    IsPartOfTrain, TimeElapsed);
+                double rx = Object.TranslateYDirection.X, ry = Object.TranslateYDirection.Y, rz = Object.TranslateYDirection.Z;
+                World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+                    Side.Z);
+                Position.X += y * rx;
+                Position.Y += y * ry;
+                Position.Z += y * rz;
+            }
+
 			if (Object.TranslateZFunction != null) {
 				double z;
 				if (UpdateFunctions) {
@@ -265,6 +363,37 @@ namespace OpenBve {
 				Position.Y += z * ry;
 				Position.Z += z * rz;
 			}
+            else if (Object.TranslateZScriptFile != null)
+            {
+                //Translate X Script
+                if (Object.TranslateZAnimationScript == null)
+                {
+                    //Load the script if required
+                    try
+                    {
+                        CSScript.GlobalSettings.TargetFramework = "v4.0";
+                        Object.TranslateZAnimationScript = CSScript.LoadCodeFrom(Object.TranslateZScriptFile)
+                            .CreateObject("OpenBVEScript")
+                            .AlignToInterface<AnimationScript>(true);
+                    }
+                    catch
+                    {
+                        Interface.AddMessage(Interface.MessageType.Error, false,
+                            "An error occcured whilst parsing script " + Object.TranslateZScriptFile);
+                        Object.TranslateYScriptFile = null;
+                        return;
+                    }
+                }
+                double z;
+                z = Object.TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+                    IsPartOfTrain, TimeElapsed);
+                double rx = Object.TranslateZDirection.X, ry = Object.TranslateZDirection.Y, rz = Object.TranslateZDirection.Z;
+                World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+                    Side.Z);
+                Position.X += z * rx;
+                Position.Y += z * ry;
+                Position.Z += z * rz;
+            }
 			// rotation
 			bool rotateX = Object.RotateXFunction != null;
 			bool rotateY = Object.RotateYFunction != null;
