@@ -47,7 +47,6 @@ namespace OpenBve {
 			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
 			try {
                 AL.SpeedOfSound((float)speedOfSound);
-				//Al.alSpeedOfSound((float)speedOfSound);
 			} catch { }
 			/*
 			 * Update the sound sources

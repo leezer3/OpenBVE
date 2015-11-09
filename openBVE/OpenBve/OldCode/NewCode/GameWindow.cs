@@ -49,7 +49,7 @@ namespace OpenBve
                 Game.InfoFrameRate = RenderFrequency;
                 TotalTimeElapsedForInfo = 0.0;
             }
-
+            
             //We need to update the camera position in the render sequence
             //Not doing this means that the camera doesn't move
             // update in one piece
@@ -221,7 +221,6 @@ namespace OpenBve
 
         private void SetupSimulation()
         {
-            Sounds.Initialize();
             Renderer.InitializeLighting();
             Timetable.CreateTimetable();
             for (int i = 0; i < Interface.MessageCount; i++)
@@ -239,6 +238,7 @@ namespace OpenBve
 
 
             Textures.UnloadAllTextures();
+            
             if (Interface.CurrentOptions.LoadInAdvance)
             {
                 Textures.LoadAllTextures();
@@ -514,7 +514,7 @@ namespace OpenBve
                     Game.AddDebugMessage(warnings.ToString() + " warning(s)", 10.0);
                 }
             }
-            
+            Sounds.StopAllSounds();
             loadComplete = true;
             RenderRealTimeElapsed = 0.0;
             RenderTimeElapsed = 0.0;

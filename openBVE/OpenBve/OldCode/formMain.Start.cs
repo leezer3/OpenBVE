@@ -161,8 +161,7 @@ namespace OpenBve {
 							string caption = ManagedContent.GetMetadata(pairs, "caption", CurrentLanguageCode, System.IO.Path.GetFileName(packageDirectory));
 							string[] metadata = new string[] { country, city, operatorx, caption };
 							string entry = ManagedContent.GetMetadata(pairs, "entry", null, string.Empty);
-							TreeNode node;
-							node = treeviewTrainAddOns.Nodes.Add(country);
+							TreeNode node = treeviewTrainAddOns.Nodes.Add(country);
 							node.ImageKey = flag;
 							node.SelectedImageKey = flag;
 							node = node.Nodes.Add(city);

@@ -266,9 +266,9 @@ namespace OpenBve
         /// <summary>Loads all registered textures.</summary>
         internal static void LoadAllTextures()
         {
-            //			for (int i = 0; i < RegisteredTexturesCount; i++) {
-            //				LoadTexture(RegisteredTextures[i]);
-            //			}
+            			for (int i = 0; i < RegisteredTexturesCount; i++) {
+            				LoadTexture(RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp);
+            			}
         }
 
 
