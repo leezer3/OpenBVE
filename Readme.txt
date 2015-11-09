@@ -56,3 +56,15 @@ License
 
 Michelle intended for this program to be placed in the public domain. 
 This means that you can make any modifications to it you like and share your modifications with others.
+
+--------------------
+Third-Pary Libraries
+--------------------
+
+OpenBVE uses the OpenTK library for windowing and input handling.
+
+This is licenced under the Open Toolkit Library Licence, which may be found in OpenTKLicence.txt
+
+OpenBVE uses the CS Script Library for animation scripting.
+
+This is licened under the MIT Licence, which may be found in CSScriptLicence.txt
