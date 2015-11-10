@@ -93,6 +93,7 @@
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Parsers\XMLParser.cs" />
+    <Compile Include="System\Scripting.cs" />
     <Compile Include="System\Timer.cs" />
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />

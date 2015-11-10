@@ -3,7 +3,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	internal static partial class Game {
+	public static partial class Game {
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
@@ -812,7 +812,8 @@ namespace OpenBve {
 				this.Speed = Speed;
 			}
 		}
-		internal struct Section {
+
+	    public struct Section {
 			internal int PreviousSection;
 			internal int NextSection;
 			internal TrainManager.Train[] Trains;
@@ -823,6 +824,8 @@ namespace OpenBve {
 			internal double TrackPosition;
 			internal SectionType Type;
 			internal SectionAspect[] Aspects;
+            /// <summary>A public read-only variable, which returns the current aspcect to external scripts</summary>
+            public int currentAspect{ get { return CurrentAspect; }}
 			internal int CurrentAspect;
 			internal int FreeSections;
 			internal void Enter(TrainManager.Train Train) {
@@ -882,7 +885,7 @@ namespace OpenBve {
 				return null;
 			}
 		}
-		internal static Section[] Sections = new Section[] { };
+		public static Section[] Sections = new Section[] { };
 		internal static void UpdateAllSections() {
 			if (Sections.Length != 0) {
 				UpdateSection(Sections.Length - 1);
