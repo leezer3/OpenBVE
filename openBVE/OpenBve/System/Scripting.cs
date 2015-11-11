@@ -45,6 +45,7 @@ namespace OpenBve
                 return 0;
             }
         }
+
         /// <summary>
         /// Provides scripting access to trains internal variables
         /// </summary>
@@ -53,7 +54,7 @@ namespace OpenBve
             /// <summary>Returns the number of cars in this train</summary>
             /// <param name="Train">The selected train</param>
             /// <returns>The number of cars</returns>
-            public static int cars(TrainManager.Train Train)
+            public static int numberOfCars(TrainManager.Train Train)
             {
                 if (Train != null)
                 {
@@ -72,7 +73,7 @@ namespace OpenBve
                 {
                     return 0;
                 }
-                if (CarIndex >Train.Cars.Length)
+                if (CarIndex > Train.Cars.Length)
                 {
                     return Train.Cars[0].Specs.CurrentSpeed;
                 }
@@ -89,7 +90,9 @@ namespace OpenBve
                 {
                     return 0;
                 }
-                return CarIndex >Train.Cars.Length ? Train.Cars[0].Specs.CurrentPerceivedSpeed : Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
+                return CarIndex > Train.Cars.Length
+                    ? Train.Cars[0].Specs.CurrentPerceivedSpeed
+                    : Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
             }
 
             /// <summary>Returns the acceleration of the selected car</summary>
@@ -102,7 +105,9 @@ namespace OpenBve
                 {
                     return 0;
                 }
-                return CarIndex >Train.Cars.Length ? Train.Cars[0].Specs.CurrentAcceleration : Train.Cars[CarIndex].Specs.CurrentAcceleration;
+                return CarIndex > Train.Cars.Length
+                    ? Train.Cars[0].Specs.CurrentAcceleration
+                    : Train.Cars[CarIndex].Specs.CurrentAcceleration;
             }
 
             /// <summary>Returns the acceleration that the first motor car is currently generating in m/s</summary>
@@ -118,9 +123,10 @@ namespace OpenBve
                         // hack: CurrentAccelerationOutput does not distinguish between forward/backward
                         if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0)
                         {
-                            return Train.Cars[j].Specs.CurrentAccelerationOutput * (double) Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
+                            return Train.Cars[j].Specs.CurrentAccelerationOutput*
+                                   (double) Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
                         }
-                        if (Train.Cars[j].Specs.CurrentAccelerationOutput >0.0)
+                        if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0)
                         {
                             return Train.Cars[j].Specs.CurrentAccelerationOutput*
                                    (double) Train.Specs.CurrentReverser.Actual;
@@ -145,7 +151,7 @@ namespace OpenBve
                         return Train.Cars[CarIndex].Specs.CurrentAccelerationOutput*
                                (double) Math.Sign(Train.Cars[CarIndex].Specs.CurrentSpeed);
                     }
-                    if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput >0.0)
+                    if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput > 0.0)
                     {
                         return Train.Cars[CarIndex].Specs.CurrentAccelerationOutput*
                                (double) Train.Specs.CurrentReverser.Actual;
@@ -162,16 +168,17 @@ namespace OpenBve
             {
                 if (Train == null) return 0.0;
                 double dist = double.MaxValue;
-                for (int j = 0; j < Train.Cars.Length; j++) {
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
                     double fx = Train.Cars[j].FrontAxle.Follower.WorldPosition.X - Position.X;
                     double fy = Train.Cars[j].FrontAxle.Follower.WorldPosition.Y - Position.Y;
                     double fz = Train.Cars[j].FrontAxle.Follower.WorldPosition.Z - Position.Z;
-                    double f = fx * fx + fy * fy + fz * fz;
+                    double f = fx*fx + fy*fy + fz*fz;
                     if (f < dist) dist = f;
                     double rx = Train.Cars[j].RearAxle.Follower.WorldPosition.X - Position.X;
                     double ry = Train.Cars[j].RearAxle.Follower.WorldPosition.Y - Position.Y;
                     double rz = Train.Cars[j].RearAxle.Follower.WorldPosition.Z - Position.Z;
-                    double r = rx * rx + ry * ry + rz * rz;
+                    double r = rx*rx + ry*ry + rz*rz;
                     if (r < dist) dist = r;
                 }
                 return Math.Sqrt(dist);
@@ -185,10 +192,16 @@ namespace OpenBve
             public static double distance(TrainManager.Train Train, int CarIndex, Vector3 Position)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
-                double x = 0.5 * (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X + Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X) - Position.X;
-                double y = 0.5 * (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y + Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y) - Position.Y;
-                double z = 0.5 * (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z + Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z) - Position.Z;
-                return Math.Sqrt(x * x + y * y + z * z);
+                double x = 0.5*
+                           (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X +
+                            Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X) - Position.X;
+                double y = 0.5*
+                           (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y +
+                            Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y) - Position.Y;
+                double z = 0.5*
+                           (Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z +
+                            Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z) - Position.Z;
+                return Math.Sqrt(x*x + y*y + z*z);
             }
 
             /// <summary>Returns the track distance to the nearest car of the selected train</summary>
@@ -199,8 +212,10 @@ namespace OpenBve
             {
                 if (Train == null) return 0.0;
                 int r = Train.Cars.Length - 1;
-                double t0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition + 0.5 * Train.Cars[0].Length;
-                double t1 = Train.Cars[r].RearAxle.Follower.TrackPosition - Train.Cars[r].RearAxlePosition - 0.5 * Train.Cars[r].Length;
+                double t0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition +
+                            0.5*Train.Cars[0].Length;
+                double t1 = Train.Cars[r].RearAxle.Follower.TrackPosition - Train.Cars[r].RearAxlePosition -
+                            0.5*Train.Cars[r].Length;
                 return TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
             }
 
@@ -216,11 +231,450 @@ namespace OpenBve
                 {
                     CarIndex = Train.Cars.Length - 1;
                 }
-                double t1 = Train.Cars[CarIndex].RearAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearAxlePosition - 0.5 * Train.Cars[CarIndex].Length;
+                double t1 = Train.Cars[CarIndex].RearAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearAxlePosition -
+                            0.5*Train.Cars[CarIndex].Length;
                 return TrackPosition < t1 ? TrackPosition - t1 : 0.0;
             }
 
+            /// <summary>Returns the main brake reservoir pressure of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>The main brake reservoir pressure in Pa</returns>
+            public static double mainReservoir(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length > CarIndex)
+                {
+                    return 0.0;
+                }
+                return Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
+            }
 
+            /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>The brake pipe pressure in Pa</returns>
+            public static double brakePipe(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length > CarIndex)
+                {
+                    return 0.0;
+                }
+                return Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
+            }
+
+            /// <summary>Returns the brake cylinder pressure of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>The brake cylinder pressure in Pa</returns>
+            public static double brakeCylinder(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length > CarIndex)
+                {
+                    return 0.0;
+                }
+                return Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
+            }
+
+            /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>The brake pipe pressure in Pa</returns>
+            public static double straightAirPipe(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length > CarIndex)
+                {
+                    return 0.0;
+                }
+                return Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
+            }
+
+            /// <summary>Returns the doors state of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double doors(TrainManager.Train Train)
+            {
+                if (Train == null) return 0.0;
+                double doorsState = 0.0;
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
+                    for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[j].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[j].Specs.Doors[k].State;
+                        }
+                    }
+                }
+                return doorsState;
+            }
+
+            /// <summary>Returns the doors state of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double doors(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length <= CarIndex)
+                {
+                    double doorsState = 0.0;
+                    for (int k = 0; k < Train.Cars[CarIndex].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[CarIndex].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[CarIndex].Specs.Doors[k].State;
+                        }
+                    }
+                    return doorsState;
+                }
+                return 0.0;
+            }
+
+            /// <summary>Returns the left-hand doors state of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double leftDoors(TrainManager.Train Train)
+            {
+                if (Train == null) return 0.0;
+                double doorsState = 0.0;
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
+                    for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[j].Specs.Doors[k].Direction == -1 &
+                            Train.Cars[j].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[j].Specs.Doors[k].State;
+                        }
+                    }
+                }
+                return doorsState;
+            }
+
+            /// <summary>Returns the left-hand doors state of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double leftDoors(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length <= CarIndex)
+                {
+                    double doorsState = 0.0;
+                    for (int k = 0; k < Train.Cars[CarIndex].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[CarIndex].Specs.Doors[k].Direction == -1 &
+                            Train.Cars[CarIndex].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[CarIndex].Specs.Doors[k].State;
+                        }
+                    }
+                    return doorsState;
+                }
+                return 0.0;
+            }
+
+            /// <summary>Returns the left-hand doors state of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double rightDoors(TrainManager.Train Train)
+            {
+                if (Train == null) return 0.0;
+                double doorsState = 0.0;
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
+                    for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[j].Specs.Doors[k].Direction == 1 &
+                            Train.Cars[j].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[j].Specs.Doors[k].State;
+                        }
+                    }
+                }
+                return doorsState;
+            }
+
+            /// <summary>Returns the left-hand doors state of the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>0.0 if all doors are closed, 1.0 if all doors are open, or a value in between</returns>
+            public static double rightDoors(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return 0.0;
+                if (Train.Cars.Length <= CarIndex)
+                {
+                    double doorsState = 0.0;
+                    for (int k = 0; k < Train.Cars[CarIndex].Specs.Doors.Length; k++)
+                    {
+                        if (Train.Cars[CarIndex].Specs.Doors[k].Direction == 1 &
+                            Train.Cars[CarIndex].Specs.Doors[k].State > doorsState)
+                        {
+                            doorsState = Train.Cars[CarIndex].Specs.Doors[k].State;
+                        }
+                    }
+                    return doorsState;
+                }
+                return 0.0;
+            }
+
+            /// <summary>Returns whether the left doors are opening for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>True if the doors are opening, false otherwise</returns>
+            public static bool leftDoorsTarget(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
+                    for (int k = 0; k < Train.Cars.Length; k++)
+                    {
+                        if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>Returns whether the left doors are opening for the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>True if the doors are opening, false otherwise</returns>
+            public static bool leftDoorsTarget(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return false;
+                if (Train.Cars.Length <= CarIndex)
+                {
+                    if (Train.Cars[CarIndex].Specs.AnticipatedLeftDoorsOpened)
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+
+            /// <summary>Returns whether the left doors are opening for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>True if the doors are opening, false otherwise</returns>
+            public static bool rightDoorsTarget(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                for (int j = 0; j < Train.Cars.Length; j++)
+                {
+                    for (int k = 0; k < Train.Cars.Length; k++)
+                    {
+                        if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>Returns whether the left doors are opening for the selected car of the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="CarIndex">The selected car</param>
+            /// <returns>True if the doors are opening, false otherwise</returns>
+            public static bool rightDoorsTarget(TrainManager.Train Train, int CarIndex)
+            {
+                if (Train == null) return false;
+                if (Train.Cars.Length <= CarIndex)
+                {
+                    if (Train.Cars[CarIndex].Specs.AnticipatedRightDoorsOpened)
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+
+            /// <summary>Returns the driver's selected reverser position for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>-1 for backwards, 0 for neutral, 1 for forwards</returns>
+            public static int reverserNotch(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                return Train.Specs.CurrentReverser.Driver;
+            }
+
+            /// <summary>Returns the driver's selected power notch for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The driver's selected power notch</returns>
+            public static int powerNotch(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                return Train.Specs.CurrentPowerNotch.Driver;
+            }
+
+            /// <summary>Returns the maximum power notch for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The maximum power notch</returns>
+            public static int powerNotches(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                return Train.Specs.MaximumPowerNotch;
+            }
+
+            /// <summary>Returns the driver's selected brake notch for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The driver's selected power notch</returns>
+            public static int brakeNotch(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                return Train.Specs.CurrentBrakeNotch.Driver;
+            }
+
+            /// <summary>Returns the maximum brake notch for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The maximum power notch</returns>
+            public static int brakeNotches(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                return Train.Specs.MaximumBrakeNotch;
+            }
+
+            /// <summary>Returns the driver's selected brake notch (Including EB) for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The driver's selected brake notch</returns>
+            public static int brakeNotchLinear(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+                {
+                    if (Train.Specs.CurrentEmergencyBrake.Driver)
+                    {
+                        return 3;
+                    }
+                    return (int) Train.Specs.AirBrake.Handle.Driver;
+                }
+                if (Train.Specs.HasHoldBrake)
+                {
+                    if (Train.Specs.CurrentEmergencyBrake.Driver)
+                    {
+                        return (int) Train.Specs.MaximumBrakeNotch + 2;
+                    }
+                    if (Train.Specs.CurrentBrakeNotch.Driver > 0)
+                    {
+                        return (int) Train.Specs.CurrentBrakeNotch.Driver + 1;
+                    }
+                    return Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
+                }
+                if (Train.Specs.CurrentEmergencyBrake.Driver)
+                {
+                    return (int) Train.Specs.MaximumBrakeNotch + 1;
+                }
+                return (int) Train.Specs.CurrentBrakeNotch.Driver;
+            }
+
+            /// <summary>Returns the maximum possible brake notch (Including EB) for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>The maximum possible brake notch</returns>
+            public static int brakeNotchesLinear(TrainManager.Train Train)
+            {
+                if (Train == null) return 0;
+                if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+                {
+                    return 3;
+                }
+                if (Train.Specs.HasHoldBrake)
+                {
+                    return 2;
+                }
+                return Train.Specs.MaximumBrakeNotch + 1;
+            }
+
+            /// <summary>Returns whether EB is active for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether EB is active</returns>
+            public static bool emergencyBrake(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Specs.CurrentEmergencyBrake.Driver;
+            }
+
+            /// <summary>Whether the selected train has an automatic air brake</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether the selected train has an automatic air brake</returns>
+            public static bool hasAirBrake(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake;
+            }
+
+            /// <summary>Whether the hold brake is currently active for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether the hold brake is currently active</returns>
+            public static bool holdBrake(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Specs.CurrentHoldBrake.Driver;
+            }
+
+            /// <summary>Whether the selected train has a hold brake</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether the selected train has a hold brake</returns>
+            public static bool hasHoldBrake(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Specs.HasHoldBrake;
+            }
+
+            /// <summary>Whether the constant speed devicee is currently active for the selected train</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether the constant speed device is currently active</returns>
+            public static bool constantSpeed(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Specs.CurrentConstSpeed;
+            }
+
+            /// <summary>Whether the selected train has a constant speed device</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>Whether the selected train has a constant speed device</returns>
+            public static bool hasConstantSpeed(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                return Train.Specs.HasConstSpeed;
+            }
+
+            /// <summary>Whether the selected train uses a custom plugin</summary>
+            /// <param name="Train">The selected train</param>
+            /// <returns>True if the train uses a custom plugin, false otherwise</returns>
+            public static bool hasPlugin(TrainManager.Train Train)
+            {
+                if (Train == null) return false;
+                if (Train == TrainManager.PlayerTrain && Train.Plugin != null)
+                {
+                    return TrainManager.PlayerTrain.Plugin.IsDefault;
+                }
+                return false;
+            }
+
+            /// <summary>Whether the selected train has a hold brake</summary>
+            /// <param name="Train">The selected train</param>
+            /// <param name="pluginState">The plugin state to query</param>
+            /// <returns>The plugin state value</returns>
+            public static int pluginState(TrainManager.Train Train, int pluginState)
+            {
+                if (Train == null || Train.Plugin == null)
+                {
+                    return 0;
+                }
+
+                if (pluginState >= 0 & pluginState < Train.Plugin.Panel.Length)
+                {
+                    return Train.Plugin.Panel[pluginState];
+                }
+                return 0;
+            }
         }
 
         /// <summary>
