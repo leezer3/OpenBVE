@@ -209,6 +209,7 @@ namespace OpenBve
 
         protected override void OnLoad(EventArgs e)
         {
+            Sounds.Initialize();
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
             Renderer.Initialize();

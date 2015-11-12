@@ -166,7 +166,7 @@ namespace OpenBve {
 					MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					return;
 				}
-			    Sounds.Initialize();
+			    
 				// end HACK //
 				result = formMain.ShowMainDialog(result);
 			} else {
