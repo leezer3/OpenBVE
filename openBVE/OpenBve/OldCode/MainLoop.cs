@@ -153,6 +153,7 @@ namespace OpenBve {
 		        {
 		            //Compare the current and previous keyboard states
 		            //Only process if they are different
+		            if (!Enum.IsDefined(typeof (Key), Interface.CurrentControls[i].Key)) continue;
 		            if (currentKeyboardState[Interface.CurrentControls[i].Key] !=
 		                previousKeyboardState[Interface.CurrentControls[i].Key])
 		            {
@@ -171,8 +172,9 @@ namespace OpenBve {
 		                }
 		            }
 		        }
-                else if(Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
+		        else if(Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
                 {
+                    if (!OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected) continue;
                     switch (Interface.CurrentControls[i].Component)
                     {
                         case Interface.JoystickComponent.Axis:
