@@ -1161,12 +1161,6 @@ namespace OpenBve {
 			Vector.X = u;
 			Vector.Z = v;
 		}
-		internal static void RotatePlane(ref Vector3Df Vector, double cosa, double sina) {
-			double u = (double)Vector.X * cosa - (double)Vector.Z * sina;
-			double v = (double)Vector.X * sina + (double)Vector.Z * cosa;
-			Vector.X = (float)u;
-			Vector.Z = (float)v;
-		}
 		internal static void RotateUpDown(ref Vector3 Vector, Vector2 Direction, double cosa, double sina) {
 			double dx = Direction.X, dy = Direction.Y;
 			double x = Vector.X, y = Vector.Y, z = Vector.Z;
@@ -1183,14 +1177,6 @@ namespace OpenBve {
 			Vector.X = dy * u + dx * v * cosa - dx * y * sina;
 			Vector.Y = y * cosa + v * sina;
 			Vector.Z = -dx * u + dy * v * cosa - dy * y * sina;
-		}
-		internal static void RotateUpDown(ref Vector3Df Vector, double dx, double dy, double cosa, double sina) {
-			double x = (double)Vector.X, y = (double)Vector.Y, z = (double)Vector.Z;
-			double u = dy * x - dx * z;
-			double v = dx * x + dy * z;
-			Vector.X = (float)(dy * u + dx * v * cosa - dx * y * sina);
-			Vector.Y = (float)(y * cosa + v * sina);
-			Vector.Z = (float)(-dx * u + dy * v * cosa - dy * y * sina);
 		}
 		internal static void RotateUpDown(ref double px, ref double py, ref double pz, double dx, double dz, double cosa, double sina) {
 			double x = px, y = py, z = pz;
