@@ -29,74 +29,7 @@ namespace OpenBve {
 		internal static Fog CurrentFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.5);
 		internal static Fog NextFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 1.0);
 		
-		// route constants
-		internal static string RouteComment = "";
-		internal static string RouteImage = "";
-		internal static double RouteAccelerationDueToGravity = 9.80665;
-		internal static double RouteRailGauge = 1.435;
-		internal static double RouteInitialAirPressure = 101325.0;
-		internal static double RouteInitialAirTemperature = 293.15;
-		internal static double RouteInitialElevation = 0.0;
-		internal static double RouteSeaLevelAirPressure = 101325.0;
-		internal static double RouteSeaLevelAirTemperature = 293.15;
-		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
-		internal const double CoefficientOfGroundFriction = 0.5;
-		internal const double CriticalCollisionSpeedDifference = 8.0;
-		internal const double BrakePipeLeakRate = 500000.0;
-		internal const double MolarMass = 0.0289644;
-		internal const double UniversalGasConstant = 8.31447;
-		internal const double TemperatureLapseRate = -0.0065;
-		internal const double CoefficientOfStiffness = 144117.325646911;
-
-		// atmospheric functions
-		internal static void CalculateSeaLevelConstants() {
-			RouteSeaLevelAirTemperature = RouteInitialAirTemperature - TemperatureLapseRate * RouteInitialElevation;
-			double Exponent = RouteAccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
-			double Base = 1.0 + TemperatureLapseRate * RouteInitialElevation / RouteSeaLevelAirTemperature;
-			if (Base >= 0.0) {
-				RouteSeaLevelAirPressure = RouteInitialAirPressure * Math.Pow(Base, Exponent);
-				if (RouteSeaLevelAirPressure < 0.001) RouteSeaLevelAirPressure = 0.001;
-			} else {
-				RouteSeaLevelAirPressure = 0.001;
-			}
-		}
-		internal static double GetAirTemperature(double Elevation) {
-			double x = RouteSeaLevelAirTemperature + TemperatureLapseRate * Elevation;
-			if (x >= 1.0) {
-				return x;
-			} else {
-				return 1.0;
-			}
-		}
-		internal static double GetAirDensity(double AirPressure, double AirTemperature) {
-			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
-			if (x >= 0.001) {
-				return x;
-			} else {
-				return 0.001;
-			}
-		}
-		internal static double GetAirPressure(double Elevation, double AirTemperature) {
-			double Exponent = -RouteAccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
-			double Base = 1.0 + TemperatureLapseRate * Elevation / RouteSeaLevelAirTemperature;
-			if (Base >= 0.0) {
-				double x = RouteSeaLevelAirPressure * Math.Pow(Base, Exponent);
-				if (x >= 0.001) {
-					return x;
-				} else {
-					return 0.001;
-				}
-			} else {
-				return 0.001;
-			}
-		}
-		internal static double GetSpeedOfSound(double AirPressure, double AirTemperature) {
-			double AirDensity = GetAirDensity(AirPressure, AirTemperature);
-			return Math.Sqrt(CoefficientOfStiffness / AirDensity);
-		}
-		internal static double GetSpeedOfSound(double AirDensity) {
-			return Math.Sqrt(CoefficientOfStiffness / AirDensity);
-		}
+		
 
 		// other trains
 		internal static double[] PrecedingTrainTimeDeltas = new double[] { };

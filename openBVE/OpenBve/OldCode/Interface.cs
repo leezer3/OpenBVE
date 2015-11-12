@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Deployment.Internal;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
@@ -1620,7 +1620,8 @@ namespace OpenBve {
 			return false;
 		}
 
-		// save controls
+		/// <summary>Saves the current control configuration</summary>
+		/// <param name="FileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
 		internal static void SaveControls(string FileOrNull) {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
@@ -1669,7 +1670,9 @@ namespace OpenBve {
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 
-		// load controls
+		/// <summary>Loads the current controls from the controls.cfg file</summary>
+		/// <param name="FileOrNull">An absolute path reference to a saved controls.cfg file, or a null reference to check the default locations</param>
+		/// <param name="Controls">The current controls array</param>
         internal static void LoadControls(string FileOrNull, out Control[] Controls)
         {
 			string File;
@@ -2100,9 +2103,9 @@ namespace OpenBve {
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].BackgroundColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 												} break;
-											} else {
-												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+									        System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+									        break;
 										case "overlaycolor":
 											if (Arguments.Length == 4) {
 												int r, g, b, a;
@@ -2121,9 +2124,9 @@ namespace OpenBve {
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].OverlayColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 												} break;
-											} else {
-												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+									        System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+									        break;
 										case "textcolor":
 											if (Arguments.Length == 4) {
 												int r, g, b, a;
@@ -2142,9 +2145,9 @@ namespace OpenBve {
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].TextColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
 												} break;
-											} else {
-												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+									        System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
+									        break;
 										case "textposition":
 											if (Arguments.Length == 2) {
 												float x, y;
@@ -2482,11 +2485,9 @@ namespace OpenBve {
 		// trim inside
 		private static string TrimInside(string Expression) {
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);
-			for (int i = 0; i < Expression.Length; i++) {
-				char c = Expression[i];
-				if (!char.IsWhiteSpace(c)) {
-					Builder.Append(c);
-				}
+			foreach (char c in Expression.Where(c => !char.IsWhiteSpace(c)))
+			{
+			    Builder.Append(c);
 			} return Builder.ToString();
 		}
 
