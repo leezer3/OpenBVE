@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Deployment.Internal;
 using System.Globalization;
+using System.Threading;
+using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenTK.Input;
@@ -1667,7 +1670,8 @@ namespace OpenBve {
 		}
 
 		// load controls
-		internal static void LoadControls(string FileOrNull, out Control[] Controls) {
+        internal static void LoadControls(string FileOrNull, out Control[] Controls)
+        {
 			string File;
 			if (FileOrNull == null) {
 				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
@@ -1715,6 +1719,17 @@ namespace OpenBve {
 							    if (Method == "keyboard" & Terms.Length == 4)
 							    {
 							        Key CurrentKey;
+							        int SDLTest;
+							        if (int.TryParse(Terms[2], out SDLTest))
+							        {
+							            //We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
+							            Thread Message = new Thread(() => MessageBox.Show("An older key-configuration file was found."
+							                                                        + Environment.NewLine +
+							                                                        "The current key-configuration has been reset to default.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand));
+							            Message.Start();
+                                        LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out CurrentControls);
+							            return;
+							        }
                                     if (Enum.TryParse(Terms[2], true, out CurrentKey))
                                     {
                                         int Modifiers;
