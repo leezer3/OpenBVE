@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -1909,7 +1908,7 @@ namespace OpenBve {
 		}
 
 		// update safety system
-		private static void UpdateSafetySystem(Train Train, double TimeElapsed) {
+		private static void UpdateSafetySystem(Train Train) {
 			Game.UpdatePluginSections(Train);
 			if (Train.Plugin != null) {
 				Train.Plugin.LastSection = Train.CurrentSectionIndex;
@@ -2516,10 +2515,9 @@ namespace OpenBve {
 			Train.Specs.CurrentHoldBrake.Driver = false;
 			Train.Specs.CurrentConstSpeed = false;
 			// plugin
-			if (Train.Plugin != null) {
-				Train.Plugin.UpdatePower();
-				Train.Plugin.UpdateBrake();
-			}
+		    if (Train.Plugin == null) return;
+		    Train.Plugin.UpdatePower();
+		    Train.Plugin.UpdateBrake();
 		}
 
 		// unapply emergency brake
@@ -2540,20 +2538,18 @@ namespace OpenBve {
 				ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
 				Train.Specs.CurrentEmergencyBrake.Driver = false;
 				// plugin
-				if (Train.Plugin != null) {
-					Train.Plugin.UpdatePower();
-					Train.Plugin.UpdateBrake();
-				}
+			    if (Train.Plugin == null) return;
+			    Train.Plugin.UpdatePower();
+			    Train.Plugin.UpdateBrake();
 			}
 		}
 
 		// apply hold brake
 		internal static void ApplyHoldBrake(Train Train, bool Value) {
 			Train.Specs.CurrentHoldBrake.Driver = Value;
-			if (Train.Plugin != null) {
-				Train.Plugin.UpdatePower();
-				Train.Plugin.UpdateBrake();
-			}
+		    if (Train.Plugin == null) return;
+		    Train.Plugin.UpdatePower();
+		    Train.Plugin.UpdateBrake();
 		}
 
 		// apply reverser
@@ -2571,16 +2567,14 @@ namespace OpenBve {
 				// sound
 				if (a == 0 & r != 0) {
 					Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.ReverserOn.Buffer;
-					if (buffer != null) {
-						OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOn.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-					}
+				    if (buffer == null) return;
+				    OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOn.Position;
+				    Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
 				} else if (a != 0 & r == 0) {
 					Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.ReverserOff.Buffer;
-					if (buffer != null) {
-						OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOff.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-					}
+				    if (buffer == null) return;
+				    OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOff.Position;
+				    Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
 				}
 			}
 		}
@@ -3565,7 +3559,7 @@ namespace OpenBve {
 			}
 			// safety system
 			if (!Game.MinimalisticSimulation | Train != PlayerTrain) {
-				UpdateSafetySystem(Train, TimeElapsed);
+				UpdateSafetySystem(Train);
 			}
 			{
 				// breaker sound

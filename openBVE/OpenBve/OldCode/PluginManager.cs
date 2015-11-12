@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OpenBveApi.Runtime;
-using OpenTK.Input;
 
 namespace OpenBve {
 	internal static partial class PluginManager {

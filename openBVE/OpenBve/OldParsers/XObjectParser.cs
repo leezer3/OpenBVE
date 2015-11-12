@@ -1110,7 +1110,7 @@ namespace OpenBve {
 							}
 							// collect faces
 							int[][] Faces = new int[nFaces][];
-							World.Vector3Df[][] FaceNormals = new World.Vector3Df[nFaces][];
+							Vector3[][] FaceNormals = new Vector3[nFaces][];
 							int[] FaceMaterials = new int[nFaces];
 							for (int j = 0; j < nFaces; j++) {
 								FaceMaterials[j] = -1;
@@ -1140,14 +1140,14 @@ namespace OpenBve {
 									return false;
 								}
 								Faces[j] = new int[nFaceVertexIndices];
-								FaceNormals[j] = new World.Vector3Df[nFaceVertexIndices];
+								FaceNormals[j] = new Vector3[nFaceVertexIndices];
 								for (int k = 0; k < nFaceVertexIndices; k++) {
 									if (faceVertexIndices[k] < 0 | faceVertexIndices[k] >= nVertices) {
 										Interface.AddMessage(Interface.MessageType.Error, false, "faceVertexIndices[" + k.ToString(Culture) + "] does not reference a valid vertex in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 										return false;
 									}
 									Faces[j][k] = faceVertexIndices[k];
-									FaceNormals[j][k] = new World.Vector3Df(0.0f, 0.0f, 0.0f);
+									FaceNormals[j][k] = new Vector3(0.0f, 0.0f, 0.0f);
 								}
 							}
 							// collect additional templates
@@ -1436,7 +1436,7 @@ namespace OpenBve {
 												}
 												double u = (double)textureCoords[k].Data[0];
 												double v = (double)textureCoords[k].Data[1];
-												Vertices[k].TextureCoordinates = new World.Vector2Df((float)u, (float)v);
+												Vertices[k].TextureCoordinates = new Vector2((float)u, (float)v);
 											}
 										} break;
 									case "MeshNormals":
@@ -1479,7 +1479,7 @@ namespace OpenBve {
 												return false;
 											}
 											// collect normals
-											World.Vector3Df[] Normals = new World.Vector3Df[nNormals];
+											Vector3[] Normals = new Vector3[nNormals];
 											for (int k = 0; k < nNormals; k++) {
 												if (normals[k].Name != "Vector") {
 													Interface.AddMessage(Interface.MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to be of template Vertex in MeshNormals in Mesh in x object file " + FileName);
@@ -1501,7 +1501,7 @@ namespace OpenBve {
 												double y = (double)normals[k].Data[1];
 												double z = (double)normals[k].Data[2];
 												World.Normalize(ref x, ref y, ref z);
-												Normals[k] = new World.Vector3Df((float)x, (float)y, (float)z);
+												Normals[k] = new Vector3((float)x, (float)y, (float)z);
 											}
 											// collect faces
 											for (int k = 0; k < nFaceNormals; k++) {

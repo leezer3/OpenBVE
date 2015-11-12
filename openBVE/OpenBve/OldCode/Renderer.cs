@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -54,7 +55,7 @@ namespace OpenBve
         internal static bool OptionLighting = true;
         internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
         internal static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
-        internal static World.Vector3Df OptionLightPosition = new World.Vector3Df(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
+        internal static Vector3 OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
         internal static float OptionLightingResultingAmount = 1.0f;
         internal static bool OptionNormals = false;
         internal static bool OptionWireframe = false;

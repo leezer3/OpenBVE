@@ -4,98 +4,20 @@
 using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve {
 	internal static class World {
-
-		// vectors
-		/// <summary>Represents a 2D vector of System.Double coordinates.</summary>
-		/// <remarks>This structure is outdated. Use OpenBveApi.Math.Vector2 instead.</remarks>
-		internal struct Vector2D {
-			internal double X;
-			internal double Y;
-			internal Vector2D(double X, double Y) {
-				this.X = X;
-				this.Y = Y;
-			}
-		}
-		/// <summary>Represents a 2D vector of System.Single coordinates.</summary>
-		internal struct Vector2Df {
-			internal float X;
-			internal float Y;
-			internal Vector2Df(float X, float Y) {
-				this.X = X;
-				this.Y = Y;
-			}
-		}
-//		/// <summary>Represents a 3D vector of System.Double coordinates.</summary>
-//		/// <remarks>This structure is outdated. Use OpenBveApi.Math.Vector3 instead.</remarks>
-//		internal struct Vector3D {
-//			internal double X;
-//			internal double Y;
-//			internal double Z;
-//			internal Vector3(double X, double Y, double Z) {
-//				this.X = X;
-//				this.Y = Y;
-//				this.Z = Z;
-//			}
-//			/// <summary>Returns a normalized vector based on a 2D vector in the XZ plane and an additional Y-coordinate.</summary>
-//			/// <param name="Vector">The vector in the XZ-plane. The X and Y components in Vector represent the X- and Z-coordinates, respectively.</param>
-//			/// <param name="Y">The Y-coordinate.</param>
-//			internal Vector3(Vector2D Vector, double Y) {
-//				double t = 1.0 / Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
-//				this.X = t * Vector.X;
-//				this.Y = t * Y;
-//				this.Z = t * Vector.Y;
-//			}
-//			/// <summary>Returns the sum of two vectors.</summary>
-//			internal static Vector3D Add(Vector3D A, Vector3D B) {
-//				return new Vector3(A.X + B.X, A.Y + B.Y, A.Z + B.Z);
-//			}
-//			/// <summary>Returns the difference of two vectors.</summary>
-//			internal static Vector3D Subtract(Vector3D A, Vector3D B) {
-//				return new Vector3(A.X - B.X, A.Y - B.Y, A.Z - B.Z);
-//			}
-//			/// <summary>Gets a matching OpenBveApi.Math.Vector3 structure.</summary>
-//			internal OpenBveApi.Math.Vector3 GetAPIStructure() {
-//				return new OpenBveApi.Math.Vector3(this.X, this.Y, this.Z);
-//			}
-//		}
-		/// <summary>Returns a normalized vector based on a 2D vector in the XZ plane and an additional Y-coordinate.</summary>
-		/// <param name="Vector">The vector in the XZ-plane. The X and Y components in Vector represent the X- and Z-coordinates, respectively.</param>
-		/// <param name="Y">The Y-coordinate.</param>
-		internal static Vector3 GetVector3(Vector2D Vector, double Y) {
-			double t = 1.0 / Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
-			return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
-		}
-		/// <summary>Represents a 3D vector of System.Single coordinates.</summary>
-		internal struct Vector3Df {
-			internal float X;
-			internal float Y;
-			internal float Z;
-			internal Vector3Df(float X, float Y, float Z) {
-				this.X = X;
-				this.Y = Y;
-				this.Z = Z;
-			}
-			internal bool IsZero() {
-				if (this.X != 0.0f) return false;
-				if (this.Y != 0.0f) return false;
-				if (this.Z != 0.0f) return false;
-				return true;
-			}
-		}
-
 		// vertices
 		/// <summary>Represents a vertex consisting of 3D coordinates and 2D texture coordinates.</summary>
 		internal struct Vertex {
 			internal Vector3 Coordinates;
-			internal Vector2Df TextureCoordinates;
+			internal Vector2 TextureCoordinates;
 			internal Vertex(double X, double Y, double Z) {
 				this.Coordinates = new Vector3(X, Y, Z);
-				this.TextureCoordinates = new Vector2Df(0.0f, 0.0f);
+				this.TextureCoordinates = new Vector2(0.0f, 0.0f);
 			}
-			internal Vertex(Vector3 Coordinates, Vector2Df TextureCoordinates) {
+			internal Vertex(Vector3 Coordinates, Vector2 TextureCoordinates) {
 				this.Coordinates = Coordinates;
 				this.TextureCoordinates = TextureCoordinates;
 			}
@@ -164,12 +86,12 @@ namespace OpenBve {
 			/// <summary>A reference to an element in the Vertex array of the contained Mesh structure.</summary>
 			internal ushort Index;
 			/// <summary>The normal to be used at the vertex.</summary>
-			internal Vector3Df Normal;
+			internal Vector3 Normal;
 			internal MeshFaceVertex(int Index) {
 				this.Index = (ushort)Index;
-				this.Normal = new Vector3Df(0.0f, 0.0f, 0.0f);
+				this.Normal = new Vector3(0.0f, 0.0f, 0.0f);
 			}
-			internal MeshFaceVertex(int Index, Vector3Df Normal) {
+			internal MeshFaceVertex(int Index, Vector3 Normal) {
 				this.Index = (ushort)Index;
 				this.Normal = Normal;
 			}
@@ -441,7 +363,7 @@ namespace OpenBve {
 		// mouse grab
 		internal static bool MouseGrabEnabled = false;
 		internal static bool MouseGrabIgnoreOnce = false;
-		internal static Vector2D MouseGrabTarget = new Vector2D(0.0, 0.0);
+		internal static Vector2 MouseGrabTarget = new Vector2(0.0, 0.0);
 		internal static void UpdateMouseGrab(double TimeElapsed) {
 			if (MouseGrabEnabled) {
 				double factor;
@@ -452,7 +374,7 @@ namespace OpenBve {
 				}
 				CameraAlignmentDirection.Yaw += factor * MouseGrabTarget.X;
 				CameraAlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
-				MouseGrabTarget = new Vector2D(0.0, 0.0);
+				MouseGrabTarget = new Vector2(0.0, 0.0);
 			}
 		}
 		
@@ -599,7 +521,7 @@ namespace OpenBve {
 		{
 		    if (World.CameraRestriction == CameraRestrictionMode.On) {
 				Vector3[] p = new Vector3[] { CameraRestrictionBottomLeft, CameraRestrictionTopRight };
-				Vector2D[] r = new Vector2D[2];
+				Vector2[] r = new Vector2[2];
 				for (int j = 0; j < 2; j++) {
 					// determine relative world coordinates
 					World.Rotate(ref p[j].X, ref p[j].Y, ref p[j].Z, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z);
@@ -1199,7 +1121,7 @@ namespace OpenBve {
 
 			px = (float)x; py = (float)y; pz = (float)z;
 		}
-		internal static void Rotate(ref Vector2D Vector, double cosa, double sina) {
+		internal static void Rotate(ref Vector2 Vector, double cosa, double sina) {
 			double u = Vector.X * cosa - Vector.Y * sina;
 			double v = Vector.X * sina + Vector.Y * cosa;
 			Vector.X = u;
@@ -1245,7 +1167,7 @@ namespace OpenBve {
 			Vector.X = (float)u;
 			Vector.Z = (float)v;
 		}
-		internal static void RotateUpDown(ref Vector3 Vector, Vector2D Direction, double cosa, double sina) {
+		internal static void RotateUpDown(ref Vector3 Vector, Vector2 Direction, double cosa, double sina) {
 			double dx = Direction.X, dy = Direction.Y;
 			double x = Vector.X, y = Vector.Y, z = Vector.Z;
 			double u = dy * x - dx * z;
@@ -1325,14 +1247,16 @@ namespace OpenBve {
 					float my = (float)(ny * t);
 					float mz = (float)(nz * t);
 					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Mesh.Faces[FaceIndex].Vertices[j].Normal.IsZero()) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3Df(mx, my, mz);
+                        if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
+                        {
+							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
 						}
 					}
 				} else {
 					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Mesh.Faces[FaceIndex].Vertices[j].Normal.IsZero()) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3Df(0.0f, 1.0f, 0.0f);
+                        if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
+                        {
+							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
 						}
 					}
 				}

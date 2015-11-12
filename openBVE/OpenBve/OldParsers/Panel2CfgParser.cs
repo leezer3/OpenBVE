@@ -951,10 +951,10 @@ namespace OpenBve {
 			v[1] = new Vector3(x0 - xm, y0 - ym, 0);
 			v[2] = new Vector3(x1 - xm, y0 - ym, 0);
 			v[3] = new Vector3(x1 - xm, y1 - ym, 0);
-			World.Vertex t0 = new World.Vertex(v[0], new World.Vector2Df(0.0f, 1.0f));
-			World.Vertex t1 = new World.Vertex(v[1], new World.Vector2Df(0.0f, 0.0f));
-			World.Vertex t2 = new World.Vertex(v[2], new World.Vector2Df(1.0f, 0.0f));
-			World.Vertex t3 = new World.Vertex(v[3], new World.Vector2Df(1.0f, 1.0f));
+			World.Vertex t0 = new World.Vertex(v[0], new Vector2(0.0f, 1.0f));
+			World.Vertex t1 = new World.Vertex(v[1], new Vector2(0.0f, 0.0f));
+			World.Vertex t2 = new World.Vertex(v[2], new Vector2(1.0f, 0.0f));
+			World.Vertex t3 = new World.Vertex(v[3], new Vector2(1.0f, 1.0f));
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Vertices = new World.Vertex[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };

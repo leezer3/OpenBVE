@@ -2,6 +2,7 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -99,7 +100,7 @@ namespace OpenBve
             OptionLighting = true;
             OptionAmbientColor = new Color24(160, 160, 160);
             OptionDiffuseColor = new Color24(160, 160, 160);
-            OptionLightPosition = new World.Vector3Df(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
+            OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
             OptionLightingResultingAmount = 1.0f;
             OptionClock = false;
             OptionBrakeSystems = false;

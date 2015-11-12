@@ -411,7 +411,23 @@ namespace OpenBveApi.Math {
 			return vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
 		}
 
-		
+        /// <summary>Returns a normalized vector based on a 2D vector in the XZ plane and an additional Y-coordinate.</summary>
+        /// <param name="Vector">The vector in the XZ-plane. The X and Y components in Vector represent the X- and Z-coordinates, respectively.</param>
+        /// <param name="Y">The Y-coordinate.</param>
+        public static Vector3 GetVector3(Vector2 Vector, double Y)
+        {
+            double t = 1.0 / System.Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
+            return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
+        }
+
+        public static bool IsZero(Vector3 Vector)
+        {
+            if (Vector.X != 0.0f) return false;
+            if (Vector.Y != 0.0f) return false;
+            if (Vector.Z != 0.0f) return false;
+            return true;
+        }
+        
 		// --- read-only fields ---
 		
 		/// <summary>Represents a null vector.</summary>
