@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenTK;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
+
+
+        [DllImport("libc")]
+        public static extern uint getuid();
 
 		// --- members ---
 
@@ -55,7 +60,16 @@ namespace OpenBve {
 				MessageBox.Show("The file system configuration could not be accessed or is invalid due to the following reason:\n\n" + ex.Message, "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
-			// --- set up packages ---
+            // --- Check if we're running as root, and prompt not to ---
+		    if (CurrentlyRunningOnMono)
+		    {
+    	        if (getuid() == 0)
+		        {
+                    MessageBox.Show("You are currently running as the root user." + System.Environment.NewLine + "This is a bad idea, please dont!", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+		        }
+		    }
+
+		    // --- set up packages ---
 			SetPackageLookupDirectories();
 			// --- load options and controls ---
 			Interface.LoadOptions();

@@ -42,122 +42,15 @@ namespace OpenBve {
 			EmergencyBrakesAts = 0,
 			EmergencyBrakesNoAts = 1
 		}
+        /// <summary>The mode for the train's safety system to start in</summary>
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
+        /// <summary>The name of the current train</summary>
 		internal static string TrainName = "";
 
-		// information
-		internal static double InfoFrameRate = 1.0;
-		internal static string InfoDebugString = "";
-		internal static int InfoTotalTriangles = 0;
-		internal static int InfoTotalTriangleStrip = 0;
-		internal static int InfoTotalQuadStrip = 0;
-		internal static int InfoTotalQuads = 0;
-		internal static int InfoTotalPolygon = 0;
-		internal static int InfoStaticOpaqueFaceCount = 0;
-
 		// ================================
 
-		// interface type
-		internal enum InterfaceType { Normal, Pause, Menu }
-		internal static InterfaceType CurrentInterface = InterfaceType.Normal;
-		internal enum MenuTag { None, Caption, Back, JumpToStation, ExitToMainMenu, Quit }
-		internal abstract class MenuEntry {
-			internal string Text;
-			internal double Highlight;
-			internal double Alpha;
-		}
-		internal class MenuCaption : MenuEntry {
-			internal MenuCaption(string Text) {
-				this.Text = Text;
-				this.Highlight = 0.0;
-				this.Alpha = 0.0;
-			}
-		}
-		internal class MenuCommand : MenuEntry {
-			internal MenuTag Tag;
-			internal int Data;
-			internal MenuCommand(string Text, MenuTag Tag, int Data) {
-				this.Text = Text;
-				this.Highlight = 0.0;
-				this.Alpha = 0.0;
-				this.Tag = Tag;
-				this.Data = Data;
-			}
-		}
-		internal class MenuSubmenu : MenuEntry {
-			internal MenuEntry[] Entries;
-			internal MenuSubmenu(string Text, MenuEntry[] Entries) {
-				this.Text = Text;
-				this.Highlight = 0.0;
-				this.Alpha = 0.0;
-				this.Entries = Entries;
-			}
-		}
-		internal static MenuEntry[] CurrentMenu = new MenuEntry[] { };
-		internal static int[] CurrentMenuSelection = new int[] { -1 };
-		internal static double[] CurrentMenuOffsets = new double[] { double.NegativeInfinity };
-		internal static void CreateMenu(bool QuitOnly) {
-			if (QuitOnly) {
-				// quit menu only
-				CurrentMenu = new MenuEntry[3];
-				CurrentMenu[0] = new MenuCaption(Interface.GetInterfaceString("menu_quit_question"));
-				CurrentMenu[1] = new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0);
-				CurrentMenu[2] = new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
-				CurrentMenuSelection = new int[] { 1 };
-				CurrentMenuOffsets = new double[] { double.NegativeInfinity };
-				CurrentMenu[1].Highlight = 1.0;
-			} else {
-				// full menu
-				int n = 0;
-				for (int i = 0; i < Stations.Length; i++) {
-					if (PlayerStopsAtStation(i) & Stations[i].Stops.Length > 0) {
-						n++;
-					}
-				}
-				MenuEntry[] a = new MenuEntry[n];
-				n = 0;
-				for (int i = 0; i < Stations.Length; i++) {
-					if (PlayerStopsAtStation(i) & Stations[i].Stops.Length > 0) {
-						a[n] = new MenuCommand(Stations[i].Name, MenuTag.JumpToStation, i);
-						n++;
-					}
-				}
-				if (n != 0) {
-					CurrentMenu = new MenuEntry[4];
-					CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
-					CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_jump"), a);
-					CurrentMenu[2] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_exit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
-					                                 });
-					CurrentMenu[3] = new MenuSubmenu(Interface.GetInterfaceString("menu_quit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_quit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
-					                                 });
-				} else {
-					CurrentMenu = new MenuEntry[3];
-					CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
-					CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_exit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
-					                                 });
-					CurrentMenu[2] = new MenuSubmenu(Interface.GetInterfaceString("menu_quit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_quit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
-					                                 });
-				}
-				CurrentMenuSelection = new int[] { 0 };
-				CurrentMenuOffsets = new double[] { double.NegativeInfinity };
-				CurrentMenu[0].Highlight = 1.0;
-			}
-		}
-
-		// ================================
-
+        /// <summary>Call this function to reset the game</summary>
+        /// <param name="ResetLogs">Whether the logs should be reset</param>
 		internal static void Reset(bool ResetLogs) {
 			// track manager
 			TrackManager.CurrentTrack = new TrackManager.Track();
@@ -808,14 +701,16 @@ namespace OpenBve {
 				return true;
 			}
 			internal TrainManager.Train GetFirstTrain(bool AllowBogusTrain) {
-				for (int i = 0; i < this.Trains.Length; i++) {
-					if (this.Trains[i].State == TrainManager.TrainState.Available) {
-						return this.Trains[i];
-					} else if (AllowBogusTrain & this.Trains[i].State == TrainManager.TrainState.Bogus) {
+				for (int i = 0; i < this.Trains.Length; i++)
+				{
+				    if (this.Trains[i].State == TrainManager.TrainState.Available) {
 						return this.Trains[i];
 					}
+				    if (AllowBogusTrain & this.Trains[i].State == TrainManager.TrainState.Bogus) {
+				        return this.Trains[i];
+				    }
 				}
-				return null;
+			    return null;
 			}
 		}
 		public static Section[] Sections = new Section[] { };
@@ -851,9 +746,8 @@ namespace OpenBve {
 						train = Sections[l].GetFirstTrain(false);
 						if (train != null) {
 							break;
-						} else {
-							l = Sections[l].PreviousSection;
 						}
+					    l = Sections[l].PreviousSection;
 					} else {
 						break;
 					}
@@ -1882,22 +1776,19 @@ namespace OpenBve {
 				j = Value >= 0 & Value < PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
-			if (j >= 0) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-				World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-				World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-				World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
-				World.CameraCurrentAlignment.TrackPosition = t;
-				World.UpdateAbsoluteCamera(0.0);
-				if (PointsOfInterest[j].Text != null) {
-					double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
-					Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.White, Game.SecondsSinceMidnight + n);
-				}
-				return true;
-			} else {
-				return false;
-			}
+		    if (j < 0) return false;
+		    TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
+		    World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
+		    World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
+		    World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
+		    World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+		    World.CameraCurrentAlignment.TrackPosition = t;
+		    World.UpdateAbsoluteCamera(0.0);
+		    if (PointsOfInterest[j].Text != null) {
+		        double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
+		        Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.White, Game.SecondsSinceMidnight + n);
+		    }
+		    return true;
 		}
 
 

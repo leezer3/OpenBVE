@@ -16,6 +16,7 @@ namespace OpenBve
         /// Represents a pressure of 1 atmosphere
         internal static double RouteInitialAirPressure = 101325.0;
         /// <summary>The initial air temperature in degrees kelvin</summary>
+        /// Represents 20°c
         internal static double RouteInitialAirTemperature = 293.15;
         /// <summary>The initial elevation in meters</summary>
         internal static double RouteInitialElevation = 0.0;
@@ -23,6 +24,7 @@ namespace OpenBve
         /// Represents a pressure of 1 atmosphere
         internal static double RouteSeaLevelAirPressure = 101325.0;
         /// <summary>The sea-level air temperature in degrees kelvin</summary>
+        /// Represents 20°c
         internal static double RouteSeaLevelAirTemperature = 293.15;
         internal static double[] RouteUnitOfLength = new double[] { 1.0 };
         internal const double CoefficientOfGroundFriction = 0.5;

@@ -87,6 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Information.cs" />
+    <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
