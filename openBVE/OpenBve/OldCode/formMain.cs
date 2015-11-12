@@ -674,6 +674,7 @@ namespace OpenBve {
 				Array.Resize<Interface.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
+            Sounds.Deinitialize();
 			// finish
 			#if !DEBUG
 			try {
