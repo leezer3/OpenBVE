@@ -900,9 +900,9 @@ namespace OpenBve {
 			}
 		}
 
-		// homepage
+		/// <summary>Launches a web-browser linked to the project homepage</summary>
 		private void linkHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			const string Url = "http://odakyufan.zxq.net/openbve/index.html";
+			const string Url = "http://github.com/leezer3/OpenBVE/";
 			try {
 				System.Diagnostics.Process.Start(Url);
 			} catch (Exception ex) {
@@ -998,8 +998,8 @@ namespace OpenBve {
 		// =========
 		// functions
 		// =========
-		
-		// load image
+
+        /// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
 		private Image LoadImage(string Folder, string Title) {
 		    try
 		    {
@@ -1022,8 +1022,8 @@ namespace OpenBve {
 		    }
 		}
 
-		// try load image
-		private bool TryLoadImage(PictureBox Box, string Title) {
+		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
+		private void TryLoadImage(PictureBox Box, string Title) {
 		    try
 		    {
 		        string Folder = Program.FileSystem.GetDataFolder("Menu");
@@ -1033,21 +1033,19 @@ namespace OpenBve {
 		            try
 		            {
 		                Box.Image = Image.FromFile(File);
-		                return true;
+		                return;
 		            }
 		            catch
 		            {
 		                Box.Image = Box.ErrorImage;
-		                return false;
+		                return;
 		            }
 		        }
 		        Box.Image = Box.ErrorImage;
-		        return false;
 		    }
 		    catch
 		    {
-                Box.Image = Box.ErrorImage;
-		        return false;
+		        Box.Image = Box.ErrorImage;
 		    }
 		}
 		
