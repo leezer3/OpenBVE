@@ -134,45 +134,66 @@ namespace OpenBve {
 
 	    private static OpenTK.Input.KeyboardState currentKeyboardState;
         private static OpenTK.Input.KeyboardState previousKeyboardState;
-		internal static void ProcessKeyboard() {
+
+	    internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
+	    {
+            //Check for modifiers
+            if(e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
+            if(e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
+            if(e.Alt) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
+	        //Traverse the controls array
+	        for (int i = 0; i < Interface.CurrentControls.Length; i++)
+	        {
+	            //If we're using keyboard for this input
+	            if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard)
+	            {
+	                //Compare the current and previous keyboard states
+	                //Only process if they are different
+	                if (!Enum.IsDefined(typeof (Key), Interface.CurrentControls[i].Key)) continue;
+                    if (e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
+	                {
+
+                        Interface.CurrentControls[i].AnalogState = 1.0;
+                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                        AddControlRepeat(i);
+	                }
+	            }
+	        }
+	    }
+
+        internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
+        {
+            //We don't need to check for modifiers on key up
+
+            //Traverse the controls array
+            for (int i = 0; i < Interface.CurrentControls.Length; i++)
+            {
+                //If we're using keyboard for this input
+                if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard)
+                {
+                    //Compare the current and previous keyboard states
+                    //Only process if they are different
+                    if (!Enum.IsDefined(typeof(Key), Interface.CurrentControls[i].Key)) continue;
+                    if (e.Key == Interface.CurrentControls[i].Key)
+                    {
+                        Interface.CurrentControls[i].AnalogState = 0.0;
+                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                        RemoveControlRepeat(i);
+                    }
+                }
+            }
+        }
+
+	    internal static void ProcessKeyboard() {
 
             //Load the current keyboard state from OpenTK
             var keyboardState = OpenTK.Input.Keyboard.GetState();
 	        currentKeyboardState = keyboardState;
-            //Check for modifiers
-		    CurrentKeyboardModifier = Interface.KeyboardModifier.None;
-            if (keyboardState[Key.LShift] | keyboardState[Key.RShift]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
-            if (keyboardState[Key.LControl] | keyboardState[Key.RControl]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
-            if (keyboardState[Key.LAlt] | keyboardState[Key.RAlt]) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
 
             //Traverse the controls array
 		    for (int i = 0; i < Interface.CurrentControls.Length; i++)
 		    {
-		        //If we're using keyboard for this input
-		        if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard)
-		        {
-		            //Compare the current and previous keyboard states
-		            //Only process if they are different
-		            if (!Enum.IsDefined(typeof (Key), Interface.CurrentControls[i].Key)) continue;
-		            if (currentKeyboardState[Interface.CurrentControls[i].Key] !=
-		                previousKeyboardState[Interface.CurrentControls[i].Key])
-		            {
-		                if (keyboardState[Interface.CurrentControls[i].Key] &
-		                    Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
-		                {
-		                    Interface.CurrentControls[i].AnalogState = 1.0;
-		                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-		                    AddControlRepeat(i);
-		                }
-		                else
-		                {
-		                    Interface.CurrentControls[i].AnalogState = 0.0;
-		                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-		                    RemoveControlRepeat(i);
-		                }
-		            }
-		        }
-		        else if(Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
+		        if(Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
                 {
                     if (!OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected) continue;
                     switch (Interface.CurrentControls[i].Component)
@@ -240,7 +261,6 @@ namespace OpenBve {
                     }
                 }
 		    }
-		    previousKeyboardState = keyboardState;
            
             /*
 					case Sdl.SDL_MOUSEBUTTONDOWN:
@@ -417,7 +437,7 @@ namespace OpenBve {
 									case Interface.Command.MenuBack:
 										// back
 										if (Game.CurrentMenuSelection.Length <= 1) {
-											Game.CurrentInterface = Game.InterfaceType.Normal;
+											//Game.CurrentInterface = Game.InterfaceType.Normal;
 										} else {
 											Array.Resize<int>(ref Game.CurrentMenuSelection, Game.CurrentMenuSelection.Length - 1);
 											Array.Resize<double>(ref Game.CurrentMenuOffsets, Game.CurrentMenuOffsets.Length - 1);

@@ -34,9 +34,8 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
-			Loader = new Thread(new ThreadStart(LoadThreaded));
-			Loader.IsBackground = true;
-			Loader.Start();
+		    Loader = new Thread(LoadThreaded) {IsBackground = true};
+		    Loader.Start();
 		}
 
 		// get railway folder

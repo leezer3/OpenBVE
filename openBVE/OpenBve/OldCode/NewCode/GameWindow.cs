@@ -42,6 +42,28 @@ namespace OpenBve
             }
             double TimeElapsed = RenderTimeElapsed;
             double RealTimeElapsed = RenderRealTimeElapsed;
+            
+            //Next, check if we're in paused/ in a menu
+            if(Game.CurrentInterface != Game.InterfaceType.Normal)
+            {
+                MainLoop.UpdateControlRepeats(0.0);
+                MainLoop.ProcessKeyboard();
+                MainLoop.ProcessControls(0.0);
+                
+                if (Game.CurrentInterface == Game.InterfaceType.Pause)
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+                Renderer.RenderScene(TimeElapsed);
+                Program.currentGameWindow.SwapBuffers();
+                if (MainLoop.Quit)
+                {
+                    Close();
+                }
+                //If the menu state has not changed, don't update the rendered simulation
+                return;
+            }
+            
             //Use the OpenTK framerate as this is much more accurate
             //Also avoids running a calculation
             if (TotalTimeElapsedForInfo >= 0.2)
@@ -88,20 +110,7 @@ namespace OpenBve
                 Game.UpdateBlackBox();
 
                 // pause/menu
-                while (Game.CurrentInterface != Game.InterfaceType.Normal)
-                {
-                    MainLoop.UpdateControlRepeats(RealTimeElapsed);
-                    MainLoop.ProcessKeyboard();
-                    MainLoop.ProcessControls(0.0);
-                    if (MainLoop.Quit) break;
-                    if (Game.CurrentInterface == Game.InterfaceType.Pause)
-                    {
-                        System.Threading.Thread.Sleep(10);
-                    }
-                    Renderer.RenderScene(TimeElapsed);
-                    Program.currentGameWindow.SwapBuffers();
-                    TimeElapsed = CPreciseTimer.GetElapsedTime();
-                }
+                
                 // limit framerate
                 if (MainLoop.LimitFramerate)
                 {
@@ -151,54 +160,58 @@ namespace OpenBve
                 RealTimeElapsed = 0.0;
                 TimeElapsed = Game.StartupTime - Game.SecondsSinceMidnight;
             }
-#if DEBUG
-            //If we're in debug mode and a frame takes greater than a second to render, we can safely assume that VS has hit a breakpoint
-            //Check this and the sim no longer barfs because the update time was too great
-            if (RealTimeElapsed > 1)
-            {
-                RealTimeElapsed = 0.0;
-                TimeElapsed = 0.0;
-            }
-#endif
-            TotalTimeElapsedForInfo += TimeElapsed;
-            TotalTimeElapsedForSectionUpdate += TimeElapsed;
 
-            
-            if (TotalTimeElapsedForSectionUpdate >= 1.0)
+            //We only want to update the simulation if we aren't in a menu
+            if (Game.CurrentInterface == Game.InterfaceType.Normal)
             {
-                if (Game.Sections.Length != 0)
+#if DEBUG
+                //If we're in debug mode and a frame takes greater than a second to render, we can safely assume that VS has hit a breakpoint
+                //Check this and the sim no longer barfs because the update time was too great
+                if (RealTimeElapsed > 1)
                 {
-                    Game.UpdateSection(Game.Sections.Length - 1);
+                    RealTimeElapsed = 0.0;
+                    TimeElapsed = 0.0;
                 }
-                TotalTimeElapsedForSectionUpdate = 0.0;
-            }
-           
-            // events
-            
-            // update simulation in chunks
-            {
-                const double chunkTime = 1.0 / 2.0;
-                if (TimeElapsed <= chunkTime)
+#endif
+                TotalTimeElapsedForInfo += TimeElapsed;
+                TotalTimeElapsedForSectionUpdate += TimeElapsed;
+
+
+                if (TotalTimeElapsedForSectionUpdate >= 1.0)
                 {
-                    Game.SecondsSinceMidnight += TimeElapsed;
-                    TrainManager.UpdateTrains(TimeElapsed);
-                }
-                else
-                {
-                    const int maxChunks = 2;
-                    int chunks = Math.Min((int)Math.Round(TimeElapsed / chunkTime), maxChunks);
-                    double time = TimeElapsed / (double)chunks;
-                    for (int i = 0; i < chunks; i++)
+                    if (Game.Sections.Length != 0)
                     {
-                        Game.SecondsSinceMidnight += time;
-                        TrainManager.UpdateTrains(time);
+                        Game.UpdateSection(Game.Sections.Length - 1);
+                    }
+                    TotalTimeElapsedForSectionUpdate = 0.0;
+                }
+
+                // events
+
+                // update simulation in chunks
+                {
+                    const double chunkTime = 1.0/2.0;
+                    if (TimeElapsed <= chunkTime)
+                    {
+                        Game.SecondsSinceMidnight += TimeElapsed;
+                        TrainManager.UpdateTrains(TimeElapsed);
+                    }
+                    else
+                    {
+                        const int maxChunks = 2;
+                        int chunks = Math.Min((int) Math.Round(TimeElapsed/chunkTime), maxChunks);
+                        double time = TimeElapsed/(double) chunks;
+                        for (int i = 0; i < chunks; i++)
+                        {
+                            Game.SecondsSinceMidnight += time;
+                            TrainManager.UpdateTrains(time);
+                        }
                     }
                 }
+                Game.UpdateScore(TimeElapsed);
+                Game.UpdateMessages();
+                Game.UpdateScoreMessages(TimeElapsed);
             }
-            Game.UpdateScore(TimeElapsed);
-            Game.UpdateMessages();
-            Game.UpdateScoreMessages(TimeElapsed);
-            
             RenderTimeElapsed += TimeElapsed;
             RenderRealTimeElapsed += RealTimeElapsed;
             if (loadComplete && !firstFrame)
@@ -209,6 +222,8 @@ namespace OpenBve
 
         protected override void OnLoad(EventArgs e)
         {
+            Keyboard.KeyDown += MainLoop.keyDownEvent;
+            Keyboard.KeyUp += MainLoop.keyUpEvent;
             Sounds.Initialize();
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
