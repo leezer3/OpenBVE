@@ -220,9 +220,13 @@ namespace OpenBve {
 		}
 
 		// display
+        /// <summary>The current horizontal viewing angle in radians</summary>
 		internal static double HorizontalViewingAngle;
+        /// <summary>The current vertical viewing angle in radians</summary>
 		internal static double VerticalViewingAngle;
+        /// <summary>The original vertical viewing angle in radians</summary>
 		internal static double OriginalVerticalViewingAngle;
+        /// <summary>The current aspect ratio</summary>
 		internal static double AspectRatio;
 		/// <summary>The current viewing distance in the forward direction.</summary>
 		internal static double ForwardViewingDistance;
@@ -473,35 +477,32 @@ namespace OpenBve {
 			if ((CameraMode != CameraViewMode.Interior & CameraMode != CameraViewMode.InteriorLookAhead) | CameraRestriction != CameraRestrictionMode.On) {
 				Source = Target;
 				return true;
-			} else {
-				double best = Source;
-				const int Precision = 8;
-				double a = Source;
-				double b = Target;
-				Source = Target;
-				if (Zoom) ApplyZoom();
-				if (PerformCameraRestrictionTest()) {
-					return true;
-				} else {
-					double x = 0.5 * (a + b);
-					bool q = true;
-					for (int i = 0; i < Precision; i++) {
-						Source = x;
-						if (Zoom) ApplyZoom();
-						q = PerformCameraRestrictionTest();
-						if (q) {
-							a = x;
-							best = x;
-						} else {
-							b = x;
-						}
-						x = 0.5 * (a + b);
-					}
-					Source = best;
-					if (Zoom) ApplyZoom();
-					return q;
-				}
 			}
+		    double best = Source;
+		    const int Precision = 8;
+		    double a = Source;
+		    double b = Target;
+		    Source = Target;
+		    if (Zoom) ApplyZoom();
+		    if (PerformCameraRestrictionTest()) {
+		        return true;
+		    }
+		    double x = 0.5 * (a + b);
+		    bool q = true;
+		    for (int i = 0; i < Precision; i++) {
+		        if (Zoom) ApplyZoom();
+		        q = PerformCameraRestrictionTest();
+		        if (q) {
+		            a = x;
+		            best = x;
+		        } else {
+		            b = x;
+		        }
+		        x = 0.5 * (a + b);
+		    }
+		    Source = best;
+		    if (Zoom) ApplyZoom();
+		    return q;
 		}
         /// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
         /// <returns>True if we are able to move the camera, false otherwise</returns>
@@ -604,6 +605,8 @@ namespace OpenBve {
 							double y1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * bestTrain.Cars[0].Height;
 							double z1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
 							
+                            /*
+                             * d1 is never used, so don't calculate it
                             double d1;
 							{
 								double dx = x1 - px;
@@ -611,9 +614,13 @@ namespace OpenBve {
 								double dz = z1 - pz;
 								d1 = dx * dx + dy * dy + dz * dz;
 							}
+                             */
 							double x2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.X + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * secondBestTrain.Cars[0].Height;
 							double z2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
+
+                            /*
+                             * d2 is never used, so don't calculate it
 							double d2;
 							{
 								double dx = x2 - px;
@@ -621,6 +628,7 @@ namespace OpenBve {
 								double dz = z2 - pz;
 								d2 = dx * dx + dy * dy + dz * dz;
 							}
+                             */
 							double t = 0.5 - (secondBestDistance - bestDistance) / (2.0 * maxDistance);
 							if (t < 0.0) t = 0.0;
 							t = 2.0 * t * t; /* in order to change the shape of the interpolation curve */
@@ -1128,31 +1136,27 @@ namespace OpenBve {
 			Vector.Y = v;
 		}
 		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * (double)px + ux * (double)py + dx * (double)pz;
-			y = sy * (double)px + uy * (double)py + dy * (double)pz;
-			z = sz * (double)px + uz * (double)py + dz * (double)pz;
+		    var x = sx * (double)px + ux * (double)py + dx * (double)pz;
+			var y = sy * (double)px + uy * (double)py + dy * (double)pz;
+			var z = sz * (double)px + uz * (double)py + dz * (double)pz;
 			px = (float)x; py = (float)y; pz = (float)z;
 		}
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * px + ux * py + dx * pz;
-			y = sy * px + uy * py + dy * pz;
-			z = sz * px + uz * py + dz * pz;
+			var x = sx * px + ux * py + dx * pz;
+			var y = sy * px + uy * py + dy * pz;
+			var z = sz * px + uz * py + dz * pz;
 			px = x; py = y; pz = z;
 		}
 		internal static void Rotate(ref float px, ref float py, ref float pz, Transformation t) {
-			double x, y, z;
-			x = t.X.X * (double)px + t.Y.X * (double)py + t.Z.X * (double)pz;
-			y = t.X.Y * (double)px + t.Y.Y * (double)py + t.Z.Y * (double)pz;
-			z = t.X.Z * (double)px + t.Y.Z * (double)py + t.Z.Z * (double)pz;
+			var x = t.X.X * (double)px + t.Y.X * (double)py + t.Z.X * (double)pz;
+			var y = t.X.Y * (double)px + t.Y.Y * (double)py + t.Z.Y * (double)pz;
+			var z = t.X.Z * (double)px + t.Y.Z * (double)py + t.Z.Z * (double)pz;
 			px = (float)x; py = (float)y; pz = (float)z;
 		}
 		internal static void Rotate(ref double px, ref double py, ref double pz, Transformation t) {
-			double x, y, z;
-			x = t.X.X * px + t.Y.X * py + t.Z.X * pz;
-			y = t.X.Y * px + t.Y.Y * py + t.Z.Y * pz;
-			z = t.X.Z * px + t.Y.Z * py + t.Z.Z * pz;
+			var x = t.X.X * px + t.Y.X * py + t.Z.X * pz;
+			var y = t.X.Y * px + t.Y.Y * py + t.Z.Y * pz;
+			var z = t.X.Z * px + t.Y.Z * py + t.Z.Z * pz;
 			px = x; py = y; pz = z;
 		}
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
@@ -1206,7 +1210,8 @@ namespace OpenBve {
 			}
 		}
 
-		// create normals
+		/// <summary>Generates the default lighting normals for a mesh</summary>
+		/// <param name="Mesh">The mesh for which to generate normals</param>
 		internal static void CreateNormals(ref Mesh Mesh) {
 			for (int i = 0; i < Mesh.Faces.Length; i++) {
 				CreateNormals(ref Mesh, i);

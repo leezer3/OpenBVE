@@ -7,7 +7,8 @@ namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
 
-
+        /// <summary>Gets the UID of the current user if running on a Unix based system</summary>
+        /// <returns>The UID</returns>
         [DllImport("libc")]
         public static extern uint getuid();
 
@@ -236,6 +237,8 @@ namespace OpenBve {
 				return false;
 			}
 			// begin HACK //
+            
+            //One degree in radians
 			const double degrees = 0.0174532925199433;
 			World.VerticalViewingAngle = 45.0 * degrees;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
