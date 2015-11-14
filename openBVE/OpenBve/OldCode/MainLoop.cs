@@ -21,6 +21,7 @@ namespace OpenBve {
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
+            Sounds.Initialize();
 		    currentResult = result;   
 		    if (OpenTKWindow == false)
 		    {

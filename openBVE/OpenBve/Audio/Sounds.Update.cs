@@ -10,6 +10,7 @@ namespace OpenBve {
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
 		/// <param name="model">The sound model.</param>
 		internal static void Update(double timeElapsed, SoundModels model) {
+		    if (timeElapsed == 0.0) return;
 			if (model == SoundModels.Linear) {
 				UpdateLinearModel(timeElapsed);
 			} else {

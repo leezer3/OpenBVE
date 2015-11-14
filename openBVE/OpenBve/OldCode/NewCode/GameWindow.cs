@@ -32,6 +32,7 @@ namespace OpenBve
             }
         }
 
+
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -225,8 +226,7 @@ namespace OpenBve
         {
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
-            
-            Sounds.Initialize();
+
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
             Renderer.Initialize();
@@ -481,7 +481,6 @@ namespace OpenBve
                 }
                 Game.MinimalisticSimulation = false;
             }
-
             // animated objects
             ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
             TrainManager.UpdateTrainObjects(0.0, true);
@@ -494,6 +493,7 @@ namespace OpenBve
                     Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
                 }
             }
+            
             // warnings / errors
             if (Interface.MessageCount != 0)
             {
@@ -532,7 +532,6 @@ namespace OpenBve
                     Game.AddDebugMessage(warnings.ToString() + " warning(s)", 10.0);
                 }
             }
-            Sounds.StopAllSounds();
             loadComplete = true;
             RenderRealTimeElapsed = 0.0;
             RenderTimeElapsed = 0.0;
