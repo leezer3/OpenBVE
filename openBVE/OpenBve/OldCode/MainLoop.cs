@@ -159,6 +159,8 @@ namespace OpenBve {
 	                }
 	            }
 	        }
+            //Remember to reset the keyboard modifier after we're done, else it repeats.....
+            CurrentKeyboardModifier = Interface.KeyboardModifier.None;
 	    }
 
         internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)

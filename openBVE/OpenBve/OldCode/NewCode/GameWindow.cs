@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -224,6 +225,7 @@ namespace OpenBve
         {
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
+            
             Sounds.Initialize();
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
