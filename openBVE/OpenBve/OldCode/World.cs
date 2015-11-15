@@ -490,6 +490,8 @@ namespace OpenBve {
 		    double x = 0.5 * (a + b);
 		    bool q = true;
 		    for (int i = 0; i < Precision; i++) {
+                //Do not remove, this is updated via the ref & causes the panel zoom to bug out
+                Source = x;
 		        if (Zoom) ApplyZoom();
 		        q = PerformCameraRestrictionTest();
 		        if (q) {

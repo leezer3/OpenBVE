@@ -705,93 +705,96 @@ namespace OpenBve {
 										Interface.AddMessage(Interface.MessageType.Error, false, "The $Include directive must not appear within another statement" + Epilog);
 										continueWithNextExpression = true;
 										break;
-									} else {
-										string[] args = s.Split(';');
-										for (int ia = 0; ia < args.Length; ia++) {
-											args[ia] = args[ia].Trim();
-										}
-										int count = (args.Length + 1) / 2;
-										string[] files = new string[count];
-										double[] weights = new double[count];
-										double[] offsets = new double[count];
-										double weightsTotal = 0.0;
-										for (int ia = 0; ia < count; ia++) {
-											string file;
-											double offset;
-											int colon = args[2 * ia].IndexOf(':');
-											if (colon >= 0) {
-												file = args[2 * ia].Substring(0, colon).TrimEnd();
-												string value = args[2 * ia].Substring(colon + 1).TrimStart();
-												if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
-													continueWithNextExpression = true;
-													Interface.AddMessage(Interface.MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
-													break;
-												}
-											} else {
-												file = args[2 * ia];
-												offset = 0.0;
-											}
-											files[ia] = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
-											offsets[ia] = offset;
-											if (!System.IO.File.Exists(files[ia])) {
-												continueWithNextExpression = true;
-												Interface.AddMessage(Interface.MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
-												break;
-											} else if (2 * ia + 1 < args.Length) {
-												if (!Interface.TryParseDoubleVb6(args[2 * ia + 1], out weights[ia])) {
-													continueWithNextExpression = true;
-													Interface.AddMessage(Interface.MessageType.Error, false, "A weight is invalid in " + t + Epilog);
-													break;
-												} else if (weights[ia] <= 0.0) {
-													continueWithNextExpression = true;
-													Interface.AddMessage(Interface.MessageType.Error, false, "A weight is not positive in " + t + Epilog);
-													break;
-												} else {
-													weightsTotal += weights[ia];
-												}
-											} else {
-												weights[ia] = 1.0;
-												weightsTotal += 1.0;
-											}
-										}
-										if (count == 0) {
-											continueWithNextExpression = true;
-											Interface.AddMessage(Interface.MessageType.Error, false, "No file was specified in " + t + Epilog);
-											break;
-										} else if (!continueWithNextExpression) {
-											double number = Program.RandomNumberGenerator.NextDouble() * weightsTotal;
-											double value = 0.0;
-											int chosenIndex = 0;
-											for (int ia = 0; ia < count; ia++) {
-												value += weights[ia];
-												if (value > number) {
-													chosenIndex = ia;
-													break;
-												}
-											}
-											Expression[] expr;
-											string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
-											PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, Encoding, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
-											int length = Expressions.Length;
-											if (expr.Length == 0) {
-												for (int ia = i; ia < Expressions.Length - 1; ia++) {
-													Expressions[ia] = Expressions[ia + 1];
-												}
-												Array.Resize<Expression>(ref Expressions, length - 1);
-											} else {
-												Array.Resize<Expression>(ref Expressions, length + expr.Length - 1);
-												for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
-													Expressions[ia] = Expressions[ia - expr.Length + 1];
-												}
-												for (int ia = 0; ia < expr.Length; ia++) {
-													Expressions[i + ia] = expr[ia];
-												}
-											}
-											i--;
-											continueWithNextExpression = true;
-										}
 									}
-									break;
+							        string[] args = s.Split(';');
+							        for (int ia = 0; ia < args.Length; ia++) {
+							            args[ia] = args[ia].Trim();
+							        }
+							        int count = (args.Length + 1) / 2;
+							        string[] files = new string[count];
+							        double[] weights = new double[count];
+							        double[] offsets = new double[count];
+							        double weightsTotal = 0.0;
+							        for (int ia = 0; ia < count; ia++) {
+							            string file;
+							            double offset;
+							            int colon = args[2 * ia].IndexOf(':');
+							            if (colon >= 0) {
+							                file = args[2 * ia].Substring(0, colon).TrimEnd();
+							                string value = args[2 * ia].Substring(colon + 1).TrimStart();
+							                if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
+							                    continueWithNextExpression = true;
+							                    Interface.AddMessage(Interface.MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
+							                    break;
+							                }
+							            } else {
+							                file = args[2 * ia];
+							                offset = 0.0;
+							            }
+							            files[ia] = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+							            offsets[ia] = offset;
+							            if (!System.IO.File.Exists(files[ia])) {
+							                continueWithNextExpression = true;
+							                Interface.AddMessage(Interface.MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
+							                break;
+							            }
+							            if (2 * ia + 1 < args.Length)
+							            {
+							                if (!Interface.TryParseDoubleVb6(args[2 * ia + 1], out weights[ia])) {
+							                    continueWithNextExpression = true;
+							                    Interface.AddMessage(Interface.MessageType.Error, false, "A weight is invalid in " + t + Epilog);
+							                    break;
+							                }
+							                if (weights[ia] <= 0.0) {
+							                    continueWithNextExpression = true;
+							                    Interface.AddMessage(Interface.MessageType.Error, false, "A weight is not positive in " + t + Epilog);
+							                    break;
+							                }
+							                weightsTotal += weights[ia];
+							            }
+							            else {
+							                weights[ia] = 1.0;
+							                weightsTotal += 1.0;
+							            }
+							        }
+							        if (count == 0) {
+							            continueWithNextExpression = true;
+							            Interface.AddMessage(Interface.MessageType.Error, false, "No file was specified in " + t + Epilog);
+							            break;
+							        }
+							        if (!continueWithNextExpression) {
+							            double number = Program.RandomNumberGenerator.NextDouble() * weightsTotal;
+							            double value = 0.0;
+							            int chosenIndex = 0;
+							            for (int ia = 0; ia < count; ia++) {
+							                value += weights[ia];
+							                if (value > number) {
+							                    chosenIndex = ia;
+							                    break;
+							                }
+							            }
+							            Expression[] expr;
+							            string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
+							            PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, Encoding, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+							            int length = Expressions.Length;
+							            if (expr.Length == 0) {
+							                for (int ia = i; ia < Expressions.Length - 1; ia++) {
+							                    Expressions[ia] = Expressions[ia + 1];
+							                }
+							                Array.Resize<Expression>(ref Expressions, length - 1);
+							            } else {
+							                Array.Resize<Expression>(ref Expressions, length + expr.Length - 1);
+							                for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
+							                    Expressions[ia] = Expressions[ia - expr.Length + 1];
+							                }
+							                for (int ia = 0; ia < expr.Length; ia++) {
+							                    Expressions[i + ia] = expr[ia];
+							                }
+							            }
+							            i--;
+							            continueWithNextExpression = true;
+							        }
+							        break;
 								case "$chr":
 									{
 										int x;
@@ -1026,9 +1029,10 @@ namespace OpenBve {
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Command = null; break;
-										} else if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
-											Command = null; break;
 										}
+									    if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+									        Command = null; break;
+									    }
 									} else {
 										if (Indices.Length > 0 && !Interface.TryParseIntVb6(Indices, out CommandIndex1)) {
 											Command = null; break;
