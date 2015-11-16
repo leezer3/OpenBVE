@@ -293,8 +293,7 @@ namespace OpenBve {
 		                return;
 		            }
 		        }
-		        double x;
-		        x = Object.TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+		        double x = Object.TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
 		            IsPartOfTrain, TimeElapsed);
 		        double rx = Object.TranslateXDirection.X, ry = Object.TranslateXDirection.Y, rz = Object.TranslateXDirection.Z;
 		        World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
@@ -339,8 +338,7 @@ namespace OpenBve {
                         return;
                     }
                 }
-                double y;
-                y = Object.TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+                double y = Object.TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
                     IsPartOfTrain, TimeElapsed);
                 double rx = Object.TranslateYDirection.X, ry = Object.TranslateYDirection.Y, rz = Object.TranslateYDirection.Z;
                 World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
@@ -384,8 +382,7 @@ namespace OpenBve {
                         return;
                     }
                 }
-                double z;
-                z = Object.TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+                double z = Object.TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
                     IsPartOfTrain, TimeElapsed);
                 double rx = Object.TranslateZDirection.X, ry = Object.TranslateZDirection.Y, rz = Object.TranslateZDirection.Z;
                 World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,

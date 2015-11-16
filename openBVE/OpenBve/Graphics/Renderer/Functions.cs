@@ -161,8 +161,8 @@ namespace OpenBve
             GL.Enable(EnableCap.ColorMaterial);
             GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
             GL.ShadeModel(ShadingModel.Smooth);
-            float x = ((float)OptionAmbientColor.R + (float)OptionAmbientColor.G + (float)OptionAmbientColor.B);
-            float y = ((float)OptionDiffuseColor.R + (float)OptionDiffuseColor.G + (float)OptionDiffuseColor.B);
+            float x = (float)OptionAmbientColor.R + (float)OptionAmbientColor.G + (float)OptionAmbientColor.B;
+            float y = (float)OptionDiffuseColor.R + (float)OptionDiffuseColor.G + (float)OptionDiffuseColor.B;
             if (x < y) x = y;
             OptionLightingResultingAmount = 0.00208333333333333f * x;
             if (OptionLightingResultingAmount > 1.0f) OptionLightingResultingAmount = 1.0f;

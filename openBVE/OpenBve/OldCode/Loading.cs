@@ -8,14 +8,22 @@ namespace OpenBve {
 	internal static class Loading {
 
 		// members
+        /// <summary>The current route loading progress</summary>
 		internal static double RouteProgress;
+        /// <summary>The current train loading progress</summary>
 		internal static double TrainProgress;
+        /// <summary>Set this member to true to cancel loading</summary>
 		internal static bool Cancel;
+        /// <summary>Whether loading is complete</summary>
 		internal static bool Complete;
-		private static Thread Loader = null;
+		private static Thread Loader;
+        /// <summary>The current route file</summary>
 		private static string CurrentRouteFile;
+        /// <summary>The character encoding of this route file</summary>
 		private static Encoding CurrentRouteEncoding;
+        /// <summary>The current train folder</summary>
 		private static string CurrentTrainFolder;
+        /// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
 		internal static double TrainProgressCurrentSum;
 		internal static double TrainProgressCurrentWeight;
@@ -38,7 +46,8 @@ namespace OpenBve {
 		    Loader.Start();
 		}
 
-		// get railway folder
+		/// <summary>Gets the absolute Railway folder for a given route file</summary>
+		/// <returns>The absolute on-disk path of the railway folder</returns>
 		private static string GetRailwayFolder(string RouteFile) {
 			try {
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
@@ -87,8 +96,9 @@ namespace OpenBve {
 			// screen
 		    World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
 		    World.CameraMode = World.CameraViewMode.Interior;
-			// load route
-			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
+			//First, check the format of the route file
+            //RW routes were written for BVE1 / 2, and have a different command syntax
+		    bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Game.CalculateSeaLevelConstants();

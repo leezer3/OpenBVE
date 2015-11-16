@@ -52,28 +52,57 @@ namespace OpenBve
         /// <returns>Whether registering the texture was successful.</returns>
         internal static bool RegisterTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out Texture handle)
         {
-           
+           /* BUG:
+            * Attempt to delete null texture handles from the end of the array
+            * These sometimes seem to end up there
+            * 
+            * Have also seen a registered textures count of 72 and an array length of 64
+            * Is it possible for a texture to fail to register, but still increment the registered textures count?
+            * 
+            * There appears to be a timing issue somewhere whilst loading, as this only happens intermittantly
+            */
+            if (RegisteredTexturesCount != 0)
+            {
+                try
+                {
+                    for (int i = RegisteredTexturesCount - 1; i > 0; i--)
+                    {
+                        if (RegisteredTextures[i] != null)
+                        {
+                            break;
+                        }
+                        Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length - 1);
+                    }
+                }
+                catch
+                {
+                }
+            }
             /*
              * Check if the texture is already registered.
              * If so, return the existing handle.
              * */
             for (int i = 0; i < RegisteredTexturesCount; i++)
             {
-                try
+                if (RegisteredTextures[i] != null)
                 {
-                    //The only exceptions thrown were these when it barfed
-                    PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
-                    if (source != null && source.Path == path && source.Parameters == parameters)
+                    try
                     {
-                        handle = RegisteredTextures[i];
-                        return true;
+                        //The only exceptions thrown were these when it barfed
+                        PathOrigin source = RegisteredTextures[i].Origin as PathOrigin;
+                        if (source != null && source.Path == path && source.Parameters == parameters)
+                        {
+                            handle = RegisteredTextures[i];
+                            return true;
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
-                catch
-                {
-                }
-                
+
             }
+
             /*
              * Register the texture and return the newly created handle.
              * */

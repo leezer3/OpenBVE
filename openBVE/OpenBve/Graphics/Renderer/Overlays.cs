@@ -169,13 +169,13 @@ namespace OpenBve
                                                 Game.Messages[j].RendererAlpha = 1.0;
                                             }
                                             tx = x;
-                                            ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                            ty = y + m * Interface.CurrentHudElements[i].Value2;
                                             preserve = true;
                                         }
                                         else if (Interface.CurrentHudElements[i].Transition == Interface.HudTransition.MoveAndFade)
                                         {
                                             tx = x;
-                                            ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                            ty = y + m * Interface.CurrentHudElements[i].Value2;
                                         }
                                         else
                                         {
@@ -205,7 +205,7 @@ namespace OpenBve
                                     else
                                     {
                                         tx = x;
-                                        ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                        ty = y + m * Interface.CurrentHudElements[i].Value2;
                                         Game.Messages[j].RendererPosition.X = 0.0;
                                         const double speed = 12.0;
                                         double dy = (speed * Math.Abs(ty - Game.Messages[j].RendererPosition.Y) + 0.1) * TimeElapsed;
@@ -460,13 +460,13 @@ namespace OpenBve
                                                 Game.ScoreMessages[j].RendererAlpha = 1.0;
                                             }
                                             tx = x;
-                                            ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                            ty = y + m * Interface.CurrentHudElements[i].Value2;
                                             preserve = true;
                                         }
                                         else if (Interface.CurrentHudElements[i].Transition == Interface.HudTransition.MoveAndFade)
                                         {
                                             tx = x;
-                                            ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                            ty = y + m * Interface.CurrentHudElements[i].Value2;
                                         }
                                         else
                                         {
@@ -496,7 +496,7 @@ namespace OpenBve
                                     else
                                     {
                                         tx = x;
-                                        ty = y + m * (Interface.CurrentHudElements[i].Value2);
+                                        ty = y + m * Interface.CurrentHudElements[i].Value2;
                                         Game.ScoreMessages[j].RendererPosition.X = 0.0;
                                         const double speed = 12.0;
                                         double dy = (speed * Math.Abs(ty - Game.ScoreMessages[j].RendererPosition.Y) + 0.1) * TimeElapsed;

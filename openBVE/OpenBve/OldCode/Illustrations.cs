@@ -289,10 +289,12 @@ namespace OpenBve {
 			{
 				Font f = new Font(FontFamily.GenericSansSerif, 10.0f, GraphicsUnit.Pixel);
 				Font fs = new Font(FontFamily.GenericSansSerif, 9.0f, GraphicsUnit.Pixel);
-				StringFormat m = new StringFormat();
-				m.Alignment = StringAlignment.Far;
-				m.LineAlignment = StringAlignment.Center;
-				System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			    StringFormat m = new StringFormat
+			    {
+			        Alignment = StringAlignment.Far,
+			        LineAlignment = StringAlignment.Center
+			    };
+			    System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 				int k = 48 * n / Width;
 				for (int i = 0; i < n; i += k) {
 					double x = ox + w * (double)(i - n0) * nd;

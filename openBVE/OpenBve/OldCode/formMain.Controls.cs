@@ -274,7 +274,7 @@ namespace OpenBve {
 				int j = comboboxKeyboardKey.SelectedIndex;
                 
 			    Key k;
-			    if (Key.TryParse(comboboxKeyboardKey.Items[j].ToString(), true, out k))
+			    if (Enum.TryParse(comboboxKeyboardKey.Items[j].ToString(), true, out k))
 			    {
                     Interface.CurrentControls[i].Key = k;
 			        UpdateControlListElement(listviewControls.Items[i], i, true);

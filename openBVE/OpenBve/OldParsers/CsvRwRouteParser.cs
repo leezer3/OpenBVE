@@ -207,7 +207,13 @@ namespace OpenBve {
 		private struct RouteData {
 			internal double TrackPosition;
 			internal double BlockInterval;
+            /// <summary>OpenBVE runs internally in meters per second
+            /// This value is used to convert between the speed set by Options.UnitsOfSpeed and m/s
+            /// </summary>
 			internal double UnitOfSpeed;
+            /// <summary>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
+            /// Certain BVE2/4 era routes used this as an animation trick
+            /// </summary>
 			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
@@ -222,6 +228,16 @@ namespace OpenBve {
 			internal Marker[] Markers;
 			internal int FirstUsedBlock;
 		}
+
+        /// <summary>This method checks whether a given route file is in the .rw format</summary>
+        /// <param name="FileName">The file to check</param>
+        /// <returns>True if this file is a RW, false otherwise</returns>
+	    internal static bool isRWFile(string FileName)
+        {
+            //TODO: Write a RW check function, which *doesn't* requite checking the extension
+            //This is a kludge, and likely to fall over with misnamed files
+            return string.Equals(System.IO.Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
+        }
 
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
@@ -390,7 +406,10 @@ namespace OpenBve {
 				Game.Sections[0].StationIndex = -1;
 				Game.Sections[0].TrackPosition = 0;
 				Game.Sections[0].Trains = new TrainManager.Train[] { };
-				// continue
+
+                /*
+                 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
+                 */
 				Data.SignalSpeeds = new double[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
 			}
 			ParseRouteForData(FileName, IsRW, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
@@ -409,12 +428,14 @@ namespace OpenBve {
 			internal double TrackPositionOffset;
 		}
 		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, ref RouteData Data, bool PreviewOnly) {
-			// parse
+			//Read the entire routefile into memory
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Expression[] Expressions;
-			PreprocessSplitIntoExpressions(FileName, IsRW, Lines, Encoding, out Expressions, true, 0.0);
+			PreprocessSplitIntoExpressions(FileName, IsRW, Lines, out Expressions, true, 0.0);
 			PreprocessChrRndSub(FileName, IsRW, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
+            //Set units of speed initially to km/h
+            //This represents 1km/h in m/s
 			Data.UnitOfSpeed = 0.277777777777778;
 			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
@@ -423,7 +444,7 @@ namespace OpenBve {
 		}
 
 		// preprocess split into expressions
-		private static void PreprocessSplitIntoExpressions(string FileName, bool IsRW, string[] Lines, System.Text.Encoding Encoding, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset) {
+		private static void PreprocessSplitIntoExpressions(string FileName, bool IsRW, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset) {
 			Expressions = new Expression[4096];
 			int e = 0;
 			// full-line rw comments
@@ -556,7 +577,7 @@ namespace OpenBve {
 			Array.Resize<Expression>(ref Expressions, e);
 		}
 
-		// preprocess chrrndsub
+		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
 		private static void PreprocessChrRndSub(string FileName, bool IsRW, ref Expression[] Expressions) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Text.Encoding Encoding = new System.Text.ASCIIEncoding();
@@ -775,7 +796,7 @@ namespace OpenBve {
 							            }
 							            Expression[] expr;
 							            string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
-							            PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, Encoding, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+							            PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
 							            int length = Expressions.Length;
 							            if (expr.Length == 0) {
 							                for (int ia = i; ia < Expressions.Length - 1; ia++) {
@@ -965,7 +986,7 @@ namespace OpenBve {
 					}
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, Expressions[j].File, j, true);
+					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, true);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
@@ -1023,7 +1044,7 @@ namespace OpenBve {
 								if (Command[k] == '(') {
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
-									int h = Indices.IndexOf(";");
+									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									if (h >= 0) {
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();
@@ -1031,11 +1052,11 @@ namespace OpenBve {
 											Command = null; break;
 										}
 									    if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
-									        Command = null; break;
+									        Command = null;
 									    }
 									} else {
 										if (Indices.Length > 0 && !Interface.TryParseIntVb6(Indices, out CommandIndex1)) {
-											Command = null; break;
+											Command = null;
 										}
 									}
 									break;
@@ -1177,7 +1198,7 @@ namespace OpenBve {
 		}
 
 		// separate commands and arguments
-		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, string FileName, int LineNumber, bool RaiseErrors) {
+		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors) {
 			bool openingerror = false, closingerror = false;
 			int i;
 			for (i = 0; i < Expression.Text.Length; i++) {
@@ -1391,7 +1412,7 @@ namespace OpenBve {
 					}
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, Expressions[j].File, j, false);
+					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, false);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
@@ -2604,7 +2625,7 @@ namespace OpenBve {
 					}
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, Expressions[j].File, j, false);
+					SeparateCommandsAndArguments(Expressions[j], out Command, out ArgumentSequence, Culture, false);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
