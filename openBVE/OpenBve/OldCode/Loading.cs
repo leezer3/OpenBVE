@@ -77,14 +77,18 @@ namespace OpenBve {
 					if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 						if (TrainManager.Trains[i].Plugin.LastException != null) {
 							Interface.AddMessage(Interface.MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
+                             Program.RestartArguments = " ";
+                             Cancel = true;    
 							return;
 						}
 					}
 				}
 				Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+			    Program.RestartArguments = " ";
+                Cancel = true;                
 			}
-			#endif
-			Complete = true;
+            #endif
+            Complete = true;
 		}
 		private static void LoadEverythingThreaded() {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
