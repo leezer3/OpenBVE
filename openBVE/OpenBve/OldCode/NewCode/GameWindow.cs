@@ -239,6 +239,10 @@ namespace OpenBve
 
         private void SetupSimulation()
         {
+            if (Loading.Cancel)
+            {
+                Close();
+            }
             Renderer.InitializeLighting();
             Timetable.CreateTimetable();
             for (int i = 0; i < Interface.MessageCount; i++)

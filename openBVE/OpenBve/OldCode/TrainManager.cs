@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -472,17 +474,28 @@ namespace OpenBve {
             if (System.IO.File.Exists(File))
             {
                 ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
-                for (int i = 0; i < a.Objects.Length; i++)
+                try
                 {
-                    a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+                    for (int i = 0; i < a.Objects.Length; i++)
+                    {
+                        a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+                    }
+                    Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
+                    World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
                 }
-                Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-                World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+                catch
+                {
+                    MessageBox.Show("A critical error occured parsing the panel.animated file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Program.RestartArguments = " ";
+                    Loading.Cancel = true;
+                }
             }
             else
             {
-                File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
-                if (System.IO.File.Exists(File))
+                try
+                {
+                    File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+                    if (System.IO.File.Exists(File))
                     {
                         Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
                         World.CameraRestriction = World.CameraRestrictionMode.On;
@@ -500,7 +513,14 @@ namespace OpenBve {
                             World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
                         }
                     }
-                
+                }
+                catch
+                {
+                    MessageBox.Show("A critical error occured parsing the panel2.cfg file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    Program.RestartArguments = " ";
+                    Loading.Cancel = true;
+                }
+
             }
         }
 
