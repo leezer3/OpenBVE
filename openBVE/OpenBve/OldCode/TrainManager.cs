@@ -492,6 +492,7 @@ namespace OpenBve {
             }
             else
             {
+
                 try
                 {
                     File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");

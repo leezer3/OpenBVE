@@ -433,7 +433,10 @@ namespace OpenBve
             }
             else
             {
-                // not a 3d cab
+                /*
+                 * Render 2D Cab
+                 * This is actually an animated object generated on the fly and held in memory
+                 */
                 if (LightingEnabled)
                 {
                     GL.Disable(EnableCap.Lighting); LightingEnabled = false; // TODO: was 'true' before
@@ -451,6 +454,7 @@ namespace OpenBve
                 {
                     RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
                 }
+                
             }
             // render overlays
             OptionLighting = optionLighting;

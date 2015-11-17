@@ -116,7 +116,7 @@ namespace OpenBve
             return true;
         }
 
-        /// <summary>Registeres a texture and returns a handle to the texture.</summary>
+        /// <summary>Registers a texture and returns a handle to the texture.</summary>
         /// <param name="texture">The texture data.</param>
         /// <returns>The handle to the texture.</returns>
         internal static Texture RegisterTexture(OpenBveApi.Textures.Texture texture)

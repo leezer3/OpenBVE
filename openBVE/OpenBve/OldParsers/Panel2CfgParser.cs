@@ -11,8 +11,9 @@ namespace OpenBve {
 		internal const double EyeDistance = 1.0;
 		
 		// parse panel config
-		internal static void ParsePanel2Config(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train) {
-			// read lines
+		internal static void ParsePanel2Config(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
+		{
+		    // read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
@@ -171,7 +172,10 @@ namespace OpenBve {
 							Textures.RegisterTexture(PanelNighttimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
 						}
 					}
-					Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+                    OpenBVEGame.RunInRenderThread(() =>
+                    {
+                        Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+                    });
 					PanelBitmapWidth = (double)tday.Width;
 					PanelBitmapHeight = (double)tday.Height;
 					CreateElement(Train, 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, 0.5, 0.5, 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday, tnight, new Color32(255, 255, 255, 255), false);
@@ -266,7 +270,10 @@ namespace OpenBve {
 										if (NighttimeImage != null) {
 											Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 										}
-										Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+                                        OpenBVEGame.RunInRenderThread(() =>
+                                        {
+                                            Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+                                        });
 										int w = tday.Width;
 										int h = tday.Height;
 										int j = CreateElement(Train, LocationX, LocationY, w, h, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday, tnight, new Color32(255, 255, 255, 255), false);
@@ -411,15 +418,24 @@ namespace OpenBve {
 										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
 									}
 									// create element
-									if (DaytimeImage != null) {
-										Textures.Texture tday;
-										Textures.RegisterTexture(DaytimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
-										Textures.Texture tnight = null;
-										if (NighttimeImage != null) {
-											Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
-										}
-										Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
-										double w = (double)tday.Width;
+								    if (DaytimeImage != null)
+								    {
+								        Textures.Texture tday;
+								        Textures.RegisterTexture(DaytimeImage,
+								            new OpenBveApi.Textures.TextureParameters(null,
+								                new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								        Textures.Texture tnight = null;
+								        if (NighttimeImage != null)
+								        {
+								            Textures.RegisterTexture(NighttimeImage,
+								                new OpenBveApi.Textures.TextureParameters(null,
+								                    new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+								        }
+								        OpenBVEGame.RunInRenderThread(() =>
+								        {
+								            Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+								        });
+								    double w = (double)tday.Width;
 										double h = (double)tday.Height;
 										if (!OriginDefined) {
 											OriginX = 0.5 * w;
@@ -723,6 +739,8 @@ namespace OpenBve {
 								{
 									double LocationX = 0.0, LocationY = 0.0;
 									double Width = 0.0, Height = 0.0;
+                                    //We read the transparent color for the timetable from the config file, but it is never used
+                                    //TODO: Fix or depreciate??
 									Color24 TransparentColor = new Color24(0, 0, 255);
 									double Layer = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {

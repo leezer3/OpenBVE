@@ -26,13 +26,13 @@ namespace OpenBveApi.Textures {
 	public class Texture {
 		// --- members ---
 		/// <summary>The width of the texture in pixels.</summary>
-		private int MyWidth;
+		private readonly int MyWidth;
 		/// <summary>The height of the texture in pixels.</summary>
-		private int MyHeight;
+		private readonly int MyHeight;
 		/// <summary>The number of bits per pixel. Must be 32.</summary>
-		private int MyBitsPerPixel;
+		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
-		private byte[] MyBytes;
+		private readonly byte[] MyBytes;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="width">The width of the texture in pixels.</param>
@@ -42,21 +42,24 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
-		public Texture(int width, int height, int bitsPerPixel, byte[] bytes) {
-			if (bitsPerPixel != 32) {
+		public Texture(int width, int height, int bitsPerPixel, byte[] bytes)
+		{
+		    if (bitsPerPixel != 32) {
 				throw new ArgumentException("The number of bits per pixel is supported.");
-			} else if (bytes == null) {
-				throw new ArgumentNullException("The data bytes are a null reference.");
-			} else if (bytes.Length != 4 * width * height) {
-				throw new ArgumentException("The data bytes are not of the expected length.");
-			} else {
-				this.MyWidth = width;
-				this.MyHeight = height;
-				this.MyBitsPerPixel = bitsPerPixel;
-				this.MyBytes = bytes;
 			}
+		    if (bytes == null) {
+		        throw new ArgumentNullException("The data bytes are a null reference.");
+		    }
+		    if (bytes.Length != 4 * width * height) {
+		        throw new ArgumentException("The data bytes are not of the expected length.");
+		    }
+		    this.MyWidth = width;
+		    this.MyHeight = height;
+		    this.MyBitsPerPixel = bitsPerPixel;
+		    this.MyBytes = bytes;
 		}
-		// --- properties ---
+
+	    // --- properties ---
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width {
 			get {
@@ -146,24 +149,25 @@ namespace OpenBveApi.Textures {
 		/// <summary>Gets the type of transparency encountered in this texture.</summary>
 		/// <returns>The type of transparency encountered in this texture.</returns>
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
-		public TextureTransparencyType GetTransparencyType() {
-			if (this.MyBitsPerPixel == 24) {
+		public TextureTransparencyType GetTransparencyType()
+		{
+		    if (this.MyBitsPerPixel == 24) {
 				return TextureTransparencyType.Opaque;
-			} else if (this.MyBitsPerPixel == 32) {
-				for (int i = 3; i < this.MyBytes.Length; i += 4) {
-					if (this.MyBytes[i] != 255) {
-						for (int j = i; j < this.MyBytes.Length; j += 4) {
-							if (this.MyBytes[j] != 0 & this.MyBytes[j] != 255) {
-								return TextureTransparencyType.Alpha;
-							}
-						}
-						return TextureTransparencyType.Partial;
-					}
-				}
-				return TextureTransparencyType.Opaque;
-			} else {
-				throw new NotSupportedException();
 			}
+		    if (this.MyBitsPerPixel == 32) {
+		        for (int i = 3; i < this.MyBytes.Length; i += 4) {
+		            if (this.MyBytes[i] != 255) {
+		                for (int j = i; j < this.MyBytes.Length; j += 4) {
+		                    if (this.MyBytes[j] != 0 & this.MyBytes[j] != 255) {
+		                        return TextureTransparencyType.Alpha;
+		                    }
+		                }
+		                return TextureTransparencyType.Partial;
+		            }
+		        }
+		        return TextureTransparencyType.Opaque;
+		    }
+		    throw new NotSupportedException();
 		}
 	}
 	
