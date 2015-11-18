@@ -226,31 +226,30 @@ namespace OpenBve
         {
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
-
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
             Renderer.Initialize();
-            Renderer.InitializeLighting();
             MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
             MainLoop.InitializeMotionBlur();
             Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
             LoadingScreenLoop();
         }
 
+        /// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
         private void SetupSimulation()
         {
             if (Loading.Cancel)
             {
                 Close();
             }
-            Renderer.InitializeLighting();
             Timetable.CreateTimetable();
+            //Check if any critical errors have occured during the route or train loading
             for (int i = 0; i < Interface.MessageCount; i++)
             {
                 if (Interface.Messages[i].Type == Interface.MessageType.Critical)
                 {
                     MessageBox.Show("A critical error has occured:\n\n" + Interface.Messages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    return;
+                    Close();
                 }
             }
             Renderer.InitializeLighting();
@@ -590,7 +589,8 @@ namespace OpenBve
         private static Queue<ThreadStart> jobs;
         private static Queue<object> locks;
         
-
+        /// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
+        /// <param name="job">The OpenGL command</param>
         internal static void RunInRenderThread(ThreadStart job)
         {
             object locker = new object();
