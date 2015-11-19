@@ -1503,7 +1503,7 @@ namespace OpenBve {
 								if (Command[k] == '(') {
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
-									int h = Indices.IndexOf(";");
+									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									if (h >= 0) {
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();
@@ -2726,7 +2726,7 @@ namespace OpenBve {
 								if (Command[k] == '(') {
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
-									int h = Indices.IndexOf(";");
+									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									if (h >= 0) {
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();

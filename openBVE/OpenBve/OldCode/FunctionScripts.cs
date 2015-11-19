@@ -1084,12 +1084,12 @@ namespace OpenBve {
 			}
 			{
 				int[] j = new int[6];
-				j[0] = Expression.LastIndexOf("==");
-				j[1] = Expression.LastIndexOf("!=");
-				j[2] = Expression.LastIndexOf("<=");
-				j[3] = Expression.LastIndexOf(">=");
-				j[4] = Expression.LastIndexOf("<");
-				j[5] = Expression.LastIndexOf(">");
+				j[0] = Expression.LastIndexOf("==", StringComparison.Ordinal);
+				j[1] = Expression.LastIndexOf("!=", StringComparison.Ordinal);
+				j[2] = Expression.LastIndexOf("<=", StringComparison.Ordinal);
+				j[3] = Expression.LastIndexOf(">=", StringComparison.Ordinal);
+				j[4] = Expression.LastIndexOf("<", StringComparison.Ordinal);
+				j[5] = Expression.LastIndexOf(">", StringComparison.Ordinal);
 				int k = -1;
 				for (int i = 0; i < j.Length; i++) {
 					if (j[i] >= 0) {

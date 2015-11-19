@@ -58,7 +58,7 @@ namespace OpenBveApi {
 		/// <returns>A platform-specific absolute path to the specified directory.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineDirectory(string absolute, string relative) {
-			int index = relative.IndexOf("??");
+            int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
 				if (System.IO.Directory.Exists(directory)) {
@@ -129,7 +129,7 @@ namespace OpenBveApi {
 		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
 		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
 		public static string CombineFile(string absolute, string relative) {
-			int index = relative.IndexOf("??");
+            int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
 				if (System.IO.File.Exists(file)) {
