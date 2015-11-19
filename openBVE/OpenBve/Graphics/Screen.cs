@@ -42,7 +42,25 @@ namespace OpenBve {
 				Initialized = false;
 			}
 		}
-		
+
+        /// <summary>Resizes the OpenGL viewport if the window is resized</summary>
+	    internal static void WindowResize(int newWidth, int newHeight)
+        {
+            Width = newWidth;
+            Height = newHeight;
+            MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+            World.InitializeCameraRestriction();
+            if (Renderer.OptionBackfaceCulling)
+            {
+                GL.Enable(EnableCap.CullFace);
+            }
+            else
+            {
+                GL.Disable(EnableCap.CullFace);
+            }
+            Renderer.ReAddObjects();
+	    }
+
 		/// <summary>Changes to or from fullscreen mode.</summary>
 		internal static void ToggleFullscreen() {
             

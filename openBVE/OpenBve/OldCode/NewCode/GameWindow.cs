@@ -222,6 +222,11 @@ namespace OpenBve
             }
         }
 
+        protected override void OnResize(EventArgs e)
+        {
+            Screen.WindowResize(Width,Height);
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             Keyboard.KeyDown += MainLoop.keyDownEvent;
