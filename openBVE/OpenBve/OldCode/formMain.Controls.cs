@@ -17,7 +17,7 @@ namespace OpenBve {
 				int i = listviewControls.SelectedIndices[0];
 				{
 					this.Tag = new object();
-					{ /// command
+					{ // command
 						int j; for (j = 0; j < Interface.CommandInfos.Length; j++) {
 							if (Interface.CommandInfos[j].Command == Interface.CurrentControls[i].Command) {
 								comboboxCommand.SelectedIndex = j;
@@ -27,7 +27,7 @@ namespace OpenBve {
 							comboboxCommand.SelectedIndex = -1;
 						}
 					}
-					/// data
+					// data
 					if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard) {
 						radiobuttonKeyboard.Checked = true;
 					} else if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick) {
@@ -58,7 +58,7 @@ namespace OpenBve {
 						checkboxKeyboardAlt.Checked = false;
 					}
 					panelJoystick.Enabled = radiobuttonJoystick.Checked;
-					/// finalize
+					// finalize
 					this.Tag = null;
 				}
 				buttonControlRemove.Enabled = true;
@@ -450,14 +450,14 @@ namespace OpenBve {
 					w = 64.0f; h = 64.0f;
 					e.Graphics.DrawRectangle(new Pen(labelControlsTitle.BackColor), x, y, w, h);
 				}
-				{ /// joystick number
+				{ // joystick number
 					e.Graphics.FillEllipse(Brushes.Gold, x + w - 16.0f, y, 16.0f, 16.0f);
 					e.Graphics.DrawEllipse(Pens.Black, x + w - 16.0f, y, 16.0f, 16.0f);
 					string t = (i + 1).ToString(Culture);
 					SizeF s = e.Graphics.MeasureString(t, f);
 					e.Graphics.DrawString(t, f, Brushes.Black, x + w - 8.0f - 0.5f * s.Width, y + 8.0f - 0.5f * s.Height);
 				}
-				{ /// joystick name
+				{ // joystick name
 					e.Graphics.DrawString(Joysticks.AttachedJoysticks[i].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
 				}
 				float m;
@@ -465,11 +465,11 @@ namespace OpenBve {
 					m = x;
 					Pen p = new Pen(Color.DarkGoldenrod, 2.0f);
 					Pen ps = new Pen(Color.Firebrick, 2.0f);
-					{ /// first row
+					{ // first row
 						float u = x + w + 8.0f;
 						float v = y + 24.0f;
 						float g = h - 24.0f;
-						{ /// hats
+						{ // hats
 						    int n = capabilities.HatCount;
 							for (int j = 0; j < n; j++) {
 								if (device == i & component == Interface.JoystickComponent.Hat & element == j) {
@@ -549,10 +549,10 @@ namespace OpenBve {
 						if (u > m) m = u;
 					}
                     
-					{ /// second row
+					{ // second row
 						float u = x;
 						float v = y + h + 8.0f;
-						{ /// axes
+						{ // axes
 						    int n = capabilities.AxisCount;
 							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
@@ -586,7 +586,7 @@ namespace OpenBve {
 							}
 						}
                         
-						{ /// buttons
+						{ // buttons
 						    int n = capabilities.ButtonCount;
 							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {

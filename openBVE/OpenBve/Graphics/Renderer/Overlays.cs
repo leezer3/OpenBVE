@@ -1280,7 +1280,7 @@ namespace OpenBve
                                 {
                                     alpha = (float)(1.0 - Interface.CurrentHudElements[i].TransitionState);
                                 }
-                                /// render
+                                // render
                                 if (alpha != 0.0f)
                                 {
                                     // background

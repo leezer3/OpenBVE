@@ -134,8 +134,6 @@ namespace OpenBve {
 		// process events
 		private static Interface.KeyboardModifier CurrentKeyboardModifier = Interface.KeyboardModifier.None;
 
-	    private static OpenTK.Input.KeyboardState currentKeyboardState;
-        private static OpenTK.Input.KeyboardState previousKeyboardState;
 
 	    internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 	    {
@@ -192,11 +190,6 @@ namespace OpenBve {
         }
 
 	    internal static void ProcessKeyboard() {
-
-            //Load the current keyboard state from OpenTK
-            var keyboardState = OpenTK.Input.Keyboard.GetState();
-	        currentKeyboardState = keyboardState;
-
             //Traverse the controls array
 		    for (int i = 0; i < Interface.CurrentControls.Length; i++)
 		    {

@@ -978,7 +978,7 @@ namespace OpenBve {
 						if (Folder != null && System.IO.Directory.Exists(Folder)) {
 							string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
 							if (System.IO.File.Exists(File)) {
-								/// train found
+								// train found
 								Result.TrainFolder = Folder;
 								ShowTrain(false);
 								return;
@@ -994,7 +994,7 @@ namespace OpenBve {
 				    }
 				}
 			} catch { }
-			/// train not found
+			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
 			textboxTrainDescription.Text = Interface.ConvertNewlinesToCrLf(Interface.GetInterfaceString("start_train_notfound") + Game.TrainName);

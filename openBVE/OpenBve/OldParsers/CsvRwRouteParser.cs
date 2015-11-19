@@ -194,8 +194,8 @@ namespace OpenBve {
 			internal Textures.Texture[] GlowTextures;
 		}
 		private class CompatibilitySignalData : SignalData {
-			internal int[] Numbers;
-			internal ObjectManager.StaticObject[] Objects;
+			internal readonly int[] Numbers;
+			internal readonly ObjectManager.StaticObject[] Objects;
 			internal CompatibilitySignalData(int[] Numbers, ObjectManager.StaticObject[] Objects) {
 				this.Numbers = Numbers;
 				this.Objects = Objects;
@@ -1038,20 +1038,21 @@ namespace OpenBve {
 							Command = Command.Replace(".Void", "");
 						}
 						// handle indices
-						int CommandIndex1 = 0, CommandIndex2 = 0;
-						if (Command != null && Command.EndsWith(")")) {
+					    if (Command != null && Command.EndsWith(")")) {
 							for (int k = Command.Length - 2; k >= 0; k--) {
 								if (Command[k] == '(') {
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
-									if (h >= 0) {
+								    int CommandIndex1;
+								    if (h >= 0) {
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Command = null; break;
 										}
-									    if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+								        int CommandIndex2;
+								        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
 									        Command = null;
 									    }
 									} else {
@@ -1509,15 +1510,16 @@ namespace OpenBve {
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
-										} else if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+											Command = null;
+										} 
+                                        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
+											Command = null;
 										}
 									} else {
 										if (Indices.Length > 0 && !Interface.TryParseIntVb6(Indices, out CommandIndex1)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
+											Command = null;
 										}
 									}
 									break;
@@ -2732,15 +2734,16 @@ namespace OpenBve {
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
-										} else if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+										    Command = null;
+										} 
+                                        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
+											Command = null;
 										}
 									} else {
 										if (Indices.Length > 0 && !Interface.TryParseIntVb6(Indices, out CommandIndex1)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null; break;
+											Command = null;
 										}
 									}
 									break;

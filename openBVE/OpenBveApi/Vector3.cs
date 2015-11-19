@@ -419,7 +419,9 @@ namespace OpenBveApi.Math {
             double t = 1.0 / System.Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
             return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
         }
-
+        /// <summary>Determines whether this is a zero (0,0,0) vector</summary>
+        /// <param name="Vector"></param>
+        /// <returns>True if this is a zero vector, false otherwise</returns>
         public static bool IsZero(Vector3 Vector)
         {
             if (Vector.X != 0.0f) return false;

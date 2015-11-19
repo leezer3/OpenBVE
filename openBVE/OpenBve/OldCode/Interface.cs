@@ -814,7 +814,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			{ /// header rows
+			{ // header rows
 				int TotalWidth = 0;
 				for (int j = 0; j < Columns; j++) {
 					TotalWidth += Widths[j] + 2;
@@ -857,7 +857,7 @@ namespace OpenBve {
 					Builder.Append("║\n");
 				}
 			}
-			{ /// top border row
+			{ // top border row
 				Builder.Append('╠');
 				for (int j = 0; j < Columns; j++) {
 					if (j != 0) {
@@ -866,7 +866,7 @@ namespace OpenBve {
 				} Builder.Append("╣\n");
 			}
 			for (int i = 0; i < Lines.Length; i++) {
-				/// center border row
+				// center border row
 				if (i != 0) {
 					Builder.Append('╟');
 					for (int j = 0; j < Columns; j++) {
@@ -875,7 +875,7 @@ namespace OpenBve {
 						} Builder.Append('─', Widths[j] + 2);
 					} Builder.Append("╢\n");
 				}
-				/// cell content
+				// cell content
 				Builder.Append('║');
 				for (int j = 0; j < Columns; j++) {
 					if (j != 0) Builder.Append('│');
@@ -888,7 +888,7 @@ namespace OpenBve {
 					Builder.Append(' ');
 				} Builder.Append("║\n");
 			}
-			{ /// bottom border row
+			{ // bottom border row
 				Builder.Append('╚');
 				for (int j = 0; j < Columns; j++) {
 					if (j != 0) {
@@ -1037,7 +1037,7 @@ namespace OpenBve {
 								}
 							}
 						}
-						{ /// header rows
+						{ // header rows
 							int TotalWidth = 0;
 							for (int j = 0; j < Columns; j++) {
 								TotalWidth += Widths[j] + 2;
@@ -1056,7 +1056,7 @@ namespace OpenBve {
 								Builder.Append("║\r\n");
 							}
 						}
-						{ /// top border row
+						{ // top border row
 							Builder.Append('╠');
 							for (int j = 0; j < Columns; j++) {
 								if (j != 0) {
@@ -1065,7 +1065,7 @@ namespace OpenBve {
 							} Builder.Append("╣\r\n");
 						}
 						for (int i = 0; i < Lines.Length; i++) {
-							/// center border row
+							// center border row
 							if (i != 0) {
 								Builder.Append('╟');
 								for (int j = 0; j < Columns; j++) {
@@ -1074,7 +1074,7 @@ namespace OpenBve {
 									} Builder.Append('─', Widths[j] + 2);
 								} Builder.Append("╢\r\n");
 							}
-							/// cell content
+							// cell content
 							Builder.Append('║');
 							for (int j = 0; j < Columns; j++) {
 								if (j != 0) Builder.Append('│');
@@ -1087,7 +1087,7 @@ namespace OpenBve {
 								Builder.Append(' ');
 							} Builder.Append("║\r\n");
 						}
-						{ /// bottom border row
+						{ // bottom border row
 							Builder.Append('╚');
 							for (int j = 0; j < Columns; j++) {
 								if (j != 0) {
