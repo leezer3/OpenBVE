@@ -14,6 +14,7 @@ namespace OpenBve {
 		// declarations
 		internal static bool LimitFramerate = false;
 	    internal static bool Quit = false;
+	    internal static bool BlockKeyRepeat;
 	    internal static int TimeFactor = 1;
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 	    internal static bool OpenTKWindow;
@@ -138,6 +139,7 @@ namespace OpenBve {
 
 	    internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 	    {
+	        BlockKeyRepeat = true;
             //Check for modifiers
             if(e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
             if(e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
@@ -160,6 +162,7 @@ namespace OpenBve {
 	                }
 	            }
 	        }
+	        BlockKeyRepeat = false;
             //Remember to reset the keyboard modifier after we're done, else it repeats.....
             CurrentKeyboardModifier = Interface.KeyboardModifier.None;
 	    }
@@ -167,7 +170,7 @@ namespace OpenBve {
         internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
         {
             //We don't need to check for modifiers on key up
-
+            BlockKeyRepeat = true;
             //Traverse the controls array
             for (int i = 0; i < Interface.CurrentControls.Length; i++)
             {
@@ -185,6 +188,7 @@ namespace OpenBve {
                     }
                 }
             }
+            BlockKeyRepeat = false;
         }
 
 	    internal static void ProcessKeyboard() {
@@ -295,7 +299,9 @@ namespace OpenBve {
 		}
 
 		// process controls
-		internal static void ProcessControls(double TimeElapsed) {
+		internal static void ProcessControls(double TimeElapsed)
+		{
+		    if (BlockKeyRepeat) return;
 			switch (Game.CurrentInterface) {
 				case Game.InterfaceType.Pause:
 					// pause

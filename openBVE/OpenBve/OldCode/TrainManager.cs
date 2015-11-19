@@ -1606,7 +1606,8 @@ namespace OpenBve {
 				}
 			}
 			Sounds.StopAllSounds(Train);
-			for (int i = 0; i < Game.Sections.Length; i++) {
+			
+            for (int i = 0; i < Game.Sections.Length; i++) {
 				Game.Sections[i].Leave(Train);
 			}
 			if (Game.Sections.Length != 0) {
