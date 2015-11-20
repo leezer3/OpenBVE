@@ -76,12 +76,12 @@ namespace Plugin {
 			if (identifier == 0x40404153494D4953) {
 				byte[] bytes = File.ReadAllBytes(file);
 				return CanLoadUncompressedData(bytes);
-			} else if (identifier == 0x46404153494D4953) {
-				byte[] bytes = File.ReadAllBytes(file);
-				return CanLoadUncompressedData(DecompressAce(bytes));
-			} else {
-				return false;
 			}
+		    if (identifier == 0x46404153494D4953) {
+		        byte[] bytes = File.ReadAllBytes(file);
+		        return CanLoadUncompressedData(DecompressAce(bytes));
+		    }
+		    return false;
 		}
 		
 		/// <summary>Checks whether the specified uncompressed data can be loaded as an ACE texture.</summary>

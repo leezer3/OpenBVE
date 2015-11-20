@@ -3383,10 +3383,15 @@ namespace OpenBve {
 		}
 		
 		// un-derail train
-		internal static void UnderailTrains() {
-			for (int i = 0; i < Trains.Length; i++) {
-				UnderailTrain(Trains[i]);
-			}
+		internal static void UnderailTrains()
+		{
+		    System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
+		    {
+                UnderailTrain(Trains[i]);
+		    });
+            //for (int i = 0; i < Trains.Length; i++) {
+			//	UnderailTrain(Trains[i]);
+			//}
 		}
 		internal static void UnderailTrain(Train Train) {
 			for (int i = 0; i < Train.Cars.Length; i++) {

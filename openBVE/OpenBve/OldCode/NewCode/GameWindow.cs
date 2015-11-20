@@ -13,8 +13,8 @@ namespace OpenBve
     class OpenBVEGame: GameWindow
     {
         int TimeFactor = 1;
-        double TotalTimeElapsedForInfo = 0.0;
-        double TotalTimeElapsedForSectionUpdate = 0.0;
+        double TotalTimeElapsedForInfo;
+        double TotalTimeElapsedForSectionUpdate;
         private bool loadComplete;
         private bool firstFrame;
         private double RenderTimeElapsed;
@@ -231,6 +231,7 @@ namespace OpenBve
         {
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
+            Mouse.ButtonDown += MainLoop.mouseDownEvent;
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
             Renderer.Initialize();

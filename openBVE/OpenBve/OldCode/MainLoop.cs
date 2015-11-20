@@ -134,6 +134,14 @@ namespace OpenBve {
 		// process events
 		private static Interface.KeyboardModifier CurrentKeyboardModifier = Interface.KeyboardModifier.None;
 
+	    internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
+	    {
+	        if (e.Button == MouseButton.Right)
+	        {
+	            World.MouseGrabEnabled = !World.MouseGrabEnabled;
+	            World.MouseGrabIgnoreOnce = true;
+	        }
+	    }
 
 	    internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 	    {
@@ -189,7 +197,26 @@ namespace OpenBve {
             BlockKeyRepeat = false;
         }
 
+	    internal static MouseState currentMouseState, previousMouseState;
+
 	    internal static void ProcessKeyboard() {
+	        if (World.MouseGrabEnabled)
+	        {
+	            previousMouseState = currentMouseState;
+	            currentMouseState = Mouse.GetState();
+	            if (previousMouseState != currentMouseState)
+	            {
+                    if (World.MouseGrabIgnoreOnce)
+                    {
+                        World.MouseGrabIgnoreOnce = false;
+                    }
+                    else if (World.MouseGrabEnabled)
+                    {
+                        World.MouseGrabTarget = new OpenBveApi.Math.Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y);
+                    }
+	            }
+	        }
+
             //Traverse the controls array
 		    for (int i = 0; i < Interface.CurrentControls.Length; i++)
 		    {
@@ -261,34 +288,6 @@ namespace OpenBve {
                     }
                 }
 		    }
-           
-            /*
-					case Sdl.SDL_MOUSEBUTTONDOWN:
-						// mouse button down
-						if (Event.button.button == Sdl.SDL_BUTTON_RIGHT) {
-							// mouse grab
-							World.MouseGrabEnabled = !World.MouseGrabEnabled;
-							if (World.MouseGrabEnabled) {
-								World.MouseGrabTarget = new World.Vector2D(0.0, 0.0);
-								Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_ON);
-								Game.AddMessage(Interface.GetInterfaceString("notification_mousegrab_on"), Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-							} else {
-								Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_OFF);
-								Game.AddMessage(Interface.GetInterfaceString("notification_mousegrab_off"), Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-							}
-						}
-						break;
-					case Sdl.SDL_MOUSEMOTION:
-						// mouse motion
-						if (World.MouseGrabIgnoreOnce) {
-							World.MouseGrabIgnoreOnce = false;
-						} else if (World.MouseGrabEnabled) {
-							World.MouseGrabTarget = new World.Vector2D((double)Event.motion.xrel, (double)Event.motion.yrel);
-						}
-						break;
-				}
-			}
-            */
 		}
 
 		// process controls

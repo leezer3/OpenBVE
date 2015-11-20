@@ -1574,13 +1574,15 @@ namespace OpenBve {
 		}
 		internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 		{
-		    
-            Object = new StaticObject();
-			Object.StartingDistance = float.MaxValue;
-			Object.EndingDistance = float.MinValue;
-			// vertices
-			Object.Mesh.Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length];
-			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
+            //Object is not actually overwritten by this call
+		    Object = new StaticObject
+		    {
+		        StartingDistance = float.MaxValue,
+		        EndingDistance = float.MinValue,
+		        Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
+		    };
+		    // vertices
+		    for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
 				Object.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
 				if (AccurateObjectDisposal) {
 					World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
