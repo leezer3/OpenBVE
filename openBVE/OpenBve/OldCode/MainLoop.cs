@@ -75,8 +75,6 @@ namespace OpenBve {
                 {
                     Program.currentGameWindow.VSync = VSyncMode.Off;
                 }
-                //Set keyboard options
-		        //Program.currentGameWindow.Keyboard.KeyRepeat = false;
 		        Program.currentGameWindow.Closing += OpenTKQuit;
                 Program.currentGameWindow.Run();
 		    }
@@ -127,7 +125,6 @@ namespace OpenBve {
 	    private static void OpenTKQuit(object sender, CancelEventArgs e)
 	    {
 	        Quit = true;
-            
 	    }
 
 
@@ -232,16 +229,22 @@ namespace OpenBve {
                             {
                                 if (Interface.CurrentControls[i].Direction != 1)
                                 {
-                                    if (axisState < -0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed)
+                                    if (axisState < -0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed && Interface.CurrentControls[i].JoystickPressed == false)
                                     {
                                         Interface.CurrentControls[i].AnalogState = 1.0;
                                         Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                        Interface.CurrentControls[i].JoystickPressed = true;
                                         AddControlRepeat(i);
+                                    }
+                                    if (axisState < -0.75 && Interface.CurrentControls[i].JoystickPressed == true)
+                                    {
+                                        //Twiddle
                                     }
                                     else
                                     {
                                         Interface.CurrentControls[i].AnalogState = 0.0;
                                         Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                                        Interface.CurrentControls[i].JoystickPressed = false;
                                         RemoveControlRepeat(i);
                                     }
                                 }
@@ -251,13 +254,18 @@ namespace OpenBve {
                                     {
                                         Interface.CurrentControls[i].AnalogState = 1.0;
                                         Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                        Interface.CurrentControls[i].JoystickPressed = true;
                                         AddControlRepeat(i);
+                                    }
+                                    if (axisState > 0.75 && Interface.CurrentControls[i].JoystickPressed == true)
+                                    {
+                                        //Twiddle
                                     }
                                     else
                                     {
                                         Interface.CurrentControls[i].AnalogState = 0.0;
-                                        Interface.CurrentControls[i].DigitalState =
-                                            Interface.DigitalControlState.Released;
+                                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                                        Interface.CurrentControls[i].JoystickPressed = false;
                                         RemoveControlRepeat(i);
                                     }
                                 }

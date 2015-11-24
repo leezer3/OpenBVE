@@ -522,9 +522,6 @@ namespace OpenBve {
 								            break;
 								    }
 								    
-
-									//double rx = (a & HatPosition.Left) != 0 ? -1.0 : (a & HatPosition.Right) != 0 ? 1.0 : 0.0;
-									//double ry = (a & HatPosition.Up) != 0 ? -1.0 : (a & HatPosition.Down) != 0 ? 1.0 : 0.0;
 									double rt = rx * rx + ry * ry;
 									rt = 1.0 / Math.Sqrt(rt);
 									rx *= rt; ry *= rt;
