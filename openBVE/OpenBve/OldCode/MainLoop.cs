@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Forms;
 using OpenTK.Input;
 using OpenTK;
@@ -221,68 +222,90 @@ namespace OpenBve {
 		    for (int i = 0; i < Interface.CurrentControls.Length; i++)
 		    {
 		        if(Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
-                {
-                    if (!OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected) continue;
+		        {
+		            if (!OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected) continue;
                     switch (Interface.CurrentControls[i].Component)
                     {
                         case Interface.JoystickComponent.Axis:
-                            if (Interface.CurrentControls[i].Direction != 1)
+                            var axisState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis((JoystickAxis) Interface.CurrentControls[i].Element);
+                            if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
                             {
-                                if (OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis((JoystickAxis)Interface.CurrentControls[i].Element) < -0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed)
+                                if (Interface.CurrentControls[i].Direction != 1)
                                 {
-                                    Interface.CurrentControls[i].AnalogState = 1.0;
-                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-                                    AddControlRepeat(i);
+                                    if (axisState < -0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed)
+                                    {
+                                        Interface.CurrentControls[i].AnalogState = 1.0;
+                                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                        AddControlRepeat(i);
+                                    }
+                                    else
+                                    {
+                                        Interface.CurrentControls[i].AnalogState = 0.0;
+                                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                                        RemoveControlRepeat(i);
+                                    }
                                 }
                                 else
                                 {
-                                    Interface.CurrentControls[i].AnalogState = 0.0;
-                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-                                    RemoveControlRepeat(i);
+                                    if (axisState > 0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed)
+                                    {
+                                        Interface.CurrentControls[i].AnalogState = 1.0;
+                                        Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                        AddControlRepeat(i);
+                                    }
+                                    else
+                                    {
+                                        Interface.CurrentControls[i].AnalogState = 0.0;
+                                        Interface.CurrentControls[i].DigitalState =
+                                            Interface.DigitalControlState.Released;
+                                        RemoveControlRepeat(i);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                if (OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis((JoystickAxis)Interface.CurrentControls[i].Element) > 0.75 && Interface.CurrentControls[i].DigitalState != Interface.DigitalControlState.Pressed)
-                                {
-                                    Interface.CurrentControls[i].AnalogState = 1.0;
-                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-                                    AddControlRepeat(i);
-                                }
-                                else
-                                {
-                                    Interface.CurrentControls[i].AnalogState = 0.0;
-                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-                                    RemoveControlRepeat(i);
-                                }
+                                Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
                             }
                             break;
                         case Interface.JoystickComponent.Button:
-                            if (OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetButton((JoystickButton)Interface.CurrentControls[i].Element) == ButtonState.Pressed)
+                            //Load the current state
+                            var buttonState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetButton((JoystickButton)Interface.CurrentControls[i].Element);
+                            //Test whether the state is the same as the last frame
+                            if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
                             {
-                                Interface.CurrentControls[i].AnalogState = 1.0;
-                                Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-                                AddControlRepeat(i);
-                            }
-                            else
-                            {
-                                Interface.CurrentControls[i].AnalogState = 0.0;
-                                Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-                                RemoveControlRepeat(i);
+                                if (buttonState == ButtonState.Pressed)
+                                {
+                                    Interface.CurrentControls[i].AnalogState = 1.0;
+                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                    AddControlRepeat(i);
+                                }
+                                else
+                                {
+                                    Interface.CurrentControls[i].AnalogState = 0.0;
+                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                                    RemoveControlRepeat(i);
+                                }
+                                //Store the state
+                                Interface.CurrentControls[i].LastState = buttonState.ToString();
                             }
                             break;
                         case Interface.JoystickComponent.Hat:
-                            if ((int)OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetHat((JoystickHat) Interface.CurrentControls[i].Element).Position == Interface.CurrentControls[i].Direction)
+                            //Load the current state
+                            var hatState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetHat((JoystickHat) Interface.CurrentControls[i].Element).Position;
+                            //Test if the state is the same as last frame
+                            if (hatState.ToString() != Interface.CurrentControls[i].LastState)
                             {
-                                Interface.CurrentControls[i].AnalogState = 1.0;
-                                Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-                                AddControlRepeat(i);
-                            }
-                            else
-                            {
-                                Interface.CurrentControls[i].AnalogState = 0.0;
-                                Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-                                RemoveControlRepeat(i);
+                                if ((int)hatState == Interface.CurrentControls[i].Direction)
+                                {
+                                    Interface.CurrentControls[i].AnalogState = 1.0;
+                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+                                    AddControlRepeat(i);
+                                }
+                                else
+                                {
+                                    Interface.CurrentControls[i].AnalogState = 0.0;
+                                    Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+                                    RemoveControlRepeat(i);
+                                }
+                                //Store the state
+                                Interface.CurrentControls[i].LastState = hatState.ToString();
                             }
                             break;
                     }

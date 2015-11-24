@@ -1497,6 +1497,7 @@ namespace OpenBve {
 			internal DigitalControlState DigitalState;
 			internal double AnalogState;
             internal Key Key;
+		    internal string LastState;
 		}
 
 		// control descriptions
