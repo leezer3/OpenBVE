@@ -1477,7 +1477,7 @@ namespace OpenBve {
 			Ctrl = 2,
 			Alt = 4
 		}
-		internal enum JoystickComponent { Invalid, Axis, Ball, Hat, Button }
+		internal enum JoystickComponent { Invalid, Axis, FullAxis, Ball, Hat, Button }
 		internal enum DigitalControlState {
 			ReleasedAcknowledged = 0,
 			Released = 1,
