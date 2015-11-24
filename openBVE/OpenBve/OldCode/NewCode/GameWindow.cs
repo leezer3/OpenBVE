@@ -12,6 +12,7 @@ namespace OpenBve
 {
     class OpenBVEGame: GameWindow
     {
+        /// <summary>The current time acceleration factor</summary>
         int TimeFactor = 1;
         double TotalTimeElapsedForInfo;
         double TotalTimeElapsedForSectionUpdate;
@@ -128,7 +129,7 @@ namespace OpenBve
                 
 
 #if DEBUG
-                //MainLoop.CheckForOpenGlError("MainLoop");
+            MainLoop.CheckForOpenGlError("MainLoop");
              
 #endif
                        
@@ -229,9 +230,11 @@ namespace OpenBve
 
         protected override void OnLoad(EventArgs e)
         {
+            //Add event handler hooks for keyboard and mouse buttons
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
             Mouse.ButtonDown += MainLoop.mouseDownEvent;
+            //Initialise the loader thread queues
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
             Renderer.Initialize();

@@ -1489,9 +1489,10 @@ namespace OpenBve {
 		}
 		
 		#if DEBUG
-		// check error
+
+        /// <summary>Checks whether an OpenGL error has occured this frame</summary>
+        /// <param name="Location">The location of the caller (The main loop or the loading screen loop)</param>
 	    internal static void CheckForOpenGlError(string Location) {
-			//int error = Gl.glGetError();
 		    var error = GL.GetError();
 			if (error != ErrorCode.NoError) {
 				string message = Location + ": ";

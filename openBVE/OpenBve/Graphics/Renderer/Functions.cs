@@ -130,7 +130,10 @@ namespace OpenBve
             GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
             Interface.LoadHUD();
             string Path = Program.FileSystem.GetDataFolder("In-game");
-            Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "logo.png"), out TextureLogo);
+            if (Renderer.TextureLogo == null)
+            {
+                Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "logo.png"), out TextureLogo);
+            }
             Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
