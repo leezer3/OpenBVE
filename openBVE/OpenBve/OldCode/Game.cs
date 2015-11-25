@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenTK.Input;
 
 namespace OpenBve {
 	public static partial class Game {
@@ -1634,6 +1635,12 @@ namespace OpenBve {
 		}
 		internal static Message[] Messages = new Message[] { };
 		internal static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
+        /// <summary>Adds a message to the in-game interface render queue</summary>
+        /// <param name="Text">The text of the message</param>
+        /// <param name="Depencency"></param>
+        /// <param name="Mode"></param>
+        /// <param name="Color">The color of the message text</param>
+        /// <param name="Timeout">The time this message will display for</param>
 		internal static void AddMessage(string Text, MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout) {
 			if (Interface.CurrentOptions.GameMode <= Mode) {
 				if (Depencency == MessageDependency.RouteLimit | Depencency == MessageDependency.SectionLimit) {
@@ -1655,6 +1662,10 @@ namespace OpenBve {
 		internal static void AddDebugMessage(string text, double duration) {
 			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
 		}
+
+	    internal static double SpeedConversionFactor = 0.0;
+	    internal static string UnitOfSpeed = "km/h";
+
 		internal static void UpdateMessages() {
 			for (int i = 0; i < Messages.Length; i++) {
 				bool remove = SecondsSinceMidnight >= Messages[i].Timeout;
@@ -1663,14 +1674,21 @@ namespace OpenBve {
 						{
 							double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
 							double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
+                            //Get the speed and limit in km/h
 							spd = Math.Round(spd * 3.6);
 							lim = Math.Round(lim * 3.6);
 							remove = spd <= lim;
 							string s = Messages[i].InternalText, t;
+                            if (SpeedConversionFactor != 0.0)
+                            {
+                                spd = Math.Round(spd * SpeedConversionFactor);
+                                lim = Math.Round(lim * SpeedConversionFactor);
+                            }
 							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[speed]", t);
 							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[limit]", t);
+                            s = s.Replace("[unit]", UnitOfSpeed);
 							Messages[i].DisplayText = s;
 						} break;
 					case MessageDependency.SectionLimit:
@@ -1681,10 +1699,16 @@ namespace OpenBve {
 							lim = Math.Round(lim * 3.6);
 							remove = spd <= lim;
 							string s = Messages[i].InternalText, t;
+                            if (SpeedConversionFactor != 0.0)
+                            {
+                                spd = Math.Round(spd * SpeedConversionFactor);
+                                lim = Math.Round(lim * SpeedConversionFactor);
+                            }
 							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[speed]", t);
 							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
 							s = s.Replace("[limit]", t);
+                            s = s.Replace("[unit]", UnitOfSpeed);
 							Messages[i].DisplayText = s;
 						} break;
 					case MessageDependency.Station:

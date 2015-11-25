@@ -976,9 +976,6 @@ namespace OpenBve {
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
 							Interface.CurrentControls[j].Element = i;
-
-                            //Not quite working at the minute, I think the hat state enums are different
-
 							Interface.CurrentControls[j].Direction = (int)hat.Position;
 							radiobuttonJoystick.Focus();
 							UpdateJoystickDetails();

@@ -244,6 +244,8 @@ namespace OpenBve {
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
+		    Game.UnitOfSpeed = "km/h";
+		    Game.SpeedConversionFactor = 0.0;
 		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			RouteData Data = new RouteData();
@@ -1812,6 +1814,21 @@ namespace OpenBve {
                                         }
                                     }
 							        break;
+                                case "route.displayspeed":
+                                   var splitArgument = Arguments[0].Split(',');
+							        if (splitArgument.Length != 2)
+							        {
+                                        Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have two arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							            break;
+							        }
+                                    Game.UnitOfSpeed = splitArgument[0];
+							        if (!double.TryParse(splitArgument[1], out Game.SpeedConversionFactor))
+							        {
+							            Interface.AddMessage(Interface.MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
+							            Game.UnitOfSpeed = "km/h";
+							        }
+
+							        break;
 								case "route.elevation":
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2139,7 +2156,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "WallStructureIndex is expected to be non-negativ in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
