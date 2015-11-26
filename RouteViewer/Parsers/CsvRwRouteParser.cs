@@ -1578,6 +1578,12 @@ namespace OpenBve {
 											Timetable.DefaultTimetableDescription = Arguments[0];
 										}
 									} break;
+                                case "route.loadingscreen":
+                                case "route.displayspeed":
+                                    if (!PreviewOnly)
+                                    {
+                                        Interface.AddMessage(Interface.MessageType.Information, false, "" + Command + " is only supported in OpenBVE versions 1.4.4.0 and above at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+                                    } break;
 								case "route.change":
 									if (!PreviewOnly) {
 										int change = 0;

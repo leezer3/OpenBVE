@@ -50,20 +50,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenBveApi">
-      <HintPath>..\..\OpenBve\bin\Release\OpenBveApi.dll</HintPath>
+      <HintPath>C:\Users\leeze_000\Desktop\Prail\OpenBveApi.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\opentk-develop\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="Tao.OpenAl">
-      <HintPath>..\..\Tao.OpenAl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.OpenGl">
-      <HintPath>..\..\Tao.OpenGl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>..\..\Tao.Sdl.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="formMessages.cs">
@@ -72,11 +69,18 @@
     <Compile Include="formMessages.designer.cs">
       <DependentUpon>formMessages.cs</DependentUpon>
     </Compile>
+    <Compile Include="formOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formOptions.Designer.cs">
+      <DependentUpon>formOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="LoadingR.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />
     <Compile Include="InterfaceR.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />
     <Compile Include="Parsers\CsvB3dObjectParser.cs" />
@@ -86,12 +90,16 @@
     <Compile Include="RendererR.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="System\FileSystem.cs" />
+    <Compile Include="System\Gamewindow.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="ProgramR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="formMessages.resx">
       <DependentUpon>formMessages.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formOptions.resx">
+      <DependentUpon>formOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -112,6 +120,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Timers.cs" />
     <Compile Include="TrackManagerR.cs" />
     <Compile Include="TrainManagerR.cs" />
     <Compile Include="WorldR.cs" />
@@ -119,9 +128,7 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="System" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

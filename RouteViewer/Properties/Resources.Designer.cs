@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RouteViewer.Properties {
+namespace OpenBve.Properties {
     using System;
     
     

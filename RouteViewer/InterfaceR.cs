@@ -7,7 +7,6 @@
 
 using System;
 using System.Globalization;
-using Tao.Sdl;
 
 namespace OpenBve {
 
@@ -45,6 +44,7 @@ namespace OpenBve {
 			internal TextureManager.InterpolationMode Interpolation;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;
+		    internal int AntialiasingLevel;
 			internal Renderer.TransparencyMode TransparencyMode;
 			internal SoundRange SoundRange;
 			internal int SoundNumber;
@@ -52,6 +52,7 @@ namespace OpenBve {
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;
 			internal int SmoothenOutTurns;
+		    internal bool VerticalSynchronization;
 		}
 		internal static Options CurrentOptions;
 

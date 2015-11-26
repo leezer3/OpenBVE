@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RouteViewer.Properties {
+namespace OpenBve.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
