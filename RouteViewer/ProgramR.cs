@@ -133,8 +133,8 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			const double invdeg = 57.295779513082320877;
-			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle * invdeg, -World.AspectRatio, 0.2, 1000.0);
+			//const double invdeg = 57.295779513082320877;
+			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
             GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();

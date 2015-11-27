@@ -6,7 +6,6 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System;
-using Tao.Sdl;
 
 namespace OpenBve {
 
@@ -123,6 +122,7 @@ namespace OpenBve {
 			internal TextureManager.InterpolationMode Interpolation;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;
+		    internal int AntialiasingLevel;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;
 		}
