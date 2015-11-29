@@ -1,4 +1,6 @@
-﻿namespace OpenBve {
+﻿using System.Windows.Forms;
+
+namespace OpenBve {
 	/// <summary>Provides functions for dealing with joysticks.</summary>
 	internal static class Joysticks {
 		
@@ -30,7 +32,8 @@
 		
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
 		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
-		
+
+	    private static string lastDescription;
 		
 		// --- functions ---
 		
@@ -39,13 +42,19 @@
 		    if (!Initialized)
 		    {
 		        int j = 0;
-		        for (int i = 0; i < 1; i++)
+		        for (int i = 0; i < 10; i++)
 		        {
                     //This *only* instanciates the first joystick, as OpenTK seems to loop
                     //the first joystick into any unused slots, and doesn't provide a name
                     //we can test against to see if it's the same
                     //Must be fixable, need to think on it....
                     var state = OpenTK.Input.Joystick.GetState(i);
+		            var description = OpenTK.Input.Joystick.GetCapabilities(i).ToString();
+                    if (description == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
+		            {
+		                break;
+		            }
+		            lastDescription = description;
 		            if (state.IsConnected)
 		            {
 		                j++;
