@@ -710,20 +710,22 @@ namespace OpenBve
                 if (ObjectManager.ObjectsUsed == 0 & ObjectManager.AnimatedWorldObjectsUsed == 0)
                 {
                     string[][] Keys;
-                    Keys = new string[][] { new string[] { "F7" } };
+                    Keys = new string[][] { new string[] { "F7" }, new string[] { "F8" } };
                     RenderKeys(4.0, 4.0, 20.0, Keys);
                     RenderString(32.0, 4.0, Fonts.FontType.Small, "Open one or more objects", -1, 1.0f, 1.0f, 1.0f, true);
+                    RenderString(32.0, 24.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
                     RenderString((double)ScreenWidth - 8.0, (double)ScreenHeight - 20.0, Fonts.FontType.Small, "v" + System.Windows.Forms.Application.ProductVersion, 1, 1.0f, 1.0f, 1.0f, true);
                 }
                 else
                 {
                     RenderString((double)0.5 * ScreenWidth - 88.0, 4.0, Fonts.FontType.Small, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), -1, 1.0f, 1.0f, 1.0f, true);
                     string[][] Keys;
-                    Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" } };
+                    Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" }, new string[] { "F8" } };
                     RenderKeys(4.0, 4.0, 24.0, Keys);
                     RenderString(32.0, 4.0, Fonts.FontType.Small, "Reload the currently open objects", -1, 1.0f, 1.0f, 1.0f, true);
                     RenderString(32.0, 24.0, Fonts.FontType.Small, "Open additional objects", -1, 1.0f, 1.0f, 1.0f, true);
                     RenderString(32.0, 44.0, Fonts.FontType.Small, "Clear currently open objects", -1, 1.0f, 1.0f, 1.0f, true);
+                    RenderString(32.0, 64.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
                     Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "L" }, new string[] { "G" }, new string[] { "B" }, new string[] { "I" } };
                     RenderKeys((double)ScreenWidth - 20.0, 4.0, 16.0, Keys);
                     RenderString((double)ScreenWidth - 28.0, 4.0, Fonts.FontType.Small, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);

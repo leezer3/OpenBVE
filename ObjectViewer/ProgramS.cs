@@ -114,8 +114,8 @@ namespace OpenBve {
 	                if (Skips == args.Length) return;
 	            }
 	        }
-
-	        Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
+	        Options.LoadOptions();
+            Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        Interface.CurrentOptions.AntialiasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
