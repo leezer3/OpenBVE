@@ -7,7 +7,7 @@ namespace OpenBve {
 		internal enum Instructions : int {
 			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
 			StackCopy, StackSwap,
-			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower,
+			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower,MathRandom,
 			MathIncrement, MathDecrement, MathFusedMultiplyAdd,
 			MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
 			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
@@ -134,6 +134,16 @@ namespace OpenBve {
 					case Instructions.MathIncrement:
 						Function.Stack[s - 1] += 1.0;
 						break;
+                    case Instructions.MathRandom:
+                        {
+                            //Generates a random number between two given doubles
+                            double min = Function.Stack[s - 2];
+                            double max = Function.Stack[s - 1];
+                            var randomGenerator = new Random();
+                            Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
+                            s--;
+                        }
+                        break;
 					case Instructions.MathDecrement:
 						Function.Stack[s - 1] -= 1.0;
 						break;
@@ -1447,7 +1457,8 @@ namespace OpenBve {
 				case "quotient":
 				case "mod":
 				case "min":
-				case "max":
+                case "max":
+                case "random":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " " + f;
 					} else {
@@ -2179,6 +2190,11 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMod;
 							n++; s--; break;
+                        case "random":
+                            if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+                            Result.Instructions[n] = Instructions.MathRandom;
+                            n++; s--; break;
 						case "floor":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
