@@ -7,7 +7,7 @@ namespace OpenBve {
 		internal enum Instructions : int {
 			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
 			StackCopy, StackSwap,
-			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower,MathRandom,
+			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, MathRandom, MathRandomInt,
 			MathIncrement, MathDecrement, MathFusedMultiplyAdd,
 			MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
 			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
@@ -138,6 +138,16 @@ namespace OpenBve {
                             double max = Function.Stack[s - 1];
                             var randomGenerator = new Random();
                             Function.Stack[s - 2] = min + randomGenerator.NextDouble() * (max - min);
+                            s--;
+                        }
+                        break;
+                    case Instructions.MathRandomInt:
+                        {
+                            //Generates a random number between two given doubles
+                            int min = (int)Function.Stack[s - 2];
+                            int max = (int)Function.Stack[s - 1];
+                            var randomGenerator = new Random();
+                            Function.Stack[s - 2] = randomGenerator.Next(min, max);
                             s--;
                         }
                         break;
@@ -1459,6 +1469,7 @@ namespace OpenBve {
 				case "min":
 				case "max":
                 case "random":
+                case "randomint":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " " + f;
 					} else {
@@ -2196,6 +2207,13 @@ namespace OpenBve {
                             if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
                             if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
                             Result.Instructions[n] = Instructions.MathRandom;
+                            Interface.AddMessage(Interface.MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
+                            n++; s--; break;
+                        case "randomint":
+                            if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+                            Result.Instructions[n] = Instructions.MathRandomInt;
+                            Interface.AddMessage(Interface.MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
                             n++; s--; break;
 						case "floor":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
