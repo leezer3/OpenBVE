@@ -89,6 +89,7 @@ namespace OpenBve {
 			internal Renderer.TransparencyMode TransparencyMode;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;
+		    internal int TimeAccelerationFactor;
 			internal int AntiAliasingLevel;
 			internal int ViewingDistance;
 			internal MotionBlurMode MotionBlur;
@@ -171,6 +172,7 @@ namespace OpenBve {
 				this.ProxyUrl = string.Empty;
 				this.ProxyUserName = string.Empty;
 				this.ProxyPassword = string.Empty;
+			    this.TimeAccelerationFactor = 5;
 			}
 		}
 		internal static Options CurrentOptions;
@@ -374,6 +376,9 @@ namespace OpenBve {
 													case "expert": Interface.CurrentOptions.GameMode = Interface.GameMode.Expert; break;
 													default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
 											} break;
+                                        case "acceleratedtimefactor":
+									        int.TryParse(Value, NumberStyles.Integer, Culture, out Interface.CurrentOptions.TimeAccelerationFactor);
+									        break;
 									} break;
 								case "controls":
 									switch (Key) {
@@ -582,6 +587,7 @@ namespace OpenBve {
 					case Interface.GameMode.Expert: Builder.AppendLine("expert"); break;
 					default: Builder.AppendLine("normal"); break;
 			}
+            Builder.Append("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
 			Builder.AppendLine();
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));

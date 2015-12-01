@@ -1317,7 +1317,7 @@ namespace OpenBve {
 								            }
 								            else
 								            {
-								                TimeFactor = TimeFactor == 1 ? 5 : 1;
+								                TimeFactor = TimeFactor == 1 ? Interface.CurrentOptions.TimeAccelerationFactor : 1;
 								                Game.AddMessage(TimeFactor.ToString(System.Globalization.CultureInfo.InvariantCulture) + "x",
 								                    Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Blue,
 								                    Game.SecondsSinceMidnight + 5.0*(double) TimeFactor);

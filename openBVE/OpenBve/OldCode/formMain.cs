@@ -299,6 +299,7 @@ namespace OpenBve {
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
+		    trackBarTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
@@ -577,6 +578,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
 			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
+		    Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
 			Interface.CurrentOptions.ShowWarningMessages = checkboxWarningMessages.Checked;
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;

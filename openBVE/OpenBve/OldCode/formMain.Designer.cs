@@ -109,6 +109,7 @@
             this.checkboxErrorMessages = new System.Windows.Forms.CheckBox();
             this.checkboxWarningMessages = new System.Windows.Forms.CheckBox();
             this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
             this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
             this.groupboxSimulation = new System.Windows.Forms.GroupBox();
             this.checkboxBlackBox = new System.Windows.Forms.CheckBox();
@@ -139,7 +140,6 @@
             this.groupboxInterpolation = new System.Windows.Forms.GroupBox();
             this.updownAntiAliasing = new System.Windows.Forms.NumericUpDown();
             this.labelAntiAliasing = new System.Windows.Forms.Label();
-            this.labelTransparencyQuality = new System.Windows.Forms.Label();
             this.labelTransparencyPerformance = new System.Windows.Forms.Label();
             this.labelTransparency = new System.Windows.Forms.Label();
             this.updownAnisotropic = new System.Windows.Forms.NumericUpDown();
@@ -242,7 +242,11 @@
             this.labelInfoTop = new System.Windows.Forms.Label();
             this.timerInstall = new System.Windows.Forms.Timer(this.components);
             this.timerFilter = new System.Windows.Forms.Timer(this.components);
-            this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
+            this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
+            this.labelTransparencyQuality = new System.Windows.Forms.Label();
+            this.labelTimeAcceleration = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -310,6 +314,7 @@
             this.panelJoystick.SuspendLayout();
             this.panelKeyboard.SuspendLayout();
             this.panelInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
             this.SuspendLayout();
             // 
             // labelFillerOne
@@ -1399,14 +1404,28 @@
             // 
             this.groupBoxAdvancedOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdvancedOptions.Controls.Add(this.label2);
+            this.groupBoxAdvancedOptions.Controls.Add(this.label1);
+            this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
+            this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
             this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
             this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 390);
             this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 84);
+            this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 121);
             this.groupBoxAdvancedOptions.TabIndex = 12;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
+            // 
+            // checkBoxDisableDisplayLists
+            // 
+            this.checkBoxDisableDisplayLists.AutoSize = true;
+            this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(5, 35);
+            this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
+            this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
+            this.checkBoxDisableDisplayLists.TabIndex = 2;
+            this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
+            this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
             // 
             // checkBoxLoadInAdvance
             // 
@@ -1417,6 +1436,30 @@
             this.checkBoxLoadInAdvance.TabIndex = 1;
             this.checkBoxLoadInAdvance.Text = "Load in advance";
             this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
+            // 
+            // trackBarTimeAccelerationFactor
+            // 
+            this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarTimeAccelerationFactor.LargeChange = 1;
+            this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(142, 52);
+            this.trackBarTimeAccelerationFactor.Maximum = 5;
+            this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
+            this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
+            this.trackBarTimeAccelerationFactor.TabIndex = 3;
+            this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
+            // 
+            // labelTimeAcceleration
+            // 
+            this.labelTimeAcceleration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTimeAcceleration.AutoEllipsis = true;
+            this.labelTimeAcceleration.Location = new System.Drawing.Point(5, 60);
+            this.labelTimeAcceleration.Name = "labelTimeAcceleration";
+            this.labelTimeAcceleration.Size = new System.Drawing.Size(130, 22);
+            this.labelTimeAcceleration.TabIndex = 10;
+            this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
+            this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupboxSimulation
             // 
@@ -1836,17 +1879,6 @@
             this.labelAntiAliasing.TabIndex = 4;
             this.labelAntiAliasing.Text = "Level of anti-aliasing:";
             this.labelAntiAliasing.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // labelTransparencyQuality
-            // 
-            this.labelTransparencyQuality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTransparencyQuality.AutoEllipsis = true;
-            this.labelTransparencyQuality.Location = new System.Drawing.Point(230, 136);
-            this.labelTransparencyQuality.Name = "labelTransparencyQuality";
-            this.labelTransparencyQuality.Size = new System.Drawing.Size(76, 16);
-            this.labelTransparencyQuality.TabIndex = 9;
-            this.labelTransparencyQuality.Text = "Quality";
-            this.labelTransparencyQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelTransparencyPerformance
             // 
@@ -2998,16 +3030,37 @@
             this.labelInfoTop.Name = "labelInfoTop";
             this.labelInfoTop.Size = new System.Drawing.Size(160, 2);
             this.labelInfoTop.TabIndex = 0;
+            
             // 
-            // checkBoxDisableDisplayLists
+            // labelTransparencyQuality
             // 
-            this.checkBoxDisableDisplayLists.AutoSize = true;
-            this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(5, 35);
-            this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
-            this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
-            this.checkBoxDisableDisplayLists.TabIndex = 2;
-            this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
-            this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
+            this.labelTransparencyQuality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTransparencyQuality.AutoEllipsis = true;
+            this.labelTransparencyQuality.Location = new System.Drawing.Point(230, 136);
+            this.labelTransparencyQuality.Name = "labelTransparencyQuality";
+            this.labelTransparencyQuality.Size = new System.Drawing.Size(76, 16);
+            this.labelTransparencyQuality.TabIndex = 9;
+            this.labelTransparencyQuality.Text = "Quality";
+            this.labelTransparencyQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(149, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(13, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(335, 100);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(13, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "5";
             // 
             // formMain
             // 
@@ -3128,6 +3181,7 @@
             this.panelKeyboard.ResumeLayout(false);
             this.panelKeyboard.PerformLayout();
             this.panelInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3144,7 +3198,6 @@
         private System.Windows.Forms.TabPage tabpageRouteManaged;
         private System.Windows.Forms.TabPage tabpageTrainManaged;
         private System.Windows.Forms.Label labelTransparencyPerformance;
-        private System.Windows.Forms.Label labelTransparencyQuality;
         private System.Windows.Forms.TrackBar trackbarTransparency;
         private System.Windows.Forms.Panel panelOptionsLeft;
         private System.Windows.Forms.Panel panelOptionsRight;
@@ -3353,6 +3406,11 @@
         private System.Windows.Forms.Panel panelRouteEncoding;
         private System.Windows.Forms.Panel panelTrainEncoding;
         private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelTimeAcceleration;
+        private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
+        private System.Windows.Forms.Label labelTransparencyQuality;
         
     }
 }
