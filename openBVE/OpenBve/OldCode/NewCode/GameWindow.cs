@@ -86,7 +86,16 @@ namespace OpenBve
             {
                 World.UpdateDriverBody(TimeElapsed);
             }
-            World.UpdateAbsoluteCamera(TimeElapsed);
+            //Check if we are running at an accelerated time factor-
+            //Camera motion speed should be the same whatever the game speed is
+            if (TimeFactor != 1)
+            {
+                World.UpdateAbsoluteCamera(TimeElapsed / TimeFactor);
+            }
+            else
+            {
+                World.UpdateAbsoluteCamera(TimeElapsed);
+            }
             TrainManager.UpdateTrainObjects(TimeElapsed, false);
             if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior)
             {
