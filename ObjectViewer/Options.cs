@@ -52,49 +52,73 @@ namespace OpenBve
                             switch (Section)
                             {
                                 case "display":
-                                switch (Key) {
-										case "windowwidth":
-											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
-													a = 960;
-												}
-												Renderer.ScreenWidth = a;
-											} break;
-										case "windowheight":
-											{
-												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
-													a = 600;
-												}
-												Renderer.ScreenHeight = a;
-											} break;
-									} break;
-								case "quality":
-									switch (Key) {
-										case "interpolation":
-											switch (Value.ToLowerInvariant()) {
-													case "nearestneighbor": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor; break;
-                                                    case "bilinear": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear; break;
-                                                    case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped; break;
-                                                    case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
-                                                    case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped; break;
-                                                    case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering; break;
-                                                    default: Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
-											} break;
-										case "anisotropicfilteringlevel":
-											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
-											} break;
-											case "antialiasinglevel":
-											{
-												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												Interface.CurrentOptions.AntialiasingLevel = a;
-											} break;
-									} break;
+                                    switch (Key)
+                                    {
+                                        case "windowwidth":
+                                            {
+                                                int a;
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                {
+                                                    a = 960;
+                                                }
+                                                Renderer.ScreenWidth = a;
+                                            } break;
+                                        case "windowheight":
+                                            {
+                                                int a;
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                {
+                                                    a = 600;
+                                                }
+                                                Renderer.ScreenHeight = a;
+                                            } break;
+                                    } break;
+                                case "quality":
+                                    switch (Key)
+                                    {
+                                        case "interpolation":
+                                            switch (Value.ToLowerInvariant())
+                                            {
+                                                case "nearestneighbor": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor; break;
+                                                case "bilinear": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear; break;
+                                                case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped; break;
+                                                case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
+                                                case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped; break;
+                                                case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering; break;
+                                                default: Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
+                                            } break;
+                                        case "anisotropicfilteringlevel":
+                                            {
+                                                int a;
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                Interface.CurrentOptions.AnisotropicFilteringLevel = a;
+                                            } break;
+                                        case "antialiasinglevel":
+                                            {
+                                                int a;
+                                                int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+                                                Interface.CurrentOptions.AntialiasingLevel = a;
+                                            } break;
+                                        case "transparencymode":
+                                            switch (Value.ToLowerInvariant())
+                                            {
+                                                case "sharp": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp; break;
+                                                case "smooth": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth; break;
+                                                default:
+                                                    {
+                                                        int a;
+                                                        if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                        {
+                                                            Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)a;
+                                                        }
+                                                        else
+                                                        {
+                                                            Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                                                        }
+                                                        break;
+                                                    }
+                                            } break;
+                                    } break;
                             }
                         }
                     }
@@ -133,6 +157,7 @@ namespace OpenBve
                     sw.WriteLine("interpolation = " + Interface.CurrentOptions.Interpolation);
                     sw.WriteLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
                     sw.WriteLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
+                    sw.WriteLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
                 }
             }
             catch

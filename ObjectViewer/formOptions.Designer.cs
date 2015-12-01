@@ -41,6 +41,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.AnsiotropicLevel = new System.Windows.Forms.NumericUpDown();
             this.AntialiasingLevel = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.TransparencyQuality = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -101,7 +103,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(212, 195);
+            this.button1.Location = new System.Drawing.Point(212, 237);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -113,7 +115,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(99, 106);
+            this.label5.Location = new System.Drawing.Point(99, 148);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(132, 15);
             this.label5.TabIndex = 10;
@@ -121,7 +123,7 @@
             // 
             // width
             // 
-            this.width.Location = new System.Drawing.Point(166, 127);
+            this.width.Location = new System.Drawing.Point(166, 169);
             this.width.Maximum = new decimal(new int[] {
             4096,
             0,
@@ -133,7 +135,7 @@
             // 
             // height
             // 
-            this.height.Location = new System.Drawing.Point(167, 153);
+            this.height.Location = new System.Drawing.Point(167, 195);
             this.height.Maximum = new decimal(new int[] {
             4096,
             0,
@@ -146,7 +148,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 129);
+            this.label6.Location = new System.Drawing.Point(12, 171);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(38, 13);
             this.label6.TabIndex = 13;
@@ -155,7 +157,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 155);
+            this.label7.Location = new System.Drawing.Point(12, 197);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(41, 13);
             this.label7.TabIndex = 14;
@@ -185,11 +187,34 @@
             this.AntialiasingLevel.Size = new System.Drawing.Size(120, 20);
             this.AntialiasingLevel.TabIndex = 16;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 112);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(110, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Transparency Quality:";
+            // 
+            // TransparencyQuality
+            // 
+            this.TransparencyQuality.FormattingEnabled = true;
+            this.TransparencyQuality.Items.AddRange(new object[] {
+            "Sharp",
+            "Intermediate",
+            "Smooth"});
+            this.TransparencyQuality.Location = new System.Drawing.Point(166, 112);
+            this.TransparencyQuality.Name = "TransparencyQuality";
+            this.TransparencyQuality.Size = new System.Drawing.Size(121, 21);
+            this.TransparencyQuality.TabIndex = 17;
+            // 
             // formOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 228);
+            this.ClientSize = new System.Drawing.Size(311, 275);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.TransparencyQuality);
             this.Controls.Add(this.AntialiasingLevel);
             this.Controls.Add(this.AnsiotropicLevel);
             this.Controls.Add(this.label7);
@@ -231,5 +256,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown AnsiotropicLevel;
         private System.Windows.Forms.NumericUpDown AntialiasingLevel;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox TransparencyQuality;
     }
 }

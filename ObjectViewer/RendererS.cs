@@ -21,6 +21,7 @@ namespace OpenBve
         // first frame behavior
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
+        internal enum TransparencyMode { Sharp, Smooth }
 
         // object list
         internal enum ObjectType : byte
@@ -183,6 +184,7 @@ namespace OpenBve
             var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MultMatrix(ref mat);
             GL.PopMatrix();
+            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
         }
 
         // initialize lighting
@@ -289,28 +291,57 @@ namespace OpenBve
                 RenderFace(ref OpaqueList[i], cx, cy, cz);
             }
             // transparent color list
-            if (TransparentColorDepthSorting)
-            {
-                SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-                BlendEnabled = true; GL.Enable(EnableCap.Blend);
-                SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
-            }
-            for (int i = 0; i < TransparentColorListCount; i++)
-            {
-                RenderFace(ref TransparentColorList[i], cx, cy, cz);
-            }
-            // alpha list
-            if (!TransparentColorDepthSorting)
-            {
-                SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-                BlendEnabled = true; GL.Enable(EnableCap.Blend);
-            }
-            GL.DepthMask(false);
-            SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
-            for (int i = 0; i < AlphaListCount; i++)
-            {
-                RenderFace(ref AlphaList[i], cx, cy, cz);
-            }
+			if (TransparentColorDepthSorting) {
+				SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
+				BlendEnabled = true; GL.Enable(EnableCap.Blend);
+				for (int i = 0; i < TransparentColorListCount; i++) {
+					GL.DepthMask(false);
+					SetAlphaFunc(AlphaFunction.Less, 1.0f);
+					RenderFace(ref TransparentColorList[i], cx, cy, cz);
+					GL.DepthMask(true);
+					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+					RenderFace(ref TransparentColorList[i], cx, cy, cz);
+				}
+			} else {
+				for (int i = 0; i < TransparentColorListCount; i++) {
+					RenderFace(ref TransparentColorList[i], cx, cy, cz);
+				}
+			}
+			// alpha list
+			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
+			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth) {
+				BlendEnabled = true; GL.Enable(EnableCap.Blend);
+				bool depthMask = true;
+				for (int i = 0; i < AlphaListCount; i++) {
+					int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
+					if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == World.MeshMaterialBlendMode.Additive) {
+						if (depthMask) {
+							GL.DepthMask(false);
+							depthMask = false;
+						}
+						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+						RenderFace(ref AlphaList[i], cx, cy, cz);
+					} else {
+						if (depthMask) {
+							GL.DepthMask(false);
+							depthMask = false;
+						}
+						SetAlphaFunc(AlphaFunction.Less, 1.0f);
+						RenderFace(ref AlphaList[i], cx, cy, cz);
+						GL.DepthMask(true);
+						depthMask = true;
+						SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+						RenderFace(ref AlphaList[i], cx, cy, cz);
+					}
+				}
+			} else {
+				BlendEnabled = true; GL.Enable(EnableCap.Blend);
+				GL.DepthMask(false);
+				SetAlphaFunc(AlphaFunction.Greater,  0.0f);
+				for (int i = 0; i < AlphaListCount; i++) {
+					RenderFace(ref AlphaList[i], cx, cy, cz);
+				}
+			}
             // overlay list
             GL.Disable(EnableCap.DepthTest);
             GL.DepthMask(false);
@@ -468,19 +499,19 @@ namespace OpenBve
             switch (FaceType)
             {
                 case World.MeshFace.FaceTypeTriangles:
-                    GL.Begin(PrimitiveType.Triangles);
+                    GL.Begin(BeginMode.Triangles);
                     break;
                 case World.MeshFace.FaceTypeTriangleStrip:
-                    GL.Begin(PrimitiveType.TriangleStrip);
+                    GL.Begin(BeginMode.TriangleStrip);
                     break;
                 case World.MeshFace.FaceTypeQuads:
-                    GL.Begin(PrimitiveType.Quads);
+                    GL.Begin(BeginMode.Quads);
                     break;
                 case World.MeshFace.FaceTypeQuadStrip:
-                    GL.Begin(PrimitiveType.QuadStrip);
+                    GL.Begin(BeginMode.QuadStrip);
                     break;
                 default:
-                    GL.Begin(PrimitiveType.Polygon);
+                    GL.Begin(BeginMode.Polygon);
                     break;
             }
             if (Material.GlowAttenuationData != 0)
@@ -559,19 +590,19 @@ namespace OpenBve
                 switch (FaceType)
                 {
                     case World.MeshFace.FaceTypeTriangles:
-                        GL.Begin(PrimitiveType.Triangles);
+                        GL.Begin(BeginMode.Triangles);
                         break;
                     case World.MeshFace.FaceTypeTriangleStrip:
-                        GL.Begin(PrimitiveType.TriangleStrip);
+                        GL.Begin(BeginMode.TriangleStrip);
                         break;
                     case World.MeshFace.FaceTypeQuads:
-                        GL.Begin(PrimitiveType.Quads);
+                        GL.Begin(BeginMode.Quads);
                         break;
                     case World.MeshFace.FaceTypeQuadStrip:
-                        GL.Begin(PrimitiveType.QuadStrip);
+                        GL.Begin(BeginMode.QuadStrip);
                         break;
                     default:
-                        GL.Begin(PrimitiveType.Polygon);
+                        GL.Begin(BeginMode.Polygon);
                         break;
                 }
                 float alphafactor;
@@ -628,7 +659,7 @@ namespace OpenBve
                 }
                 for (int j = 0; j < Face.Vertices.Length; j++)
                 {
-                    GL.Begin(PrimitiveType.Lines);
+                    GL.Begin(BeginMode.Lines);
                     GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
                     GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
                     GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - CameraZ));

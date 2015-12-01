@@ -12,6 +12,7 @@ namespace OpenBve
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
+            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
         }
@@ -58,7 +59,16 @@ namespace OpenBve
             {
                 Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
             }
-            
+            //Transparency quality
+            switch (TransparencyQuality.SelectedIndex)
+            {
+                case 0:
+                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
+                    break;
+                default:
+                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                    break;
+            }
             //Set width and height
             if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
             {
