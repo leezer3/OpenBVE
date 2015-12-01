@@ -108,7 +108,7 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            
+            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
             Options.SaveOptions();
             this.Close();
         }

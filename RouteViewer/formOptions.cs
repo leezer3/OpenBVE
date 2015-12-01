@@ -100,6 +100,7 @@ namespace OpenBve
                     Program.CurrentlyLoading = false;
                 }
             }
+            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
             Options.SaveOptions();
             this.Close();
         }
