@@ -76,53 +76,112 @@ namespace OpenBve {
 			AnisotropicFiltering
 		}
 		internal class Options {
+            /// <summary>The ISO 639-1 code for the current user interface language</summary>
 			internal string LanguageCode;
+            /// <summary>Whether the program is to be run in full-screen mode</summary>
 			internal bool FullscreenMode;
+            /// <summary>Whether the program is to be rendered using vertical syncronisation</summary>
 			internal bool VerticalSynchronization;
+            /// <summary>The screen width (Windowed Mode)</summary>
 			internal int WindowWidth;
+            /// <summary>The screen height (Windowed Mode)</summary>
 			internal int WindowHeight;
+            /// <summary>The screen width (Fullscreen Mode)</summary>
 			internal int FullscreenWidth;
+            /// <summary>The screen height (Fullscreen Mode)</summary>
 			internal int FullscreenHeight;
+            /// <summary>The number of bits per pixel (Only relevant in fullscreen mode)</summary>
 			internal int FullscreenBits;
+            /// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
+            /// <summary>The current pixel interpolation mode </summary>
 			internal InterpolationMode Interpolation;
+            /// <summary>The current transparency quality mode</summary>
 			internal Renderer.TransparencyMode TransparencyMode;
+            /// <summary>The level of anisotropic filtering to be applied</summary>
 			internal int AnisotropicFilteringLevel;
+            /// <summary>The maximum level of anisotropic filtering supported by the system</summary>
 			internal int AnisotropicFilteringMaximum;
+            /// <summary>The accelerated time factor (1x to 5x)</summary>
 		    internal int TimeAccelerationFactor;
+            /// <summary>The level of antialiasing to be applied</summary>
 			internal int AntiAliasingLevel;
+            /// <summary>The viewing distance in meters</summary>
 			internal int ViewingDistance;
+            /// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
+            /*
+             * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
+             * object by checking for duplicate vertices etc.
+             */
+            /// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
 			internal int ObjectOptimizationBasicThreshold;
+            /// <summary>The minimum number of verticies for full optimisation to be performed on an object</summary>
 			internal int ObjectOptimizationFullThreshold;
+            /// <summary>Whether toppling is enabled</summary>
 			internal bool Toppling;
+            /// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
+            /// <summary>Whether derailments are enabled</summary>
 			internal bool Derailments;
+            /// <summary>Whether the black-box data logger is enabled</summary>
 			internal bool BlackBox;
+            /// <summary>Whether joystick support is enabled</summary>
 			internal bool UseJoysticks;
+            /// <summary>The threshold below which joystick axis motion will be disregarded</summary>
 			internal double JoystickAxisThreshold;
+            /// <summary>The delay after which a held-down key will start to repeat</summary>
 			internal double KeyRepeatDelay;
+            /// <summary>The interval at which a held down key will repeat after the intial delay</summary>
 			internal double KeyRepeatInterval;
+            /// <summary>The current sound model</summary>
 			internal Sounds.SoundModels SoundModel;
+            /// <summary>The range outside of which sounds will be inaudible</summary>
 			internal SoundRange SoundRange;
+            /// <summary>The maximum number of sounds playing at any one time</summary>
 			internal int SoundNumber;
+            /// <summary>Whether warning messages are to be shown</summary>
 			internal bool ShowWarningMessages;
+            /// <summary>Whether error messages are to be shown</summary>
 			internal bool ShowErrorMessages;
+            /// <summary>The current route's on-disk folder path</summary>
 			internal string RouteFolder;
+            /// <summary>The current train's on-disk folder path</summary>
 			internal string TrainFolder;
+            /// <summary>The list of recently used routes</summary>
 			internal string[] RecentlyUsedRoutes;
+            /// <summary>The list of recently used trains</summary>
 			internal string[] RecentlyUsedTrains;
+            /// <summary>The maximum number of recently used routes/ trains to display</summary>
 			internal int RecentlyUsedLimit;
+            /// <summary>The list of recently used route character encodings</summary>
 			internal EncodingValue[] RouteEncodings;
+            /// <summary>The list of recently used train character encodings</summary>
 			internal EncodingValue[] TrainEncodings;
+            /// <summary>The game mode- Affects how the score is calculated</summary>
 			internal GameMode GameMode;
+            /// <summary>The width of the main menu window</summary>
 			internal int MainMenuWidth;
+            /// <summary>The height of the main menu window</summary>
 			internal int MainMenuHeight;
+            /// <summary>Whether the use of OpenGL display lists is disabled</summary>
 			internal bool DisableDisplayLists;
+            /// <summary>Whether the simulation will load all textures and sounds into system memory on initial load</summary>
 			internal bool LoadInAdvance;
+            /*
+             * Note: Disabling texture resizing may produce artifacts at the edges of textures,
+             * and may display issues with certain graphics cards.
+             */
+            /// <summary>Whether textures are to be resized to the power of two rule</summary>
 			internal bool NoTextureResize;
+            /*
+             * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
+             */
+            /// <summary>The proxy URL to use when retrieving content from the internet</summary>
 			internal string ProxyUrl;
+            /// <summary>The proxy username to use when retrieving content from the internet</summary>
 			internal string ProxyUserName;
+            /// <summary>The proxy password to use when retrieving content from the internet</summary>
 			internal string ProxyPassword;
 			internal Options() {
 				this.LanguageCode = "en-US";
@@ -175,7 +234,9 @@ namespace OpenBve {
 			    this.TimeAccelerationFactor = 5;
 			}
 		}
+        /// <summary>The current game options</summary>
 		internal static Options CurrentOptions;
+        /// <summary>Loads the options file from disk</summary>
 		internal static void LoadOptions() {
 			CurrentOptions = new Options();
 			CultureInfo Culture = CultureInfo.InvariantCulture;
