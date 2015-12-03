@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -1646,17 +1648,18 @@ namespace OpenBve
                                         Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
                                         break;
                                     case Interface.Command.RouteInformation:
-                                        if (RouteInformation == null)
+                                        if (RouteInfoActive == false)
                                         {
-                                            RouteInformation = new formRouteInformation();
-                                        }
-                                        if (!RouteInformation.Visible)
-                                        {
-                                            RouteInformation.Show();
+                                            RouteInfoThread = new Thread(ThreadProc)
+                                            {
+                                                IsBackground = true
+                                            };
+                                            RouteInfoThread.Start();
+                                            RouteInfoActive = true;
                                         }
                                         else
                                         {
-                                            RouteInformation.Hide();
+                                            KillRouteInfo();
                                         }
                                         break;
                                 }

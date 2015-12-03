@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Security.Permissions;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics;
@@ -22,8 +25,9 @@ namespace OpenBve {
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 	    internal static bool OpenTKWindow;
 	    internal static formMain.MainDialogResult currentResult;
-
-	    internal static formRouteInformation RouteInformation;
+	    internal static formRouteInformation RouteInformationForm;
+	    internal static Thread RouteInfoThread;
+	    internal static bool RouteInfoActive;
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
@@ -86,9 +90,13 @@ namespace OpenBve {
 		// --------------------------------
 
 		// repeats
-		
-   
 
+
+        private static void ThreadProc()
+        {
+            RouteInformationForm = new formRouteInformation();
+            RouteInformationForm.ShowDialog();
+        }
 
 	    private static void OpenTKQuit(object sender, CancelEventArgs e)
 	    {
@@ -413,5 +421,14 @@ namespace OpenBve {
 		}
 		#endif
 
+	    public static void KillRouteInfo()
+        {
+            MainLoop.RouteInformationForm.Invoke((MethodInvoker)delegate
+            {
+                MainLoop.RouteInformationForm.Close();
+            });
+            RouteInfoActive = false;
+            Application.DoEvents();
+	    }
 	}
 }

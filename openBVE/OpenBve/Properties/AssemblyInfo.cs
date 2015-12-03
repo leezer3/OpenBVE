@@ -13,8 +13,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("openBVE")]
 [assembly: AssemblyCopyright("The openBVE Project")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.4.12.1175")]
-[assembly: AssemblyFileVersion("1.4.12.1175")]
+[assembly: AssemblyVersion("1.4.12.1338")]
+[assembly: AssemblyFileVersion("1.4.12.1338")]
 [assembly: CLSCompliant(true)]
 
 namespace OpenBve {
