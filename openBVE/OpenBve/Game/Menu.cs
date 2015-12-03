@@ -1,6 +1,6 @@
 ﻿namespace OpenBve
 {
-    public static partial class Game
+    internal static partial class Game
     {
         internal enum MenuTag { None, Caption, Back, JumpToStation, ExitToMainMenu, Quit }
         internal abstract class MenuEntry

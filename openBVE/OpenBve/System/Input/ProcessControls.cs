@@ -1645,6 +1645,20 @@ namespace OpenBve
                                         Sounds.GlobalMute = !Sounds.GlobalMute;
                                         Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
                                         break;
+                                    case Interface.Command.RouteInformation:
+                                        if (RouteInformation == null)
+                                        {
+                                            RouteInformation = new formRouteInformation();
+                                        }
+                                        if (!RouteInformation.Visible)
+                                        {
+                                            RouteInformation.Show();
+                                        }
+                                        else
+                                        {
+                                            RouteInformation.Hide();
+                                        }
+                                        break;
                                 }
                             }
                             else if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released)

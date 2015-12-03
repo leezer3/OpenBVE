@@ -2,7 +2,7 @@
 
 namespace OpenBve
 {
-    public static partial class Game
+    internal static partial class Game
     {
         /// <summary>The route's comment (For display in the main menu)</summary>
         internal static string RouteComment = "";

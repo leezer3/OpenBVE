@@ -1,6 +1,6 @@
 ﻿namespace OpenBve
 {
-    public static partial class Game
+    internal static partial class Game
     {
         /// <summary>The game's current framerate</summary>
         internal static double InfoFrameRate = 1.0;

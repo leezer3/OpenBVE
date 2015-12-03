@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using OpenTK;
@@ -24,7 +26,8 @@ namespace OpenBve
         {
             try
             {
-                System.Drawing.Icon ico = new System.Drawing.Icon("data\\icon.ico");
+                var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                System.Drawing.Icon ico = new System.Drawing.Icon(OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data"), "icon.ico"));
                 this.Icon = ico;
             }
             catch

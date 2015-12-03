@@ -785,7 +785,6 @@ namespace OpenBve {
 							TryLoadImage(pictureboxRouteImage, "route_error.png");
 						}
 					} else {
-						//string f = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Result.RouteFile), System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile));
 						string[] e = new string[] { ".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg" };
 						int i;
 						for (i = 0; i < e.Length; i++) {

@@ -104,6 +104,8 @@ namespace OpenBve {
             //RW routes were written for BVE1 / 2, and have a different command syntax
 		    bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
+		    Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
+            createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Game.CalculateSeaLevelConstants();
 			if (Game.BogusPretrainInstructions.Length != 0) {

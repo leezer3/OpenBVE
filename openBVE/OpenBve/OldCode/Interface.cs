@@ -1347,7 +1347,9 @@ namespace OpenBve {
             //Diesel Locomotive
             EngineStart,EngineStop,GearUp,GearDown,
             //Electric Locomotive
-            RaisePantograph,LowerPantograph,MainBreaker
+            RaisePantograph,LowerPantograph,MainBreaker,
+            //Other
+            RouteInformation
 
 		}
         /// <summary>
@@ -1671,6 +1673,7 @@ namespace OpenBve {
 			new CommandInfo(Command.DebugWireframe, CommandType.Digital, "DEBUG_WIREFRAME"),
 			new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS"),
 			new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE"),
+            new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
 		};
 		internal static Control[] CurrentControls = new Control[] { };
 

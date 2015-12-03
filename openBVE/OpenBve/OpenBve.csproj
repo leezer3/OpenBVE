@@ -82,11 +82,20 @@
       <HintPath>..\..\..\..\opentk-develop\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\formRouteInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Game\formRouteInformation.Designer.cs">
+      <DependentUpon>formRouteInformation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />
@@ -101,7 +110,6 @@
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />
     <Compile Include="System\Scripting.cs" />
-    <Compile Include="System\Timer.cs" />
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
@@ -173,7 +181,7 @@
     </Compile>
     <Compile Include="OldCode\FunctionScripts.cs" />
     <Compile Include="OldCode\Game.cs" />
-    <Compile Include="OldCode\Illustrations.cs" />
+    <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
     <Compile Include="OldCode\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
@@ -187,7 +195,7 @@
     <Compile Include="OldCode\ObjectManager.cs" />
     <Compile Include="OldCode\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
-    <Compile Include="OldCode\Timers.cs" />
+    <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="OldCode\Timetable.cs" />
     <Compile Include="OldCode\TrackManager.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
@@ -201,13 +209,16 @@
     <Compile Include="OldParsers\WaveParser.cs" />
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />
-    <Compile Include="System\FileSystem.cs" />
+    <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\ManagedContent.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\Joysticks.cs" />
-    <Compile Include="System\Plugins.cs" />
+    <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Game\formRouteInformation.resx">
+      <DependentUpon>formRouteInformation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OldCode\formImage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formImage.cs</DependentUpon>

@@ -23,6 +23,8 @@ namespace OpenBve {
 	    internal static bool OpenTKWindow;
 	    internal static formMain.MainDialogResult currentResult;
 
+	    internal static formRouteInformation RouteInformation;
+
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
             Sounds.Initialize();
