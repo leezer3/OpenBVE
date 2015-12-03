@@ -234,6 +234,7 @@ namespace OpenBve {
 	                Dialog.Filter = "CSV/RW files|*.csv;*.rw|All files|*";
 	                if (Dialog.ShowDialog() == DialogResult.OK)
 	                {
+                        Application.DoEvents();
 	                    CurrentlyLoading = true;
 	                    Renderer.RenderScene(0.0);
 	                    Program.currentGameWindow.SwapBuffers();
@@ -246,11 +247,13 @@ namespace OpenBve {
 	                break;
                 case Key.F8:
 	                formOptions.ShowOptions();
+                    Application.DoEvents();
                     break;
 	            case Key.F9:
 	                if (Interface.MessageCount != 0)
 	                {
 	                    formMessages.ShowMessages();
+                        Application.DoEvents();
 	                }
 	                break;
 	            case Key.A:

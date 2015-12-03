@@ -232,6 +232,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Options";
+            this.Shown += new System.EventHandler(this.formOptions_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.width)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.height)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).EndInit();

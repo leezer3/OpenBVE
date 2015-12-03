@@ -17,10 +17,11 @@ namespace OpenBve
             height.Value = Renderer.ScreenHeight;
         }
 
-        internal static void ShowOptions()
+        internal static DialogResult ShowOptions()
         {
             formOptions Dialog = new formOptions();
-            Dialog.Show();
+            DialogResult Result = Dialog.ShowDialog();
+            return Result;
         }
 
         private void button1_Click(object sender, EventArgs e)

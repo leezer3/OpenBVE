@@ -17,10 +17,16 @@ namespace OpenBve
             height.Value = Renderer.ScreenHeight;
         }
 
-        internal static void ShowOptions()
+        internal static DialogResult ShowOptions()
         {
             formOptions Dialog = new formOptions();
-            Dialog.Show();
+            DialogResult Result = Dialog.ShowDialog();
+            return Result;
+        }
+
+        private void formOptions_Shown(object sender, EventArgs e)
+        {
+            button1.Focus();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -102,7 +108,7 @@ namespace OpenBve
             }
             Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
             Options.SaveOptions();
-            this.Close();
+            this.Dispose();
         }
     }
 }

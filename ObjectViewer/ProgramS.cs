@@ -290,6 +290,7 @@ namespace OpenBve {
 	                Dialog.Filter = "CSV/B3D/X/ANIMATED files|*.csv;*.b3d;*.x;*.animated|All files|*";
 	                if (Dialog.ShowDialog() == DialogResult.OK)
 	                {
+                        Application.DoEvents();
 	                    string[] f = Dialog.FileNames;
 	                    int n = Files.Length;
 	                    Array.Resize<string>(ref Files, n + f.Length);
@@ -333,6 +334,7 @@ namespace OpenBve {
 	                if (Interface.MessageCount != 0)
 	                {
 	                    formMessages.ShowMessages();
+                        Application.DoEvents();
 	                }
 	                break;
 	            case Key.Delete:
@@ -420,6 +422,7 @@ namespace OpenBve {
 	                break;
                 case Key.F8:
                     formOptions.ShowOptions();
+                    Application.DoEvents();
                     break;
 	            case Key.G:
 	            case Key.C:
