@@ -123,6 +123,15 @@ namespace OpenBve {
 
         internal static void ProcessKeyboard()
         {
+
+            if (RouteInfoActive == true)
+            {
+                if (RouteInfoThread.ThreadState == ThreadState.Stopped)
+                {
+                    RouteInfoActive = false;
+                }
+            }
+
             if (World.MouseGrabEnabled)
             {
                 previousMouseState = currentMouseState;
@@ -427,7 +436,6 @@ namespace OpenBve {
             {
                 MainLoop.RouteInformationForm.Close();
             });
-            RouteInfoActive = false;
             Application.DoEvents();
 	    }
 	}

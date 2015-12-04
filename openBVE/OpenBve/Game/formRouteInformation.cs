@@ -35,7 +35,9 @@ namespace OpenBve
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            Application.DoEvents();
             MainLoop.KillRouteInfo();
+            
         }
     }
 }
