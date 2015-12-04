@@ -61,11 +61,12 @@
     <Compile Include="formOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-	<Compile Include="formOptions.designer.cs">
+    <Compile Include="formOptions.designer.cs">
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Options.cs" />
+    <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />
@@ -99,6 +100,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
     <Reference Include="Tao.Sdl">
       <HintPath>..\..\Tao.Sdl.dll</HintPath>
     </Reference>
@@ -109,7 +111,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="formOptions.resx">
-	<DependentUpon>formOptions.cs</DependentUpon>
+      <DependentUpon>formOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

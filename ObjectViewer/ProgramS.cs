@@ -287,7 +287,7 @@ namespace OpenBve {
 	                OpenFileDialog Dialog = new OpenFileDialog();
 	                Dialog.CheckFileExists = true;
 	                Dialog.Multiselect = true;
-	                Dialog.Filter = "CSV/B3D/X/ANIMATED files|*.csv;*.b3d;*.x;*.animated|All files|*";
+	                Dialog.Filter = "CSV/B3D/X/ANIMATED files|*.csv;*.b3d;*.x;*.animated;*.l3dobj|All files|*";
 	                if (Dialog.ShowDialog() == DialogResult.OK)
 	                {
                         Application.DoEvents();
