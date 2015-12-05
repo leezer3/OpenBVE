@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using CSScriptLibrary;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -1648,19 +1651,32 @@ namespace OpenBve
                                         Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
                                         break;
                                     case Interface.Command.RouteInformation:
-                                        if (RouteInfoActive == false)
+                                        if (RouteInfoFormDomain == null)
                                         {
-                                            RouteInfoThread = new Thread(ThreadProc)
-                                            {
-                                                IsBackground = true
-                                            };
-                                            RouteInfoThread.Start();
-                                            RouteInfoActive = true;
+                                            RouteInfoFormDomain = AppDomain.CreateDomain("RouteInfo", AppDomain.CurrentDomain.Evidence, AppDomain.CurrentDomain.SetupInformation);
+                                            RouteInfoFormDomain.SetPrincipalPolicy(System.Security.Principal.PrincipalPolicy.WindowsPrincipal);
+                                        }
+                                        if (RouteInformationForm == null)
+                                        {
+                                            RouteInformationForm = (formRouteInformation)RouteInfoFormDomain.CreateInstanceAndUnwrap(System.Reflection.Assembly.GetExecutingAssembly().FullName,typeof (formRouteInformation).FullName);
+
+                                            RouteInformationForm.Show();
+                                            byte[] RouteMap = OpenBve.Game.RouteInformation.RouteMap.ToByteArray(ImageFormat.Bmp);
+                                            byte[] GradientProfile = OpenBve.Game.RouteInformation.GradientProfile.ToByteArray(ImageFormat.Bmp);
+                                            RouteInformationForm.UpdateImage(RouteMap, GradientProfile);
                                         }
                                         else
                                         {
-                                            KillRouteInfo();
+                                            if (RouteInformationForm.Visible)
+                                            {
+                                                RouteInformationForm.Hide();
+                                            }
+                                            else
+                                            {
+                                                RouteInformationForm.Show();
+                                            }
                                         }
+                                        Application.DoEvents();
                                         break;
                                 }
                             }

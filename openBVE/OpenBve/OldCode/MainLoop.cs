@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using CSScriptLibrary;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics;
@@ -28,6 +29,9 @@ namespace OpenBve {
 	    internal static formRouteInformation RouteInformationForm;
 	    internal static Thread RouteInfoThread;
 	    internal static bool RouteInfoActive;
+
+
+	    internal static AppDomain RouteInfoFormDomain;
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
@@ -123,15 +127,6 @@ namespace OpenBve {
 
         internal static void ProcessKeyboard()
         {
-
-            if (RouteInfoActive == true)
-            {
-                if (RouteInfoThread.ThreadState == ThreadState.Stopped)
-                {
-                    RouteInfoActive = false;
-                }
-            }
-
             if (World.MouseGrabEnabled)
             {
                 previousMouseState = currentMouseState;
@@ -429,14 +424,5 @@ namespace OpenBve {
 			}
 		}
 		#endif
-
-	    public static void KillRouteInfo()
-        {
-            MainLoop.RouteInformationForm.Invoke((MethodInvoker)delegate
-            {
-                MainLoop.RouteInformationForm.Close();
-            });
-            Application.DoEvents();
-	    }
 	}
 }

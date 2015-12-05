@@ -11,9 +11,11 @@ namespace OpenBve {
 		/// <returns>The collection of animated objects.</returns>
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-			Result.Objects = new ObjectManager.AnimatedObject[4];
-			int ObjectCount = 0;
+		    ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+		    {
+		        Objects = new ObjectManager.AnimatedObject[4]
+		    };
+		    int ObjectCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			bool rpnUsed = false;
@@ -99,10 +101,12 @@ namespace OpenBve {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-											aos.Object = s;
-											aos.Position = position;
-											a.States = new ObjectManager.AnimatedObjectState[] { aos };
+										    ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+										    {
+										        Object = s,
+										        Position = position
+										    };
+										    a.States = new ObjectManager.AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										} else if (obj[j] is ObjectManager.AnimatedObjectCollection) {
@@ -130,20 +134,22 @@ namespace OpenBve {
 								if (Result.Objects.Length == ObjectCount) {
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
-								Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
-								Result.Objects[ObjectCount].CurrentState = -1;
-								Result.Objects[ObjectCount].TranslateXDirection = new World.Vector3D(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].TranslateYDirection = new World.Vector3D(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].TranslateZDirection = new World.Vector3D(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].RotateXDirection = new World.Vector3D(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].RotateYDirection = new World.Vector3D(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].RotateZDirection = new World.Vector3D(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].TextureShiftXDirection = new World.Vector2D(1.0, 0.0);
-								Result.Objects[ObjectCount].TextureShiftYDirection = new World.Vector2D(0.0, 1.0);
-								Result.Objects[ObjectCount].RefreshRate = 0.0;
-								Result.Objects[ObjectCount].ObjectIndex = -1;
-								World.Vector3D Position = new World.Vector3D(0.0, 0.0, 0.0);
+							    Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
+							    {
+							        States = new ObjectManager.AnimatedObjectState[] {},
+							        CurrentState = -1,
+							        TranslateXDirection = new World.Vector3D(1.0, 0.0, 0.0),
+							        TranslateYDirection = new World.Vector3D(0.0, 1.0, 0.0),
+							        TranslateZDirection = new World.Vector3D(0.0, 0.0, 1.0),
+							        RotateXDirection = new World.Vector3D(1.0, 0.0, 0.0),
+							        RotateYDirection = new World.Vector3D(0.0, 1.0, 0.0),
+							        RotateZDirection = new World.Vector3D(0.0, 0.0, 1.0),
+							        TextureShiftXDirection = new World.Vector2D(1.0, 0.0),
+							        TextureShiftYDirection = new World.Vector2D(0.0, 1.0),
+							        RefreshRate = 0.0,
+							        ObjectIndex = -1
+							    };
+							    World.Vector3D Position = new World.Vector3D(0.0, 0.0, 0.0);
 								bool timetableUsed = false;
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;

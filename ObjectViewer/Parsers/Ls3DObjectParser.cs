@@ -83,13 +83,14 @@ namespace OpenBve
 
             World.Vertex[] tempVertices = new World.Vertex[0];
             World.Vector3Df[] tempNormals = new World.Vector3Df[0];
+            World.ColorRGB transparentColor = new World.ColorRGB();
             string tday = null;
             string tnight = null;
             bool TransparencyUsed = false;
             bool Face2 = false;
             int TextureWidth = 0;
             int TextureHeight = 0;
-
+            
             currentXML.Load(FileName);
             //Check for null
             if (currentXML.DocumentElement != null)
@@ -136,17 +137,35 @@ namespace OpenBve
                                                     }
                                                     break;
                                                 case "Transparent":
-                                                    //Need to handle transparencies
                                                     //If transparent is set to true, then the texture appears to have a transparent part
+                                                    //However, we also appear to be able to set a transparent color and not the Transparent attribute
                                                     if (attribute.Value == "TRUE")
                                                     {
                                                         TransparencyUsed = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        TransparencyUsed = false;
                                                     }
                                                     break;
                                                 case "TransparentTyp":
                                                     //Sets the transparency type
                                                     //This must be color key transparency, as BMP file can't store an alpha channel
                                                     //A value of 1 would appear to be solid black???
+                                                    TransparencyUsed = true;
+                                                    switch (attribute.Value)
+                                                    {
+                                                        case "0":
+                                                            break;
+                                                        case "1":
+                                                            //Would appear to be 0,0,0
+                                                            transparentColor = new World.ColorRGB((byte)0, (byte)0, (byte)0);
+                                                            break;
+                                                        case "2":
+                                                            //Would appear to be 0,0,255
+                                                            transparentColor = new World.ColorRGB((byte)0, (byte)0, (byte)255);
+                                                            break;
+                                                    }
                                                     break;
                                                 case "Drawrueckseiten":
                                                     Face2 = true;
@@ -301,6 +320,14 @@ namespace OpenBve
                     {
                         Builder.Materials[j].DaytimeTexture = tday;
                         Builder.Materials[j].NighttimeTexture = tnight;
+                    }
+                }
+                if (TransparencyUsed == true)
+                {
+                    for (int j = 0; j < Builder.Materials.Length; j++)
+                    {
+                        Builder.Materials[j].TransparentColor = transparentColor;
+                        Builder.Materials[j].TransparentColorUsed = true;
                     }
                 }
                  

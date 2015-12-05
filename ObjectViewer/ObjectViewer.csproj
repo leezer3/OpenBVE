@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Options.cs" />
+    <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />

@@ -106,6 +106,7 @@
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Parsers\XMLParser.cs" />
+    <Compile Include="System\Functions\Extensions.cs" />
     <Compile Include="System\Input\ControlRepeats.cs" />
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />

@@ -45,7 +45,7 @@ namespace OpenBve {
 		private static void Main(string[] args) {
             //var options = new ToolkitOptions();
             //options.Backend = PlatformBackend.PreferNative;
-            Toolkit.Init();
+            //Toolkit.Init();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			//--- determine the running environment ---
