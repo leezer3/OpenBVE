@@ -121,10 +121,6 @@ namespace OpenBve {
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
 	        // initialize camera
 
-	        // create window
-	        Renderer.ScreenWidth = 960;
-	        Renderer.ScreenHeight = 600;
-
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
 	        currentGameWindow = new ObjectViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
 	        currentGameWindow.Visible = true;

@@ -285,6 +285,13 @@ namespace OpenBve
             SwapBuffers();
         }
 
+        protected override void OnResize(EventArgs e)
+        {
+            Renderer.ScreenWidth = Width;
+            Renderer.ScreenHeight = Height;
+            Program.UpdateViewport();
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             KeyDown += Program.KeyDown;

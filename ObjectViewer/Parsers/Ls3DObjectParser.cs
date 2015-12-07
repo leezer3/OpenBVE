@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using System.Xml;
-using OpenBveApi.Math;
-using OpenTK.Graphics.OpenGL;
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace OpenBve
 {
@@ -136,13 +129,18 @@ namespace OpenBve
                                                                 TextureWidth = TextureInformation.Width;
                                                                 TextureHeight = TextureInformation.Height;
                                                                 Color color = TextureInformation.GetPixel(1, 1);
-                                                                transparentColor = new World.ColorRGB((byte)color.R, (byte)color.G,(byte)color.B);
+                                                                transparentColor = new World.ColorRGB((byte) color.R, (byte) color.G, (byte) color.B);
                                                             }
                                                         }
                                                         catch
                                                         {
+                                                            Interface.AddMessage(Interface.MessageType.Error, true, "An error occured loading daytime texture " + tday + " in file " + FileName);
                                                             tday = null;
                                                         }
+                                                    }
+                                                    else
+                                                    {
+                                                        Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture " + tday + " could not be found in file " + FileName);
                                                     }
                                                     break;
                                                 //Defines whether the texture uses transparency
