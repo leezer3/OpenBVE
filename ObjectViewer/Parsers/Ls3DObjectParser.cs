@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenTK.Graphics.OpenGL;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace OpenBve
 {
@@ -118,6 +123,8 @@ namespace OpenBve
                                         {
                                             switch (attribute.Name)
                                             {
+                                                //Sets the texture
+                                                //Loksim3D objects only support daytime textures
                                                 case "Texture":
                                                     tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), attribute.Value);
                                                     if (File.Exists(tday))
@@ -128,6 +135,8 @@ namespace OpenBve
                                                             {
                                                                 TextureWidth = TextureInformation.Width;
                                                                 TextureHeight = TextureInformation.Height;
+                                                                Color color = TextureInformation.GetPixel(1, 1);
+                                                                transparentColor = new World.ColorRGB((byte)color.R, (byte)color.G,(byte)color.B);
                                                             }
                                                         }
                                                         catch
@@ -136,9 +145,9 @@ namespace OpenBve
                                                         }
                                                     }
                                                     break;
+                                                //Defines whether the texture uses transparency
+                                                //May be omitted
                                                 case "Transparent":
-                                                    //If transparent is set to true, then the texture appears to have a transparent part
-                                                    //However, we also appear to be able to set a transparent color and not the Transparent attribute
                                                     if (attribute.Value == "TRUE")
                                                     {
                                                         TransparencyUsed = true;
@@ -148,25 +157,31 @@ namespace OpenBve
                                                         TransparencyUsed = false;
                                                     }
                                                     break;
+                                                //Sets the transparency type
                                                 case "TransparentTyp":
-                                                    //Sets the transparency type
-                                                    //This must be color key transparency, as BMP file can't store an alpha channel
-                                                    //A value of 1 would appear to be solid black???
-                                                    TransparencyUsed = true;
                                                     switch (attribute.Value)
                                                     {
                                                         case "0":
+                                                            //Transparency is disabled
+                                                            TransparencyUsed = false;
                                                             break;
                                                         case "1":
-                                                            //Would appear to be 0,0,0
-                                                            transparentColor = new World.ColorRGB((byte)0, (byte)0, (byte)0);
+                                                            //Transparency is solid black
+                                                            TransparencyUsed = true;
+                                                            transparentColor = new World.ColorRGB(0,0,0);
                                                             break;
                                                         case "2":
-                                                            //Would appear to be 0,0,255
-                                                            transparentColor = new World.ColorRGB((byte)0, (byte)0, (byte)255);
+                                                            //Transparency is the color at Pixel 1,1
+                                                            TransparencyUsed = true;
+                                                            break;
+                                                        case "3":
+                                                            //This is used when transparency is used with an alpha bitmap
+                                                            //Not currently supported
+                                                            TransparencyUsed = false;
                                                             break;
                                                     }
                                                     break;
+                                                //Sets whether the rears of the faces are to be drawn
                                                 case "Drawrueckseiten":
                                                     Face2 = true;
                                                     break;
@@ -174,8 +189,7 @@ namespace OpenBve
                                                 /*
                                          * MISSING PROPERTIES:
                                          * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
-                                         * Beleuchtet- Translates as illuminated. Presume something to do with lighting?
-                                         * Drawrueckseiten- Translates as draw backs. Equivilant of Face2 usage?
+                                         * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
                                          * FileAuthor
                                          * FileInfo
                                          * FilePicture
@@ -184,7 +198,7 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                //The point command would appear to be equivilant to a vertex
+                                //The point command is eqivilant to a vertex
                                 else if (node.Name == "Point" && node.HasChildNodes)
                                 {
                                     foreach (XmlNode childNode in node.ChildNodes)
@@ -199,12 +213,14 @@ namespace OpenBve
                                             {
                                                 switch (attribute.Name)
                                                 {
+                                                    //Sets the vertex normals
                                                     case "Normal":
                                                         string[] NormalPoints = attribute.Value.Split(';');
                                                         double.TryParse(NormalPoints[0], out nx);
                                                         double.TryParse(NormalPoints[1], out ny);
                                                         double.TryParse(NormalPoints[2], out nz);
                                                         break;
+                                                    //Sets the vertex 3D co-ordinates
                                                     case "Vekt":
                                                         string[] VertexPoints = attribute.Value.Split(';');
                                                         double.TryParse(VertexPoints[0], out vx);
@@ -234,13 +250,15 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                //The Flaeche command would appear to be equal to a face
+                                //The Flaeche command creates a face
                                 else if (node.Name == "Flaeche" && node.HasChildNodes)
                                 {
                                     foreach (XmlNode childNode in node.ChildNodes)
                                     {
                                         if (childNode.Name == "Props" && childNode.Attributes != null)
                                         {
+                                            //Defines the verticies in this face
+                                            //**NOTE**: A vertex may appear in multiple faces with different texture co-ordinates
                                             if (childNode.Attributes["Points"] != null)
                                             {
                                                 string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
@@ -296,9 +314,6 @@ namespace OpenBve
                                                     {
                                                         Builder.Faces[f].Flags = (byte) World.MeshFace.Face2Mask;
                                                     }
-
-
-
                                                 }
                                             }
 
@@ -419,6 +434,6 @@ namespace OpenBve
                     Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
                 }
             }
-        }
+        }  
     }
 }
