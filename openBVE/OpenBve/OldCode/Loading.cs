@@ -16,6 +16,8 @@ namespace OpenBve {
 		internal static bool Cancel;
         /// <summary>Whether loading is complete</summary>
 		internal static bool Complete;
+        /// <summary>Whether there is currently a job waiting to complete in the main game loop</summary>
+        internal static bool JobAvailable = false;
 		private static Thread Loader;
         /// <summary>The current route file</summary>
 		private static string CurrentRouteFile;
@@ -88,6 +90,10 @@ namespace OpenBve {
                 Cancel = true;                
 			}
             #endif
+		    if (JobAvailable)
+		    {
+		        Thread.Sleep(10);
+		    }
             Complete = true;
 		}
 		private static void LoadEverythingThreaded() {

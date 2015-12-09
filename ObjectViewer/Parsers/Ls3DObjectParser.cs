@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace OpenBve
@@ -65,7 +66,7 @@ namespace OpenBve
         /// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
         /// /// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
         /// <returns>The object loaded.</returns>
-        internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+        internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, double RotationX, double RotationY, double RotationZ)
         {
             XmlDocument currentXML = new XmlDocument();
             //May need to be changed to use de-DE
@@ -88,8 +89,14 @@ namespace OpenBve
             bool Face2 = false;
             int TextureWidth = 0;
             int TextureHeight = 0;
-            
-            currentXML.Load(FileName);
+            if (File.Exists(FileName))
+            {
+                currentXML.Load(FileName);
+            }
+            else
+            {
+                return null;
+            }
             //Check for null
             if (currentXML.DocumentElement != null)
             {
@@ -324,6 +331,37 @@ namespace OpenBve
                     }
                 }
                 
+                //Apply rotation
+                /*
+                 * NOTES:
+                 * No rotation order is specified
+                 * The rotation string in a .l3dgrp file is ordered Y, X, Z    ??? Can't find a good reason for this ???
+                 * Rotations must still be performed in X,Y,Z order to produce correct results
+                 */
+
+                if (RotationX != 0.0)
+                {
+                    //This is actually the Y-Axis rotation
+                    //Convert to radians
+                    RotationX *= 0.0174532925199433;
+                    //Apply rotation
+                    ApplyRotation(Builder, 0, 1, 0, RotationX);
+                }
+                if (RotationY != 0.0)
+                {
+                    //This is actually the X-Axis rotation
+                    //Convert to radians
+                    RotationY *= 0.0174532925199433;
+                    //Apply rotation
+                    ApplyRotation(Builder, 1, 0, 0, RotationY);
+                }
+                if (RotationZ != 0.0)
+                {
+                    //Convert to radians
+                    RotationZ *= 0.0174532925199433;
+                    //Apply rotation
+                    ApplyRotation(Builder, 0, 0, 1, RotationZ);
+                }
                 
                 //These files appear to only have one texture defined
                 //Therefore import later- May have to change
@@ -432,6 +470,23 @@ namespace OpenBve
                     Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
                 }
             }
-        }  
+        }
+
+        private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a)
+        {
+            double cosa = Math.Cos(a);
+            double sina = Math.Sin(a);
+            for (int i = 0; i < Builder.Vertices.Length; i++)
+            {
+                World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+            }
+            for (int i = 0; i < Builder.Faces.Length; i++)
+            {
+                for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
+                {
+                    World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+                }
+            }
+        }
     }
 }

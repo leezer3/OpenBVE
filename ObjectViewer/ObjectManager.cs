@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace OpenBve
 {
@@ -1011,7 +1012,7 @@ namespace OpenBve
 
         // load object
         internal enum ObjectLoadMode { Normal, DontAllowUnloadOfTextures }
-        internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+        internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY, double RotationX, double RotationY, double RotationZ)
         {
 #if !DEBUG
 			try {
@@ -1056,7 +1057,7 @@ namespace OpenBve
                     Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
                     break;
                 case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY, RotationX, RotationY, RotationZ);
                     break;
                 case ".l3dgrp":
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
@@ -1116,7 +1117,11 @@ namespace OpenBve
                     Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY,0,0,0);
+                    if (Result == null)
+                    {
+                        return null;
+                    }
                     break;
                 case ".animated":
                     Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
@@ -1148,9 +1153,12 @@ namespace OpenBve
                 AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
                 for (int i = 0; i < a.Objects.Length; i++)
                 {
-                    for (int j = 0; j < a.Objects[i].States.Length; j++)
+                    if (a.Objects[i] != null)
                     {
-                        OptimizeObject(a.Objects[i].States[j].Object, PreserveVertices);
+                        for (int j = 0; j < a.Objects[i].States.Length; j++)
+                        {
+                            OptimizeObject(a.Objects[i].States[j].Object, PreserveVertices);
+                        }
                     }
                 }
             }

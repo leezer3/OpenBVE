@@ -575,7 +575,7 @@ namespace OpenBve
                 Renderer.DrawLoadingScreen();
                 Program.currentGameWindow.SwapBuffers();
                 
-                if (JobAvailable)
+                if (Loading.JobAvailable)
                 {
                     while (jobs.Count > 0)
                     {
@@ -590,7 +590,7 @@ namespace OpenBve
                             }
                         }
                     }
-                    JobAvailable = false;
+                    Loading.JobAvailable = false;
                 }
                 double time = CPreciseTimer.GetElapsedTime();
                 double wait = 1000.0 / 60.0 - time * 1000 - 50;
@@ -604,7 +604,7 @@ namespace OpenBve
 
         internal static readonly object LoadingLock = new object();
         internal static bool LoadingRemakeCurrent = false;
-        private static bool JobAvailable = false;
+        
         private static readonly object jobLock = new object();
         private static Queue<ThreadStart> jobs;
         private static Queue<object> locks;
@@ -616,7 +616,7 @@ namespace OpenBve
             object locker = new object();
             lock (jobLock)
             {
-                JobAvailable = true;
+                Loading.JobAvailable = true;
                 jobs.Enqueue(job);
                 locks.Enqueue(locker);
             }

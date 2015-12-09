@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Xml;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -11,8 +13,10 @@ namespace OpenBve
             //A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
             internal string Name;
             internal World.Vector3D Position;
-            //Change??
-            internal World.Vector3D Rotation;
+
+            internal double RotationX;
+            internal double RotationY;
+            internal double RotationZ;
         }
 
         internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
@@ -57,7 +61,6 @@ namespace OpenBve
                                                         string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
                                                         
                                                         Object.Name = ObjectFile;
-                                                        //obj[obj.Length -1] = ObjectManager.LoadObject(ObjectFile, Encoding, LoadMode, false, false, false);
                                                         ObjectCount++;
                                                         break;
                                                     case "Position":
@@ -67,8 +70,11 @@ namespace OpenBve
                                                         double.TryParse(SplitPosition[2], out Object.Position.Z);
                                                         break;
                                                     case "Rotation":
-                                                        //This will require passing a paramater to the LS3D object reader I think
-                                                        //Dynamic rotation doesn't seem to be possible
+                                                        string[] SplitRotation = attribute.Value.Split(';');
+
+                                                        double.TryParse(SplitRotation[0], out Object.RotationX);
+                                                        double.TryParse(SplitRotation[1], out Object.RotationY);
+                                                        double.TryParse(SplitRotation[2], out Object.RotationZ);
                                                         break;
                                                 }
                                             }
@@ -80,17 +86,21 @@ namespace OpenBve
                         }
                     }
                     
-                    Array.Resize<ObjectManager.UnifiedObject>(ref obj, CurrentObjects.Length);
-                    Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, CurrentObjects.Length);
                     //We've loaded the XML references, now load the objects into memory
                     for (int i = 0; i < CurrentObjects.Length; i++)
                     {
-                        obj[i] = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false);
+                        var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].RotationX, CurrentObjects[i].RotationY, CurrentObjects[i].RotationZ);
+                        if (Object != null)
+                        {
+                            Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length +1);
+                            obj[obj.Length - 1] = Object;
+                        }
                     }
                     for (int j = 0; j < obj.Length; j++)
                     {
                         if (obj[j] != null)
                         {
+                            Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
                             if (obj[j] is ObjectManager.StaticObject)
                             {
                                 ObjectManager.StaticObject s = (ObjectManager.StaticObject) obj[j];
@@ -124,7 +134,6 @@ namespace OpenBve
                         }
                     }
                 }
-                Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, CurrentObjects.Length);
                 return Result;
             }
             //Didn't find an acceptable XML object
