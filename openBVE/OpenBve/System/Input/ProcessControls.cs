@@ -1663,7 +1663,7 @@ namespace OpenBve
                                             RouteInformationForm.Show();
                                             byte[] RouteMap = OpenBve.Game.RouteInformation.RouteMap.ToByteArray(ImageFormat.Bmp);
                                             byte[] GradientProfile = OpenBve.Game.RouteInformation.GradientProfile.ToByteArray(ImageFormat.Bmp);
-                                            RouteInformationForm.UpdateImage(RouteMap, GradientProfile);
+                                            RouteInformationForm.UpdateImage(RouteMap, GradientProfile,Game.RouteInformation.RouteBriefing);
                                         }
                                         else
                                         {
@@ -1674,6 +1674,7 @@ namespace OpenBve
                                             else
                                             {
                                                 RouteInformationForm.Show();
+                                                RouteInformationForm.Activate();
                                             }
                                         }
                                         Application.DoEvents();

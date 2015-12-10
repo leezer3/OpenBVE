@@ -22,7 +22,7 @@ namespace OpenBve
             catch {}
         }
 
-        internal void UpdateImage(Byte[] RouteMap, Byte[] GradientProfile)
+        internal void UpdateImage(Byte[] RouteMap, Byte[] GradientProfile, string RouteBriefing)
         {
             try
             {
@@ -40,6 +40,32 @@ namespace OpenBve
                 pictureBoxRouteMap.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBoxGradientProfile.Image = bitmapGradientProfile;
                 pictureBoxGradientProfile.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                if (!string.IsNullOrEmpty(RouteBriefing))
+                {
+                    try
+                    {
+                        if (Path.GetExtension(RouteBriefing) == ".txt")
+                        {
+                            richTextBoxRouteInformation.LoadFile(RouteBriefing, RichTextBoxStreamType.PlainText);
+                        }
+                        else
+                        {
+                            richTextBoxRouteInformation.LoadFile(RouteBriefing, RichTextBoxStreamType.RichText);
+                        }
+                        
+                    }
+                    catch
+                    {
+                        //Hide tab page if we encounter an error loading the briefing file
+                        tabControl1.TabPages.Remove(tabPage3);
+                    }
+                }
+                else
+                {
+                    //Hide tab page if no route briefing is provided
+                    tabControl1.TabPages.Remove(tabPage3);
+                }
             }
             catch
             { }
@@ -57,6 +83,11 @@ namespace OpenBve
             this.Hide();
             e.Cancel = true;
             Application.DoEvents();
+        }
+
+        private void richTextBoxRouteInformation_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab.Focus();
         }
     }
 }

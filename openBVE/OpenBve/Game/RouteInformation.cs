@@ -12,7 +12,8 @@ namespace OpenBve
             internal static Bitmap GradientProfile;
             /// <summary>A bitmap storing the current auto-generated timetable</summary>
             internal static Bitmap TimeTable;
-
+            /// <summary>A string storing the absolute on-disk path to a .RTF or .TXT document describing the briefing for the current scenario</summary>
+            internal static string RouteBriefing;
 
             internal static void LoadInformation()
             {

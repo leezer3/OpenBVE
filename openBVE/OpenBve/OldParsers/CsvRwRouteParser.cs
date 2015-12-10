@@ -1814,6 +1814,7 @@ namespace OpenBve {
                                         }
                                     }
 							        break;
+                                //Sets a custom unit of speed to to displayed in on-screen messages
                                 case "route.displayspeed":
                                    var splitArgument = Arguments[0].Split(',');
 							        if (splitArgument.Length != 2)
@@ -1829,6 +1830,25 @@ namespace OpenBve {
 							        }
 
 							        break;
+                                //Sets the route's briefing data
+                                case "route.briefing":
+                                    if (Arguments.Length < 1)
+                                    {
+                                        Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+                                    }
+                                    else
+                                    {
+                                        string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+                                        if (!System.IO.File.Exists(f))
+                                        {
+                                            Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+                                        }
+                                        else
+                                        {
+                                            Game.RouteInformation.RouteBriefing = f;
+                                        }
+                                    }
+                                    break;
 								case "route.elevation":
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

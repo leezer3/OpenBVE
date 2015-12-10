@@ -33,17 +33,21 @@
             this.pictureBoxRouteMap = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.pictureBoxGradientProfile = new System.Windows.Forms.PictureBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.richTextBoxRouteInformation = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRouteMap)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGradientProfile)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -88,6 +92,28 @@
             this.pictureBoxGradientProfile.TabIndex = 0;
             this.pictureBoxGradientProfile.TabStop = false;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.richTextBoxRouteInformation);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(493, 451);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Briefing";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxRouteInformation
+            // 
+            this.richTextBoxRouteInformation.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.richTextBoxRouteInformation.Location = new System.Drawing.Point(0, 0);
+            this.richTextBoxRouteInformation.Name = "richTextBoxRouteInformation";
+            this.richTextBoxRouteInformation.ReadOnly = true;
+            this.richTextBoxRouteInformation.Size = new System.Drawing.Size(493, 451);
+            this.richTextBoxRouteInformation.TabIndex = 0;
+            this.richTextBoxRouteInformation.Text = "";
+            this.richTextBoxRouteInformation.Click += new System.EventHandler(this.richTextBoxRouteInformation_Click);
+            // 
             // formRouteInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -105,6 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRouteMap)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGradientProfile)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -116,5 +143,7 @@
         private System.Windows.Forms.PictureBox pictureBoxRouteMap;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox pictureBoxGradientProfile;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.RichTextBox richTextBoxRouteInformation;
     }
 }
