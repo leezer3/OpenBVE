@@ -122,9 +122,23 @@ namespace OpenBve {
 			}
 			Renderer.ReAddObjects();
 			// end HACK //
-             
+
+            //Reset the camera when switching between fullscreen and windowed mode
+            //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
+            if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+            {
+                World.CameraCurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
+                    0.0);
+            }
+            World.CameraCurrentAlignment.Yaw = 0.0;
+            World.CameraCurrentAlignment.Pitch = 0.0;
+            World.CameraCurrentAlignment.Roll = 0.0;
+            if (World.CameraMode == World.CameraViewMode.Track)
+            {
+                TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,false);
+            }  
 		}
-             
+        
 		
 	}
 }
