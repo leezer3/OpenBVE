@@ -27,7 +27,11 @@ namespace OpenBve
 
                         Interface.CurrentControls[i].AnalogState = 1.0;
                         Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-                        AddControlRepeat(i);
+                        //Key repeats should not be added if in a menu, unless they are Menu Up/ Menu Down commands
+                        if (Game.CurrentInterface != Game.InterfaceType.Menu || Interface.CurrentControls[i].Command == Interface.Command.MenuUp || Interface.CurrentControls[i].Command == Interface.Command.MenuDown)
+                        {
+                            AddControlRepeat(i);
+                        }
                     }
                 }
             }

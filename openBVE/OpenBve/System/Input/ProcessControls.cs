@@ -210,7 +210,7 @@ namespace OpenBve
                                         // back
                                         if (Game.CurrentMenuSelection.Length <= 1)
                                         {
-                                            //Game.CurrentInterface = Game.InterfaceType.Normal;
+                                            Game.CurrentInterface = Game.InterfaceType.Normal;
                                         }
                                         else
                                         {

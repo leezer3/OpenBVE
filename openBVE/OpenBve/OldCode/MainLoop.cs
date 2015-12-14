@@ -281,11 +281,6 @@ namespace OpenBve {
             }
         }
 
-		// process controls
-
-		
-		// --------------------------------
-
 		// save camera setting
 		private static void SaveCameraSettings() {
 			switch (World.CameraMode) {
