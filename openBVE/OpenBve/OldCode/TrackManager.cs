@@ -709,6 +709,7 @@ namespace OpenBve {
 							(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
 							(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
 							(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
+                        Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
 					} else {
 						Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
 					}
