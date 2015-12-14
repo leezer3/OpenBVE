@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Security.Permissions;
 using System.Threading;
@@ -12,6 +13,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace OpenBve {
 	internal static partial class MainLoop {
@@ -99,7 +101,7 @@ namespace OpenBve {
         private static void ThreadProc()
         {
             RouteInformationForm = new formRouteInformation();
-            RouteInformationForm.ShowDialog();
+            Application.Run(RouteInformationForm);
         }
 
 	    private static void OpenTKQuit(object sender, CancelEventArgs e)
