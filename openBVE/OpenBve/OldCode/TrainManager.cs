@@ -1031,14 +1031,15 @@ namespace OpenBve {
 		// update train objects
 		internal static void UpdateTrainObjects(double TimeElapsed, bool ForceUpdate)
 		{
-
+            /*
 		    System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
 		    {
                 UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
 		    });
-			//for (int i = 0; i < Trains.Length; i++) {
-			//	UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
-			//}
+             */
+			for (int i = 0; i < Trains.Length; i++) {
+				UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
+			}
 		}
 		private static void UpdateTrainObjects(Train Train, double TimeElapsed, bool ForceUpdate) {
 			if (!Game.MinimalisticSimulation) {
