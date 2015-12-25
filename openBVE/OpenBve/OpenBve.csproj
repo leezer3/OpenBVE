@@ -82,6 +82,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\opentk-develop\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress.Unsigned, Version=0.11.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\leeze_000\Desktop\sharpcompress-master\bin\SharpCompress.Unsigned.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

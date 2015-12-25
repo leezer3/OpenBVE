@@ -33,7 +33,7 @@ namespace OpenBve {
 		private MainDialogResult Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
-	    internal static Image PackageIcon;
+        
 		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
@@ -115,7 +115,6 @@ namespace OpenBve {
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
 			Image GamepadIcon = LoadImage(MenuFolder, "icon_gamepad.png");
-            PackageIcon = LoadImage(MenuFolder, "package.png");
 			JoystickImage = LoadImage(MenuFolder, "joystick.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
