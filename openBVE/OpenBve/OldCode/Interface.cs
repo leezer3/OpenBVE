@@ -168,6 +168,8 @@ namespace OpenBve {
 			internal bool DisableDisplayLists;
             /// <summary>Whether the simulation will load all textures and sounds into system memory on initial load</summary>
 			internal bool LoadInAdvance;
+            /// <summary>Whether EB application is possible from the use of a joystick axis</summary>
+		    internal bool AllowAxisEB;
             /*
              * Note: Disabling texture resizing may produce artifacts at the edges of textures,
              * and may display issues with certain graphics cards.
@@ -232,6 +234,7 @@ namespace OpenBve {
 				this.ProxyUserName = string.Empty;
 				this.ProxyPassword = string.Empty;
 			    this.TimeAccelerationFactor = 5;
+			    this.AllowAxisEB = true;
 			}
 		}
         /// <summary>The current game options</summary>
@@ -446,6 +449,9 @@ namespace OpenBve {
 										case "usejoysticks":
 											Interface.CurrentOptions.UseJoysticks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
+                                        case "joystickaxiseb":
+                                            Interface.CurrentOptions.AllowAxisEB = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+                                            break;
 										case "joystickaxisthreshold":
 											{
 												double a;
@@ -656,6 +662,7 @@ namespace OpenBve {
 			Builder.AppendLine();
 			Builder.AppendLine("[controls]");
 			Builder.AppendLine("useJoysticks = " + (CurrentOptions.UseJoysticks ? "true" : "false"));
+            Builder.AppendLine("joystickAxisEB = " + (CurrentOptions.AllowAxisEB ? "true" : "false"));
 			Builder.AppendLine("joystickAxisthreshold = " + CurrentOptions.JoystickAxisThreshold.ToString(Culture));
 			Builder.AppendLine("keyRepeatDelay = " + (1000.0 * CurrentOptions.KeyRepeatDelay).ToString("0", Culture));
 			Builder.AppendLine("keyRepeatInterval = " + (1000.0 * CurrentOptions.KeyRepeatInterval).ToString("0", Culture));

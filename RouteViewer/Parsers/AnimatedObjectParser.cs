@@ -179,6 +179,7 @@ namespace OpenBve {
 														if (s.Length >= 1) {
 															string Folder = System.IO.Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
+														    bool NullObject = true;
 															for (int k = 0; k < s.Length; k++) {
 																s[k] = s[k].Trim();
 																if (s[k].Length == 0) {
@@ -194,6 +195,15 @@ namespace OpenBve {
 																		StateFiles[k] = null;
 																	}
 																}
+															    if (StateFiles[k] != null)
+															    {
+															        NullObject = false;
+															    }
+															    if (NullObject == true)
+															    {
+                                                                    Interface.AddMessage(Interface.MessageType.Error, false, "No statefiles were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															        return null;
+															    }
 															}
 														} else {
 															Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);

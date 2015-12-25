@@ -91,6 +91,7 @@
             this.labelRoute = new System.Windows.Forms.Label();
             this.labelStartTitleSeparator = new System.Windows.Forms.Label();
             this.labelStartTitle = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.labelStartTitleBackground = new System.Windows.Forms.Label();
             this.labelFillerTwo = new System.Windows.Forms.Label();
             this.panelOptions = new System.Windows.Forms.Panel();
@@ -102,6 +103,7 @@
             this.updownDistance = new System.Windows.Forms.NumericUpDown();
             this.labelDistance = new System.Windows.Forms.Label();
             this.groupboxControls = new System.Windows.Forms.GroupBox();
+            this.checkBoxEBAxis = new System.Windows.Forms.CheckBox();
             this.trackbarJoystickAxisThreshold = new System.Windows.Forms.TrackBar();
             this.checkboxJoysticksUsed = new System.Windows.Forms.CheckBox();
             this.labelJoystickAxisThreshold = new System.Windows.Forms.Label();
@@ -109,6 +111,10 @@
             this.checkboxErrorMessages = new System.Windows.Forms.CheckBox();
             this.checkboxWarningMessages = new System.Windows.Forms.CheckBox();
             this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelTimeAcceleration = new System.Windows.Forms.Label();
+            this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
             this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
             this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
             this.groupboxSimulation = new System.Windows.Forms.GroupBox();
@@ -140,6 +146,7 @@
             this.groupboxInterpolation = new System.Windows.Forms.GroupBox();
             this.updownAntiAliasing = new System.Windows.Forms.NumericUpDown();
             this.labelAntiAliasing = new System.Windows.Forms.Label();
+            this.labelTransparencyQuality = new System.Windows.Forms.Label();
             this.labelTransparencyPerformance = new System.Windows.Forms.Label();
             this.labelTransparency = new System.Windows.Forms.Label();
             this.updownAnisotropic = new System.Windows.Forms.NumericUpDown();
@@ -154,6 +161,7 @@
             this.labelOptionsTitleBackground = new System.Windows.Forms.Label();
             this.labelFillerThree = new System.Windows.Forms.Label();
             this.panelPanels = new System.Windows.Forms.Panel();
+            this.radioButtonPackages = new System.Windows.Forms.RadioButton();
             this.labelPanelsBottom = new System.Windows.Forms.Label();
             this.radiobuttonOptions = new System.Windows.Forms.RadioButton();
             this.radiobuttonControls = new System.Windows.Forms.RadioButton();
@@ -242,11 +250,27 @@
             this.labelInfoTop = new System.Windows.Forms.Label();
             this.timerInstall = new System.Windows.Forms.Timer(this.components);
             this.timerFilter = new System.Windows.Forms.Timer(this.components);
-            this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
-            this.labelTransparencyQuality = new System.Windows.Forms.Label();
-            this.labelTimeAcceleration = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.panelPackages = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
+            this.buttonInstallRoute = new System.Windows.Forms.Button();
+            this.dataGridViewRoutePackages = new System.Windows.Forms.DataGridView();
+            this.routeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.routeVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.labelPackages = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -284,6 +308,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackbarJoystickAxisThreshold)).BeginInit();
             this.groupboxVerbosity.SuspendLayout();
             this.groupBoxAdvancedOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
             this.groupboxSimulation.SuspendLayout();
             this.groupboxSound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).BeginInit();
@@ -314,7 +339,9 @@
             this.panelJoystick.SuspendLayout();
             this.panelKeyboard.SuspendLayout();
             this.panelInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
+            this.panelPackages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
             this.SuspendLayout();
             // 
             // labelFillerOne
@@ -376,6 +403,7 @@
             this.panelStart.Controls.Add(this.labelRoute);
             this.panelStart.Controls.Add(this.labelStartTitleSeparator);
             this.panelStart.Controls.Add(this.labelStartTitle);
+            this.panelStart.Controls.Add(this.label13);
             this.panelStart.Controls.Add(this.labelStartTitleBackground);
             this.panelStart.Location = new System.Drawing.Point(160, 0);
             this.panelStart.Name = "panelStart";
@@ -1182,6 +1210,16 @@
             this.labelStartTitle.TabIndex = 1;
             this.labelStartTitle.Text = "Start new game";
             // 
+            // label13
+            // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
+            this.label13.Location = new System.Drawing.Point(0, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(643, 32);
+            this.label13.TabIndex = 0;
+            // 
             // labelStartTitleBackground
             // 
             this.labelStartTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1197,9 +1235,9 @@
             this.labelFillerTwo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
-            this.labelFillerTwo.Location = new System.Drawing.Point(0, 312);
+            this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
             this.labelFillerTwo.Name = "labelFillerTwo";
-            this.labelFillerTwo.Size = new System.Drawing.Size(160, 178);
+            this.labelFillerTwo.Size = new System.Drawing.Size(160, 160);
             this.labelFillerTwo.TabIndex = 2;
             // 
             // panelOptions
@@ -1321,6 +1359,7 @@
             // 
             this.groupboxControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupboxControls.Controls.Add(this.checkBoxEBAxis);
             this.groupboxControls.Controls.Add(this.trackbarJoystickAxisThreshold);
             this.groupboxControls.Controls.Add(this.checkboxJoysticksUsed);
             this.groupboxControls.Controls.Add(this.labelJoystickAxisThreshold);
@@ -1331,6 +1370,18 @@
             this.groupboxControls.TabIndex = 10;
             this.groupboxControls.TabStop = false;
             this.groupboxControls.Text = "Controls";
+            // 
+            // checkBoxEBAxis
+            // 
+            this.checkBoxEBAxis.AutoSize = true;
+            this.checkBoxEBAxis.Checked = true;
+            this.checkBoxEBAxis.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEBAxis.Location = new System.Drawing.Point(8, 41);
+            this.checkBoxEBAxis.Name = "checkBoxEBAxis";
+            this.checkBoxEBAxis.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxEBAxis.TabIndex = 18;
+            this.checkBoxEBAxis.Text = "Allow EB on brake axis";
+            this.checkBoxEBAxis.UseVisualStyleBackColor = true;
             // 
             // trackbarJoystickAxisThreshold
             // 
@@ -1359,9 +1410,9 @@
             // labelJoystickAxisThreshold
             // 
             this.labelJoystickAxisThreshold.AutoEllipsis = true;
-            this.labelJoystickAxisThreshold.Location = new System.Drawing.Point(8, 48);
+            this.labelJoystickAxisThreshold.Location = new System.Drawing.Point(200, 16);
             this.labelJoystickAxisThreshold.Name = "labelJoystickAxisThreshold";
-            this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(184, 16);
+            this.labelJoystickAxisThreshold.Size = new System.Drawing.Size(104, 13);
             this.labelJoystickAxisThreshold.TabIndex = 1;
             this.labelJoystickAxisThreshold.Text = "Joystick threshold:";
             this.labelJoystickAxisThreshold.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1417,6 +1468,47 @@
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(335, 100);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(13, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "5";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(149, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(13, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "0";
+            // 
+            // labelTimeAcceleration
+            // 
+            this.labelTimeAcceleration.AutoEllipsis = true;
+            this.labelTimeAcceleration.Location = new System.Drawing.Point(5, 60);
+            this.labelTimeAcceleration.Name = "labelTimeAcceleration";
+            this.labelTimeAcceleration.Size = new System.Drawing.Size(130, 22);
+            this.labelTimeAcceleration.TabIndex = 10;
+            this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
+            this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // trackBarTimeAccelerationFactor
+            // 
+            this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarTimeAccelerationFactor.LargeChange = 1;
+            this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(142, 52);
+            this.trackBarTimeAccelerationFactor.Maximum = 5;
+            this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
+            this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
+            this.trackBarTimeAccelerationFactor.TabIndex = 3;
+            this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
+            // 
             // checkBoxDisableDisplayLists
             // 
             this.checkBoxDisableDisplayLists.AutoSize = true;
@@ -1436,30 +1528,6 @@
             this.checkBoxLoadInAdvance.TabIndex = 1;
             this.checkBoxLoadInAdvance.Text = "Load in advance";
             this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
-            // 
-            // trackBarTimeAccelerationFactor
-            // 
-            this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarTimeAccelerationFactor.LargeChange = 1;
-            this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(142, 52);
-            this.trackBarTimeAccelerationFactor.Maximum = 5;
-            this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
-            this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
-            this.trackBarTimeAccelerationFactor.TabIndex = 3;
-            this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
-            // 
-            // labelTimeAcceleration
-            // 
-            this.labelTimeAcceleration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelTimeAcceleration.AutoEllipsis = true;
-            this.labelTimeAcceleration.Location = new System.Drawing.Point(5, 60);
-            this.labelTimeAcceleration.Name = "labelTimeAcceleration";
-            this.labelTimeAcceleration.Size = new System.Drawing.Size(130, 22);
-            this.labelTimeAcceleration.TabIndex = 10;
-            this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-            this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupboxSimulation
             // 
@@ -1880,6 +1948,17 @@
             this.labelAntiAliasing.Text = "Level of anti-aliasing:";
             this.labelAntiAliasing.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // labelTransparencyQuality
+            // 
+            this.labelTransparencyQuality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTransparencyQuality.AutoEllipsis = true;
+            this.labelTransparencyQuality.Location = new System.Drawing.Point(230, 136);
+            this.labelTransparencyQuality.Name = "labelTransparencyQuality";
+            this.labelTransparencyQuality.Size = new System.Drawing.Size(76, 16);
+            this.labelTransparencyQuality.TabIndex = 9;
+            this.labelTransparencyQuality.Text = "Quality";
+            this.labelTransparencyQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // labelTransparencyPerformance
             // 
             this.labelTransparencyPerformance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -2028,6 +2107,7 @@
             // panelPanels
             // 
             this.panelPanels.BackColor = System.Drawing.Color.Gray;
+            this.panelPanels.Controls.Add(this.radioButtonPackages);
             this.panelPanels.Controls.Add(this.labelPanelsBottom);
             this.panelPanels.Controls.Add(this.radiobuttonOptions);
             this.panelPanels.Controls.Add(this.radiobuttonControls);
@@ -2036,14 +2116,26 @@
             this.panelPanels.Controls.Add(this.labelPanelsTop);
             this.panelPanels.Location = new System.Drawing.Point(0, 160);
             this.panelPanels.Name = "panelPanels";
-            this.panelPanels.Size = new System.Drawing.Size(160, 152);
+            this.panelPanels.Size = new System.Drawing.Size(160, 176);
             this.panelPanels.TabIndex = 0;
+            // 
+            // radioButtonPackages
+            // 
+            this.radioButtonPackages.AutoSize = true;
+            this.radioButtonPackages.Location = new System.Drawing.Point(8, 144);
+            this.radioButtonPackages.Name = "radioButtonPackages";
+            this.radioButtonPackages.Size = new System.Drawing.Size(133, 17);
+            this.radioButtonPackages.TabIndex = 5;
+            this.radioButtonPackages.TabStop = true;
+            this.radioButtonPackages.Text = "Package Management";
+            this.radioButtonPackages.UseVisualStyleBackColor = true;
+            this.radioButtonPackages.CheckedChanged += new System.EventHandler(this.radioButtonPackages_CheckedChanged);
             // 
             // labelPanelsBottom
             // 
             this.labelPanelsBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPanelsBottom.BackColor = System.Drawing.Color.White;
-            this.labelPanelsBottom.Location = new System.Drawing.Point(0, 150);
+            this.labelPanelsBottom.Location = new System.Drawing.Point(0, 174);
             this.labelPanelsBottom.Name = "labelPanelsBottom";
             this.labelPanelsBottom.Size = new System.Drawing.Size(160, 2);
             this.labelPanelsBottom.TabIndex = 1;
@@ -3030,37 +3122,239 @@
             this.labelInfoTop.Name = "labelInfoTop";
             this.labelInfoTop.Size = new System.Drawing.Size(160, 2);
             this.labelInfoTop.TabIndex = 0;
-            
             // 
-            // labelTransparencyQuality
+            // panelPackages
             // 
-            this.labelTransparencyQuality.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTransparencyQuality.AutoEllipsis = true;
-            this.labelTransparencyQuality.Location = new System.Drawing.Point(230, 136);
-            this.labelTransparencyQuality.Name = "labelTransparencyQuality";
-            this.labelTransparencyQuality.Size = new System.Drawing.Size(76, 16);
-            this.labelTransparencyQuality.TabIndex = 9;
-            this.labelTransparencyQuality.Text = "Quality";
-            this.labelTransparencyQuality.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            
+            this.panelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
+            this.panelPackages.Controls.Add(this.button2);
+            this.panelPackages.Controls.Add(this.button3);
+            this.panelPackages.Controls.Add(this.dataGridViewTrainPackages);
+            this.panelPackages.Controls.Add(this.button1);
+            this.panelPackages.Controls.Add(this.buttonInstallRoute);
+            this.panelPackages.Controls.Add(this.dataGridViewRoutePackages);
+            this.panelPackages.Controls.Add(this.label7);
+            this.panelPackages.Controls.Add(this.label10);
+            this.panelPackages.Controls.Add(this.label11);
+            this.panelPackages.Controls.Add(this.labelPackages);
+            this.panelPackages.Controls.Add(this.label14);
+            this.panelPackages.Controls.Add(this.label15);
+            this.panelPackages.Location = new System.Drawing.Point(160, 0);
+            this.panelPackages.Name = "panelPackages";
+            this.panelPackages.Size = new System.Drawing.Size(643, 586);
+            this.panelPackages.TabIndex = 14;
             // 
-            // label1
+            // button2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(149, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(13, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "0";
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(500, 497);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(136, 23);
+            this.button2.TabIndex = 18;
+            this.button2.Text = "Uninstall Train";
+            this.button2.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // button3
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(335, 100);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(13, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "5";
+            this.button3.Location = new System.Drawing.Point(8, 497);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(136, 23);
+            this.button3.TabIndex = 17;
+            this.button3.Text = "Install Train";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewTrainPackages
+            // 
+            this.dataGridViewTrainPackages.AllowUserToAddRows = false;
+            this.dataGridViewTrainPackages.AllowUserToDeleteRows = false;
+            this.dataGridViewTrainPackages.AllowUserToResizeColumns = false;
+            this.dataGridViewTrainPackages.AllowUserToResizeRows = false;
+            this.dataGridViewTrainPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewTrainPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewTrainPackages.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridViewTrainPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTrainPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4});
+            this.dataGridViewTrainPackages.Location = new System.Drawing.Point(9, 309);
+            this.dataGridViewTrainPackages.Name = "dataGridViewTrainPackages";
+            this.dataGridViewTrainPackages.ReadOnly = true;
+            this.dataGridViewTrainPackages.RowHeadersVisible = false;
+            this.dataGridViewTrainPackages.RowHeadersWidth = 90;
+            this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 185);
+            this.dataGridViewTrainPackages.TabIndex = 16;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.HeaderText = "Version";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "Author";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Website";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(500, 256);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(136, 23);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "Uninstall Route";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // buttonInstallRoute
+            // 
+            this.buttonInstallRoute.Location = new System.Drawing.Point(8, 256);
+            this.buttonInstallRoute.Name = "buttonInstallRoute";
+            this.buttonInstallRoute.Size = new System.Drawing.Size(136, 23);
+            this.buttonInstallRoute.TabIndex = 14;
+            this.buttonInstallRoute.Text = "Install Route";
+            this.buttonInstallRoute.UseVisualStyleBackColor = true;
+            this.buttonInstallRoute.Click += new System.EventHandler(this.buttonInstallRoute_Click);
+            // 
+            // dataGridViewRoutePackages
+            // 
+            this.dataGridViewRoutePackages.AllowUserToAddRows = false;
+            this.dataGridViewRoutePackages.AllowUserToDeleteRows = false;
+            this.dataGridViewRoutePackages.AllowUserToResizeColumns = false;
+            this.dataGridViewRoutePackages.AllowUserToResizeRows = false;
+            this.dataGridViewRoutePackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewRoutePackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewRoutePackages.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridViewRoutePackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRoutePackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.routeName,
+            this.routeVersion,
+            this.routeAuthor,
+            this.routeWebsite});
+            this.dataGridViewRoutePackages.Location = new System.Drawing.Point(8, 67);
+            this.dataGridViewRoutePackages.Name = "dataGridViewRoutePackages";
+            this.dataGridViewRoutePackages.ReadOnly = true;
+            this.dataGridViewRoutePackages.RowHeadersVisible = false;
+            this.dataGridViewRoutePackages.RowHeadersWidth = 90;
+            this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 185);
+            this.dataGridViewRoutePackages.TabIndex = 13;
+            // 
+            // routeName
+            // 
+            this.routeName.HeaderText = "Name";
+            this.routeName.Name = "routeName";
+            this.routeName.ReadOnly = true;
+            // 
+            // routeVersion
+            // 
+            this.routeVersion.HeaderText = "Version";
+            this.routeVersion.Name = "routeVersion";
+            this.routeVersion.ReadOnly = true;
+            // 
+            // routeAuthor
+            // 
+            this.routeAuthor.HeaderText = "Author";
+            this.routeAuthor.Name = "routeAuthor";
+            this.routeAuthor.ReadOnly = true;
+            // 
+            // routeWebsite
+            // 
+            this.routeWebsite.HeaderText = "Website";
+            this.routeWebsite.Name = "routeWebsite";
+            this.routeWebsite.ReadOnly = true;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoEllipsis = true;
+            this.label7.BackColor = System.Drawing.Color.Silver;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Location = new System.Drawing.Point(8, 282);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(627, 24);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Installed Trains";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label10
+            // 
+            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label10.AutoEllipsis = true;
+            this.label10.BackColor = System.Drawing.Color.Silver;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Location = new System.Drawing.Point(8, 40);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(627, 24);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "Installed Routes";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.BackColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(0, 32);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(643, 2);
+            this.label11.TabIndex = 2;
+            // 
+            // labelPackages
+            // 
+            this.labelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelPackages.AutoEllipsis = true;
+            this.labelPackages.AutoSize = true;
+            this.labelPackages.BackColor = System.Drawing.Color.DarkGray;
+            this.labelPackages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPackages.ForeColor = System.Drawing.Color.White;
+            this.labelPackages.Location = new System.Drawing.Point(8, 8);
+            this.labelPackages.Name = "labelPackages";
+            this.labelPackages.Size = new System.Drawing.Size(145, 16);
+            this.labelPackages.TabIndex = 1;
+            this.labelPackages.Text = "Package Management";
+            // 
+            // label14
+            // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label14.BackColor = System.Drawing.Color.DarkGray;
+            this.label14.Location = new System.Drawing.Point(0, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(643, 32);
+            this.label14.TabIndex = 0;
+            // 
+            // label15
+            // 
+            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
+            this.label15.Location = new System.Drawing.Point(0, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(643, 32);
+            this.label15.TabIndex = 0;
             // 
             // formMain
             // 
@@ -3076,10 +3370,11 @@
             this.Controls.Add(this.labelFillerOne);
             this.Controls.Add(this.labelFillerTwo);
             this.Controls.Add(this.labelFillerThree);
+            this.Controls.Add(this.panelPackages);
             this.Controls.Add(this.panelOptions);
+            this.Controls.Add(this.panelStart);
             this.Controls.Add(this.panelControls);
             this.Controls.Add(this.panelReview);
-            this.Controls.Add(this.panelStart);
             this.KeyPreview = true;
             this.Name = "formMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -3139,6 +3434,7 @@
             this.groupboxVerbosity.PerformLayout();
             this.groupBoxAdvancedOptions.ResumeLayout(false);
             this.groupBoxAdvancedOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
             this.groupboxSimulation.ResumeLayout(false);
             this.groupboxSimulation.PerformLayout();
             this.groupboxSound.ResumeLayout(false);
@@ -3181,7 +3477,10 @@
             this.panelKeyboard.ResumeLayout(false);
             this.panelKeyboard.PerformLayout();
             this.panelInfo.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
+            this.panelPackages.ResumeLayout(false);
+            this.panelPackages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3411,6 +3710,30 @@
         private System.Windows.Forms.Label labelTimeAcceleration;
         private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
         private System.Windows.Forms.Label labelTransparencyQuality;
+        private System.Windows.Forms.RadioButton radioButtonPackages;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Panel panelPackages;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label labelPackages;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.DataGridView dataGridViewRoutePackages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridView dataGridViewTrainPackages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonInstallRoute;
+        private System.Windows.Forms.CheckBox checkBoxEBAxis;
         
     }
 }

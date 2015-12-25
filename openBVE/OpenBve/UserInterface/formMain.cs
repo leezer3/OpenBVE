@@ -33,6 +33,7 @@ namespace OpenBve {
 		private MainDialogResult Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
+	    internal static Image PackageIcon;
 		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
@@ -76,6 +77,10 @@ namespace OpenBve {
 				radiobuttonOptions.AutoSize = false;
 				radiobuttonOptions.Size = new Size(buttonClose.Width, buttonClose.Height);
 				radiobuttonOptions.TextAlign = ContentAlignment.MiddleCenter;
+                radioButtonPackages.Appearance = Appearance.Button;
+                radioButtonPackages.AutoSize = false;
+                radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
+                radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
 			}
 			// options
 			Interface.LoadLogs();
@@ -95,6 +100,7 @@ namespace OpenBve {
 						case 1: radiobuttonReview.Checked = true; break;
 						case 2: radiobuttonControls.Checked = true; break;
 						case 3: radiobuttonOptions.Checked = true; break;
+                        case 4: radioButtonPackages.Checked = true; break;
 						default: radiobuttonStart.Checked = true; break;
 				}
 			}
@@ -109,6 +115,7 @@ namespace OpenBve {
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
 			Image GamepadIcon = LoadImage(MenuFolder, "icon_gamepad.png");
+            PackageIcon = LoadImage(MenuFolder, "package.png");
 			JoystickImage = LoadImage(MenuFolder, "joystick.png");
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
@@ -307,6 +314,7 @@ namespace OpenBve {
 		    checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
+		    checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
 				double a = (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + (double)trackbarJoystickAxisThreshold.Minimum;
 				int b = (int)Math.Round(a);
@@ -577,6 +585,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
+            Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
 			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 		    Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
@@ -756,6 +765,7 @@ namespace OpenBve {
 			} else if (radiobuttonOptions.Checked) {
 				comboboxLanguages.Focus();
 			}
+            //TODO: Needs focus changing when packages tab is selected
 			formMain_Resize(null, null);
 			if (this.WindowState != FormWindowState.Maximized) {
 				Size sss = this.ClientRectangle.Size;
@@ -845,6 +855,7 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
+		    panelPackages.Visible = false;
 			panelPanels.BackColor = labelStartTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonHighlight;
@@ -858,6 +869,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
+            panelPackages.Visible = false;
 			panelPanels.BackColor = labelReviewTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -871,6 +883,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelReview.Visible = false;
 			panelOptions.Visible = false;
+            panelPackages.Visible = false;
 			panelPanels.BackColor = labelControlsTitle.BackColor;
 			pictureboxJoysticks.Visible = true;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -884,6 +897,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelReview.Visible = false;
 			panelControls.Visible = false;
+            panelPackages.Visible = false;
 			panelPanels.BackColor = labelOptionsTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -892,6 +906,28 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
 			UpdateRadioButtonBackColor();
 		}
+        private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
+        {
+            panelOptions.Visible = false;
+            panelStart.Visible = false;
+            panelReview.Visible = false;
+            panelControls.Visible = false;
+            panelPackages.Visible = true;
+            panelPanels.BackColor = labelPackages.BackColor;
+            pictureboxJoysticks.Visible = false;
+            radiobuttonStart.BackColor = SystemColors.ButtonFace;
+            radiobuttonReview.BackColor = SystemColors.ButtonFace;
+            radiobuttonControls.BackColor = SystemColors.ButtonFace;
+            radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
+            UpdateRadioButtonBackColor();
+            //Load packages
+            if (radioButtonPackages.Checked)
+            {
+                LoadRoutePackages();
+                LoadTrainPackages();
+                PopulatePackageList();
+            }
+        }
 		private void UpdateRadioButtonBackColor() {
 			// work-around for button-style radio buttons on Mono
 			if (Program.CurrentlyRunningOnMono) {
@@ -999,7 +1035,7 @@ namespace OpenBve {
 		// =========
 
         /// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-		private Image LoadImage(string Folder, string Title) {
+        private Image LoadImage(string Folder, string Title) {
 		    try
 		    {
 		        string File = OpenBveApi.Path.CombineFile(Folder, Title);
@@ -1047,6 +1083,12 @@ namespace OpenBve {
 		        Box.Image = Box.ErrorImage;
 		    }
 		}
+
+        private void buttonInstallRoute_Click(object sender, EventArgs e)
+        {
+            var PackageInstallForm = new formPackageInstall();
+            PackageInstallForm.ShowDialog();
+        }
 		
 	}
 }

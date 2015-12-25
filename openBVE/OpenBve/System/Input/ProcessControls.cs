@@ -299,7 +299,10 @@ namespace OpenBve
                                                             TrainManager.AirBrakeHandleState.Service);
                                                         break;
                                                     case 3:
-                                                        TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                        if (Interface.CurrentOptions.AllowAxisEB)
+                                                        {
+                                                            TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                        }
                                                         break;
                                                 }
                                             }
@@ -347,7 +350,10 @@ namespace OpenBve
                                                     }
                                                     else
                                                     {
-                                                        TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                        if (Interface.CurrentOptions.AllowAxisEB)
+                                                        {
+                                                            TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -382,7 +388,10 @@ namespace OpenBve
                                                 }
                                                 else
                                                 {
-                                                    TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                    if (Interface.CurrentOptions.AllowAxisEB)
+                                                    {
+                                                        TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                    }
                                                 }
                                                 TrainManager.ApplyHoldBrake(TrainManager.PlayerTrain, q);
                                             }
@@ -409,7 +418,10 @@ namespace OpenBve
                                                 }
                                                 else
                                                 {
-                                                    TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                    if (Interface.CurrentOptions.AllowAxisEB)
+                                                    {
+                                                        TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
+                                                    }
                                                 }
                                             }
                                         }
@@ -1286,7 +1298,7 @@ namespace OpenBve
                                         break;
                                     case Interface.Command.BrakeEmergency:
                                         // brake emergency
-                                        if (!TrainManager.PlayerTrain.Specs.SingleHandle)
+                                        if (!TrainManager.PlayerTrain.Specs.SingleHandle || Interface.CurrentOptions.AllowAxisEB == false)
                                         {
                                             TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
                                         }

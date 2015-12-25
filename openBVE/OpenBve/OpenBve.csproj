@@ -58,6 +58,7 @@
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>bin\Release\OpenBve.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -105,12 +106,33 @@
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\formMain.Packages.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Parsers\XMLParser.cs" />
     <Compile Include="System\Functions\Extensions.cs" />
     <Compile Include="System\Input\ControlRepeats.cs" />
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />
     <Compile Include="System\Scripting.cs" />
+    <Compile Include="UserInterface\formPackageInstall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formPackageInstall.Designer.cs">
+      <DependentUpon>formPackageInstall.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formPackageInstall.resx">
+      <DependentUpon>formPackageInstall.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
@@ -148,35 +170,35 @@
     <Compile Include="Graphics\Textures.TextureOrigin.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\formImage.cs">
+    <Compile Include="UserInterface\formImage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\formImage.Designer.cs">
+    <Compile Include="UserInterface\formImage.Designer.cs">
       <DependentUpon>formImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\formMain.AddOns.cs">
+    <Compile Include="UserInterface\formMain.AddOns.cs">
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\formMain.Controls.cs">
+    <Compile Include="UserInterface\formMain.Controls.cs">
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\formMain.cs">
+    <Compile Include="UserInterface\formMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\formMain.Designer.cs">
+    <Compile Include="UserInterface\formMain.Designer.cs">
       <DependentUpon>formMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\formMain.Options.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldCode\formMain.Review.cs">
+    <Compile Include="UserInterface\formMain.Options.cs">
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\formMain.Start.cs">
+    <Compile Include="UserInterface\formMain.Review.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formMain.Start.cs">
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -220,11 +242,11 @@
     <EmbeddedResource Include="Game\formRouteInformation.resx">
       <DependentUpon>formRouteInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OldCode\formImage.resx">
+    <EmbeddedResource Include="UserInterface\formImage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formImage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OldCode\formMain.resx">
+    <EmbeddedResource Include="UserInterface\formMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>

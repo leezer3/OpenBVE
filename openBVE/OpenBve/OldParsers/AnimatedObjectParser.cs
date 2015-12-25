@@ -170,33 +170,45 @@ namespace OpenBve {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
-												case "states":
-													{
-														string[] s = b.Split(',');
-														if (s.Length >= 1) {
-															string Folder = System.IO.Path.GetDirectoryName(FileName);
-															StateFiles = new string[s.Length];
-															for (int k = 0; k < s.Length; k++) {
-																s[k] = s[k].Trim();
-																if (s[k].Length == 0) {
-																	Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	StateFiles[k] = null;
-																} else if (Interface.ContainsInvalidPathChars(s[k])) {
-																	Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	StateFiles[k] = null;
-																} else {
-																	StateFiles[k] = OpenBveApi.Path.CombineFile(Folder, s[k]);
-																	if (!System.IO.File.Exists(StateFiles[k])) {
-																		Interface.AddMessage(Interface.MessageType.Error, true, "File " + StateFiles[k] + " not found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		StateFiles[k] = null;
-																	}
-																}
-															}
-														} else {
-															Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															return null;
-														}
-													} break;
+                                                case "states":
+                                                    {
+                                                        string[] s = b.Split(',');
+                                                        if (s.Length >= 1)
+                                                        {
+                                                            string Folder = System.IO.Path.GetDirectoryName(FileName);
+                                                            StateFiles = new string[s.Length];
+                                                            bool NullObject = true;
+                                                            for (int k = 0; k < s.Length; k++) {
+                                                                s[k] = s[k].Trim();
+                                                                if (s[k].Length == 0) {
+                                                                    Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+                                                                    StateFiles[k] = null;
+                                                                } else if (Interface.ContainsInvalidPathChars(s[k])) {
+                                                                    Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+                                                                    StateFiles[k] = null;
+                                                                } else {
+                                                                    StateFiles[k] = OpenBveApi.Path.CombineFile(Folder, s[k]);
+                                                                    if (!System.IO.File.Exists(StateFiles[k])) {
+                                                                        Interface.AddMessage(Interface.MessageType.Error, true, "File " + StateFiles[k] + " not found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+                                                                        StateFiles[k] = null;
+                                                                    }
+                                                                }
+                                                                if (StateFiles[k] != null)
+                                                                {
+                                                                    NullObject = false;
+                                                                }
+                                                                if (NullObject == true)
+                                                                {
+                                                                    Interface.AddMessage(Interface.MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+                                                                    return null;
+                                                                }
+                                                            }
+                                                        }
+                                                        else {
+                                                            Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+                                                            return null;
+                                                        }
+                                                    } break;
 												case "statefunction":
 													try {
 														StateFunctionLine = i;
