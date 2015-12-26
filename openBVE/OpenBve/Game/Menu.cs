@@ -1,8 +1,10 @@
-﻿namespace OpenBve
+﻿using System.Windows.Forms;
+
+namespace OpenBve
 {
     internal static partial class Game
     {
-        internal enum MenuTag { None, Caption, Back, JumpToStation, ExitToMainMenu, Quit }
+        internal enum MenuTag { None, Caption, Back, JumpToStation, ExitToMainMenu, Quit, Control }
         internal abstract class MenuEntry
         {
             internal string Text;
@@ -42,9 +44,9 @@
                 this.Entries = Entries;
             }
         }
-        internal static MenuEntry[] CurrentMenu = new MenuEntry[] { };
-        internal static int[] CurrentMenuSelection = new int[] { -1 };
-        internal static double[] CurrentMenuOffsets = new double[] { double.NegativeInfinity };
+        internal static MenuEntry[] CurrentMenu = { };
+        internal static int[] CurrentMenuSelection = { -1 };
+        internal static double[] CurrentMenuOffsets = { double.NegativeInfinity };
         /// <summary>Creates a new menu</summary>
         /// <param name="QuitOnly">Whether this menu is a full menu, or a quit menu only</param>
         internal static void CreateMenu(bool QuitOnly)
@@ -81,9 +83,15 @@
                         n++;
                     }
                 }
+
+                MenuEntry[] b = new MenuEntry[Interface.CurrentControls.Length];
+                for (int i = 0; i < Interface.CurrentControls.Length; i++)
+                {
+                    b[i] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
+                }
                 if (n != 0)
                 {
-                    CurrentMenu = new MenuEntry[4];
+                    CurrentMenu = new MenuEntry[5];
                     CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
                     CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_jump"), a);
                     CurrentMenu[2] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
@@ -96,10 +104,11 @@
 					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
 					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
 					                                 });
+                    CurrentMenu[4] = new MenuSubmenu("Customise Controls", b);
                 }
                 else
                 {
-                    CurrentMenu = new MenuEntry[3];
+                    CurrentMenu = new MenuEntry[4];
                     CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
                     CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
 					                                 	new MenuCaption(Interface.GetInterfaceString("menu_exit_question")),
@@ -111,6 +120,7 @@
 					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
 					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
 					                                 });
+                    CurrentMenu[3] = new MenuSubmenu("Customise Controls", b);
                 }
                 CurrentMenuSelection = new int[] { 0 };
                 CurrentMenuOffsets = new double[] { double.NegativeInfinity };

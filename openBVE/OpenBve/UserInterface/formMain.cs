@@ -540,11 +540,7 @@ namespace OpenBve {
 					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
-                /*
-				for (int i = 0; i < Interface.Keys.Length; i++) {
-					comboboxKeyboardKey.Items.Add(Interface.Keys[i].Description);
-				}
-                 */
+
 			    foreach (string currentKey in Enum.GetNames(typeof(OpenTK.Input.Key)))
 			    {
 			        comboboxKeyboardKey.Items.Add(currentKey);

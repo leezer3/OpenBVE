@@ -53,6 +53,9 @@ namespace OpenBve
                         }
                     }
                     break;
+                case Game.InterfaceType.CustomiseControl:
+
+                    break;
                 case Game.InterfaceType.Menu:
                     // menu
                     for (int i = 0; i < Interface.CurrentControls.Length; i++)
@@ -153,6 +156,10 @@ namespace OpenBve
                                                 case Game.MenuTag.Quit:
                                                     // quit
                                                     Quit = true;
+                                                    break;
+                                                case Game.MenuTag.Control:
+                                                    // Set Control
+                                                    Game.CurrentInterface = Game.InterfaceType.CustomiseControl;
                                                     break;
                                             }
                                         }
