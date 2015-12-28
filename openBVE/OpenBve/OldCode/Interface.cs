@@ -1230,6 +1230,9 @@ namespace OpenBve {
 		internal static InterfaceQuickReference QuickReferences;
 		internal static int RatingsCount = 10;
 
+	    internal static string CurrentControl;
+	    internal static string CurrentControlDescription;
+
 		// load language
 		internal static void LoadLanguage(string File) {
 			string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());

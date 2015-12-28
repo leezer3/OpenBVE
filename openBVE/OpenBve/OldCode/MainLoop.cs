@@ -129,6 +129,96 @@ namespace OpenBve {
 
         internal static void ProcessKeyboard()
         {
+            if (Game.CurrentInterface == Game.InterfaceType.CustomiseControl)
+            {
+                //We now need to change the control reference & return.....
+                Game.MenuEntry[] a = Game.CurrentMenu;
+                int j = Game.CurrentMenuSelection.Length - 1;
+                {
+                    int k = 0;
+                    while (k < j)
+                    {
+                        Game.MenuSubmenu b = a[Game.CurrentMenuSelection[k]] as Game.MenuSubmenu;
+                        if (b == null) break;
+                        a = b.Entries;
+                        k++;
+                    }
+                }
+                if (a[Game.CurrentMenuSelection[j]] is Game.MenuCommand)
+                {
+                    Game.MenuCommand b = (Game.MenuCommand) a[Game.CurrentMenuSelection[j]];
+                    if (b.Tag == Game.MenuTag.Control)
+                    {
+                        //Check joystick control is enabled
+                        if (Interface.CurrentOptions.UseJoysticks)
+                        {
+                            for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++)
+                            {
+                                int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
+                                for (int i = 0; i < axes; i++)
+                                {
+                                    double aa = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i);
+                                    if (aa < -0.75)
+                                    {
+                                        Interface.CurrentControls[b.Data].Method = Interface.ControlMethod.Joystick;
+                                        Interface.CurrentControls[b.Data].Device = k;
+                                        Interface.CurrentControls[b.Data].Component = Interface.JoystickComponent.Axis;
+                                        Interface.CurrentControls[b.Data].Element = i;
+                                        Interface.CurrentControls[b.Data].Direction = -1;
+                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+                                        Interface.SaveControls(null);
+                                        return;
+                                    }
+                                    if (aa > 0.75)
+                                    {
+                                        Interface.CurrentControls[b.Data].Method = Interface.ControlMethod.Joystick;
+                                        Interface.CurrentControls[b.Data].Device = k;
+                                        Interface.CurrentControls[b.Data].Component = Interface.JoystickComponent.Axis;
+                                        Interface.CurrentControls[b.Data].Element = i;
+                                        Interface.CurrentControls[b.Data].Direction = 1;
+                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+                                        Interface.SaveControls(null);
+                                        return;
+                                    }
+                                }
+                                int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
+                                for (int i = 0; i < buttons; i++)
+                                {
+                                    if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton) i) ==
+                                        ButtonState.Pressed)
+                                    {
+                                        Interface.CurrentControls[b.Data].Method = Interface.ControlMethod.Joystick;
+                                        Interface.CurrentControls[b.Data].Device = k;
+                                        Interface.CurrentControls[b.Data].Component = Interface.JoystickComponent.Button;
+                                        Interface.CurrentControls[b.Data].Element = i;
+                                        Interface.CurrentControls[b.Data].Direction = 1;
+                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+                                        Interface.SaveControls(null);
+                                        return;
+                                    }
+                                }
+                                int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
+                                for (int i = 0; i < hats; i++)
+                                {
+                                    JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
+                                    if (hat.Position != HatPosition.Centered)
+                                    {
+                                        Interface.CurrentControls[b.Data].Method = Interface.ControlMethod.Joystick;
+                                        Interface.CurrentControls[b.Data].Device = k;
+                                        Interface.CurrentControls[b.Data].Component = Interface.JoystickComponent.Hat;
+                                        Interface.CurrentControls[b.Data].Element = i;
+                                        Interface.CurrentControls[b.Data].Direction = (int) hat.Position;
+                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+                                        Interface.SaveControls(null);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
             if (World.MouseGrabEnabled)
             {
                 previousMouseState = currentMouseState;
@@ -145,7 +235,7 @@ namespace OpenBve {
                     }
                 }
             }
-
+            
             //Traverse the controls array
             for (int i = 0; i < Interface.CurrentControls.Length; i++)
             {

@@ -169,6 +169,8 @@ namespace OpenBve {
 		/// <summary>Represents a very large sans serif font.</summary>
 		internal static readonly OpenGlFont VeryLargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 27.0f);
 
+        internal static readonly OpenGlFont EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
+
 		
 		// --- functions ---
 		

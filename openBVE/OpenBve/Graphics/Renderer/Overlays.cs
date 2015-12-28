@@ -1665,7 +1665,9 @@ namespace OpenBve
                 GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
                 RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
                 GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-                DrawString(Fonts.VeryLargeFont, "Please press any key or move a joystick axis.....", new System.Drawing.Point(Screen.Width / 2, Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+                DrawString(Fonts.EvenLargerFont, Interface.CurrentControlDescription, new System.Drawing.Point(Screen.Width / 2, (int)((Screen.Height / 4) * 1.5)), TextAlignment.CenterMiddle, Color128.White, true);
+                DrawString(Fonts.VeryLargeFont, "The current control assignment is: " + Interface.CurrentControl, new System.Drawing.Point(Screen.Width / 2, (Screen.Height / 4) * 2), TextAlignment.CenterMiddle, Color128.White, true);
+                DrawString(Fonts.EvenLargerFont, "Please press any key or move a joystick axis to set this control.....", new System.Drawing.Point(Screen.Width / 2, (Screen.Height / 4) * 3), TextAlignment.CenterMiddle, Color128.White, true);
             }
             else if (Game.CurrentInterface == Game.InterfaceType.Menu)
             {

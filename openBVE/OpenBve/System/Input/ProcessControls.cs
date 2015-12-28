@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using CSScriptLibrary;
@@ -158,7 +159,61 @@ namespace OpenBve
                                                     Quit = true;
                                                     break;
                                                 case Game.MenuTag.Control:
-                                                    // Set Control
+                                                    // Set control information for string render
+                                                    Interface.Control loadedControl = Interface.CurrentControls[b.Data];
+                                                    for (int h = 0; h < Interface.CommandInfos.Length; h++)
+                                                    {
+                                                        if (Interface.CommandInfos[h].Command == loadedControl.Command)
+                                                        {
+                                                            Interface.CurrentControlDescription =
+                                                                Interface.CommandInfos[h].Description;
+
+                                                        }
+                                                    }
+                                                    switch (Interface.CurrentControls[b.Data].Method)
+                                                    {
+                                                        case Interface.ControlMethod.Keyboard:
+                                                            if (loadedControl.Modifier != Interface.KeyboardModifier.None)
+                                                            {
+                                                                Interface.CurrentControl = "Keyboard: " + loadedControl.Modifier + "-" + loadedControl.Key;
+                                                            }
+                                                            else
+                                                            {
+                                                                Interface.CurrentControl = "Keyboard: " + loadedControl.Key;
+                                                            }
+                                                            break;
+                                                        case Interface.ControlMethod.Joystick:
+                                                            string Direction;
+                                                            if (loadedControl.Direction == 1)
+                                                            {
+                                                                Direction = "Positive Direction";
+                                                            }
+                                                            else
+                                                            {
+                                                                Direction = "Negative Direction";
+                                                            }
+                                                            switch (loadedControl.Component)
+                                                            {
+                                                                case Interface.JoystickComponent.FullAxis:
+                                                                case Interface.JoystickComponent.Axis:
+                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element + " " + Direction;
+                                                                    break;
+                                                                case Interface.JoystickComponent.Button:
+                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element;
+                                                                    break;
+                                                                case Interface.JoystickComponent.Hat:
+                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element + " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
+                                                                    break;
+                                                                case Interface.JoystickComponent.Invalid:
+                                                                    Interface.CurrentControl = "N/A";
+                                                                    break;
+
+                                                            }
+                                                            break;
+                                                        case Interface.ControlMethod.Invalid:
+                                                            Interface.CurrentControl = "N/A";
+                                                            break;
+                                                    }
                                                     Game.CurrentInterface = Game.InterfaceType.CustomiseControl;
                                                     break;
                                             }
