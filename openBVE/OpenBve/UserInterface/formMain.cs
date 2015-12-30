@@ -429,7 +429,7 @@ namespace OpenBve {
             //Controls
 			groupboxControls.Text = Interface.GetInterfaceString("options_misc_controls");
 			checkboxJoysticksUsed.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
-            checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
+            checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_ebaxis");
 			labelJoystickAxisThreshold.Text = Interface.GetInterfaceString("options_misc_controls_threshold");
             //Sound
 			groupboxSound.Text = Interface.GetInterfaceString("options_misc_sound");
@@ -442,7 +442,7 @@ namespace OpenBve {
             groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
             checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
             checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
-            trackBarTimeAccelerationFactor.Text = Interface.GetInterfaceString("options_advanced_timefactor");
+            labelTimeAcceleration.Text = Interface.GetInterfaceString("options_advanced_timefactor");
             /*
              * Localisation for strings in the game start pane
              */
