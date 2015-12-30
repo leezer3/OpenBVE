@@ -48,17 +48,25 @@ namespace OpenBve {
         {
             Width = newWidth;
             Height = newHeight;
-            MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
-            World.InitializeCameraRestriction();
-            if (Renderer.OptionBackfaceCulling)
+            if (Loading.Complete)
             {
-                GL.Enable(EnableCap.CullFace);
+                MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+                World.InitializeCameraRestriction();
+                if (Renderer.OptionBackfaceCulling)
+                {
+                    GL.Enable(EnableCap.CullFace);
+                }
+                else
+                {
+                    GL.Disable(EnableCap.CullFace);
+                }
+                Renderer.ReAddObjects();
+            } else {
+                GL.Viewport(0, 0, Width, Height);
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
+                GL.Ortho(0.0, (double)Width, (double)Height, 0.0, -1.0, 1.0);
             }
-            else
-            {
-                GL.Disable(EnableCap.CullFace);
-            }
-            Renderer.ReAddObjects();
 	    }
 
 		/// <summary>Changes to or from fullscreen mode.</summary>
