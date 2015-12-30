@@ -30,7 +30,13 @@ namespace OpenBve {
 	    internal static formMain.MainDialogResult currentResult;
 	    internal static formRouteInformation RouteInformationForm;
 	    internal static Thread RouteInfoThread;
-	    internal static bool RouteInfoActive;
+        internal static bool RouteInfoActive
+        {
+            get
+            {
+                return RouteInformationForm != null && RouteInformationForm.IsHandleCreated && RouteInformationForm.Visible;
+            }
+        }
 
 
 	    internal static AppDomain RouteInfoFormDomain;
@@ -42,10 +48,10 @@ namespace OpenBve {
 		    if (OpenTKWindow == false)
 		    {
                 GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
-		        
+
                  /*
-                 * TODO: This should be able to be moved back into the screen initialisation file
-                 */
+                  * TODO: This should be able to be moved back into the screen initialisation file
+                  */
                 
 		        if (Interface.CurrentOptions.FullscreenMode)
 		        {
@@ -59,8 +65,8 @@ namespace OpenBve {
 		                    resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
 		                {
                             OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
-		                    Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, "OpenBve", GameWindowFlags.Default);
-		                    
+		                    Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default);
+							Program.currentGameWindow.Visible = true;
 		                    Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 		                    break;
 		                }
@@ -68,12 +74,14 @@ namespace OpenBve {
 		        }
 		        else
 		        {
-                    Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth, Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight, currentGraphicsMode, "OpenBve", GameWindowFlags.Default);
-                    Program.currentGameWindow.Visible = true;
-		            Program.currentGameWindow.TargetUpdateFrequency = 0;
-                    Program.currentGameWindow.TargetRenderFrequency = 0;
-                    Program.currentGameWindow.Title = "OpenBVE";
+                    Program.currentGameWindow = new OpenBVEGame(
+                        Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth,
+                        Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight,
+                        currentGraphicsMode, GameWindowFlags.Default);
 		        }
+                Program.currentGameWindow.Visible = true;
+                Program.currentGameWindow.TargetUpdateFrequency = 0;
+                Program.currentGameWindow.TargetRenderFrequency = 0;
 		        if (Program.currentGameWindow == null)
 		        {
 		            MessageBox.Show("An error occured whilst attempting to launch the graphics subsystem." + Environment.NewLine +
