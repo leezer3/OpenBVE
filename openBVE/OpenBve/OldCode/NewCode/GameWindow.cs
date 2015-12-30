@@ -13,6 +13,7 @@ namespace OpenBve
 {
     class OpenBVEGame: GameWindow
     {
+        public const string WindowTitle = "openBVE";
         /// <summary>The current time acceleration factor</summary>
         int TimeFactor = 1;
         double TotalTimeElapsedForInfo;
@@ -22,7 +23,7 @@ namespace OpenBve
         private double RenderTimeElapsed;
         private double RenderRealTimeElapsed;
         //We need to explicitly specify the default constructor
-        public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, string openbve, GameWindowFlags @default): base (width,height,currentGraphicsMode,openbve,@default)
+        public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base (width,height,currentGraphicsMode,WindowTitle,@default)
         {
             try
             {
@@ -242,9 +243,6 @@ namespace OpenBve
         protected override void OnLoad(EventArgs e)
         {
             //Add event handler hooks for keyboard and mouse buttons
-            Keyboard.KeyDown += MainLoop.keyDownEvent;
-            Keyboard.KeyUp += MainLoop.keyUpEvent;
-            Mouse.ButtonDown += MainLoop.mouseDownEvent;
             //Initialise the loader thread queues
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
@@ -253,8 +251,17 @@ namespace OpenBve
             MainLoop.InitializeMotionBlur();
             Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
             LoadingScreenLoop();
+            // to prevent funny things
+            Keyboard.KeyDown += MainLoop.keyDownEvent;
+            Keyboard.KeyUp += MainLoop.keyUpEvent;
+            Mouse.ButtonDown += MainLoop.mouseDownEvent;
         }
-
+        protected override void OnClosed(EventArgs e)
+        {
+            if (!Loading.Complete)
+                Loading.Cancel = true;
+            base.OnClosed(e);
+        }
         /// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
         private void SetupSimulation()
         {
@@ -567,11 +574,14 @@ namespace OpenBve
             GL.PushMatrix();
             GL.LoadIdentity();
             GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
-            
-            while (!Loading.Complete)
+            GL.Viewport(0, 0, Screen.Width, Screen.Height);
+
+            while (!Loading.Complete && !Loading.Cancel)
             {
                 CPreciseTimer.GetElapsedTime();
-                GL.Viewport(0, 0, Screen.Width, Screen.Height);
+                this.ProcessEvents();
+                if (this.IsExiting)
+                    Loading.Cancel = true;
                 Renderer.DrawLoadingScreen();
                 Program.currentGameWindow.SwapBuffers();
                 
@@ -597,9 +607,12 @@ namespace OpenBve
                 if (wait > 0)
                     Thread.Sleep((int)(wait));
             }
-            GL.PopMatrix();
-            GL.MatrixMode(MatrixMode.Projection);
-            SetupSimulation();
+            if(!Loading.Cancel)
+            {
+                GL.PopMatrix();
+                GL.MatrixMode(MatrixMode.Projection);
+                SetupSimulation();
+            }
         }
 
         internal static readonly object LoadingLock = new object();

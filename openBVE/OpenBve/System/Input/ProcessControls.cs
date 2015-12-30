@@ -1732,7 +1732,7 @@ namespace OpenBve
                                                 IsBackground = true
                                             };
                                             RouteInfoThread.Start();
-                                            while (MainLoop.RouteInformationForm == null)
+                                            while (MainLoop.RouteInformationForm == null || !MainLoop.RouteInformationForm.IsHandleCreated)
                                             {
                                                 //The form may take a few milliseconds to load
                                                 //Takes longer on Mono
