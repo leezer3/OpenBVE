@@ -1370,12 +1370,12 @@ namespace OpenBve {
         {
             string cmdname = Enum.GetName(typeof(Command), cmd);
             if (cmdname == null) throw new ArgumentNullException("cmdname");
-            if (!cmdname.StartsWith("Security", StringComparison.InvariantCulture))
-                throw new ArgumentException("Command is not a security command.", "cmd");
-            string ending = cmdname.Substring(8).ToUpperInvariant();
+			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
+				cmdname = cmdname.Substring(8).ToUpperInvariant();
             VirtualKeys key;
-            if (!Enum.TryParse(ending, out key))
-                throw new ArgumentException("VirtualKeys does not contain following security key: " + ending, "cmd");
+            if (!Enum.TryParse(cmdname, out key))
+				throw new ArgumentException("VirtualKeys does not contain following key: " +
+					cmdname, "cmd");
             return key;
         }
 		internal enum CommandType { Digital, AnalogHalf, AnalogFull }
