@@ -271,6 +271,7 @@
             this.labelPackages = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.buttonControlReset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -2680,6 +2681,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(247)))), ((int)(((byte)(230)))));
+            this.panelControls.Controls.Add(this.buttonControlReset);
             this.panelControls.Controls.Add(this.buttonControlsExport);
             this.panelControls.Controls.Add(this.buttonControlsImport);
             this.panelControls.Controls.Add(this.buttonControlDown);
@@ -2701,7 +2703,7 @@
             // 
             this.buttonControlsExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonControlsExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlsExport.Location = new System.Drawing.Point(320, 234);
+            this.buttonControlsExport.Location = new System.Drawing.Point(320, 219);
             this.buttonControlsExport.Name = "buttonControlsExport";
             this.buttonControlsExport.Size = new System.Drawing.Size(96, 24);
             this.buttonControlsExport.TabIndex = 7;
@@ -2713,7 +2715,7 @@
             // 
             this.buttonControlsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonControlsImport.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlsImport.Location = new System.Drawing.Point(216, 234);
+            this.buttonControlsImport.Location = new System.Drawing.Point(216, 219);
             this.buttonControlsImport.Name = "buttonControlsImport";
             this.buttonControlsImport.Size = new System.Drawing.Size(96, 24);
             this.buttonControlsImport.TabIndex = 6;
@@ -2725,7 +2727,7 @@
             // 
             this.buttonControlDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonControlDown.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlDown.Location = new System.Drawing.Point(531, 234);
+            this.buttonControlDown.Location = new System.Drawing.Point(531, 219);
             this.buttonControlDown.Name = "buttonControlDown";
             this.buttonControlDown.Size = new System.Drawing.Size(96, 24);
             this.buttonControlDown.TabIndex = 9;
@@ -2737,7 +2739,7 @@
             // 
             this.buttonControlUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonControlUp.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlUp.Location = new System.Drawing.Point(427, 234);
+            this.buttonControlUp.Location = new System.Drawing.Point(427, 219);
             this.buttonControlUp.Name = "buttonControlUp";
             this.buttonControlUp.Size = new System.Drawing.Size(96, 24);
             this.buttonControlUp.TabIndex = 8;
@@ -2749,7 +2751,7 @@
             // 
             this.buttonControlRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonControlRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlRemove.Location = new System.Drawing.Point(112, 234);
+            this.buttonControlRemove.Location = new System.Drawing.Point(112, 219);
             this.buttonControlRemove.Name = "buttonControlRemove";
             this.buttonControlRemove.Size = new System.Drawing.Size(96, 24);
             this.buttonControlRemove.TabIndex = 5;
@@ -2761,7 +2763,7 @@
             // 
             this.buttonControlAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonControlAdd.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlAdd.Location = new System.Drawing.Point(8, 234);
+            this.buttonControlAdd.Location = new System.Drawing.Point(8, 219);
             this.buttonControlAdd.Name = "buttonControlAdd";
             this.buttonControlAdd.Size = new System.Drawing.Size(96, 24);
             this.buttonControlAdd.TabIndex = 4;
@@ -2812,7 +2814,7 @@
             this.listviewControls.MultiSelect = false;
             this.listviewControls.Name = "listviewControls";
             this.listviewControls.ShowGroups = false;
-            this.listviewControls.Size = new System.Drawing.Size(627, 186);
+            this.listviewControls.Size = new System.Drawing.Size(627, 168);
             this.listviewControls.TabIndex = 3;
             this.listviewControls.UseCompatibleStateImageBehavior = false;
             this.listviewControls.View = System.Windows.Forms.View.Details;
@@ -3356,6 +3358,18 @@
             this.label15.Size = new System.Drawing.Size(643, 32);
             this.label15.TabIndex = 0;
             // 
+            // buttonControlReset
+            // 
+            this.buttonControlReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonControlReset.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonControlReset.Location = new System.Drawing.Point(8, 248);
+            this.buttonControlReset.Name = "buttonControlReset";
+            this.buttonControlReset.Size = new System.Drawing.Size(96, 24);
+            this.buttonControlReset.TabIndex = 12;
+            this.buttonControlReset.Text = "Reset to defaults";
+            this.buttonControlReset.UseVisualStyleBackColor = true;
+            this.buttonControlReset.Click += new System.EventHandler(this.buttonControlReset_Click);
+            // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3370,10 +3384,10 @@
             this.Controls.Add(this.labelFillerOne);
             this.Controls.Add(this.labelFillerTwo);
             this.Controls.Add(this.labelFillerThree);
+            this.Controls.Add(this.panelControls);
             this.Controls.Add(this.panelPackages);
             this.Controls.Add(this.panelOptions);
             this.Controls.Add(this.panelStart);
-            this.Controls.Add(this.panelControls);
             this.Controls.Add(this.panelReview);
             this.KeyPreview = true;
             this.Name = "formMain";
@@ -3734,6 +3748,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button buttonInstallRoute;
         private System.Windows.Forms.CheckBox checkBoxEBAxis;
+        private System.Windows.Forms.Button buttonControlReset;
         
     }
 }

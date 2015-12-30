@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -1752,6 +1751,9 @@ namespace OpenBve {
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 
+
+	    private static bool ControlsReset;
+
 		/// <summary>Loads the current controls from the controls.cfg file</summary>
 		/// <param name="FileOrNull">An absolute path reference to a saved controls.cfg file, or a null reference to check the default locations</param>
 		/// <param name="Controls">The current controls array</param>
@@ -1763,6 +1765,13 @@ namespace OpenBve {
 				if (!System.IO.File.Exists(File)) {
                     //Load the default key assignments if the user settings don't exist
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
+                    if (!System.IO.File.Exists(File))
+				    {
+                        MessageBox.Show("Warning: " + Environment.NewLine + "No control configuration files found.",
+                                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                        Controls = new Control[0];
+                        return;
+				    }
 				}
 			} else {
 				File = FileOrNull;
@@ -1808,11 +1817,33 @@ namespace OpenBve {
 							        if (int.TryParse(Terms[2], out SDLTest))
 							        {
 							            //We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
-							            Thread Message = new Thread(() => MessageBox.Show("An older key-configuration file was found."
-							                                                        + Environment.NewLine +
-							                                                        "The current key-configuration has been reset to default.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand));
-							            Message.Start();
-                                        LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out CurrentControls);
+							            if (ControlsReset == false)
+							            {
+							                MessageBox.Show("An older key-configuration file was found." + Environment.NewLine + "The current key-configuration has been reset to default.", Application.ProductName,
+                                                MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							            }
+							            var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"),"Default keyboard assignment.controls");
+							            if (System.IO.File.Exists(DefaultControls))
+							            {
+							                if (ControlsReset == false)
+							                {
+							                    LoadControls(DefaultControls, out CurrentControls);
+							                    ControlsReset = true;
+							                }
+							                else
+							                {
+                                                MessageBox.Show("Warning: " + Environment.NewLine + "The default key assignment file is corrupt or an older version.",
+                                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                                                Controls = new Control[0];
+							                }
+                                            
+							            }
+							            else
+							            {
+							                MessageBox.Show("Warning: " + Environment.NewLine + "The default key assignment file does not exist.",
+							                    Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                                                Controls = new Control[0];
+							            }
 							            return;
 							        }
                                     if (Enum.TryParse(Terms[2], true, out CurrentKey))

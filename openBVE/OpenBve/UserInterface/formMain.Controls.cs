@@ -366,6 +366,32 @@ namespace OpenBve {
 			}
 		}
 
+        private void buttonControlReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
+                for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
+                {
+                    listviewControls.SelectedItems[i].Selected = false;
+                }
+                listviewControls.Items.Clear();
+                ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
+                for (int i = 0; i < Interface.CurrentControls.Length; i++)
+                {
+                    Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+                    UpdateControlListElement(Items[i], i, false);
+                }
+                listviewControls.Items.AddRange(Items);
+                listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+            
+        }
+
 		// export
 		private void buttonControlsExport_Click(object sender, EventArgs e) {
 		    SaveFileDialog Dialog = new SaveFileDialog

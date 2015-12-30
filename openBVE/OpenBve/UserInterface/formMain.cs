@@ -519,6 +519,7 @@ namespace OpenBve {
 			buttonControlRemove.Text = Interface.GetInterfaceString("controls_remove");
 			buttonControlsImport.Text = Interface.GetInterfaceString("controls_import");
 			buttonControlsExport.Text = Interface.GetInterfaceString("controls_export");
+            buttonControlReset.Text = Interface.GetInterfaceString("controls_reset");
 			buttonControlUp.Text = Interface.GetInterfaceString("controls_up");
 			buttonControlDown.Text = Interface.GetInterfaceString("controls_down");
 			groupboxControl.Text = Interface.GetInterfaceString("controls_selection");
@@ -1084,6 +1085,8 @@ namespace OpenBve {
             var PackageInstallForm = new formPackageInstall();
             PackageInstallForm.ShowDialog();
         }
+
+        
 		
 	}
 }
