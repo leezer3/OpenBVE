@@ -211,6 +211,7 @@
             this.labelReviewTitleBackground = new System.Windows.Forms.Label();
             this.timerEvents = new System.Windows.Forms.Timer(this.components);
             this.panelControls = new System.Windows.Forms.Panel();
+            this.buttonControlReset = new System.Windows.Forms.Button();
             this.buttonControlsExport = new System.Windows.Forms.Button();
             this.buttonControlsImport = new System.Windows.Forms.Button();
             this.buttonControlDown = new System.Windows.Forms.Button();
@@ -271,7 +272,6 @@
             this.labelPackages = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.buttonControlReset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -2699,6 +2699,18 @@
             this.panelControls.Size = new System.Drawing.Size(643, 586);
             this.panelControls.TabIndex = 13;
             // 
+            // buttonControlReset
+            // 
+            this.buttonControlReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonControlReset.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonControlReset.Location = new System.Drawing.Point(8, 248);
+            this.buttonControlReset.Name = "buttonControlReset";
+            this.buttonControlReset.Size = new System.Drawing.Size(96, 24);
+            this.buttonControlReset.TabIndex = 12;
+            this.buttonControlReset.Text = "Reset to defaults";
+            this.buttonControlReset.UseVisualStyleBackColor = true;
+            this.buttonControlReset.Click += new System.EventHandler(this.buttonControlReset_Click);
+            // 
             // buttonControlsExport
             // 
             this.buttonControlsExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -3358,18 +3370,6 @@
             this.label15.Size = new System.Drawing.Size(643, 32);
             this.label15.TabIndex = 0;
             // 
-            // buttonControlReset
-            // 
-            this.buttonControlReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonControlReset.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonControlReset.Location = new System.Drawing.Point(8, 248);
-            this.buttonControlReset.Name = "buttonControlReset";
-            this.buttonControlReset.Size = new System.Drawing.Size(96, 24);
-            this.buttonControlReset.TabIndex = 12;
-            this.buttonControlReset.Text = "Reset to defaults";
-            this.buttonControlReset.UseVisualStyleBackColor = true;
-            this.buttonControlReset.Click += new System.EventHandler(this.buttonControlReset_Click);
-            // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3384,9 +3384,9 @@
             this.Controls.Add(this.labelFillerOne);
             this.Controls.Add(this.labelFillerTwo);
             this.Controls.Add(this.labelFillerThree);
+            this.Controls.Add(this.panelOptions);
             this.Controls.Add(this.panelControls);
             this.Controls.Add(this.panelPackages);
-            this.Controls.Add(this.panelOptions);
             this.Controls.Add(this.panelStart);
             this.Controls.Add(this.panelReview);
             this.KeyPreview = true;

@@ -365,30 +365,38 @@ namespace OpenBve {
 //			Result.TrainEncoding = System.Text.Encoding.UTF8;
 		}
 
-		// apply language
+		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage() {
-			// panel
+            /*
+             * Localisation for strings in main panel
+             */
 			radiobuttonStart.Text = Interface.GetInterfaceString("panel_start");
 			radiobuttonReview.Text = Interface.GetInterfaceString("panel_review");
 			radiobuttonControls.Text = Interface.GetInterfaceString("panel_controls");
 			radiobuttonOptions.Text = Interface.GetInterfaceString("panel_options");
 			linkHomepage.Text = Interface.GetInterfaceString("panel_homepage");
 			buttonClose.Text = Interface.GetInterfaceString("panel_close");
-			// options
+			/*
+             * Localisation for strings in the options pane
+             */
 			labelOptionsTitle.Text = Interface.GetInterfaceString("options_title");
+            //Basic display mode settings
 			groupboxDisplayMode.Text = Interface.GetInterfaceString("options_display_mode");
 			radiobuttonWindow.Text = Interface.GetInterfaceString("options_display_mode_window");
 			radiobuttonFullscreen.Text = Interface.GetInterfaceString("options_display_mode_fullscreen");
 			labelVSync.Text = Interface.GetInterfaceString("options_display_vsync");
 			comboboxVSync.Items[0] = Interface.GetInterfaceString("options_display_vsync_off");
 			comboboxVSync.Items[1] = Interface.GetInterfaceString("options_display_vsync_on");
+            //Windowed Mode
 			groupboxWindow.Text = Interface.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Interface.GetInterfaceString("options_display_window_width");
 			labelWindowHeight.Text = Interface.GetInterfaceString("options_display_window_height");
+            //Fullscreen
 			groupboxFullscreen.Text = Interface.GetInterfaceString("options_display_fullscreen");
 			labelFullscreenWidth.Text = Interface.GetInterfaceString("options_display_fullscreen_width");
 			labelFullscreenHeight.Text = Interface.GetInterfaceString("options_display_fullscreen_height");
 			labelFullscreenBits.Text = Interface.GetInterfaceString("options_display_fullscreen_bits");
+            //Interpolation, AA and AF
 			groupboxInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation");
 			labelInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation_mode");
 			comboboxInterpolation.Items[0] = Interface.GetInterfaceString("options_quality_interpolation_mode_nearest");
@@ -403,28 +411,41 @@ namespace OpenBve {
 			labelTransparencyPerformance.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_sharp");
 			labelTransparencyQuality.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_smooth");
 			groupboxDistance.Text = Interface.GetInterfaceString("options_quality_distance");
+            //Viewing distance and motion blur
 			labelDistance.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance");
 			labelDistanceUnit.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance_meters");
-			labelMotionBlur.Text = "options_quality_distance_motionblur";
+            labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
 			comboboxMotionBlur.Items[0] = Interface.GetInterfaceString("options_quality_distance_motionblur_none");
 			comboboxMotionBlur.Items[1] = Interface.GetInterfaceString("options_quality_distance_motionblur_low");
 			comboboxMotionBlur.Items[2] = Interface.GetInterfaceString("options_quality_distance_motionblur_medium");
 			comboboxMotionBlur.Items[3] = Interface.GetInterfaceString("options_quality_distance_motionblur_high");
 			labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
+            //Simulation
 			groupboxSimulation.Text = Interface.GetInterfaceString("options_misc_simulation");
 			checkboxToppling.Text = Interface.GetInterfaceString("options_misc_simulation_toppling");
 			checkboxCollisions.Text = Interface.GetInterfaceString("options_misc_simulation_collisions");
 			checkboxDerailments.Text = Interface.GetInterfaceString("options_misc_simulation_derailments");
 			checkboxBlackBox.Text = Interface.GetInterfaceString("options_misc_simulation_blackbox");
+            //Controls
 			groupboxControls.Text = Interface.GetInterfaceString("options_misc_controls");
 			checkboxJoysticksUsed.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
+            checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
 			labelJoystickAxisThreshold.Text = Interface.GetInterfaceString("options_misc_controls_threshold");
+            //Sound
 			groupboxSound.Text = Interface.GetInterfaceString("options_misc_sound");
 			labelSoundNumber.Text = Interface.GetInterfaceString("options_misc_sound_number");
+            //Verbosity
 			groupboxVerbosity.Text = Interface.GetInterfaceString("options_verbosity");
 			checkboxWarningMessages.Text = Interface.GetInterfaceString("options_verbosity_warningmessages");
 			checkboxErrorMessages.Text = Interface.GetInterfaceString("options_verbosity_errormessages");
-			// start
+            //Advanced Options
+            groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
+            checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
+            checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
+            trackBarTimeAccelerationFactor.Text = Interface.GetInterfaceString("options_advanced_timefactor");
+            /*
+             * Localisation for strings in the game start pane
+             */
 			labelStartTitle.Text = Interface.GetInterfaceString("start_title");
 			labelRoute.Text = " " + Interface.GetInterfaceString("start_route");
 			groupboxRouteSelection.Text = Interface.GetInterfaceString("start_route_selection");
@@ -458,7 +479,9 @@ namespace OpenBve {
 			comboboxMode.Items[0] = Interface.GetInterfaceString("mode_arcade");
 			comboboxMode.Items[1] = Interface.GetInterfaceString("mode_normal");
 			comboboxMode.Items[2] = Interface.GetInterfaceString("mode_expert");
-			// review
+            /*
+             * Localisation for strings in the game review pane
+             */
 			labelReviewTitle.Text = Interface.GetInterfaceString("review_title");
 			labelConditions.Text = " " + Interface.GetInterfaceString("review_conditions");
 			groupboxReviewRoute.Text = Interface.GetInterfaceString("review_conditions_route");
@@ -506,7 +529,9 @@ namespace OpenBve {
 			comboboxBlackBoxFormat.Items[0] = Interface.GetInterfaceString("review_blackbox_format_csv");
 			comboboxBlackBoxFormat.Items[1] = Interface.GetInterfaceString("review_blackbox_format_text");
 			buttonBlackBoxExport.Text = Interface.GetInterfaceString("review_blackbox_export");
-			// controls
+            /*
+             * Localisation for strings related to controls (Keyboard etc.)
+             */
 			for (int i = 0; i < listviewControls.SelectedItems.Count; i++) {
 				listviewControls.SelectedItems[i].Selected = false;
 			}
