@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenTK;
@@ -61,14 +63,47 @@ namespace OpenBve {
 				MessageBox.Show("The file system configuration could not be accessed or is invalid due to the following reason:\n\n" + ex.Message, "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
-            // --- Check if we're running as root, and prompt not to ---
+
+            //Platform specific startup checks
 		    if (CurrentlyRunningOnMono)
 		    {
-    	        if (getuid() == 0)
+		        // --- Check if we're running as root, and prompt not to ---
+		        if (getuid() == 0)
 		        {
-                    MessageBox.Show("You are currently running as the root user." + System.Environment.NewLine + "This is a bad idea, please dont!", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+		            MessageBox.Show(
+		                "You are currently running as the root user." + System.Environment.NewLine +
+		                "This is a bad idea, please dont!", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		        }
 		    }
+		    else
+		    {
+		        if (!System.IO.File.Exists(System.IO.Path.Combine(Environment.SystemDirectory, "OpenAL32.dll")))
+		        {
+                    
+                    MessageBox.Show(
+                        "OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
+		                "Please follow the install prompts.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+
+                    ProcessStartInfo info = new ProcessStartInfo(System.IO.Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
+                    info.UseShellExecute = true;
+		            if (Environment.OSVersion.Version.Major >= 6)
+		            {
+		                info.Verb = "runas";
+		            }
+		            try
+                    {
+                        System.Diagnostics.Process p = System.Diagnostics.Process.Start(info);
+                        p.WaitForExit();
+                    }
+                    catch (Win32Exception ex)
+                    {
+                        MessageBox.Show(
+                        "An error occured during OpenAL installation....", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    }
+                    
+		        }
+		    }
+
 
 		    // --- set up packages ---
 			SetPackageLookupDirectories();
