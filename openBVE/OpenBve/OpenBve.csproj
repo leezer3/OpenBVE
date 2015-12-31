@@ -12,7 +12,7 @@
     <AssemblyName>OpenBve</AssemblyName>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <SignAssembly>False</SignAssembly>
@@ -286,18 +286,21 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' == '' And Exists('/usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe') ">mono /usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe "$(ProjectDir)Properties/AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' != '' ">mono $(TextTransformMono) "$(ProjectDir)Properties/AssemblyInfo.tt"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)/Data" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
+  </Target>-->
+  <Target Name="BeforeBuild">
+	<Warning Text="TextTransform missing and /p:TextTransformMono=[path] not specified! Ignoring TextTransform." Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' == '' And !Exists('/usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe') " />
   </Target>
-  -->
 </Project>
