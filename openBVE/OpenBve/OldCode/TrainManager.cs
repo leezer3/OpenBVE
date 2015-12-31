@@ -3762,6 +3762,7 @@ namespace OpenBve {
 						string s = Interface.GetInterfaceString("message_signal_proceed");
 						double a = 3.6 * Train.CurrentSectionLimit;
 						s = s.Replace("[speed]", a.ToString("0", System.Globalization.CultureInfo.InvariantCulture));
+						s = s.Replace("[unit]", Game.UnitOfSpeed);
 						Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
 					}
 				}
