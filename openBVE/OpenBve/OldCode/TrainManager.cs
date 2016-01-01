@@ -3760,8 +3760,9 @@ namespace OpenBve {
 					Train.CurrentSectionLimit = 6.94444444444444;
 					if (Train == PlayerTrain) {
 						string s = Interface.GetInterfaceString("message_signal_proceed");
-						double a = 3.6 * Train.CurrentSectionLimit;
+						double a = (3.6 * Train.CurrentSectionLimit) * Game.SpeedConversionFactor;
 						s = s.Replace("[speed]", a.ToString("0", System.Globalization.CultureInfo.InvariantCulture));
+                        s = s.Replace("[unit]", Game.UnitOfSpeed);
 						Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
 					}
 				}

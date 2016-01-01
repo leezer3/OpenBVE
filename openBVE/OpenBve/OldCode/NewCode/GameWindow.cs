@@ -242,7 +242,6 @@ namespace OpenBve
 
         protected override void OnLoad(EventArgs e)
         {
-            //Add event handler hooks for keyboard and mouse buttons
             //Initialise the loader thread queues
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);
@@ -251,9 +250,11 @@ namespace OpenBve
             MainLoop.InitializeMotionBlur();
             Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
             LoadingScreenLoop();
-            // to prevent funny things
+            //Add event handler hooks for keyboard and mouse buttons
+            //Do this after the renderer has init and the loop has started to prevent timing issues
             Keyboard.KeyDown += MainLoop.keyDownEvent;
             Keyboard.KeyUp += MainLoop.keyUpEvent;
+            Keyboard.KeyRepeat = false;
             Mouse.ButtonDown += MainLoop.mouseDownEvent;
         }
         protected override void OnClosed(EventArgs e)
