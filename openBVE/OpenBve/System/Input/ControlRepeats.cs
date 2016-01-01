@@ -27,6 +27,14 @@ namespace OpenBve
         /// <param name="controlIndex">The control index to repeat</param>
         private static void AddControlRepeat(int controlIndex)
         {
+            for(int i = 0; i < RepeatControlsUsed; i++)
+            {
+                if(RepeatControls[i].ControlIndex == controlIndex)
+                {
+					// this control is in repeat array already
+                    return;
+                }
+            }
             if (RepeatControls.Length == RepeatControlsUsed)
             {
                 Array.Resize<ControlRepeat>(ref RepeatControls, RepeatControls.Length << 1);
