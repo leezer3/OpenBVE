@@ -102,8 +102,8 @@ namespace OpenBve {
 			    }
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
-                    MessageBox.Show("An error occured whilst attempting to switch to fullscreen mode." + System.Environment.NewLine +
-                        "Please check your fullscreen resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    MessageBox.Show(Interface.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
+                        Interface.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			        Fullscreen = false;
 			    }
 			} else {

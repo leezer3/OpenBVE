@@ -95,18 +95,18 @@ namespace OpenBve {
 					try {
 						AL.SpeedOfSound(343.0f);
 					} catch {
-						MessageBox.Show("OpenAL 1.1 is required. You seem to have OpenAL 1.0.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                        MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_version"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return true;
 				}
 			    Alc.CloseDevice(OpenAlDevice);
 			    OpenAlDevice = IntPtr.Zero;
-			    MessageBox.Show("The OpenAL context could not be created.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_context"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			    return false;
 			}
 		    OpenAlContext = ContextHandle.Zero;
-		    MessageBox.Show("The OpenAL sound device could not be opened.", "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		    return false;
 		}
 		

@@ -388,10 +388,6 @@ namespace OpenBve {
 			    if (t == null) return;
 			    if (!System.IO.File.Exists(t)) return;
 			    Result.RouteFile = t;
-			    /*if (Type.GetType("Mono.Runtime") != null)
-					    {
-					        MessageBox.Show("Please press OK- This works around a mono crash.");
-					    } */
 			    ShowRoute(false);
 			}
 		}
