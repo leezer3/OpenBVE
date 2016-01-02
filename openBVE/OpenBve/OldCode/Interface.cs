@@ -1767,7 +1767,7 @@ namespace OpenBve {
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
                     if (!System.IO.File.Exists(File))
 				    {
-                        MessageBox.Show("Warning: " + Environment.NewLine + "No control configuration files found.",
+                        MessageBox.Show(Interface.GetInterfaceString("errors_warning") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_missing"),
                                                 Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                         Controls = new Control[0];
                         return;
@@ -1819,7 +1819,7 @@ namespace OpenBve {
 							            //We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
 							            if (ControlsReset == false)
 							            {
-							                MessageBox.Show("An older key-configuration file was found." + Environment.NewLine + "The current key-configuration has been reset to default.", Application.ProductName,
+                                            MessageBox.Show(Interface.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_reset"), Application.ProductName,
                                                 MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							            }
 							            var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"),"Default keyboard assignment.controls");
@@ -1832,7 +1832,7 @@ namespace OpenBve {
 							                }
 							                else
 							                {
-                                                MessageBox.Show("Warning: " + Environment.NewLine + "The default key assignment file is corrupt or an older version.",
+                                                MessageBox.Show(Interface.GetInterfaceString("errors_warning") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_default_oldversion"),
                                                 Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                                                 Controls = new Control[0];
 							                }
@@ -1840,7 +1840,7 @@ namespace OpenBve {
 							            }
 							            else
 							            {
-							                MessageBox.Show("Warning: " + Environment.NewLine + "The default key assignment file does not exist.",
+                                            MessageBox.Show(Interface.GetInterfaceString("errors_warning") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_default_missing"),
 							                    Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                                                 Controls = new Control[0];
 							            }

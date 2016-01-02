@@ -484,19 +484,22 @@ namespace OpenBve {
                 }
                 catch
                 {
-                    MessageBox.Show("A critical error occured parsing the panel.animated file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    var currentError = Interface.GetInterfaceString("error_critical_file");
+                    currentError = currentError.Replace("[file]", "panel.animated");
+                    MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                     Program.RestartArguments = " ";
                     Loading.Cancel = true;
                 }
             }
             else
             {
-
+                var Panel2 = false;
                 try
                 {
                     File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
                     if (System.IO.File.Exists(File))
                     {
+                        Panel2 = true;
                         Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
                         World.CameraRestriction = World.CameraRestrictionMode.On;
                     }
@@ -516,7 +519,9 @@ namespace OpenBve {
                 }
                 catch
                 {
-                    MessageBox.Show("A critical error occured parsing the panel2.cfg file", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    var currentError = Interface.GetInterfaceString("errors_critical_file");
+                    currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+                    MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
                     Program.RestartArguments = " ";
                     Loading.Cancel = true;
                 }
