@@ -44,6 +44,9 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
+            //Set the route and train folders in the info class
+		    Game.RouteInformation.RouteFile = RouteFile;
+		    Game.RouteInformation.TrainFolder = TrainFolder;
 		    Loader = new Thread(LoadThreaded) {IsBackground = true};
 		    Loader.Start();
 		}
@@ -69,9 +72,6 @@ namespace OpenBve {
 
 		// load threaded
 		private static void LoadThreaded() {
-			#if DEBUG
-			LoadEverythingThreaded();
-			#else
 			try {
 				LoadEverythingThreaded();
 			} catch (Exception ex) {
@@ -79,6 +79,7 @@ namespace OpenBve {
 					if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 						if (TrainManager.Trains[i].Plugin.LastException != null) {
 							Interface.AddMessage(Interface.MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
+                            CrashHandler.LoadingCrash(TrainManager.Trains[i].Plugin.LastException.ToString(), true);
                              Program.RestartArguments = " ";
                              Cancel = true;    
 							return;
@@ -86,11 +87,11 @@ namespace OpenBve {
 					}
 				}
 				Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+                CrashHandler.LoadingCrash(ex.ToString(), false);
 			    Program.RestartArguments = " ";
                 Cancel = true;                
 			}
-            #endif
-		    if (JobAvailable)
+            if (JobAvailable)
 		    {
 		        Thread.Sleep(10);
 		    }

@@ -14,6 +14,10 @@ namespace OpenBve
             internal static Bitmap TimeTable;
             /// <summary>A string storing the absolute on-disk path to a .RTF or .TXT document describing the briefing for the current scenario</summary>
             internal static string RouteBriefing;
+            /// <summary>A string storing the absolute on-disk path to the current route file</summary>
+            internal static string RouteFile;
+            /// <summary>A string storing the absolute on-disk path to the current train folder</summary>
+            internal static string TrainFolder;
 
             internal static void LoadInformation()
             {
