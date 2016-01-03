@@ -90,6 +90,15 @@ namespace OpenBve
                 outputFile.WriteLine("Current routefile is: "  + Game.RouteInformation.RouteFile);
                 outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
                 outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+                //Errors and Warnings
+                if (Game.RouteInformation.FilesNotFound != null)
+                {
+                    outputFile.WriteLine(Game.RouteInformation.FilesNotFound);
+                }
+                if (Game.RouteInformation.ErrorsAndWarnings != null)
+                {
+                    outputFile.WriteLine(Game.RouteInformation.ErrorsAndWarnings);
+                }
                 //Track position and viewing distance
                 outputFile.WriteLine("Current track position is: " + World.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m");
                 outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
@@ -129,7 +138,15 @@ namespace OpenBve
                 outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
                 outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
                 outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
-                //Track position and viewing distance
+                //Errors and Warnings
+                if (Game.RouteInformation.FilesNotFound != null)
+                {
+                    outputFile.WriteLine(Game.RouteInformation.FilesNotFound);
+                }
+                if (Game.RouteInformation.ErrorsAndWarnings != null)
+                {
+                    outputFile.WriteLine(Game.RouteInformation.ErrorsAndWarnings);
+                }
                 if (Train)
                 {
                     outputFile.WriteLine("The current train plugin caused the following exception: ");

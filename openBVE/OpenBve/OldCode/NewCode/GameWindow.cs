@@ -546,22 +546,31 @@ namespace OpenBve
                         warnings++;
                     }
                 }
+                string NotFound = null;
+                string Messages = null;
                 if (filesNotFound != 0)
                 {
-                    Game.AddDebugMessage(filesNotFound.ToString() + " file(s) not found", 10.0);
+                    NotFound = filesNotFound.ToString() + " file(s) not found";
+                    Game.AddDebugMessage(NotFound, 10.0);
+                    
                 }
                 if (errors != 0 & warnings != 0)
                 {
-                    Game.AddDebugMessage(errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)", 10.0);
+                    Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
+                    Game.AddDebugMessage(Messages, 10.0);
                 }
                 else if (errors != 0)
                 {
-                    Game.AddDebugMessage(errors.ToString() + " error(s)", 10.0);
+                    Messages = errors.ToString() + " error(s)";
+                    Game.AddDebugMessage(Messages, 10.0);
                 }
                 else
                 {
-                    Game.AddDebugMessage(warnings.ToString() + " warning(s)", 10.0);
+                    Messages = warnings.ToString() + " warning(s)";
+                    Game.AddDebugMessage(Messages, 10.0);
                 }
+                Game.RouteInformation.FilesNotFound = NotFound;
+                Game.RouteInformation.ErrorsAndWarnings = Messages;
             }
             loadComplete = true;
             RenderRealTimeElapsed = 0.0;

@@ -18,6 +18,10 @@ namespace OpenBve
             internal static string RouteFile;
             /// <summary>A string storing the absolute on-disk path to the current train folder</summary>
             internal static string TrainFolder;
+            /// <summary>The number of files not found</summary>
+            internal static string FilesNotFound;
+            /// <summary>The number of errors and warnings</summary>
+            internal static string ErrorsAndWarnings;
 
             internal static void LoadInformation()
             {

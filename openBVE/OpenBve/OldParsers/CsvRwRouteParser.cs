@@ -246,6 +246,7 @@ namespace OpenBve {
 			// initialize data
 		    Game.UnitOfSpeed = "km/h";
 		    Game.SpeedConversionFactor = 0.0;
+		    Game.RouteInformation.RouteBriefing = null;
 		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			RouteData Data = new RouteData();

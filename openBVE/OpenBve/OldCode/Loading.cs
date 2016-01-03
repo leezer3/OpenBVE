@@ -47,6 +47,8 @@ namespace OpenBve {
             //Set the route and train folders in the info class
 		    Game.RouteInformation.RouteFile = RouteFile;
 		    Game.RouteInformation.TrainFolder = TrainFolder;
+		    Game.RouteInformation.FilesNotFound = null;
+		    Game.RouteInformation.ErrorsAndWarnings = null;
 		    Loader = new Thread(LoadThreaded) {IsBackground = true};
 		    Loader.Start();
 		}
