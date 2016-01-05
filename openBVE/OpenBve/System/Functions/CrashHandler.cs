@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -104,6 +104,14 @@ namespace OpenBve
                 outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
                 outputFile.WriteLine("The exception caught was as follows: ");
                 outputFile.WriteLine(ExceptionText);
+                double MemoryUsed;
+                using (Process proc = Process.GetCurrentProcess())
+                {
+                    MemoryUsed = proc.PrivateMemorySize64;
+                }
+                outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024), 2) + "mb");
+                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
+                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
             }
 
         }
@@ -156,6 +164,14 @@ namespace OpenBve
                     outputFile.WriteLine("The current routefile caused the following exception: ");
                 }
                 outputFile.WriteLine(ExceptionText);
+                double MemoryUsed;
+                using (Process proc = Process.GetCurrentProcess())
+                {
+                    MemoryUsed = proc.PrivateMemorySize64;
+                }
+                outputFile.WriteLine("Current program memory usage: " + Math.Round((MemoryUsed / 1024 / 1024),2) + "mb");
+                var freeRamCounter = new PerformanceCounter("Memory", "Available MBytes");
+                outputFile.WriteLine("System memory free: " + freeRamCounter.NextValue() + "mb");
             }
 
         }
