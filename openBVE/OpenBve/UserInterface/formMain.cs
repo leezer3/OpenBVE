@@ -310,6 +310,7 @@ namespace OpenBve {
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
 		    checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
+		    checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
 		    checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
@@ -441,6 +442,7 @@ namespace OpenBve {
             //Advanced Options
             groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
             checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
+		    checkBoxUnloadTextures.Text = Interface.GetInterfaceString("options_advanced_unload_textures");
             checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
             labelTimeAcceleration.Text = Interface.GetInterfaceString("options_advanced_timefactor");
             /*
@@ -602,6 +604,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;
 		    Interface.CurrentOptions.LoadInAdvance = checkBoxLoadInAdvance.Checked;
+		    Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
 		    Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
@@ -1109,6 +1112,20 @@ namespace OpenBve {
         {
             var PackageInstallForm = new formPackageInstall();
             PackageInstallForm.ShowDialog();
+        }
+
+        private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxLoadInAdvance.Checked)
+            {
+                //Load in advance negates unloading textures...
+                checkBoxUnloadTextures.Checked = false;
+                checkBoxUnloadTextures.Enabled = false;
+            }
+            else
+            {
+                checkBoxUnloadTextures.Enabled = true;
+            }
         }
 
         

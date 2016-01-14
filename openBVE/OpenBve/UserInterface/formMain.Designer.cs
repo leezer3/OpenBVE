@@ -111,6 +111,7 @@
             this.checkboxErrorMessages = new System.Windows.Forms.CheckBox();
             this.checkboxWarningMessages = new System.Windows.Forms.CheckBox();
             this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.labelTimeAcceleration = new System.Windows.Forms.Label();
@@ -1456,6 +1457,7 @@
             // 
             this.groupBoxAdvancedOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
             this.groupBoxAdvancedOptions.Controls.Add(this.label2);
             this.groupBoxAdvancedOptions.Controls.Add(this.label1);
             this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
@@ -1468,6 +1470,20 @@
             this.groupBoxAdvancedOptions.TabIndex = 12;
             this.groupBoxAdvancedOptions.TabStop = false;
             this.groupBoxAdvancedOptions.Text = "Advanced Options";
+            // 
+            // checkBoxUnloadTextures
+            // 
+            this.checkBoxUnloadTextures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxUnloadTextures.AutoSize = true;
+            this.checkBoxUnloadTextures.Location = new System.Drawing.Point(176, 19);
+            this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
+            this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxUnloadTextures.TabIndex = 13;
+            this.checkBoxUnloadTextures.Text = "Unload unused textures";
+            this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
+            this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
             // 
             // label2
             // 
@@ -1529,6 +1545,7 @@
             this.checkBoxLoadInAdvance.TabIndex = 1;
             this.checkBoxLoadInAdvance.Text = "Load in advance";
             this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
+            this.checkBoxLoadInAdvance.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
             // 
             // groupboxSimulation
             // 
@@ -3749,6 +3766,7 @@
         private System.Windows.Forms.Button buttonInstallRoute;
         private System.Windows.Forms.CheckBox checkBoxEBAxis;
         private System.Windows.Forms.Button buttonControlReset;
+        private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
         
     }
 }

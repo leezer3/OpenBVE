@@ -167,6 +167,8 @@ namespace OpenBve {
 			internal bool DisableDisplayLists;
             /// <summary>Whether the simulation will load all textures and sounds into system memory on initial load</summary>
 			internal bool LoadInAdvance;
+            /// <summary>Whether the simulation will dynamically unload unused textures</summary>
+            internal bool UnloadUnusedTextures;
             /// <summary>Whether EB application is possible from the use of a joystick axis</summary>
 		    internal bool AllowAxisEB;
             /*
@@ -228,6 +230,7 @@ namespace OpenBve {
 				this.MainMenuHeight = 0;
 				this.DisableDisplayLists = false;
 				this.LoadInAdvance = false;
+			    this.UnloadUnusedTextures = false;
 				this.NoTextureResize = false;
 				this.ProxyUrl = string.Empty;
 				this.ProxyUserName = string.Empty;
@@ -341,6 +344,9 @@ namespace OpenBve {
 										case "loadinadvance":
 											Interface.CurrentOptions.LoadInAdvance = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
+                                        case "unloadtextures":
+                                            Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+                                            break;
 										case "notextureresize":
 											Interface.CurrentOptions.NoTextureResize = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
@@ -607,6 +613,7 @@ namespace OpenBve {
 			Builder.AppendLine("mainmenuHeight = " + CurrentOptions.MainMenuHeight.ToString(Culture));
 			Builder.AppendLine("disableDisplayLists = " + (CurrentOptions.DisableDisplayLists ? "true" : "false"));
 			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
+            Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
 			Builder.AppendLine("noTextureResize = " + (CurrentOptions.NoTextureResize ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[quality]");
