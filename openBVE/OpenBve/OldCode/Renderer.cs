@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -23,6 +23,7 @@ namespace OpenBve
         //Set LoadTextureImmediatelyMode to NotYet for the first frame
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 
+        internal static bool FirstFrame;
 
         // the static opaque lists
         /// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
@@ -1111,6 +1112,52 @@ namespace OpenBve
             int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
             if (k >= 0)
             {
+                IList<World.MeshMaterial> UnloadTextures = new List<World.MeshMaterial>(ObjectManager.Objects[ObjectIndex].Mesh.Materials);
+                for (int s = 0; s < ObjectManager.Objects.Length; s++)
+                {
+                    if (UnloadTextures.Count == 0)
+                    {
+                        //Break out of loop if no textures are left in the list
+                        break;
+                    }
+                    if (s == ObjectIndex)
+                    {
+                        //Don't process the object we wish to unload
+                        continue;
+                    }
+                    if (ObjectManager.Objects[s].RendererIndex == 0)
+                    {
+                        //Don't process not loaded objects
+                        continue;
+                    }
+                    for (int r = 0; r < ObjectManager.Objects[s].Mesh.Materials.Length; r++)
+                    {   
+                        for (int q = 0; q < UnloadTextures.Count; q++)
+                        {
+                            try
+                            {
+                                if (UnloadTextures[q] == ObjectManager.Objects[s].Mesh.Materials[r])
+                                {
+                                    UnloadTextures.RemoveAt(q);
+                                }
+                            }
+                            catch
+                            { }
+                        }
+                    }
+                }
+                
+                if(UnloadTextures.Count != 0)
+                {
+                    //MessageBox.Show(UnloadTextures.Count.ToString());
+                    foreach (var Texture in UnloadTextures )
+                    {
+                        Textures.UnloadTexture(Texture.DaytimeTexture);
+                        Textures.UnloadTexture(Texture.NighttimeTexture);
+                    }
+                    
+                }
+                 
                 // remove faces
                 for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
                 {
