@@ -144,7 +144,11 @@ namespace OpenBve
             MainLoop.CheckForOpenGlError("MainLoop");
              
 #endif
-                       
+            if (Interface.CurrentOptions.UnloadUnusedTextures)
+            {
+                Renderer.UnloadUnusedTextures();
+                Renderer.LastBoundTexture = null;
+            }
             // finish
             try
             {

@@ -110,6 +110,7 @@
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
+    <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
