@@ -23,3 +23,4 @@ namespace OpenBve {
 		internal const string VersionSuffix = "";
 	}
 }
+
