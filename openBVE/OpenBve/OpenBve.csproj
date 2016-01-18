@@ -76,15 +76,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSScriptLibrary">
-      <HintPath>C:\Users\leeze_000\Desktop\cs-script\lib\CSScriptLibrary.dll</HintPath>
+      <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\opentk-develop\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
+      <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress.Unsigned, Version=0.11.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\leeze_000\Desktop\sharpcompress-master\bin\SharpCompress.Unsigned.dll</HintPath>
+      <HintPath>..\..\Dependencies\SharpCompress.Unsigned.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

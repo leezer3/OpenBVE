@@ -3,6 +3,7 @@
 	
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="D:\OBVE\SourceCode\openBVE\Tao.Sdl.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\leeze_000\Desktop\cs-script\lib\CSScriptLibrary.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark9/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/Housekeeping/Bookmarks/NumberedBookmarks/=Bookmark9/Coords/@EntryValue">(Doc Ln 266 Col 22)</s:String>

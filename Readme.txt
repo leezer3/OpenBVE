@@ -68,3 +68,7 @@ This is licenced under the Open Toolkit Library Licence, which may be found in O
 OpenBVE uses the CS Script Library for animation scripting.
 
 This is licened under the MIT Licence, which may be found in CSScriptLicence.txt
+
+OpenBVE uses SharpCompress for archive handling.
+
+This is licenced under the MIT Licence, which may be found in SharpCompressLicence.txt
