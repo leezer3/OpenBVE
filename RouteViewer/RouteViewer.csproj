@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenBveApi">
-      <HintPath>C:\Users\leeze_000\Desktop\Prail\OpenBveApi.dll</HintPath>
+      <HintPath>..\openBVE\OpenBveApi\bin\Debug\OpenBveApi.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
