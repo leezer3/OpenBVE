@@ -117,6 +117,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="System\Functions\CrashHandler.cs" />
+    <Compile Include="UserInterface\formAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formAbout.Designer.cs">
+      <DependentUpon>formAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formMain.Packages.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +141,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formAbout.resx">
+      <DependentUpon>formAbout.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formPackageInstall.resx">
       <DependentUpon>formPackageInstall.cs</DependentUpon>

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
+using ContentAlignment = System.Drawing.ContentAlignment;
 
 namespace OpenBve {
 	internal partial class formMain : Form {
@@ -1125,6 +1126,17 @@ namespace OpenBve {
             else
             {
                 checkBoxUnloadTextures.Enabled = true;
+            }
+        }
+
+	    internal formAbout AboutDialog;
+
+        private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (AboutDialog == null || AboutDialog.Visible == false)
+            {
+                AboutDialog = new formAbout();
+                AboutDialog.Show();
             }
         }
 

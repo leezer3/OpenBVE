@@ -273,6 +273,7 @@
             this.labelPackages = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.aboutLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -1239,7 +1240,7 @@
             this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
             this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
             this.labelFillerTwo.Name = "labelFillerTwo";
-            this.labelFillerTwo.Size = new System.Drawing.Size(160, 160);
+            this.labelFillerTwo.Size = new System.Drawing.Size(160, 144);
             this.labelFillerTwo.TabIndex = 2;
             // 
             // panelOptions
@@ -3097,13 +3098,14 @@
             // 
             this.panelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelInfo.BackColor = System.Drawing.Color.Gray;
+            this.panelInfo.Controls.Add(this.aboutLabel);
             this.panelInfo.Controls.Add(this.linkHomepage);
             this.panelInfo.Controls.Add(this.labelVersion);
             this.panelInfo.Controls.Add(this.labelInfoBottom);
             this.panelInfo.Controls.Add(this.labelInfoTop);
-            this.panelInfo.Location = new System.Drawing.Point(0, 490);
+            this.panelInfo.Location = new System.Drawing.Point(0, 477);
             this.panelInfo.Name = "panelInfo";
-            this.panelInfo.Size = new System.Drawing.Size(160, 48);
+            this.panelInfo.Size = new System.Drawing.Size(160, 61);
             this.panelInfo.TabIndex = 3;
             // 
             // linkHomepage
@@ -3141,7 +3143,7 @@
             // 
             this.labelInfoBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfoBottom.BackColor = System.Drawing.Color.White;
-            this.labelInfoBottom.Location = new System.Drawing.Point(0, 46);
+            this.labelInfoBottom.Location = new System.Drawing.Point(0, 59);
             this.labelInfoBottom.Name = "labelInfoBottom";
             this.labelInfoBottom.Size = new System.Drawing.Size(160, 2);
             this.labelInfoBottom.TabIndex = 5;
@@ -3386,6 +3388,23 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(643, 32);
             this.label15.TabIndex = 0;
+            // 
+            // aboutLabel
+            // 
+            this.aboutLabel.ActiveLinkColor = System.Drawing.Color.Crimson;
+            this.aboutLabel.AutoEllipsis = true;
+            this.aboutLabel.DisabledLinkColor = System.Drawing.Color.Silver;
+            this.aboutLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+            this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
+            this.aboutLabel.Location = new System.Drawing.Point(8, 40);
+            this.aboutLabel.Name = "aboutLabel";
+            this.aboutLabel.Size = new System.Drawing.Size(128, 16);
+            this.aboutLabel.TabIndex = 6;
+            this.aboutLabel.TabStop = true;
+            this.aboutLabel.Text = "About";
+            this.aboutLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.aboutLabel.VisitedLinkColor = System.Drawing.Color.Gold;
+            this.aboutLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLabel_LinkClicked);
             // 
             // formMain
             // 
@@ -3767,6 +3786,7 @@
         private System.Windows.Forms.CheckBox checkBoxEBAxis;
         private System.Windows.Forms.Button buttonControlReset;
         private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
+        private System.Windows.Forms.LinkLabel aboutLabel;
         
     }
 }
