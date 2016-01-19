@@ -49,9 +49,6 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenBveApi">
-      <HintPath>..\openBVE\OpenBveApi\bin\Debug\OpenBveApi.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\OpenTK.dll</HintPath>
@@ -127,6 +124,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+  </ItemGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\openBVE\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

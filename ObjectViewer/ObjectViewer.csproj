@@ -49,14 +49,16 @@
     <BaseAddress>4194304</BaseAddress>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+   <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="formOptions.cs">
       <SubType>Form</SubType>
@@ -91,19 +93,6 @@
     <Compile Include="WorldS.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OpenBveApi">
-      <HintPath>..\openBVE\OpenBveApi\bin\Debug\OpenBveApi.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="formMessages.resx">
       <DependentUpon>formMessages.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -116,5 +105,19 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
+      <ItemGroup>
+    <ProjectReference Include="..\openBVE\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup />
+    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>
