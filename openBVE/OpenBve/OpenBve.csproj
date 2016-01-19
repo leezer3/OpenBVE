@@ -74,6 +74,13 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <StartAction>Project</StartAction>
   </PropertyGroup>
+  <PropertyGroup>
+    <AllowedReferenceRelatedFileExtensions>
+        .pdb;
+        .xml;
+        .dll.config
+    </AllowedReferenceRelatedFileExtensions>
+</PropertyGroup>
   <ItemGroup>
     <Reference Include="CSScriptLibrary">
       <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>

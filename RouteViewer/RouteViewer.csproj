@@ -48,6 +48,13 @@
     <BaseAddress>4194304</BaseAddress>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
+  <PropertyGroup>
+    <AllowedReferenceRelatedFileExtensions>
+        .pdb;
+        .xml;
+        .dll.config
+    </AllowedReferenceRelatedFileExtensions>
+</PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
