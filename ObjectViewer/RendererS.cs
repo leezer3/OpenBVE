@@ -15,8 +15,8 @@ namespace OpenBve
     {
 
         // screen (output window)
-        internal static int ScreenWidth;
-        internal static int ScreenHeight;
+        internal static int ScreenWidth = 960;
+        internal static int ScreenHeight = 600;
 
         // first frame behavior
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
