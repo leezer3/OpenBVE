@@ -1241,6 +1241,8 @@ namespace OpenBve {
 
 		// load language
 		internal static void LoadLanguage(string File) {
+		    try
+		    {
 			string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
 			string Section = "";
 			InterfaceStrings = new InterfaceString[16];
@@ -1321,6 +1323,12 @@ namespace OpenBve {
 					}
 				}
 			}
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("An error occurred whilst attempting to load the selected language file.");
+                Environment.Exit(0);
+            }
 		}
 
 		// ================================

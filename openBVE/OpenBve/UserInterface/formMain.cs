@@ -120,7 +120,14 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
-			string[] flags = System.IO.Directory.GetFiles(flagsFolder);
+		    string[] flags = new string[] {};
+		    try
+		    {
+			    flags = System.IO.Directory.GetFiles(flagsFolder);
+            }
+            catch (Exception)
+            {
+            }
 			// route selection
 		    listviewRouteFiles.SmallImageList = new ImageList {TransparentColor = Color.White};
 		    if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
@@ -129,12 +136,18 @@ namespace OpenBve {
 			treeviewRouteAddOns.ImageList = new ImageList();
 			if (FolderIcon != null) treeviewRouteAddOns.ImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) treeviewRouteAddOns.ImageList.Images.Add("route", RouteIcon);
-			foreach (string flag in flags) {
-				try {
-					treeviewRouteAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag), Image.FromFile(flag));
-				} catch { }
-			}
-			listviewRouteFiles.Columns.Clear();
+		    foreach (string flag in flags)
+		    {
+		        try
+		        {
+		            treeviewRouteAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag),
+		                Image.FromFile(flag));
+		        }
+		        catch
+		        {
+		        }
+		    }
+		    listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
