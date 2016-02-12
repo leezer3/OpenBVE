@@ -76,13 +76,58 @@ namespace OpenBve {
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
+		    bool CommentStarted = false;
 			for (int i = 0; i < Lines.Length; i++) {
 				{
-					// strip away comments
-					int j = Lines[i].IndexOf(';');
-					if (j >= 0) {
-						Lines[i] = Lines[i].Substring(0, j);
-					}
+                    // Strip OpenBVE original standard comments
+                    int j = Lines[i].IndexOf(';');
+                    if (j >= 0)
+                    {
+                        Lines[i] = Lines[i].Substring(0, j);
+                    }
+                    // Strip double backslash comments
+                    int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
+                    if (k >= 0)
+                    {
+                        Lines[i] = Lines[i].Substring(0, k);
+                    }
+                    //Strip star backslash comments
+                    if (!CommentStarted)
+                    {
+                        int l = Lines[i].IndexOf("/*", StringComparison.Ordinal);
+                        if (l >= 0)
+                        {
+                            CommentStarted = true;
+                            string Part1 = Lines[i].Substring(0, l);
+                            int m = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+                            string Part2 = "";
+                            if (m >= 0)
+                            {
+                                Part2 = Lines[i].Substring(m + 2, Lines[i].Length - 2);
+                            }
+                            Lines[i] = String.Concat(Part1, Part2);
+                        }
+                    }
+                    else
+                    {
+                        int l = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+                        if (l >= 0)
+                        {
+                            CommentStarted = false;
+                            if (l + 2 != Lines[i].Length)
+                            {
+                                Lines[i] = Lines[i].Substring(l + 2, (Lines[i].Length - 2));
+                            }
+                            else
+                            {
+                                Lines[i] = "";
+                            }
+                        }
+                        else
+                        {
+                            Lines[i] = "";
+                        }
+                    }
 				}
 				// collect arguments
 				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);

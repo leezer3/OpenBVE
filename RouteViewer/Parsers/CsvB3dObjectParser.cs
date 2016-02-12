@@ -53,7 +53,8 @@ namespace OpenBve {
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeat">Whether to force TextureWrapMode.Repeat for referenced textures.</param>
+		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis.</param>
+        /// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis.</param>
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -68,13 +69,58 @@ namespace OpenBve {
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			World.Vector3Df[] Normals = new World.Vector3Df[4];
+		    bool CommentStarted = false;
 			for (int i = 0; i < Lines.Length; i++) {
 				{
-					// strip away comments
-					int j = Lines[i].IndexOf(';');
-					if (j >= 0) {
-						Lines[i] = Lines[i].Substring(0, j);
-					}
+                    // Strip OpenBVE original standard comments
+                    int j = Lines[i].IndexOf(';');
+                    if (j >= 0)
+                    {
+                        Lines[i] = Lines[i].Substring(0, j);
+                    }
+                    // Strip double backslash comments
+                    int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
+                    if (k >= 0)
+                    {
+                        Lines[i] = Lines[i].Substring(0, k);
+                    }
+                    //Strip star backslash comments
+                    if (!CommentStarted)
+                    {
+                        int l = Lines[i].IndexOf("/*", StringComparison.Ordinal);
+                        if (l >= 0)
+                        {
+                            CommentStarted = true;
+                            string Part1 = Lines[i].Substring(0, l);
+                            int m = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+                            string Part2 = "";
+                            if (m >= 0)
+                            {
+                                Part2 = Lines[i].Substring(m + 2, Lines[i].Length - 2);
+                            }
+                            Lines[i] = String.Concat(Part1, Part2);
+                        }
+                    }
+                    else
+                    {
+                        int l = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+                        if (l >= 0)
+                        {
+                            CommentStarted = false;
+                            if (l + 2 != Lines[i].Length)
+                            {
+                                Lines[i] = Lines[i].Substring(l + 2, (Lines[i].Length - 2));
+                            }
+                            else
+                            {
+                                Lines[i] = "";
+                            }
+                        }
+                        else
+                        {
+                            Lines[i] = "";
+                        }
+                    }
 				}
 				// collect arguments
 				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
