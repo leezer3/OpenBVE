@@ -13,7 +13,6 @@ namespace OpenBve
 {
     class OpenBVEGame: GameWindow
     {
-        public const string WindowTitle = "openBVE";
         /// <summary>The current time acceleration factor</summary>
         int TimeFactor = 1;
         double TotalTimeElapsedForInfo;
@@ -23,7 +22,7 @@ namespace OpenBve
         private double RenderTimeElapsed;
         private double RenderRealTimeElapsed;
         //We need to explicitly specify the default constructor
-        public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base (width,height,currentGraphicsMode,WindowTitle,@default)
+        public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, Interface.GetInterfaceString("program_title"), @default)
         {
             try
             {

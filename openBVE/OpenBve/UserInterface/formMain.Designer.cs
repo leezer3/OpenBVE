@@ -3428,7 +3428,7 @@
             this.KeyPreview = true;
             this.Name = "formMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "openBVE";
+            this.Text = Interface.GetInterfaceString("program_title");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
             this.Load += new System.EventHandler(this.formMain_Load);
             this.Shown += new System.EventHandler(this.formMain_Shown);

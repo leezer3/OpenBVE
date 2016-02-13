@@ -95,18 +95,18 @@ namespace OpenBve {
 					try {
 						AL.SpeedOfSound(343.0f);
 					} catch {
-                        MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_version"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                        MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_version"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return true;
 				}
 			    Alc.CloseDevice(OpenAlDevice);
 			    OpenAlDevice = IntPtr.Zero;
-                MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_context"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_context"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			    return false;
 			}
 		    OpenAlContext = ContextHandle.Zero;
-            MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), "openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		    return false;
 		}
 		

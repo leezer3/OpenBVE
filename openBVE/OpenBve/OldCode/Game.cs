@@ -434,10 +434,8 @@ namespace OpenBve {
 		internal static string LogRouteName = "";
 		internal static string LogTrainName = "";
 		internal static DateTime LogDateTime = DateTime.Now;
-		private static void AddScore(int Value, ScoreTextToken TextToken, double Duration) {
-			AddScore(Value, TextToken, Duration, true);
-		}
-		private static void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count) {
+
+	    private static void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count = true) {
 			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
 				int n = ScoreMessages.Length;
 				Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);

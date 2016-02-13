@@ -843,22 +843,29 @@ namespace OpenBve {
 				Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 			}
 			World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
-			AnimatedWorldObjects[a] = new AnimatedWorldObject();
-			AnimatedWorldObjects[a].Position = Position;
-			AnimatedWorldObjects[a].Direction = FinalTransformation.Z;
-			AnimatedWorldObjects[a].Up = FinalTransformation.Y;
-			AnimatedWorldObjects[a].Side = FinalTransformation.X;
-			AnimatedWorldObjects[a].Object = Prototype.Clone();
-			AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
+		    AnimatedWorldObjects[a] = new AnimatedWorldObject
+		    {
+		        Position = Position,
+		        Direction = FinalTransformation.Z,
+		        Up = FinalTransformation.Y,
+		        Side = FinalTransformation.X,
+		        Object = Prototype.Clone()
+		    };
+		    AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
 			AnimatedWorldObjects[a].SectionIndex = SectionIndex;
 			AnimatedWorldObjects[a].TrackPosition = TrackPosition;
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				if (AnimatedWorldObjects[a].Object.States[i].Object == null) {
-					AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject();
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Faces = new World.MeshFace[] { };
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials = new World.MeshMaterial[] { };
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices = new World.Vertex[] { };
-					AnimatedWorldObjects[a].Object.States[i].Object.RendererIndex = -1;
+				    AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
+				    {
+				        Mesh =
+				        {
+				            Faces = new World.MeshFace[] {},
+				            Materials = new World.MeshMaterial[] {},
+				            Vertices = new World.Vertex[] {}
+				        },
+				        RendererIndex = -1
+				    };
 				}
 			}
 			double r = 0.0;
@@ -1662,12 +1669,17 @@ namespace OpenBve {
 			if (a >= Objects.Length) {
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
-			Objects[a] = new StaticObject();
-			Objects[a].Mesh.Faces = new World.MeshFace[] { };
-			Objects[a].Mesh.Materials = new World.MeshMaterial[] { };
-			Objects[a].Mesh.Vertices = new World.Vertex[] { };
-			Objects[a].Dynamic = true;
-			ObjectsUsed++;
+		    Objects[a] = new StaticObject
+		    {
+		        Mesh =
+		        {
+		            Faces = new World.MeshFace[] {},
+		            Materials = new World.MeshMaterial[] {},
+		            Vertices = new World.Vertex[] {}
+		        },
+		        Dynamic = true
+		    };
+		    ObjectsUsed++;
 			return a;
 		}
 
