@@ -6249,7 +6249,7 @@ namespace OpenBve {
 								int distance = Math.Min(1048575, (int)Math.Round(TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + transponder.TrackPositionDelta));
 								unchecked {
 									int value = (int)((uint)speed | ((uint)distance << 12));
-									transponder.DontTriggerAnymore = true;
+                                    transponders.Add(new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
 								}
 							}
 						}
