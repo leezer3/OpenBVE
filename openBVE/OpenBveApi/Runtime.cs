@@ -593,15 +593,18 @@ namespace OpenBveApi.Runtime {
 	    private bool MyDisableTimeAcceleration;
         /// <summary>Stores the list of current stations.</summary>
 	    private readonly List<Station> MyStations;
+        /// <summary>The current camera view mode.</summary>
+	    private readonly CameraViewMode MyCameraViewMode;
 		// --- constructors ---
-		/// <summary>Creates a new instance of this class.</summary>
-		/// <param name="vehicle">The state of the train.</param>
-		/// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
-		/// <param name="handles">The virtual handles.</param>
-		/// <param name="totalTime">The current absolute time.</param>
-		/// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
-        /// <param name="stations">The current route's list of stations.</param>
-		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations) {
+	    /// <summary>Creates a new instance of this class.</summary>
+	    /// <param name="vehicle">The state of the train.</param>
+	    /// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
+	    /// <param name="handles">The virtual handles.</param>
+	    /// <param name="totalTime">The current absolute time.</param>
+	    /// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
+	    /// <param name="stations">The current route's list of stations.</param>
+	    /// <param name="cameraView">The current camera view mode</param>
+	    public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView) {
 			this.MyVehicle = vehicle;
 			this.MyPrecedingVehicle = precedingVehicle;
 			this.MyHandles = handles;
@@ -609,6 +612,7 @@ namespace OpenBveApi.Runtime {
 			this.MyElapsedTime = elapsedTime;
 			this.MyDebugMessage = null;
 		    this.MyStations = stations;
+		    this.MyCameraViewMode = cameraView;
 		}
 
 
@@ -673,6 +677,14 @@ namespace OpenBveApi.Runtime {
 	    {
 	        get { return this.MyStations; }
 	    }
+        /// <summary>Gets the current camera view mode.</summary>
+        public CameraViewMode CameraViewMode
+        {
+            get
+            {
+                return this.MyCameraViewMode;
+            }
+        }
 	}
 	
 	// --- key down / key up ---
@@ -769,9 +781,26 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The music horn. The numerical value of this constant is 2.</summary>
 		Music = 3
 	}
-	
-	
-	// --- door change ---
+
+    /// <summary>Represents the available camera view modes.</summary>
+    public enum CameraViewMode
+    {
+        /// <summary>The interior of a 2D cab</summary>
+        Interior,
+        /// <summary>The interior of a 3D cab</summary>
+        InteriorLookAhead,
+        /// <summary>An exterior camera attached to a train</summary>
+        Exterior,
+        /// <summary>A camera attached to the track</summary>
+        Track,
+        /// <summary>A fly-by camera attached to a point on the track</summary>
+        FlyBy,
+        /// <summary>A fly-by zooming camera attached to a point on the track</summary>
+        FlyByZooming
+    }
+
+
+    // --- door change ---
 	
 	/// <summary>Represents the state of the doors.</summary>
 	[Flags]

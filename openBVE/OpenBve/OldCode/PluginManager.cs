@@ -41,6 +41,8 @@ namespace OpenBve {
             //NEW: Whether this plugin can disable the time acceleration factor
 		    /// <summary>Whether this plugin can disable time acceleration.</summary>
 		    internal static bool DisableTimeAcceleration;
+            /// <summary>The current camera view mode</summary>
+		    internal OpenBveApi.Runtime.CameraViewMode CurrentCameraViewMode;
 
 		    private List<Station> currentRouteStations;
 		    internal bool StationsLoaded;
@@ -124,7 +126,13 @@ namespace OpenBve {
 				 * */
 				double totalTime = Game.SecondsSinceMidnight;
 				double elapsedTime = Game.SecondsSinceMidnight - LastTime;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, new Time(totalTime), new Time(elapsedTime), currentRouteStations);
+                /* 
+                 * Set the current camera view mode
+                 * Could probably do away with the CurrentCameraViewMode and use a direct cast??
+                 * 
+                 */
+			    CurrentCameraViewMode = (OpenBveApi.Runtime.CameraViewMode)World.CameraMode;
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
@@ -569,7 +577,8 @@ namespace OpenBve {
 			}
 			/*
 			 * Check if the plugin is a Win32 plugin.
-			 * */
+			 * 
+             */
 			try {
 				if (!CheckWin32Header(pluginFile)) {
 					Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
@@ -583,6 +592,11 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 				return false;
 			}
+		    if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
+		    {
+                Interface.AddMessage(Interface.MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
+		        return false;
+		    }
 			train.Plugin = new Win32Plugin(pluginFile, train);
 			if (train.Plugin.Load(specs, mode)) {
 				return true;
