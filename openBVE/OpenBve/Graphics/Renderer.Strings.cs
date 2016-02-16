@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 
@@ -8,6 +9,7 @@ namespace OpenBve {
 		// --- structures ---
 		
 		/// <summary>Represents the alignment of a text compared to a reference coordinate.</summary>
+		[Flags]
 		private enum TextAlignment {
 			/// <summary>The reference coordinate represents the top-left corner.</summary>
 			TopLeft = 1,

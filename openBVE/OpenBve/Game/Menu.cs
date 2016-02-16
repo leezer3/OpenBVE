@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
     internal static partial class Game
     {

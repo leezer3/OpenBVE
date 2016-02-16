@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace OpenBve {
+﻿namespace OpenBve {
 	/// <summary>Provides functions for dealing with joysticks.</summary>
 	internal static class Joysticks {
 		

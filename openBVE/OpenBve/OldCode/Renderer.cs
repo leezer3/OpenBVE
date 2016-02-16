@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using CSScriptLibrary;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics;
