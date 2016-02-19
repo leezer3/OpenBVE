@@ -1,4 +1,6 @@
 # git ignore file
 *.userprefs
+*.DotSettings.user
+*.suo
 bin/
 obj/

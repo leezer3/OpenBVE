@@ -1,7 +1,0 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:Boolean x:Key="/Default/RunConfigs/Config/=9A7AECB93D3A8945BF7A13902D1A3C33/@KeyIndexDefined">True</s:Boolean>
-	<s:String x:Key="/Default/RunConfigs/Config/=9A7AECB93D3A8945BF7A13902D1A3C33/Type/@EntryValue">project</s:String>
-	<s:String x:Key="/Default/RunConfigs/Config/=9A7AECB93D3A8945BF7A13902D1A3C33/Name/@EntryValue">ObjectViewer</s:String>
-	<s:String x:Key="/Default/RunConfigs/Config/=9A7AECB93D3A8945BF7A13902D1A3C33/ProjectGuid/@EntryValue">44F4E0F19AD07E488AFAB8223E0D8671</s:String>
-	<s:String x:Key="/Default/RunConfigs/Config/=9A7AECB93D3A8945BF7A13902D1A3C33/DefaultAction/@EntryValue">run</s:String>
-	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">9A7AECB93D3A8945BF7A13902D1A3C33</s:String></wpf:ResourceDictionary>
