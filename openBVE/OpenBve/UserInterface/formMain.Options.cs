@@ -20,7 +20,7 @@ namespace OpenBve {
 				#if !DEBUG
 				try {
 					#endif
-					Interface.LoadLanguage(LanguageFiles[i]);
+			        Interface.CurrentLanguageCode = Interface.AvailableLangauges[i].LanguageCode;
 					#if !DEBUG
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -29,8 +29,7 @@ namespace OpenBve {
 				#if !DEBUG
 				try {
 					#endif
-					string Flag = Interface.GetInterfaceString("language_flag");
-					string File = OpenBveApi.Path.CombineFile(Folder, Flag);
+                    string File = OpenBveApi.Path.CombineFile(Folder, Interface.AvailableLangauges[i].Flag);
 					if (!System.IO.File.Exists(File)) {
 						File = OpenBveApi.Path.CombineFile(Folder, "unknown.png");
 					}

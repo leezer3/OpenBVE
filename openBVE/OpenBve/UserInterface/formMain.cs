@@ -872,9 +872,11 @@ namespace OpenBve {
 				Array.Resize<string>(ref LanguageNames, n);
 				Array.Sort<string, string>(LanguageNames, LanguageFiles);
 				comboboxLanguages.Items.Clear();
-				for (int i = 0; i < n; i++) {
-					comboboxLanguages.Items.Add(LanguageNames[i]);
-				}
+                //Load all available languages
+                for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+                {
+                    comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
+                }
 			} else {
 				LanguageFiles = new string[] { };
 				comboboxLanguages.Items.Clear();

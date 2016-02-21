@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -132,11 +133,11 @@ namespace OpenBve {
 			// --- load language ---
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
-				string file = OpenBveApi.Path.CombineFile(folder, Interface.CurrentOptions.LanguageCode + ".cfg");
-				if (!System.IO.File.Exists(file)) {
-					file = OpenBveApi.Path.CombineFile(folder, "en-US.cfg");
-				}
-				Interface.LoadLanguage(file);
+                string[] LanguageFiles = Directory.GetFiles(folder, "*.cfg");
+			    foreach (var File in LanguageFiles)
+			    {
+			        Interface.AddLanguage(File);
+			    }
 			}
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();

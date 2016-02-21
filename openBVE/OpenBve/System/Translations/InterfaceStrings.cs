@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OpenBve
 {
     internal static partial class Interface
     {
-        private struct InterfaceString
+        /// <summary>Stores the current language-code</summary>
+        internal static string CurrentLanguageCode = "en-GB";
+
+        internal struct InterfaceString
         {
             /// <summary>The name of the string</summary>
             internal string Name;
@@ -34,29 +38,76 @@ namespace OpenBve
         /// <returns>The translated string</returns>
         internal static string GetInterfaceString(string Name)
         {
-            int n = Name.Length;
-            for (int k = 0; k < InterfaceStringCount; k++)
+            List<string> FallbackLanguages = new List<string>();
+            //First, we need to find the default langauge file
+            for (int i = 0; i < AvailableLangauges.Count; i++)
             {
-                int i;
-                if ((k & 1) == 0)
+                if (AvailableLangauges[i].LanguageCode == CurrentLanguageCode)
                 {
-                    i = (CurrentInterfaceStringIndex + (k >> 1) + InterfaceStringCount) % InterfaceStringCount;
-                }
-                else
-                {
-                    i = (CurrentInterfaceStringIndex - (k + 1 >> 1) + InterfaceStringCount) % InterfaceStringCount;
-                }
-                if (InterfaceStrings[i].Name.Length == n)
-                {
-                    if (InterfaceStrings[i].Name == Name)
+                    //Set the fallback languages
+                    FallbackLanguages = AvailableLangauges[i].FallbackCodes;
+                    int n = Name.Length;
+                    for (int k = 0; k < AvailableLangauges[i].InterfaceStringCount; k++)
                     {
-                        CurrentInterfaceStringIndex = (i + 1) % InterfaceStringCount;
-                        return InterfaceStrings[i].Text;
+                        int t;
+                        if ((k & 1) == 0)
+                        {
+                            t = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+                        }
+                        else
+                        {
+                            t = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+                        }
+                        if (AvailableLangauges[i].InterfaceStrings[t].Name.Length == n)
+                        {
+                            if (AvailableLangauges[i].InterfaceStrings[t].Name == Name)
+                            {
+                                CurrentInterfaceStringIndex = (t + 1) % AvailableLangauges[i].InterfaceStringCount;
+                                return AvailableLangauges[i].InterfaceStrings[t].Text;
+                            }
+                        }
                     }
                 }
             }
+            //OK, so that didn't work- Try the fallback languages
+            if (FallbackLanguages == null)
+            {
+                return Name;
+            }
+            for (int m = 0; m < FallbackLanguages.Count; m++)
+            {
+                for (int i = 0; i < AvailableLangauges.Count; i++)
+                {
+                    if (AvailableLangauges[i].LanguageCode == FallbackLanguages[m])
+                    {
+                        int j = Name.Length;
+                        for (int k = 0; k < AvailableLangauges[i].InterfaceStringCount; k++)
+                        {
+                            int l;
+                            if ((k & 1) == 0)
+                            {
+                                l = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+                            }
+                            else
+                            {
+                                l = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+                            }
+                            if (AvailableLangauges[i].InterfaceStrings[l].Name.Length == j)
+                            {
+                                if (AvailableLangauges[i].InterfaceStrings[l].Name == Name)
+                                {
+                                    CurrentInterfaceStringIndex = (l + 1) % AvailableLangauges[i].InterfaceStringCount;
+                                    //We found the string in a fallback language, so let's return it!
+                                    return AvailableLangauges[i].InterfaceStrings[l].Text;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             //Default return type-
-            //If the string does not exist in the current language, return the search string
+            //If the string does not exist in the current language or any of the fallback options, return the search string
             return Name;
         }
         /// <summary>The quick-reference strings displayed in-game</summary>
