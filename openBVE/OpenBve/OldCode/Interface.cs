@@ -1184,12 +1184,18 @@ namespace OpenBve {
 
 		// interface strings
 		private struct InterfaceString {
+            /// <summary>The name of the string</summary>
 			internal string Name;
+            /// <summary>The translated string text</summary>
 			internal string Text;
 		}
 		private static InterfaceString[] InterfaceStrings = new InterfaceString[16];
 		private static int InterfaceStringCount = 0;
 		private static int CurrentInterfaceStringIndex = 0;
+
+        /// <summary>Adds a translated user interface string to the current list</summary>
+        /// <param name="Name">The name of the string to add</param>
+        /// <param name="Text">The translated text of the string to add</param>
 		private static void AddInterfaceString(string Name, string Text) {
 			if (InterfaceStringCount >= InterfaceStrings.Length) {
 				Array.Resize<InterfaceString>(ref InterfaceStrings, InterfaceStrings.Length << 1);
@@ -1198,6 +1204,10 @@ namespace OpenBve {
 			InterfaceStrings[InterfaceStringCount].Text = Text;
 			InterfaceStringCount++;
 		}
+
+        /// <summary>Fetches a translated user interface string</summary>
+        /// <param name="Name">The name of the string to fetch</param>
+        /// <returns>The translated string</returns>
 		internal static string GetInterfaceString(string Name) {
 			int n = Name.Length;
 			for (int k = 0; k < InterfaceStringCount; k++) {
@@ -1214,8 +1224,11 @@ namespace OpenBve {
 					}
 				}
 			}
+            //Default return type-
+            //If the string does not exist in the current language, return the search string
 			return Name;
 		}
+        /// <summary>The quick-reference strings displayed in-game</summary>
 		internal struct InterfaceQuickReference {
 			internal string HandleForward;
 			internal string HandleNeutral;
@@ -1376,15 +1389,13 @@ namespace OpenBve {
             RouteInformation
 
 		}
-        /// <summary>
-        /// Converts the specified security command to a virtual key.
-        /// </summary>
+        /// <summary>Converts the specified security command to a virtual key.</summary>
         /// <returns>Virtual key for plugins.</returns>
         /// <param name="cmd">Security command. If this isn't security command, ArgumentException will be thrown.</param>
         internal static VirtualKeys SecurityToVirtualKey(Command cmd)
         {
             string cmdname = Enum.GetName(typeof(Command), cmd);
-            if (cmdname == null) throw new ArgumentNullException("cmdname");
+            if (cmdname == null) throw new ArgumentNullException("cmd");
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
             VirtualKeys key;
@@ -2402,15 +2413,24 @@ namespace OpenBve {
 
 		// ================================
 
-		// encodings
+		/// <summary>The understood character encodings</summary>
 		internal enum Encoding {
+            /// <summary>The character encoding is unknown</summary>
 			Unknown = 0,
+            /// <summary>UTF-8</summary>
 			Utf8 = 1,
+            /// <summary>UTF-16LE</summary>
 			Utf16Le = 2,
+            /// <summary>UTF-16BE</summary>
 			Utf16Be = 3,
+            /// <summary>UTF-32LE</summary>
 			Utf32Le = 4,
+            /// <summary>UTF-32BE</summary>
 			Utf32Be = 5,
 		}
+        /// <summary>Gets the character endcoding of a file</summary>
+        /// <param name="File">The absolute path to a file</param>
+        /// <returns>The character encoding, or unknown</returns>
 		internal static Encoding GetEncodingFromFile(string File) {
 			try {
 				byte[] Data = System.IO.File.ReadAllBytes(File);
@@ -2430,7 +2450,12 @@ namespace OpenBve {
 				return Encoding.Unknown;
 			}
 		}
-		internal static Encoding GetEncodingFromFile(string Folder, string File) {
+
+	    /// <summary>Gets the character endcoding of a file within a folder</summary>
+	    /// <param name="Folder">The absolute path to the folder containing the file</param>
+	    /// <param name="File">The filename</param>
+	    /// <returns>The character encoding, or unknown</returns>
+	    internal static Encoding GetEncodingFromFile(string Folder, string File) {
 			return GetEncodingFromFile(OpenBveApi.Path.CombineFile(Folder, File));
 		}
 
@@ -2479,7 +2504,10 @@ namespace OpenBve {
 			return false;
 		}
 
-		// try parse time
+		/// <summary>Parses a string into OpenBVE's internal time representation (Seconds since midnight on the first day)</summary>
+		/// <param name="Expression">The time in string format</param>
+		/// <param name="Value">The number of seconds since midnight on the first day this represents, updated via 'out'</param>
+		/// <returns>True if the parse succeeds, false if it does not</returns>
 		internal static bool TryParseTime(string Expression, out double Value) {
 			Expression = TrimInside(Expression);
 			if (Expression.Length != 0) {
@@ -2513,7 +2541,10 @@ namespace OpenBve {
 			return false;
 		}
 
-		// try parse hex color
+		/// <summary>Parses a hexadecimal string into a Color24</summary>
+		/// <param name="Expression">The color in hexadecimal format</param>
+		/// <param name="Color">The Color24, updated via 'out'</param>
+		/// <returns>True if the parse succeds, false if it does not</returns>
 		internal static bool TryParseHexColor(string Expression, out Color24 Color) {
 			if (Expression.StartsWith("#")) {
 				string a = Expression.Substring(1).TrimStart();
@@ -2619,7 +2650,9 @@ namespace OpenBve {
 			} return Builder.ToString();
 		}
 
-		// is japanese
+		/// <summary>Determines whether the specified string is encoded using Shift_JIS (Japanese)</summary>
+		/// <param name="Name">The string to check</param>
+        /// <returns>True if Shift_JIS encoded, false otherwise</returns>
 		internal static bool IsJapanese(string Name) {
 			for (int i = 0; i < Name.Length; i++) {
 				int a = char.ConvertToUtf32(Name, i);
@@ -2641,7 +2674,9 @@ namespace OpenBve {
 			} return true;
 		}
 
-		// unescape
+		/// <summary>Unescapes control characters used in a language file</summary>
+		/// <param name="Text">The raw string on which unescaping should be performed</param>
+		/// <returns>The unescaped string</returns>
 		internal static string Unescape(string Text) {
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Text.Length);
 			int Start = 0;
@@ -2711,9 +2746,9 @@ namespace OpenBve {
 			return Builder.ToString();
 		}
 
-		// ================================
-
-		// convert newlines to crlf
+		/// <summary>Converts various line-endings to CR-LF format</summary>
+		/// <param name="Text">The string for which all line-endings should be converted to CR-LF</param>
+		/// <returns>The converted StringBuilder</returns>
 		internal static string ConvertNewlinesToCrLf(string Text) {
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			for (int i = 0; i < Text.Length; i++) {
@@ -2826,7 +2861,9 @@ namespace OpenBve {
 //			return GetCorrectedFolderName(System.IO.Path.Combine(SafeFolderPart, GetCorrectedPathSeparation(UnsafeFolderPart)));
 //		}
 		
-		// contains invalid path characters
+		/// <summary>Tests whether a string contains characters invalid for use in a file name or path</summary>
+		/// <param name="Expression">The string to test</param>
+		/// <returns>True if this string contains invalid characters, false otherwise</returns>
 		internal static bool ContainsInvalidPathChars(string Expression) {
 			char[] a = System.IO.Path.GetInvalidFileNameChars();
 			char[] b = System.IO.Path.GetInvalidPathChars();
