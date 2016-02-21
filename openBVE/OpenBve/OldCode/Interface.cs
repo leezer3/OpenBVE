@@ -7,7 +7,7 @@ using OpenBveApi.Runtime;
 using OpenTK.Input;
 
 namespace OpenBve {
-	internal static class Interface {
+	internal static partial class Interface {
 
 		// messages
 		internal enum MessageType {
@@ -1183,240 +1183,17 @@ namespace OpenBve {
 		// ================================
 
 		// interface strings
-		private struct InterfaceString {
-            /// <summary>The name of the string</summary>
-			internal string Name;
-            /// <summary>The translated string text</summary>
-			internal string Text;
-		}
-		private static InterfaceString[] InterfaceStrings = new InterfaceString[16];
-		private static int InterfaceStringCount = 0;
-		private static int CurrentInterfaceStringIndex = 0;
-
-        /// <summary>Adds a translated user interface string to the current list</summary>
-        /// <param name="Name">The name of the string to add</param>
-        /// <param name="Text">The translated text of the string to add</param>
-		private static void AddInterfaceString(string Name, string Text) {
-			if (InterfaceStringCount >= InterfaceStrings.Length) {
-				Array.Resize<InterfaceString>(ref InterfaceStrings, InterfaceStrings.Length << 1);
-			}
-			InterfaceStrings[InterfaceStringCount].Name = Name;
-			InterfaceStrings[InterfaceStringCount].Text = Text;
-			InterfaceStringCount++;
-		}
-
-        /// <summary>Fetches a translated user interface string</summary>
-        /// <param name="Name">The name of the string to fetch</param>
-        /// <returns>The translated string</returns>
-		internal static string GetInterfaceString(string Name) {
-			int n = Name.Length;
-			for (int k = 0; k < InterfaceStringCount; k++) {
-				int i;
-				if ((k & 1) == 0) {
-					i = (CurrentInterfaceStringIndex + (k >> 1) + InterfaceStringCount) % InterfaceStringCount;
-				} else {
-					i = (CurrentInterfaceStringIndex - (k + 1 >> 1) + InterfaceStringCount) % InterfaceStringCount;
-				}
-				if (InterfaceStrings[i].Name.Length == n) {
-					if (InterfaceStrings[i].Name == Name) {
-						CurrentInterfaceStringIndex = (i + 1) % InterfaceStringCount;
-						return InterfaceStrings[i].Text;
-					}
-				}
-			}
-            //Default return type-
-            //If the string does not exist in the current language, return the search string
-			return Name;
-		}
-        /// <summary>The quick-reference strings displayed in-game</summary>
-		internal struct InterfaceQuickReference {
-			internal string HandleForward;
-			internal string HandleNeutral;
-			internal string HandleBackward;
-			internal string HandlePower;
-			internal string HandlePowerNull;
-			internal string HandleBrake;
-			internal string HandleBrakeNull;
-			internal string HandleRelease;
-			internal string HandleLap;
-			internal string HandleService;
-			internal string HandleEmergency;
-			internal string HandleHoldBrake;
-			internal string DoorsLeft;
-			internal string DoorsRight;
-			internal string Score;
-		}
-		internal static InterfaceQuickReference QuickReferences;
-		internal static int RatingsCount = 10;
-
-	    internal static string CurrentControl;
-	    internal static string CurrentControlDescription;
+		
 
 		// load language
-		internal static void LoadLanguage(string File) {
-		    try
-		    {
-			string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
-			string Section = "";
-			InterfaceStrings = new InterfaceString[16];
-			InterfaceStringCount = 0;
-			QuickReferences.HandleForward = "F";
-			QuickReferences.HandleNeutral = "N";
-			QuickReferences.HandleBackward = "B";
-			QuickReferences.HandlePower = "P";
-			QuickReferences.HandlePowerNull = "N";
-			QuickReferences.HandleBrake = "B";
-			QuickReferences.HandleBrakeNull = "N";
-			QuickReferences.HandleRelease = "RL";
-			QuickReferences.HandleLap = "LP";
-			QuickReferences.HandleService = "SV";
-			QuickReferences.HandleEmergency = "EM";
-			QuickReferences.HandleHoldBrake = "HB";
-			QuickReferences.DoorsLeft = "L";
-			QuickReferences.DoorsRight = "R";
-			QuickReferences.Score = "Score: ";
-			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim();
-				if (!Lines[i].StartsWith(";")) {
-					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
-					} else {
-						int j = Lines[i].IndexOf('=');
-						if (j >= 0) {
-							string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-							string b = Interface.Unescape(Lines[i].Substring(j + 1).TrimStart());
-							switch (Section) {
-								case "handles":
-									switch (a) {
-											case "forward": Interface.QuickReferences.HandleForward = b; break;
-											case "neutral": Interface.QuickReferences.HandleNeutral = b; break;
-											case "backward": Interface.QuickReferences.HandleBackward = b; break;
-											case "power": Interface.QuickReferences.HandlePower = b; break;
-											case "powernull": Interface.QuickReferences.HandlePowerNull = b; break;
-											case "brake": Interface.QuickReferences.HandleBrake = b; break;
-											case "brakenull": Interface.QuickReferences.HandleBrakeNull = b; break;
-											case "release": Interface.QuickReferences.HandleRelease = b; break;
-											case "lap": Interface.QuickReferences.HandleLap = b; break;
-											case "service": Interface.QuickReferences.HandleService = b; break;
-											case "emergency": Interface.QuickReferences.HandleEmergency = b; break;
-											case "holdbrake": Interface.QuickReferences.HandleHoldBrake = b; break;
-									} break;
-								case "doors":
-									switch (a) {
-											case "left": Interface.QuickReferences.DoorsLeft = b; break;
-											case "right": Interface.QuickReferences.DoorsRight = b; break;
-									} break;
-								case "misc":
-									switch (a) {
-											case "score": Interface.QuickReferences.Score = b; break;
-									} break;
-								case "commands":
-									{
-										for (int k = 0; k < CommandInfos.Length; k++) {
-											if (string.Compare(CommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0) {
-												CommandInfos[k].Description = b;
-												break;
-											}
-										}
-									} break;
-								case "keys":
-									{
-										for (int k = 0; k < Keys.Length; k++) {
-											if (string.Compare(Keys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0) {
-												Keys[k].Description = b;
-												break;
-											}
-										}
-									} break;
-								default:
-									AddInterfaceString(Section + "_" + a, b);
-									break;
-							}
-						}
-					}
-				}
-			}
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("An error occurred whilst attempting to load the selected language file.");
-                Environment.Exit(0);
-            }
-		}
+		
 
 		// ================================
 
-		// commands
-		internal enum Command {
-			None = 0,
-			PowerIncrease, PowerDecrease, PowerHalfAxis, PowerFullAxis,
-			BrakeIncrease, BrakeDecrease, BrakeEmergency, BrakeHalfAxis, BrakeFullAxis,
-			SinglePower, SingleNeutral, SingleBrake, SingleEmergency, SingleFullAxis,
-			ReverserForward, ReverserBackward, ReverserFullAxis,
-			DoorsLeft, DoorsRight,
-			HornPrimary, HornSecondary, HornMusic,
-			DeviceConstSpeed,
-			SecurityS, SecurityA1, SecurityA2, SecurityB1, SecurityB2, SecurityC1, SecurityC2,
-            SecurityD, SecurityE, SecurityF, SecurityG, SecurityH, SecurityI, SecurityJ, SecurityK, SecurityL, SecurityM,
-            SecurityN, SecurityO, SecurityP,
-			CameraInterior, CameraExterior, CameraTrack, CameraFlyBy,
-			CameraMoveForward, CameraMoveBackward, CameraMoveLeft, CameraMoveRight, CameraMoveUp, CameraMoveDown,
-			CameraRotateLeft, CameraRotateRight, CameraRotateUp, CameraRotateDown, CameraRotateCCW, CameraRotateCW,
-			CameraZoomIn, CameraZoomOut, CameraPreviousPOI, CameraNextPOI, CameraReset, CameraRestriction,
-			TimetableToggle, TimetableUp, TimetableDown,
-			MiscClock, MiscSpeed, MiscFps, MiscAI, MiscInterfaceMode, MiscBackfaceCulling, MiscCPUMode,
-			MiscTimeFactor, MiscPause, MiscMute, MiscFullscreen, MiscQuit,
-			MenuActivate, MenuUp, MenuDown, MenuEnter, MenuBack,
-			DebugWireframe, DebugNormals, DebugBrakeSystems,
-            /* 
-             * These keys were added in 1.4.4.0
-             * Plugins should refer to these rather than the deprecated Security keys
-             * Doing this means that key assignments can be changed globally for all locomotives
-             * that support this method, rather than the haphazard and non-standard use
-             * of the security keys
-             * 
-             */
+		
 
-            //Common Keys
-            WiperSpeedUp,WiperSpeedDown,FillFuel,
-            //Steam locomotive
-            LiveSteamInjector,ExhaustSteamInjector,IncreaseCutoff,DecreaseCutoff,Blowers,
-            //Diesel Locomotive
-            EngineStart,EngineStop,GearUp,GearDown,
-            //Electric Locomotive
-            RaisePantograph,LowerPantograph,MainBreaker,
-            //Other
-            RouteInformation
-
-		}
-        /// <summary>Converts the specified security command to a virtual key.</summary>
-        /// <returns>Virtual key for plugins.</returns>
-        /// <param name="cmd">Security command. If this isn't security command, ArgumentException will be thrown.</param>
-        internal static VirtualKeys SecurityToVirtualKey(Command cmd)
-        {
-            string cmdname = Enum.GetName(typeof(Command), cmd);
-            if (cmdname == null) throw new ArgumentNullException("cmd");
-			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
-				cmdname = cmdname.Substring(8).ToUpperInvariant();
-            VirtualKeys key;
-            if (!Enum.TryParse(cmdname, out key))
-				throw new ArgumentException("VirtualKeys does not contain following key: " +
-					cmdname, "cmd");
-            return key;
-        }
-		internal enum CommandType { Digital, AnalogHalf, AnalogFull }
-		internal struct CommandInfo {
-			internal Command Command;
-			internal CommandType Type;
-			internal string Name;
-			internal string Description;
-			internal CommandInfo(Command Command, CommandType Type, string Name) {
-				this.Command = Command;
-				this.Type = Type;
-				this.Name = Name;
-				this.Description = "N/A";
-			}
-		}
+		
+		
 
 		// key infos
 		internal struct KeyInfo {
@@ -1568,42 +1345,7 @@ namespace OpenBve {
 		};
 
 		// controls
-		internal enum ControlMethod {
-			Invalid = 0,
-			Keyboard = 1,
-			Joystick = 2
-		}
-
-	    [Flags]
-	    internal enum KeyboardModifier {
-			None = 0,
-			Shift = 1,
-			Ctrl = 2,
-			Alt = 4
-		}
-		internal enum JoystickComponent { Invalid, Axis, FullAxis, Ball, Hat, Button }
-		internal enum DigitalControlState {
-			ReleasedAcknowledged = 0,
-			Released = 1,
-			Pressed = 2,
-			PressedAcknowledged = 3
-		}
-		internal struct Control {
-			internal Command Command;
-			internal CommandType InheritedType;
-			internal ControlMethod Method;
-			internal KeyboardModifier Modifier;
-			internal int Device;
-			internal JoystickComponent Component;
-		    internal int Element;
-		    internal bool Pressed;
-			internal int Direction;
-			internal DigitalControlState DigitalState;
-			internal double AnalogState;
-            internal Key Key;
-		    internal string LastState;
-		    internal bool JoystickPressed;
-		}
+		
 
 		// control descriptions
 		internal static string[] ControlDescriptions = new string[] { };
@@ -2568,6 +2310,11 @@ namespace OpenBve {
 				return false;
 			}
 		}
+
+        /// <summary>Parses a hexadecimal string into a Color32</summary>
+        /// <param name="Expression">The color in hexadecimal format</param>
+        /// <param name="Color">The Color32, updated via 'out'</param>
+        /// <returns>True if the parse succeds, false if it does not</returns>
 		internal static bool TryParseHexColor(string Expression, out Color32 Color) {
 			if (Expression.StartsWith("#")) {
 				string a = Expression.Substring(1).TrimStart();

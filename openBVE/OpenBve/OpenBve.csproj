@@ -80,7 +80,7 @@
         .xml;
         .dll.config
     </AllowedReferenceRelatedFileExtensions>
-</PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSScriptLibrary">
       <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
@@ -124,6 +124,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="System\Functions\CrashHandler.cs" />
+    <Compile Include="System\Input\Commands.cs" />
+    <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Translations\InterfaceStrings.cs" />
+    <Compile Include="System\Translations\LanguageFile.cs" />
     <Compile Include="UserInterface\formAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -302,6 +306,7 @@
       <Name>OpenBveApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
