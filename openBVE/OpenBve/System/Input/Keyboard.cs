@@ -13,35 +13,9 @@ namespace OpenBve
             if (e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
             if (e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
             if (e.Alt) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
-            if (Game.CurrentInterface == Game.InterfaceType.CustomiseControl)
+			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
             {
-                //We now need to change the control reference & return.....
-                Game.MenuEntry[] a = Game.CurrentMenu;
-                int j = Game.CurrentMenuSelection.Length - 1;
-                {
-                    int k = 0;
-                    while (k < j)
-                    {
-                        Game.MenuSubmenu b = a[Game.CurrentMenuSelection[k]] as Game.MenuSubmenu;
-                        if (b == null) break;
-                        a = b.Entries;
-                        k++;
-                    }
-                }
-                if (a[Game.CurrentMenuSelection[j]] is Game.MenuCommand)
-                {
-                    // command
-                    Game.MenuCommand b = (Game.MenuCommand) a[Game.CurrentMenuSelection[j]];
-                    if (b.Tag == Game.MenuTag.Control)
-                    {
-                        //Set control
-                        Interface.CurrentControls[b.Data].Method = Interface.ControlMethod.Keyboard;
-                        Interface.CurrentControls[b.Data].Key = e.Key;
-                        Interface.CurrentControls[b.Data].Modifier = CurrentKeyboardModifier;
-                    }
-                    Game.CurrentInterface = Game.InterfaceType.Menu;
-                    Interface.SaveControls(null);
-                }
+				Game.Menu.SetControlKbdCustomData(e.Key, CurrentKeyboardModifier);
                 return;
             }
             //Traverse the controls array

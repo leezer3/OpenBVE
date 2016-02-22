@@ -28,10 +28,9 @@
             Pause,
             /// <summary>The game is currently showing a menu</summary>
             Menu,
-            /// <summary>The game is currently customising a control</summary>
-            CustomiseControl
         }
         /// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
-        internal static InterfaceType CurrentInterface = InterfaceType.Normal;
+        internal static InterfaceType	CurrentInterface	= InterfaceType.Normal;
+		internal static Menu			Menu				= Menu.Instance;
     }
 }

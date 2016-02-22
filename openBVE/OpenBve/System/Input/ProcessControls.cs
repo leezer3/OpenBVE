@@ -32,12 +32,10 @@ namespace OpenBve
                                         Game.CurrentInterface = Game.InterfaceType.Normal;
                                         break;
                                     case Interface.Command.MenuActivate:
-                                        Game.CreateMenu(false);
-                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+										Game.Menu.PushMenu(Menu.MenuType.Top);
                                         break;
                                     case Interface.Command.MiscQuit:
-                                        Game.CreateMenu(true);
-                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+										Game.Menu.PushMenu(Menu.MenuType.Quit);
                                         break;
                                     case Interface.Command.MiscFullscreen:
                                         Screen.ToggleFullscreen();
@@ -51,250 +49,24 @@ namespace OpenBve
                         }
                     }
                     break;
-                case Game.InterfaceType.CustomiseControl:
-
+/*
+				case Game.InterfaceType.CustomiseControl:
                     break;
-                case Game.InterfaceType.Menu:
-                    // menu
-                    for (int i = 0; i < Interface.CurrentControls.Length; i++)
-                    {
-                        if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.Digital)
-                        {
-                            if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Pressed)
-                            {
-                                Interface.CurrentControls[i].DigitalState =
-                                    Interface.DigitalControlState.PressedAcknowledged;
-                                switch (Interface.CurrentControls[i].Command)
-                                {
-                                    case Interface.Command.MenuUp:
-                                    {
-                                        // up
-                                        Game.MenuEntry[] a = Game.CurrentMenu;
-                                        int j = Game.CurrentMenuSelection.Length - 1;
-                                        int k = 0;
-                                        while (k < j)
-                                        {
-                                            Game.MenuSubmenu b = a[Game.CurrentMenuSelection[k]] as Game.MenuSubmenu;
-                                            if (b == null) break;
-                                            a = b.Entries;
-                                            k++;
-                                        }
-                                        if (Game.CurrentMenuSelection[j] > 0 &&
-                                            !(a[Game.CurrentMenuSelection[j] - 1] is Game.MenuCaption))
-                                        {
-                                            Game.CurrentMenuSelection[j]--;
-                                        }
-                                    }
-                                        break;
-                                    case Interface.Command.MenuDown:
-                                    {
-                                        // down
-                                        Game.MenuEntry[] a = Game.CurrentMenu;
-                                        int j = Game.CurrentMenuSelection.Length - 1;
-                                        int k = 0;
-                                        while (k < j)
-                                        {
-                                            Game.MenuSubmenu b = a[Game.CurrentMenuSelection[k]] as Game.MenuSubmenu;
-                                            if (b == null) break;
-                                            a = b.Entries;
-                                            k++;
-                                        }
-                                        if (Game.CurrentMenuSelection[j] < a.Length - 1)
-                                        {
-                                            Game.CurrentMenuSelection[j]++;
-                                        }
-                                    }
-                                        break;
-                                    case Interface.Command.MenuEnter:
-                                    {
-                                        // enter
-                                        Game.MenuEntry[] a = Game.CurrentMenu;
-                                        int j = Game.CurrentMenuSelection.Length - 1;
-                                        {
-                                            int k = 0;
-                                            while (k < j)
-                                            {
-                                                Game.MenuSubmenu b = a[Game.CurrentMenuSelection[k]] as Game.MenuSubmenu;
-                                                if (b == null) break;
-                                                a = b.Entries;
-                                                k++;
-                                            }
-                                        }
-                                        if (a[Game.CurrentMenuSelection[j]] is Game.MenuCommand)
-                                        {
-                                            // command
-                                            Game.MenuCommand b = (Game.MenuCommand) a[Game.CurrentMenuSelection[j]];
-                                            switch (b.Tag)
-                                            {
-                                                case Game.MenuTag.Back:
-                                                    // back
-                                                    if (Game.CurrentMenuSelection.Length <= 1)
-                                                    {
-                                                        Game.CurrentInterface = Game.InterfaceType.Normal;
-                                                    }
-                                                    else
-                                                    {
-                                                        Array.Resize<int>(ref Game.CurrentMenuSelection,
-                                                            Game.CurrentMenuSelection.Length - 1);
-                                                        Array.Resize<double>(ref Game.CurrentMenuOffsets,
-                                                            Game.CurrentMenuOffsets.Length - 1);
-                                                    }
-                                                    break;
-                                                case Game.MenuTag.JumpToStation:
-                                                    // jump to station
-                                                    TrainManager.JumpTrain(TrainManager.PlayerTrain, b.Data);
-                                                    break;
-                                                case Game.MenuTag.ExitToMainMenu:
-                                                    Program.RestartArguments = Interface.CurrentOptions.GameMode ==
-                                                                               Interface.GameMode.Arcade
-                                                        ? "/review"
-                                                        : "";
-                                                    Quit = true;
-                                                    break;
-                                                case Game.MenuTag.Quit:
-                                                    // quit
-                                                    Quit = true;
-                                                    break;
-                                                case Game.MenuTag.Control:
-                                                    // Set control information for string render
-                                                    Interface.Control loadedControl = Interface.CurrentControls[b.Data];
-                                                    for (int h = 0; h < Interface.CommandInfos.Length; h++)
-                                                    {
-                                                        if (Interface.CommandInfos[h].Command == loadedControl.Command)
-                                                        {
-                                                            Interface.CurrentControlDescription =
-                                                                Interface.CommandInfos[h].Description;
+*/
+				case Game.InterfaceType.Menu:			// MENU
+					for (int i = 0; i < Interface.CurrentControls.Length; i++)
+					{
+						if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.Digital
+								&& Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Pressed)
+						{
+							Interface.CurrentControls[i].DigitalState =
+									Interface.DigitalControlState.PressedAcknowledged;
+							Game.Menu.ProcessCommand(Interface.CurrentControls[i].Command, TimeElapsed);
+						}
+					}
+					break;
 
-                                                        }
-                                                    }
-                                                    switch (Interface.CurrentControls[b.Data].Method)
-                                                    {
-                                                        case Interface.ControlMethod.Keyboard:
-                                                            if (loadedControl.Modifier != Interface.KeyboardModifier.None)
-                                                            {
-                                                                Interface.CurrentControl = "Keyboard: " + loadedControl.Modifier + "-" + loadedControl.Key;
-                                                            }
-                                                            else
-                                                            {
-                                                                Interface.CurrentControl = "Keyboard: " + loadedControl.Key;
-                                                            }
-                                                            break;
-                                                        case Interface.ControlMethod.Joystick:
-                                                            string Direction;
-                                                            if (loadedControl.Direction == 1)
-                                                            {
-                                                                Direction = "Positive Direction";
-                                                            }
-                                                            else
-                                                            {
-                                                                Direction = "Negative Direction";
-                                                            }
-                                                            switch (loadedControl.Component)
-                                                            {
-                                                                case Interface.JoystickComponent.FullAxis:
-                                                                case Interface.JoystickComponent.Axis:
-                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element + " " + Direction;
-                                                                    break;
-                                                                case Interface.JoystickComponent.Button:
-                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element;
-                                                                    break;
-                                                                case Interface.JoystickComponent.Hat:
-                                                                    Interface.CurrentControl = "Joystick " + loadedControl.Device + ": " + loadedControl.Component + " " + loadedControl.Element + " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
-                                                                    break;
-                                                                case Interface.JoystickComponent.Invalid:
-                                                                    Interface.CurrentControl = "N/A";
-                                                                    break;
-
-                                                            }
-                                                            break;
-                                                        case Interface.ControlMethod.Invalid:
-                                                            Interface.CurrentControl = "N/A";
-                                                            break;
-                                                    }
-                                                    Game.CurrentInterface = Game.InterfaceType.CustomiseControl;
-                                                    break;
-                                            }
-                                        }
-                                        else if (a[Game.CurrentMenuSelection[j]] is Game.MenuSubmenu)
-                                        {
-                                            // menu
-                                            Game.MenuSubmenu b = (Game.MenuSubmenu) a[Game.CurrentMenuSelection[j]];
-                                            int n = Game.CurrentMenuSelection.Length;
-                                            Array.Resize<int>(ref Game.CurrentMenuSelection, n + 1);
-                                            Array.Resize<double>(ref Game.CurrentMenuOffsets, n + 1);
-                                            /* Select the first non-caption entry. */
-                                            int selection;
-                                            for (selection = 0; selection < b.Entries.Length; selection++)
-                                            {
-                                                if (!(b.Entries[selection] is Game.MenuCaption)) break;
-                                            }
-                                            /* Select the next station if this menu has stations in it. */
-                                            int station = TrainManager.PlayerTrain.LastStation;
-                                            if (TrainManager.PlayerTrain.Station == -1 |
-                                                TrainManager.PlayerTrain.StationState !=
-                                                TrainManager.TrainStopState.Pending)
-                                            {
-                                                for (int k = station + 1; k < Game.Stations.Length; k++)
-                                                {
-                                                    if (Game.StopsAtStation(k, TrainManager.PlayerTrain))
-                                                    {
-                                                        station = k;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            for (int k = selection + 1; k < b.Entries.Length; k++)
-                                            {
-                                                Game.MenuCommand c = b.Entries[k] as Game.MenuCommand;
-                                                if (c != null && c.Tag == Game.MenuTag.JumpToStation)
-                                                {
-                                                    if (c.Data <= station)
-                                                    {
-                                                        selection = k;
-                                                    }
-                                                }
-                                            }
-                                            Game.CurrentMenuSelection[n] = selection < b.Entries.Length ? selection : 0;
-                                            Game.CurrentMenuOffsets[n] = double.NegativeInfinity;
-                                            a = b.Entries;
-                                            for (int h = 0; h < a.Length; h++)
-                                            {
-                                                a[h].Highlight = h == 0 ? 1.0 : 0.0;
-                                                a[h].Alpha = 0.0;
-                                            }
-                                        }
-                                    }
-                                        break;
-                                    case Interface.Command.MenuBack:
-                                        // back
-                                        if (Game.CurrentMenuSelection.Length <= 1)
-                                        {
-                                            Game.CurrentInterface = Game.InterfaceType.Normal;
-                                        }
-                                        else
-                                        {
-                                            Array.Resize<int>(ref Game.CurrentMenuSelection,
-                                                Game.CurrentMenuSelection.Length - 1);
-                                            Array.Resize<double>(ref Game.CurrentMenuOffsets,
-                                                Game.CurrentMenuOffsets.Length - 1);
-                                        }
-                                        break;
-                                    case Interface.Command.MiscFullscreen:
-                                        // fullscreen
-                                        Screen.ToggleFullscreen();
-                                        break;
-                                    case Interface.Command.MiscMute:
-                                        // mute
-                                        Sounds.GlobalMute = !Sounds.GlobalMute;
-                                        Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
-                                        break;
-
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case Game.InterfaceType.Normal:
+				case Game.InterfaceType.Normal:
                     // normal
                     for (int i = 0; i < Interface.CurrentControls.Length; i++)
                     {
@@ -764,8 +536,7 @@ namespace OpenBve
                                 {
                                     case Interface.Command.MiscQuit:
                                         // quit
-                                        Game.CreateMenu(true);
-                                        Game.CurrentInterface = Game.InterfaceType.Menu;
+										Game.Menu.PushMenu(Menu.MenuType.Quit);
                                         break;
                                     case Interface.Command.CameraInterior:
                                         // camera: interior
@@ -1656,9 +1427,8 @@ namespace OpenBve
                                         break;
                                     case Interface.Command.MenuActivate:
                                         // menu
-                                        Game.CreateMenu(false);
-                                        Game.CurrentInterface = Game.InterfaceType.Menu;
-                                        break;
+										Game.Menu.PushMenu(Menu.MenuType.Top);
+										break;
                                     case Interface.Command.MiscPause:
                                         // pause
                                         Game.CurrentInterface = Game.InterfaceType.Pause;

@@ -9,11 +9,11 @@ namespace OpenBve
     internal static partial class Renderer
     {
 
-        private static void RenderOverlayTexture(Textures.Texture texture, double left, double top, double right, double bottom)
+        internal static void RenderOverlayTexture(Textures.Texture texture, double left, double top, double right, double bottom)
         {
             DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
         }
-        private static void RenderOverlaySolid(double left, double top, double right, double bottom)
+        internal static void RenderOverlaySolid(double left, double top, double right, double bottom)
         {
             DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
         }

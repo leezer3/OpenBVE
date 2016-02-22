@@ -132,7 +132,5 @@ namespace OpenBve
         internal static InterfaceQuickReference QuickReferences;
         internal static int RatingsCount = 10;
 
-        internal static string CurrentControl;
-        internal static string CurrentControlDescription;
     }
 }
