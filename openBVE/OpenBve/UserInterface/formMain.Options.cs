@@ -42,7 +42,7 @@ namespace OpenBve {
 					#if !DEBUG
 				} catch { }
 				#endif
-				ApplyLanguage();
+				ApplyLanguage(Interface.CurrentLanguageCode);
 				TextboxRouteFilterTextChanged(null, null);
 				TextboxTrainFilterTextChanged(null, null);
 			}

@@ -356,7 +356,7 @@ namespace OpenBve {
 						#endif
 						string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
 						Interface.LoadLanguage(File);
-						ApplyLanguage();
+						ApplyLanguage(Interface.CurrentLanguageCode);
 						#if !DEBUG
 					} catch (Exception ex) {
 						MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -381,7 +381,17 @@ namespace OpenBve {
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
-		private void ApplyLanguage() {
+		private void ApplyLanguage(string Language) {
+            //Set command infos to the translated strings
+		    for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+		    {
+                //This is a hack, but the commandinfos are used in too many places to twiddle with easily
+		        if (Interface.AvailableLangauges[i].LanguageCode == Language)
+		        {
+		            Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
+		            break;
+		        }
+		    }
             /*
              * Localisation for strings in main panel
              */

@@ -134,6 +134,8 @@ namespace OpenBve {
                 string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
                 string Section = "";
                 InterfaceString[] LoadedStrings = new InterfaceString[16];
+                CommandInfo[] LoadedCommands = new CommandInfo[Interface.CommandInfos.Length];
+                Array.Copy(Interface.CommandInfos, LoadedCommands, Interface.CommandInfos.Length);
                 var LoadedStringCount = 0;
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -182,11 +184,11 @@ namespace OpenBve {
                                         } break;
                                     case "commands":
                                         {
-                                            for (int k = 0; k < CommandInfos.Length; k++)
+                                            for (int k = 0; k < LoadedCommands.Length; k++)
                                             {
-                                                if (string.Compare(CommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                if (string.Compare(LoadedCommands[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
                                                 {
-                                                    CommandInfos[k].Description = b;
+                                                    LoadedCommands[k].Description = b;
                                                     break;
                                                 }
                                             }
@@ -230,6 +232,7 @@ namespace OpenBve {
                     }
                 }
                 newLanguage.InterfaceStrings = LoadedStrings;
+                newLanguage.CommandInfos = LoadedCommands;
                 newLanguage.InterfaceStringCount = LoadedStringCount;
                 //We should always fall-back to en-US as the last-resort before failing to load a string
                 newLanguage.FallbackCodes.Add("en-US");
@@ -247,6 +250,8 @@ namespace OpenBve {
 	    {
             /// <summary>The interface strings for this language</summary>
 	        internal InterfaceString[] InterfaceStrings;
+            /// <summary>The command information strings for this language</summary>
+	        internal CommandInfo[] CommandInfos;
 
 	        internal int InterfaceStringCount;
             /// <summary>The language name</summary>
