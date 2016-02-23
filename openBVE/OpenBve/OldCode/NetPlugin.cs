@@ -17,7 +17,9 @@ namespace OpenBve {
 		}
 		
 		// --- members ---
+        /// <summary>The absolute on-disk path of the plugin's folder</summary>
 		private readonly string PluginFolder;
+        /// <summary>The absolute on-disk path of the train's folder</summary>
 		private readonly string TrainFolder;
 		private readonly IRuntime Api;
 		private SoundHandleEx[] SoundHandles;
@@ -262,6 +264,12 @@ namespace OpenBve {
 			}
 			#endif
 		}
+        /// <summary>May be called from a .Net plugin, in order to play a sound from the driver's car of a train</summary>
+        /// <param name="index">The plugin-based of the sound to play</param>
+        /// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
+        /// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
+        /// <param name="looped">Whether the sound is looped</param>
+        /// <returns>The sound handle, or null if not successful</returns>
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped) {
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null) {
 				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
@@ -277,6 +285,34 @@ namespace OpenBve {
 				return null;
 			}
 		}
+
+	    /// <summary>May be called from a .Net plugin, in order to play a sound from a specific car of a train</summary>
+	    /// <param name="index">The plugin-based of the sound to play</param>
+        /// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>
+        /// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
+	    /// <param name="looped">Whether the sound is looped</param>
+	    /// <param name="CarIndex">The index of the car which is to emit the sound</param>
+	    /// <returns>The sound handle, or null if not successful</returns>
+	    internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped, int CarIndex)
+        {
+            if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < this.Train.Cars.Length && CarIndex >= 0)
+            {
+                Sounds.SoundBuffer buffer = this.Train.Cars[CarIndex].Sounds.Plugin[index].Buffer;
+                OpenBveApi.Math.Vector3 position = this.Train.Cars[CarIndex].Sounds.Plugin[index].Position;
+                Sounds.SoundSource source = Sounds.PlaySound(buffer, pitch, volume, position, this.Train, CarIndex, looped);
+                if (this.SoundHandlesCount == this.SoundHandles.Length)
+                {
+                    Array.Resize<SoundHandleEx>(ref this.SoundHandles, this.SoundHandles.Length << 1);
+                }
+                this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, source);
+                this.SoundHandlesCount++;
+                return this.SoundHandles[this.SoundHandlesCount - 1];
+            }
+            else
+            {
+                return null;
+            }
+        }
 	}
 	
 }
