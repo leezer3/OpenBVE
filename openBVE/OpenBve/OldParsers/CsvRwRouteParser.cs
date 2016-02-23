@@ -239,15 +239,13 @@ namespace OpenBve {
             return string.Equals(System.IO.Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
         }
 
-        internal static bool customLoadScreen;
-
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
 		    Game.UnitOfSpeed = "km/h";
 		    Game.SpeedConversionFactor = 0.0;
 		    Game.RouteInformation.RouteBriefing = null;
-		    customLoadScreen = false;
+//		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			RouteData Data = new RouteData();
 			Data.BlockInterval = 25.0;
@@ -508,10 +506,10 @@ namespace OpenBve {
 			if (Loading.Cancel) return;
 			ApplyRouteData(FileName, Encoding, ref Data, PreviewOnly);
 
-		    if (PreviewOnly == true && customLoadScreen == false)
-		    {
-		        Renderer.TextureLogo = null;
-		    }
+//		    if (PreviewOnly == true && customLoadScreen == false)
+//		    {
+//		        Renderer.TextureLogo = null;
+//		    }
 		}
 
 		// ================================
@@ -1804,15 +1802,12 @@ namespace OpenBve {
                                     else
                                     {
                                         string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
-                                        if (!System.IO.File.Exists(f))
-                                        {
-                                            Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-                                        }
-                                        else
-                                        {
-                                            Textures.RegisterTexture(f, out Renderer.TextureLogo);
-                                            customLoadScreen = true;
-                                        }
+									if (!System.IO.File.Exists (f))
+									{
+										Interface.AddMessage (Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions [j].Line.ToString (Culture) + ", column " + Expressions [j].Column.ToString (Culture) + " in file " + Expressions [j].File);
+									}
+									else
+										Renderer.SetLoadingBkg(f);
                                     }
 							        break;
                                 //Sets a custom unit of speed to to displayed in on-screen messages

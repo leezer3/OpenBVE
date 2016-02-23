@@ -72,7 +72,8 @@ namespace OpenBve
         private static double FadeToBlackDueToChangeEnds = 0.0;
 
         // textures
-        internal static Textures.Texture TextureLogo = null;
+//		internal static Textures.Texture	TextureLoadingBkg	= null;
+//        internal static Textures.Texture	TextureLogo			= null;
 
         // constants
         private const float inv255 = 1.0f / 255.0f;       
