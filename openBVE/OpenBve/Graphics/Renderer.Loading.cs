@@ -11,17 +11,23 @@ namespace OpenBve {
 		 * This file contains the drawing routines for the loading screen
 		 * -------------------------------------------------------------- */
 
-//		private static Color128	ColourBackground	= new Color128(0.39f, 0.39f, 0.39f, 1.00f);
+		// the components of the screen background colour
+		private const float		bkgR				= 0.5f;
+		private const float		bkgG				= 0.5f;
+		private const float		bkgB				= 0.5f;
+		private const float		bkgA				= 1.00f;
 		// the openBVE yellow
 		private static Color128	ColourProgressBar	= new Color128(1.00f, 0.69f, 0.00f, 1.00f);
+		// the percentage to lower the logo centre from the screen top (currently set at the golden ratio)
+		private const double	logoCentreYFactor	= 0.381966;
 		private const int		progrBorder			= 1;
 		private const int		progrMargin			= 24;
-		private const int		numOfLoadingBkgs	= 2;
+		private const int		numOfLoadingBkgs	= 7;
 
 		private static bool				customLoadScreen	= false;
 		private static Textures.Texture	TextureLoadingBkg	= null;
 		private static Textures.Texture	TextureLogo			= null;
-		private static string			LogoFileName		= "logo_512.png";
+		private static string[]			LogoFileName		= {"logo_256.png", "logo_512.png", "logo_1024.png"};
 
 		//
 		// INIT LOADING RESOURCES
@@ -36,12 +42,15 @@ namespace OpenBve {
 				int bkgNo = Program.RandomNumberGenerator.Next (numOfLoadingBkgs);
 				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_"+bkgNo+".png"),
 					out TextureLoadingBkg);
-				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_1.png"),
-					out TextureLoadingBkg);
 			}
 			if (Renderer.TextureLogo == null)
 			{
-				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, LogoFileName), out TextureLogo);
+				// choose logo size according to screen width
+				string	fName;
+				if (Screen.Width > 2048)		fName	= LogoFileName[2];
+				else if (Screen.Width > 1024)	fName	= LogoFileName[1];
+				else							fName	= LogoFileName[0];
+				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), out TextureLogo);
 			}
 		}
 
@@ -73,7 +82,12 @@ namespace OpenBve {
 			}
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.PushMatrix();
-//			int		blankHeight;
+			// fill the screen with background colour
+			GL.Color4(bkgR, bkgG, bkgB, bkgA);
+			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+
+			// BACKGROUND IMAGE
 			int		bkgHeight, bkgWidth;
 			int		fontHeight	= (int)Fonts.SmallFont.FontSize;
 			int		logoBottom;
@@ -96,42 +110,50 @@ namespace OpenBve {
 			DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth) / 2, 0),
 				new Size(bkgWidth, bkgHeight), Color128.White);
 			// if the route has no custom loading image, add the openBVE logo
-			// (the route custom image is lodaded in OldParsers/CsvRwRouteParser.cs)
+			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				// place the centre of the logo at the golden ratio of the screen height
-				int logoTop	= (int)(Screen.Height * 0.381966 - TextureLogo.Height / 2);
+				// place the centre of the logo at from the screen top
+				int logoTop	= (int)(Screen.Height * logoCentreYFactor - TextureLogo.Height / 2);
 				logoBottom	= logoTop + TextureLogo.Height;
 				DrawRectangle(TextureLogo,
 					new Point((Screen.Width - TextureLogo.Width) / 2, logoTop),
 					new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 			}
 			else
+			{
+					// if custom route image, no logo and leave a conventional black area below the potential logo
+			}
 				logoBottom	= Screen.Height / 2;
 			if (!bkgLoaded)				// if the background texture not yet loaded, do nothing else
 				return;
 			// take the height remaining below the logo and divide in 3 horiz. parts
 			int	blankHeight	= (Screen.Height - logoBottom) / 3;
+
+			// VERSION NUMBER
+			// place the version above the first division
 			int	versionTop	= logoBottom + blankHeight - fontHeight;
-			// draw version number and web site URL
 			DrawString(Fonts.SmallFont, "Version " + typeof(Renderer).Assembly.GetName().Version,
 				new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
-			// for the moment, do not show any URL
+			// for the moment, do not show any URL; would go right below the first division
 //			DrawString(Fonts.SmallFont, "https://sites.google.com/site/openbvesim/home",
 //				new Point(halfWidth, versionTop + fontHeight+2),
 //				TextAlignment.TopMiddle, Color128.White);
-			// draw progress message and bar
+
+			// PROGRESS MESSAGE AND BAR
+			// place progress bar right below the second division
 			int		progressTop		= Screen.Height - blankHeight;
 			int		progressWidth	= Screen.Width - progrMargin * 2;
 			double	routeProgress	= Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
 			double	trainProgress	= Math.Max(0.0, Math.Min(1.0, Loading.TrainProgress));
+			// draw progress message right above the second division
 			string	text			= Interface.GetInterfaceString(
 				routeProgress < 1.0 ? "loading_loading_route" :
 				(trainProgress < 1.0 ? "loading_loading_train" : "message_loading") );
 			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6),
 				TextAlignment.TopMiddle, Color128.White);
 			// sum of route progress and train progress arrives up to 2.0:
-			// => 50.0 * to convert to %
+			// => times 50.0 to convert to %
 			double	percent	= 50.0 * (routeProgress + trainProgress);
 			string	percStr	= percent.ToString("0") + "%";
 			// progress frame
@@ -143,8 +165,8 @@ namespace OpenBve {
 			// progress percent
 			DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop),
 				TextAlignment.TopMiddle, Color128.Black);
-			GL.PopMatrix();             
+			GL.PopMatrix();
 		}
-		
+
 	}
 }
