@@ -1025,7 +1025,7 @@ namespace OpenBve {
 					}
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
-						RenderKeys(4.0, 52.0, 24.0, Keys);
+						RenderKeys(4.0, 72.0, 24.0, Keys);
 						RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 message recently generated.", -1, 1.0f, 0.5f, 0.5f, true);
 					} else if (Interface.MessageCount > 1) {
 						Keys = new string[][] { new string[] { "F9" } };
