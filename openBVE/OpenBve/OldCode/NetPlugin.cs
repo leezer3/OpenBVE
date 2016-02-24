@@ -22,10 +22,17 @@ namespace OpenBve {
         /// <summary>The absolute on-disk path of the train's folder</summary>
 		private readonly string TrainFolder;
 		private readonly IRuntime Api;
+        /// <summary>An array containing all of the plugin's current sound handles</summary>
 		private SoundHandleEx[] SoundHandles;
+        /// <summary>The total number of sound handles currently in use</summary>
 		private int SoundHandlesCount;
 		
 		// --- constructors ---
+        /// <summary>Initialises a new instance of a .Net based plugin</summary>
+        /// <param name="pluginFile">The absolute on-disk path of the plugin to load</param>
+        /// <param name="trainFolder">The absolute on-disk path of the train's folder</param>
+        /// <param name="api">The base OpenBVE runtime interface</param>
+        /// <param name="train">The base train</param>
 		internal NetPlugin(string pluginFile, string trainFolder, IRuntime api, TrainManager.Train train) {
 			base.PluginTitle = System.IO.Path.GetFileName(pluginFile);
 			base.PluginValid = true;

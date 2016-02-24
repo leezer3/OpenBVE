@@ -389,9 +389,11 @@ namespace OpenBve {
 		        if (Interface.AvailableLangauges[i].LanguageCode == Language)
 		        {
 		            Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
+		            Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
 		            break;
 		        }
 		    }
+            
             /*
              * Localisation for strings in main panel
              */

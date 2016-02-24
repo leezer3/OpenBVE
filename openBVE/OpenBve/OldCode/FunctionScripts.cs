@@ -2498,14 +2498,18 @@ namespace OpenBve {
 		// mathematical functions
 		private static double Log(double X) {
 			if (X <= 0.0) {
-				return 0.0; /// ComplexInfinity or NonReal
+                //If X is less than or equal to 0.0 Log will return ComplexInfinity/ NonReal
+                //Therefore, return 0.0
+			    return 0.0;
 			} else {
 				return Math.Log(X);
 			}
 		}
 		private static double Sqrt(double X) {
 			if (X < 0.0) {
-				return 0.0; /// NonReal
+                //If X is less than or equal to 0.0 Sqrt will return NonReal
+                //Therefore, return 0.0
+				return 0.0;
 			} else {
 				return Math.Sqrt(X);
 			}
@@ -2515,7 +2519,9 @@ namespace OpenBve {
 			double d = c - Math.Floor(c) - 0.5;
 			double e = Math.Floor(X >= 0.0 ? X : -X) * 1.38462643383279E-16;
 			if (d >= -e & d <= e) {
-				return 0.0; /// ComplexInfinity
+                //If X is less than or equal to 0.0 Tan will return NonReal
+                //Therefore, return 0.0
+                return 0.0;
 			} else {
 				return Math.Tan(X);
 			}
