@@ -6,20 +6,47 @@ using System.Drawing;
 
 namespace OpenBve
 {
+	/********************
+		MENU CLASS
+	*********************
+	Implements the in-game menu system; manages addition and removal of individual menus.
+	Implemented as a singleton.
+	Keeps a stack of menus, allowing navigating forward and back */
+
 	public sealed class Menu
 	{
 		public enum MenuTag		{ None, Caption, MenuBack, MenuJumpToStation, MenuExitToMainMenu, MenuControls, MenuQuit,
 			BackToSim, JumpToStation, ExitToMainMenu, Quit, Control };
 		public enum MenuType	{ None, Top, JumpToStation, ExitToMainMenu, Controls, Control, Quit };
 
+		// components of the semi-transparent screen overlay
+		private const float					ovlR			= 0.00f;
+		private const float					ovlG			= 0.00f;
+		private const float					ovlB			= 0.00f;
+		private const float					ovlA			= 0.20f;
+		// components of the menu background colour
+		private const float					bkgMenuR		= 0.00f;
+		private const float					bkgMenuG		= 0.00f;
+		private const float					bkgMenuB		= 0.00f;
+		private const float					bkgMenuA		= 1.00f;
+		// components of the highlighted item background
+		private const float					bkgHgltR		= 1.00f;
+		private const float					bkgHgltG		= 0.69f;
+		private const float					bkgHgltB		= 0.00f;
+		private const float					bkgHgltA		= 1.00f;
+		// text colours
 		private static readonly Color128	ColourCaption	= new Color128(0.750f, 0.750f, 0.875f, 1.0f);
 		private static readonly Color128	ColourDimmed	= new Color128(1.000f, 1.000f, 1.000f, 0.5f);
-		private static readonly Color128	ColourHighlight	= new Color128(1.000f, 1.000f, 0.000f, 1.0f);
-		private static readonly Color128	ColourNormal	= new Color128(1.000f, 1.000f, 1.000f, 1.0f);
+		private static readonly Color128	ColourHighlight	= Color128.Black;
+		private static readonly Color128	ColourNormal	= Color128.White;
 
-		private const int					MenuBorderX		= 8;
-		private const int					MenuBorderY		= 2;
-		private const int					MenuLineHeight	= 28;
+		// some sizes and constants
+		// TODO: make borders Menu fields dependent on font size
+		private const int					MenuBorderX		= 16;
+		private const int					MenuBorderY		= 16;
+		private const int					MenuItemBorderX	= 8;
+		private const int					MenuItemBorderY	= 2;
+		private const float					LineSpacing		= 1.75f;	// the ratio between the font size and line distance
 		private const int					SelectionNone	= -1;
 
 		/********************
@@ -63,8 +90,9 @@ namespace OpenBve
 			/********************
 				MENU FIELDS
 			*********************/
-			public MenuEntry[]				Items		= { };
 			public Renderer.TextAlignment	Align;
+			public MenuEntry[]				Items		= { };
+			public int						ItemWidth	= 0;
 			public int						Height		= 0;
 			public int						Selection	= SelectionNone;
 			public int						TopItem;			// the top displayed menu item
@@ -207,11 +235,13 @@ namespace OpenBve
 				// compute menu extent
 				for (i = 0; i < Items.Length; i++)
 				{
-					size = Renderer.MeasureString(Fonts.NormalFont, Items [i].Text);
+					size = Renderer.MeasureString(Game.Menu.MenuFont, Items [i].Text);
 					if (size.Width > Width)
-						Width	= size.Width;
+						Width		= size.Width;
+					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
+						ItemWidth	= size.Width;
 				}
-				Height	= Items.Length * MenuLineHeight;
+				Height	= Items.Length * Game.Menu.LineHeight;
 				TopItem	= 0;
 			}
 
@@ -220,10 +250,17 @@ namespace OpenBve
 		/********************
 			MENU SYSTEM FIELDS
 		*********************/
-		private SingleMenu[]	Menus					= { };
-		private int				CurrMenu				= -1;
-		private bool			IsCustomisingControl	= false;
-		private int				CustomControlIdx;
+		private		int					CurrMenu				= -1;
+		private		int					em;
+		private		int					lineHeight;
+		private		SingleMenu[]		Menus					= { };
+		private		Fonts.OpenGlFont	menuFont				= null;
+		private		bool				IsCustomisingControl	= false;
+		private		bool				IsInitialized			= false;
+		private		int					CustomControlIdx;	// the index of the control being customized
+		// properties (to allow read-only access to some fields)
+		internal	int					LineHeight				{ get { return lineHeight; } }
+		internal	Fonts.OpenGlFont	MenuFont 				{ get { return menuFont; } }
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
@@ -238,12 +275,31 @@ namespace OpenBve
 			MENU SYSTEM METHODS
 		*********************/
 		//
+		// INITIALIZE THE MENU SYSTEM
+		//
+		private void Init()
+		{
+			Reset();
+			// choose the text font size according to screen height
+			// the boundaries follow approximately the progression
+			// of font sizes defined in Graphics/Fonts.cs
+			if (Screen.Height <= 512)		menuFont	= Fonts.SmallFont;
+			else if (Screen.Height <= 680)	menuFont	= Fonts.NormalFont;
+			else if (Screen.Height <= 890)	menuFont	= Fonts.LargeFont;
+			else if (Screen.Height <= 1150)	menuFont	= Fonts.VeryLargeFont;
+			else 							menuFont	= Fonts.EvenLargerFont;
+			em				= (int)menuFont.FontSize;
+			lineHeight		= (int)(em * LineSpacing);
+			IsInitialized	= true;
+		}
+
+		//
 		// RESET MENU SYSTEM TO INITIAL CONDITIONS
 		//
 		private void Reset()
 		{
 			CurrMenu	= -1;
-			Menus		= new SingleMenu[0];
+			Menus		= new SingleMenu[] { };
 		}
 
 		//
@@ -251,6 +307,8 @@ namespace OpenBve
 		//
 		public void PushMenu(MenuType type, int data = 0)
 		{
+			if (!IsInitialized)
+				Init ();
 			CurrMenu++;
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
@@ -416,62 +474,80 @@ namespace OpenBve
 
 			SingleMenu menu	= Menus[CurrMenu];
 			// overlay background
-			GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
+			GL.Color4(ovlR, ovlG, ovlB, ovlA);
 			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
-			// centre the menu in the main window
-			int		menuX				= (Screen.Width - menu.Width) / 2;	// menu left margin
-			// if menu alignment is left, align items on menu left margin, otherwise centre them in the screen
-			int		itemX				= (menu.Align & Renderer.TextAlignment.Left) != 0 ? menuX : Screen.Width / 2;
-			int		itemY				= (Screen.Height- menu.Height)/ 2;
+			// HORIZONTAL PLACEMENT: centre the menu in the main window
+			int		menuXmin			= (Screen.Width - menu.Width) / 2;		// menu left edge (border excluded)
+			int		menuXmax			= menuXmin + menu.Width;				// menu right edge (border excluded)
+			int		itemLeft			= (Screen.Width - menu.ItemWidth) / 2;	// item left edge
+			// if menu alignment is left, left-align items, otherwise centre them in the screen
+			int		itemX				= (menu.Align & Renderer.TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
+			// VERTICAL PLACEMENT: centre the menu in the main window
+			int		menuYmin			= (Screen.Height- menu.Height)/ 2;		// menu top edge (border excluded)
+			int		menuYmax			= menuYmin + menu.Height;				// menu bottom edge (border excluded)
+			int		itemY				= menuYmin;								// item top edge
 			// assume all items fit in the screen
 			int		visibleItems		= menu.Items.Length;
 			int		menuBottomItem		= visibleItems - 1;
 
 			// if there are more items than can fit in the screen height,
-			// (assuming at least an empty line at the top and at the bottom of the menu)
-			if (itemY < MenuLineHeight+MenuBorderY)
+			// (there should be at least room for the menu top border)
+			if (menuYmin < MenuBorderY)
 			{
-				int	numOfLines	= Screen.Height / MenuLineHeight;	// the number of lines which fit in the screen
+				// the number of lines which fit in the screen
+				int	numOfLines	= (Screen.Height - MenuBorderY*2) / lineHeight;
 				visibleItems	= numOfLines - 2;					// at least an empty line at the top and at the bottom
 				// split the menu in chunks of 'visibleItems' items
 				// and display the chunk which contains the currently selected item
 				menu.TopItem	= menu.Selection - (menu.Selection % visibleItems);
-				visibleItems	= menu.Items.Length - menu.TopItem < visibleItems ?	// in the last chunk, only
-					menu.Items.Length - menu.TopItem : visibleItems;				// display remaining items
+				visibleItems	= menu.Items.Length - menu.TopItem < visibleItems ?	// in the last chunk,
+					menu.Items.Length - menu.TopItem : visibleItems;				// display remaining items only
 				menuBottomItem	= menu.TopItem + visibleItems - 1;
-				// if not starting from the top of the menu, draw a dimmed ellipsis item
-				if (menu.TopItem > 0)
-					Renderer.DrawString(Fonts.NormalFont, "...", new System.Drawing.Point(itemX, 0),
-						Renderer.TextAlignment.TopLeft, ColourDimmed, false);
+				menuYmin			= (Screen.Height - numOfLines*lineHeight) / 2;
+				menuYmax			= menuYmin + numOfLines * lineHeight;
 				// first menu item is drawn on second line
-				itemY			= MenuLineHeight;
+				// first line is empty on first screnn and contains an ellipsis on following sreens
+				itemY			= menuYmin + lineHeight;
 			}
+
+			// draw the menu background
+			GL.Color4(bkgMenuR, bkgMenuG, bkgMenuB, bkgMenuA);
+			Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
+				menuXmax + MenuBorderX, menuYmax + MenuBorderY);
+
+			// if not starting from the top of the menu, draw a dimmed ellipsis item
+			if (menu.TopItem > 0)
+				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, menuYmin),
+					menu.Align, ColourDimmed, false);
+			// draw the items
 			for (i = menu.TopItem; i <= menuBottomItem; i++)
 			{
 				if (i == menu.Selection)
 				{
-					// draw a solid black rectangle under the text
-					GL.Color4(0.0f, 0.0f, 0.0f, 1.0f);
-					Renderer.RenderOverlaySolid(menuX-MenuBorderX, itemY-MenuBorderY,
-						menuX+menu.Width+MenuBorderX*2, itemY+MenuLineHeight-MenuBorderY);
+					// draw a solid highlight rectangle under the text
+					// HACK! the highlight rectangle has to be shifted a little down to match
+					// the text body. OpenGL 'feature'?
+					GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+					Renderer.RenderOverlaySolid(itemLeft-MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+						itemLeft+menu.ItemWidth+MenuItemBorderX, itemY+em+MenuItemBorderY*2);
 					// draw the text
-					Renderer.DrawString(Fonts.NormalFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Renderer.DrawString(Fonts.NormalFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Renderer.DrawString(Fonts.NormalFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
-				itemY += MenuLineHeight;
+				itemY += lineHeight;
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Renderer.DrawString(Fonts.NormalFont, "...", new System.Drawing.Point(itemX, itemY),
-					Renderer.TextAlignment.TopLeft, ColourDimmed, false);
+				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, itemY),
+					menu.Align, ColourDimmed, false);
 		}
 	}
 
