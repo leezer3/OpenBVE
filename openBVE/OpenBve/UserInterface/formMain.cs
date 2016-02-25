@@ -1138,7 +1138,7 @@ namespace OpenBve {
 
         private void buttonInstallRoute_Click(object sender, EventArgs e)
         {
-            var PackageInstallForm = new formPackageInstall();
+            var PackageInstallForm = new formPackageInstall(this);
             PackageInstallForm.ShowDialog();
         }
 

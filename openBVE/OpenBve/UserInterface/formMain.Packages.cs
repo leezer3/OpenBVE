@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace OpenBve
@@ -13,14 +10,8 @@ namespace OpenBve
         /// <summary>Defines an OpenBVE Package</summary>
         internal class Package
         {
-            /// <summary>The overarching version number</summary>
-            internal int Version = 0;
-            /// <summary>The major version</summary>
-            internal int MajorVersion = 0;
-            /// <summary>The minor version</summary>
-            internal int MinorVersion = 0;
-            /// <summary>The revision number</summary>
-            internal int Revision = 0;
+            /// <summary>The package version</summary>
+            internal Version PackageVersion;
             /// <summary>The package name</summary>
             internal string Name = "";
             /// <summary>The package author</summary>
@@ -33,8 +24,51 @@ namespace OpenBve
             internal int PackageType;
         }
 
-        internal List<Package> InstalledRoutes = new List<Package>();
-        internal List<Package> InstalledTrains = new List<Package>();
+        
+
+        internal static List<Package> InstalledRoutes = new List<Package>();
+        internal static List<Package> InstalledTrains = new List<Package>();
+
+        
+        internal void RefreshPackages()
+        {
+            SavePackages();
+            LoadRoutePackages();
+            PopulatePackageList();
+        }
+
+        /// <summary>Call this method to save the package list to disk.</summary>
+        internal void SavePackages()
+        {
+            var PackageDatabase = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "packages.xml");
+            File.Delete(PackageDatabase);
+            using (StreamWriter sw = new StreamWriter(PackageDatabase))
+            {
+                sw.WriteLine("<?xml version=\"1.0\"?>");
+                sw.WriteLine("<OpenBVE>");
+                if (InstalledRoutes.Count > 0)
+                {
+                    //Write out routes
+                    sw.WriteLine("<PackageDatabase id=\"Routes\">");
+                    foreach (var Package in InstalledRoutes)
+                    {
+                        sw.WriteLine("<Package name=\"" + Package.Name +"\" author=\"" + Package.Author + "\" version=\""+Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"0\"/>");
+                    }
+                    sw.WriteLine("</PackageDatabase>");
+                }
+                if (InstalledTrains.Count > 0)
+                {
+                    //Write out trains
+                    sw.WriteLine("<PackageDatabase id=\"Trains\">");
+                    foreach (var Package in InstalledTrains)
+                    {
+                        sw.WriteLine("<Package name=\"" + Package.Name + "\" author=\"" + Package.Author + "\" version=\"" + Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"1\"/>");
+                    }
+                    sw.WriteLine("</PackageDatabase>");
+                }
+                sw.WriteLine("</OpenBVE>");
+            }
+        }
 
         /// <summary>This method must be called upon first load of the package management tab, in order to load the currently installed packages</summary>
         internal void LoadRoutePackages()
@@ -78,31 +112,22 @@ namespace OpenBve
                     Package currentPackage = new Package();
                     foreach (XmlAttribute currentAttribute in Package.Attributes)
                     {
-                        switch (currentAttribute.Name)
+                        switch (currentAttribute.Name.ToLower())
                         {
                             //Parse attributes
-                            case "Version":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.Version);
+                            case "version":
+                                currentPackage.PackageVersion = Version.Parse(currentAttribute.InnerText);
                                 break;
-                            case "MajorVersion":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.MajorVersion);
-                                break;
-                            case "MinorVersion":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.MinorVersion);
-                                break;
-                            case "Revision":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.Revision);
-                                break;
-                            case "Name":
+                            case "name":
                                 currentPackage.Name = currentAttribute.InnerText;
                                 break;
-                            case "Author":
+                            case "author":
                                 currentPackage.Author = currentAttribute.InnerText;
                                 break;
-                            case "Website":
+                            case "website":
                                 currentPackage.Website = currentAttribute.InnerText;
                                 break;
-                            case "GUID":
+                            case "guid":
                                 currentPackage.GUID = currentAttribute.InnerText;
                                 break;
                         }
@@ -159,16 +184,7 @@ namespace OpenBve
                         {
                             //Parse attributes
                             case "Version":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.Version);
-                                break;
-                            case "MajorVersion":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.MajorVersion);
-                                break;
-                            case "MinorVersion":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.MinorVersion);
-                                break;
-                            case "Revision":
-                                int.TryParse(currentAttribute.InnerText, out currentPackage.Revision);
+                                currentPackage.PackageVersion = Version.Parse(currentAttribute.InnerText);
                                 break;
                             case "Name":
                                 currentPackage.Name = currentAttribute.InnerText;
@@ -201,7 +217,7 @@ namespace OpenBve
             for(int i = 0; i < InstalledRoutes.Count; i++)
             {
                 //Create row
-                object[] Package = { InstalledRoutes[i].Name, InstalledRoutes[i].Version + "." + InstalledRoutes[i].MajorVersion + "." + InstalledRoutes[i].MinorVersion + "." + InstalledRoutes[i].Revision, InstalledRoutes[i].Author, 
+                object[] Package = { InstalledRoutes[i].Name, InstalledRoutes[i].PackageVersion, InstalledRoutes[i].Author, 
                                        InstalledRoutes[i].Website};
                 //Add to the datagrid view
                 dataGridViewRoutePackages.Rows.Add(Package);
@@ -212,7 +228,7 @@ namespace OpenBve
             for (int i = 0; i < InstalledTrains.Count; i++)
             {
                 //Create row
-                object[] Package = { InstalledTrains[i].Name, InstalledTrains[i].Version + "." + InstalledTrains[i].MajorVersion + "." + InstalledTrains[i].MinorVersion + "." + InstalledTrains[i].Revision, InstalledTrains[i].Author, 
+                object[] Package = { InstalledTrains[i].Name, InstalledTrains[i].PackageVersion, InstalledTrains[i].Author, 
                                        InstalledTrains[i].Website};
                 //Add to the datagrid view
                 dataGridViewTrainPackages.Rows.Add(Package);
