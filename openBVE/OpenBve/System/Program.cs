@@ -48,7 +48,7 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 
-            
+#if DEBUG            
             // Add handler for UI thread exceptions
             Application.ThreadException += new ThreadExceptionEventHandler(CrashHandler.UIThreadException);
 
@@ -57,7 +57,7 @@ namespace OpenBve {
 
             // This handler is for catching non-UI thread exceptions
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler.CurrentDomain_UnhandledException);
-
+#endif
             //var options = new ToolkitOptions();
             //options.Backend = PlatformBackend.PreferNative;
             //Toolkit.Init();
