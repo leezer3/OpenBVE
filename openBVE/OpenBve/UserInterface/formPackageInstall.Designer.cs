@@ -71,6 +71,15 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.PackagePanel6 = new System.Windows.Forms.Panel();
+            this.DependancyList = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MinimumVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaximumVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Website = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.PackagePanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PackageInstallImage)).BeginInit();
             this.PackagePanel2.SuspendLayout();
@@ -80,6 +89,8 @@
             this.groupBox1.SuspendLayout();
             this.PackagePanel4.SuspendLayout();
             this.PackagePanel5.SuspendLayout();
+            this.PackagePanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DependancyList)).BeginInit();
             this.SuspendLayout();
             // 
             // PackageNextButton
@@ -482,10 +493,10 @@
             // 
             // FilesInstalled
             // 
-            this.FilesInstalled.Enabled = false;
             this.FilesInstalled.Location = new System.Drawing.Point(4, 54);
             this.FilesInstalled.Multiline = true;
             this.FilesInstalled.Name = "FilesInstalled";
+            this.FilesInstalled.ReadOnly = true;
             this.FilesInstalled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.FilesInstalled.Size = new System.Drawing.Size(371, 201);
             this.FilesInstalled.TabIndex = 9;
@@ -518,14 +529,93 @@
             this.label6.TabIndex = 6;
             this.label6.Text = "Installation Result:";
             // 
+            // PackagePanel6
+            // 
+            this.PackagePanel6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PackagePanel6.Controls.Add(this.DependancyList);
+            this.PackagePanel6.Controls.Add(this.label13);
+            this.PackagePanel6.Controls.Add(this.label16);
+            this.PackagePanel6.Location = new System.Drawing.Point(0, 0);
+            this.PackagePanel6.Name = "PackagePanel6";
+            this.PackagePanel6.Size = new System.Drawing.Size(375, 255);
+            this.PackagePanel6.TabIndex = 9;
+            // 
+            // DependancyList
+            // 
+            this.DependancyList.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.DependancyList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DependancyList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.MinimumVersion,
+            this.MaximumVersion,
+            this.Author,
+            this.Website});
+            this.DependancyList.Location = new System.Drawing.Point(6, 45);
+            this.DependancyList.Name = "DependancyList";
+            this.DependancyList.ReadOnly = true;
+            this.DependancyList.Size = new System.Drawing.Size(375, 209);
+            this.DependancyList.TabIndex = 8;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Name";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // MinimumVersion
+            // 
+            this.MinimumVersion.HeaderText = "Minimum Version";
+            this.MinimumVersion.Name = "MinimumVersion";
+            this.MinimumVersion.ReadOnly = true;
+            // 
+            // MaximumVersion
+            // 
+            this.MaximumVersion.HeaderText = "Maximum Version";
+            this.MaximumVersion.Name = "MaximumVersion";
+            this.MaximumVersion.ReadOnly = true;
+            // 
+            // Author
+            // 
+            this.Author.HeaderText = "Author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            // 
+            // Website
+            // 
+            this.Website.HeaderText = "Website";
+            this.Website.Name = "Website";
+            this.Website.ReadOnly = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 29);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(246, 13);
+            this.label13.TabIndex = 7;
+            this.label13.Text = "This package has unmet dependancies as follows:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(12, 9);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(46, 16);
+            this.label16.TabIndex = 6;
+            this.label16.Text = "Error:";
+            // 
             // formPackageInstall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 261);
+            this.Controls.Add(this.PackagePanel6);
+            this.Controls.Add(this.PackagePanel3);
             this.Controls.Add(this.PackagePanel5);
             this.Controls.Add(this.PackagePanel4);
-            this.Controls.Add(this.PackagePanel3);
             this.Controls.Add(this.PackagePanel2);
             this.Controls.Add(this.PackagePanel1);
             this.Controls.Add(this.PackageNextButton);
@@ -547,6 +637,9 @@
             this.PackagePanel4.PerformLayout();
             this.PackagePanel5.ResumeLayout(false);
             this.PackagePanel5.PerformLayout();
+            this.PackagePanel6.ResumeLayout(false);
+            this.PackagePanel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DependancyList)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -596,5 +689,14 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel PackagePanel6;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.DataGridView DependancyList;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MinimumVersion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MaximumVersion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Website;
     }
 }

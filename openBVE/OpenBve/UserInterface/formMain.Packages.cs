@@ -22,6 +22,15 @@ namespace OpenBve
             internal string GUID = "";
             /// <summary>Stores the package type- 0 for routes and 1 for trains</summary>
             internal int PackageType;
+
+            /*
+             * These values are used by dependancies
+             * They need to live in the base Package class to save creating another.....
+             */
+            /// <summary>The minimum package version</summary>
+            internal Version MinimumVersion;
+            /// <summary>The maximum package version</summary>
+            internal Version MaximumVersion;
         }
 
         
@@ -40,7 +49,7 @@ namespace OpenBve
         /// <summary>Call this method to save the package list to disk.</summary>
         internal void SavePackages()
         {
-            var PackageDatabase = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "packages.xml");
+            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
             File.Delete(PackageDatabase);
             using (StreamWriter sw = new StreamWriter(PackageDatabase))
             {
@@ -77,7 +86,7 @@ namespace OpenBve
             InstalledRoutes.Clear();
             XmlDocument currentXML = new XmlDocument();
             //Attempt to load the packages database file
-            var PackageDatabase = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "packages.xml");
+            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
             if (!File.Exists(PackageDatabase))
             {
                 //The database file doesn't exist.....
@@ -145,7 +154,7 @@ namespace OpenBve
             InstalledTrains.Clear();
             XmlDocument currentXML = new XmlDocument();
             //Attempt to load the packages database file
-            var PackageDatabase = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "packages.xml");
+            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
             if (!File.Exists(PackageDatabase))
             {
                 //The database file doesn't exist.....
