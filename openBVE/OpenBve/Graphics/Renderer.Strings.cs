@@ -10,7 +10,7 @@ namespace OpenBve {
 		
 		/// <summary>Represents the alignment of a text compared to a reference coordinate.</summary>
 		[Flags]
-		private enum TextAlignment {
+		internal enum TextAlignment {
 			/// <summary>The reference coordinate represents the top-left corner.</summary>
 			TopLeft = 1,
 			/// <summary>The reference coordinate represents the top-middle corner.</summary>
@@ -50,7 +50,7 @@ namespace OpenBve {
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
 		/// <returns>The size of the string.</returns>
-		private static Size MeasureString(Fonts.OpenGlFont font, string text) {
+		internal static Size MeasureString(Fonts.OpenGlFont font, string text) {
 			int width = 0;
 			int height = 0;
 			if (text != null) {
@@ -181,7 +181,7 @@ namespace OpenBve {
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
+		internal static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
 			if (shadow) {
 				DrawString(font, text, new Point(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
 				DrawString(font, text, location, alignment, color);
