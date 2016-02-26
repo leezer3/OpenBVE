@@ -9,9 +9,16 @@ namespace OpenBve {
 	internal partial class formMain : Form {
 		internal formMain() {
 			InitializeComponent();
-		}
+            this.Text = Interface.GetInterfaceString("program_title");
+            }
 
-		// show main dialog
+	    public sealed override string Text
+	    {
+	        get { return base.Text; }
+	        set { base.Text = value; }
+	    }
+
+	    // show main dialog
 		internal struct MainDialogResult {
 			internal bool Start;
 			internal string RouteFile;
