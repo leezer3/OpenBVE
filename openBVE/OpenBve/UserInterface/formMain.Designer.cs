@@ -246,6 +246,7 @@
             this.radiobuttonJoystick = new System.Windows.Forms.RadioButton();
             this.radiobuttonKeyboard = new System.Windows.Forms.RadioButton();
             this.panelInfo = new System.Windows.Forms.Panel();
+            this.aboutLabel = new System.Windows.Forms.LinkLabel();
             this.linkHomepage = new System.Windows.Forms.LinkLabel();
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelInfoBottom = new System.Windows.Forms.Label();
@@ -253,8 +254,7 @@
             this.timerInstall = new System.Windows.Forms.Timer(this.components);
             this.timerFilter = new System.Windows.Forms.Timer(this.components);
             this.panelPackages = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.panelPackageList = new System.Windows.Forms.Panel();
             this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -269,11 +269,44 @@
             this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label7 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            this.panelPackageInstall = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
+            this.labelPackageVersion = new System.Windows.Forms.Label();
+            this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
+            this.labelPackageAuthor = new System.Windows.Forms.Label();
+            this.textBoxPackageName = new System.Windows.Forms.TextBox();
+            this.labelPackageName = new System.Windows.Forms.Label();
+            this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
+            this.panelDependancyError = new System.Windows.Forms.Panel();
+            this.dataGridViewDependancies = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.buttonProceedAnyway = new System.Windows.Forms.Button();
+            this.panelSuccess = new System.Windows.Forms.Panel();
+            this.textBoxFilesInstalled = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.labelPackages = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.aboutLabel = new System.Windows.Forms.LinkLabel();
+            this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
             this.panelStart.SuspendLayout();
             this.groupboxTrainSelection.SuspendLayout();
@@ -343,8 +376,14 @@
             this.panelKeyboard.SuspendLayout();
             this.panelInfo.SuspendLayout();
             this.panelPackages.SuspendLayout();
+            this.panelPackageList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
+            this.panelPackageInstall.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
+            this.panelDependancyError.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDependancies)).BeginInit();
+            this.panelSuccess.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelFillerOne
@@ -3108,6 +3147,23 @@
             this.panelInfo.Size = new System.Drawing.Size(160, 61);
             this.panelInfo.TabIndex = 3;
             // 
+            // aboutLabel
+            // 
+            this.aboutLabel.ActiveLinkColor = System.Drawing.Color.Crimson;
+            this.aboutLabel.AutoEllipsis = true;
+            this.aboutLabel.DisabledLinkColor = System.Drawing.Color.Silver;
+            this.aboutLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+            this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
+            this.aboutLabel.Location = new System.Drawing.Point(8, 40);
+            this.aboutLabel.Name = "aboutLabel";
+            this.aboutLabel.Size = new System.Drawing.Size(128, 16);
+            this.aboutLabel.TabIndex = 6;
+            this.aboutLabel.TabStop = true;
+            this.aboutLabel.Text = "About";
+            this.aboutLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.aboutLabel.VisitedLinkColor = System.Drawing.Color.Gold;
+            this.aboutLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLabel_LinkClicked);
+            // 
             // linkHomepage
             // 
             this.linkHomepage.ActiveLinkColor = System.Drawing.Color.Crimson;
@@ -3162,16 +3218,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
-            this.panelPackages.Controls.Add(this.button2);
-            this.panelPackages.Controls.Add(this.button3);
-            this.panelPackages.Controls.Add(this.dataGridViewTrainPackages);
-            this.panelPackages.Controls.Add(this.button1);
-            this.panelPackages.Controls.Add(this.buttonInstallRoute);
-            this.panelPackages.Controls.Add(this.dataGridViewRoutePackages);
-            this.panelPackages.Controls.Add(this.label7);
-            this.panelPackages.Controls.Add(this.label10);
-            this.panelPackages.Controls.Add(this.label11);
+            this.panelPackages.Controls.Add(this.panelPackageList);
+            this.panelPackages.Controls.Add(this.panelPackageInstall);
+            this.panelPackages.Controls.Add(this.panelDependancyError);
+            this.panelPackages.Controls.Add(this.panelSuccess);
             this.panelPackages.Controls.Add(this.labelPackages);
+            this.panelPackages.Controls.Add(this.label11);
             this.panelPackages.Controls.Add(this.label14);
             this.panelPackages.Controls.Add(this.label15);
             this.panelPackages.Location = new System.Drawing.Point(160, 0);
@@ -3179,24 +3231,21 @@
             this.panelPackages.Size = new System.Drawing.Size(643, 586);
             this.panelPackages.TabIndex = 14;
             // 
-            // button2
+            // panelPackageList
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(500, 497);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(136, 23);
-            this.button2.TabIndex = 18;
-            this.button2.Text = "Uninstall Train";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(8, 497);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(136, 23);
-            this.button3.TabIndex = 17;
-            this.button3.Text = "Install Train";
-            this.button3.UseVisualStyleBackColor = true;
+            this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
+            this.panelPackageList.Controls.Add(this.button1);
+            this.panelPackageList.Controls.Add(this.buttonInstallRoute);
+            this.panelPackageList.Controls.Add(this.dataGridViewRoutePackages);
+            this.panelPackageList.Controls.Add(this.label7);
+            this.panelPackageList.Controls.Add(this.label10);
+            this.panelPackageList.Location = new System.Drawing.Point(0, 30);
+            this.panelPackageList.Name = "panelPackageList";
+            this.panelPackageList.Size = new System.Drawing.Size(641, 559);
+            this.panelPackageList.TabIndex = 3;
             // 
             // dataGridViewTrainPackages
             // 
@@ -3214,13 +3263,13 @@
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewTextBoxColumn4});
-            this.dataGridViewTrainPackages.Location = new System.Drawing.Point(9, 309);
+            this.dataGridViewTrainPackages.Location = new System.Drawing.Point(5, 269);
             this.dataGridViewTrainPackages.Name = "dataGridViewTrainPackages";
             this.dataGridViewTrainPackages.ReadOnly = true;
             this.dataGridViewTrainPackages.RowHeadersVisible = false;
             this.dataGridViewTrainPackages.RowHeadersWidth = 90;
             this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 185);
-            this.dataGridViewTrainPackages.TabIndex = 16;
+            this.dataGridViewTrainPackages.TabIndex = 22;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -3249,20 +3298,20 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(500, 256);
+            this.button1.Location = new System.Drawing.Point(495, 456);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(136, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Uninstall Route";
+            this.button1.TabIndex = 21;
+            this.button1.Text = "Uninstall Package";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // buttonInstallRoute
             // 
-            this.buttonInstallRoute.Location = new System.Drawing.Point(8, 256);
+            this.buttonInstallRoute.Location = new System.Drawing.Point(5, 457);
             this.buttonInstallRoute.Name = "buttonInstallRoute";
             this.buttonInstallRoute.Size = new System.Drawing.Size(136, 23);
-            this.buttonInstallRoute.TabIndex = 14;
-            this.buttonInstallRoute.Text = "Install Route";
+            this.buttonInstallRoute.TabIndex = 20;
+            this.buttonInstallRoute.Text = "Install Package";
             this.buttonInstallRoute.UseVisualStyleBackColor = true;
             this.buttonInstallRoute.Click += new System.EventHandler(this.buttonInstallRoute_Click);
             // 
@@ -3282,13 +3331,13 @@
             this.routeVersion,
             this.routeAuthor,
             this.routeWebsite});
-            this.dataGridViewRoutePackages.Location = new System.Drawing.Point(8, 67);
+            this.dataGridViewRoutePackages.Location = new System.Drawing.Point(4, 27);
             this.dataGridViewRoutePackages.Name = "dataGridViewRoutePackages";
             this.dataGridViewRoutePackages.ReadOnly = true;
             this.dataGridViewRoutePackages.RowHeadersVisible = false;
             this.dataGridViewRoutePackages.RowHeadersWidth = 90;
             this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 185);
-            this.dataGridViewRoutePackages.TabIndex = 13;
+            this.dataGridViewRoutePackages.TabIndex = 19;
             // 
             // routeName
             // 
@@ -3322,10 +3371,10 @@
             this.label7.BackColor = System.Drawing.Color.Silver;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(8, 282);
+            this.label7.Location = new System.Drawing.Point(4, 242);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(627, 24);
-            this.label7.TabIndex = 6;
+            this.label7.TabIndex = 18;
             this.label7.Text = "Installed Trains";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -3337,22 +3386,391 @@
             this.label10.BackColor = System.Drawing.Color.Silver;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(8, 40);
+            this.label10.Location = new System.Drawing.Point(4, 8);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(627, 24);
-            this.label10.TabIndex = 3;
+            this.label10.Size = new System.Drawing.Size(627, 16);
+            this.label10.TabIndex = 17;
             this.label10.Text = "Installed Routes";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label11
+            // panelPackageInstall
             // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.BackColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(0, 32);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(643, 2);
-            this.label11.TabIndex = 2;
+            this.panelPackageInstall.Controls.Add(this.label8);
+            this.panelPackageInstall.Controls.Add(this.label6);
+            this.panelPackageInstall.Controls.Add(this.button2);
+            this.panelPackageInstall.Controls.Add(this.textBox3);
+            this.panelPackageInstall.Controls.Add(this.label5);
+            this.panelPackageInstall.Controls.Add(this.linkLabelPackageWebsite);
+            this.panelPackageInstall.Controls.Add(this.label4);
+            this.panelPackageInstall.Controls.Add(this.textBoxPackageVersion);
+            this.panelPackageInstall.Controls.Add(this.labelPackageVersion);
+            this.panelPackageInstall.Controls.Add(this.textBoxPackageAuthor);
+            this.panelPackageInstall.Controls.Add(this.labelPackageAuthor);
+            this.panelPackageInstall.Controls.Add(this.textBoxPackageName);
+            this.panelPackageInstall.Controls.Add(this.labelPackageName);
+            this.panelPackageInstall.Controls.Add(this.pictureBoxPackageImage);
+            this.panelPackageInstall.Location = new System.Drawing.Point(0, 30);
+            this.panelPackageInstall.Name = "panelPackageInstall";
+            this.panelPackageInstall.Size = new System.Drawing.Size(641, 559);
+            this.panelPackageInstall.TabIndex = 4;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoEllipsis = true;
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Silver;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(232, 18);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(111, 16);
+            this.label8.TabIndex = 16;
+            this.label8.Text = "Install a Package";
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.BackColor = System.Drawing.Color.Silver;
+            this.label6.Location = new System.Drawing.Point(7, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(627, 32);
+            this.label6.TabIndex = 15;
+            // 
+            // button2
+            // 
+            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(198, 505);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(146, 40);
+            this.button2.TabIndex = 14;
+            this.button2.Text = "Select Package......";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.Location = new System.Drawing.Point(134, 379);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(493, 112);
+            this.textBox3.TabIndex = 13;
+            this.textBox3.Text = "No package selected.";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 382);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(109, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Package Description:";
+            // 
+            // linkLabelPackageWebsite
+            // 
+            this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelPackageWebsite.AutoSize = true;
+            this.linkLabelPackageWebsite.Location = new System.Drawing.Point(136, 359);
+            this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
+            this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
+            this.linkLabelPackageWebsite.TabIndex = 11;
+            this.linkLabelPackageWebsite.TabStop = true;
+            this.linkLabelPackageWebsite.Text = "No package selected.";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 360);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(95, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Package Website:";
+            // 
+            // textBoxPackageVersion
+            // 
+            this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 331);
+            this.textBoxPackageVersion.Name = "textBoxPackageVersion";
+            this.textBoxPackageVersion.Size = new System.Drawing.Size(493, 20);
+            this.textBoxPackageVersion.TabIndex = 9;
+            this.textBoxPackageVersion.Text = "No package selected.";
+            // 
+            // labelPackageVersion
+            // 
+            this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPackageVersion.AutoSize = true;
+            this.labelPackageVersion.Location = new System.Drawing.Point(6, 334);
+            this.labelPackageVersion.Name = "labelPackageVersion";
+            this.labelPackageVersion.Size = new System.Drawing.Size(91, 13);
+            this.labelPackageVersion.TabIndex = 8;
+            this.labelPackageVersion.Text = "Package Version:";
+            // 
+            // textBoxPackageAuthor
+            // 
+            this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 307);
+            this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
+            this.textBoxPackageAuthor.Size = new System.Drawing.Size(493, 20);
+            this.textBoxPackageAuthor.TabIndex = 7;
+            this.textBoxPackageAuthor.Text = "No package selected.";
+            // 
+            // labelPackageAuthor
+            // 
+            this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPackageAuthor.AutoSize = true;
+            this.labelPackageAuthor.Location = new System.Drawing.Point(6, 310);
+            this.labelPackageAuthor.Name = "labelPackageAuthor";
+            this.labelPackageAuthor.Size = new System.Drawing.Size(87, 13);
+            this.labelPackageAuthor.TabIndex = 6;
+            this.labelPackageAuthor.Text = "Package Author:";
+            // 
+            // textBoxPackageName
+            // 
+            this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPackageName.Location = new System.Drawing.Point(134, 283);
+            this.textBoxPackageName.Name = "textBoxPackageName";
+            this.textBoxPackageName.Size = new System.Drawing.Size(493, 20);
+            this.textBoxPackageName.TabIndex = 5;
+            this.textBoxPackageName.Text = "No package selected.";
+            // 
+            // labelPackageName
+            // 
+            this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPackageName.AutoSize = true;
+            this.labelPackageName.Location = new System.Drawing.Point(6, 286);
+            this.labelPackageName.Name = "labelPackageName";
+            this.labelPackageName.Size = new System.Drawing.Size(84, 13);
+            this.labelPackageName.TabIndex = 4;
+            this.labelPackageName.Text = "Package Name:";
+            // 
+            // pictureBoxPackageImage
+            // 
+            this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxPackageImage.Location = new System.Drawing.Point(164, 54);
+            this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
+            this.pictureBoxPackageImage.Size = new System.Drawing.Size(256, 203);
+            this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxPackageImage.TabIndex = 3;
+            this.pictureBoxPackageImage.TabStop = false;
+            // 
+            // panelDependancyError
+            // 
+            this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
+            this.panelDependancyError.Controls.Add(this.label16);
+            this.panelDependancyError.Controls.Add(this.label12);
+            this.panelDependancyError.Controls.Add(this.label3);
+            this.panelDependancyError.Controls.Add(this.label9);
+            this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
+            this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
+            this.panelDependancyError.Name = "panelDependancyError";
+            this.panelDependancyError.Size = new System.Drawing.Size(641, 559);
+            this.panelDependancyError.TabIndex = 5;
+            // 
+            // dataGridViewDependancies
+            // 
+            this.dataGridViewDependancies.AllowUserToAddRows = false;
+            this.dataGridViewDependancies.AllowUserToDeleteRows = false;
+            this.dataGridViewDependancies.AllowUserToResizeColumns = false;
+            this.dataGridViewDependancies.AllowUserToResizeRows = false;
+            this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8});
+            this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 85);
+            this.dataGridViewDependancies.Name = "dataGridViewDependancies";
+            this.dataGridViewDependancies.ReadOnly = true;
+            this.dataGridViewDependancies.RowHeadersVisible = false;
+            this.dataGridViewDependancies.RowHeadersWidth = 90;
+            this.dataGridViewDependancies.Size = new System.Drawing.Size(627, 414);
+            this.dataGridViewDependancies.TabIndex = 20;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "Version";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "Author";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.HeaderText = "Website";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 69);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(167, 13);
+            this.label16.TabIndex = 18;
+            this.label16.Text = "These are shown in the list below:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(7, 54);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(238, 13);
+            this.label12.TabIndex = 17;
+            this.label12.Text = "The current package has unment dependancies.";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoEllipsis = true;
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Silver;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(232, 18);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(118, 16);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Dependancy Error";
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.BackColor = System.Drawing.Color.Silver;
+            this.label9.Location = new System.Drawing.Point(7, 10);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(627, 32);
+            this.label9.TabIndex = 15;
+            // 
+            // buttonProceedAnyway
+            // 
+            this.buttonProceedAnyway.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonProceedAnyway.Location = new System.Drawing.Point(198, 505);
+            this.buttonProceedAnyway.Name = "buttonProceedAnyway";
+            this.buttonProceedAnyway.Size = new System.Drawing.Size(146, 40);
+            this.buttonProceedAnyway.TabIndex = 14;
+            this.buttonProceedAnyway.Text = "Proceed Anyway";
+            this.buttonProceedAnyway.UseVisualStyleBackColor = true;
+            this.buttonProceedAnyway.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
+            // 
+            // panelSuccess
+            // 
+            this.panelSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
+            this.panelSuccess.Controls.Add(this.label17);
+            this.panelSuccess.Controls.Add(this.label18);
+            this.panelSuccess.Controls.Add(this.label19);
+            this.panelSuccess.Controls.Add(this.label20);
+            this.panelSuccess.Controls.Add(this.button3);
+            this.panelSuccess.Location = new System.Drawing.Point(0, 30);
+            this.panelSuccess.Name = "panelSuccess";
+            this.panelSuccess.Size = new System.Drawing.Size(641, 559);
+            this.panelSuccess.TabIndex = 23;
+            // 
+            // textBoxFilesInstalled
+            // 
+            this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxFilesInstalled.BackColor = System.Drawing.SystemColors.Menu;
+            this.textBoxFilesInstalled.Enabled = false;
+            this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 85);
+            this.textBoxFilesInstalled.Multiline = true;
+            this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
+            this.textBoxFilesInstalled.Size = new System.Drawing.Size(628, 418);
+            this.textBoxFilesInstalled.TabIndex = 19;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(7, 69);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(181, 13);
+            this.label17.TabIndex = 18;
+            this.label17.Text = "A list of files installed is shown below:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(7, 54);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(129, 13);
+            this.label18.TabIndex = 17;
+            this.label18.Text = "Installation was sucessful.";
+            // 
+            // label19
+            // 
+            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label19.AutoEllipsis = true;
+            this.label19.AutoSize = true;
+            this.label19.BackColor = System.Drawing.Color.Silver;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.ForeColor = System.Drawing.Color.Black;
+            this.label19.Location = new System.Drawing.Point(232, 18);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(139, 16);
+            this.label19.TabIndex = 16;
+            this.label19.Text = "Installation Successful";
+            // 
+            // label20
+            // 
+            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label20.BackColor = System.Drawing.Color.Silver;
+            this.label20.Location = new System.Drawing.Point(7, 10);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(627, 32);
+            this.label20.TabIndex = 15;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(198, 505);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(146, 40);
+            this.button3.TabIndex = 14;
+            this.button3.Text = "OK";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // labelPackages
             // 
@@ -3368,6 +3786,16 @@
             this.labelPackages.Size = new System.Drawing.Size(145, 16);
             this.labelPackages.TabIndex = 1;
             this.labelPackages.Text = "Package Management";
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.BackColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(0, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(643, 2);
+            this.label11.TabIndex = 2;
             // 
             // label14
             // 
@@ -3389,22 +3817,9 @@
             this.label15.Size = new System.Drawing.Size(643, 32);
             this.label15.TabIndex = 0;
             // 
-            // aboutLabel
+            // openPackageFileDialog
             // 
-            this.aboutLabel.ActiveLinkColor = System.Drawing.Color.Crimson;
-            this.aboutLabel.AutoEllipsis = true;
-            this.aboutLabel.DisabledLinkColor = System.Drawing.Color.Silver;
-            this.aboutLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-            this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
-            this.aboutLabel.Location = new System.Drawing.Point(8, 40);
-            this.aboutLabel.Name = "aboutLabel";
-            this.aboutLabel.Size = new System.Drawing.Size(128, 16);
-            this.aboutLabel.TabIndex = 6;
-            this.aboutLabel.TabStop = true;
-            this.aboutLabel.Text = "About";
-            this.aboutLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.aboutLabel.VisitedLinkColor = System.Drawing.Color.Gold;
-            this.aboutLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutLabel_LinkClicked);
+            this.openPackageFileDialog.FileName = "openFileDialog1";
             // 
             // formMain
             // 
@@ -3413,6 +3828,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(803, 586);
             this.Controls.Add(this.labelVerticalSeparator);
+            this.Controls.Add(this.panelPackages);
             this.Controls.Add(this.panelInfo);
             this.Controls.Add(this.panelPanels);
             this.Controls.Add(this.buttonClose);
@@ -3422,13 +3838,12 @@
             this.Controls.Add(this.labelFillerThree);
             this.Controls.Add(this.panelOptions);
             this.Controls.Add(this.panelControls);
-            this.Controls.Add(this.panelPackages);
             this.Controls.Add(this.panelStart);
             this.Controls.Add(this.panelReview);
             this.KeyPreview = true;
             this.Name = "formMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = Interface.GetInterfaceString("program_title");
+            this.Text = "openBVE";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
             this.Load += new System.EventHandler(this.formMain_Load);
             this.Shown += new System.EventHandler(this.formMain_Shown);
@@ -3529,8 +3944,17 @@
             this.panelInfo.ResumeLayout(false);
             this.panelPackages.ResumeLayout(false);
             this.panelPackages.PerformLayout();
+            this.panelPackageList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
+            this.panelPackageInstall.ResumeLayout(false);
+            this.panelPackageInstall.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
+            this.panelDependancyError.ResumeLayout(false);
+            this.panelDependancyError.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDependancies)).EndInit();
+            this.panelSuccess.ResumeLayout(false);
+            this.panelSuccess.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3763,19 +4187,15 @@
         private System.Windows.Forms.RadioButton radioButtonPackages;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Panel panelPackages;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label labelPackages;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.DataGridView dataGridViewRoutePackages;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBoxEBAxis;
+        private System.Windows.Forms.Button buttonControlReset;
+        private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
+        private System.Windows.Forms.LinkLabel aboutLabel;
+        private System.Windows.Forms.Panel panelPackageList;
         private System.Windows.Forms.DataGridView dataGridViewTrainPackages;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -3783,10 +4203,47 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button buttonInstallRoute;
-        private System.Windows.Forms.CheckBox checkBoxEBAxis;
-        private System.Windows.Forms.Button buttonControlReset;
-        private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
-        private System.Windows.Forms.LinkLabel aboutLabel;
+        private System.Windows.Forms.DataGridView dataGridViewRoutePackages;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panelPackageInstall;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.LinkLabel linkLabelPackageWebsite;
+        private System.Windows.Forms.TextBox textBoxPackageVersion;
+        private System.Windows.Forms.TextBox textBoxPackageAuthor;
+        private System.Windows.Forms.TextBox textBoxPackageName;
+        private System.Windows.Forms.PictureBox pictureBoxPackageImage;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelPackageVersion;
+        private System.Windows.Forms.Label labelPackageAuthor;
+        private System.Windows.Forms.Label labelPackageName;
+        private System.Windows.Forms.OpenFileDialog openPackageFileDialog;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel panelDependancyError;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button buttonProceedAnyway;
+        private System.Windows.Forms.DataGridView dataGridViewDependancies;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.Panel panelSuccess;
+        private System.Windows.Forms.TextBox textBoxFilesInstalled;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button button3;
         
     }
 }

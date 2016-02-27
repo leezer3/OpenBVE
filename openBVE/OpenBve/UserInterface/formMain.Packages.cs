@@ -1,40 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
+using OpenBveApi.Packages;
 
 namespace OpenBve
 {
     internal partial class formMain
     {
-        /// <summary>Defines an OpenBVE Package</summary>
-        internal class Package
-        {
-            /// <summary>The package version</summary>
-            internal Version PackageVersion;
-            /// <summary>The package name</summary>
-            internal string Name = "";
-            /// <summary>The package author</summary>
-            internal string Author = "";
-            /// <summary>The package website</summary>
-            internal string Website = "";
-            /// <summary>The GUID for this package</summary>
-            internal string GUID = "";
-            /// <summary>Stores the package type- 0 for routes and 1 for trains</summary>
-            internal int PackageType;
-
-            /*
-             * These values are used by dependancies
-             * They need to live in the base Package class to save creating another.....
-             */
-            /// <summary>The minimum package version</summary>
-            internal Version MinimumVersion;
-            /// <summary>The maximum package version</summary>
-            internal Version MaximumVersion;
-        }
-
-        
-
         internal static List<Package> InstalledRoutes = new List<Package>();
         internal static List<Package> InstalledTrains = new List<Package>();
 
@@ -46,11 +20,128 @@ namespace OpenBve
             PopulatePackageList();
         }
 
+        private Package currentPackage;
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Check to see if the package is null- If null, then we haven't loaded a package yet
+            if (currentPackage == null)
+            {
+                if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    currentPackage = OpenBveApi.Packages.Manipulation.ReadPackage(openPackageFileDialog.FileName);
+                    if (currentPackage != null)
+                    {
+                        textBoxPackageName.Text = currentPackage.Name;
+                        textBoxPackageAuthor.Text = currentPackage.Author;
+                        textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
+                        if (currentPackage.Website != null)
+                        {
+                            linkLabelPackageWebsite.Text = currentPackage.Website;
+                            LinkLabel.Link link = new LinkLabel.Link();
+                            link.LinkData = currentPackage.Website;
+                            linkLabelPackageWebsite.Links.Add(link);
+                        }
+                        else
+                        {
+                            linkLabelPackageWebsite.Text = "No website provided.";
+                        }
+                        if (currentPackage.PackageImage != null)
+                        {
+                            pictureBoxPackageImage.Image = currentPackage.PackageImage;
+                        }
+                        else
+                        {
+                            TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
+                        }
+                        button2.Text = "Install";
+                    }
+                }
+
+            }
+            else
+            {
+                List<Package> Dependancies = Information.CheckDependancies(currentPackage, InstalledRoutes, InstalledTrains);
+                if (Dependancies != null)
+                {
+                    //We are missing a dependancy
+                    PopulateDependancyList(Dependancies);
+                    panelPackageInstall.Hide();
+                    panelDependancyError.Show();
+                    return;
+                }
+                VersionInformation Info;
+                Version OldVersion = new Version();
+                if (currentPackage.PackageType == 0)
+                {
+                    Info = Information.CheckVersion(currentPackage, formMain.InstalledRoutes, ref OldVersion);
+                }
+                else
+                {
+                    Info = Information.CheckVersion(currentPackage, formMain.InstalledTrains, ref OldVersion);
+                }
+                switch (Info)
+                {
+                    case VersionInformation.NotFound:
+                        Extract();
+                        break;
+                    case VersionInformation.NewerVersion:
+                        //Newer version than installed, show new version prompt
+                        //TODO: Not implemented
+                        break;
+                    case VersionInformation.SameVersion:
+                        //Same version installed, show reinstall prompt
+                        //TODO: Not implemented
+                        break;
+                    case VersionInformation.OlderVersion:
+                        //Older version than installed, ERROR
+                        
+                        break;
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            RefreshPackages();
+            panelSuccess.Hide();
+            panelPackageList.Show();
+        }
+
+        private readonly string PackageDatabase = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
+
+        private void buttonProceedAnyway_Click(object sender, EventArgs e)
+        {
+            Extract();
+        }
+
+        private void Extract()
+        {
+            string ExtractionDirectory;
+            if (currentPackage.PackageType == 0)
+            {
+                ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
+            }
+            else
+            {
+                ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+            }
+            string PackageFiles = "";
+            Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, PackageDatabase, ref PackageFiles);
+            formMain.InstalledRoutes.Add(currentPackage);
+            textBoxFilesInstalled.Text = PackageFiles;
+            panelDependancyError.Hide();
+            panelSuccess.Show();
+        }
+
         /// <summary>Call this method to save the package list to disk.</summary>
         internal void SavePackages()
         {
             var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
-            File.Delete(PackageDatabase);
+            if (File.Exists(PackageDatabase))
+            {
+                File.Delete(PackageDatabase);
+            }
             using (StreamWriter sw = new StreamWriter(PackageDatabase))
             {
                 sw.WriteLine("<?xml version=\"1.0\"?>");
@@ -241,6 +332,22 @@ namespace OpenBve
                                        InstalledTrains[i].Website};
                 //Add to the datagrid view
                 dataGridViewTrainPackages.Rows.Add(Package);
+            }
+        }
+
+        /// <summary>This method should be called to populate the list of unmet dependancies</summary>
+        internal void PopulateDependancyList(List<Package> Dependancies)
+        {
+            //Clear the package list
+            dataGridViewDependancies.Rows.Clear();
+            //We have route packages in our list!
+            for (int i = 0; i < Dependancies.Count; i++)
+            {
+                //Create row
+                object[] Package = { Dependancies[i].Name, Dependancies[i].MinimumVersion, Dependancies[i].MaximumVersion , Dependancies[i].Author, 
+                                       Dependancies[i].Website};
+                //Add to the datagrid view
+                dataGridViewDependancies.Rows.Add(Package);
             }
         }
 

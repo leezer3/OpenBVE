@@ -49,7 +49,12 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
+    <Reference Include="SharpCompress.Unsigned">
+      <HintPath>C:\Users\leeze_000\Desktop\sharpcompress-master\bin\SharpCompress.Unsigned.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archives.cs" />
@@ -63,6 +68,7 @@
     <Compile Include="Math.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Orientation3.cs" />
+    <Compile Include="Packages.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

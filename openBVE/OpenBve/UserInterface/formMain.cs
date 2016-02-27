@@ -1087,7 +1087,7 @@ namespace OpenBve {
 		// =========
 
         /// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-        private Image LoadImage(string Folder, string Title) {
+        internal Image LoadImage(string Folder, string Title) {
 		    try
 		    {
 		        string File = OpenBveApi.Path.CombineFile(Folder, Title);
@@ -1136,12 +1136,6 @@ namespace OpenBve {
 		    }
 		}
 
-        private void buttonInstallRoute_Click(object sender, EventArgs e)
-        {
-            var PackageInstallForm = new formPackageInstall(this);
-            PackageInstallForm.ShowDialog();
-        }
-
         private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxLoadInAdvance.Checked)
@@ -1167,7 +1161,11 @@ namespace OpenBve {
             }
         }
 
-        
-		
+	    private void buttonInstallRoute_Click(object sender, EventArgs e)
+	    {
+            TryLoadImage(pictureBoxPackageImage, "route_error.png");
+	        panelPackageList.Hide();
+	        panelPackageInstall.Show();
+	    }
 	}
 }
