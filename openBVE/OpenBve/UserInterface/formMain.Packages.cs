@@ -65,7 +65,7 @@ namespace OpenBve
                 if (Dependancies != null)
                 {
                     //We are missing a dependancy
-                    PopulateDependancyList(Dependancies);
+                    PopulateDependancyList(Dependancies, dataGridViewDependancies);
                     panelPackageInstall.Hide();
                     panelDependancyError.Show();
                     return;
@@ -80,25 +80,41 @@ namespace OpenBve
                 {
                     Info = Information.CheckVersion(currentPackage, formMain.InstalledTrains, ref OldVersion);
                 }
-                switch (Info)
+                if (Info == VersionInformation.NotFound)
                 {
-                    case VersionInformation.NotFound:
-                        Extract();
-                        break;
-                    case VersionInformation.NewerVersion:
-                        //Newer version than installed, show new version prompt
-                        //TODO: Not implemented
-                        break;
-                    case VersionInformation.SameVersion:
-                        //Same version installed, show reinstall prompt
-                        //TODO: Not implemented
-                        break;
-                    case VersionInformation.OlderVersion:
-                        //Older version than installed, ERROR
-                        
-                        break;
+                    Extract();
+                }
+                else
+                {
+                    switch (Info)
+                    {
+                        case VersionInformation.NewerVersion:
+                            labelVersionError.Text = "The selected package is already installed, and is a newer version.";
+                            break;
+                        case VersionInformation.SameVersion:
+                            labelVersionError.Text = "The selected package is already installed, and is an identical version.";
+                            break;
+                        case VersionInformation.OlderVersion:
+                            labelVersionError.Text = "The selected package is already installed, and is an older version.";
+                            break;
+                    }
+                    textBoxCurrentVersion.Text = OldVersion.ToString();
+                    textBoxNewVersion.Text = currentPackage.PackageVersion.ToString();
+                    if (currentPackage.Dependancies.Count != 0)
+                    {
+                        List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, InstalledRoutes, InstalledTrains);
+                        if (brokenDependancies != null)
+                        {
+                            PopulateDependancyList(brokenDependancies, dataGridViewBrokenDependancies);
+                        }
+                    }
+                    panelDependancyError.Hide();
+                    panelSuccess.Hide();
+                    panelPackageInstall.Hide();
+                    panelVersionError.Show();
                 }
             }
+                
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -106,6 +122,11 @@ namespace OpenBve
             RefreshPackages();
             panelSuccess.Hide();
             panelPackageList.Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Extract();
         }
 
         private readonly string PackageDatabase = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
@@ -131,6 +152,7 @@ namespace OpenBve
             formMain.InstalledRoutes.Add(currentPackage);
             textBoxFilesInstalled.Text = PackageFiles;
             panelDependancyError.Hide();
+            panelVersionError.Hide();
             panelSuccess.Show();
         }
 
@@ -336,10 +358,10 @@ namespace OpenBve
         }
 
         /// <summary>This method should be called to populate the list of unmet dependancies</summary>
-        internal void PopulateDependancyList(List<Package> Dependancies)
+        internal void PopulateDependancyList(List<Package> Dependancies, DataGridView dependancyGrid)
         {
             //Clear the package list
-            dataGridViewDependancies.Rows.Clear();
+            dependancyGrid.Rows.Clear();
             //We have route packages in our list!
             for (int i = 0; i < Dependancies.Count; i++)
             {
@@ -347,7 +369,7 @@ namespace OpenBve
                 object[] Package = { Dependancies[i].Name, Dependancies[i].MinimumVersion, Dependancies[i].MaximumVersion , Dependancies[i].Author, 
                                        Dependancies[i].Website};
                 //Add to the datagrid view
-                dataGridViewDependancies.Rows.Add(Package);
+                dependancyGrid.Rows.Add(Package);
             }
         }
 

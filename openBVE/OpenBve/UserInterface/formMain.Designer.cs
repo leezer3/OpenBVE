@@ -254,6 +254,21 @@
             this.timerInstall = new System.Windows.Forms.Timer(this.components);
             this.timerFilter = new System.Windows.Forms.Timer(this.components);
             this.panelPackages = new System.Windows.Forms.Panel();
+            this.panelVersionError = new System.Windows.Forms.Panel();
+            this.dataGridViewBrokenDependancies = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.textBoxNewVersion = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.textBoxCurrentVersion = new System.Windows.Forms.TextBox();
+            this.labelVersionError = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             this.panelPackageList = new System.Windows.Forms.Panel();
             this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -376,6 +391,8 @@
             this.panelKeyboard.SuspendLayout();
             this.panelInfo.SuspendLayout();
             this.panelPackages.SuspendLayout();
+            this.panelVersionError.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
             this.panelPackageList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
@@ -3222,6 +3239,7 @@
             this.panelPackages.Controls.Add(this.panelPackageInstall);
             this.panelPackages.Controls.Add(this.panelDependancyError);
             this.panelPackages.Controls.Add(this.panelSuccess);
+            this.panelPackages.Controls.Add(this.panelVersionError);
             this.panelPackages.Controls.Add(this.labelPackages);
             this.panelPackages.Controls.Add(this.label11);
             this.panelPackages.Controls.Add(this.label14);
@@ -3230,6 +3248,161 @@
             this.panelPackages.Name = "panelPackages";
             this.panelPackages.Size = new System.Drawing.Size(643, 586);
             this.panelPackages.TabIndex = 14;
+            // 
+            // panelVersionError
+            // 
+            this.panelVersionError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelVersionError.Controls.Add(this.dataGridViewBrokenDependancies);
+            this.panelVersionError.Controls.Add(this.label27);
+            this.panelVersionError.Controls.Add(this.label25);
+            this.panelVersionError.Controls.Add(this.textBoxNewVersion);
+            this.panelVersionError.Controls.Add(this.label24);
+            this.panelVersionError.Controls.Add(this.textBoxCurrentVersion);
+            this.panelVersionError.Controls.Add(this.labelVersionError);
+            this.panelVersionError.Controls.Add(this.label21);
+            this.panelVersionError.Controls.Add(this.label22);
+            this.panelVersionError.Controls.Add(this.button4);
+            this.panelVersionError.Location = new System.Drawing.Point(0, 30);
+            this.panelVersionError.Name = "panelVersionError";
+            this.panelVersionError.Size = new System.Drawing.Size(641, 559);
+            this.panelVersionError.TabIndex = 24;
+            // 
+            // dataGridViewBrokenDependancies
+            // 
+            this.dataGridViewBrokenDependancies.AllowUserToAddRows = false;
+            this.dataGridViewBrokenDependancies.AllowUserToDeleteRows = false;
+            this.dataGridViewBrokenDependancies.AllowUserToResizeColumns = false;
+            this.dataGridViewBrokenDependancies.AllowUserToResizeRows = false;
+            this.dataGridViewBrokenDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewBrokenDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewBrokenDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataGridViewBrokenDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewBrokenDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10,
+            this.dataGridViewTextBoxColumn11,
+            this.dataGridViewTextBoxColumn12});
+            this.dataGridViewBrokenDependancies.Location = new System.Drawing.Point(6, 154);
+            this.dataGridViewBrokenDependancies.Name = "dataGridViewBrokenDependancies";
+            this.dataGridViewBrokenDependancies.ReadOnly = true;
+            this.dataGridViewBrokenDependancies.RowHeadersVisible = false;
+            this.dataGridViewBrokenDependancies.RowHeadersWidth = 90;
+            this.dataGridViewBrokenDependancies.Size = new System.Drawing.Size(627, 345);
+            this.dataGridViewBrokenDependancies.TabIndex = 25;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.HeaderText = "Version";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.HeaderText = "Author";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.HeaderText = "Website";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(8, 138);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(276, 13);
+            this.label27.TabIndex = 24;
+            this.label27.Text = "The following dependancies will be broken by this action:";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(18, 107);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(69, 13);
+            this.label25.TabIndex = 21;
+            this.label25.Text = "New version:";
+            // 
+            // textBoxNewVersion
+            // 
+            this.textBoxNewVersion.Location = new System.Drawing.Point(145, 104);
+            this.textBoxNewVersion.Name = "textBoxNewVersion";
+            this.textBoxNewVersion.Size = new System.Drawing.Size(100, 20);
+            this.textBoxNewVersion.TabIndex = 20;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(18, 71);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(81, 13);
+            this.label24.TabIndex = 19;
+            this.label24.Text = "Current version:";
+            // 
+            // textBoxCurrentVersion
+            // 
+            this.textBoxCurrentVersion.Location = new System.Drawing.Point(145, 71);
+            this.textBoxCurrentVersion.Name = "textBoxCurrentVersion";
+            this.textBoxCurrentVersion.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCurrentVersion.TabIndex = 18;
+            // 
+            // labelVersionError
+            // 
+            this.labelVersionError.AutoSize = true;
+            this.labelVersionError.Location = new System.Drawing.Point(8, 50);
+            this.labelVersionError.Name = "labelVersionError";
+            this.labelVersionError.Size = new System.Drawing.Size(309, 13);
+            this.labelVersionError.TabIndex = 17;
+            this.labelVersionError.Text = "The selected package is already installed, and is a ??? version..";
+            // 
+            // label21
+            // 
+            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label21.AutoEllipsis = true;
+            this.label21.AutoSize = true;
+            this.label21.BackColor = System.Drawing.Color.Silver;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.ForeColor = System.Drawing.Color.Black;
+            this.label21.Location = new System.Drawing.Point(232, 18);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(144, 16);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "Package Version Error";
+            // 
+            // label22
+            // 
+            this.label22.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label22.BackColor = System.Drawing.Color.Silver;
+            this.label22.Location = new System.Drawing.Point(7, 10);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(627, 32);
+            this.label22.TabIndex = 15;
+            // 
+            // button4
+            // 
+            this.button4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(198, 505);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(146, 40);
+            this.button4.TabIndex = 14;
+            this.button4.Text = "Proceed Anyway";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // panelPackageList
             // 
@@ -3944,6 +4117,9 @@
             this.panelInfo.ResumeLayout(false);
             this.panelPackages.ResumeLayout(false);
             this.panelPackages.PerformLayout();
+            this.panelVersionError.ResumeLayout(false);
+            this.panelVersionError.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).EndInit();
             this.panelPackageList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
@@ -4244,6 +4420,21 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Panel panelVersionError;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox textBoxNewVersion;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox textBoxCurrentVersion;
+        private System.Windows.Forms.Label labelVersionError;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.DataGridView dataGridViewBrokenDependancies;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
         
     }
 }

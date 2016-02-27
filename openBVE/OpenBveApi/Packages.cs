@@ -23,7 +23,7 @@ namespace OpenBveApi.Packages
         /// <summary>The GUID for this package</summary>
         public string GUID;
         /// <summary>Stores the package type- 0 for routes and 1 for trains</summary>
-        public int PackageType;
+        public PackageType PackageType;
         /// <summary>The file this package was installed from</summary>
         public string PackageFile;
         /// <summary>The image for this package</summary>
@@ -53,7 +53,20 @@ namespace OpenBveApi.Packages
         /// <summary>The version is the same version as that currently installed</summary>
         SameVersion = 3,
     }
-    
+
+    /// <summary>Defines the possible package types</summary>
+    public enum PackageType
+    {
+        /// <summary>The type of package was not found/ undefined</summary>
+        NotFound = 0,
+        /// <summary>The package is a route</summary>
+        Route = 1,
+        /// <summary>The package is a train</summary>
+        Train = 2,
+        /// <summary>The package is a route, utility etc.</summary>
+        Other = 3,
+    }
+
 
     /// <summary>Provides functions for manipulating OpenBVE packages</summary>
     public static class Manipulation
@@ -202,6 +215,9 @@ namespace OpenBveApi.Packages
                                     case "version":
                                         currentPackage.PackageVersion = Version.Parse(Attribute.InnerText);
                                         break;
+                                    case "type":
+                                        Enum.TryParse(Attribute.InnerText, out currentPackage.PackageType);
+                                        break;
                                 }
                             }
                         }
@@ -244,7 +260,7 @@ namespace OpenBveApi.Packages
                                         currentDependancy.MaximumVersion = Version.Parse(Attribute.InnerText);
                                         break;
                                     case "type":
-                                        int.TryParse(Attribute.InnerText, out currentDependancy.PackageType);
+                                        Enum.TryParse(Attribute.InnerText, out currentDependancy.PackageType);
                                         break;
 
                                 }
@@ -312,7 +328,7 @@ namespace OpenBveApi.Packages
             foreach (Package currentDependancy in currentPackage.Dependancies)
             {
                 //Itinerate through the routes list
-                if (currentDependancy.PackageType == 0)
+                if (currentDependancy.PackageType == PackageType.Route)
                 {
                     foreach (Package Package in installedRoutes)
                     {
@@ -327,7 +343,7 @@ namespace OpenBveApi.Packages
                         }
                     }
                 }
-                if (currentDependancy.PackageType == 1)
+                if (currentDependancy.PackageType == PackageType.Train)
                 {
                     //Itinerate through the trains list
                     foreach (Package Package in installedTrains)
@@ -350,6 +366,48 @@ namespace OpenBveApi.Packages
                 return null;
             }
             return currentPackage.Dependancies;
+        }
+
+        /// <summary>Checks to see if upgrading or downgrading this package will break any dependancies</summary>
+        public static List<Package> UpgradeDowngradeDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)
+        {
+            List<Package> Dependancies = new List<Package>();
+            foreach (Package routePackage in installedRoutes)
+            {
+                //Itinerate through the routes list
+                foreach (Package Package in routePackage.Dependancies)
+                {
+                    if(Package.GUID == currentPackage.GUID)
+                    {
+                        if (Package.MinimumVersion > currentPackage.PackageVersion || Package.MaximumVersion < currentPackage.PackageVersion)
+                        {
+                            Dependancies.Add(Package);
+                        }
+                    }
+                }
+
+            }
+            foreach (Package trainPackage in installedTrains)
+            {
+                //Itinerate through the routes list
+                foreach (Package Package in trainPackage.Dependancies)
+                {
+                    if (Package.GUID == currentPackage.GUID)
+                    {
+                        if (Package.MinimumVersion > currentPackage.PackageVersion || Package.MaximumVersion < currentPackage.PackageVersion)
+                        {
+                            Dependancies.Add(Package);
+                        }
+                    }
+                }
+
+            }
+            if (Dependancies.Count == 0)
+            {
+                //Return null if there are no unmet dependancies
+                return null;
+            }
+            return Dependancies;
         }
     }
 }
