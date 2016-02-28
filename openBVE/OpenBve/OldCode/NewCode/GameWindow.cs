@@ -245,6 +245,7 @@ namespace OpenBve
 
         protected override void OnLoad(EventArgs e)
         {
+            Renderer.DetermineMaxAFLevel();
             //Initialise the loader thread queues
             jobs = new Queue<ThreadStart>(10);
             locks = new Queue<object>(10);

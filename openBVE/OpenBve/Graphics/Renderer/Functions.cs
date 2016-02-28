@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using System;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -129,7 +130,7 @@ namespace OpenBve
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
             GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
             Interface.LoadHUD();
-			InitLoading();
+            InitLoading();
             Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
@@ -167,6 +168,38 @@ namespace OpenBve
             if (OptionLightingResultingAmount > 1.0f) OptionLightingResultingAmount = 1.0f;
             GL.Enable(EnableCap.Lighting); LightingEnabled = true;
             GL.DepthFunc(DepthFunction.Lequal);
+        }
+
+        /// <summary>
+        /// Determines the maximum Anisotropic filtering level the system supports
+        /// </summary>
+        internal static void DetermineMaxAFLevel()
+        {
+
+            string[] Extensions = GL.GetString(StringName.Extensions).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            Interface.CurrentOptions.AnisotropicFilteringMaximum = 0;
+            for (int i = 0; i < Extensions.Length; i++)
+            {
+                if (string.Compare(Extensions[i], "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    float n; GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out n);
+                    Interface.CurrentOptions.AnisotropicFilteringMaximum = (int)Math.Round((double)n);
+                    break;
+                }
+            }
+            if (Interface.CurrentOptions.AnisotropicFilteringMaximum <= 0)
+            {
+                Interface.CurrentOptions.AnisotropicFilteringMaximum = 0;
+                Interface.CurrentOptions.AnisotropicFilteringLevel = 0;
+            }
+            else if (Interface.CurrentOptions.AnisotropicFilteringLevel == 0 & Interface.CurrentOptions.AnisotropicFilteringMaximum > 0)
+            {
+                Interface.CurrentOptions.AnisotropicFilteringLevel = Interface.CurrentOptions.AnisotropicFilteringMaximum;
+            }
+            else if (Interface.CurrentOptions.AnisotropicFilteringLevel > Interface.CurrentOptions.AnisotropicFilteringMaximum)
+            {
+                Interface.CurrentOptions.AnisotropicFilteringLevel = Interface.CurrentOptions.AnisotropicFilteringMaximum;
+            }
         }
     }
 }
