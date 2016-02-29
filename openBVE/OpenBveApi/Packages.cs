@@ -103,7 +103,7 @@ namespace OpenBveApi.Packages
                 string Text = "";
                 foreach (var FileName in PackageFiles)
                 {
-                    Text += FileName + "\r\n";
+                    Text += extractionDirectory + FileName + "\r\n";
                 }
                 packageFiles = Text;
                 //Write out the package file list
@@ -288,8 +288,13 @@ namespace OpenBveApi.Packages
     /// <summary>Provides information functions for OpenBVE packages</summary>
     public static class Information
     {
+
         /// <summary>Checks to see if this package is currently installed, and if so whether there is another version installed</summary>
-        public static VersionInformation CheckVersion(Package currentPackage, List<Package> packageList, ref Version oldVersion)
+        /// <param name="currentPackage">The package to check</param>
+        /// <param name="packageList">The list of currently installed packages</param>
+        /// <param name="oldPackage">Returns via 'ref' the current package installed</param>
+        /// <returns>Whether the package to check is installed, and if so whether it is an older, newer or identical version</returns>
+        public static VersionInformation CheckVersion(Package currentPackage, List<Package> packageList, ref Package oldPackage)
         {
 
             foreach (var Package in packageList)
@@ -297,6 +302,7 @@ namespace OpenBveApi.Packages
                 //Check GUID
                 if (currentPackage.GUID == Package.GUID)
                 {
+                    oldPackage = currentPackage;
                     //GUID found, check versions
                     if (currentPackage.PackageVersion == Package.PackageVersion)
                     {
@@ -306,13 +312,11 @@ namespace OpenBveApi.Packages
                     if (currentPackage.PackageVersion > Package.PackageVersion)
                     {
                         //This is an older version, so update the ref with the found version number
-                        oldVersion = Package.PackageVersion;
                         return VersionInformation.OlderVersion;
                     }
                     if (currentPackage.PackageVersion < Package.PackageVersion)
                     {
                         //This is a newer version, but it's good manners to point out that this will be replacing an older version
-                        oldVersion = Package.PackageVersion;
                         return VersionInformation.NewerVersion;
                     }
                     

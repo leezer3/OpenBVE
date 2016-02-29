@@ -1167,6 +1167,5 @@ namespace OpenBve {
 	        panelPackageList.Hide();
 	        panelPackageInstall.Show();
 	    }
-
 	}
 }

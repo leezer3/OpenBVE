@@ -21,6 +21,7 @@ namespace OpenBve
         }
 
         private Package currentPackage;
+        private Package oldPackage;
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -71,17 +72,24 @@ namespace OpenBve
                     return;
                 }
                 VersionInformation Info;
-                Version OldVersion = new Version();
-                if (currentPackage.PackageType == 0)
+                oldPackage = null;
+                switch (currentPackage.PackageType)
                 {
-                    Info = Information.CheckVersion(currentPackage, formMain.InstalledRoutes, ref OldVersion);
-                }
-                else
-                {
-                    Info = Information.CheckVersion(currentPackage, formMain.InstalledTrains, ref OldVersion);
+                    case PackageType.Route:
+                        Info = Information.CheckVersion(currentPackage, formMain.InstalledRoutes, ref oldPackage);
+                        break;
+                    case PackageType.Train:
+                        Info = Information.CheckVersion(currentPackage, formMain.InstalledTrains, ref oldPackage);
+                        break;
+                    default:
+                        Info = Information.CheckVersion(currentPackage, formMain.InstalledTrains, ref oldPackage);
+                        //TODO: Show appropriate error message....
+                        //The current info is temp, as otherwise Info may not be initialised before access
+                        break;
                 }
                 if (Info == VersionInformation.NotFound)
                 {
+                    panelPackageInstall.Hide();
                     Extract();
                 }
                 else
@@ -90,15 +98,17 @@ namespace OpenBve
                     {
                         case VersionInformation.NewerVersion:
                             labelVersionError.Text = "The selected package is already installed, and is a newer version.";
+                            textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
                             break;
                         case VersionInformation.SameVersion:
                             labelVersionError.Text = "The selected package is already installed, and is an identical version.";
+                            textBoxCurrentVersion.Text = currentPackage.PackageVersion.ToString();
                             break;
                         case VersionInformation.OlderVersion:
                             labelVersionError.Text = "The selected package is already installed, and is an older version.";
+                            textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
                             break;
                     }
-                    textBoxCurrentVersion.Text = OldVersion.ToString();
                     textBoxNewVersion.Text = currentPackage.PackageVersion.ToString();
                     if (currentPackage.Dependancies.Count != 0)
                     {
@@ -124,32 +134,58 @@ namespace OpenBve
             panelPackageList.Show();
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            Extract();
-        }
-
-        private readonly string PackageDatabase = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
+        private static readonly string PackageDatabase = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
+        private static readonly string packageDatabaseFile = OpenBveApi.Path.CombineFile(PackageDatabase, "packages.xml");
 
         private void buttonProceedAnyway_Click(object sender, EventArgs e)
         {
-            Extract();
+            Extract(oldPackage);
         }
 
-        private void Extract()
+        private void Extract(Package packageToReplace = null)
         {
             string ExtractionDirectory;
-            if (currentPackage.PackageType == 0)
+            switch (currentPackage.PackageType)
             {
-                ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
-            }
-            else
-            {
-                ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+                case PackageType.Route:
+                    ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
+                    break;
+                case PackageType.Train:
+                default:
+                    ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+                    break;
             }
             string PackageFiles = "";
             Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, PackageDatabase, ref PackageFiles);
-            formMain.InstalledRoutes.Add(currentPackage);
+            switch (currentPackage.PackageType)
+            {
+                case PackageType.Route:
+                    if (packageToReplace != null)
+                    {
+                        for (int i = InstalledRoutes.Count; i > 0; i--)
+                        {
+                            if (InstalledRoutes[i -1].GUID == currentPackage.GUID)
+                            {
+                                InstalledRoutes.Remove(InstalledRoutes[i -1]);
+                            }
+                        }
+                    }
+                    formMain.InstalledRoutes.Add(currentPackage);
+                    break;
+                case PackageType.Train:
+                    if (packageToReplace != null)
+                    {
+                        for (int i = InstalledTrains.Count; i > 0; i--)
+                        {
+                            if (InstalledTrains[i -1].GUID == currentPackage.GUID)
+                            {
+                                InstalledTrains.Remove(InstalledTrains[i -1]);
+                            }
+                        }
+                    }
+                    formMain.InstalledTrains.Add(currentPackage);
+                    break;
+            }
             textBoxFilesInstalled.Text = PackageFiles;
             panelDependancyError.Hide();
             panelVersionError.Hide();
@@ -159,36 +195,47 @@ namespace OpenBve
         /// <summary>Call this method to save the package list to disk.</summary>
         internal void SavePackages()
         {
-            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
-            if (File.Exists(PackageDatabase))
+            try
             {
-                File.Delete(PackageDatabase);
+                if (!Directory.Exists(PackageDatabase))
+                {
+                    Directory.CreateDirectory(PackageDatabase);
+                }
+                if (File.Exists(packageDatabaseFile))
+                {
+                    File.Delete(packageDatabaseFile);
+                }
+                //TODO: Can we automatically serialize the XML rather than manually writing?
+                using (StreamWriter sw = new StreamWriter(packageDatabaseFile))
+                {
+                    sw.WriteLine("<?xml version=\"1.0\"?>");
+                    sw.WriteLine("<OpenBVE>");
+                    if (InstalledRoutes.Count > 0)
+                    {
+                        //Write out routes
+                        sw.WriteLine("<PackageDatabase id=\"Routes\">");
+                        foreach (var Package in InstalledRoutes)
+                        {
+                            sw.WriteLine("<Package name=\"" + Package.Name + "\" author=\"" + Package.Author + "\" version=\"" + Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"0\"/>");
+                        }
+                        sw.WriteLine("</PackageDatabase>");
+                    }
+                    if (InstalledTrains.Count > 0)
+                    {
+                        //Write out trains
+                        sw.WriteLine("<PackageDatabase id=\"Trains\">");
+                        foreach (var Package in InstalledTrains)
+                        {
+                            sw.WriteLine("<Package name=\"" + Package.Name + "\" author=\"" + Package.Author + "\" version=\"" + Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"1\"/>");
+                        }
+                        sw.WriteLine("</PackageDatabase>");
+                    }
+                    sw.WriteLine("</OpenBVE>");
+                }
             }
-            using (StreamWriter sw = new StreamWriter(PackageDatabase))
+            catch (Exception)
             {
-                sw.WriteLine("<?xml version=\"1.0\"?>");
-                sw.WriteLine("<OpenBVE>");
-                if (InstalledRoutes.Count > 0)
-                {
-                    //Write out routes
-                    sw.WriteLine("<PackageDatabase id=\"Routes\">");
-                    foreach (var Package in InstalledRoutes)
-                    {
-                        sw.WriteLine("<Package name=\"" + Package.Name +"\" author=\"" + Package.Author + "\" version=\""+Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"0\"/>");
-                    }
-                    sw.WriteLine("</PackageDatabase>");
-                }
-                if (InstalledTrains.Count > 0)
-                {
-                    //Write out trains
-                    sw.WriteLine("<PackageDatabase id=\"Trains\">");
-                    foreach (var Package in InstalledTrains)
-                    {
-                        sw.WriteLine("<Package name=\"" + Package.Name + "\" author=\"" + Package.Author + "\" version=\"" + Package.PackageVersion + "\" website=\"" + Package.Website + "\" guid=\"" + Package.GUID + "\" type=\"1\"/>");
-                    }
-                    sw.WriteLine("</PackageDatabase>");
-                }
-                sw.WriteLine("</OpenBVE>");
+                MessageBox.Show("An error occured whilst saving the package database. \r\n Please check for write permissions.");
             }
         }
 
@@ -199,15 +246,14 @@ namespace OpenBve
             InstalledRoutes.Clear();
             XmlDocument currentXML = new XmlDocument();
             //Attempt to load the packages database file
-            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
-            if (!File.Exists(PackageDatabase))
+            if (!File.Exists(packageDatabaseFile))
             {
                 //The database file doesn't exist.....
                 return;
             }
             try
             {
-                currentXML.Load(PackageDatabase);
+                currentXML.Load(packageDatabaseFile);
             }
             catch
             {
@@ -254,6 +300,10 @@ namespace OpenBve
                                 break;
                         }
                     }
+                    if (String.IsNullOrEmpty(currentPackage.GUID))
+                    {
+                        return;
+                    }
                     //Add to the list of installed packages
                     InstalledRoutes.Add(currentPackage);
                 }
@@ -267,15 +317,14 @@ namespace OpenBve
             InstalledTrains.Clear();
             XmlDocument currentXML = new XmlDocument();
             //Attempt to load the packages database file
-            var PackageDatabase = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase"), "packages.xml");
-            if (!File.Exists(PackageDatabase))
+            if (!File.Exists(packageDatabaseFile))
             {
                 //The database file doesn't exist.....
                 return;
             }
             try
             {
-                currentXML.Load(PackageDatabase);
+                currentXML.Load(packageDatabaseFile);
             }
             catch
             {
@@ -302,25 +351,29 @@ namespace OpenBve
                     Package currentPackage = new Package();
                     foreach (XmlAttribute currentAttribute in Package.Attributes)
                     {
-                        switch (currentAttribute.Name)
+                        switch (currentAttribute.Name.ToLower())
                         {
                             //Parse attributes
-                            case "Version":
+                            case "version":
                                 currentPackage.PackageVersion = Version.Parse(currentAttribute.InnerText);
                                 break;
-                            case "Name":
+                            case "name":
                                 currentPackage.Name = currentAttribute.InnerText;
                                 break;
-                            case "Author":
+                            case "author":
                                 currentPackage.Author = currentAttribute.InnerText;
                                 break;
-                            case "Website":
+                            case "website":
                                 currentPackage.Website = currentAttribute.InnerText;
                                 break;
-                            case "GUID":
+                            case "guid":
                                 currentPackage.GUID = currentAttribute.InnerText;
                                 break;
                         }
+                    }
+                    if (String.IsNullOrEmpty(currentPackage.GUID))
+                    {
+                        return;
                     }
                     //Add to the list of installed packages
                     InstalledTrains.Add(currentPackage);
@@ -329,31 +382,43 @@ namespace OpenBve
 
         }
 
+        //TODO: Combine two methods into singleton??
         /// <summary>This method should be called to populate the list of installed packages </summary>
         internal void PopulatePackageList()
         {
             //Clear the package list
             dataGridViewRoutePackages.Rows.Clear();
-            if (InstalledRoutes.Count == 0) return;
-            //We have route packages in our list!
-            for(int i = 0; i < InstalledRoutes.Count; i++)
+            if (InstalledRoutes.Count != 0)
             {
-                //Create row
-                object[] Package = { InstalledRoutes[i].Name, InstalledRoutes[i].PackageVersion, InstalledRoutes[i].Author, 
-                                       InstalledRoutes[i].Website};
-                //Add to the datagrid view
-                dataGridViewRoutePackages.Rows.Add(Package);
-            }
+                //We have route packages in our list!
+                for (int i = 0; i < InstalledRoutes.Count; i++)
+                {
+                    //Create row
+                    object[] Package =
+                    {
+                        InstalledRoutes[i].Name, InstalledRoutes[i].PackageVersion, InstalledRoutes[i].Author,
+                        InstalledRoutes[i].Website
+                    };
+                    //Add to the datagrid view
+                    dataGridViewRoutePackages.Rows.Add(Package);
+                }
 
-            if (InstalledTrains.Count == 0) return;
-            //We have train packages in our list!
-            for (int i = 0; i < InstalledTrains.Count; i++)
+            }
+            dataGridViewTrainPackages.Rows.Clear();
+            if (InstalledTrains.Count != 0)
             {
-                //Create row
-                object[] Package = { InstalledTrains[i].Name, InstalledTrains[i].PackageVersion, InstalledTrains[i].Author, 
-                                       InstalledTrains[i].Website};
-                //Add to the datagrid view
-                dataGridViewTrainPackages.Rows.Add(Package);
+                //We have train packages in our list!
+                for (int i = 0; i < InstalledTrains.Count; i++)
+                {
+                    //Create row
+                    object[] Package =
+                    {
+                        InstalledTrains[i].Name, InstalledTrains[i].PackageVersion, InstalledTrains[i].Author,
+                        InstalledTrains[i].Website
+                    };
+                    //Add to the datagrid view
+                    dataGridViewTrainPackages.Rows.Add(Package);
+                }
             }
         }
 
