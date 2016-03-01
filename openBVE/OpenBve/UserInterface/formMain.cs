@@ -1160,12 +1160,5 @@ namespace OpenBve {
                 AboutDialog.Show();
             }
         }
-
-	    private void buttonInstallRoute_Click(object sender, EventArgs e)
-	    {
-            TryLoadImage(pictureBoxPackageImage, "route_error.png");
-	        panelPackageList.Hide();
-	        panelPackageInstall.Show();
-	    }
 	}
 }

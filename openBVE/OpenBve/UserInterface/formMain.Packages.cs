@@ -9,10 +9,17 @@ namespace OpenBve
 {
     internal partial class formMain
     {
+        /*
+         * This class contains the drawing and management routines for the
+         * package management tab of the main form.
+         * 
+         * Package manipulation is handled by the OpenBveApi.Packages namespace
+         */
         internal static List<Package> InstalledRoutes = new List<Package>();
         internal static List<Package> InstalledTrains = new List<Package>();
+        internal int selectedTrainPackageIndex = 0;
+        internal int selectedRoutePackageIndex = 0;
 
-        
         internal void RefreshPackages()
         {
             SavePackages();
@@ -23,7 +30,7 @@ namespace OpenBve
         private Package currentPackage;
         private Package oldPackage;
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonInstall_Click(object sender, EventArgs e)
         {
             //Check to see if the package is null- If null, then we haven't loaded a package yet
             if (currentPackage == null)
@@ -55,7 +62,7 @@ namespace OpenBve
                         {
                             TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
                         }
-                        button2.Text = "Install";
+                        buttonSelectPackage.Text = "Install";
                     }
                 }
 
@@ -127,7 +134,7 @@ namespace OpenBve
                 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonInstallFinished_Click(object sender, EventArgs e)
         {
             RefreshPackages();
             panelSuccess.Hide();
@@ -438,5 +445,76 @@ namespace OpenBve
             }
         }
 
+        /// <summary>This method should be called to uninstall a package</summary>
+        internal void UninstallPackage(int selectedPackageIndex, ref List<Package> Packages)
+        {
+            //TODO: Requires dependancy checking on uninstall
+            string uninstallResults = "";
+            Package packageToUninstall = Packages[selectedPackageIndex];
+            if (OpenBveApi.Packages.Manipulation.UninstallPackage(packageToUninstall, PackageDatabase,ref uninstallResults))
+            {
+                Packages.Remove(packageToUninstall);
+                textBoxUninstallResult.Text = uninstallResults;
+                panelPackageList.Hide();
+                panelPackageInstall.Hide();
+                panelDependancyError.Hide();
+                panelVersionError.Hide();
+                panelSuccess.Hide();
+            }
+            else
+            {
+                if (uninstallResults == null)
+                {
+                    //TODO: Requires a specific error for attempting to uninstall a package with the XML file list missing
+                }
+            }
+            panelUninstallResult.Show();
+        }
+
+        private void dataGridViewTrainPackages_SelectionChanged(object sender, EventArgs e)
+        {
+            selectedRoutePackageIndex = -1;
+            selectedTrainPackageIndex = -1;
+            if (dataGridViewTrainPackages.SelectedRows.Count > 0)
+            {
+                selectedTrainPackageIndex = dataGridViewTrainPackages.SelectedRows[0].Index;
+            }
+        }
+
+        private void dataGridViewRoutePackages_SelectionChanged(object sender, EventArgs e)
+        {
+            selectedTrainPackageIndex = -1;
+            selectedRoutePackageIndex = -1;
+            if (dataGridViewRoutePackages.SelectedRows.Count > 0)
+            {
+                selectedRoutePackageIndex = dataGridViewRoutePackages.SelectedRows[0].Index;
+            }
+        }
+
+        private void buttonUninstallPackage_Click(object sender, EventArgs e)
+        {
+            if (selectedRoutePackageIndex != -1)
+            {
+                UninstallPackage(selectedRoutePackageIndex, ref InstalledRoutes);
+            }
+            if (selectedTrainPackageIndex != -1)
+            {
+                UninstallPackage(selectedTrainPackageIndex, ref InstalledTrains);
+            }
+        }
+
+        private void buttonUninstallFinish_Click(object sender, EventArgs e)
+        {
+            panelUninstallResult.Hide();
+            panelPackageList.Show();
+        }
+
+
+        private void buttonInstallPackage_Click(object sender, EventArgs e)
+        {
+            TryLoadImage(pictureBoxPackageImage, "route_error.png");
+            panelPackageList.Hide();
+            panelPackageInstall.Show();
+        }
     }
 }

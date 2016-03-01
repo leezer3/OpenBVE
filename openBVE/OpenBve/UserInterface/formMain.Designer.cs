@@ -260,23 +260,23 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
-            this.buttonInstallRoute = new System.Windows.Forms.Button();
+            this.buttonUninstallPackage = new System.Windows.Forms.Button();
+            this.buttonInstallPackage = new System.Windows.Forms.Button();
             this.dataGridViewRoutePackages = new System.Windows.Forms.DataGridView();
             this.routeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.routeVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.labelInstalledTrains = new System.Windows.Forms.Label();
+            this.labelInstalledRoutes = new System.Windows.Forms.Label();
             this.panelPackageInstall = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelInstallText = new System.Windows.Forms.Label();
+            this.labelInstallHeader = new System.Windows.Forms.Label();
+            this.buttonSelectPackage = new System.Windows.Forms.Button();
+            this.textBoxPackageDescription = new System.Windows.Forms.TextBox();
+            this.labelPackageDescription = new System.Windows.Forms.Label();
             this.linkLabelPackageWebsite = new System.Windows.Forms.LinkLabel();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelPackageWebsite = new System.Windows.Forms.Label();
             this.textBoxPackageVersion = new System.Windows.Forms.TextBox();
             this.labelPackageVersion = new System.Windows.Forms.Label();
             this.textBoxPackageAuthor = new System.Windows.Forms.TextBox();
@@ -290,33 +290,40 @@
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelMissingDepemdanciesText2 = new System.Windows.Forms.Label();
+            this.labelMissingDepemdanciesText1 = new System.Windows.Forms.Label();
+            this.labelDependancyErrorHeader = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.buttonProceedAnyway = new System.Windows.Forms.Button();
             this.panelSuccess = new System.Windows.Forms.Panel();
             this.textBoxFilesInstalled = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
+            this.labelListFilesInstalled = new System.Windows.Forms.Label();
+            this.labelInstallSuccess1 = new System.Windows.Forms.Label();
+            this.labelInstallSucess2 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.buttonInstallFinish = new System.Windows.Forms.Button();
             this.panelVersionError = new System.Windows.Forms.Panel();
             this.dataGridViewBrokenDependancies = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
+            this.labelBrokenDependancies = new System.Windows.Forms.Label();
+            this.labelNewVersion = new System.Windows.Forms.Label();
             this.textBoxNewVersion = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
+            this.labelCurrentVersion = new System.Windows.Forms.Label();
             this.textBoxCurrentVersion = new System.Windows.Forms.TextBox();
             this.labelVersionError = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
+            this.labelVersionErrorHeader = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
+            this.buttonProceedAnyway1 = new System.Windows.Forms.Button();
+            this.panelUninstallResult = new System.Windows.Forms.Panel();
+            this.textBoxUninstallResult = new System.Windows.Forms.TextBox();
+            this.labelUninstallLog = new System.Windows.Forms.Label();
+            this.labelUninstallSuccess = new System.Windows.Forms.Label();
+            this.labelUninstallSuccessHeader = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.buttonUninstallFinish = new System.Windows.Forms.Button();
             this.labelPackages = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -401,6 +408,7 @@
             this.panelSuccess.SuspendLayout();
             this.panelVersionError.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
+            this.panelUninstallResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelFillerOne
@@ -3240,6 +3248,7 @@
             this.panelPackages.Controls.Add(this.panelDependancyError);
             this.panelPackages.Controls.Add(this.panelSuccess);
             this.panelPackages.Controls.Add(this.panelVersionError);
+            this.panelPackages.Controls.Add(this.panelUninstallResult);
             this.panelPackages.Controls.Add(this.labelPackages);
             this.panelPackages.Controls.Add(this.label11);
             this.panelPackages.Controls.Add(this.label14);
@@ -3255,11 +3264,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
-            this.panelPackageList.Controls.Add(this.button1);
-            this.panelPackageList.Controls.Add(this.buttonInstallRoute);
+            this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
+            this.panelPackageList.Controls.Add(this.buttonInstallPackage);
             this.panelPackageList.Controls.Add(this.dataGridViewRoutePackages);
-            this.panelPackageList.Controls.Add(this.label7);
-            this.panelPackageList.Controls.Add(this.label10);
+            this.panelPackageList.Controls.Add(this.labelInstalledTrains);
+            this.panelPackageList.Controls.Add(this.labelInstalledRoutes);
             this.panelPackageList.Location = new System.Drawing.Point(0, 30);
             this.panelPackageList.Name = "panelPackageList";
             this.panelPackageList.Size = new System.Drawing.Size(641, 559);
@@ -3286,8 +3295,10 @@
             this.dataGridViewTrainPackages.ReadOnly = true;
             this.dataGridViewTrainPackages.RowHeadersVisible = false;
             this.dataGridViewTrainPackages.RowHeadersWidth = 90;
+            this.dataGridViewTrainPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 185);
             this.dataGridViewTrainPackages.TabIndex = 22;
+            this.dataGridViewTrainPackages.SelectionChanged += new System.EventHandler(this.dataGridViewTrainPackages_SelectionChanged);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -3313,25 +3324,26 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
-            // button1
+            // buttonUninstallPackage
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(495, 456);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(136, 23);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Uninstall Package";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUninstallPackage.Location = new System.Drawing.Point(495, 456);
+            this.buttonUninstallPackage.Name = "buttonUninstallPackage";
+            this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
+            this.buttonUninstallPackage.TabIndex = 21;
+            this.buttonUninstallPackage.Text = "Uninstall Package";
+            this.buttonUninstallPackage.UseVisualStyleBackColor = true;
+            this.buttonUninstallPackage.Click += new System.EventHandler(this.buttonUninstallPackage_Click);
             // 
-            // buttonInstallRoute
+            // buttonInstallPackage
             // 
-            this.buttonInstallRoute.Location = new System.Drawing.Point(5, 457);
-            this.buttonInstallRoute.Name = "buttonInstallRoute";
-            this.buttonInstallRoute.Size = new System.Drawing.Size(136, 23);
-            this.buttonInstallRoute.TabIndex = 20;
-            this.buttonInstallRoute.Text = "Install Package";
-            this.buttonInstallRoute.UseVisualStyleBackColor = true;
-            this.buttonInstallRoute.Click += new System.EventHandler(this.buttonInstallRoute_Click);
+            this.buttonInstallPackage.Location = new System.Drawing.Point(5, 457);
+            this.buttonInstallPackage.Name = "buttonInstallPackage";
+            this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
+            this.buttonInstallPackage.TabIndex = 20;
+            this.buttonInstallPackage.Text = "Install Package";
+            this.buttonInstallPackage.UseVisualStyleBackColor = true;
+            this.buttonInstallPackage.Click += new System.EventHandler(this.buttonInstallPackage_Click);
             // 
             // dataGridViewRoutePackages
             // 
@@ -3354,8 +3366,10 @@
             this.dataGridViewRoutePackages.ReadOnly = true;
             this.dataGridViewRoutePackages.RowHeadersVisible = false;
             this.dataGridViewRoutePackages.RowHeadersWidth = 90;
+            this.dataGridViewRoutePackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 185);
             this.dataGridViewRoutePackages.TabIndex = 19;
+            this.dataGridViewRoutePackages.SelectionChanged += new System.EventHandler(this.dataGridViewRoutePackages_SelectionChanged);
             // 
             // routeName
             // 
@@ -3381,48 +3395,48 @@
             this.routeWebsite.Name = "routeWebsite";
             this.routeWebsite.ReadOnly = true;
             // 
-            // label7
+            // labelInstalledTrains
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelInstalledTrains.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoEllipsis = true;
-            this.label7.BackColor = System.Drawing.Color.Silver;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(4, 242);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(627, 24);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Installed Trains";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelInstalledTrains.AutoEllipsis = true;
+            this.labelInstalledTrains.BackColor = System.Drawing.Color.Silver;
+            this.labelInstalledTrains.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelInstalledTrains.ForeColor = System.Drawing.Color.White;
+            this.labelInstalledTrains.Location = new System.Drawing.Point(4, 242);
+            this.labelInstalledTrains.Name = "labelInstalledTrains";
+            this.labelInstalledTrains.Size = new System.Drawing.Size(627, 24);
+            this.labelInstalledTrains.TabIndex = 18;
+            this.labelInstalledTrains.Text = "Installed Trains";
+            this.labelInstalledTrains.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label10
+            // labelInstalledRoutes
             // 
-            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelInstalledRoutes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label10.AutoEllipsis = true;
-            this.label10.BackColor = System.Drawing.Color.Silver;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(4, 8);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(627, 16);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Installed Routes";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelInstalledRoutes.AutoEllipsis = true;
+            this.labelInstalledRoutes.BackColor = System.Drawing.Color.Silver;
+            this.labelInstalledRoutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelInstalledRoutes.ForeColor = System.Drawing.Color.White;
+            this.labelInstalledRoutes.Location = new System.Drawing.Point(4, 8);
+            this.labelInstalledRoutes.Name = "labelInstalledRoutes";
+            this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 16);
+            this.labelInstalledRoutes.TabIndex = 17;
+            this.labelInstalledRoutes.Text = "Installed Routes";
+            this.labelInstalledRoutes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelPackageInstall
             // 
             this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelPackageInstall.Controls.Add(this.label8);
-            this.panelPackageInstall.Controls.Add(this.label6);
-            this.panelPackageInstall.Controls.Add(this.button2);
-            this.panelPackageInstall.Controls.Add(this.textBox3);
-            this.panelPackageInstall.Controls.Add(this.label5);
+            this.panelPackageInstall.Controls.Add(this.labelInstallText);
+            this.panelPackageInstall.Controls.Add(this.labelInstallHeader);
+            this.panelPackageInstall.Controls.Add(this.buttonSelectPackage);
+            this.panelPackageInstall.Controls.Add(this.textBoxPackageDescription);
+            this.panelPackageInstall.Controls.Add(this.labelPackageDescription);
             this.panelPackageInstall.Controls.Add(this.linkLabelPackageWebsite);
-            this.panelPackageInstall.Controls.Add(this.label4);
+            this.panelPackageInstall.Controls.Add(this.labelPackageWebsite);
             this.panelPackageInstall.Controls.Add(this.textBoxPackageVersion);
             this.panelPackageInstall.Controls.Add(this.labelPackageVersion);
             this.panelPackageInstall.Controls.Add(this.textBoxPackageAuthor);
@@ -3435,63 +3449,63 @@
             this.panelPackageInstall.Size = new System.Drawing.Size(641, 559);
             this.panelPackageInstall.TabIndex = 4;
             // 
-            // label8
+            // labelInstallText
             // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelInstallText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label8.AutoEllipsis = true;
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.Silver;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.Black;
-            this.label8.Location = new System.Drawing.Point(232, 18);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 16);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "Install a Package";
+            this.labelInstallText.AutoEllipsis = true;
+            this.labelInstallText.AutoSize = true;
+            this.labelInstallText.BackColor = System.Drawing.Color.Silver;
+            this.labelInstallText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelInstallText.ForeColor = System.Drawing.Color.Black;
+            this.labelInstallText.Location = new System.Drawing.Point(232, 18);
+            this.labelInstallText.Name = "labelInstallText";
+            this.labelInstallText.Size = new System.Drawing.Size(111, 16);
+            this.labelInstallText.TabIndex = 16;
+            this.labelInstallText.Text = "Install a Package";
             // 
-            // label6
+            // labelInstallHeader
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.BackColor = System.Drawing.Color.Silver;
-            this.label6.Location = new System.Drawing.Point(7, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(627, 32);
-            this.label6.TabIndex = 15;
+            this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
+            this.labelInstallHeader.Location = new System.Drawing.Point(7, 10);
+            this.labelInstallHeader.Name = "labelInstallHeader";
+            this.labelInstallHeader.Size = new System.Drawing.Size(627, 32);
+            this.labelInstallHeader.TabIndex = 15;
             // 
-            // button2
+            // buttonSelectPackage
             // 
-            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(198, 505);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(146, 40);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "Select Package......";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonSelectPackage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSelectPackage.Location = new System.Drawing.Point(198, 505);
+            this.buttonSelectPackage.Name = "buttonSelectPackage";
+            this.buttonSelectPackage.Size = new System.Drawing.Size(146, 40);
+            this.buttonSelectPackage.TabIndex = 14;
+            this.buttonSelectPackage.Text = "Select Package......";
+            this.buttonSelectPackage.UseVisualStyleBackColor = true;
+            this.buttonSelectPackage.Click += new System.EventHandler(this.buttonInstall_Click);
             // 
-            // textBox3
+            // textBoxPackageDescription
             // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(134, 379);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(493, 112);
-            this.textBox3.TabIndex = 13;
-            this.textBox3.Text = "No package selected.";
+            this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 379);
+            this.textBoxPackageDescription.Multiline = true;
+            this.textBoxPackageDescription.Name = "textBoxPackageDescription";
+            this.textBoxPackageDescription.Size = new System.Drawing.Size(493, 112);
+            this.textBoxPackageDescription.TabIndex = 13;
+            this.textBoxPackageDescription.Text = "No package selected.";
             // 
-            // label5
+            // labelPackageDescription
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 382);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(109, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Package Description:";
+            this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPackageDescription.AutoSize = true;
+            this.labelPackageDescription.Location = new System.Drawing.Point(8, 382);
+            this.labelPackageDescription.Name = "labelPackageDescription";
+            this.labelPackageDescription.Size = new System.Drawing.Size(109, 13);
+            this.labelPackageDescription.TabIndex = 12;
+            this.labelPackageDescription.Text = "Package Description:";
             // 
             // linkLabelPackageWebsite
             // 
@@ -3505,15 +3519,15 @@
             this.linkLabelPackageWebsite.TabStop = true;
             this.linkLabelPackageWebsite.Text = "No package selected.";
             // 
-            // label4
+            // labelPackageWebsite
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 360);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(95, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Package Website:";
+            this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPackageWebsite.AutoSize = true;
+            this.labelPackageWebsite.Location = new System.Drawing.Point(6, 360);
+            this.labelPackageWebsite.Name = "labelPackageWebsite";
+            this.labelPackageWebsite.Size = new System.Drawing.Size(95, 13);
+            this.labelPackageWebsite.TabIndex = 10;
+            this.labelPackageWebsite.Text = "Package Website:";
             // 
             // textBoxPackageVersion
             // 
@@ -3593,9 +3607,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
-            this.panelDependancyError.Controls.Add(this.label16);
-            this.panelDependancyError.Controls.Add(this.label12);
-            this.panelDependancyError.Controls.Add(this.label3);
+            this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText2);
+            this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText1);
+            this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
             this.panelDependancyError.Controls.Add(this.label9);
             this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
             this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
@@ -3651,38 +3665,38 @@
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             this.dataGridViewTextBoxColumn8.ReadOnly = true;
             // 
-            // label16
+            // labelMissingDepemdanciesText2
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 69);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(167, 13);
-            this.label16.TabIndex = 18;
-            this.label16.Text = "These are shown in the list below:";
+            this.labelMissingDepemdanciesText2.AutoSize = true;
+            this.labelMissingDepemdanciesText2.Location = new System.Drawing.Point(7, 69);
+            this.labelMissingDepemdanciesText2.Name = "labelMissingDepemdanciesText2";
+            this.labelMissingDepemdanciesText2.Size = new System.Drawing.Size(167, 13);
+            this.labelMissingDepemdanciesText2.TabIndex = 18;
+            this.labelMissingDepemdanciesText2.Text = "These are shown in the list below:";
             // 
-            // label12
+            // labelMissingDepemdanciesText1
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(7, 54);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(238, 13);
-            this.label12.TabIndex = 17;
-            this.label12.Text = "The current package has unment dependancies.";
+            this.labelMissingDepemdanciesText1.AutoSize = true;
+            this.labelMissingDepemdanciesText1.Location = new System.Drawing.Point(7, 54);
+            this.labelMissingDepemdanciesText1.Name = "labelMissingDepemdanciesText1";
+            this.labelMissingDepemdanciesText1.Size = new System.Drawing.Size(238, 13);
+            this.labelMissingDepemdanciesText1.TabIndex = 17;
+            this.labelMissingDepemdanciesText1.Text = "The current package has unment dependancies.";
             // 
-            // label3
+            // labelDependancyErrorHeader
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelDependancyErrorHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoEllipsis = true;
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Silver;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(232, 18);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(118, 16);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Dependancy Error";
+            this.labelDependancyErrorHeader.AutoEllipsis = true;
+            this.labelDependancyErrorHeader.AutoSize = true;
+            this.labelDependancyErrorHeader.BackColor = System.Drawing.Color.Silver;
+            this.labelDependancyErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDependancyErrorHeader.ForeColor = System.Drawing.Color.Black;
+            this.labelDependancyErrorHeader.Location = new System.Drawing.Point(232, 18);
+            this.labelDependancyErrorHeader.Name = "labelDependancyErrorHeader";
+            this.labelDependancyErrorHeader.Size = new System.Drawing.Size(118, 16);
+            this.labelDependancyErrorHeader.TabIndex = 16;
+            this.labelDependancyErrorHeader.Text = "Dependancy Error";
             // 
             // label9
             // 
@@ -3712,11 +3726,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
-            this.panelSuccess.Controls.Add(this.label17);
-            this.panelSuccess.Controls.Add(this.label18);
-            this.panelSuccess.Controls.Add(this.label19);
+            this.panelSuccess.Controls.Add(this.labelListFilesInstalled);
+            this.panelSuccess.Controls.Add(this.labelInstallSuccess1);
+            this.panelSuccess.Controls.Add(this.labelInstallSucess2);
             this.panelSuccess.Controls.Add(this.label20);
-            this.panelSuccess.Controls.Add(this.button3);
+            this.panelSuccess.Controls.Add(this.buttonInstallFinish);
             this.panelSuccess.Location = new System.Drawing.Point(0, 30);
             this.panelSuccess.Name = "panelSuccess";
             this.panelSuccess.Size = new System.Drawing.Size(641, 559);
@@ -3735,38 +3749,38 @@
             this.textBoxFilesInstalled.Size = new System.Drawing.Size(628, 418);
             this.textBoxFilesInstalled.TabIndex = 19;
             // 
-            // label17
+            // labelListFilesInstalled
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(7, 69);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(181, 13);
-            this.label17.TabIndex = 18;
-            this.label17.Text = "A list of files installed is shown below:";
+            this.labelListFilesInstalled.AutoSize = true;
+            this.labelListFilesInstalled.Location = new System.Drawing.Point(7, 69);
+            this.labelListFilesInstalled.Name = "labelListFilesInstalled";
+            this.labelListFilesInstalled.Size = new System.Drawing.Size(181, 13);
+            this.labelListFilesInstalled.TabIndex = 18;
+            this.labelListFilesInstalled.Text = "A list of files installed is shown below:";
             // 
-            // label18
+            // labelInstallSuccess1
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 54);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(129, 13);
-            this.label18.TabIndex = 17;
-            this.label18.Text = "Installation was sucessful.";
+            this.labelInstallSuccess1.AutoSize = true;
+            this.labelInstallSuccess1.Location = new System.Drawing.Point(7, 54);
+            this.labelInstallSuccess1.Name = "labelInstallSuccess1";
+            this.labelInstallSuccess1.Size = new System.Drawing.Size(129, 13);
+            this.labelInstallSuccess1.TabIndex = 17;
+            this.labelInstallSuccess1.Text = "Installation was sucessful.";
             // 
-            // label19
+            // labelInstallSucess2
             // 
-            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelInstallSucess2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label19.AutoEllipsis = true;
-            this.label19.AutoSize = true;
-            this.label19.BackColor = System.Drawing.Color.Silver;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.ForeColor = System.Drawing.Color.Black;
-            this.label19.Location = new System.Drawing.Point(232, 18);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(139, 16);
-            this.label19.TabIndex = 16;
-            this.label19.Text = "Installation Successful";
+            this.labelInstallSucess2.AutoEllipsis = true;
+            this.labelInstallSucess2.AutoSize = true;
+            this.labelInstallSucess2.BackColor = System.Drawing.Color.Silver;
+            this.labelInstallSucess2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelInstallSucess2.ForeColor = System.Drawing.Color.Black;
+            this.labelInstallSucess2.Location = new System.Drawing.Point(232, 18);
+            this.labelInstallSucess2.Name = "labelInstallSucess2";
+            this.labelInstallSucess2.Size = new System.Drawing.Size(139, 16);
+            this.labelInstallSucess2.TabIndex = 16;
+            this.labelInstallSucess2.Text = "Installation Successful";
             // 
             // label20
             // 
@@ -3778,17 +3792,17 @@
             this.label20.Size = new System.Drawing.Size(627, 32);
             this.label20.TabIndex = 15;
             // 
-            // button3
+            // buttonInstallFinish
             // 
-            this.button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(198, 505);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(146, 40);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "OK";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonInstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonInstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInstallFinish.Location = new System.Drawing.Point(198, 505);
+            this.buttonInstallFinish.Name = "buttonInstallFinish";
+            this.buttonInstallFinish.Size = new System.Drawing.Size(146, 40);
+            this.buttonInstallFinish.TabIndex = 14;
+            this.buttonInstallFinish.Text = "OK";
+            this.buttonInstallFinish.UseVisualStyleBackColor = true;
+            this.buttonInstallFinish.Click += new System.EventHandler(this.buttonInstallFinished_Click);
             // 
             // panelVersionError
             // 
@@ -3796,15 +3810,15 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelVersionError.Controls.Add(this.dataGridViewBrokenDependancies);
-            this.panelVersionError.Controls.Add(this.label27);
-            this.panelVersionError.Controls.Add(this.label25);
+            this.panelVersionError.Controls.Add(this.labelBrokenDependancies);
+            this.panelVersionError.Controls.Add(this.labelNewVersion);
             this.panelVersionError.Controls.Add(this.textBoxNewVersion);
-            this.panelVersionError.Controls.Add(this.label24);
+            this.panelVersionError.Controls.Add(this.labelCurrentVersion);
             this.panelVersionError.Controls.Add(this.textBoxCurrentVersion);
             this.panelVersionError.Controls.Add(this.labelVersionError);
-            this.panelVersionError.Controls.Add(this.label21);
+            this.panelVersionError.Controls.Add(this.labelVersionErrorHeader);
             this.panelVersionError.Controls.Add(this.label22);
-            this.panelVersionError.Controls.Add(this.button4);
+            this.panelVersionError.Controls.Add(this.buttonProceedAnyway1);
             this.panelVersionError.Location = new System.Drawing.Point(0, 30);
             this.panelVersionError.Name = "panelVersionError";
             this.panelVersionError.Size = new System.Drawing.Size(641, 559);
@@ -3858,23 +3872,23 @@
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
             this.dataGridViewTextBoxColumn12.ReadOnly = true;
             // 
-            // label27
+            // labelBrokenDependancies
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(8, 138);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(276, 13);
-            this.label27.TabIndex = 24;
-            this.label27.Text = "The following dependancies will be broken by this action:";
+            this.labelBrokenDependancies.AutoSize = true;
+            this.labelBrokenDependancies.Location = new System.Drawing.Point(8, 138);
+            this.labelBrokenDependancies.Name = "labelBrokenDependancies";
+            this.labelBrokenDependancies.Size = new System.Drawing.Size(276, 13);
+            this.labelBrokenDependancies.TabIndex = 24;
+            this.labelBrokenDependancies.Text = "The following dependancies will be broken by this action:";
             // 
-            // label25
+            // labelNewVersion
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(18, 107);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(69, 13);
-            this.label25.TabIndex = 21;
-            this.label25.Text = "New version:";
+            this.labelNewVersion.AutoSize = true;
+            this.labelNewVersion.Location = new System.Drawing.Point(18, 107);
+            this.labelNewVersion.Name = "labelNewVersion";
+            this.labelNewVersion.Size = new System.Drawing.Size(69, 13);
+            this.labelNewVersion.TabIndex = 21;
+            this.labelNewVersion.Text = "New version:";
             // 
             // textBoxNewVersion
             // 
@@ -3883,14 +3897,14 @@
             this.textBoxNewVersion.Size = new System.Drawing.Size(100, 20);
             this.textBoxNewVersion.TabIndex = 20;
             // 
-            // label24
+            // labelCurrentVersion
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(18, 71);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(81, 13);
-            this.label24.TabIndex = 19;
-            this.label24.Text = "Current version:";
+            this.labelCurrentVersion.AutoSize = true;
+            this.labelCurrentVersion.Location = new System.Drawing.Point(18, 71);
+            this.labelCurrentVersion.Name = "labelCurrentVersion";
+            this.labelCurrentVersion.Size = new System.Drawing.Size(81, 13);
+            this.labelCurrentVersion.TabIndex = 19;
+            this.labelCurrentVersion.Text = "Current version:";
             // 
             // textBoxCurrentVersion
             // 
@@ -3908,20 +3922,20 @@
             this.labelVersionError.TabIndex = 17;
             this.labelVersionError.Text = "The selected package is already installed, and is a ??? version..";
             // 
-            // label21
+            // labelVersionErrorHeader
             // 
-            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.labelVersionErrorHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label21.AutoEllipsis = true;
-            this.label21.AutoSize = true;
-            this.label21.BackColor = System.Drawing.Color.Silver;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.ForeColor = System.Drawing.Color.Black;
-            this.label21.Location = new System.Drawing.Point(232, 18);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(144, 16);
-            this.label21.TabIndex = 16;
-            this.label21.Text = "Package Version Error";
+            this.labelVersionErrorHeader.AutoEllipsis = true;
+            this.labelVersionErrorHeader.AutoSize = true;
+            this.labelVersionErrorHeader.BackColor = System.Drawing.Color.Silver;
+            this.labelVersionErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVersionErrorHeader.ForeColor = System.Drawing.Color.Black;
+            this.labelVersionErrorHeader.Location = new System.Drawing.Point(232, 18);
+            this.labelVersionErrorHeader.Name = "labelVersionErrorHeader";
+            this.labelVersionErrorHeader.Size = new System.Drawing.Size(144, 16);
+            this.labelVersionErrorHeader.TabIndex = 16;
+            this.labelVersionErrorHeader.Text = "Package Version Error";
             // 
             // label22
             // 
@@ -3933,17 +3947,101 @@
             this.label22.Size = new System.Drawing.Size(627, 32);
             this.label22.TabIndex = 15;
             // 
-            // button4
+            // buttonProceedAnyway1
             // 
-            this.button4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(198, 505);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(146, 40);
-            this.button4.TabIndex = 14;
-            this.button4.Text = "Proceed Anyway";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
+            this.buttonProceedAnyway1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonProceedAnyway1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonProceedAnyway1.Location = new System.Drawing.Point(198, 505);
+            this.buttonProceedAnyway1.Name = "buttonProceedAnyway1";
+            this.buttonProceedAnyway1.Size = new System.Drawing.Size(146, 40);
+            this.buttonProceedAnyway1.TabIndex = 14;
+            this.buttonProceedAnyway1.Text = "Proceed Anyway";
+            this.buttonProceedAnyway1.UseVisualStyleBackColor = true;
+            this.buttonProceedAnyway1.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
+            // 
+            // panelUninstallResult
+            // 
+            this.panelUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelUninstallResult.Controls.Add(this.textBoxUninstallResult);
+            this.panelUninstallResult.Controls.Add(this.labelUninstallLog);
+            this.panelUninstallResult.Controls.Add(this.labelUninstallSuccess);
+            this.panelUninstallResult.Controls.Add(this.labelUninstallSuccessHeader);
+            this.panelUninstallResult.Controls.Add(this.label29);
+            this.panelUninstallResult.Controls.Add(this.buttonUninstallFinish);
+            this.panelUninstallResult.Location = new System.Drawing.Point(0, 30);
+            this.panelUninstallResult.Name = "panelUninstallResult";
+            this.panelUninstallResult.Size = new System.Drawing.Size(641, 559);
+            this.panelUninstallResult.TabIndex = 25;
+            // 
+            // textBoxUninstallResult
+            // 
+            this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxUninstallResult.BackColor = System.Drawing.SystemColors.Menu;
+            this.textBoxUninstallResult.Enabled = false;
+            this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 85);
+            this.textBoxUninstallResult.Multiline = true;
+            this.textBoxUninstallResult.Name = "textBoxUninstallResult";
+            this.textBoxUninstallResult.Size = new System.Drawing.Size(628, 418);
+            this.textBoxUninstallResult.TabIndex = 19;
+            // 
+            // labelUninstallLog
+            // 
+            this.labelUninstallLog.AutoSize = true;
+            this.labelUninstallLog.Location = new System.Drawing.Point(7, 69);
+            this.labelUninstallLog.Name = "labelUninstallLog";
+            this.labelUninstallLog.Size = new System.Drawing.Size(109, 13);
+            this.labelUninstallLog.TabIndex = 18;
+            this.labelUninstallLog.Text = "A log is shown below:";
+            // 
+            // labelUninstallSuccess
+            // 
+            this.labelUninstallSuccess.AutoSize = true;
+            this.labelUninstallSuccess.Location = new System.Drawing.Point(7, 54);
+            this.labelUninstallSuccess.Name = "labelUninstallSuccess";
+            this.labelUninstallSuccess.Size = new System.Drawing.Size(142, 13);
+            this.labelUninstallSuccess.TabIndex = 17;
+            this.labelUninstallSuccess.Text = "Uninstallation was sucessful.";
+            // 
+            // labelUninstallSuccessHeader
+            // 
+            this.labelUninstallSuccessHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelUninstallSuccessHeader.AutoEllipsis = true;
+            this.labelUninstallSuccessHeader.AutoSize = true;
+            this.labelUninstallSuccessHeader.BackColor = System.Drawing.Color.Silver;
+            this.labelUninstallSuccessHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelUninstallSuccessHeader.ForeColor = System.Drawing.Color.Black;
+            this.labelUninstallSuccessHeader.Location = new System.Drawing.Point(232, 18);
+            this.labelUninstallSuccessHeader.Name = "labelUninstallSuccessHeader";
+            this.labelUninstallSuccessHeader.Size = new System.Drawing.Size(156, 16);
+            this.labelUninstallSuccessHeader.TabIndex = 16;
+            this.labelUninstallSuccessHeader.Text = "Uninstallation Successful";
+            // 
+            // label29
+            // 
+            this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label29.BackColor = System.Drawing.Color.Silver;
+            this.label29.Location = new System.Drawing.Point(7, 10);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(627, 32);
+            this.label29.TabIndex = 15;
+            // 
+            // buttonUninstallFinish
+            // 
+            this.buttonUninstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonUninstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonUninstallFinish.Location = new System.Drawing.Point(198, 505);
+            this.buttonUninstallFinish.Name = "buttonUninstallFinish";
+            this.buttonUninstallFinish.Size = new System.Drawing.Size(146, 40);
+            this.buttonUninstallFinish.TabIndex = 14;
+            this.buttonUninstallFinish.Text = "OK";
+            this.buttonUninstallFinish.UseVisualStyleBackColor = true;
+            this.buttonUninstallFinish.Click += new System.EventHandler(this.buttonUninstallFinish_Click);
             // 
             // labelPackages
             // 
@@ -4131,6 +4229,8 @@
             this.panelVersionError.ResumeLayout(false);
             this.panelVersionError.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).EndInit();
+            this.panelUninstallResult.ResumeLayout(false);
+            this.panelUninstallResult.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -4377,35 +4477,35 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button buttonInstallRoute;
+        private System.Windows.Forms.Button buttonUninstallPackage;
+        private System.Windows.Forms.Button buttonInstallPackage;
         private System.Windows.Forms.DataGridView dataGridViewRoutePackages;
         private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
         private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
         private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label labelInstalledTrains;
+        private System.Windows.Forms.Label labelInstalledRoutes;
         private System.Windows.Forms.Panel panelPackageInstall;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxPackageDescription;
         private System.Windows.Forms.LinkLabel linkLabelPackageWebsite;
         private System.Windows.Forms.TextBox textBoxPackageVersion;
         private System.Windows.Forms.TextBox textBoxPackageAuthor;
         private System.Windows.Forms.TextBox textBoxPackageName;
         private System.Windows.Forms.PictureBox pictureBoxPackageImage;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonSelectPackage;
+        private System.Windows.Forms.Label labelPackageDescription;
+        private System.Windows.Forms.Label labelPackageWebsite;
         private System.Windows.Forms.Label labelPackageVersion;
         private System.Windows.Forms.Label labelPackageAuthor;
         private System.Windows.Forms.Label labelPackageName;
         private System.Windows.Forms.OpenFileDialog openPackageFileDialog;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelInstallText;
+        private System.Windows.Forms.Label labelInstallHeader;
         private System.Windows.Forms.Panel panelDependancyError;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelMissingDepemdanciesText2;
+        private System.Windows.Forms.Label labelMissingDepemdanciesText1;
+        private System.Windows.Forms.Label labelDependancyErrorHeader;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button buttonProceedAnyway;
         private System.Windows.Forms.DataGridView dataGridViewDependancies;
@@ -4415,26 +4515,33 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
         private System.Windows.Forms.Panel panelSuccess;
         private System.Windows.Forms.TextBox textBoxFilesInstalled;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label labelListFilesInstalled;
+        private System.Windows.Forms.Label labelInstallSuccess1;
+        private System.Windows.Forms.Label labelInstallSucess2;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button buttonInstallFinish;
         private System.Windows.Forms.Panel panelVersionError;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label labelNewVersion;
         private System.Windows.Forms.TextBox textBoxNewVersion;
-        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label labelCurrentVersion;
         private System.Windows.Forms.TextBox textBoxCurrentVersion;
         private System.Windows.Forms.Label labelVersionError;
-        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label labelVersionErrorHeader;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonProceedAnyway1;
         private System.Windows.Forms.DataGridView dataGridViewBrokenDependancies;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label labelBrokenDependancies;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private System.Windows.Forms.Panel panelUninstallResult;
+        private System.Windows.Forms.TextBox textBoxUninstallResult;
+        private System.Windows.Forms.Label labelUninstallLog;
+        private System.Windows.Forms.Label labelUninstallSuccess;
+        private System.Windows.Forms.Label labelUninstallSuccessHeader;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Button buttonUninstallFinish;
         
     }
 }

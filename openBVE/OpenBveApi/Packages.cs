@@ -96,14 +96,14 @@ namespace OpenBveApi.Packages
                         //We don't want to add directories to the list of files
                         if (!reader.Entry.IsDirectory)
                         {
-                            PackageFiles.Add(reader.Entry.Key);
+                            PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory , reader.Entry.Key));
                         }
                     }
                 }
                 string Text = "";
                 foreach (var FileName in PackageFiles)
                 {
-                    Text += extractionDirectory + FileName + "\r\n";
+                    Text += FileName + "\r\n";
                 }
                 packageFiles = Text;
                 //Write out the package file list
@@ -119,6 +119,54 @@ namespace OpenBveApi.Packages
                     listWriter.Serialize(sw, PackageFiles);
                 }
             }
+        }
+
+        /// <summary>Uninstalls a package</summary>
+        /// <param name="currentPackage">The package to uninstall</param>
+        /// <param name="databaseFolder">The package database folder</param>
+        /// <param name="PackageFiles">Returns via 'ref' a list of files uninstalled</param>
+        /// <returns>True if uninstall succeeded with no errors, false otherwise</returns>
+        public static bool UninstallPackage(Package currentPackage, string databaseFolder, ref string PackageFiles)
+        {
+            var fileList = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID + ".xml");
+            if (!File.Exists(fileList))
+            {
+                PackageFiles = null;
+                //The list of files installed by this package is missing
+                return false;
+            }
+            XmlSerializer listReader = new XmlSerializer(typeof(List<string>));
+            List<string> filesToDelete;
+            using (FileStream readFileStream = new FileStream(fileList, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                filesToDelete = (List<string>)listReader.Deserialize(readFileStream);
+            }
+            File.Delete(fileList);
+            bool noErrors = true;
+            int errorCount = 0;
+            int deletionCount = 0;
+            string Result = "";
+            foreach (var String in filesToDelete)
+            {
+                try
+                {
+                    File.Delete(String);
+                    Result += String + " deleted successfully. \r\n ";
+                    deletionCount++;
+                }
+                catch (Exception ex)
+                {
+                    //We have caught an error....
+                    //Set the return type to false, and add the exception to the results string
+                    noErrors = false;
+                    Result += String + "\r\n";
+                    Result += ex.Message + "\r\n";
+                    errorCount++;
+                }
+            }
+            //Set the final results string to display
+            PackageFiles = deletionCount + " files deleted successfully. \r\n" + errorCount + " errors were encountered. \r\n \r\n \r\n" + Result;
+            return noErrors;
         }
 
         /// <summary>Reads the information of the selected package</summary>
