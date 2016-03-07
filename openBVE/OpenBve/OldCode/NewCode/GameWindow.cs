@@ -256,10 +256,11 @@ namespace OpenBve
             LoadingScreenLoop();
             //Add event handler hooks for keyboard and mouse buttons
             //Do this after the renderer has init and the loop has started to prevent timing issues
-            Keyboard.KeyDown += MainLoop.keyDownEvent;
-            Keyboard.KeyUp += MainLoop.keyUpEvent;
-            Keyboard.KeyRepeat = false;
-            Mouse.ButtonDown += MainLoop.mouseDownEvent;
+			Keyboard.KeyDown	+= MainLoop.keyDownEvent;
+			Keyboard.KeyUp		+= MainLoop.keyUpEvent;
+			Keyboard.KeyRepeat	 = false;
+			Mouse.ButtonDown	+= MainLoop.mouseDownEvent;
+			Mouse.Move			+= MainLoop.mouseMoveEvent;
         }
         protected override void OnClosed(EventArgs e)
         {

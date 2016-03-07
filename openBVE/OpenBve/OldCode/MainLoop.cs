@@ -113,25 +113,42 @@ namespace OpenBve {
 	        Quit = true;
 	    }
 
+		/********************
+			PROCESS EVENTS
+		********************/
+		//
+		// MOUSE EVENTS
+		//
+		internal static MouseState currentMouseState, previousMouseState;
 
+		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (e.Button == MouseButton.Right)
+			{
+				World.MouseGrabEnabled = !World.MouseGrabEnabled;
+				World.MouseGrabIgnoreOnce = true;
+			}
+			if (e.Button == MouseButton.Left)
+			{
+				// if currently in a menu, forward the click to the menu system
+				if (Game.CurrentInterface == Game.InterfaceType.Menu)
+					Game.Menu.ProcessMouseDown(e.Button, e.X, e.Y);
+			}
+		}
 
-		// process events
+		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
+		{
+			// if currently in a menu, forward the click to the menu system
+			if (Game.CurrentInterface == Game.InterfaceType.Menu)
+				Game.Menu.ProcessMouseMove(e.X, e.Y);
+		}
+
+		//
+		// KEYBOARD EVENTS
+		//
 		private static Interface.KeyboardModifier CurrentKeyboardModifier = Interface.KeyboardModifier.None;
 
-	    internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
-	    {
-	        if (e.Button == MouseButton.Right)
-	        {
-	            World.MouseGrabEnabled = !World.MouseGrabEnabled;
-	            World.MouseGrabIgnoreOnce = true;
-	        }
-	    }
-
-
-
-	    internal static MouseState currentMouseState, previousMouseState;
-
-        internal static void ProcessKeyboard()
+		internal static void ProcessKeyboard()
         {
 			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
             {

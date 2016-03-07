@@ -318,8 +318,7 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)/Data" "$(TargetDir)"</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -f "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
