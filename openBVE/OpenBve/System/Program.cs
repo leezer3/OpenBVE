@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -23,6 +24,9 @@ namespace OpenBve {
 		
 		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
 		internal static bool CurrentlyRunningOnWindows = false;
+
+        /// <summary>Stores the current CPU architecture</summary>
+	    internal static ImageFileMachine CurrentCPUArchitecture;
 
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost = null;
@@ -58,6 +62,12 @@ namespace OpenBve {
             // This handler is for catching non-UI thread exceptions
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler.CurrentDomain_UnhandledException);
 #endif
+
+            //Determine the current CPU architecture-
+            //ARM will generally only support OpenGL-ES
+            PortableExecutableKinds peKind;
+            typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
+            
             //var options = new ToolkitOptions();
             //options.Backend = PlatformBackend.PreferNative;
             //Toolkit.Init();
