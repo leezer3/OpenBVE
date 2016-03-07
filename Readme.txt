@@ -7,6 +7,9 @@ There have also been backwards compatible changes made to the OpenBveApi, and an
 are described fully here-
 https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes
 
+Automatically generated daily builds are available from this URL:
+http://vps.bvecornwall.co.uk/OpenBVE/Builds/
+
 -----
 Notes
 -----
