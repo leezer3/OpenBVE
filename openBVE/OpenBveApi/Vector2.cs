@@ -331,6 +331,13 @@ namespace OpenBveApi.Math {
 		
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector2 Down = new Vector2(0.0, 1.0);
+
+		/// <summary>Returns the representation of the vector in string format</summary>
+		public override string ToString()
+		{
+			string toString = this.X + " , " + this.Y;
+			return toString;
+		}
 		
 	}
 }
