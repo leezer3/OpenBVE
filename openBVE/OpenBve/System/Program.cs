@@ -52,7 +52,7 @@ namespace OpenBve {
 		[STAThread]
 		private static void Main(string[] args) {
 
-#if DEBUG            
+#if !DEBUG            
             // Add handler for UI thread exceptions
             Application.ThreadException += new ThreadExceptionEventHandler(CrashHandler.UIThreadException);
 

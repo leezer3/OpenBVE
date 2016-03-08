@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace OpenBve {
 	internal static class TrainDatParser {
@@ -9,6 +10,12 @@ namespace OpenBve {
 			// load file
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "train.dat");
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			if (Lines.Length == 0)
+			{
+				//Catch zero-length train.dat files
+				MessageBox.Show("The train.dat file " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat") + " is of zero length.");
+				throw new Exception("The train.dat file " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat") + " is of zero length.");
+			}
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {

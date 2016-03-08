@@ -154,10 +154,18 @@ namespace OpenBve
                     Platform = "SDL2";
                 }
                 outputFile.WriteLine("Program is running on the " + Platform + " backend");
-                //Route and train
-                outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
-                outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
-                outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+                //Route and train information
+                try
+                {
+                    //We need the try/ catch block in order to catch errors which may have occured before initing the current route, train or plugin
+                    //These may occur if we feed dud data to the sim
+                    outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
+                    outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
+                    outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+                }
+                catch
+                {
+                }
                 //Errors and Warnings
                 if (Game.RouteInformation.FilesNotFound != null)
                 {
