@@ -2,5 +2,6 @@
 *.userprefs
 *.DotSettings.user
 *.suo
+AssemblyInfo.cs
 bin/
 obj/
