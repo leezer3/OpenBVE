@@ -39,63 +39,54 @@ namespace OpenBve {
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
-            Sounds.Initialize();
-		    currentResult = result;   
-		    if (OpenTKWindow == false)
-		    {
-                GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+			Sounds.Initialize();
+			currentResult = result;
+			if (OpenTKWindow == false)
+			{
+				GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 
-                 /*
-                  * TODO: This should be able to be moved back into the screen initialisation file
-                  */
-                
-		        if (Interface.CurrentOptions.FullscreenMode)
-		        {
-		            IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+				 /*
+				  * TODO: This should be able to be moved back into the screen initialisation file
+				  */
 
-		            for (int i = 0; i < resolutions.Count; i++)
-		            {
-		                //Test each resolution
-		                if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
-		                    resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
-		                    resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
-		                {
-                            OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
-		                    Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default);
-							Program.currentGameWindow.Visible = true;
-		                    Program.currentGameWindow.WindowState = WindowState.Fullscreen;
-		                    break;
-		                }
-		            }
-		        }
-		        else
-		        {
-                    Program.currentGameWindow = new OpenBVEGame(
-                        Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth,
-                        Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight,
-                        currentGraphicsMode, GameWindowFlags.Default);
-		        }
-                Program.currentGameWindow.Visible = true;
-                Program.currentGameWindow.TargetUpdateFrequency = 0;
-                Program.currentGameWindow.TargetRenderFrequency = 0;
-		        if (Program.currentGameWindow == null)
-		        {
-		            MessageBox.Show("An error occured whilst attempting to launch the graphics subsystem." + Environment.NewLine +
-                                    "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    Program.RestartArguments = " ";
-		            return;
-		        }
-                if (Interface.CurrentOptions.VerticalSynchronization)
-                {
-                    Program.currentGameWindow.VSync = VSyncMode.On;
-                }
-                else
-                {
-                    Program.currentGameWindow.VSync = VSyncMode.Off;
-                }
-		        Program.currentGameWindow.Closing += OpenTKQuit;
-                Program.currentGameWindow.Run();
-		    }
+				if (Interface.CurrentOptions.FullscreenMode)
+				{
+					IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+
+					for (int i = 0; i < resolutions.Count; i++)
+					{
+						//Test each resolution
+						if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
+							resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
+							resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
+						{
+							OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
+							Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default);
+							Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+							break;
+						}
+					}
+				}
+				else
+				{
+					Program.currentGameWindow = new OpenBVEGame( Interface.CurrentOptions.WindowWidth, Interface.CurrentOptions.WindowHeight,
+						currentGraphicsMode, GameWindowFlags.Default);
+				}
+				if (Program.currentGameWindow == null)
+				{
+					MessageBox.Show("An error occured whilst attempting to launch the graphics subsystem." + Environment.NewLine +
+									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					return;
+				}
+				Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ?
+														VSyncMode.On : VSyncMode.Off;
+				Program.currentGameWindow.Closing += OpenTKQuit;
+				Program.currentGameWindow.TargetUpdateFrequency = 0;
+				Program.currentGameWindow.TargetRenderFrequency = 0;
+				Program.currentGameWindow.Visible = true;
+				Program.currentGameWindow.Run();
+			}
 		}
 		// --------------------------------
 
