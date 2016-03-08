@@ -98,6 +98,14 @@ namespace OpenBve
                     Platform = "SDL2";
                 }
                 outputFile.WriteLine("Program is running on the " + Platform + " backend");
+                if (Interface.CurrentOptions.FullscreenMode)
+                {
+                    outputFile.WriteLine("Current screen resolution is: Full-screen " + Interface.CurrentOptions.FullscreenWidth + "px x " + Interface.CurrentOptions.FullscreenHeight + "px " + Interface.CurrentOptions.FullscreenBits + "bit color-mode");
+                }
+                else
+                {
+                    outputFile.WriteLine("Current screen resolution is: Windowed " + Interface.CurrentOptions.WindowWidth + "px x " + Interface.CurrentOptions.WindowHeight + "px ");
+                }
                 //Route and train
                 outputFile.WriteLine("Current routefile is: "  + Game.RouteInformation.RouteFile);
                 outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
@@ -154,6 +162,14 @@ namespace OpenBve
                     Platform = "SDL2";
                 }
                 outputFile.WriteLine("Program is running on the " + Platform + " backend");
+                if (Interface.CurrentOptions.FullscreenMode)
+                {
+                    outputFile.WriteLine("Current screen resolution is: Full-screen " + Interface.CurrentOptions.FullscreenWidth + "px X " + Interface.CurrentOptions.FullscreenHeight + "px " + Interface.CurrentOptions.FullscreenBits + "bit color-mode");
+                }
+                else
+                {
+                    outputFile.WriteLine("Current screen resolution is: Windowed " + Interface.CurrentOptions.WindowWidth + "px X " + Interface.CurrentOptions.WindowHeight + "px ");
+                }
                 //Route and train information
                 try
                 {
