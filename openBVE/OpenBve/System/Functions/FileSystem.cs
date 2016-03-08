@@ -38,7 +38,7 @@ namespace OpenBve {
 		internal FileSystem() {
 			string assemblyFile = Assembly.GetExecutingAssembly().Location;
 			string assemblyFolder = Path.GetDirectoryName(assemblyFile);
-            string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Interface.GetInterfaceString("program_title"));
+			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
 			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
