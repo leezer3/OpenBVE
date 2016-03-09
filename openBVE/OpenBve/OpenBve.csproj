@@ -317,8 +317,10 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' != '' ">mono $(TextTransformMono) "$(ProjectDir)Properties/AssemblyInfo.tt"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C
+xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll*" /Y /I /C</PostBuildEvent>
+    <!-- Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
