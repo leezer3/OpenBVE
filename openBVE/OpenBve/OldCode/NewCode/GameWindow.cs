@@ -627,6 +627,8 @@ namespace OpenBve
                 GL.PopMatrix();
                 GL.MatrixMode(MatrixMode.Projection);
                 SetupSimulation();
+            } else {
+                this.Close();
             }
         }
 
