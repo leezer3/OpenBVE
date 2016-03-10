@@ -12,10 +12,10 @@ namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
 
-        /// <summary>Gets the UID of the current user if running on a Unix based system</summary>
-        /// <returns>The UID</returns>
-        [DllImport("libc")]
-        public static extern uint getuid();
+		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
+		/// <returns>The UID</returns>
+		[DllImport("libc")]
+		public static extern uint getuid();
 
 		// --- members ---
 
@@ -25,8 +25,8 @@ namespace OpenBve {
 		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
 		internal static bool CurrentlyRunningOnWindows = false;
 
-        /// <summary>Stores the current CPU architecture</summary>
-	    internal static ImageFileMachine CurrentCPUArchitecture;
+		/// <summary>Stores the current CPU architecture</summary>
+		internal static ImageFileMachine CurrentCPUArchitecture;
 
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost = null;
@@ -43,8 +43,8 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static Random RandomNumberGenerator = new Random();
 
-        public static GameWindow currentGameWindow;
-        
+		public static GameWindow currentGameWindow;
+		
 		// --- functions ---
 		
 		/// <summary>Is executed when the program starts.</summary>
@@ -53,82 +53,82 @@ namespace OpenBve {
 		private static void Main(string[] args) {
 
 #if !DEBUG            
-            // Add handler for UI thread exceptions
-            Application.ThreadException += new ThreadExceptionEventHandler(CrashHandler.UIThreadException);
+			// Add handler for UI thread exceptions
+			Application.ThreadException += new ThreadExceptionEventHandler(CrashHandler.UIThreadException);
 
-            // Force all WinForms errors to go through handler
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+			// Force all WinForms errors to go through handler
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            // This handler is for catching non-UI thread exceptions
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler.CurrentDomain_UnhandledException);
+			// This handler is for catching non-UI thread exceptions
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler.CurrentDomain_UnhandledException);
 #endif
 
-            //Determine the current CPU architecture-
-            //ARM will generally only support OpenGL-ES
-            PortableExecutableKinds peKind;
-            typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
-            
-            //var options = new ToolkitOptions();
-            //options.Backend = PlatformBackend.PreferNative;
-            //Toolkit.Init();
+			//Determine the current CPU architecture-
+			//ARM will generally only support OpenGL-ES
+			PortableExecutableKinds peKind;
+			typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
+			
+			//var options = new ToolkitOptions();
+			//options.Backend = PlatformBackend.PreferNative;
+			//Toolkit.Init();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			//--- determine the running environment ---
-            //I wonder if disabling this hack will stop the craashing on Linux....
+			//I wonder if disabling this hack will stop the craashing on Linux....
 			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
-            //Doesn't appear to, but Mono have fixed the button appearance bug
+			//Doesn't appear to, but Mono have fixed the button appearance bug
 			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
 			CurrentHost = new Host();
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
-                MessageBox.Show(Interface.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Interface.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 
-            //Platform specific startup checks
-		    if (CurrentlyRunningOnMono)
-		    {
-		        // --- Check if we're running as root, and prompt not to ---
-		        if (getuid() == 0)
-		        {
-		            MessageBox.Show(
-		                "You are currently running as the root user." + System.Environment.NewLine +
-                        "This is a bad idea, please dont!", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-		        }
-		    }
-		    else
-		    {
-		        if (!System.IO.File.Exists(System.IO.Path.Combine(Environment.SystemDirectory, "OpenAL32.dll")))
-		        {
-                    
-                    MessageBox.Show(
-                        "OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
-                        "Please follow the install prompts.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			//Platform specific startup checks
+			if (CurrentlyRunningOnMono)
+			{
+				// --- Check if we're running as root, and prompt not to ---
+				if (getuid() == 0)
+				{
+					MessageBox.Show(
+						"You are currently running as the root user." + System.Environment.NewLine +
+						"This is a bad idea, please dont!", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+			}
+			else
+			{
+				if (!System.IO.File.Exists(System.IO.Path.Combine(Environment.SystemDirectory, "OpenAL32.dll")))
+				{
+					
+					MessageBox.Show(
+						"OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
+						"Please follow the install prompts.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 
-                    ProcessStartInfo info = new ProcessStartInfo(System.IO.Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
-                    info.UseShellExecute = true;
-		            if (Environment.OSVersion.Version.Major >= 6)
-		            {
-		                info.Verb = "runas";
-		            }
-		            try
-                    {
-                        System.Diagnostics.Process p = System.Diagnostics.Process.Start(info);
-                        p.WaitForExit();
-                    }
-                    catch (Win32Exception ex)
-                    {
-                        MessageBox.Show(
-                        "An error occured during OpenAL installation....", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    }
-                    
-		        }
-		    }
+					ProcessStartInfo info = new ProcessStartInfo(System.IO.Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
+					info.UseShellExecute = true;
+					if (Environment.OSVersion.Version.Major >= 6)
+					{
+						info.Verb = "runas";
+					}
+					try
+					{
+						System.Diagnostics.Process p = System.Diagnostics.Process.Start(info);
+						p.WaitForExit();
+					}
+					catch (Win32Exception ex)
+					{
+						MessageBox.Show(
+						"An error occured during OpenAL installation....", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
+					
+				}
+			}
 
 
-		    // --- set up packages ---
+			// --- set up packages ---
 			SetPackageLookupDirectories();
 			// --- load options and controls ---
 			Interface.LoadOptions();
@@ -143,11 +143,11 @@ namespace OpenBve {
 			// --- load language ---
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
-                string[] LanguageFiles = Directory.GetFiles(folder, "*.cfg");
-			    foreach (var File in LanguageFiles)
-			    {
-			        Interface.AddLanguage(File);
-			    }
+				string[] LanguageFiles = Directory.GetFiles(folder, "*.cfg");
+				foreach (var File in LanguageFiles)
+				{
+					Interface.AddLanguage(File);
+				}
 			}
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
@@ -207,13 +207,13 @@ namespace OpenBve {
 								}
 							} break;
 						}
-					    if (folder == null) continue;
-					    System.IO.DirectoryInfo info = System.IO.Directory.GetParent(folder);
-					    if (info != null) {
-					        folder = info.FullName;
-					    } else {
-					        break;
-					    }
+						if (folder == null) continue;
+						System.IO.DirectoryInfo info = System.IO.Directory.GetParent(folder);
+						if (info != null) {
+							folder = info.FullName;
+						} else {
+							break;
+						}
 					}
 				}
 				Game.Reset(false);
@@ -225,7 +225,7 @@ namespace OpenBve {
 					MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					return;
 				}
-			    
+				
 				// end HACK //
 				result = formMain.ShowMainDialog(result);
 			} else {
@@ -233,7 +233,7 @@ namespace OpenBve {
 			}
 			// --- start the actual program ---
 			if (result.Start) {
-                if (Initialize()) {
+				if (Initialize()) {
 					#if !DEBUG
 					try {
 						#endif
@@ -241,27 +241,27 @@ namespace OpenBve {
 						#if !DEBUG
 					} catch (Exception ex) {
 						bool found = false;
-                        //Thread.Sleep(20);
+						//Thread.Sleep(20);
 						for (int i = 0; i < TrainManager.Trains.Length; i++) {
 							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 								if (TrainManager.Trains[i].Plugin.LastException != null) {
-                                    CrashHandler.LoadingCrash(ex.Message, true);
+									CrashHandler.LoadingCrash(ex.Message, true);
 									MessageBox.Show("The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a runtime exception: " + TrainManager.Trains[i].Plugin.LastException.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 									found = true;
 									break;
+									RestartArguments = "";
 								}
 							}
 						}
 						if (!found)
 						{
-                            MessageBox.Show("The route and train loader encountered the following critical error: " + Environment.NewLine + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            CrashHandler.LoadingCrash(ex.Message, false);
-						    
+							MessageBox.Show("The route and train loader encountered the following critical error: " + Environment.NewLine + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+							CrashHandler.LoadingCrash(ex.Message, false);
+							RestartArguments = "";
 						}
 					}
-					#endif
+#endif
 				}
-                RestartArguments = "";
 				Deinitialize();
 			}
 			// --- restart the program if necessary ---
@@ -280,26 +280,26 @@ namespace OpenBve {
 			}
 		}
 
-	    
+		
 		/// <summary>Initializes the program. A matching call to deinitialize must be made when the program is terminated.</summary>
 		/// <returns>Whether the initialization was successful.</returns>
 		private static bool Initialize() {
 			if (!Plugins.LoadPlugins()) {
 				return false;
 			}
-            
+			
 			if (!Screen.Initialize()) {
 				MessageBox.Show("SDL failed to initialize the video subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}
-            
+			
 			if (!Joysticks.Initialize()) {
 				MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}
 			// begin HACK //
-            
-            //One degree in radians
+			
+			//One degree in radians
 			const double degrees = 0.0174532925199433;
 			World.VerticalViewingAngle = 45.0 * degrees;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
@@ -319,10 +319,10 @@ namespace OpenBve {
 			Sounds.Deinitialize();
 			Joysticks.Deinitialize();
 			Screen.Deinitialize();
-		    if (currentGameWindow != null)
-		    {
-		        currentGameWindow.Dispose();
-		    }
+			if (currentGameWindow != null)
+			{
+				currentGameWindow.Dispose();
+			}
 		}
 		
 		/// <summary>Provides the API with lookup directories for all installed packages.</summary>

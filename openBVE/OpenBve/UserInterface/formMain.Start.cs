@@ -311,7 +311,7 @@ namespace OpenBve {
 						Array.Sort<string>(Files);
 						for (int i = 0; i < Files.Length; i++)
 						{
-						    if (Files[i] == null) return;
+							if (Files[i] == null) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
 							switch (Extension) {
 								case ".rw":
@@ -342,15 +342,14 @@ namespace OpenBve {
 
 		// route files
 		private void listviewRouteFiles_SelectedIndexChanged(object sender, EventArgs e) {
-            if (listviewRouteFiles.SelectedItems.Count == 1) {
+			if (listviewRouteFiles.SelectedItems.Count == 1) {
 				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
-                
+				
 				if (t != null)
 				{
-				    
+					
 					if (System.IO.File.Exists(t)) {
 						Result.RouteFile = t;
-					    //MessageBox.Show(Convert.ToString(t));
 						ShowRoute(false);
 					}
 				}
@@ -385,10 +384,10 @@ namespace OpenBve {
 		private void listviewRouteRecently_SelectedIndexChanged(object sender, EventArgs e) {
 			if (listviewRouteRecently.SelectedItems.Count == 1) {
 				string t = listviewRouteRecently.SelectedItems[0].Tag as string;
-			    if (t == null) return;
-			    if (!System.IO.File.Exists(t)) return;
-			    Result.RouteFile = t;
-			    ShowRoute(false);
+				if (t == null) return;
+				if (!System.IO.File.Exists(t)) return;
+				Result.RouteFile = t;
+				ShowRoute(false);
 			}
 		}
 
@@ -407,31 +406,31 @@ namespace OpenBve {
 		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e) {
 			if (comboboxRouteEncoding.Tag == null) {
 				int i = comboboxRouteEncoding.SelectedIndex;
-			    if (!(i >= 0 & i < EncodingCodepages.Length)) return;
-			    Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
-			    if (i == 0) {
-			        // remove from cache
-			        for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-			            if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
-			                Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-			                Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
-			                break;
-			            }
-			        }
-			    } else {
-			        // add to cache
-			        int j; for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-			            if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
-			                Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
-			                break;
-			            }
-			        } if (j == Interface.CurrentOptions.RouteEncodings.Length) {
-			            Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
-			            Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
-			            Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
-			        }
-			    }
-			    ShowRoute(true);
+				if (!(i >= 0 & i < EncodingCodepages.Length)) return;
+				Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
+				if (i == 0) {
+					// remove from cache
+					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
+						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
+							Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
+							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
+							break;
+						}
+					}
+				} else {
+					// add to cache
+					int j; for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
+						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
+							Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+							break;
+						}
+					} if (j == Interface.CurrentOptions.RouteEncodings.Length) {
+						Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
+						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
+						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
+					}
+				}
+				ShowRoute(true);
 			}
 		}
 		private void buttonRouteEncodingLatin1_Click(object sender, EventArgs e) {
@@ -697,14 +696,14 @@ namespace OpenBve {
 
 			if (Result.RouteFile != null)
 			{
-			    
+				
 				this.Cursor = Cursors.WaitCursor;
-			    //Calling Application.DoEvents seems to cause a crash on some Mono systems....
-                //As far as I can tell, it's not actually doing anything useful
-                //I think the original intention was probably to allow the GUI to update a little faster??
-			    //Application.DoEvents();
-			    
-			    // determine encoding
+				//Calling Application.DoEvents seems to cause a crash on some Mono systems....
+				//As far as I can tell, it's not actually doing anything useful
+				//I think the original intention was probably to allow the GUI to update a little faster??
+				//Application.DoEvents();
+				
+				// determine encoding
 				if (!UserSelectedEncoding) {
 					comboboxRouteEncoding.Tag = new object();
 					comboboxRouteEncoding.SelectedIndex = 0;
@@ -745,7 +744,7 @@ namespace OpenBve {
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();
-                    
+					
 					int i;
 					for (i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++) {
 						if (Interface.CurrentOptions.RouteEncodings[i].Value == Result.RouteFile) {
@@ -798,7 +797,7 @@ namespace OpenBve {
 							TryLoadImage(pictureboxRouteImage, "route_unknown.png");
 						}
 					}
-                    
+					
 					// description
 					string Description = Interface.ConvertNewlinesToCrLf(Game.RouteComment);
 					if (Description.Length != 0) {
@@ -812,7 +811,7 @@ namespace OpenBve {
 					} else {
 						checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 					}
-                    
+					
 				} catch (Exception ex) {
 					// error
 					TryLoadImage(pictureboxRouteImage, "route_error.png");
@@ -824,13 +823,16 @@ namespace OpenBve {
 					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				}
 				groupboxRouteDetails.Visible = true;
-                
+				
 				if (checkboxTrainDefault.Checked) {
 					ShowDefaultTrain();
 				}
-			    
+				
 				this.Cursor = Cursors.Default;
-               
+				//Deliberately select the tab when the process is complete
+				//This hopefully fixes another instance of the 'grey tabs' bug
+				tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
+			   
 				buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
 			}
 		}
@@ -935,14 +937,14 @@ namespace OpenBve {
 
 		// show default train
 		private void ShowDefaultTrain() {
-            
+			
 			if (string.IsNullOrEmpty(Result.RouteFile)) {
 				return;
 			}
 			if (string.IsNullOrEmpty(Game.TrainName)) {
 				return;
 			}
-            
+			
 			string Folder;
 			try {
 				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
@@ -951,7 +953,7 @@ namespace OpenBve {
 					if (System.IO.Directory.Exists(Folder)) {
 						string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
 						if (System.IO.File.Exists(File)) {
-                            
+							
 							Result.TrainFolder = Folder;
 							ShowTrain(false);
 							return;
@@ -980,13 +982,13 @@ namespace OpenBve {
 							}
 						} break;
 					}
-				    if (Folder == null) continue;
-				    System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-				    if (Info != null) {
-				        Folder = Info.FullName;
-				    } else {
-				        break;
-				    }
+					if (Folder == null) continue;
+					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
+					if (Info != null) {
+						Folder = Info.FullName;
+					} else {
+						break;
+					}
 				}
 			} catch { }
 			// train not found
