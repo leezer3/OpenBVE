@@ -7,15 +7,14 @@ before_install:
 
 mono:
  - latest
- - 3.10.0
- - 3.8.0
 
 script:
   - LC_ALL=C xbuild /t:Build /p:Configuration=Release openBVE/OpenBve.sln
 after_success:
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && mkdir build 
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && mv openBVE/OpenBve/bin/Release/* build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" build
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && cd build
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" *
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && export SSHPASS=$DEPLOY_PASS
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH 
  

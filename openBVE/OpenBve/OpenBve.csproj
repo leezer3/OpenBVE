@@ -313,8 +313,8 @@
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' == '' And Exists('/usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe') ">mono /usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe "$(ProjectDir)Properties/AssemblyInfo.tt"</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' != '' ">mono $(TextTransformMono) "$(ProjectDir)Properties/AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' == '' And Exists('/usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe') ">mono /usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe "$(ProjectDir)Properties/AssemblyInfo.tt" -out "$(ProjectDir)Properties/AssemblyInfo.cs"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' And '$(TextTransformMono)' != '' ">mono $(TextTransformMono) "$(ProjectDir)Properties/AssemblyInfo.tt" -out "$(ProjectDir)Properties/AssemblyInfo.cs"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C
