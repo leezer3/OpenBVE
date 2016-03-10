@@ -48,30 +48,43 @@ namespace OpenBve {
 				 /*
 				  * TODO: This should be able to be moved back into the screen initialisation file
 				  */
-				
 				if (Interface.CurrentOptions.FullscreenMode)
 				{
 					IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
-
+					bool resolutionFound = false;
 					for (int i = 0; i < resolutions.Count; i++)
 					{
+						
 						//Test each resolution
-						if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
-							resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
-							resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
+						if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth && resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight && resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
 						{
-							OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
-							Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default);
-							Program.currentGameWindow.Visible = true;
-							Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+							try
+							{
+								OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
+								Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default)
+								{
+									Visible = true,
+									WindowState = WindowState.Fullscreen
+								};
+								resolutionFound = true;
+							}
+							catch
+							{
+								//Our resolution was in the list of available resolutions presented, but the graphics card driver failed to switch
+								MessageBox.Show("Failed to change to the selected full-screen resolution:" + Environment.NewLine +
+									Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
+									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+								Program.RestartArguments = " ";
+								return;
+							}
 							break;
 						}
 					}
-					if (Program.currentGameWindow == null)
+					if (resolutionFound == false)
 					{
-						//We didn't find the selected fullscreen resolution in our available resolutions list, so show an appropriate error message and restart.....
+						//Our resolution was not found at all
 						MessageBox.Show("The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine + 
-							Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
+							Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine + 
 							"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						Program.RestartArguments = " ";
 						return;
@@ -79,19 +92,32 @@ namespace OpenBve {
 				}
 				else
 				{
-					Program.currentGameWindow = new OpenBVEGame(
-						Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth,
-						Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight,
-						currentGraphicsMode, GameWindowFlags.Default);
+
+					try
+					{
+						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+						{
+							Visible = true
+						};
+					}
+					catch
+					{
+						//Windowed mode failed to launch
+						MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
+							Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " + Environment.NewLine +
+							"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						Program.RestartArguments = " ";
+						return;
+					}
 				}
 				if (Program.currentGameWindow == null)
 				{
-					MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem." + Environment.NewLine +
-									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					//We should never really get an unspecified error here, but it's good manners to handle all cases
+					MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
 					return;
 				}
-				Program.currentGameWindow.Visible = true;
+				
 				Program.currentGameWindow.TargetUpdateFrequency = 0;
 				Program.currentGameWindow.TargetRenderFrequency = 0;
 				Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
