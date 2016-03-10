@@ -25,17 +25,17 @@ namespace OpenBve {
 		internal static bool OpenTKWindow;
 		internal static formMain.MainDialogResult currentResult;
 		internal static formRouteInformation RouteInformationForm;
-		internal static Thread RouteInfoThread;
-		internal static bool RouteInfoActive
-		{
-			get
-			{
-				return RouteInformationForm != null && RouteInformationForm.IsHandleCreated && RouteInformationForm.Visible;
-			}
-		}
+//		internal static Thread RouteInfoThread;
+//		internal static bool RouteInfoActive
+//		{
+//			get
+//			{
+//				return RouteInformationForm != null && RouteInformationForm.IsHandleCreated && RouteInformationForm.Visible;
+//			}
+//		}
 
 
-		internal static AppDomain RouteInfoFormDomain;
+//		internal static AppDomain RouteInfoFormDomain;
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{

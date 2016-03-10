@@ -109,6 +109,7 @@
       <DependentUpon>formRouteInformation.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\RouteInformation.cs" />
+    <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />

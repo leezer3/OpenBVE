@@ -1491,45 +1491,47 @@ namespace OpenBve
                                         Sounds.GlobalMute = !Sounds.GlobalMute;
                                         Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
                                         break;
-                                    case Interface.Command.RouteInformation:
-                                        if (RouteInfoThread == null)
-                                        {
-                                            RouteInfoThread = new Thread(ThreadProc)
-                                            {
-                                                IsBackground = true
-                                            };
-                                            RouteInfoThread.Start();
-                                            while (MainLoop.RouteInformationForm == null || !MainLoop.RouteInformationForm.IsHandleCreated)
-                                            {
-                                                //The form may take a few milliseconds to load
-                                                //Takes longer on Mono
-                                                Thread.Sleep(10);
-                                            }
-                                            MainLoop.RouteInformationForm.Invoke((MethodInvoker) delegate
-                                            {
-                                                byte[] RouteMap = OpenBve.Game.RouteInformation.RouteMap.ToByteArray(ImageFormat.Bmp);
-                                                byte[] GradientProfile = OpenBve.Game.RouteInformation.GradientProfile.ToByteArray(ImageFormat.Bmp);
-                                                RouteInformationForm.UpdateImage(RouteMap, GradientProfile,Game.RouteInformation.RouteBriefing);
-                                            });
-                                        }
-                                        else
-                                        {
-                                            if (MainLoop.RouteInformationForm.Visible == true)
-                                            {
-                                                MainLoop.RouteInformationForm.Invoke((MethodInvoker) delegate
-                                                {
-                                                    MainLoop.RouteInformationForm.Hide();
-                                                });
-                                            }
-                                            else
-                                            {
-                                                MainLoop.RouteInformationForm.Invoke((MethodInvoker)delegate
-                                                {
-                                                    MainLoop.RouteInformationForm.Show();
-                                                });
-                                            }
-                                        }
-                                        break;
+								case Interface.Command.RouteInformation:
+// Replaced by RouteInfoOverlay, but not deleted for future reference
+//									if (RouteInfoThread == null)
+//									{
+//										RouteInfoThread = new Thread(ThreadProc)
+//										{
+//											IsBackground = true
+//										};
+//										RouteInfoThread.Start();
+//										while (MainLoop.RouteInformationForm == null || !MainLoop.RouteInformationForm.IsHandleCreated)
+//										{
+//											//The form may take a few milliseconds to load
+//											//Takes longer on Mono
+//											Thread.Sleep(10);
+//										}
+//										MainLoop.RouteInformationForm.Invoke((MethodInvoker) delegate
+//										{
+//											byte[] RouteMap = OpenBve.Game.RouteInformation.RouteMap.ToByteArray(ImageFormat.Bmp);
+//											byte[] GradientProfile = OpenBve.Game.RouteInformation.GradientProfile.ToByteArray(ImageFormat.Bmp);
+//											RouteInformationForm.UpdateImage(RouteMap, GradientProfile,Game.RouteInformation.RouteBriefing);
+//										});
+//									}
+//									else
+//									{
+//										if (MainLoop.RouteInformationForm.Visible == true)
+//										{
+//											MainLoop.RouteInformationForm.Invoke((MethodInvoker) delegate
+//											{
+//												MainLoop.RouteInformationForm.Hide();
+//											});
+//										}
+//										else
+//										{
+//											MainLoop.RouteInformationForm.Invoke((MethodInvoker)delegate
+//											{
+//												MainLoop.RouteInformationForm.Show();
+//											});
+//										}
+//									}
+									Game.routeInfoOverlay.ProcessCommand(Interface.Command.RouteInformation);
+									break;
                                 }
                             }
                             else if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released)

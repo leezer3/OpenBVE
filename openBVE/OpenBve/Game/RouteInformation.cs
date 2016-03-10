@@ -6,6 +6,7 @@ namespace OpenBve
     {
         internal static class RouteInformation
         {
+			internal const int		DefaultRouteInfoSize	= 500;
             /// <summary>A bitmap storing the current route-map image</summary>
             internal static Bitmap RouteMap;
             /// <summary>A bitmap storing the current route gradient profile </summary>
@@ -23,10 +24,20 @@ namespace OpenBve
             /// <summary>The number of errors and warnings</summary>
             internal static string ErrorsAndWarnings;
 
-            internal static void LoadInformation()
-            {
-                RouteMap = Illustrations.CreateRouteMap(500, 500);
-                GradientProfile = Illustrations.CreateRouteGradientProfile(500, 500);
+			/// <summary>Ranges of route info bitmaps</summary>
+			internal static int GradientMinTrack, GradientMaxTrack;
+			internal static int RouteMinX, RouteMaxX, RouteMinZ, RouteMaxZ;
+
+			internal static void LoadInformation()
+			{
+				RouteMap		= Illustrations.CreateRouteMap(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
+				RouteMinX			= Illustrations.LastRouteMinX;
+				RouteMaxX			= Illustrations.LastRouteMaxX;
+				RouteMinZ			= Illustrations.LastRouteMinZ;
+				RouteMaxZ			= Illustrations.LastRouteMaxZ;
+				GradientProfile	= Illustrations.CreateRouteGradientProfile(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
+				GradientMinTrack	= Illustrations.LastGradientMinTrack;
+				GradientMaxTrack	= Illustrations.LastGradientMaxTrack;
             }
         }
     }

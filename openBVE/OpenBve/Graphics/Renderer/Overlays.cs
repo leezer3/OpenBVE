@@ -25,6 +25,8 @@ namespace OpenBve
             System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
             if (CurrentOutputMode == OutputMode.Default)
             {
+				// route info overlay
+				Game.routeInfoOverlay.Show();
                 // hud
                 TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
                 TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
