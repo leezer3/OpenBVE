@@ -9,16 +9,16 @@ namespace OpenBve {
 	internal partial class formMain : Form {
 		internal formMain() {
 			InitializeComponent();
-            this.Text = Interface.GetInterfaceString("program_title");
-            }
+			this.Text = Interface.GetInterfaceString("program_title");
+			}
 
-	    public sealed override string Text
-	    {
-	        get { return base.Text; }
-	        set { base.Text = value; }
-	    }
+		public sealed override string Text
+		{
+			get { return base.Text; }
+			set { base.Text = value; }
+		}
 
-	    // show main dialog
+		// show main dialog
 		internal struct MainDialogResult {
 			internal bool Start;
 			internal string RouteFile;
@@ -27,21 +27,21 @@ namespace OpenBve {
 			internal System.Text.Encoding TrainEncoding;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial) {
-		        using (formMain Dialog = new formMain())
-		        {
-		            Dialog.Result = initial;
-		            Dialog.ShowDialog();
-		            MainDialogResult result = Dialog.Result;
-		            Dialog.Dispose();
-                    return result;
-		        }
+				using (formMain Dialog = new formMain())
+				{
+					Dialog.Result = initial;
+					Dialog.ShowDialog();
+					MainDialogResult result = Dialog.Result;
+					Dialog.Dispose();
+					return result;
+				}
 		}
 
 		// members
 		private MainDialogResult Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
-        
+		
 		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
@@ -85,10 +85,10 @@ namespace OpenBve {
 				radiobuttonOptions.AutoSize = false;
 				radiobuttonOptions.Size = new Size(buttonClose.Width, buttonClose.Height);
 				radiobuttonOptions.TextAlign = ContentAlignment.MiddleCenter;
-                radioButtonPackages.Appearance = Appearance.Button;
-                radioButtonPackages.AutoSize = false;
-                radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
-                radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
+				radioButtonPackages.Appearance = Appearance.Button;
+				radioButtonPackages.AutoSize = false;
+				radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
+				radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
 			}
 			// options
 			Interface.LoadLogs();
@@ -108,7 +108,7 @@ namespace OpenBve {
 						case 1: radiobuttonReview.Checked = true; break;
 						case 2: radiobuttonControls.Checked = true; break;
 						case 3: radiobuttonOptions.Checked = true; break;
-                        case 4: radioButtonPackages.Checked = true; break;
+						case 4: radioButtonPackages.Checked = true; break;
 						default: radiobuttonStart.Checked = true; break;
 				}
 			}
@@ -127,39 +127,39 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
-		    string[] flags = new string[] {};
-		    try
-		    {
-			    flags = System.IO.Directory.GetFiles(flagsFolder);
-            }
-            catch (Exception)
-            {
-            }
+			string[] flags = new string[] {};
+			try
+			{
+				flags = System.IO.Directory.GetFiles(flagsFolder);
+			}
+			catch (Exception)
+			{
+			}
 			// route selection
-		    listviewRouteFiles.SmallImageList = new ImageList {TransparentColor = Color.White};
-		    if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
+			listviewRouteFiles.SmallImageList = new ImageList {TransparentColor = Color.White};
+			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
 			treeviewRouteAddOns.ImageList = new ImageList();
 			if (FolderIcon != null) treeviewRouteAddOns.ImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) treeviewRouteAddOns.ImageList.Images.Add("route", RouteIcon);
-		    foreach (string flag in flags)
-		    {
-		        try
-		        {
-		            treeviewRouteAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag),
-		                Image.FromFile(flag));
-		        }
-		        catch
-		        {
-		        }
-		    }
-		    listviewRouteFiles.Columns.Clear();
+			foreach (string flag in flags)
+			{
+				try
+				{
+					treeviewRouteAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag),
+						Image.FromFile(flag));
+				}
+				catch
+				{
+				}
+			}
+			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
-		    listviewRouteRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
-		    if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
+			listviewRouteRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+			if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++) {
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
 				Item.ImageKey = "route";
@@ -167,8 +167,8 @@ namespace OpenBve {
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// train selection
-		    listviewTrainFolders.SmallImageList = new ImageList {TransparentColor = Color.White};
-		    if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
+			listviewTrainFolders.SmallImageList = new ImageList {TransparentColor = Color.White};
+			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
 			treeviewTrainAddOns.ImageList = new ImageList();
@@ -183,8 +183,8 @@ namespace OpenBve {
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
 			listviewTrainRecently.Columns.Add("");
-		    listviewTrainRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
-		    if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
+			listviewTrainRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++) {
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
 				Item.ImageKey = "train";
@@ -276,8 +276,8 @@ namespace OpenBve {
 				buttonBlackBoxExport.Enabled = false;
 			}
 			// controls
-		    listviewControls.SmallImageList = new ImageList {TransparentColor = Color.White};
-		    if (KeyboardIcon != null) listviewControls.SmallImageList.Images.Add("keyboard", KeyboardIcon);
+			listviewControls.SmallImageList = new ImageList {TransparentColor = Color.White};
+			if (KeyboardIcon != null) listviewControls.SmallImageList.Images.Add("keyboard", KeyboardIcon);
 			if (MouseIcon != null) listviewControls.SmallImageList.Images.Add("mouse", MouseIcon);
 			if (JoystickIcon != null) listviewControls.SmallImageList.Images.Add("joystick", JoystickIcon);
 			if (GamepadIcon != null) listviewControls.SmallImageList.Images.Add("gamepad", GamepadIcon);
@@ -306,6 +306,16 @@ namespace OpenBve {
 			} else {
 				comboboxInterpolation.SelectedIndex = 3;
 			}
+			comboBoxTimeTableDisplayMode.Items.Clear();
+			comboBoxTimeTableDisplayMode.Items.AddRange(new object[] { "", "", "", "" });
+			if ((int)Interface.CurrentOptions.TimeTableStyle >= 0 & (int)Interface.CurrentOptions.TimeTableStyle < comboBoxTimeTableDisplayMode.Items.Count)
+			{
+				comboBoxTimeTableDisplayMode.SelectedIndex = (int)Interface.CurrentOptions.TimeTableStyle;
+			}
+			else
+			{
+				comboBoxTimeTableDisplayMode.SelectedIndex = 1;
+			}
 			if (Interface.CurrentOptions.AnisotropicFilteringMaximum <= 0) {
 				labelAnisotropic.Enabled = false;
 				updownAnisotropic.Enabled = false;
@@ -326,16 +336,16 @@ namespace OpenBve {
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
-		    trackBarTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor;
+			trackBarTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
-		    checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
-		    checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
-		    checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
+			checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
+			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
+			checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
-		    checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
+			checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
 				double a = (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum) * Interface.CurrentOptions.JoystickAxisThreshold + (double)trackbarJoystickAxisThreshold.Minimum;
 				int b = (int)Math.Round(a);
@@ -371,12 +381,12 @@ namespace OpenBve {
 					#endif
 				}
 			}
-		    if (Program.CurrentlyRunningOnMono)
-		    {
-                //HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
-		        tabcontrolRouteSelection.SelectedTab = tabpageRouteBrowse;
-		        tabcontrolTrainSelection.SelectedTab = tabpageTrainBrowse;
-		    }
+			if (Program.CurrentlyRunningOnMono)
+			{
+				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
+				tabcontrolRouteSelection.SelectedTab = tabpageRouteBrowse;
+				tabcontrolTrainSelection.SelectedTab = tabpageTrainBrowse;
+			}
 			// lists
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			// result
@@ -389,21 +399,21 @@ namespace OpenBve {
 
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage(string Language) {
-            //Set command infos to the translated strings
-		    for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
-		    {
-                //This is a hack, but the commandinfos are used in too many places to twiddle with easily
-		        if (Interface.AvailableLangauges[i].LanguageCode == Language)
-		        {
-		            Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
-		            Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
-		            break;
-		        }
-		    }
-            
-            /*
-             * Localisation for strings in main panel
-             */
+			//Set command infos to the translated strings
+			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+			{
+				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
+				if (Interface.AvailableLangauges[i].LanguageCode == Language)
+				{
+					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
+					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
+					break;
+				}
+			}
+			
+			/*
+			 * Localisation for strings in main panel
+			 */
 			radiobuttonStart.Text = Interface.GetInterfaceString("panel_start");
 			radiobuttonReview.Text = Interface.GetInterfaceString("panel_review");
 			radiobuttonControls.Text = Interface.GetInterfaceString("panel_controls");
@@ -411,26 +421,26 @@ namespace OpenBve {
 			linkHomepage.Text = Interface.GetInterfaceString("panel_homepage");
 			buttonClose.Text = Interface.GetInterfaceString("panel_close");
 			/*
-             * Localisation for strings in the options pane
-             */
+			 * Localisation for strings in the options pane
+			 */
 			labelOptionsTitle.Text = Interface.GetInterfaceString("options_title");
-            //Basic display mode settings
+			//Basic display mode settings
 			groupboxDisplayMode.Text = Interface.GetInterfaceString("options_display_mode");
 			radiobuttonWindow.Text = Interface.GetInterfaceString("options_display_mode_window");
 			radiobuttonFullscreen.Text = Interface.GetInterfaceString("options_display_mode_fullscreen");
 			labelVSync.Text = Interface.GetInterfaceString("options_display_vsync");
 			comboboxVSync.Items[0] = Interface.GetInterfaceString("options_display_vsync_off");
 			comboboxVSync.Items[1] = Interface.GetInterfaceString("options_display_vsync_on");
-            //Windowed Mode
+			//Windowed Mode
 			groupboxWindow.Text = Interface.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Interface.GetInterfaceString("options_display_window_width");
 			labelWindowHeight.Text = Interface.GetInterfaceString("options_display_window_height");
-            //Fullscreen
+			//Fullscreen
 			groupboxFullscreen.Text = Interface.GetInterfaceString("options_display_fullscreen");
 			labelFullscreenWidth.Text = Interface.GetInterfaceString("options_display_fullscreen_width");
 			labelFullscreenHeight.Text = Interface.GetInterfaceString("options_display_fullscreen_height");
 			labelFullscreenBits.Text = Interface.GetInterfaceString("options_display_fullscreen_bits");
-            //Interpolation, AA and AF
+			//Interpolation, AA and AF
 			groupboxInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation");
 			labelInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation_mode");
 			comboboxInterpolation.Items[0] = Interface.GetInterfaceString("options_quality_interpolation_mode_nearest");
@@ -445,42 +455,49 @@ namespace OpenBve {
 			labelTransparencyPerformance.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_sharp");
 			labelTransparencyQuality.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_smooth");
 			groupboxDistance.Text = Interface.GetInterfaceString("options_quality_distance");
-            //Viewing distance and motion blur
+			//Viewing distance and motion blur
 			labelDistance.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance");
 			labelDistanceUnit.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance_meters");
-            labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
+			labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
 			comboboxMotionBlur.Items[0] = Interface.GetInterfaceString("options_quality_distance_motionblur_none");
 			comboboxMotionBlur.Items[1] = Interface.GetInterfaceString("options_quality_distance_motionblur_low");
 			comboboxMotionBlur.Items[2] = Interface.GetInterfaceString("options_quality_distance_motionblur_medium");
 			comboboxMotionBlur.Items[3] = Interface.GetInterfaceString("options_quality_distance_motionblur_high");
 			labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
-            //Simulation
+			//Simulation
 			groupboxSimulation.Text = Interface.GetInterfaceString("options_misc_simulation");
 			checkboxToppling.Text = Interface.GetInterfaceString("options_misc_simulation_toppling");
 			checkboxCollisions.Text = Interface.GetInterfaceString("options_misc_simulation_collisions");
 			checkboxDerailments.Text = Interface.GetInterfaceString("options_misc_simulation_derailments");
 			checkboxBlackBox.Text = Interface.GetInterfaceString("options_misc_simulation_blackbox");
-            //Controls
+			//Controls
 			groupboxControls.Text = Interface.GetInterfaceString("options_misc_controls");
 			checkboxJoysticksUsed.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
-            checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_ebaxis");
+			checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_ebaxis");
 			labelJoystickAxisThreshold.Text = Interface.GetInterfaceString("options_misc_controls_threshold");
-            //Sound
+			//Sound
 			groupboxSound.Text = Interface.GetInterfaceString("options_misc_sound");
 			labelSoundNumber.Text = Interface.GetInterfaceString("options_misc_sound_number");
-            //Verbosity
+			//Verbosity
 			groupboxVerbosity.Text = Interface.GetInterfaceString("options_verbosity");
 			checkboxWarningMessages.Text = Interface.GetInterfaceString("options_verbosity_warningmessages");
 			checkboxErrorMessages.Text = Interface.GetInterfaceString("options_verbosity_errormessages");
-            //Advanced Options
-            groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
-            checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
-		    checkBoxUnloadTextures.Text = Interface.GetInterfaceString("options_advanced_unload_textures");
-            checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
-            labelTimeAcceleration.Text = Interface.GetInterfaceString("options_advanced_timefactor");
-            /*
-             * Localisation for strings in the game start pane
-             */
+			//Advanced Options
+			groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
+			checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
+			checkBoxUnloadTextures.Text = Interface.GetInterfaceString("options_advanced_unload_textures");
+			checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
+			labelTimeAcceleration.Text = Interface.GetInterfaceString("options_advanced_timefactor");
+			//Other Options
+			groupBoxOther.Text = Interface.GetInterfaceString("options_other");
+			labelTimeTableDisplayMode.Text = Interface.GetInterfaceString("options_other_timetable_mode");
+			comboBoxTimeTableDisplayMode.Items[0] = Interface.GetInterfaceString("options_other_timetable_mode_none");
+			comboBoxTimeTableDisplayMode.Items[1] = Interface.GetInterfaceString("options_other_timetable_mode_default");
+			comboBoxTimeTableDisplayMode.Items[2] = Interface.GetInterfaceString("options_other_timetable_mode_autogenerated");
+			comboBoxTimeTableDisplayMode.Items[3] = Interface.GetInterfaceString("options_other_timetable_mode_prefercustom");
+			/*
+			 * Localisation for strings in the game start pane
+			 */
 			labelStartTitle.Text = Interface.GetInterfaceString("start_title");
 			labelRoute.Text = " " + Interface.GetInterfaceString("start_route");
 			groupboxRouteSelection.Text = Interface.GetInterfaceString("start_route_selection");
@@ -514,9 +531,9 @@ namespace OpenBve {
 			comboboxMode.Items[0] = Interface.GetInterfaceString("mode_arcade");
 			comboboxMode.Items[1] = Interface.GetInterfaceString("mode_normal");
 			comboboxMode.Items[2] = Interface.GetInterfaceString("mode_expert");
-            /*
-             * Localisation for strings in the game review pane
-             */
+			/*
+			 * Localisation for strings in the game review pane
+			 */
 			labelReviewTitle.Text = Interface.GetInterfaceString("review_title");
 			labelConditions.Text = " " + Interface.GetInterfaceString("review_conditions");
 			groupboxReviewRoute.Text = Interface.GetInterfaceString("review_conditions_route");
@@ -564,9 +581,9 @@ namespace OpenBve {
 			comboboxBlackBoxFormat.Items[0] = Interface.GetInterfaceString("review_blackbox_format_csv");
 			comboboxBlackBoxFormat.Items[1] = Interface.GetInterfaceString("review_blackbox_format_text");
 			buttonBlackBoxExport.Text = Interface.GetInterfaceString("review_blackbox_export");
-            /*
-             * Localisation for strings related to controls (Keyboard etc.)
-             */
+			/*
+			 * Localisation for strings related to controls (Keyboard etc.)
+			 */
 			for (int i = 0; i < listviewControls.SelectedItems.Count; i++) {
 				listviewControls.SelectedItems[i].Selected = false;
 			}
@@ -579,7 +596,7 @@ namespace OpenBve {
 			buttonControlRemove.Text = Interface.GetInterfaceString("controls_remove");
 			buttonControlsImport.Text = Interface.GetInterfaceString("controls_import");
 			buttonControlsExport.Text = Interface.GetInterfaceString("controls_export");
-            buttonControlReset.Text = Interface.GetInterfaceString("controls_reset");
+			buttonControlReset.Text = Interface.GetInterfaceString("controls_reset");
 			buttonControlUp.Text = Interface.GetInterfaceString("controls_up");
 			buttonControlDown.Text = Interface.GetInterfaceString("controls_down");
 			groupboxControl.Text = Interface.GetInterfaceString("controls_selection");
@@ -602,10 +619,10 @@ namespace OpenBve {
 				}
 				comboboxKeyboardKey.Items.Clear();
 
-			    foreach (string currentKey in Enum.GetNames(typeof(OpenTK.Input.Key)))
-			    {
-			        comboboxKeyboardKey.Items.Add(currentKey);
-			    }
+				foreach (string currentKey in Enum.GetNames(typeof(OpenTK.Input.Key)))
+				{
+					comboboxKeyboardKey.Items.Add(currentKey);
+				}
 
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++) {
@@ -636,15 +653,15 @@ namespace OpenBve {
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;
-		    Interface.CurrentOptions.LoadInAdvance = checkBoxLoadInAdvance.Checked;
-		    Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
-		    Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
+			Interface.CurrentOptions.LoadInAdvance = checkBoxLoadInAdvance.Checked;
+			Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
+			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
-            Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
+			Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
 			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
-		    Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
+			Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
 			Interface.CurrentOptions.SoundNumber = (int)Math.Round(updownSoundNumber.Value);
 			Interface.CurrentOptions.ShowWarningMessages = checkboxWarningMessages.Checked;
 			Interface.CurrentOptions.ShowErrorMessages = checkboxErrorMessages.Checked;
@@ -742,7 +759,7 @@ namespace OpenBve {
 				Array.Resize<Interface.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
-            Sounds.Deinitialize();
+			Sounds.Deinitialize();
 			// finish
 			#if !DEBUG
 			try {
@@ -822,7 +839,7 @@ namespace OpenBve {
 			} else if (radiobuttonOptions.Checked) {
 				comboboxLanguages.Focus();
 			}
-            //TODO: Needs focus changing when packages tab is selected
+			//TODO: Needs focus changing when packages tab is selected
 			formMain_Resize(null, null);
 			if (this.WindowState != FormWindowState.Maximized) {
 				Size sss = this.ClientRectangle.Size;
@@ -891,11 +908,11 @@ namespace OpenBve {
 				Array.Resize<string>(ref LanguageNames, n);
 				Array.Sort<string, string>(LanguageNames, LanguageFiles);
 				comboboxLanguages.Items.Clear();
-                //Load all available languages
-                for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
-                {
-                    comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
-                }
+				//Load all available languages
+				for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+				{
+					comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
+				}
 			} else {
 				LanguageFiles = new string[] { };
 				comboboxLanguages.Items.Clear();
@@ -914,7 +931,7 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
-		    panelPackages.Visible = false;
+			panelPackages.Visible = false;
 			panelPanels.BackColor = labelStartTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonHighlight;
@@ -928,7 +945,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelControls.Visible = false;
 			panelOptions.Visible = false;
-            panelPackages.Visible = false;
+			panelPackages.Visible = false;
 			panelPanels.BackColor = labelReviewTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -942,7 +959,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelReview.Visible = false;
 			panelOptions.Visible = false;
-            panelPackages.Visible = false;
+			panelPackages.Visible = false;
 			panelPanels.BackColor = labelControlsTitle.BackColor;
 			pictureboxJoysticks.Visible = true;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -956,7 +973,7 @@ namespace OpenBve {
 			panelStart.Visible = false;
 			panelReview.Visible = false;
 			panelControls.Visible = false;
-            panelPackages.Visible = false;
+			panelPackages.Visible = false;
 			panelPanels.BackColor = labelOptionsTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
@@ -965,28 +982,28 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
 			UpdateRadioButtonBackColor();
 		}
-        private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
-        {
-            panelOptions.Visible = false;
-            panelStart.Visible = false;
-            panelReview.Visible = false;
-            panelControls.Visible = false;
-            panelPackages.Visible = true;
-            panelPanels.BackColor = labelPackages.BackColor;
-            pictureboxJoysticks.Visible = false;
-            radiobuttonStart.BackColor = SystemColors.ButtonFace;
-            radiobuttonReview.BackColor = SystemColors.ButtonFace;
-            radiobuttonControls.BackColor = SystemColors.ButtonFace;
-            radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-            UpdateRadioButtonBackColor();
-            //Load packages
-            if (radioButtonPackages.Checked)
-            {
-                LoadRoutePackages();
-                LoadTrainPackages();
-                PopulatePackageList();
-            }
-        }
+		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
+		{
+			panelOptions.Visible = false;
+			panelStart.Visible = false;
+			panelReview.Visible = false;
+			panelControls.Visible = false;
+			panelPackages.Visible = true;
+			panelPanels.BackColor = labelPackages.BackColor;
+			pictureboxJoysticks.Visible = false;
+			radiobuttonStart.BackColor = SystemColors.ButtonFace;
+			radiobuttonReview.BackColor = SystemColors.ButtonFace;
+			radiobuttonControls.BackColor = SystemColors.ButtonFace;
+			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
+			UpdateRadioButtonBackColor();
+			//Load packages
+			if (radioButtonPackages.Checked)
+			{
+				LoadRoutePackages();
+				LoadTrainPackages();
+				PopulatePackageList();
+			}
+		}
 		private void UpdateRadioButtonBackColor() {
 			// work-around for button-style radio buttons on Mono
 			if (Program.CurrentlyRunningOnMono) {
@@ -1027,10 +1044,10 @@ namespace OpenBve {
 				int j = listviewControls.SelectedIndices[0];
 				
 				for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++) {
-				    int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
+					int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
 					for (int i = 0; i < axes; i++)
 					{
-					    double a = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i);
+						double a = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i);
 						if (a < -0.75) {
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
@@ -1041,18 +1058,18 @@ namespace OpenBve {
 							UpdateControlListElement(listviewControls.Items[j], j, true);
 							return;
 						}
-					    if (a > 0.75) {
-					        Interface.CurrentControls[j].Device = k;
-					        Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
-					        Interface.CurrentControls[j].Element = i;
-					        Interface.CurrentControls[j].Direction = 1;
-					        radiobuttonJoystick.Focus();
-					        UpdateJoystickDetails();
-					        UpdateControlListElement(listviewControls.Items[j], j, true);
-					        return;
-					    }
+						if (a > 0.75) {
+							Interface.CurrentControls[j].Device = k;
+							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+							Interface.CurrentControls[j].Element = i;
+							Interface.CurrentControls[j].Direction = 1;
+							radiobuttonJoystick.Focus();
+							UpdateJoystickDetails();
+							UpdateControlListElement(listviewControls.Items[j], j, true);
+							return;
+						}
 					}
-                    int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
+					int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
 					for (int i = 0; i < buttons; i++) {
 						if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton)i) == ButtonState.Pressed) {
 							Interface.CurrentControls[j].Device = k;
@@ -1065,9 +1082,9 @@ namespace OpenBve {
 							return;
 						}
 					}
-                    int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
+					int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
 					for (int i = 0; i < hats; i++) {
-                        JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
+						JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
 						if (hat.Position != HatPosition.Centered)
 						{
 							Interface.CurrentControls[j].Device = k;
@@ -1084,7 +1101,7 @@ namespace OpenBve {
 			}
 			
 			pictureboxJoysticks.Invalidate();
-            
+			
 		}
 
 		
@@ -1093,88 +1110,85 @@ namespace OpenBve {
 		// functions
 		// =========
 
-        /// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-        private Image LoadImage(string Folder, string Title) {
-		    try
-		    {
-		        string File = OpenBveApi.Path.CombineFile(Folder, Title);
-		        if (System.IO.File.Exists(File))
-		        {
-		            try
-		            {
-		                return Image.FromFile(File);
-		            }
-		            catch
-		            {
-		            }
-		        }
-		        return null;
-		    }
-		    catch
-		    {
-		        return null;
-		    }
+		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
+		private Image LoadImage(string Folder, string Title) {
+			try
+			{
+				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				if (System.IO.File.Exists(File))
+				{
+					try
+					{
+						return Image.FromFile(File);
+					}
+					catch
+					{
+					}
+				}
+				return null;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
 		private void TryLoadImage(PictureBox Box, string Title) {
-		    try
-		    {
-		        string Folder = Program.FileSystem.GetDataFolder("Menu");
-		        string File = OpenBveApi.Path.CombineFile(Folder, Title);
-		        if (System.IO.File.Exists(File))
-		        {
-		            try
-		            {
-		                Box.Image = Image.FromFile(File);
-		                return;
-		            }
-		            catch
-		            {
-		                Box.Image = Box.ErrorImage;
-		                return;
-		            }
-		        }
-		        Box.Image = Box.ErrorImage;
-		    }
-		    catch
-		    {
-		        Box.Image = Box.ErrorImage;
-		    }
+			try
+			{
+				string Folder = Program.FileSystem.GetDataFolder("Menu");
+				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				if (System.IO.File.Exists(File))
+				{
+					try
+					{
+						Box.Image = Image.FromFile(File);
+						return;
+					}
+					catch
+					{
+						Box.Image = Box.ErrorImage;
+						return;
+					}
+				}
+				Box.Image = Box.ErrorImage;
+			}
+			catch
+			{
+				Box.Image = Box.ErrorImage;
+			}
 		}
 
-        private void buttonInstallRoute_Click(object sender, EventArgs e)
-        {
-            var PackageInstallForm = new formPackageInstall();
-            PackageInstallForm.ShowDialog();
-        }
+		private void buttonInstallRoute_Click(object sender, EventArgs e)
+		{
+			var PackageInstallForm = new formPackageInstall();
+			PackageInstallForm.ShowDialog();
+		}
 
-        private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxLoadInAdvance.Checked)
-            {
-                //Load in advance negates unloading textures...
-                checkBoxUnloadTextures.Checked = false;
-                checkBoxUnloadTextures.Enabled = false;
-            }
-            else
-            {
-                checkBoxUnloadTextures.Enabled = true;
-            }
-        }
+		private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
+		{
+			if (checkBoxLoadInAdvance.Checked)
+			{
+				//Load in advance negates unloading textures...
+				checkBoxUnloadTextures.Checked = false;
+				checkBoxUnloadTextures.Enabled = false;
+			}
+			else
+			{
+				checkBoxUnloadTextures.Enabled = true;
+			}
+		}
 
-	    internal formAbout AboutDialog;
+		internal formAbout AboutDialog;
 
-        private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (AboutDialog == null || AboutDialog.Visible == false)
-            {
-                AboutDialog = new formAbout();
-                AboutDialog.Show();
-            }
-        }
-
-        
-		
+		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			if (AboutDialog == null || AboutDialog.Visible == false)
+			{
+				AboutDialog = new formAbout();
+				AboutDialog.Show();
+			}
+		}
 	}
 }
