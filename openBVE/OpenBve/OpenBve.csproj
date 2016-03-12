@@ -102,13 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
-    <Compile Include="Game\formRouteInformation.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Game\formRouteInformation.Designer.cs">
-      <DependentUpon>formRouteInformation.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game\RouteInformation.cs" />
+    <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />
@@ -266,9 +261,6 @@
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Game\formRouteInformation.resx">
-      <DependentUpon>formRouteInformation.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formImage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formImage.cs</DependentUpon>
