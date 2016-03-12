@@ -310,7 +310,11 @@ namespace OpenBve {
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false<c> = for standard window.</param>
 		internal static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
-			// find first and last used element based on stations
+			// Track elements are assumed to be all of the same length, and this length
+			// is used as measure unit, rather than computing the incremental track length
+			// in any 'real world' unut (like m).
+
+			// HORIZONTAL RANGE: find first and last used element based on stations
 			int n = TrackManager.CurrentTrack.Elements.Length;
 			int n0 = n - 1;
 			int n1 = 0;
@@ -325,14 +329,16 @@ namespace OpenBve {
 					}
 				}
 			}
+			// Allow for 4 track units before first station and 8 track units after the last one
 			n0 -= 4;
 			n1 += 8;
+			// But not outside of actual track element array!
 			if (n0 < 0) n0 = 0;
 			if (n1 >= TrackManager.CurrentTrack.Elements.Length)
 				n1 = TrackManager.CurrentTrack.Elements.Length - 1;
-			if (n1 <= n0)
+			if (n1 <= n0)		// neither a 0-length or 'negative' track!
 				n1 = n0 + 1;
-			// find dimensions
+			// VERTICAL RANGE
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
 			for (int i = n0; i <= n1; i++)
 			{
@@ -342,18 +348,23 @@ namespace OpenBve {
 			}
 			if (y0 >= y1 - 1.0)
 				y0 = y1 - 1.0;
-			double nd = 1.0 / (double)(n1 - n0);
-			double yd = 1.0 / (double)(y1 - y0);
+
+			double nd = 1.0 / (double)(n1 - n0);	// horizontal scale
+			double yd = 1.0 / (double)(y1 - y0);	// vertical scale
+			// allow for some padding around actual data
 			double ox = LeftPad, oy = TopPad;
 			double w = (double)(Width - (LeftPad+RightPad));
 			double h = (double)(Height - (TopPad+BottomPad+TrackOffsPad));
-			// set total bitmap X range
-			double minX = TrackManager.CurrentTrack.Elements[0].StartingTrackPosition;
-			double maxX = TrackManager.CurrentTrack.Elements[n - 1].StartingTrackPosition;
-			double offX = (maxX - minX) * ox / w;
+			// set total bitmap track position range; used by in-game profile to place
+			// the current position of the trains; as the train positions are known as track positions,
+			// actual track positions are needed here, rather than indices into the track element array.
+			double minX = TrackManager.CurrentTrack.Elements[n0].StartingTrackPosition;
+			double maxX = TrackManager.CurrentTrack.Elements[n1].StartingTrackPosition;
+			double offX = ox * (maxX - minX) / w;
 			lastGradientMinTrack = (int)(minX - offX);
 			lastGradientMaxTrack = (int)(maxX + offX);
-			// create bitmap
+
+			// BITMAP (in-game display needs transparency)
 			Bitmap b = new Bitmap(Width, Height,
 					inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 					: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -370,7 +381,7 @@ namespace OpenBve {
 				g.FillRectangle(mapColors[mode].belowSeaFill, (float)x0, (float)y, (float)x1, (float)(oy + h) - (float)y);
 				g.DrawLine(mapColors[mode].belowSeaBrdr, (float)x0, (float)y, (float)x1, (float)y);
 			}
-			// draw route path
+			// draw route gradient profile
 			{
 				PointF[] p = new PointF[n + 2];
 				p[0] = new PointF((float)(ox - w * (double)n0 * nd), (float)(oy + h));

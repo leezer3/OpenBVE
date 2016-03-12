@@ -28,7 +28,8 @@ namespace OpenBve
 		//and of reain dot in route map
 		private const int			trainDotRadius	= 4;
 		private const int			trainDotDiameter= (trainDotRadius * 2);
-		private static readonly Color128	trainDotColour	= Color128.Red;
+		private static readonly Color128	trainDotColour			= Color128.Red;
+		private static readonly Color128	playerTrainDotColour	= Color128.Green;
 
 		//
 		// FIELDS
@@ -70,6 +71,7 @@ namespace OpenBve
 		{
 			if (currentState == state.none)
 				return;
+			int i, trainX, trainZ, xPos, zPos;
 			// size the image to half of the smallest screen size, but not larger than default size
 			// NO: compressing the image below its original size makes texs hard to read
 //			int		width		= Math.Min(Math.Min(Screen.Height, Screen.Width) / 2,
@@ -83,17 +85,22 @@ namespace OpenBve
 			{
 			case state.map:
 				Renderer.DrawRectangle(mapImage, origin, size, null);
-				// get current rain position
-				int trainX = (int)TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.WorldPosition.X;
-				int trainZ = (int)TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z;
-				// convert to route map coordinates
-				int xPos = width * (trainX - Game.RouteInformation.RouteMinX) /
-					(Game.RouteInformation.RouteMaxX - Game.RouteInformation.RouteMinX) - trainDotRadius;
-				int zPos = width - width * (trainZ - Game.RouteInformation.RouteMinZ) /
-					(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
-				// draw a dot at current train position
-				Renderer.DrawRectangle(null, new Point(xPos, zPos),
-					new Size(trainDotDiameter, trainDotDiameter), trainDotColour);
+				// get current train position
+				int n = TrainManager.Trains.Length;
+				for (i = 0; i < n; i++)
+				{
+					trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
+					trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
+					// convert to route map coordinates
+					xPos = width * (trainX - Game.RouteInformation.RouteMinX) /
+							(Game.RouteInformation.RouteMaxX - Game.RouteInformation.RouteMinX) - trainDotRadius;
+					zPos = width - width * (trainZ - Game.RouteInformation.RouteMinZ) /
+							(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
+					// draw a dot at current train position
+					Renderer.DrawRectangle(null, new Point(xPos, zPos),
+							new Size(trainDotDiameter, trainDotDiameter),
+							TrainManager.Trains[i] == TrainManager.PlayerTrain ? playerTrainDotColour : trainDotColour);
+				}
 				break;
 			case state.gradient:
 				Renderer.DrawRectangle(gradientImage, origin, size, null);
