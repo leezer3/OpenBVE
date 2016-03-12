@@ -24,7 +24,7 @@ namespace OpenBve {
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 		internal static bool OpenTKWindow;
 		internal static formMain.MainDialogResult currentResult;
-		internal static formRouteInformation RouteInformationForm;
+//		internal static formRouteInformation RouteInformationForm;
 //		internal static Thread RouteInfoThread;
 //		internal static bool RouteInfoActive
 //		{
@@ -130,11 +130,11 @@ namespace OpenBve {
 		// repeats
 
 
-		private static void ThreadProc()
-		{
-			RouteInformationForm = new formRouteInformation();
-			Application.Run(RouteInformationForm);
-		}
+//		private static void ThreadProc()
+//		{
+//			RouteInformationForm = new formRouteInformation();
+//			Application.Run(RouteInformationForm);
+//		}
 
 		private static void OpenTKQuit(object sender, CancelEventArgs e)
 		{
