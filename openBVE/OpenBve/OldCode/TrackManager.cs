@@ -581,7 +581,7 @@ namespace OpenBve {
 			internal double CurveCantTangent;
 			internal double AdhesionMultiplier;
 			internal double CsvRwAccuracyLevel;
-		    internal double Pitch;
+			internal double Pitch;
 			internal Vector3 WorldPosition;
 			internal Vector3 WorldDirection;
 			internal Vector3 WorldUp;
@@ -589,7 +589,7 @@ namespace OpenBve {
 			internal GeneralEvent[] Events;
 			internal TrackElement(double StartingTrackPosition) {
 				this.StartingTrackPosition = StartingTrackPosition;
-			    this.Pitch = 0.0;
+				this.Pitch = 0.0;
 				this.CurveRadius = 0.0;
 				this.CurveCant = 0.0;
 				this.CurveCantTangent = 0.0;
@@ -617,9 +617,10 @@ namespace OpenBve {
 			internal Vector3 WorldDirection;
 			internal Vector3 WorldUp;
 			internal Vector3 WorldSide;
-		    internal double Pitch;
+			internal double Pitch;
 			internal double CurveRadius;
 			internal double CurveCant;
+			internal double Odometer;
 			internal double CantDueToInaccuracy;
 			internal double AdhesionMultiplier;
 			internal EventTriggerType TriggerType;
@@ -651,6 +652,7 @@ namespace OpenBve {
 			}
 			double da = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
 			double db = NewTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
+
 			// track
 			if (UpdateWorldCoordinates) {
 				if (db != 0.0) {
@@ -682,7 +684,7 @@ namespace OpenBve {
 						Follower.WorldSide = CurrentTrack.Elements[i].WorldSide;
 						World.Rotate(ref Follower.WorldSide.X, ref Follower.WorldSide.Y, ref Follower.WorldSide.Z, 0.0, 1.0, 0.0, cos2a, sin2a);
 						World.Cross(Follower.WorldDirection.X, Follower.WorldDirection.Y, Follower.WorldDirection.Z, Follower.WorldSide.X, Follower.WorldSide.Y, Follower.WorldSide.Z, out Follower.WorldUp.X, out Follower.WorldUp.Y, out Follower.WorldUp.Z);
-					    
+						
 					} else {
 						// straight
 						Follower.WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + db * CurrentTrack.Elements[i].WorldDirection.X;
@@ -693,7 +695,7 @@ namespace OpenBve {
 						Follower.WorldSide = CurrentTrack.Elements[i].WorldSide;
 						Follower.CurveRadius = 0.0;
 					}
-                    
+					
 					// cant
 					if (i < CurrentTrack.Elements.Length - 1) {
 						double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
@@ -709,12 +711,12 @@ namespace OpenBve {
 							(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
 							(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
 							(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
-                        Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
+						Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
 					} else {
 						Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
 					}
 
-                    
+					
 				} else {
 					Follower.WorldPosition = CurrentTrack.Elements[i].WorldPosition;
 					Follower.WorldDirection = CurrentTrack.Elements[i].WorldDirection;
@@ -723,7 +725,7 @@ namespace OpenBve {
 					Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
 					Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
 				}
-                
+				
 			} else {
 				if (db != 0.0) {
 					if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
@@ -752,12 +754,12 @@ namespace OpenBve {
 					Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
 					Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
 				}
-               
+			   
 			}
 			Follower.AdhesionMultiplier = CurrentTrack.Elements[i].AdhesionMultiplier;
-            //Pitch added for Plugin Data usage
-            //Mutliply this by 1000 to get the original value
-            Follower.Pitch = CurrentTrack.Elements[i].Pitch * 1000;
+			//Pitch added for Plugin Data usage
+			//Mutliply this by 1000 to get the original value
+			Follower.Pitch = CurrentTrack.Elements[i].Pitch * 1000;
 			// inaccuracy
 			if (AddTrackInaccurary) {
 				double x, y, c;
@@ -788,6 +790,19 @@ namespace OpenBve {
 			}
 			// events
 			CheckEvents(ref Follower, i, Math.Sign(db - da), da, db);
+			//Update the odometer
+			if (Follower.TrackPosition != NewTrackPosition)
+			{
+				//HACK: Reset the odometer if we've moved more than 10m this frame
+				if (Math.Abs(NewTrackPosition - Follower.TrackPosition) > 10)
+				{
+					Follower.Odometer = 0;
+				}
+				else
+				{
+					Follower.Odometer += NewTrackPosition - Follower.TrackPosition;
+				}
+			}
 			// finish
 			Follower.TrackPosition = NewTrackPosition;
 			Follower.LastTrackElement = i;

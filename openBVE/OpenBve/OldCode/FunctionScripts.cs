@@ -18,7 +18,7 @@ namespace OpenBve {
 			TrainCars,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant,
+			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Odometer, OdometerOfCar,
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
@@ -132,26 +132,26 @@ namespace OpenBve {
 							}
 							s--; break;
 						}
-                    case Instructions.MathRandom:
-				        {
-                            //Generates a random number between two given doubles
-                            double min = Function.Stack[s - 2];
-                            double max = Function.Stack[s - 1];
-                            var randomGenerator = new Random();
-                            Function.Stack[s - 2] =  min + randomGenerator.NextDouble() * (max - min);
-				            s--;
-				        }
-				        break;
-                    case Instructions.MathRandomInt:
-                        {
-                            //Generates a random number between two given doubles
-                            int min = (int)Function.Stack[s - 2];
-                            int max = (int)Function.Stack[s - 1];
-                            var randomGenerator = new Random();
-                            Function.Stack[s - 2] = randomGenerator.Next(min,max);
-                            s--;
-                        }
-                        break;
+					case Instructions.MathRandom:
+						{
+							//Generates a random number between two given doubles
+							double min = Function.Stack[s - 2];
+							double max = Function.Stack[s - 1];
+							var randomGenerator = new Random();
+							Function.Stack[s - 2] =  min + randomGenerator.NextDouble() * (max - min);
+							s--;
+						}
+						break;
+					case Instructions.MathRandomInt:
+						{
+							//Generates a random number between two given doubles
+							int min = (int)Function.Stack[s - 2];
+							int max = (int)Function.Stack[s - 1];
+							var randomGenerator = new Random();
+							Function.Stack[s - 2] = randomGenerator.Next(min,max);
+							s--;
+						}
+						break;
 					case Instructions.MathIncrement:
 						Function.Stack[s - 1] += 1.0;
 						break;
@@ -293,7 +293,7 @@ namespace OpenBve {
 					case Instructions.TrainSpeedometer:
 						if (Train != null) {
 							Function.Stack[s] = Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
-                            //Train.Cars[CarIndex].Specs.
+							//Train.Cars[CarIndex].Specs.
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -417,82 +417,112 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
-                    case Instructions.CurveRadius:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = (Train.Cars[j].FrontAxle.Follower.CurveRadius + Train.Cars[j].RearAxle.Follower.CurveRadius) / 2;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-                    case Instructions.FrontAxleCurveRadius:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveRadius;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-                    case Instructions.RearAxleCurveRadius:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].RearAxle.Follower.CurveRadius;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
-                    case Instructions.CurveCant:
-                        if (Train == null)
-                        {
-                            Function.Stack[s - 1] = 0.0;
-                        }
-                        else
-                        {
-                            int j = (int)Math.Round(Function.Stack[s - 1]);
-                            if (j < 0) j += Train.Cars.Length;
-                            if (j >= 0 & j < Train.Cars.Length)
-                            {
-                                Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveCant;
-                            }
-                            else
-                            {
-                                Function.Stack[s - 1] = 0.0;
-                            }
-                        }
-                        break;
+					case Instructions.CurveRadius:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = (Train.Cars[j].FrontAxle.Follower.CurveRadius + Train.Cars[j].RearAxle.Follower.CurveRadius) / 2;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.FrontAxleCurveRadius:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveRadius;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.RearAxleCurveRadius:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].RearAxle.Follower.CurveRadius;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.CurveCant:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.CurveCant;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
+					case Instructions.Odometer:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = Train.Cars[CarIndex].FrontAxle.Follower.Odometer;
+						}
+						s++;
+						break;
+					case Instructions.OdometerOfCar:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.Odometer;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
 					case Instructions.TrainTrackDistanceToCar:
 						if (Train != null) {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
@@ -984,25 +1014,25 @@ namespace OpenBve {
 									if (m < 0) {
 										throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 									}
-							        if (m == 0)
-							        {
-							            if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
-							            p[n] = Expression.Substring(t, j - t);
-							            n++;
-							            string a = Expression.Substring(0, i).Trim();
-							            string c = Expression.Substring(j + 1).Trim();
-							            System.Text.StringBuilder r = new System.Text.StringBuilder();
-							            for (int k = 0; k < n; k++)
-							            {
-							                p[k] = GetFunctionNotationFromInfixNotation(p[k], true);
-							                if (k > 0) r.Append(',');
-							                r.Append(p[k]);
-							            }
-							            Expression = a + "[" + r + "]" + c;
-							            s = i + r.Length + 2;
-							            q = true;
-							        }
-							        break;
+									if (m == 0)
+									{
+										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
+										p[n] = Expression.Substring(t, j - t);
+										n++;
+										string a = Expression.Substring(0, i).Trim();
+										string c = Expression.Substring(j + 1).Trim();
+										System.Text.StringBuilder r = new System.Text.StringBuilder();
+										for (int k = 0; k < n; k++)
+										{
+											p[k] = GetFunctionNotationFromInfixNotation(p[k], true);
+											if (k > 0) r.Append(',');
+											r.Append(p[k]);
+										}
+										Expression = a + "[" + r + "]" + c;
+										s = i + r.Length + 2;
+										q = true;
+									}
+									break;
 								case ',':
 									if (m == 1) {
 										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
@@ -1041,15 +1071,15 @@ namespace OpenBve {
 								if (n < 0) {
 									throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
 								}
-						        if (n == 0)
-						        {
-						            string a = Expression.Substring(0, i).Trim();
-						            string b = Expression.Substring(i + 1, j - i - 1).Trim();
-						            string c = Expression.Substring(j + 1).Trim();
-						            return GetFunctionNotationFromInfixNotation(a + GetFunctionNotationFromInfixNotation(b, false) + c,
-						                false);
-						        }
-						        break;
+								if (n == 0)
+								{
+									string a = Expression.Substring(0, i).Trim();
+									string b = Expression.Substring(i + 1, j - i - 1).Trim();
+									string c = Expression.Substring(j + 1).Trim();
+									return GetFunctionNotationFromInfixNotation(a + GetFunctionNotationFromInfixNotation(b, false) + c,
+										false);
+								}
+								break;
 						} j++;
 					}
 					throw new System.IO.InvalidDataException("No closing parenthesis found in " + Expression);
@@ -1225,7 +1255,7 @@ namespace OpenBve {
 										if (m < 0) {
 											throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 										} 
-                                        if (m == 0) {
+										if (m == 0) {
 											q = true;
 										}
 										break;
@@ -1262,7 +1292,7 @@ namespace OpenBve {
 				if (a[i].Length == 0) {
 					throw new System.IO.InvalidDataException("An empty argument is invalid in " + f + " in " + Expression);
 				} 
-                if (a[i].IndexOf(' ') >= 0) {
+				if (a[i].IndexOf(' ') >= 0) {
 					throw new System.IO.InvalidDataException("An argument containing a space is invalid in " + f + " in " + Expression);
 				}
 				a[i] = GetPostfixNotationFromFunctionNotation(a[i]).Trim();
@@ -1272,22 +1302,22 @@ namespace OpenBve {
 				case "plus":
 					switch (n)
 					{
-					    case 0:
-					        return "0";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        if (a[1].EndsWith(" *")) {
-					            return a[1] + " " + a[0] + " +";
-					        } else {
-					            return a[0] + " " + a[1] + " +";
-					        }
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i] + " +");
-					        }
-					        return t.ToString();
+						case 0:
+							return "0";
+						case 1:
+							return a[0];
+						case 2:
+							if (a[1].EndsWith(" *")) {
+								return a[1] + " " + a[0] + " +";
+							} else {
+								return a[0] + " " + a[1] + " +";
+							}
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " +");
+							}
+							return t.ToString();
 					}
 				case "subtract":
 					if (n == 2) {
@@ -1297,18 +1327,18 @@ namespace OpenBve {
 				case "times":
 					switch (n)
 					{
-					    case 0:
-					        return "1";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        return a[0] + " " + a[1] + " *";
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " *");
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i] + " *");
-					        }
-					        return t.ToString();
+						case 0:
+							return "1";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " *";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " *");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " *");
+							}
+							return t.ToString();
 					}
 				case "divide":
 					if (n == 2) {
@@ -1318,30 +1348,30 @@ namespace OpenBve {
 				case "power":
 					switch (n)
 					{
-					    case 0:
-					        return "1";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        return a[0] + " " + a[1] + " power";
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1]);
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i]);
-					        }
-					        for (i = 0; i < n - 1; i++) {
-					            t.Append(" power");
-					        }
-					        return t.ToString();
+						case 0:
+							return "1";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " power";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1]);
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i]);
+							}
+							for (i = 0; i < n - 1; i++) {
+								t.Append(" power");
+							}
+							return t.ToString();
 					}
 					// math
-                case "random":
-                case "randomint":
-                    if (n == 2)
-                    {
-                        return a[0] + " " + a[1] + " " + f;
-                    }
-                    throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
+				case "random":
+				case "randomint":
+					if (n == 2)
+					{
+						return a[0] + " " + a[1] + " " + f;
+					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "quotient":
 				case "mod":
 				case "min":
@@ -1402,55 +1432,56 @@ namespace OpenBve {
 				case "and":
 					switch (n)
 					{
-					    case 0:
-					        return "1";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        return a[0] + " " + a[1] + " &";
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i] + " &");
-					        } return t.ToString();
+						case 0:
+							return "1";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " &";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " &");
+							} return t.ToString();
 					}
 				case "or":
 					switch (n)
 					{
-					    case 0:
-					        return "0";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        return a[0] + " " + a[1] + " |";
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i] + " |");
-					        } return t.ToString();
+						case 0:
+							return "0";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " |";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " |");
+							} return t.ToString();
 					}
 				case "xor":
 					switch (n)
 					{
-					    case 0:
-					        return "0";
-					    case 1:
-					        return a[0];
-					    case 2:
-					        return a[0] + " " + a[1] + " ^";
-					    default:
-					        System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-					        for (i = 2; i < n; i++) {
-					            t.Append(" " + a[i] + " ^");
-					        } return t.ToString();
+						case 0:
+							return "0";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " ^";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " ^");
+							} return t.ToString();
 					}
 					// train
 				case "distance":
 				case "trackdistance":
-                case "curveradius":
-                case "frontaxlecurveradius":
-                case "rearaxlecurveradius":
-                case "curvecant":
+				case "curveradius":
+				case "frontaxlecurveradius":
+				case "rearaxlecurveradius":
+				case "curvecant":
+				case "odometer":
 				case "speed":
 				case "speedometer":
 				case "acceleration":
@@ -2080,16 +2111,16 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMod;
 							n++; s--; break;
-                        case "random":
-                            if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.MathRandom;
-                            n++; s--; break;
-                        case "randomint":
-                            if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.MathRandomInt;
-                            n++; s--; break;
+						case "random":
+							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.MathRandom;
+							n++; s--; break;
+						case "randomint":
+							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.MathRandomInt;
+							n++; s--; break;
 						case "floor":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
@@ -2290,26 +2321,35 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainTrackDistance;
 							n++; s++; if (s >= m) m = s; break;
-                        case "frontaxlecurveradiusindex":
-                            if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.FrontAxleCurveRadius;
-                            n++; break;
-                        case "rearaxlecurveradiusindex":
-                            if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.RearAxleCurveRadius;
-                            n++; break;
-                        case "curveradiusindex":
-                            if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.CurveRadius;
-                            n++; break;
-                        case "curvecantindex":
-                            if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
-                            if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.CurveCant;
-                            n++; break;
+						case "frontaxlecurveradiusindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.FrontAxleCurveRadius;
+							n++; break;
+						case "rearaxlecurveradiusindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.RearAxleCurveRadius;
+							n++; break;
+						case "curveradiusindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurveRadius;
+							n++; break;
+						case "curvecantindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurveCant;
+							n++; break;
+						case "odometer":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Odometer;
+							n++; s++; if (s >= m) m = s;  break;
+						case "odometerindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.OdometerOfCar;
+							n++; break;
 						case "trackdistanceindex":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
@@ -2498,17 +2538,17 @@ namespace OpenBve {
 		// mathematical functions
 		private static double Log(double X) {
 			if (X <= 0.0) {
-                //If X is less than or equal to 0.0 Log will return ComplexInfinity/ NonReal
-                //Therefore, return 0.0
-			    return 0.0;
+				//If X is less than or equal to 0.0 Log will return ComplexInfinity/ NonReal
+				//Therefore, return 0.0
+				return 0.0;
 			} else {
 				return Math.Log(X);
 			}
 		}
 		private static double Sqrt(double X) {
 			if (X < 0.0) {
-                //If X is less than or equal to 0.0 Sqrt will return NonReal
-                //Therefore, return 0.0
+				//If X is less than or equal to 0.0 Sqrt will return NonReal
+				//Therefore, return 0.0
 				return 0.0;
 			} else {
 				return Math.Sqrt(X);
@@ -2519,9 +2559,9 @@ namespace OpenBve {
 			double d = c - Math.Floor(c) - 0.5;
 			double e = Math.Floor(X >= 0.0 ? X : -X) * 1.38462643383279E-16;
 			if (d >= -e & d <= e) {
-                //If X is less than or equal to 0.0 Tan will return NonReal
-                //Therefore, return 0.0
-                return 0.0;
+				//If X is less than or equal to 0.0 Tan will return NonReal
+				//Therefore, return 0.0
+				return 0.0;
 			} else {
 				return Math.Tan(X);
 			}
