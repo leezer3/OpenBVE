@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_encodings.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Character Encodings</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Character Encodings</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This page describes what character encodings are and how they should be used.
+</font></td></tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Overview</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+A character encoding is a way to translate characters into bytes that can be stored on the hard drive. In the beginnings, one byte (256 states) was used to encode one character. As different writing systems around the world have different requirements for characters to be encoded, there are a lot of different encodings in use throughout the world. Problematically, if the encoding of a text file is not known in advance, misinterpreting the encoding can result in <em>mojibake</em> (meaningless sequence of characters).<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Example of a Japanese text encoded in Shift_JIS (requires appropriate fonts available):</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>ひらがなカタカナ漢字</tt></td>
+</tr>
+</table>
+<table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>The byte sequence generated from the previous example in Shift_JIS:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>82 D0 82 E7 82 AA 82 C8 83 4A 83 5E 83 4A 83 69 8A BF 8E 9A</tt></td>
+</tr>
+</table>
+<table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>What happens if the byte sequence is misinterpreted as being ISO 8859-1 (Latin-1) instead of Shift_JIS:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>‚Ð‚ç‚ª‚ÈƒJƒ^ƒJƒiŠ¿Žš</tt></td>
+</tr>
+</table>
+Usually, one particular encoding only allows to use the writing system for which it was designed for. Unicode, a standard which covers basically all characters as used in writing systems throughout the world, provides a solution here.<br /><br />While Unicode is wide-spread today, there are still some issues. First of all, Unicode is not directly a character encoding. Instead, so-called Unicode Transformation Formats (UTF) provide the means to encode particular characters. Transformation formats frequently used are UTF-8 and UTF-16.<br /><br />Route and train files are usually, for compatibility reasons, allowed to be encoded in any arbitrary encoding. As the encoding is not known in advance, the user will need to select the correct encoding for the route and the train in the settings tab in the main menu. Of course this is a nuisance and should be avoided somehow.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Byte Order Mark</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+UTF-16 descends from a character encoding (UTC-2) which always used two bytes to encode one character. As such, the order of those two bytes matters. In order to know in which order the bytes appear, a so-called byte order mark is frequently prepended to the text, usually automatically and transparently by the text editor. The byte order mark provides decoders a means of detecting in which byte order the file was saved in. Additionally, the byte order mark provides a fairly safe way of detecting that the text file is saved in Unicode in the first place.<br /><br />While not technically necessary, the byte order mark is also frequently used for UTF-8. As UTF-8 does not have a byte order issue, the sole purpose of using a byte order mark with UTF-8 is to provide a means to flagging the file as being encoded in UTF-8.<br /><br />As said, while Unicode allows to encode virtually all characters used in all writing systems around the world, it does not necessarily make working with text files easier if the encoding to be used was not agreed on.<br /><br />Using a byte order mark provides openBVE the ability to automatically detect the encoding for each individual file. If you have a good text editor, you will not only be able to select the encoding manually, but also if you want to save with a byte order mark or not. Notepad (Windows) always saves with a byte order mark if UTF-8 is selected as the character encoding upon saving the file, to make an acceptable example.<br /><br />Technically, the byte order mark is the first bytes of a particular text file. The byte order marks which can be automatically detected by openBVE are:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Encoding</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Hexadecimal representation</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">UTF-8</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">EF BB BF</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">UTF-16 (big endian)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">FE FF</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">UTF-16 (little endian)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">FF FE</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">UTF-32 (big endian)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">00 00 FE FF</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">UTF-32 (little endian)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">FF FE 00 00</td></tr>
+</table><br />
+You are encouraged to always save text files in one of those encodings with a byte order mark in order for openBVE to automatically detect the encoding used.
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_encodings.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+</html>

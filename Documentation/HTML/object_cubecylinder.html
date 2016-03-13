@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/object_cubecylinder.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:32:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Cubes and cylinders</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Cubes and cylinders</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Cube command</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The Cube command in B3D and CSV objects is equivalent to a series of Vertex/AddVertex and Face/AddFace commands.<br /><br />Given the following code (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Cube <em>x</em>, <em>y</em>, <em>z</em></tt></td>
+</tr>
+</table>
+<br />The Cube command corresponds to these instructions (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Vertex <em>x</em>, <em>y</em>, -<em>z</em><br />
+Vertex <em>x</em>, -<em>y</em>, -<em>z</em><br />
+Vertex -<em>x</em>, -<em>y</em>, -<em>z</em><br />
+Vertex -<em>x</em>, <em>y</em>, -<em>z</em><br />
+Vertex <em>x</em>, <em>y</em>, <em>z</em><br />
+Vertex <em>x</em>, -<em>y</em>, <em>z</em><br />
+Vertex -<em>x</em>, -<em>y</em>, <em>z</em><br />
+Vertex -<em>x</em>, <em>y</em>, <em>z</em><br />
+Face <em>v</em>+0, <em>v</em>+1, <em>v</em>+2, <em>v</em>+3<br />
+Face <em>v</em>+0, <em>v</em>+4, <em>v</em>+5, <em>v</em>+1<br />
+Face <em>v</em>+0, <em>v</em>+3, <em>v</em>+7, <em>v</em>+4<br />
+Face <em>v</em>+6, <em>v</em>+5, <em>v</em>+4, <em>v</em>+7<br />
+Face <em>v</em>+6, <em>v</em>+7, <em>v</em>+3, <em>v</em>+2<br />
+Face <em>v</em>+6, <em>v</em>+2, <em>v</em>+1, <em>v</em>+5</tt></td>
+</tr>
+</table>
+where <em>v</em> is the number of vertices that have already been created before the Cube command was used.<br /><br />If you want to texture the cube, you need to add appropriate Coordinate/SetTextureCoordinate commands manually.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Cylinder command</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The Cylinder command in B3D and CSV objects is equivalent to a series of Vertex/AddVertex and Face/AddFace commands.<br /><br />Given the following code (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Cylinder <em>n</em>, <em>r1</em>, <em>r2</em>, <em>h</em></tt></td>
+</tr>
+</table>
+<br />The Cylinder command first corresponds to <em>n</em> pairs of two vertex instructions (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Vertex cos[2*pi*<font color="red"><b>0</b></font>/n]*<em>r1</em>, &nbsp;<em>h</em>/2, sin[2*pi*<font color="red"><b>0</b></font>/n]*<em>r1</em><br />
+Vertex cos[2*pi*<font color="red"><b>0</b></font>/n]*<em>r2</em>, -<em>h</em>/2, sin[2*pi*<font color="red"><b>0</b></font>/n]*<em>r2</em><br />
+Vertex cos[2*pi*<font color="#E0A000"><b>1</b></font>/n]*<em>r1</em>, &nbsp;<em>h</em>/2, sin[2*pi*<font color="#E0A000"><b>1</b></font>/n]*<em>r1</em><br />
+Vertex cos[2*pi*<font color="#E0A000"><b>1</b></font>/n]*<em>r2</em>, -<em>h</em>/2, sin[2*pi*<font color="#E0A000"><b>1</b></font>/n]*<em>r2</em><br />
+Vertex cos[2*pi*<font color="green"><b>2</b></font>/n]*<em>r1</em>, &nbsp;<em>h</em>/2, sin[2*pi*<font color="green"><b>2</b></font>/n]*<em>r1</em><br />
+Vertex cos[2*pi*<font color="green"><b>2</b></font>/n]*<em>r2</em>, -<em>h</em>/2, sin[2*pi*<font color="green"><b>2</b></font>/n]*<em>r2</em><br />
+...<br />
+Vertex cos[2*pi*<font color="blue"><b>(n-1)</b></font>/n]*<em>r1</em>, &nbsp;<em>h</em>/2, sin[2*pi*<font color="blue"><b>(n-1)</b></font>/n]*<em>r1</em><br />
+Vertex cos[2*pi*<font color="blue"><b>(n-1)</b></font>/n]*<em>r2</em>, -<em>h</em>/2, sin[2*pi*<font color="blue"><b>(n-1)</b></font>/n]*<em>r2</em></tt></td>
+</tr>
+</table>
+<br />Then, <em>n</em> faces are added to form the side walls (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Face <font color="#E0A000"><b>2</b></font>, <font color="#E0A000"><b>3</b></font>, <font color="red"><b>1</b></font>, <font color="red"><b>0</b></font><br />
+Face <font color="green"><b>4</b></font>, <font color="green"><b>5</b></font>, <font color="#E0A000"><b>3</b></font>, <font color="#E0A000"><b>2</b></font><br />
+Face <font color="blue"><b>6</b></font>, <font color="blue"><b>7</b></font>, <font color="green"><b>5</b></font>, <font color="green"><b>4</b></font><br />
+Face <font color="fuchsia"><b>8</b></font>, <font color="fuchsia"><b>9</b></font>, <font color="blue"><b>7</b></font>, <font color="blue"><b>6</b></font><br />
+...<br />
+Face <font color="blue"><b>2*<em>n</em>-6</b></font>, <font color="blue"><b>2*<em>n</em>-5</b></font>, <font color="fuchsia"><b>2*<em>n</em>-7</b></font>, <font color="fuchsia"><b>2*<em>n</em>-8</b></font><br />
+Face <font color="green"><b>2*<em>n</em>-4</b></font>, <font color="green"><b>2*<em>n</em>-3</b></font>, <font color="blue"><b>2*<em>n</em>-5</b></font>, <font color="blue"><b>2*<em>n</em>-6</b></font><br />
+Face <font color="#E0A000"><b>2*<em>n</em>-2</b></font>, <font color="#E0A000"><b>2*<em>n</em>-1</b></font>, <font color="green"><b>2*<em>n</em>-3</b></font>, <font color="green"><b>2*<em>n</em>-4</b></font><br />
+Face <font color="red"><b>0</b></font>, &nbsp;&nbsp;&nbsp;&nbsp;<font color="red"><b>1</b></font>, &nbsp;&nbsp;&nbsp;&nbsp;<font color="#E0A000"><b>2*<em>n</em>-1</b></font>, <font color="#E0A000"><b>2*<em>n</em>-2</b></font></tt></td>
+</tr>
+</table>
+<br />If <em>r2</em>&gt;0, a lower cap is then added (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Face <font color="red"><b>2*<em>n</em>-2</b></font>, <font color="fuchsia"><b>2*<em>n</em>-4</b></font>, <font color="blue"><b>2*<em>n</em>-6</b></font>, ..., <font color="green"><b>4</b></font>, <font color="#E0A000"><b>2</b></font>, <font color="red"><b>0</b></font></tt></td>
+</tr>
+</table>
+<br />If <em>r1</em>&gt;0, an upper cap is then added (B3D style):<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>Face <font color="red"><b>1</b></font>, <font color="#E0A000"><b>3</b></font>, <font color="green"><b>5</b></font>, ..., <font color="blue"><b>2*<em>n</em>-5</b></font>, <font color="fuchsia"><b>2*<em>n</em>-3</b></font>, <font color="red"><b>2*<em>n</em>-1</b></font></tt></td>
+</tr>
+</table>
+<br />If you want to texture the cylinder, you need to add appropriate Coordinate/SetTextureCoordinate commands manually.
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/object_cubecylinder.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:32:26 GMT -->
+</html>

@@ -1,0 +1,941 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_panel_cfg.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:09 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>The panel.cfg file format</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">The <b>panel.cfg</b> file format</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Contents</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+↷ <a href="#overview">1. Overview</a><br />
+↷ <a href="#syntax">2. Syntax</a><br />
+↷ <a href="#panel">3. The Panel section</a><br />
+↷ <a href="#view">4. The View section</a><br />
+↷ <a href="#pressureindicator">5. The PressureIndicator section</a><br />
+↷ <a href="#speedindicator">6. The SpeedIndicator section</a><br />
+↷ <a href="#digitalindicator">7. The DigitalIndicator section</a><br />
+↷ <a href="#pilotlamp">8. The PilotLamp section</a><br />
+↷ <a href="#watch">9. The Watch section</a><br />
+↷ <a href="#brakeindicator">10. The BrakeIndicator section</a><br />
+<br /><a name="overview" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 1. Overview</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The panel.cfg file allows to create 2D panels by defining which elements to use, like speedometers, pressure gauges etc., and where they are to be placed.<br /><br />The panel.cfg file is a plain text file encoded in any arbitrary <a href="information_encodings.html">encoding</a>, however, UTF-8 with a byte order mark is the preferred choice. The <a href="information_numberformats.html">parsing model</a> for numbers is <b>Loose</b>, however, you are encouraged to produce <em>Strict</em> output nonetheless. The file is required to be located inside the train folder and is expected to be named <b>panel.cfg</b>. The file is interpreted on a per-line basis, from top to bottom.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table style="border:1px dashed;margin-left:20pt;margin-right:20pt;">
+<tr><td bgcolor="#FFE080" style="border:2px; border-style:ridge;"><font color="#404040">
+<b>ⓘ</b> The panel.cfg is outdated
+</font></td></tr><tr><td bgcolor="#FFFFFF">
+The panel.cfg has been superseded by the panel2.cfg. You can achieve the full functionality of the panel.cfg and more by using the panel2.cfg instead. If both files are present in the train folder, the panel2.cfg has precedence over the panel.cfg.
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<br />➟ <a href="train_panel_cfg_quick.html">See also the quick reference for the panel.cfg...</a><br />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<table style="border:1px dashed;margin-left:20pt;margin-right:20pt;">
+<tr><td bgcolor="#FFE080" style="border:2px; border-style:ridge;"><font color="#404040">
+<b>ⓘ</b> Overlay and Lighting
+</font></td></tr><tr><td bgcolor="#FFFFFF">
+The cab is rendered as an overlay. This means that the cab will always appear in front of scenery objects. This is intentional, because this way, rain, walls and other obstructing objects cannot be accidentally rendered inside the cab. Furthermore, lighting in the cab is different than in the scenery. While the ambient brightness is reflected in the cab, the ambient color is not, and the cab always appears as if reflecting white light.
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<br /><a name="syntax" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 2. Syntax</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />Each line in the file can be empty (or solely consist of white spaces) and will be ignored, can mark the beginning of a new section or contain key-value pairs inside a section. All key-value pairs relate to the last section opened.<br /><br />A new section is opened by starting the line with an opening bracket (U+005B) and ending it with a closing bracket (U+005D). The text in-between the brackets indicates the name of the section and is case-insensitive. White spaces at the beginning and the end of the line are ignored, as well as at the beginning and the end of the name of the section. Thus, the beginning of the section has the following form:<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[NameOfTheSection]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+<br />A key-value pair is indicated by giving the key, an equals sign (U+003D) and then the value. The key is case-insensitive. White spaces at the beginning and the end of the line are ignored, as well as in front and after the equals sign. Alternatively, white spaces surrounding the key and the value are ignored. Thus, a key-value pair as the following form:<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">NameOfTheKey = Value</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+<br />Some values are further split into multiple parts, separated by commas (U+002C). Instead of a comma, a colon (U+003A) can be used interchangeably.<br /><br />You can use comments anywhere at the end of a line. A comment is started by a semicolon (U+003B). Comments, if present, are stripped away from all lines before these are processed.<br /><br /><a name="panel" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 3. The Panel section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+The Panel section defines which background image to use. Only one Panel section is expected in a panel.cfg file.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[Panel]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Background = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image file to use as the panel background image.
+</font></td></tr></table>
+Defines which background image to use. <em>File</em> is relative to the train folder. The image is aligned at the bottom-left of the screen, where a width of 480 corresponds to the right edge of the screen. You cannot meaningfully use images of larger width with the panel.cfg. Consider using the panel2.cfg if you want to employ images of any size. If this key-value pair is not used, the background image file is implicitly assumed to be called <em>Panel.bmp</em>. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><br /><a name="view" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 4. The View section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+The View section defines the viewing angle conditions. Only one View section is expected in a panel.cfg file.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[View]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Yaw = <em>ValueInDegrees</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInDegrees</em></b>: A floating-point number measured in <b>degrees</b> indicating the yaw. Positive values represent right, negative ones left. The default value is 0.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Pitch = <em>ValueInDegrees</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInDegrees</em></b>: A floating-point number measured in <b>degrees</b> indicating the pitch. Positive values represent up, negative ones down. The default value is 0.
+</font></td></tr></table>
+Defines the pitch of the view. Any value entered will be additionally subtract by 11 degrees, resulting in a slight downward pitch if <em>ValueInDegrees</em> is 0. If this key-value pair is not used, the final viewing angle will be -11 degrees.<br /><br /><a name="pressureindicator" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 5. The PressureIndicator section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates a pressure indicator. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[PressureIndicator]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">PressureIndicator, PressureGauge, PressureMeter, 圧力計</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Type = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: The type of pressure indicator to use. The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Value</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: The pressure indicator is a gauge.<br />
+<b>1</b>: The pressure indicator is an LED.<br />
+<br />
+<img src="../Images/illustration_pressuregauge.png" alt="" /> <img src="../Images/illustration_pressuregauge_led.png" alt="" />
+</font></td></tr></table>
+This defines the type of the pressure indicator. While both the gauge type and the LED type indicators can show two different pressures, this is not generally useful for the LED type as the upper LED shape will block the view into the lower LED shape.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Type, 形態</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">LowerNeedle = <em>Subject</em>, <em>RedValue</em>, <em>GreenValue</em>, <em>BlueValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Subject</em></b>: The kind of pressure to indicate.<br />
+<b><em>RedValue</em></b>: The red component of the color. Measured from 0 (black) to 255 (red). The default value is 0.<br />
+<b><em>GreenValue</em></b>: The green component of the color. Measured from 0 (black) to 255 (green). The default value is 0.<br />
+<b><em>BlueValue</em></b>: The blue component of the color. Measured from 0 (black) to 255 (blue). The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Subject</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: Does not show the lower needle.<br />
+<b>1</b> or <b>BC</b> or <b>ブレーキシリンダ</b>: Indicates the pressure of the brake cylinder.<br />
+<b>2</b> or <b>BP</b> or <b>ブレーキ管</b> or <b>制動管</b>: Indicates the pressure of the brake pipe.<br />
+<b>3</b> or <b>ER</b> or <b>釣り合い空気溜め</b> or <b>釣り合い空気ダメ</b> or <b>つりあい空気溜め</b> or <b>ツリアイ空気ダメ</b>: Indicates the pressure of the equalizing reservoir.<br />
+<b>4</b> or <b>MR</b> or <b>元空気溜め</b> or <b>元空気ダメ</b>: Indicates the pressure of the main reservoir.<br />
+<b>5</b> or <b>SAP</b> or <b>直通管</b>: Indicates the pressure of the straight air pipe.
+</font></td></tr></table>
+Creates the lower needle for a gauge-type pressure indicator, or defines the color of the lower shape for an LED-type indicator.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">LowerNeedle, LowerHand, 下針</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">UpperNeedle = <em>Subject</em>, <em>RedValue</em>, <em>GreenValue</em>, <em>BlueValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Subject</em></b>: The kind of pressure to indicate.<br />
+<b><em>RedValue</em></b>: The red component of the color. Measured from 0 (black) to 255 (red). The default value is 0.<br />
+<b><em>GreenValue</em></b>: The green component of the color. Measured from 0 (black) to 255 (green). The default value is 0.<br />
+<b><em>BlueValue</em></b>: The blue component of the color. Measured from 0 (black) to 255 (blue). The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Subject</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: Does not show the upper needle.<br />
+<b>1</b> or <b>BC</b> or <b>ブレーキシリンダ</b>: Indicates the pressure of the brake cylinder.<br />
+<b>2</b> or <b>BP</b> or <b>ブレーキ管</b> or <b>制動管</b>: Indicates the pressure of the brake pipe.<br />
+<b>3</b> or <b>ER</b> or <b>釣り合い空気溜め</b> or <b>釣り合い空気ダメ</b> or <b>つりあい空気溜め</b> or <b>ツリアイ空気ダメ</b>: Indicates the pressure of the equalizing reservoir.<br />
+<b>4</b> or <b>MR</b> or <b>元空気溜め</b> or <b>元空気ダメ</b>: Indicates the pressure of the main reservoir.<br />
+<b>5</b> or <b>SAP</b> or <b>直通管</b>: Indicates the pressure of the straight air pipe.
+</font></td></tr></table>
+Creates the upper needle for a gauge-type pressure indicator, or defines the color of the upper shape for an LED-type indicator.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">UpperNeedle, UpperHand, 上針</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Center = <em>X</em>, <em>Y</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>X</em></b>: The X-coordinate in the panel image at which the center of the pressure indicator is placed <b>in pixels</b>. The default value is 0.<br />
+<b><em>Y</em></b>: The Y-coordinate in the panel image at which the center of the pressure indicator is placed <b>in pixels</b>. The default value is 0.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Center, 中心</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Radius = <em>ValueInPixels</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInPixels</em></b>: The radius of the pressure indicator <b>in pixels</b>. The default value is 16.
+</font></td></tr></table>
+For gauge-type indicators, defines the radius of the pressure gauge needle in pixels. For LED-type indicators, defines half the edge length of the LED-square in pixels. The radius is measured in pixels of the panel image.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Radius, 半径</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Background = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The background image to use, relative to the train folder.
+</font></td></tr></table>
+Creates a background for the pressure indicator. The background is shown below the needles or the LED-square. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Background, 背景</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Cover = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The cover image to use, relative to the train folder.
+</font></td></tr></table>
+Creates a cover for the pressure indicator. The cover is shown on top of the needles or the LED-square. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Cover, ふた</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Unit = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: The type of unit to use for the <em>Minimum</em> and <em>Maximum</em> settings. The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Value</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b> or <b>kpa</b>: The unit is kilo-pascal (1000 Pa).<br />
+<b>1</b> or <b>kgf/cm2</b> or <b>kgf/cm^2</b> or <b>kg/cm2</b> or <b>kg/cm^2</b>: The unit is kilogram-force per centimeter squared (98066.5 Pa).
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Unit, 単位</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Minimum = <em>PressureValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>PressureValue</em></b>: The minimum pressure corresponding to <em>Angle</em>. The unit is defined via <em>Unit</em>.
+</font></td></tr></table>
+Defines the minimum pressure corresponding to the <em>Angle</em> measured clockwise from the 6 o'clock position. The default value is 0.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Minimum, 最小</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Maximum = <em>PressureValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>PressureValue</em></b>: The maximum pressure corresponding to <em>Angle</em>. The unit is defined via <em>Unit</em>.
+</font></td></tr></table>
+Defines the maximum pressure corresponding to the <em>Angle</em> measured counter-clockwise from the 6 o'clock position. The default value is 1000.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Maximum, 最大</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Angle = <em>ValueInDegrees</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInDegrees</em></b>: The angle corresponding to the <em>Minimum</em> and <em>Maximum</em> pressures in <b>degrees</b>.
+</font></td></tr></table>
+Defines the angle, measured clockwise from the 6 o'clock position, corresponding to the <em>Minimum</em> pressure, and also the angle, measured counter-clockwise from the 6 o'clock position, corresponding to the <em>Maximum</em> pressure. The default value is 45.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Angle, 角度</font></td></tr>
+</table>
+<br /><a name="speedindicator" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 5. The SpeedIndicator section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates an analog speed indicator. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[SpeedIndicator]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">SpeedIndicator, Speedometer, 速度計</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Type = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: The type of pressure indicator to use. The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Value</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: The pressure indicator is a gauge.<br />
+<b>1</b>: The pressure indicator is an LED.<br />
+<br />
+<img src="../Images/illustration_speedometer.png" alt="" /> <img src="../Images/illustration_speedometer_led.png" alt="" />
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Type, 形態</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Needle = <em>RedValue</em>, <em>GreenValue</em>, <em>BlueValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>RedValue</em></b>: The red component of the color. Measured from 0 (black) to 255 (red). The default value is 255.<br />
+<b><em>GreenValue</em></b>: The green component of the color. Measured from 0 (black) to 255 (green). The default value is 255.<br />
+<b><em>BlueValue</em></b>: The blue component of the color. Measured from 0 (black) to 255 (blue). The default value is 255.
+</font></td></tr></table>
+Defines the color for the needle (gauges) or for the overlay (LEDs).<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Needle, Hand, 針</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Center = <em>X</em>, <em>Y</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>X</em></b>: The X-coordinate in the panel image at which the center of the speed indicator is placed <b>in pixels</b>. The default value is 0.<br />
+<b><em>Y</em></b>: The Y-coordinate in the panel image at which the center of the speed indicator is placed <b>in pixels</b>. The default value is 0.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Center, 中心</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Radius = <em>ValueInPixels</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInPixels</em></b>: The radius of the pressure indicator <b>in pixels</b>. The default value is 16.
+</font></td></tr></table>
+For gauge-type indicators, defines the radius of the pressure gauge needle in pixels. For LED-type indicators, defines half the edge length of the LED-square in pixels. The radius is measured in pixels of the panel image.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Radius, 半径</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Background = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The background image to use, relative to the train folder.
+</font></td></tr></table>
+Creates a background for the pressure indicator. The background is shown below the needles or the LED-square. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Background, 背景</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Cover = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The cover image to use, relative to the train folder.
+</font></td></tr></table>
+Creates a cover for the pressure indicator. The cover is shown on top of the needles or the LED-square. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Cover, ふた</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Maximum = <em>SpeedValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>SpeedValue</em></b>: The maximum speed corresponding to <em>Angle</em>. The unit is <b>kilometers per hour</b> (km/h).
+</font></td></tr></table>
+Defines the maximum speed corresponding to the <em>Angle</em> measured counter-clockwise from the 6 o'clock position. The default value is 120.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Maximum, 最大</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Angle = <em>SpeedValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>SpeedValue</em></b>: The angle corresponding to the <em>Maximum</em> speed in <b>degrees</b>.
+</font></td></tr></table>
+Defines the angle, measured counter-clockwise from the 6 o'clock position, corresponding to the <em>Maximum</em> speed. The default value is 60.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Angle, 角度</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Atc = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image file to extract ATC indicator lamps from, relative to the train folder.
+</font></td></tr></table>
+Creates ATC indicators. The bitmap is required to have 13 square elements stacked horizontally, anchored at the right of the bitmap. The height of the bitmap defines the size of one square element. From left to right, the elements represent:<br /><br /><img src="../Images/illustration_atc.png" alt="" />
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>1<sup>st</sup></em>&#58; ATC not currently available</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>2<sup>nd</sup></em>&#58; 0 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>3<sup>rd</sup></em>&#58; 15 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>4<sup>th</sup></em>&#58; 25 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>5<sup>th</sup></em>&#58; 45 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>6<sup>th</sup></em>&#58; 55 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>7<sup>th</sup></em>&#58; 65 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>8<sup>th</sup></em>&#58; 75 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>9<sup>th</sup></em>&#58; 90 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>10<sup>th</sup></em>&#58; 100 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>11<sup>th</sup></em>&#58; 110 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>12<sup>th</sup></em>&#58; 120 km/h speed restriction</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>13<sup>th</sup></em>&#58; ATS currently active</td>
+</tr></table>
+<br />The center of any of the indicators is placed on a circle defined by <em>Center</em> as the center of the circle and <em>AtsRadius</em> as the radius of the circle. The angle at which an element is placed on that circle corresponds to the respective speed, or to the 6 o'clock position for the <em>ATC not currently available</em> and <em>ATS currently active</em> indicators. Only the one currently representative indicator is shown. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">AtcRadius = <em>ValueInPixels</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInPixels</em></b>: The radius <b>in pixels</b> at which ATC indicators are placed around the speed indicator. The default value is 0.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">AtcRadius, Atc半径</font></td></tr>
+</table>
+<br /><a name="digitalindicator" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 7. The DigitalIndicator section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates a digital speed indicator. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[DigitalIndicator]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Number = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image file to extract digits from, relative to the train folder. Is required to be specified.
+</font></td></tr></table>
+Creates a three-digit decimal speed display in kilometers per hour (km/h). The bitmap is required to have 11 elements stacked vertically, anchored at the top-right of the bitmap. From top to bottom, the 1<sup>st</sup> through 10<sup>th</sup> elements represent the digits 0 through 9, while the 11<sup>th</sup> element represents a missing digit that is shown in the 10s when the speed is below 10 km/h, and in the 100s when the speed is below 100 km/h. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Corner = <em>Left</em>, <em>Top</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Left</em></b>: The X-coordinate in the panel image at which the left of the speed indicator is placed <b>in pixels</b>. The default value is 0.<br />
+<b><em>Top</em></b>: The Y-coordinate in the panel image at which the top of the speed indicator is placed <b>in pixels</b>. The default value is 0.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Size = <em>Width</em>, <em>Height</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Width</em></b>: The width of a single digit inside the bitmap <b>in pixels</b>.<br />
+<b><em>Height</em></b>: The height of a single digit inside the bitmap <b>in pixels</b>.
+</font></td></tr></table>
+Defines the size of a single digit. Is required to be specified.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Unit = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: The type of unit to use for the display. The default value is 0.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>Value</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b> or <b>km/h</b>: The unit is kilometers per hour.<br />
+<b>1</b> or <b>mph</b>: The unit is international miles per hour.<br />
+<b>2</b> or <b>m/s</b>: The unit is meters per second.
+</font></td></tr></table>
+<br /><a name="pilotlamp" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 8. The PilotLamp section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates a door indicator. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[PilotLamp]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">PilotLamp, 知らせ灯</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">TurnOn = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image file shown when the doors are fully closed.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">TurnOn, 点灯</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">TurnOff = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image file shown when the doors are not fully closed.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">TurnOff, 消灯</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Corner = <em>Left</em>, <em>Top</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Left</em></b>: The X-coordinate in the panel image <b>in pixels</b> at which the left of the pilot lamp is placed. The default value is 0.<br />
+<b><em>Top</em></b>: The Y-coordinate in the panel image <b>in pixels</b> at which the top of the pilot lamp is placed. The default value is 0.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Corner, 左上</font></td></tr>
+</table>
+<br /><a name="watch" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 9. The Watch section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates a watch consisting of needles for hour, minute and second. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[Watch]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Watch, 時計</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Background = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The background image to use, relative to the train folder.
+</font></td></tr></table>
+Creates a background for the watch. The background is shown below the watch needles. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels.<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Background, 背景</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Center = <em>X</em>, <em>Y</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>X</em></b>: The X-coordinate in the panel image at which the center of the watch is placed <b>in pixels</b>. The default value is 0.<br />
+<b><em>Y</em></b>: The Y-coordinate in the panel image at which the center of the watch is placed <b>in pixels</b>. The default value is 0.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Center, 中心</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Radius = <em>ValueInPixels</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>ValueInPixels</em></b>: The radius of the watch needles <b>in pixels</b>. The default value is 16.
+</font></td></tr></table>
+<table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Radius, 半径</font></td></tr>
+</table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Needle = <em>RedValue</em>, <em>GreenValue</em>, <em>BlueValue</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>RedValue</em></b>: The red component of the color. Measured from 0 (black) to 255 (red). The default value is 255.<br />
+<b><em>GreenValue</em></b>: The green component of the color. Measured from 0 (black) to 255 (green). The default value is 255.<br />
+<b><em>BlueValue</em></b>: The blue component of the color. Measured from 0 (black) to 255 (blue). The default value is 255.
+</font></td></tr></table>
+Defines the color for all of the three needles (second, minute and hour).<br /><table bgcolor="#E0E0E0" style="border:0px none;margin-left:20pt;margin-right:10pt;">
+<tr><td><font color="#C00000">☀</font></td><td><em>The following spelling variations can be used:&nbsp;</em></td></tr>
+<tr><td /><td><font color="#0060C0">Needle, Hand, 針</font></td></tr>
+</table>
+<br /><a name="brakeindicator" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 10. The BrakeIndicator section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This section creates an indicator depicting the state of the power and brake handles. You can use as many of these sections as required.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[BrakeIndicator]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Image = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>FileName</em></b>: The image to use, relative to the train folder. Is required to be specified.
+</font></td></tr></table>
+Creates an indicator depicting the state of the power and brake handles. The bitmap is required to have a certain number of elements (depending on the train characteristics) stacked horizontally, anchored at the left of the bitmap. The height of the bitmap is equivalent to the height of an element. Pure blue in the image (red=0, green=0, blue=255) represents transparent pixels. The meaning of the elements depends on the type of brake systems used:<br /><br /><em>For air brakes, from left to right:</em><br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em>-1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>...</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>2</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>1</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Release (REL)</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Lap (LAP)</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Service (SRV)</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Emergency brake (EMG)</td>
+</tr></table>
+<br /><em>For notched brakes without the hold brake device, from left to right:</em><br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em>-1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>...</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch 2</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch 1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Neutral</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch 1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch 2</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>...</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch <em>m</em>-1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch <em>m</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Emergency brake</td>
+</tr></table>
+<br /><em>For notched brakes with the hold brake device, from left to right:</em><br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch <em>n</em>-1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>...</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch 2</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Power notch 1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Neutral</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Hold brake</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch 1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch 2</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td><em>...</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch <em>m</em>-1</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Brake notch <em>m</em></td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Emergency brake</td>
+</tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Corner = <em>Left</em>, <em>Top</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Left</em></b>: The X-coordinate in the panel image at which the left of the indicator is placed <b>in pixels</b>. The default value is 0.<br />
+<b><em>Top</em></b>: The Y-coordinate in the panel image at which the top of the indicator is placed <b>in pixels</b>. The default value is 0.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Width = <em>ValueInPixels</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: The width of a single element inside the bitmap <b>in pixels</b>. Is required to be specified.
+</font></td></tr></table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_panel_cfg.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:14 GMT -->
+</html>

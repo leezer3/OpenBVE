@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_standards.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Standards</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Standards</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />On a few occasions in route and train development, you will need to coordinate your efforts with other developers in order to allow easy exchange of trains across routes. Otherwise, trains might not work on a route or might not sound correctly.<br /><br />For example, the run<em>i</em>.wav sounds are played whenever the train moves along the rails, where <em>i</em> is a number identifying the rail type. If developer A used run1.wav to represent a continuously welded rail, but another developer B used run1.wav as the sound to represent jointed rails on concrete sleepers, both trains might not be suited for use on the same route. This makes exchange of trains across routes difficult, even if a train would be used on that route in reality.<br /><br />As such, if you know of standards that have been created and are actually employed by enough developers, give your feedback, and these standards might be listed here.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Train run<em>i</em>.wav sounds</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The only attempt currently known is the <a href="http://www.railsimroutes.co.uk/bvetss">BVE Track Sound Standard</a>. It should be noted that it is not widely used outside the UK, and also not necessarily suited for all kinds of railways.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Train flange<em>i</em>.wav sounds</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+No attempts are currently known to standardize the meanings of flange<em>i</em>.wav sounds.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Beacons</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+No attempts are currently known to standardize the meanings of beacons.<br /><br />However, the following is a list of beacons reserved for the built-in safety systems ATS-SN and ATS-P. These should only be used by route/train developers if the meaning of the beacons are (nearly) identical:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Beacon type</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Optional data</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Meaning</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">0</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><em>SwitchSystem</em></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">S-type transponder for ATS-SN. Placed about 600m in front of a signal. Raises an alarm the driver has to acknowledge whenever the referenced signal is red.<br />
+<br />
+Values for <em>SwitchSystem</em>:<br />
+-1: The train should not switch the safety system.<br />
+0: The train should automatically switch from ATS-P to ATS-SN when passing this beacon.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><em>SwitchSystem</em></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">SN-type transponder for ATS-SN. Placed about 20m in front of a signal. Triggers the emergency brakes whenever the referenced signal is red.<br />
+<br />
+Values for <em>SwitchSystem</em>:<br />
+-1: The train should not switch the safety system.<br />
+0: The train should automatically switch from ATS-P to ATS-SN when passing this beacon.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">2</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><em>Cars</em></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Immediate stop transponder for ATS-SN and ATS-P. Placed after stops. Applies the emergency brakes whenever the referenced signal is red and the number of cars corresponds to the optional data.<br />
+<br />
+Values for <em>Cars</em>:<br />
+0: The transponder triggers regardless of the amount of cars.<br />
+<em>Positive integer</em>: The transponder triggers only if <em>Cars</em> is greater than or equal to the number of cars the train has.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><em>SwitchSystem</em></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Pattern renewal transponder for ATS-P. Multiple of these are placed in front of a signal. Informs the train about the distance to the referenced signal and whether it is red or not. The train then calculates a brake curve to the referenced signal if it is red.<br />
+<br />
+Values for <em>SwitchSystem</em>:<br />
+-1: The train should not switch the safety system.<br />
+0: The train should automatically switch from ATS-SN to ATS-P when passing this beacon.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">4</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><em>SwitchSystem</em></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Immediate stop transponder for ATS-P. Placed about 25m/30m in front of a signal. Informs the train about the distance to the referenced signal and whether it is red or not. The train brakes immediately if the signal is red.<br />
+<br />
+Values for <em>SwitchSystem</em>:<br />
+-1: The train should not switch the safety system.<br />
+0: The train should automatically switch from ATS-SN to ATS-P when passing this beacon.</td></tr>
+</table><br />
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_standards.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+</html>

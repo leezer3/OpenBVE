@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/tool_objectviewer.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Object Viewer</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Object Viewer</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<img src="../Images/tool_objectviewer_screenshot_1.png" alt="" /> <img src="../Images/tool_objectviewer_screenshot_2.png" alt="" /> <img src="../Images/tool_objectviewer_screenshot_3.png" alt="" /><br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Overview</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+This tool allows to preview one or more object files. Objects can be added at any time and also reloaded to quickly reflect changes. Keyboard and mouse controls allow to move and rotate the camera. If objects contain errors, a report can be optionally displayed.<br /><br />Files that are passed as command line arguments are automatically opened at startup. If a CSV file is determined to be a CSV route instead of a CSV object, <em>RouteViewer.exe</em> will be started if present inside the same folder as <em>ObjectViewer.exe</em>. This allows you to link CSV files against either Object Viewer or Route Viewer and still have the correct tool opening the file.<br /><br />Please note that Object Viewer always interprets files as UTF-8 unless a byte order mark indicates a different Unicode encoding. Non-Unicode encodings are not supported.<br /><br />Supported object file formats:<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>B3D</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>CSV</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>X</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>ANIMATED</td>
+</tr></table>
+<br />This tool does not support the plugin API yet. This means that only the built-in texture formats (BMP, PNG, GIF, JPG, TIF) are supported.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Changelog</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+Please also see the changelog of the main program.<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.4.4.0 (2016-01-30)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for antialiasing and anisotropic filtering.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for different window sizes.</td>
+</tr></table>
+
+<font color="#0080FF">● Version 1.3.2.0 (2011-11-30)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for managed content package references.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.11.0 (2011-01-07)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The file system organization has changed along with the openBVE main program. Object Viewer accepts the /filesystem=FILE switch.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.7.2 (2010-07-31)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Animated objects were not updated immediately after loading or reloading objects, but only after <em>RefreshRate</em> seconds had passed.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.7.1 (2010-07-28)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Some animated objects using state changes could crash the program due to a faulty renderer.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.7.0 (2010-07-11)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Different background colors can now be cycled through using the [B] key. Pressing [Shift+B] allows to select arbitrary colors via a picker.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.6.0 (2010-03-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>If a CSV file is passed as a command-line argument, Route Viewer is started if the file is determined to be a CSV route instead of a CSV object. The detection is now solely based on the presence of the <em>CreateMeshBuilder</em> string.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.5.0 (2010-01-24)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Removed the dependency on specific versions of the Tao.OpenAL, Tao.OpenGL and Tao.SDL libraries, which could cause problems in recent Linux distributions.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.1.0.0 (2009-06-28)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Animated objects are now supported.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.0.7.1 (2009-06-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Support for custom normals in AddVertex (CSV) and Vertex (RW) commands.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Support for the Shear and ShearAll commands.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>As for responsiveness, complex objects are not optimized any longer in order to improve loading times.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.0.4.0 (2009-04-26)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added options to show coordinate system grid and to hide interface</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Changed some key assignments to be more memorable</td>
+</tr></table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/tool_objectviewer.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:40 GMT -->
+</html>

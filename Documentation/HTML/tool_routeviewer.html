@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/tool_routeviewer.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:48 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Route Viewer</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Route Viewer</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<img src="../Images/tool_routeviewer_screenshot_1.png" alt="" /><br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Overview</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+This tool allows to preview route files. The camera can be moved, rotated and zoomed, you can jump to stations and points of interest, and also enable a series of options. If routes contain errors, a report can be optionally displayed.<br /><br />A file that is passed as a command line argument is automatically opened at startup. If a CSV file is determined to be a CSV object instead of a CSV route, <em>ObjectViewer.exe</em> will be started if present inside the same folder as <em>RouteViewer.exe</em>. This allows you to link CSV files against either Route Viewer or Object Viewer and still have the correct tool opening the file.<br /><br />Please note that Route Viewer always interprets files as UTF-8 unless a byte order mark indicates a different Unicode encoding. Non-Unicode encodings are not supported.<br /><br />For moving the camera, use the <em>WASD</em> keys, for rotating the <em>Arrow</em> keys. Jump to stations with the <em>PageUp</em> and <em>PageDown</em> keys, or jump to points of interests using the <em>Num1</em> and <em>Num7</em> keys. You can also enter a specific track position using the <em>number</em> keys, then confirm with the <em>Return</em> key or cancel with the <em>Escape</em> key. For relative offsets, the prefixes <em>Minus</em> and <em>Plus</em> are also accepted. There are other useful keys which are hinted at in RouteViewer's main window.<br /><br />Supported route file formats:<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>CSV</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>RW</td>
+</tr></table>
+<br />This tool does not support the plugin API yet. This means that only the built-in texture formats (BMP, PNG, GIF, JPG, TIF) and the built-in sound formats (WAV) are supported.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+
+<font size="+1" color="#0080FF">■ Changelog</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+Please also see the changelog of the main program.<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.4.4.0 (2016-01-30)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for antialiasing and anisotropic filtering.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for different window sizes.</td>
+</tr></table>
+
+<table><tr style="height: 4px;"><td /></tr></table>
+
+<font color="#0080FF">● Version 1.3.2.0 (2011-11-30)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added support for managed content package references.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.11.0 (2011-01-07)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The file system organization has changed along with the openBVE main program. Route Viewer accepts the /filesystem=FILE switch.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.7.2 (2010-07-31)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Animated objects were not updated immediately after loading or reloading routes, but only after <em>RefreshRate</em> seconds had passed.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.6.0 (2010-03-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>If a CSV file is passed as a command-line argument, Object Viewer is started if the file is determined to be a CSV object instead of a CSV route. The detection is now solely based on the presence of the <em>CreateMeshBuilder</em> string.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.5.1 (2010-02-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>You can now enter a track position using the number keys and jump to that position.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.5.0 (2010-01-24)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Removed the dependency on specific versions of the Tao.OpenAL, Tao.OpenGL and Tao.SDL libraries, which could cause problems in recent Linux distributions.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.3.0 (2009-11-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>When loading a route via command line arguments, the wrong background image could show at the initial track position.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.2.0.0 (2009-07-26)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The camera yaw, pitch and roll are now displayed along with the track position and offsets.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.1.0.0 (2009-06-28)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The set of variables than can be used in functions of animated objects has been vastly extended. This matches with the corresponding version of openBVE.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.0.7.1 (2009-06-14)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Support for new parameters in <em>ArrivalTime</em> in Track.Sta and Track.Station commands.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Support for custom normals in AddVertex and Vertex commands (objects).</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Support for the Shear and ShearAll commands (objects).</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>As for responsiveness, complex objects are not optimized any longer in order to improve loading times.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.0.6.0 (2009-05-24)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Added the functionality to mute sound.</td>
+</tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Version 1.0.4.0 (2009-04-26)</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Changed some key assignments to be more memorable</td>
+</tr></table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/tool_routeviewer.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:32:07 GMT -->
+</html>
