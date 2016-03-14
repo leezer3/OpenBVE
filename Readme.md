@@ -4,6 +4,8 @@ This source code is an experimental port of OpenBVE to the OpenTK framework. The
 
 Automatically generated daily builds are available [here](http://vps.bvecornwall.co.uk/OpenBVE/Builds/).
 
+Documentation for development of add-ons (update version of docs originally written by _michelle_) can be found [here](https://github.com/leezer3/OpenBVE/tree/master/Documentation).
+
 ### Notes
 
 This build has been tested to compile correctly using VS2013 and MonoDevelop, but should also compile with SharpDevelop.
@@ -22,6 +24,7 @@ Joystick hat support does not function correctly in the current release build of
 
 - Christopher Lees
 - Jakub Vanek
+- Maurizo M. Gavioli
 
 ### Links
 
