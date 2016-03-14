@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_numberformats.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Number formats</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Number formats</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+This page describes which number formats are encountered in the various route and train files and how to adhere to them.
+</font></td></tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Contents</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+↷ <a href="#overview">1. Overview</a><br />
+↷ <a href="#integers">2. Integers</a><br />
+↷ <a href="#floating">3. Floating-point numbers</a><br />
+↷ <a href="#times">4. Times</a><br />
+↷ <a href="#colors">5. Color values</a><br />
+<br /><a name="overview" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 1. Overview</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+Within the route and train files, you will encounter numbers like integers or floating-point numbers all the time, occasionally also others. These numbers are required to adhere to a certain format, which is described in the following sections.<br /><br />There are two parsing methods for numbers: <b>Strict</b> and <b>Loose</b>. The Strict method is a very tight specification which does not leave space for making typographic mistakes. This method is used in all new file formats. The Loose method is a legacy parsing model required for compatibility with older material. The different files as presented on the <em>Developing for openBVE</em> pages indicate which model is being used. Note that whenever a <em>Loose</em> model is permitted, you can also use the <em>Strict</em> formats as <em>Strict</em> forms a subset of <em>Loose</em>.<br /><br /><a name="integers" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 2. Integers</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<b>Strict:</b> Permitted is any sequence of at least one decimal digit in the range from 0 to 9 (U+0030 - U+0039), optionally prepended by a negative sign (U+002D). The resulting character sequence may include leading or trailing white spaces.<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Examples for <em>Strict</em> integers:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>0<br />
+123<br />
+-98</tt></td>
+</tr>
+</table>
+<br /><b>Loose:</b> All white spaces are removed from the character sequence first. Then, the remaining character sequence (<em>abcde</em>) is interpreted according to the <em>Strict</em> model. If this fails to create a valid number, the last character is dropped from the sequence (<em>abcd</em>) and then, the sequence is tested again. This continues until a valid number is produced or until no character remains, after which the character sequence is determined to be an invalid number.<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Examples for <em>Loose</em> integers:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>123<br />
+77 11<br />
+-987x456</tt></td>
+</tr>
+</table>
+<table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>The interpreted integers from the preceding examples are:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>123<br />
+7711<br />
+-987</tt></td>
+</tr>
+</table>
+<br /><a name="floating" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 3. Floating-point numbers</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<b>Strict:</b> Permitted is any sequence of at least one decimal digit in the range from 0 to 9 (U+0030 - U+0039), optionally interleaved by exactly one decimal separator in form of the period (U+002E), optionally prepended by a negative sign (U+002D). The resulting character sequence may include leading or trailing white spaces.<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Examples for <em>Strict</em> floating-point numbers:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>123<br />
+123.<br />
+123.0<br />
+123.456<br />
+0.456<br />
+.456<br />
+-123.456</tt></td>
+</tr>
+</table>
+<br /><b>Loose:</b> All white spaces are removed from the character sequence first. Then, the remaining character sequence (<em>abcde</em>) is interpreted according to the <em>Strict</em> model. If this fails to create a valid number, the last character is dropped from the sequence (<em>abcd</em>) and then, the sequence is tested again. This continues until a valid number is produced or until no character remains, after which the character sequence is determined to be an invalid number.<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Examples for <em>Loose</em> floating-point numbers:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>-123 . 456<br />
+987,333</tt></td>
+</tr>
+</table>
+<table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>The interpreted floating-point numbers from the preceding examples are:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>-123.456<br />
+987</tt></td>
+</tr>
+</table>
+<br /><a name="times" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 4. Times</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<b>Legacy:</b> Permitted is any of the following sequences:<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt><em>hhh</em><b>.</b><em>mmss</em><br />
+<em>hhh</em><b>.</b><em>mms</em><br />
+<em>hhh</em><b>.</b><em>mm</em><br />
+<em>hhh</em><b>.</b><em>m</em><br />
+<em>hhh</em></tt></td>
+</tr>
+</table>
+In these sequences, <em>hhh</em> denotes any sequence of at least one decimal digit to indicate the hour, <em>mm</em> denotes the two-digit minute part, <em>m</em> denotes a one-digit minute part, <em>ss</em> denotes a two-digit second part, <em>s</em> denotes a one-digit second part, and the character to separate the hours from the minutes is the period (U+002E). All digits need to be characters from 0 to 9 (U+0030 - U+0039). Leading or trailing white spaces are ignored. The total time is determined via the following formula, resulting in seconds since midnight:<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Seconds since midnight for a given time:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">ƒ</td><td bgcolor="#FFD8C0" style="border:1px dotted;">
+<tt>3600*<em>hhh</em> + 60*<em>mm</em> + <em>ss</em></tt></td>
+</tr>
+</table>
+If minutes or seconds are not indicated, they are assumed to be zero. You can use any non-negative hour, including values greater than or equal to 24. If, for example, a station arrival time is 23:59:00 (day 1), and the arrival time of the following station is 00:02:15 (day 2), then use the following sequences to represent these times in order to ensure a chronological order:<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>Examples for times:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>23.5900<br />
+24.0215</tt></td>
+</tr>
+</table>
+<br /><a name="colors" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 5. Color values</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<b>Hexcolor:</b> A six-digit hexadecimal number is preceded by a number sign character (U+0023). An individual hexadecimal digit can be comprised of the decimal digits from 0 to 9 (U+0030 - U+0039), the lowercase letters from a to f (U+0061 - U+0066) and the uppercase letters from A to F (U+0041 - U+0046). The hexcolor has the following form:<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>#<em>RRGGBB</em></tt></td>
+</tr>
+</table>
+In this sequence, <em>RR</em> represents the red component, <em>GG</em> the green component and <em>BB</em> the blue component. Each component ranges from 00 to FF (0 - 255), where 00 represents no contribution for that channel and FF full contribution.<br /><br />Commonly used colors (to indicate transparency) include:<br /><table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em></em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt><font color="black">#000000 (black)</font><br />
+<font color="red">#FF0000 (red)</font><br />
+<font color="green">#00FF00 (green)</font><br />
+<font color="blue">#0000FF (blue)</font><br />
+<font color="#00C0C0">#00FFFF (cyan)</font><br />
+<font color="fuchsia">#FF00FF (magenta)</font><br />
+<font color="yellow">#FFFF00 (yellow)</font><br />
+<font color="white">#FFFFFF (white)</font></tt></td>
+</tr>
+</table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_numberformats.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+</html>

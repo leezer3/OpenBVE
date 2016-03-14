@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_panel2_cfg_quick.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:32:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>The panel2.cfg file format - Quick reference</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">The <b>panel2.cfg</b> file format - Quick reference</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><font color="red">[This]</font>
+<br /><b>Resolution</b> = <em>Value</em><br /><b>Left</b> = <em>Value</em><br /><b>Right</b> = <em>Value</em><br /><b>Top</b> = <em>Value</em><br /><b>Bottom</b> = <em>Value</em><br /><b>DaytimeImage</b> = <em>FileName</em><br /><b>NighttimeImage</b> = <em>FileName</em><br /><b>TransparentColor</b> = <em>HexColor</em><br /><b>Center</b> = <em>X</em>, <em>Y</em><br /><b>Origin</b> = <em>X</em>, <em>Y</em><br /><br /><font color="red">[PilotLamp]</font>
+<br /><b>Subject</b> = <em>Subject</em><br /><b>Location</b> = <em>Left</em>, <em>Top</em><br /><b>DaytimeImage</b> = <em>FileName</em><br /><b>NighttimeImage</b> = <em>FileName</em><br /><b>TransparentColor</b> = <em>HexColor</em><br /><b>Layer</b> = <em>LayerIndex</em><br /><br /><font color="red">[Needle]</font>
+<br /><b>Subject</b> = <em>Subject</em><br /><b>Location</b> = <em>CenterX</em>, <em>CenterY</em><br /><b>Radius</b> = <em>ValueInPixels</em><br /><b>DaytimeImage</b> = <em>FileName</em><br /><b>NighttimeImage</b> = <em>FileName</em><br /><b>Color</b> = <em>HexColor</em><br /><b>TransparentColor</b> = <em>HexColor</em><br /><b>Origin</b> = <em>X</em>, <em>Y</em><br /><b>InitialAngle</b> = <em>ValueInDegrees</em><br /><b>LastAngle</b> = <em>ValueInDegrees</em><br /><b>Minimum</b> = <em>Value</em><br /><b>Maximum</b> = <em>Value</em><br /><b>NaturalFreq</b> = <em>Value</em><br /><b>DampingRatio</b> = <em>Value</em><br /><b>Layer</b> = <em>LayerIndex</em><br /><br /><font color="red">[DigitalNumber]</font>
+<br /><b>Subject</b> = <em>Subject</em><br /><b>Location</b> = <em>Left</em>, <em>Top</em><br /><b>DaytimeImage</b> = <em>FileName</em><br /><b>NighttimeImage</b> = <em>FileName</em><br /><b>TransparentColor</b> = <em>HexColor</em><br /><b>Interval</b> = <em>Height</em><br /><b>Layer</b> = <em>LayerIndex</em><br /><br /><font color="red">[DigitalGauge]</font>
+<br /><b>Subject</b> = <em>Subject</em><br /><b>Location</b> = <em>CenterX</em>, <em>CenterY</em><br /><b>Radius</b> = <em>ValueInPixels</em><br /><b>Color</b> = <em>HexColor</em><br /><b>InitialAngle</b> = <em>ValueInDegrees</em><br /><b>LastAngle</b> = <em>ValueInDegrees</em><br /><b>Minimum</b> = <em>Value</em><br /><b>Maximum</b> = <em>Value</em><br /><b>Step</b> = <em>Value</em><br /><b>Layer</b> = <em>LayerIndex</em><br /><br /><font color="red">[Timetable]</font>
+<br /><b>Location</b> = <em>Left</em>, <em>Top</em><br /><b>Width</b> = <em>ValueInPixels</em><br /><b>Height</b> = <em>ValueInPixels</em><br /><b>TransparentColor</b> = <em>HexColor</em><br /><b>Layer</b> = <em>LayerIndex</em><br /><br /><font color="red">Base subjects</font>
+
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">true</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">kmph, mph, ms</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">mr, er, sap, bp, bc</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">power, brake, rev, csc</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">door, doorl<em>i</em>, doorr<em>i</em></td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">hour, min, sec</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">ats<em>i</em>, atc</td></tr>
+</table><br />
+<font color="red">Subject suffixes</font>
+
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">d<em>i</em></td></tr>
+</table><br />
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_panel2_cfg_quick.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:32:26 GMT -->
+</html>

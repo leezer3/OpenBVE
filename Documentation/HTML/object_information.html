@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/object_information.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:30:47 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Information and tips for object creation</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Information and tips for object creation</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />This page presents information developers need to be aware of and general tips for object creation.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Commands</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>In Face (B3D) or AddFace (CSV) commands, vertices need to be given in order of adjacency. Complex polygons, meaning self-intersecting polygons, will lead to erratic results.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The current implementation of openBVE produces incorrect illumination on the back face of faces created by Face2 (B3D) or AddFace2 (CSV). This behavior might change in future versions of openBVE so that both sides are correctly illuminated.</td>
+</tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Geometry</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Avoid overly complex geometry where the end results are hardly noticable. Avoid using Cube and Cylinder commands (B3D/CSV) if parts of the cube/cylinder will not be visible. Do not create cylinder caps unless they are likely to be visible.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>To get smoothly curved objects, use custom normals with fewer faces instead of no custom normals with many faces.</td>
+</tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Textures</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Try to create textures that wrap around objects by using texture coordinates appropriately. This will reduce or eliminate the need to change the texture when rendering, which is expensive.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Use only textures which are of power-of-two size, e.g. whose sides are of length 1, 2, 4, 8, 16, 32, etc. Textures do not need to be square, though.</td>
+</tr></table>
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Transparency</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>For best visual quality, every transparency has its overhead. Avoid using transparency at all if there are alternatives of similar implementational and geometric complexity.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Use color-key transparency whenever possible. Avoid using alpha channels in textures or using Color (B3D) or SetColor (CSV) commands with an alpha setting at all costs.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>When it is necessary to use alpha, bear in mind that depth sorting will be used to determine the rendering order. There is no perfect real-time depth sorting algorithm, thus artifacts cannot be completely avoided.</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>When using alpha, keep polygons parallel to each other, which will always render correctly. The worst case scenario is perpendicular faces. When such faces overlap on-screen, the rendering order might be erratic. Use perpendicular alpha faces only if they are unlikely to overlap on-screen.</td>
+</tr></table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/object_information.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:30:47 GMT -->
+</html>

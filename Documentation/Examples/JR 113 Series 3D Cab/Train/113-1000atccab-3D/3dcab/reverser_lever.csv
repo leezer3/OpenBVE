@@ -1,0 +1,6 @@
+﻿CreateMeshBuilder
+Cylinder, 12, 0.005, 0.005, 0.05
+Translate, 0, 0.05, 0
+SetColor, 140, 130, 120
+
+TranslateAll, 0, 0.99, 0

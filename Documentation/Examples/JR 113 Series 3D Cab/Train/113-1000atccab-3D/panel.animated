@@ -1,0 +1,289 @@
+﻿; ----------
+; static cab
+; ----------
+
+[object]
+states = 3dcab\cab.csv
+
+
+; --------------
+; reverser lever
+; --------------
+
+[object]
+states = 3dcab\reverser_mount.csv
+position = -1.30, 2.20, 9.75
+
+[object]
+states = 3dcab\reverser_lever.csv
+position = -1.30, 1.20, 9.75
+rotatexfunction = 0.03 * reverserNotch
+rotatexdamping = 20, 0.8
+
+
+; -----------
+; power lever
+; -----------
+
+[object]
+states = 3dcab\power_mount.csv
+position = -1.20, 2.20, 9.75
+
+[object]
+states = 3dcab\power_lever.csv
+position = -1.20, 1.20, 9.75
+rotatexfunction = ((powerNotch / powerNotches) * 2 - 1) * 0.07
+rotatexdirection = -1, 0, 0
+rotatexdamping = 20, 0.8
+
+
+; -----------
+; brake lever
+; -----------
+
+[object]
+states = 3dcab\brake_mount.csv
+position = -0.55, 2.25, 9.80
+
+[object]
+states = 3dcab\brake_lever.csv
+position = -0.55, 2.25, 9.80
+rotateyfunction = (brakeNotchLinear / brakeNotchesLinear) * 2 - 1
+rotateydirection = 0, -1, 0
+rotateydamping = 20, 0.8
+
+
+; ----------
+; pilot lamp
+; ----------
+
+[object]
+states = 3dcab\pilot_lamp.csv
+statefunction = ceiling[doors]
+position = -0.832, 2.510, 9.8998
+
+
+; -----------
+; speedometer
+; -----------
+
+[object]
+states = 3dcab\needle_speedometer.csv
+position = -1.006, 2.437, 9.8998
+rotatezdirection = 0, 0, -1
+rotatezfunction = -2.0943951023932 + abs[speedometer] * 0.125663706143592
+
+[object]
+states = 3dcab\needle_speedometer_cover.csv
+position = -1.006, 2.437, 9.8996
+
+
+; --------------------
+; left pressure gauges
+; --------------------
+
+[object]
+states = 3dcab\needle_pressuregauge_lower.csv
+position = -1.225, 2.440, 9.8998
+rotatezdirection = 0, 0, -1
+rotatezfunction = -2.44346095279206 + mainReservoir * 0.00000488692190558412
+
+[object]
+states = 3dcab\needle_pressuregauge_upper.csv
+position = -1.225, 2.440, 9.8996
+rotatezdirection = 0, 0, -1
+rotatezfunction = -2.44346095279206 + brakePipe * 0.00000488692190558412
+
+[object]
+states = 3dcab\needle_pressuregauge_cover.csv
+position = -1.225, 2.440, 9.8994
+
+
+; ---------------------
+; right pressure gauges
+; ---------------------
+
+[object]
+states = 3dcab\needle_pressuregauge_lower.csv
+position = -0.695, 2.437, 9.8998
+rotatezdirection = 0, 0, -1
+rotatezfunction = -2.44346095279206 + brakeCylinder * 0.00000488692190558412
+
+[object]
+states = 3dcab\needle_pressuregauge_upper.csv
+position = -0.695, 2.437, 9.8996
+rotatezdirection = 0, 0, -1
+rotatezfunction = -2.44346095279206 + straightAirPipe * 0.00000488692190558412
+
+[object]
+states = 3dcab\needle_pressuregauge_cover.csv
+position = -0.695, 2.437, 9.8994
+
+
+; -----
+; clock
+; -----
+
+[object]
+states = 3dcab\needle_hour.csv
+position = -0.828, 2.392, 9.8994
+rotatezdirection = 0, 0, -1
+rotatezfunction = 0.26179938779915 * floor[0.000277777777777778 * time]
+rotatezdamping = 20, 0.6
+
+[object]
+states = 3dcab\needle_minute.csv
+position = -0.828, 2.392, 9.8994
+rotatezdirection = 0, 0, -1
+rotatezfunction = 0.10471975511966 * floor[0.0166666666666667 * time]
+rotatezdamping = 20, 0.6
+
+[object]
+states = 3dcab\needle_second.csv
+position = -0.828, 2.392, 9.8992
+rotatezdirection = 0, 0, -1
+rotatezfunction = 0.10471975511966 * floor[time]
+rotatezdamping = 20, 0.6
+
+[object]
+states = 3dcab\needle_speedometer_cover.csv
+position = -1.006, 2.437, 9.8996
+
+
+; -------------
+; ats/atc lamps
+; -------------
+
+[object]
+states = 3dcab\lamps.csv
+position = -0.450, 3.050, 9.850
+
+[object]
+states = 3dcab\lamp-00-0.csv, 3dcab\lamp-00-1.csv
+statefunction = pluginState[256]
+position = -0.450, 3.050, 9.850
+
+[object]
+states = 3dcab\lamp-01-0.csv, 3dcab\lamp-01-1.csv
+statefunction = if[pluginState[257] == 2, mod[0.8 * time, 1], pluginState[257]]
+position = -0.450, 3.025, 9.850
+
+[object]
+states = 3dcab\lamp-02-0.csv, 3dcab\lamp-02-1.csv
+statefunction = pluginState[259]
+position = -0.450, 3.000, 9.850
+
+[object]
+states = 3dcab\lamp-03-0.csv, 3dcab\lamp-03-1.csv
+statefunction = pluginState[260]
+position = -0.450, 2.975, 9.850
+
+[object]
+states = 3dcab\lamp-04-0.csv, 3dcab\lamp-04-1.csv
+statefunction = pluginState[261]
+position = -0.450, 2.950, 9.850
+
+[object]
+states = 3dcab\lamp-05-0.csv, 3dcab\lamp-05-1.csv
+statefunction = pluginState[262]
+position = -0.450, 2.925, 9.850
+
+[object]
+states = 3dcab\lamp-06-0.csv, 3dcab\lamp-06-1.csv
+statefunction = pluginState[263]
+position = -0.450, 2.900, 9.850
+
+[object]
+states = 3dcab\lamp-07-0.csv, 3dcab\lamp-07-1.csv
+statefunction = pluginState[264]
+position = -0.450, 2.875, 9.850
+
+[object]
+states = 3dcab\lamp-08-0.csv, 3dcab\lamp-08-1.csv
+statefunction = pluginState[265]
+position = -0.450, 2.850, 9.850
+
+[object]
+states = 3dcab\lamp-09-0.csv, 3dcab\lamp-09-1.csv
+statefunction = pluginState[266]
+position = -0.450, 2.825, 9.850
+
+[object]
+states = 3dcab\lamp-10-0.csv, 3dcab\lamp-10-1.csv
+statefunction = pluginState[267]
+position = -0.450, 2.800, 9.850
+
+[object]
+states = 3dcab\lamp-11-0.csv, 3dcab\lamp-11-1.csv
+statefunction = pluginState[268]
+position = -0.450, 2.775, 9.850
+
+
+; ---------------------
+; atc speedometer lamps
+; ---------------------
+
+[object]
+states = 3dcab\atc-00.csv
+statefunction = pluginstate[271] != 0
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-01.csv
+statefunction = pluginstate[271] != 1
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-02.csv
+statefunction = pluginstate[271] != 2
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-03.csv
+statefunction = pluginstate[271] != 3
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-04.csv
+statefunction = pluginstate[271] != 4
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-05.csv
+statefunction = pluginstate[271] != 5
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-06.csv
+statefunction = pluginstate[271] != 6
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-07.csv
+statefunction = pluginstate[271] != 7
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-08.csv
+statefunction = pluginstate[271] != 8
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-09.csv
+statefunction = pluginstate[271] != 9
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-10.csv
+statefunction = pluginstate[271] != 10
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-11.csv
+statefunction = pluginstate[271] != 11
+position = -1.006, 2.437, 9.8996
+
+[object]
+states = 3dcab\atc-12.csv
+statefunction = pluginstate[271] != 12
+position = -1.006, 2.437, 9.8996

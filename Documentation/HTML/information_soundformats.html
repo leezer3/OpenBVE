@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_soundformats.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:29:14 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Supported sound formats</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Supported sound formats</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />This is a list of supported sound formats.<br /><br />
+<table style="border-collapse: collapse;">
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Format</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Usual file extension</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">RIFF WAVE</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">.wav</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Native FLAC</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">.flac</td></tr>
+</table><br />
+Please note that due to its 3D positional nature, openBVE will convert multi-channel audio to mono upon loading, so there is no point in providing multi-channel audio in the first place. For multi-channel audio, openBVE discards silent channels and tries to detect constructive or destructive interference in the mixed version of the remaining channels. If interference is detected, the first non-silent channel in the file is used, otherwise the mixed channel.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ RIFF WAVE format</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+WAVE files are supported, which technically are RIFF (or RIFX) container files with the WAVE format type. WAVE itself allows different formats, of which only a subset are supported. These are:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Format</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Sample rate</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Bitrate</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Channels</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">PCM</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">any</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">any</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">any</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Microsoft ADPCM</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">any</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">4 bits</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">any</td></tr>
+</table><br />
+<em>Sample rate</em> refers to the number of samples per second per channel. <em>Bitrate</em> refers to the number of bits per sample per channel.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Native FLAC format</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+All native FLAC files are supported with the following (in practice rarely occuring) exceptions:<br /><br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Changing the sample rate in the middle of the file is not supported.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>Negative predictor shifts are not supported.</td>
+</tr></table>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>MD5 checks are skipped for bit rates other than 8, 16 or 24.</td>
+</tr></table>
+<hr />
+<br /><br />Further information about these formats from a programmer's point of view can be found on these external sites:<br /><br />General information about RIFF, WAVE and PCM:<br />➟ <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">http&#58;&#47;&#47;www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf</a><br />
+<br />Information about Microsoft ADPCM:<br />➟ <a href="http://icculus.org/SDL_sound/downloads/external_documentation/wavecomp.htm">http&#58;&#47;&#47;icculus.org/SDL_sound/downloads/external_documentation/wavecomp.htm</a><br />
+<br />Official documentation on FLAC:<br />➟ <a href="http://flac.sourceforge.net/documentation.html">http&#58;&#47;&#47;flac.sourceforge.net/documentation.html</a><br />
+<br />Additional documentation on FLAC:<br />➟ <a href="http://home.comcast.net/~b.langenb/audioformats_letter.pdf">http&#58;&#47;&#47;home.comcast.net/~b.langenb/audioformats_letter.pdf</a><br />
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/information_soundformats.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:29:14 GMT -->
+</html>

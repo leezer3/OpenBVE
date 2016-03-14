@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/plugin_overview.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:25 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>.NET assembly plugins</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">.NET assembly plugins</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />Plugins allow to offer functionality that openBVE does not provide out of the box. At the moment, only train plugins are supported which are mainly intended for the simulation of safety equipment.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Train plugins</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />Train plugins allow to change the runtime behavior of trains to some degree. Things you can do include displaying custom indicators in the panels, playing custom sounds and overriding the handles the driver originally set. Plugins can be used to simulate safety equipment such as ATS or ATC, among other things.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Contents</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+↷ <a href="#guidelines">1. Guidelines on developing plugins</a><br />
+↷ <a href="#howto">2. How to develop a plugin</a><br />
+↷ <a href="#documentation">3. API Documentation</a><br />
+↷ <a href="#templates">4. Template projects</a><br />
+<br /><a name="guidelines" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Guidelines on developing plugins</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />All .NET assembly plugins are intended to run on all platforms without recompilation. In order to achieve this goal, you as the programmer have to follow a certain set of rules which will be explained right here from the start.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins should target the .NET Framework 2.0</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />A whole variety of new .NET Framework versions comes out every so often. In order for plugins to not have stricter requirements on external dependencies than openBVE itself, plugins should target the .NET Framework 2.0, not any later version. This means that users do not have to upgrade their .NET Framework just in order to run your plugin. It also helps ensuring that all plugins run both on Microsoft .NET as well as on Mono, which is used on Linux and Mac OS X primarily.<br /><br />This also means that you must not use CLI-specific features such as Mono.Simd, among other things.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins must be compiled against any CPU</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />Even though openBVE itself currently runs in 32-bit mode (on Windows anyway), plugins must not exhibit this behavior - they must run on all CPU architectures. Be sure to set AnyCPU as the target processor in your development tool of choice. In Visual Studio and SharpDevelop, for example, the default target processor is x86, not AnyCPU. Be sure to change that.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins must not use P/Invoke</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />The .NET Framework has the great advantage of running plugins on all platforms if plugins are designed right. Platform invokation can destroy this advantage, so do not call platform-specific libraries from within your plugin. Use only what the .NET Framework has to offer.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins must make file system calls in a cross-platform-compatible way</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />There are differences in how file systems work on different platforms, and you have to incorporate them in your plugin if you make calls to external files. For example, Linux generally uses case-sensitive file systems, and both Linux and Mac OS X use the slash as the directory separator, while Windows uses the backslash.<br /><br />Furthermore, accessing files from the current working directory can lead to unreproducible results across platforms. Therefore, you must always use a fully qualified (absolute) path when accessing files. Train plugins are given both the path to the train folder and the path to folder they are stored in. This is intended to assist them in finding files from the expected locations.<br /><br />For this reason, you must never construct file names in any of the following ways:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="red">✗</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string file = "configuration.ini";</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">This is a relative path that uses the current working directory. Prone to failure across platforms.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="red">✗</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string file = TrainFolder + "/configuration.ini";</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">This uses a slash as the directory separator. Works on Linux and Mac OS X, but not on Windows.</td></tr>
+</table><br />
+The way you should construct file names:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="green">✓</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string file = System.IO.Path.Combine(TrainFolder, "configuration.ini");</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">This works perfectly on all platforms.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="green">✓</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string subdirectory = System.IO.Path.Combine(TrainFolder, "subdirectory");<br />
+string file = System.IO.Path.Combine(subdirectory, "configuration.ini");</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">This works perfectly on all platforms.</td></tr>
+</table><br />
+However, mind that Linux and Mac OS X are case-sensitive platforms. If you hardwire <em>configuration.ini</em>, then you must call the file that way when creating it, and not, for example, <em>Configuration.ini</em>. Be sure to check this.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins must read from text files with specified encodings and in a culture-insensitive way</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />When you read textual data from a file, always specify an explicit encoding such as UTF-8. Never read text files with the computer's default encoding. Also, when you interpret numbers, always specify an explicit culture. Never interpret numbers with the computer's default culture.<br /><br />For this reason, you must never read from text files or interpret them in any of the following ways:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="red">✗</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string[] lines = System.IO.File.ReadAllLines(file);</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Uses an unspecified encoding.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="red">✗</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">int number = double.Parse(lines[0]);</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Uses an unspecified culture.</td></tr>
+</table><br />
+The way you should read from files and interpret them:<br /><br />
+<table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="green">✓</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">string[] lines = System.IO.File.ReadAllLines(file, System.Text.Encoding.UTF8);</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Uses an explicit encoding.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="green">✓</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">int number;<br />
+double.TryParse(lines[0], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out number);</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Uses the invariant culture.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><font color="green">✓</font></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;<br />
+int number = double.Parse(lines[0]);</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Uses the invariant culture.</td></tr>
+</table><br />
+<table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● Plugins must allow running multiple instances</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br />The classes the plugins export may be instantiated by openBVE multiple times. In case of train plugins, one instance may be created per train. The instances may even be run in different threads. Plugins must be designed with behavior this in mind.<br /><br /><a name="howto" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ How to develop a plugin</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />In order to create a train plugin, first choose a programming language (for example C# or Visual Basic.NET) and a suitable development tool (for example <a href="http://monodevelop.com/">MonoDevelop</a> or <a href="http://www.icsharpcode.net/opensource/sd/">SharpDevelop</a>). Then create a new <b>Class Library</b> and reference <b>OpenBveApi.dll</b> (which comes with openBVE). Now, create a public class that inherits the interface you want to implement (see the API documentation below).<br /><br />Be sure to compile against AnyCPU, to enable CLS-compliance checks and to remove references that are not actually needed. Mind to <b>not</b> ship OpenBveApi.dll with your plugin.<br /><br /><a name="documentation" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Documentation</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+<table style="border-collapse: collapse;">
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> API component</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Description</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;"> Documentation</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">IRuntime</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Train plugins</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><a href="plugin_iruntime.html">View</a></td></tr>
+</table><br />
+<a name="templates" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Template projects</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />In the directory <b>Examples\Sample Plugins</b>, you can find template projects targeting different programming languages. In these templates, almost everything has been prepared for you. The only thing you have to do is to include a reference to OpenBveApi.dll which comes with openBVE.<br /><br />For those who use SharpDevelop, reference OpenBveApi.dll by clicking the <em>Project</em> menu and selecting <em>Add reference</em>, then go to the <em>.NET Assembly Browser</em> tab and click on <em>Browse</em>. Now browse to your openBVE directory and select <em>OpenBveApi.dll</em>. Confirm with <em>OK</em>. Now select <em>OpenBveApi</em> from the <em>Projects</em> window and set <em>Local copy</em> to <b>False</b>. Also be sure that <em>Specific Version</em> is set to <b>False</b>.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/plugin_overview.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:29 GMT -->
+</html>
