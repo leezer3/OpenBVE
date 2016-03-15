@@ -1,10 +1,6 @@
 language: csharp
 solution: openBVE/OpenBve.sln
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y mono-devel monodevelop
-
 os:
   - linux
   - osx
