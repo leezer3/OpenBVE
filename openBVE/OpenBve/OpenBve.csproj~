@@ -313,7 +313,7 @@
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
-<PreBuildEvent Condition=" '$(OS)' == 'Unix' ">cd $(ProjectDir)Properties &amp;&amp;./AssemblyInfo.sh</PreBuildEvent>
+<PreBuildEvent Condition=" '$(OS)' == 'Unix' ">"bash "$(ProjectDir)Properties/AssemblyInfo.sh""</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C
