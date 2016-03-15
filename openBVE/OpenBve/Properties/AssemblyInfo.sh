@@ -1,6 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 MajorVersion=1
 MinorVersion=4
+
+# cd to correct directory
+cd -P -- "$(dirname -- "$0")"
+
+# determine revision and build numbers
 if [[ "$OSTYPE" == "darwin"* ]]; then
 #OSX
 Revision=$(((($(date +%s) - $(date -jf "%Y-%m-%d" "2016-03-08" $B +%s))/86400 )+40 ))
