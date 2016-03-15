@@ -42,6 +42,8 @@ namespace OpenBve {
 			internal int Width;
 			/// <summary>The height of the texture. Only valid if the texture is loaded.</summary>
 			internal int Height;
+			/// <summary>Stores the time in clock-ticks that this texture was last accessed</summary>
+			internal int LastAccess;
 			/// <summary>The type of transparency encountered in the texture. Only valid if the texture is loaded.</summary>
 			internal OpenBveApi.Textures.TextureTransparencyType Transparency;
 			/// <summary>Whether to ignore further attemps to load the texture after previous attempts have failed.</summary>
@@ -87,6 +89,7 @@ namespace OpenBve {
 				if (object.ReferenceEquals(b, null)) return true;
 				return a.Origin != b.Origin;
 			}
+
 			/// <summary>Checks whether this instance is equal to the specified object.</summary>
 			/// <param name="obj">The object.</param>
 			/// <returns>Whether this instance is equal to the specified object.</returns>
