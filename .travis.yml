@@ -19,9 +19,12 @@ after_success:
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" *
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
  #OSX Build
+ #Install sshpass (Possibly we need to create a local brew script, but not at the minute...)
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && brew install hudochenkov/sshpass/sshpass
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mkdir Mac
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependancies/MacBundle.tgz
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependencies/MacBundle.tgz
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv openBVE/OpenBve/bin/Release/* Mac/OpenBVE.app/Contents/Resources/
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && cd Mac
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create OpenBVE-$(date '+%F').dmg -volname "OpenBVE" -fs HFS+ -srcfolder "OpenBVE.app"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
  
