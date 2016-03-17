@@ -4,9 +4,12 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, out ObjectManager.UnifiedObject[] CarObjects, TrainManager.Train Train) {
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, out ObjectManager.UnifiedObject[] CarObjects, out ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train)
+		{
 			CarObjects = new ObjectManager.UnifiedObject[Train.Cars.Length];
+			BogieObjects = new ObjectManager.UnifiedObject[Train.Cars.Length * 2];
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
+			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "extensions.cfg");
 			if (System.IO.File.Exists(FileName)) {
@@ -199,7 +202,163 @@ namespace OpenBve {
 									} else {
 										Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
-								} else {
+								}
+								if (Lines[i].StartsWith("[bogie", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
+								{
+									// car
+									string t = Lines[i].Substring(6, Lines[i].Length - 7);
+									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+									{
+										//Assuming that there are two bogies per car
+										bool IsOdd = (n % 2 != 0);
+										int CarIndex = n / 2;
+										if (n >= 0 & n < Train.Cars.Length * 2)
+										{
+											bool DefinedLength = false;
+											bool DefinedAxles = false;
+											i++;
+											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
+											{
+												if (Lines[i].Length != 0)
+												{
+													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+													if (j >= 0)
+													{
+														string a = Lines[i].Substring(0, j).TrimEnd();
+														string b = Lines[i].Substring(j + 1).TrimStart();
+														switch (a.ToLowerInvariant())
+														{
+															case "object":
+																if (Interface.ContainsInvalidPathChars(b))
+																{
+																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																}
+																else
+																{
+																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
+																	if (System.IO.File.Exists(File))
+																	{
+																		BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																	}
+																	else
+																	{
+																		Interface.AddMessage(Interface.MessageType.Error, true, "The bogie object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																}
+																break;
+															case "length":
+																{
+																	double m;
+																	if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out m))
+																	{
+																		if (m > 0.0)
+																		{
+																			if (IsOdd)
+																			{
+																				Train.Cars[CarIndex].FrontBogie.Length = m;
+																			}
+																			else
+																			{
+																				Train.Cars[CarIndex].RearBogie.Length = m;
+																			}
+																			DefinedLength = true;
+																		}
+																		else
+																		{
+																			Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		}
+																	}
+																	else
+																	{
+																		Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																}
+																break;
+															case "axles":
+																{
+																	int k = b.IndexOf(',');
+																	if (k >= 0)
+																	{
+																		string c = b.Substring(0, k).TrimEnd();
+																		string d = b.Substring(k + 1).TrimStart();
+																		double rear, front;
+																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear))
+																		{
+																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		}
+																		else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
+																		{
+																			Interface.AddMessage(Interface.MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		}
+																		else if (rear >= front)
+																		{
+																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		}
+																		else
+																		{
+																			if (IsOdd)
+																			{
+																				Train.Cars[CarIndex].FrontBogie.RearAxlePosition = rear;
+																				Train.Cars[CarIndex].FrontBogie.FrontAxlePosition = front;
+																			}
+																			else
+																			{
+																				Train.Cars[CarIndex].RearBogie.RearAxlePosition = rear;
+																				Train.Cars[CarIndex].RearBogie.FrontAxlePosition = front;
+																			}
+																			DefinedAxles = true;
+																		}
+																	}
+																	else
+																	{
+																		Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																}
+																break;
+															case "reversed":
+																BogieObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																break;
+															default:
+																Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																break;
+														}
+													}
+													else
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+												}
+												i++;
+											}
+											i--;
+											if (DefinedLength & !DefinedAxles)
+											{
+												if (IsOdd)
+												{
+													double AxleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
+													Train.Cars[CarIndex].FrontBogie.RearAxlePosition = -AxleDistance;
+													Train.Cars[CarIndex].FrontBogie.FrontAxlePosition = AxleDistance;
+												}
+												else
+												{
+													double AxleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
+													Train.Cars[CarIndex].RearBogie.RearAxlePosition = -AxleDistance;
+													Train.Cars[CarIndex].RearBogie.FrontAxlePosition = AxleDistance;
+												}
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										}
+									}
+									else
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									}
+								}
+								else
+								{
 									// default
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
@@ -243,8 +402,72 @@ namespace OpenBve {
 						}
 					}
 				}
+				
+				//Check for bogie objects and reverse if necessary.....
+				int bogieObjects = 0;
+				for (int i = 0; i < Train.Cars.Length * 2; i++)
+				{
+					bool IsOdd = (i % 2 != 0);
+					int CarIndex = i/2;
+					if (BogieObjects[i] != null)
+					{
+						bogieObjects++;
+						if (BogieObjectsReversed[i])
+						{
+							{
+								// reverse axle positions
+								if (IsOdd)
+								{
+									double temp = Train.Cars[CarIndex].FrontBogie.FrontAxlePosition;
+									Train.Cars[i].FrontAxlePosition = -Train.Cars[CarIndex].FrontBogie.RearAxlePosition;
+									Train.Cars[i].FrontBogie.RearAxlePosition = -temp;
+								}
+								else
+								{
+									double temp = Train.Cars[CarIndex].RearBogie.FrontAxlePosition;
+									Train.Cars[i].FrontAxlePosition = -Train.Cars[CarIndex].RearBogie.RearAxlePosition;
+									Train.Cars[i].RearBogie.RearAxlePosition = -temp;
+								}
+							}
+							if (BogieObjects[i] is ObjectManager.StaticObject)
+							{
+								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
+								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
+							}
+							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+							{
+								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
+								for (int j = 0; j < obj.Objects.Length; j++)
+								{
+									for (int h = 0; h < obj.Objects[j].States.Length; h++)
+									{
+										CsvB3dObjectParser.ApplyScale(obj.Objects[j].States[h].Object, -1.0, 1.0, -1.0);
+										obj.Objects[j].States[h].Position.X *= -1.0;
+										obj.Objects[j].States[h].Position.Z *= -1.0;
+									}
+									obj.Objects[j].TranslateXDirection.X *= -1.0;
+									obj.Objects[j].TranslateXDirection.Z *= -1.0;
+									obj.Objects[j].TranslateYDirection.X *= -1.0;
+									obj.Objects[j].TranslateYDirection.Z *= -1.0;
+									obj.Objects[j].TranslateZDirection.X *= -1.0;
+									obj.Objects[j].TranslateZDirection.Z *= -1.0;
+								}
+							}
+							else
+							{
+								throw new NotImplementedException();
+							}
+						}
+					}
+				}
+				
 				if (carObjects > 0 & carObjects < Train.Cars.Length) {
 					Interface.AddMessage(Interface.MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
+				}
+				
+				if (bogieObjects > 0 & bogieObjects < Train.Cars.Length * 2)
+				{
+					Interface.AddMessage(Interface.MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
 				}
 			}
 		}

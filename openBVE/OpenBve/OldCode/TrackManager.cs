@@ -630,6 +630,7 @@ namespace OpenBve {
 				UpdateTrackFollower(ref this, this.TrackPosition, true, AddTrackInaccuracy);
 			}
 		}
+
 		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
 			if (CurrentTrack.Elements.Length == 0) return;
 			int i = Follower.LastTrackElement;

@@ -683,8 +683,12 @@ namespace OpenBve {
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].CarSections = new TrainManager.CarSection[] { };
+				Train.Cars[i].FrontBogie.CarSections = new TrainManager.CarSection[] { };
+				Train.Cars[i].RearBogie.CarSections = new TrainManager.CarSection[] { };
 				Train.Cars[i].CurrentCarSection = -1;
 				TrainManager.ChangeCarSection(Train, i, -1);
+				TrainManager.ChangeFrontBogieSection(Train, i, -1);
+				TrainManager.ChangeRearBogieSection(Train, i, -1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? TrackManager.EventTriggerType.RearCarRearAxle : TrackManager.EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? TrackManager.EventTriggerType.TrainFront : TrackManager.EventTriggerType.None;
