@@ -247,7 +247,11 @@ namespace OpenBve {
 					ObjectManager.UnifiedObject[] BogieObjects;
 					ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, out CarObjects, out BogieObjects, TrainManager.Trains[k]);
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
-					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
+					//Stores the current array index of the bogie object to add
+					//Required as there are two bogies per car, and we're using a simple linear array....
+					int currentBogieObject = 0;
+					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++)
+					{
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
@@ -286,13 +290,13 @@ namespace OpenBve {
 						}
 						
 						//Load bogie objects
-						if (BogieObjects[i] != null)
+						if (BogieObjects[currentBogieObject] != null)
 						{
 							int j = TrainManager.Trains[k].Cars[i].FrontBogie.CarSections.Length;
 							Array.Resize<TrainManager.CarSection>(ref TrainManager.Trains[k].Cars[i].FrontBogie.CarSections, j + 1);
-							if (BogieObjects[i] is ObjectManager.StaticObject)
+							if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
 							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[i];
+								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
@@ -301,9 +305,9 @@ namespace OpenBve {
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].CurrentState = 0;
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
 							}
-							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+							else if (BogieObjects[currentBogieObject] is ObjectManager.AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[i];
+								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[currentBogieObject];
 								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
 								for (int h = 0; h < a.Objects.Length; h++)
 								{
@@ -312,14 +316,15 @@ namespace OpenBve {
 								}
 							}
 						}
+						currentBogieObject++;
 						//Can't think of a better way to do this than two functions......
-						if (BogieObjects[i*2] != null)
+						if (BogieObjects[currentBogieObject] != null)
 						{
 							int j = TrainManager.Trains[k].Cars[i].RearBogie.CarSections.Length;
 							Array.Resize<TrainManager.CarSection>(ref TrainManager.Trains[k].Cars[i].RearBogie.CarSections, j + 1);
-							if (BogieObjects[i*2] is ObjectManager.StaticObject)
+							if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
 							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[i*2];
+								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
@@ -328,9 +333,9 @@ namespace OpenBve {
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].CurrentState = 0;
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
 							}
-							else if (BogieObjects[i*2] is ObjectManager.AnimatedObjectCollection)
+							else if (BogieObjects[currentBogieObject] is ObjectManager.AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[i*2];
+								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[currentBogieObject];
 								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
 								for (int h = 0; h < a.Objects.Length; h++)
 								{
@@ -339,6 +344,7 @@ namespace OpenBve {
 								}
 							}
 						}
+						currentBogieObject++;
 					}
 				}
 				// place cars

@@ -1633,6 +1633,8 @@ namespace OpenBve {
 					int o = Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[j].ObjectIndex;
 					if (Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay)
 					{
+						//Technically, bogies should *never* be an overlay object, but this is just a clone of existing functions.....
+						//Remove later??
 						Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
 					}
 					else
@@ -1669,6 +1671,8 @@ namespace OpenBve {
 					int o = Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[j].ObjectIndex;
 					if (Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay)
 					{
+						//Technically, bogies should *never* be an overlay object, but this is just a clone of existing functions.....
+						//Remove later??
 						Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
 					}
 					else
@@ -1712,7 +1716,6 @@ namespace OpenBve {
 			ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex, Train.Cars[CarIndex].CurrentCarSection, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].FrontAxlePosition, p, Direction, Up, Side, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
 		}
 
-		//Probably calls here when it vanishes....
 		private static void UpdateFrontBogieSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
 		{
 			{
@@ -1720,6 +1723,7 @@ namespace OpenBve {
 				if (Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay &
 					World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
 				{
+					//Should never be hit, as a bogie cannot be a cab object
 					p = new Vector3(Train.Cars[CarIndex].DriverX, Train.Cars[CarIndex].DriverY, Train.Cars[CarIndex].DriverZ);
 				}
 				else
@@ -1768,6 +1772,7 @@ namespace OpenBve {
 				if (Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay &
 					World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
 				{
+					//Should never be hit, as a bogie cannot be a cab object
 					p = new Vector3(Train.Cars[CarIndex].DriverX, Train.Cars[CarIndex].DriverY, Train.Cars[CarIndex].DriverZ);
 				}
 				else
