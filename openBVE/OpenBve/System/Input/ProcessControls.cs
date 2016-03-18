@@ -576,6 +576,12 @@ namespace OpenBve
                                         {
                                             TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
                                         }
+										//Hide bogies
+										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+										{
+											TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
+											TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
+										}
                                         World.CameraAlignmentDirection = new World.CameraAlignment();
                                         World.CameraAlignmentSpeed = new World.CameraAlignment();
                                         UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);

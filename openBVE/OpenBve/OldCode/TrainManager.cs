@@ -1319,7 +1319,7 @@ namespace OpenBve {
 				//Hack: If no bogie objects are defined, just return
 				return;
 			}
-			ObjectManager.InitializeAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], StateIndex, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, Train.Cars[CarIndex].FrontBogie.CurrentlyVisible);
+			ObjectManager.InitializeAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], StateIndex, false, Train.Cars[CarIndex].FrontBogie.CurrentlyVisible);
 		}
 
 		internal static void InitializeRearBogieSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, int StateIndex)
@@ -1329,7 +1329,7 @@ namespace OpenBve {
 				//Hack: If no bogie objects are defined, just return
 				return;
 			}
-			ObjectManager.InitializeAnimatedObject(ref Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[ElementIndex], StateIndex, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, Train.Cars[CarIndex].RearBogie.CurrentlyVisible);
+			ObjectManager.InitializeAnimatedObject(ref Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[ElementIndex], StateIndex, false, Train.Cars[CarIndex].RearBogie.CurrentlyVisible);
 		}
 
 		// update train objects
@@ -1631,16 +1631,7 @@ namespace OpenBve {
 				for (int j = 0; j < Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements.Length; j++)
 				{
 					int o = Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[j].ObjectIndex;
-					if (Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay)
-					{
-						//Technically, bogies should *never* be an overlay object, but this is just a clone of existing functions.....
-						//Remove later??
-						Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
-					}
-					else
-					{
-						Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
-					}
+					Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
 				}
 			}
 			Train.Cars[CarIndex].FrontBogie.CurrentCarSection = SectionIndex;
@@ -1669,16 +1660,7 @@ namespace OpenBve {
 				for (int j = 0; j < Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements.Length; j++)
 				{
 					int o = Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[j].ObjectIndex;
-					if (Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay)
-					{
-						//Technically, bogies should *never* be an overlay object, but this is just a clone of existing functions.....
-						//Remove later??
-						Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
-					}
-					else
-					{
-						Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
-					}
+					Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
 				}
 			}
 			Train.Cars[CarIndex].RearBogie.CurrentCarSection = SectionIndex;
