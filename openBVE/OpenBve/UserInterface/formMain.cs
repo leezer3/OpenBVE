@@ -1159,6 +1159,7 @@ namespace OpenBve {
                 AboutDialog = new formAbout();
                 AboutDialog.Show();
             }
-        }
+		}
+
 	}
 }
