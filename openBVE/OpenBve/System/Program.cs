@@ -68,9 +68,6 @@ namespace OpenBve {
 			PortableExecutableKinds peKind;
 			typeof(object).Module.GetPEKind(out peKind, out CurrentCPUArchitecture);
 			
-			//var options = new ToolkitOptions();
-			//options.Backend = PlatformBackend.PreferNative;
-			//Toolkit.Init();
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			//--- determine the running environment ---
@@ -132,6 +129,13 @@ namespace OpenBve {
 			SetPackageLookupDirectories();
 			// --- load options and controls ---
 			Interface.LoadOptions();
+			//Switch between SDL2 and native backends; use native backend by default
+			var options = new ToolkitOptions();	
+			if (Interface.CurrentOptions.PreferNativeBackend)
+			{
+				options.Backend = PlatformBackend.PreferNative;
+			}
+			Toolkit.Init(options);
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			{
 				string folder = Program.FileSystem.GetDataFolder("Controls");

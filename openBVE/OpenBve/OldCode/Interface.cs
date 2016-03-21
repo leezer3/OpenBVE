@@ -183,6 +183,8 @@ namespace OpenBve {
 			internal bool UnloadUnusedTextures;
 			/// <summary>Whether EB application is possible from the use of a joystick axis</summary>
 			internal bool AllowAxisEB;
+			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
+			internal bool PreferNativeBackend = true;
 
 			internal TimeTableMode TimeTableStyle;
 			/*
@@ -312,6 +314,9 @@ namespace OpenBve {
 									} break;
 								case "display":
 									switch (Key) {
+										case "prefernativebackend":
+											Interface.CurrentOptions.PreferNativeBackend = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											break;
 										case "mode":
 											Interface.CurrentOptions.FullscreenMode = string.Compare(Value, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
@@ -645,6 +650,7 @@ namespace OpenBve {
 			}
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
+			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));
 			Builder.AppendLine("mode = " + (CurrentOptions.FullscreenMode ? "fullscreen" : "window"));
 			Builder.AppendLine("vsync = " + (CurrentOptions.VerticalSynchronization ? "true" : "false"));
 			Builder.AppendLine("windowWidth = " + CurrentOptions.WindowWidth.ToString(Culture));

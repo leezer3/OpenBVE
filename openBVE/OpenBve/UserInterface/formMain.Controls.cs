@@ -122,22 +122,22 @@ namespace OpenBve {
 				if ((Interface.CurrentControls[Index].Modifier & Interface.KeyboardModifier.Ctrl) != 0) t += Interface.GetInterfaceString("controls_assignment_keyboard_ctrl");
 				if ((Interface.CurrentControls[Index].Modifier & Interface.KeyboardModifier.Alt) != 0) t += Interface.GetInterfaceString("controls_assignment_keyboard_alt");
 				
-                
-                int j; 
-                for (j = 0; j < 133; j++) {
-                    //OpenTK key description
-                    if (Interface.CurrentControls[Index].Key != Key.Unknown)
-                    {
-                        t += Interface.CurrentControls[Index].Key;
-                        break;
-                    }
+				
+				int j; 
+				for (j = 0; j < 133; j++) {
+					//OpenTK key description
+					if (Interface.CurrentControls[Index].Key != Key.Unknown)
+					{
+						t += Interface.CurrentControls[Index].Key;
+						break;
+					}
 				} if (j == 133) {
 					t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
 				}
 				return t;
 			} 
-            
-            if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.Joystick) {
+			
+			if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.Joystick) {
 
 				string t = Interface.GetInterfaceString("controls_assignment_joystick").Replace("[index]", (Interface.CurrentControls[Index].Device + 1).ToString(Culture));
 				switch (Interface.CurrentControls[Index].Component) {
@@ -177,7 +177,7 @@ namespace OpenBve {
 				}
 				return t;
 			} 
-            
+			
 				return Interface.GetInterfaceString("controls_assignment_invalid");
 			
 		}
@@ -272,13 +272,13 @@ namespace OpenBve {
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxKeyboardKey.SelectedIndex;
-                
-			    Key k;
-			    if (Enum.TryParse(comboboxKeyboardKey.Items[j].ToString(), true, out k))
-			    {
-                    Interface.CurrentControls[i].Key = k;
-			        UpdateControlListElement(listviewControls.Items[i], i, true);
-			    }
+				
+				Key k;
+				if (Enum.TryParse(comboboxKeyboardKey.Items[j].ToString(), true, out k))
+				{
+					Interface.CurrentControls[i].Key = k;
+					UpdateControlListElement(listviewControls.Items[i], i, true);
+				}
 			}
 		}
 
@@ -338,15 +338,15 @@ namespace OpenBve {
 
 		// import
 		private void buttonControlsImport_Click(object sender, EventArgs e) {
-		    OpenFileDialog Dialog = new OpenFileDialog
-		    {
-		        CheckFileExists = true,
-		        Filter =
-		            Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
-		            Interface.GetInterfaceString("dialog_allfiles") + "|*"
-		    };
-		    //Dialog.InitialDirectory = Interface.GetControlsFolder();
-		    if (Dialog.ShowDialog() == DialogResult.OK) {
+			OpenFileDialog Dialog = new OpenFileDialog
+			{
+				CheckFileExists = true,
+				Filter =
+					Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
+					Interface.GetInterfaceString("dialog_allfiles") + "|*"
+			};
+			//Dialog.InitialDirectory = Interface.GetControlsFolder();
+			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
 					Interface.LoadControls(Dialog.FileName, out Interface.CurrentControls);
 					for (int i = 0; i < listviewControls.SelectedItems.Count; i++) {
@@ -366,42 +366,42 @@ namespace OpenBve {
 			}
 		}
 
-        private void buttonControlReset_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
-                for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
-                {
-                    listviewControls.SelectedItems[i].Selected = false;
-                }
-                listviewControls.Items.Clear();
-                ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
-                for (int i = 0; i < Interface.CurrentControls.Length; i++)
-                {
-                    Items[i] = new ListViewItem(new string[] { "", "", "", "" });
-                    UpdateControlListElement(Items[i], i, false);
-                }
-                listviewControls.Items.AddRange(Items);
-                listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-            
-        }
+		private void buttonControlReset_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				Interface.LoadControls(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls"), out Interface.CurrentControls);
+				for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
+				{
+					listviewControls.SelectedItems[i].Selected = false;
+				}
+				listviewControls.Items.Clear();
+				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
+				for (int i = 0; i < Interface.CurrentControls.Length; i++)
+				{
+					Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+					UpdateControlListElement(Items[i], i, false);
+				}
+				listviewControls.Items.AddRange(Items);
+				listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			}
+			
+		}
 
 		// export
 		private void buttonControlsExport_Click(object sender, EventArgs e) {
-		    SaveFileDialog Dialog = new SaveFileDialog
-		    {
-		        OverwritePrompt = true,
-		        Filter =
-		            Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
-		            Interface.GetInterfaceString("dialog_allfiles") + "|*"
-		    };
-		    if (Dialog.ShowDialog() == DialogResult.OK) {
+			SaveFileDialog Dialog = new SaveFileDialog
+			{
+				OverwritePrompt = true,
+				Filter =
+					Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
+					Interface.GetInterfaceString("dialog_allfiles") + "|*"
+			};
+			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
 					Interface.SaveControls(Dialog.FileName);
 				} catch (Exception ex) {
@@ -433,11 +433,11 @@ namespace OpenBve {
 			textboxJoystickGrab.ForeColor = Color.Black;
 		}
 
-	    
+		
 		// attached joysticks
 		private void pictureboxJoysticks_Paint(object sender, PaintEventArgs e)
 		{
-		    this.DoubleBuffered = true;
+			this.DoubleBuffered = true;
 			int device = -1;
 			Interface.JoystickComponent component = Interface.JoystickComponent.Invalid;
 			int element = -1;
@@ -462,10 +462,10 @@ namespace OpenBve {
 			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
 			for (int i = 0; i < Joysticks.AttachedJoysticks.Length; i++)
 			{
-                //Get the current joystick state
-			    var capabilities = Joystick.GetCapabilities(Joysticks.AttachedJoysticks[i].OpenTKHandle);
-                var state = Joystick.GetState(Joysticks.AttachedJoysticks[i].OpenTKHandle);
-			    
+				//Get the current joystick state
+				var capabilities = Joystick.GetCapabilities(Joysticks.AttachedJoysticks[i].OpenTKHandle);
+				var state = Joystick.GetState(Joysticks.AttachedJoysticks[i].OpenTKHandle);
+				
 				float w, h;
 				if (JoystickImage != null) {
 					e.Graphics.DrawImage(JoystickImage, x, y);
@@ -486,6 +486,22 @@ namespace OpenBve {
 				{ // joystick name
 					e.Graphics.DrawString(Joysticks.AttachedJoysticks[i].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
 				}
+				if (OpenTK.Configuration.RunningOnSdl2 || OpenTK.Configuration.RunningOnMacOS)
+				{
+					//HACK: Control configuration doesn't work in-form on Mac or SDL2 backends
+					//The least we can do is to leave a nice message
+					string error = Interface.GetInterfaceString("errors_controls_ingame");
+					if (OpenTK.Configuration.RunningOnSdl2)
+					{
+						error = error.Replace("[platform]", "SDL2");
+					}
+					if (OpenTK.Configuration.RunningOnMacOS)
+					{
+						error = error.Replace("[platform]", "Mac OS-X");
+					}
+					e.Graphics.DrawString(error, this.Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
+					return;
+				}
 				float m;
 				if (groupboxJoysticks.Enabled) {
 					m = x;
@@ -496,7 +512,7 @@ namespace OpenBve {
 						float v = y + 24.0f;
 						float g = h - 24.0f;
 						{ // hats
-						    int n = capabilities.HatCount;
+							int n = capabilities.HatCount;
 							for (int j = 0; j < n; j++) {
 								if (device == i & component == Interface.JoystickComponent.Hat & element == j) {
 									e.Graphics.DrawEllipse(ps, u, v, g, g);
@@ -506,48 +522,48 @@ namespace OpenBve {
 								string t = "H" + (j + 1).ToString(Culture);
 								SizeF s = e.Graphics.MeasureString(t, f);
 								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-							    JoystickHatState aa = state.GetHat((JoystickHat)j);
-							    HatPosition a = aa.Position;
+								JoystickHatState aa = state.GetHat((JoystickHat)j);
+								HatPosition a = aa.Position;
 								if (a != HatPosition.Centered)
 								{
-								    double rx = 0.0;
-								    double ry = 0.0;
-                                    switch (a)
-								    {
-                                        case HatPosition.Up:
-								            rx = 0.0;
-								            ry = -1.0;
-								            break;
-                                        case HatPosition.Down:
-                                            rx = 0.0;
-								            ry = 1.0;
-								            break;
-                                        case HatPosition.Left:
-                                            rx = -1.0;
-								            ry = 0.0;
-                                            break;
-                                        case HatPosition.Right:
-                                            rx = 1.0;
-								            ry = 0.0;
-								            break;
-                                        case HatPosition.UpLeft:
-                                            rx = -1.0;
-								            ry = -1.0;
-                                            break;
-                                        case HatPosition.UpRight:
-                                            rx = 1.0;
-								            ry = -1.0;
-								            break;
-                                        case HatPosition.DownLeft:
-                                            rx = -1.0;
-								            ry = 1.0;
-                                            break;
-                                        case HatPosition.DownRight:
-                                            rx = 1.0;
-								            ry = 1.0;
-								            break;
-								    }
-								    
+									double rx = 0.0;
+									double ry = 0.0;
+									switch (a)
+									{
+										case HatPosition.Up:
+											rx = 0.0;
+											ry = -1.0;
+											break;
+										case HatPosition.Down:
+											rx = 0.0;
+											ry = 1.0;
+											break;
+										case HatPosition.Left:
+											rx = -1.0;
+											ry = 0.0;
+											break;
+										case HatPosition.Right:
+											rx = 1.0;
+											ry = 0.0;
+											break;
+										case HatPosition.UpLeft:
+											rx = -1.0;
+											ry = -1.0;
+											break;
+										case HatPosition.UpRight:
+											rx = 1.0;
+											ry = -1.0;
+											break;
+										case HatPosition.DownLeft:
+											rx = -1.0;
+											ry = 1.0;
+											break;
+										case HatPosition.DownRight:
+											rx = 1.0;
+											ry = 1.0;
+											break;
+									}
+									
 									double rt = rx * rx + ry * ry;
 									rt = 1.0 / Math.Sqrt(rt);
 									rx *= rt; ry *= rt;
@@ -557,8 +573,8 @@ namespace OpenBve {
 									e.Graphics.DrawEllipse(new Pen(Color.Firebrick, 2.0f), u + 0.5f * g + dx - 4.0f, v + 0.5f * g + dy - 4.0f, 8.0f, 8.0f);
 								}
 								if (device == i & component == Interface.JoystickComponent.Hat & element == j) {
-                                    double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
-                                    double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
+									double rx = ((HatPosition)direction & HatPosition.Left) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Right) != 0 ? 1.0 : 0.0;
+									double ry = ((HatPosition)direction & HatPosition.Up) != 0 ? -1.0 : ((HatPosition)direction & HatPosition.Down) != 0 ? 1.0 : 0.0;
 									double rt = rx * rx + ry * ry;
 									rt = 1.0 / Math.Sqrt(rt);
 									rx *= rt; ry *= rt;
@@ -571,15 +587,15 @@ namespace OpenBve {
 						}
 						if (u > m) m = u;
 					}
-                    
+					
 					{ // second row
 						float u = x;
 						float v = y + h + 8.0f;
 						{ // axes
-						    int n = capabilities.AxisCount;
+							int n = capabilities.AxisCount;
 							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
-                                float r = state.GetAxis((JoystickAxis)j);
+								float r = state.GetAxis((JoystickAxis)j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
 								if ((float)Math.Abs((double)r) < threshold) {
@@ -608,9 +624,9 @@ namespace OpenBve {
 								u += 24.0f;
 							}
 						}
-                        
+						
 						{ // buttons
-						    int n = capabilities.ButtonCount;
+							int n = capabilities.ButtonCount;
 							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
 								bool q = state.GetButton((JoystickButton)j) != 0;
@@ -627,10 +643,10 @@ namespace OpenBve {
 								if ((j & 1) != 0 | j == n - 1) u += g + 8.0f;
 							}
 						}
-                         
+						 
 						if (u > m) m = u;
 					}
-                     
+					 
 				} else {
 					m = x + w + 64.0f;
 				}
