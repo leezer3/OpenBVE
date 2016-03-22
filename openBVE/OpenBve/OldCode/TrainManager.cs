@@ -939,8 +939,9 @@ namespace OpenBve {
 		}
 
 		// update camera
-		internal static void UpdateCamera(Train Train) {
-			int i = Train.DriverCar;
+		internal static void UpdateCamera(Train Train, int Car) {
+			int i = Car;
+			int j = Train.DriverCar;
 			double dx = Train.Cars[i].FrontAxle.Follower.WorldPosition.X - Train.Cars[i].RearAxle.Follower.WorldPosition.X;
 			double dy = Train.Cars[i].FrontAxle.Follower.WorldPosition.Y - Train.Cars[i].RearAxle.Follower.WorldPosition.Y;
 			double dz = Train.Cars[i].FrontAxle.Follower.WorldPosition.Z - Train.Cars[i].RearAxle.Follower.WorldPosition.Z;
@@ -955,9 +956,9 @@ namespace OpenBve {
 			double rx = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.X + Train.Cars[i].RearAxle.Follower.WorldPosition.X);
 			double ry = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Y + Train.Cars[i].RearAxle.Follower.WorldPosition.Y);
 			double rz = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Z + Train.Cars[i].RearAxle.Follower.WorldPosition.Z);
-			double cx = rx + sx * Train.Cars[i].DriverX + ux * Train.Cars[i].DriverY + dx * Train.Cars[i].DriverZ;
-			double cy = ry + sy * Train.Cars[i].DriverX + uy * Train.Cars[i].DriverY + dy * Train.Cars[i].DriverZ;
-			double cz = rz + sz * Train.Cars[i].DriverX + uz * Train.Cars[i].DriverY + dz * Train.Cars[i].DriverZ;
+			double cx = rx + sx * Train.Cars[j].DriverX + ux * Train.Cars[j].DriverY + dx * Train.Cars[j].DriverZ;
+			double cy = ry + sy * Train.Cars[j].DriverX + uy * Train.Cars[j].DriverY + dy * Train.Cars[j].DriverZ;
+			double cz = rz + sz * Train.Cars[j].DriverX + uz * Train.Cars[j].DriverY + dz * Train.Cars[j].DriverZ;
 			World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
 			World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
 			World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
