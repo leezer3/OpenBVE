@@ -1040,9 +1040,9 @@ namespace OpenBve {
 
 
 		private void timerEvents_Tick(object sender, EventArgs e) {
+			Joysticks.RefreshJoysticks();
 			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
-				
 				for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++) {
 					int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
 					for (int i = 0; i < axes; i++)

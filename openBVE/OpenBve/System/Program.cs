@@ -224,11 +224,7 @@ namespace OpenBve {
 			}
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
-				// begin HACK //
-				if (!Joysticks.Initialize()) {
-					MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					return;
-				}
+				Joysticks.RefreshJoysticks();
 				
 				// end HACK //
 				result = formMain.ShowMainDialog(result);
@@ -297,10 +293,7 @@ namespace OpenBve {
 				return false;
 			}
 			
-			if (!Joysticks.Initialize()) {
-				MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				return false;
-			}
+			Joysticks.RefreshJoysticks();
 			// begin HACK //
 			
 			//One degree in radians
@@ -321,7 +314,6 @@ namespace OpenBve {
 		private static void Deinitialize() {
 			Plugins.UnloadPlugins();
 			Sounds.Deinitialize();
-			Joysticks.Deinitialize();
 			Screen.Deinitialize();
 			if (currentGameWindow != null)
 			{

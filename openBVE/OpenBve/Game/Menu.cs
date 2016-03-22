@@ -172,6 +172,8 @@ namespace OpenBve
 					break;
 
 				case MenuType.Controls:
+					//Refresh the joystick list
+					Joysticks.RefreshJoysticks();
 					Items		= new MenuEntry[Interface.CurrentControls.Length + 1];
 					Items[0]	= new MenuCommand (Interface.GetInterfaceString ("menu_back"), MenuTag.MenuBack, 0);
 					for (i = 0; i < Interface.CurrentControls.Length; i++)
@@ -180,6 +182,8 @@ namespace OpenBve
 					break;
 
 				case MenuType.Control:
+					//Refresh the joystick list
+					Joysticks.RefreshJoysticks();
 					Selection	= SelectionNone;
 					Items		= new MenuEntry[4];
 					// get code name and description
