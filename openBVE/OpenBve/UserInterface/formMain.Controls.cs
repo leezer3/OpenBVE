@@ -486,18 +486,13 @@ namespace OpenBve {
 				{ // joystick name
 					e.Graphics.DrawString(Joysticks.AttachedJoysticks[i].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
 				}
-				if (OpenTK.Configuration.RunningOnSdl2 || OpenTK.Configuration.RunningOnMacOS)
+				if (OpenTK.Configuration.RunningOnSdl2)
 				{
-					//HACK: Control configuration doesn't work in-form on Mac or SDL2 backends
-					//The least we can do is to leave a nice message
+					//HACK: Control configuration doesn't work in-form on SDL2
 					string error = Interface.GetInterfaceString("errors_controls_ingame");
 					if (OpenTK.Configuration.RunningOnSdl2)
 					{
 						error = error.Replace("[platform]", "SDL2");
-					}
-					if (OpenTK.Configuration.RunningOnMacOS)
-					{
-						error = error.Replace("[platform]", "Mac OS-X");
 					}
 					e.Graphics.DrawString(error, this.Font, Brushes.Black, x + w + 8.0f, y + 30.0f);
 					return;
