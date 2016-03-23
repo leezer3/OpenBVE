@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.Remoting.Channels;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -14,7 +16,7 @@ namespace OpenBve {
 			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
 			CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 			LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
-			TimeSecondsSinceMidnight, CameraDistance,
+			TimeSecondsSinceMidnight, CameraDistance,CameraView,
 			TrainCars,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
@@ -262,6 +264,17 @@ namespace OpenBve {
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
+					case Instructions.CameraView:
+						//Returns whether the camera is in interior or exterior mode
+						if (World.CameraMode == World.CameraViewMode.Interior || World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+						{
+							Function.Stack[s] = 0;
+						}
+						else
+						{
+							Function.Stack[s] = 1;
+						}
+						s++; break;
 						// train
 					case Instructions.TrainCars:
 						if (Train != null) {
@@ -2266,6 +2279,10 @@ namespace OpenBve {
 						case "cameradistance":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CameraDistance;
+							n++; s++; if (s >= m) m = s; break;
+						case "cameramode":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CameraView;
 							n++; s++; if (s >= m) m = s; break;
 							// train
 						case "cars":
