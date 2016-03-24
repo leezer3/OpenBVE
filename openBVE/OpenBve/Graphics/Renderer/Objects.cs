@@ -406,7 +406,11 @@ namespace OpenBve
 				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
 				foreach (var Texture in Textures.RegisteredTextures)
 				{
-					Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					//Texture can be null in certain cases....
+					if (Texture != null)
+					{
+						Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					}
 				}
 			}
 		}
