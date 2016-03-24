@@ -254,6 +254,30 @@
 			this.timerInstall = new System.Windows.Forms.Timer(this.components);
 			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
+			this.panelCreatePackage = new System.Windows.Forms.Panel();
+			this.button3 = new System.Windows.Forms.Button();
+			this.panelNewPackage = new System.Windows.Forms.Panel();
+			this.label16 = new System.Windows.Forms.Label();
+			this.textBoxGUID = new System.Windows.Forms.TextBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.panelReplacePackage = new System.Windows.Forms.Panel();
+			this.label10 = new System.Windows.Forms.Label();
+			this.dataGridViewReplacePackage = new System.Windows.Forms.DataGridView();
+			this.dataGridViewTextBoxColumn21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
+			this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
+			this.radioButtonQ2Route = new System.Windows.Forms.RadioButton();
+			this.labelPackageType = new System.Windows.Forms.Label();
+			this.groupBoxQ1 = new System.Windows.Forms.GroupBox();
+			this.radioButtonQ1No = new System.Windows.Forms.RadioButton();
+			this.radioButtonQ1Yes = new System.Windows.Forms.RadioButton();
+			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.labelReplacePackage = new System.Windows.Forms.Label();
 			this.panelPackageList = new System.Windows.Forms.Panel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
@@ -417,6 +441,12 @@
 			this.panelKeyboard.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelCreatePackage.SuspendLayout();
+			this.panelNewPackage.SuspendLayout();
+			this.panelReplacePackage.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).BeginInit();
+			this.groupBox1.SuspendLayout();
+			this.groupBoxQ1.SuspendLayout();
 			this.panelPackageList.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
@@ -3272,6 +3302,7 @@
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
 			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
+			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.labelPackages);
 			this.panelPackages.Controls.Add(this.label11);
 			this.panelPackages.Controls.Add(this.label14);
@@ -3280,6 +3311,268 @@
 			this.panelPackages.Name = "panelPackages";
 			this.panelPackages.Size = new System.Drawing.Size(643, 586);
 			this.panelPackages.TabIndex = 14;
+			// 
+			// panelCreatePackage
+			// 
+			this.panelCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelCreatePackage.Controls.Add(this.button3);
+			this.panelCreatePackage.Controls.Add(this.panelNewPackage);
+			this.panelCreatePackage.Controls.Add(this.panelReplacePackage);
+			this.panelCreatePackage.Controls.Add(this.groupBox1);
+			this.panelCreatePackage.Controls.Add(this.labelPackageType);
+			this.panelCreatePackage.Controls.Add(this.groupBoxQ1);
+			this.panelCreatePackage.Controls.Add(this.label7);
+			this.panelCreatePackage.Controls.Add(this.label8);
+			this.panelCreatePackage.Controls.Add(this.labelReplacePackage);
+			this.panelCreatePackage.Location = new System.Drawing.Point(0, 30);
+			this.panelCreatePackage.Name = "panelCreatePackage";
+			this.panelCreatePackage.Size = new System.Drawing.Size(641, 559);
+			this.panelCreatePackage.TabIndex = 27;
+			// 
+			// button3
+			// 
+			this.button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button3.Location = new System.Drawing.Point(198, 505);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(146, 40);
+			this.button3.TabIndex = 22;
+			this.button3.Text = "Proceed......";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
+			// 
+			// panelNewPackage
+			// 
+			this.panelNewPackage.Controls.Add(this.label16);
+			this.panelNewPackage.Controls.Add(this.textBoxGUID);
+			this.panelNewPackage.Controls.Add(this.label12);
+			this.panelNewPackage.Enabled = false;
+			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
+			this.panelNewPackage.Name = "panelNewPackage";
+			this.panelNewPackage.Size = new System.Drawing.Size(644, 354);
+			this.panelNewPackage.TabIndex = 21;
+			// 
+			// label16
+			// 
+			this.label16.AutoSize = true;
+			this.label16.Location = new System.Drawing.Point(3, 52);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(360, 13);
+			this.label16.TabIndex = 26;
+			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
+			// 
+			// textBoxGUID
+			// 
+			this.textBoxGUID.Location = new System.Drawing.Point(5, 21);
+			this.textBoxGUID.Name = "textBoxGUID";
+			this.textBoxGUID.Size = new System.Drawing.Size(285, 20);
+			this.textBoxGUID.TabIndex = 25;
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(3, 3);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(281, 13);
+			this.label12.TabIndex = 24;
+			this.label12.Text = "The new package has been assinged the following GUID:";
+			// 
+			// panelReplacePackage
+			// 
+			this.panelReplacePackage.Controls.Add(this.label10);
+			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
+			this.panelReplacePackage.Location = new System.Drawing.Point(-2, 137);
+			this.panelReplacePackage.Name = "panelReplacePackage";
+			this.panelReplacePackage.Size = new System.Drawing.Size(644, 354);
+			this.panelReplacePackage.TabIndex = 20;
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(3, 3);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(230, 13);
+			this.label10.TabIndex = 24;
+			this.label10.Text = "Please select the package you wish to replace:";
+			// 
+			// dataGridViewReplacePackage
+			// 
+			this.dataGridViewReplacePackage.AllowUserToAddRows = false;
+			this.dataGridViewReplacePackage.AllowUserToDeleteRows = false;
+			this.dataGridViewReplacePackage.AllowUserToResizeColumns = false;
+			this.dataGridViewReplacePackage.AllowUserToResizeRows = false;
+			this.dataGridViewReplacePackage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewReplacePackage.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewReplacePackage.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewReplacePackage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewReplacePackage.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn21,
+            this.dataGridViewTextBoxColumn22,
+            this.dataGridViewTextBoxColumn23,
+            this.dataGridViewTextBoxColumn24});
+			this.dataGridViewReplacePackage.Location = new System.Drawing.Point(7, 19);
+			this.dataGridViewReplacePackage.Name = "dataGridViewReplacePackage";
+			this.dataGridViewReplacePackage.ReadOnly = true;
+			this.dataGridViewReplacePackage.RowHeadersVisible = false;
+			this.dataGridViewReplacePackage.RowHeadersWidth = 90;
+			this.dataGridViewReplacePackage.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewReplacePackage.Size = new System.Drawing.Size(627, 328);
+			this.dataGridViewReplacePackage.TabIndex = 23;
+			this.dataGridViewReplacePackage.SelectionChanged += new System.EventHandler(this.dataGridViewReplacePackage_SelectionChanged);
+			// 
+			// dataGridViewTextBoxColumn21
+			// 
+			this.dataGridViewTextBoxColumn21.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn21.Name = "dataGridViewTextBoxColumn21";
+			this.dataGridViewTextBoxColumn21.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn22
+			// 
+			this.dataGridViewTextBoxColumn22.HeaderText = "Version";
+			this.dataGridViewTextBoxColumn22.Name = "dataGridViewTextBoxColumn22";
+			this.dataGridViewTextBoxColumn22.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn23
+			// 
+			this.dataGridViewTextBoxColumn23.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn23.Name = "dataGridViewTextBoxColumn23";
+			this.dataGridViewTextBoxColumn23.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn24
+			// 
+			this.dataGridViewTextBoxColumn24.HeaderText = "Website";
+			this.dataGridViewTextBoxColumn24.Name = "dataGridViewTextBoxColumn24";
+			this.dataGridViewTextBoxColumn24.ReadOnly = true;
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.radioButtonQ2Other);
+			this.groupBox1.Controls.Add(this.radioButtonQ2Train);
+			this.groupBox1.Controls.Add(this.radioButtonQ2Route);
+			this.groupBox1.Location = new System.Drawing.Point(8, 69);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(265, 24);
+			this.groupBox1.TabIndex = 19;
+			this.groupBox1.TabStop = false;
+			// 
+			// radioButtonQ2Other
+			// 
+			this.radioButtonQ2Other.AutoSize = true;
+			this.radioButtonQ2Other.Location = new System.Drawing.Point(119, 1);
+			this.radioButtonQ2Other.Name = "radioButtonQ2Other";
+			this.radioButtonQ2Other.Size = new System.Drawing.Size(51, 17);
+			this.radioButtonQ2Other.TabIndex = 19;
+			this.radioButtonQ2Other.TabStop = true;
+			this.radioButtonQ2Other.Text = "Other";
+			this.radioButtonQ2Other.UseVisualStyleBackColor = true;
+			this.radioButtonQ2Other.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+			// 
+			// radioButtonQ2Train
+			// 
+			this.radioButtonQ2Train.AutoSize = true;
+			this.radioButtonQ2Train.Location = new System.Drawing.Point(64, 1);
+			this.radioButtonQ2Train.Name = "radioButtonQ2Train";
+			this.radioButtonQ2Train.Size = new System.Drawing.Size(49, 17);
+			this.radioButtonQ2Train.TabIndex = 18;
+			this.radioButtonQ2Train.TabStop = true;
+			this.radioButtonQ2Train.Text = "Train";
+			this.radioButtonQ2Train.UseVisualStyleBackColor = true;
+			this.radioButtonQ2Train.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+			// 
+			// radioButtonQ2Route
+			// 
+			this.radioButtonQ2Route.AutoSize = true;
+			this.radioButtonQ2Route.Location = new System.Drawing.Point(3, 1);
+			this.radioButtonQ2Route.Name = "radioButtonQ2Route";
+			this.radioButtonQ2Route.Size = new System.Drawing.Size(54, 17);
+			this.radioButtonQ2Route.TabIndex = 0;
+			this.radioButtonQ2Route.TabStop = true;
+			this.radioButtonQ2Route.Text = "Route";
+			this.radioButtonQ2Route.UseVisualStyleBackColor = true;
+			this.radioButtonQ2Route.CheckedChanged += new System.EventHandler(this.Q2_CheckedChanged);
+			// 
+			// labelPackageType
+			// 
+			this.labelPackageType.AutoSize = true;
+			this.labelPackageType.Location = new System.Drawing.Point(7, 50);
+			this.labelPackageType.Name = "labelPackageType";
+			this.labelPackageType.Size = new System.Drawing.Size(159, 13);
+			this.labelPackageType.TabIndex = 18;
+			this.labelPackageType.Text = "Please select the package type:";
+			// 
+			// groupBoxQ1
+			// 
+			this.groupBoxQ1.Controls.Add(this.radioButtonQ1No);
+			this.groupBoxQ1.Controls.Add(this.radioButtonQ1Yes);
+			this.groupBoxQ1.Location = new System.Drawing.Point(7, 113);
+			this.groupBoxQ1.Name = "groupBoxQ1";
+			this.groupBoxQ1.Size = new System.Drawing.Size(101, 24);
+			this.groupBoxQ1.TabIndex = 17;
+			this.groupBoxQ1.TabStop = false;
+			// 
+			// radioButtonQ1No
+			// 
+			this.radioButtonQ1No.AutoSize = true;
+			this.radioButtonQ1No.Enabled = false;
+			this.radioButtonQ1No.Location = new System.Drawing.Point(52, 1);
+			this.radioButtonQ1No.Name = "radioButtonQ1No";
+			this.radioButtonQ1No.Size = new System.Drawing.Size(39, 17);
+			this.radioButtonQ1No.TabIndex = 18;
+			this.radioButtonQ1No.TabStop = true;
+			this.radioButtonQ1No.Text = "No";
+			this.radioButtonQ1No.UseVisualStyleBackColor = true;
+			this.radioButtonQ1No.CheckedChanged += new System.EventHandler(this.Q1_CheckedChanged);
+			// 
+			// radioButtonQ1Yes
+			// 
+			this.radioButtonQ1Yes.AutoSize = true;
+			this.radioButtonQ1Yes.Enabled = false;
+			this.radioButtonQ1Yes.Location = new System.Drawing.Point(3, 1);
+			this.radioButtonQ1Yes.Name = "radioButtonQ1Yes";
+			this.radioButtonQ1Yes.Size = new System.Drawing.Size(43, 17);
+			this.radioButtonQ1Yes.TabIndex = 0;
+			this.radioButtonQ1Yes.TabStop = true;
+			this.radioButtonQ1Yes.Text = "Yes";
+			this.radioButtonQ1Yes.UseVisualStyleBackColor = true;
+			this.radioButtonQ1Yes.CheckedChanged += new System.EventHandler(this.Q1_CheckedChanged);
+			// 
+			// label7
+			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label7.AutoEllipsis = true;
+			this.label7.AutoSize = true;
+			this.label7.BackColor = System.Drawing.Color.Silver;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label7.ForeColor = System.Drawing.Color.Black;
+			this.label7.Location = new System.Drawing.Point(232, 18);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(117, 16);
+			this.label7.TabIndex = 16;
+			this.label7.Text = "Create a Package";
+			// 
+			// label8
+			// 
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label8.BackColor = System.Drawing.Color.Silver;
+			this.label8.Location = new System.Drawing.Point(7, 10);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(627, 32);
+			this.label8.TabIndex = 15;
+			// 
+			// labelReplacePackage
+			// 
+			this.labelReplacePackage.AutoSize = true;
+			this.labelReplacePackage.Enabled = false;
+			this.labelReplacePackage.Location = new System.Drawing.Point(6, 94);
+			this.labelReplacePackage.Name = "labelReplacePackage";
+			this.labelReplacePackage.Size = new System.Drawing.Size(188, 13);
+			this.labelReplacePackage.TabIndex = 4;
+			this.labelReplacePackage.Text = "Is this to replace an existing package?";
 			// 
 			// panelPackageList
 			// 
@@ -4458,6 +4751,17 @@
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelCreatePackage.ResumeLayout(false);
+			this.panelCreatePackage.PerformLayout();
+			this.panelNewPackage.ResumeLayout(false);
+			this.panelNewPackage.PerformLayout();
+			this.panelReplacePackage.ResumeLayout(false);
+			this.panelReplacePackage.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).EndInit();
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			this.groupBoxQ1.ResumeLayout(false);
+			this.groupBoxQ1.PerformLayout();
 			this.panelPackageList.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
@@ -4808,6 +5112,30 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button buttonCreatePackage;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Panel panelCreatePackage;
+		private System.Windows.Forms.GroupBox groupBoxQ1;
+		private System.Windows.Forms.RadioButton radioButtonQ1No;
+		private System.Windows.Forms.RadioButton radioButtonQ1Yes;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label labelReplacePackage;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.RadioButton radioButtonQ2Train;
+		private System.Windows.Forms.RadioButton radioButtonQ2Route;
+		private System.Windows.Forms.Label labelPackageType;
+		private System.Windows.Forms.RadioButton radioButtonQ2Other;
+		private System.Windows.Forms.Panel panelReplacePackage;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.DataGridView dataGridViewReplacePackage;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn21;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn22;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn23;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn24;
+		private System.Windows.Forms.Panel panelNewPackage;
+		private System.Windows.Forms.Label label16;
+		private System.Windows.Forms.TextBox textBoxGUID;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Button button3;
         
     }
 }

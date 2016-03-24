@@ -1160,8 +1160,5 @@ namespace OpenBve {
                 AboutDialog.Show();
             }
 		}
-
-
-
 	}
 }

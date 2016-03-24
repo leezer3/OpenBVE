@@ -18,10 +18,12 @@ namespace OpenBve
 		 */
 		internal static List<Package> InstalledRoutes = new List<Package>();
 		internal static List<Package> InstalledTrains = new List<Package>();
+		internal static List<Package> InstalledOther = new List<Package>();
 		internal int selectedTrainPackageIndex = 0;
 		internal int selectedRoutePackageIndex = 0;
 		internal static bool creatingPackage = false;
 		internal Package newPackage = null;
+		internal PackageType newPackageType;
 		internal string ImageFile;
 
 		internal void RefreshPackages()
@@ -38,17 +40,8 @@ namespace OpenBve
 		{
 			if (creatingPackage)
 			{
-				string GUID = new Guid().ToString();
-				newPackage = new Package
-				{
-					Name = textBoxPackageName.Text,
-					Author = textBoxPackageAuthor.Text,
-					//TODO:
-					//Website = linkLabelPackageWebsite.Links[0],
-					GUID = GUID,
-					PackageVersion = new Version(0, 0, 0, 0)
-				};
-				//TODO: Requires interface string adding
+				
+				//TODO: Requires interface strings adding
 				if (textBoxPackageName.Text == "No package selected.")
 				{
 					MessageBox.Show("Please enter a name.");
@@ -69,7 +62,11 @@ namespace OpenBve
 				{
 					MessageBox.Show("Please enter a valid version number in the following format: \r\n 1.0.0");
 				}
-				
+				//Only set properties after making the checks
+				newPackage.Name = textBoxPackageName.Text;
+				newPackage.Author = textBoxPackageAuthor.Text;
+				newPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
+
 				
 				panelDependancyError.Hide();
 				panelSuccess.Hide();
@@ -87,6 +84,10 @@ namespace OpenBve
 					{
 						textBoxPackageName.Text = currentPackage.Name;
 						textBoxPackageAuthor.Text = currentPackage.Author;
+						if (currentPackage.Description != null)
+						{
+							textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
+						}
 						textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
 						if (currentPackage.Website != null)
 						{
@@ -208,8 +209,11 @@ namespace OpenBve
 					ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
 					break;
 				case PackageType.Train:
-				default:
 					ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+					break;
+				default:
+					//TODO: Not sure this is the right place to put this, but at the moment leave it there
+					ExtractionDirectory = Program.FileSystem.DataFolder;
 					break;
 			}
 			string PackageFiles = "";
@@ -628,17 +632,35 @@ namespace OpenBve
 			Manipulation.CreatePackage(newPackage,"C:\\test\\test.zip",ImageFile,files,"C:\\test\\");
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void button3_Click(object sender, EventArgs e)
 		{
 			creatingPackage = true;
-			//This string must not be localised
-			textBoxPackageVersion.Text = "1.0.0";
+			textBoxPackageName.Text = newPackage.Name;
+			textBoxPackageVersion.Text = newPackage.Version;
+			textBoxPackageAuthor.Text = newPackage.Author;
+			if (newPackage.Description != null)
+			{
+				textBoxPackageDescription.Text = newPackage.Description.Replace("\\r\\n", "\r\n");
+			}
+			panelCreatePackage.Hide();
 			panelPackageList.Hide();
 			panelVersionError.Hide();
 			panelDependancyError.Hide();
 			panelUninstallResult.Hide();
 			panelSuccess.Hide();
 			panelPackageInstall.Show();
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			panelPackageInstall.Hide();
+			panelPackageList.Hide();
+			panelVersionError.Hide();
+			panelDependancyError.Hide();
+			panelUninstallResult.Hide();
+			panelSuccess.Hide();
+			panelPackageDependsAdd.Hide();
+			panelCreatePackage.Show();
 		}
 
 		private void pictureBoxPackageImage_Click(object sender, EventArgs e)
@@ -649,6 +671,91 @@ namespace OpenBve
 				{
 					ImageFile = openPackageFileDialog.FileName;
 					pictureBoxPackageImage.Image = Image.FromFile(openPackageFileDialog.FileName);
+				}
+			}
+		}
+
+
+		private void Q1_CheckedChanged(object sender, EventArgs e)
+		{
+			if (radioButtonQ1Yes.Checked == true)
+			{
+				panelReplacePackage.Show();
+				panelNewPackage.Hide();
+				switch (newPackageType)
+				{
+					case PackageType.Route:
+						PopulateDependancyList(InstalledRoutes, dataGridViewReplacePackage);
+						break;
+					case PackageType.Train:
+						PopulateDependancyList(InstalledTrains, dataGridViewReplacePackage);
+						break;
+					case PackageType.Other:
+						PopulateDependancyList(InstalledOther, dataGridViewReplacePackage);
+						break;
+				}
+				dataGridViewReplacePackage.ClearSelection();
+			}
+			else
+			{
+				panelReplacePackage.Hide();
+				panelNewPackage.Show();
+				panelNewPackage.Enabled = true;
+				string GUID = Guid.NewGuid().ToString();
+				newPackage = new Package
+				{
+					Name = textBoxPackageName.Text,
+					Author = textBoxPackageAuthor.Text,
+					Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
+					//TODO:
+					//Website = linkLabelPackageWebsite.Links[0],
+					GUID = GUID,
+					PackageVersion = new Version(0, 0, 0, 0),
+					PackageType = newPackageType
+				};
+				textBoxGUID.Text = newPackage.GUID;
+			}
+		}
+
+		private void Q2_CheckedChanged(object sender, EventArgs e)
+		{
+			radioButtonQ1Yes.Enabled = true;
+			radioButtonQ1No.Enabled = true;
+			labelReplacePackage.Enabled = true;
+			if (radioButtonQ2Route.Checked)
+			{
+				newPackageType = PackageType.Route;
+			}
+			else if (radioButtonQ2Train.Checked)
+			{
+				newPackageType = PackageType.Train;
+			}
+			else
+			{
+				newPackageType = PackageType.Other;
+			}
+			
+		}
+
+
+		private void dataGridViewReplacePackage_SelectionChanged(object sender, EventArgs e)
+		{
+			if (dataGridViewReplacePackage.SelectedRows.Count > 0)
+			{
+				switch (newPackageType)
+				{
+					case PackageType.Route:
+						newPackage = InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
+						newPackage.PackageType = PackageType.Route;
+						break;
+					case PackageType.Train:
+						newPackage = InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
+						newPackage.PackageType = PackageType.Train;
+						break;
+					case PackageType.Other:
+						newPackage = InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
+						newPackage.PackageType = PackageType.Other;
+						break;
 				}
 			}
 		}

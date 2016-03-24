@@ -50,6 +50,8 @@ namespace OpenBveApi.Packages
 		public PackageType PackageType;
 		/// <summary>The file this package was installed from</summary>
 		public string PackageFile;
+		/// <summary>The package description</summary>
+		public string Description;
 		/// <summary>The image for this package</summary>
 		[XmlIgnore]
 		public Image PackageImage;
