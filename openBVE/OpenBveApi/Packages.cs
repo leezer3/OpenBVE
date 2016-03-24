@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using SharpCompress.Common;
 using SharpCompress.Reader;
@@ -10,11 +11,33 @@ using System.Drawing;
 
 namespace OpenBveApi.Packages
 {
+	
+
 	/// <summary>Defines an OpenBVE Package</summary>
+	[XmlType("Package")]
 	public class Package
 	{
 		/// <summary>The package version</summary>
+		[XmlIgnore] 
 		public Version PackageVersion;
+
+		[XmlElement(ElementName = "PackageVersion")]
+		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+		public string Version
+		{
+			get
+			{
+				if (this.PackageVersion == null)
+					return string.Empty;
+				else
+					return this.PackageVersion.ToString();
+			}
+			set
+			{
+				if (!String.IsNullOrEmpty(value))
+					this.PackageVersion = new Version(value);
+			}
+		}
 		/// <summary>The package name</summary>
 		public string Name;
 		/// <summary>The package author</summary>
@@ -28,6 +51,7 @@ namespace OpenBveApi.Packages
 		/// <summary>The file this package was installed from</summary>
 		public string PackageFile;
 		/// <summary>The image for this package</summary>
+		[XmlIgnore]
 		public Image PackageImage;
 		/// <summary>The list of dependancies for this package</summary>
 		public List<Package> Dependancies;
@@ -42,6 +66,13 @@ namespace OpenBveApi.Packages
 		public Version MaximumVersion;
 		
 	}
+
+	[XmlType("openBVE")]
+	public class SerializedPackage
+	{
+		public Package Package;
+	}
+
 	/// <summary>Provides the possible states of a version</summary>
 	public enum VersionInformation
 	{
@@ -130,6 +161,9 @@ namespace OpenBveApi.Packages
 		/// <param name="rootDirectory">The root content directory, used to determine relative paths within the archive</param>
 		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, string[] packageFiles, string rootDirectory)
 		{
+			//TEMP
+			File.Delete(packageFile);
+
 			using (var zip = File.OpenWrite(packageFile))
 			{
 				using (var zipWriter = WriterFactory.Open(zip, SharpCompress.Common.ArchiveType.Zip, CompressionType.LZMA))
@@ -152,13 +186,16 @@ namespace OpenBveApi.Packages
 					{
 						//TODO: Let's see if we can get the serializer working everywhere in the solution.....
 						//Haven't checked whether these are read by the reader yet.
-						XmlSerializer listWriter = new XmlSerializer(typeof(Package), new XmlRootAttribute("OpenBVE"));
-						listWriter.Serialize(sw, currentPackage);
+						XmlSerializer listWriter = new XmlSerializer(typeof(SerializedPackage));
+						listWriter.Serialize(sw, new SerializedPackage{Package = currentPackage});
 					}
 					//Write out XML
 					zipWriter.Write("Package.xml",tempXML);
 					//Write out image
-					zipWriter.Write("Package.png", packageImage);
+					if (System.IO.File.Exists(packageImage))
+					{
+						zipWriter.Write("Package.png", packageImage);
+					}
 				}
 			}
 		}
@@ -232,12 +269,12 @@ namespace OpenBveApi.Packages
 					//Search for the package.xml file- This must be located in the archive root
 					if (reader.Entry.Key.ToLowerInvariant() == "package.xml")
 					{
-						CurrentXML = new XmlDocument();
 						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 						//Load the XML file
 						InfoFound = true;
-						CurrentXML.Load(OpenBveApi.Path.CombineDirectory(TempDirectory, "package.xml"));
-
+						XmlSerializer listReader = new XmlSerializer(typeof(SerializedPackage));
+						SerializedPackage newPackage = (SerializedPackage)listReader.Deserialize(XmlReader.Create(OpenBveApi.Path.CombineFile(TempDirectory, "package.xml")));
+						currentPackage = newPackage.Package;
 					}
 					if (reader.Entry.Key.ToLowerInvariant() == "package.png")
 					{
@@ -273,98 +310,7 @@ namespace OpenBveApi.Packages
 				return null;
 			}
 			//Read the info
-			if (CurrentXML.DocumentElement != null)
-			{
-				XmlNodeList packageNodes = CurrentXML.DocumentElement.SelectNodes("/openbve/package");
-				//Check this file actually contains OpenBVE package nodes
-				if (packageNodes != null)
-				{
-					foreach (XmlNode node in packageNodes)
-					{
-						/*
-					 * Read properties
-					 */
-						if (node.Attributes != null)
-						{
-							foreach (XmlAttribute Attribute in node.Attributes)
-							{
-								switch (Attribute.Name.ToLowerInvariant())
-								{
-									case "author":
-										currentPackage.Author = Attribute.InnerText;
-										break;
-									case "name":
-										currentPackage.Name = Attribute.InnerText;
-										break;
-									case "guid":
-										currentPackage.GUID = Attribute.InnerText;
-										break;
-									case "website":
-										currentPackage.Website = Attribute.InnerText;
-										break;
-									case "version":
-										currentPackage.PackageVersion = Version.Parse(Attribute.InnerText);
-										break;
-									case "type":
-										Enum.TryParse(Attribute.InnerText, out currentPackage.PackageType);
-										break;
-								}
-							}
-						}
-					}
-				}
-				XmlNodeList dependancyNodes = CurrentXML.DocumentElement.SelectNodes("/openbve/dependancy");
-				//Check this file actually contains OpenBVE package dependancy nodes
-				if (dependancyNodes != null)
-				{
-					currentPackage.Dependancies = new List<Package>();
-					foreach (XmlNode node in dependancyNodes)
-					{
-						/*
-					 * Read properties
-					 */
-						Package currentDependancy = null;
-						if (node.Attributes != null)
-						{
-							currentDependancy = new Package();
-							foreach (XmlAttribute Attribute in node.Attributes)
-							{
-								switch (Attribute.Name.ToLowerInvariant())
-								{
-									case "author":
-										currentDependancy.Author = Attribute.InnerText;
-										break;
-									case "name":
-										currentDependancy.Name = Attribute.InnerText;
-										break;
-									case "guid":
-										currentDependancy.GUID = Attribute.InnerText;
-										break;
-									case "website":
-										currentDependancy.Website = Attribute.InnerText;
-										break;
-									case "minversion":
-										currentDependancy.MinimumVersion = Version.Parse(Attribute.InnerText);
-										break;
-									case "maxversion":
-										currentDependancy.MaximumVersion = Version.Parse(Attribute.InnerText);
-										break;
-									case "type":
-										Enum.TryParse(Attribute.InnerText, out currentDependancy.PackageType);
-										break;
 
-								}
-							}
-						}
-
-
-						if (currentDependancy != null)
-						{
-							currentPackage.Dependancies.Add(currentDependancy);
-						}
-					}
-				}
-			}
 			if (currentPackage.Equals(new Package()))
 			{
 				//Somewhat hacky way to quickly check if all elements are null....

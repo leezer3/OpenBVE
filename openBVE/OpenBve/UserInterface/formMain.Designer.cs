@@ -3629,12 +3629,14 @@
 			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxPackageImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pictureBoxPackageImage.Location = new System.Drawing.Point(164, 54);
 			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
 			this.pictureBoxPackageImage.Size = new System.Drawing.Size(256, 203);
 			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.pictureBoxPackageImage.TabIndex = 3;
 			this.pictureBoxPackageImage.TabStop = false;
+			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
 			// 
 			// panelDependancyError
 			// 

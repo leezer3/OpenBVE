@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -21,6 +22,7 @@ namespace OpenBve
 		internal int selectedRoutePackageIndex = 0;
 		internal static bool creatingPackage = false;
 		internal Package newPackage = null;
+		internal string ImageFile;
 
 		internal void RefreshPackages()
 		{
@@ -36,6 +38,16 @@ namespace OpenBve
 		{
 			if (creatingPackage)
 			{
+				string GUID = new Guid().ToString();
+				newPackage = new Package
+				{
+					Name = textBoxPackageName.Text,
+					Author = textBoxPackageAuthor.Text,
+					//TODO:
+					//Website = linkLabelPackageWebsite.Links[0],
+					GUID = GUID,
+					PackageVersion = new Version(0, 0, 0, 0)
+				};
 				//TODO: Requires interface string adding
 				if (textBoxPackageName.Text == "No package selected.")
 				{
@@ -53,16 +65,12 @@ namespace OpenBve
 					MessageBox.Show("Please enter a description.");
 					return;
 				}
-				string GUID = new Guid().ToString();
-				newPackage = new Package
+				if (!Version.TryParse(textBoxPackageVersion.Text, out newPackage.PackageVersion))
 				{
-					Name = textBoxPackageName.Text,
-					Author = textBoxPackageAuthor.Text,
-					//TODO:
-					//Website = linkLabelPackageWebsite.Links[0],
-					GUID = GUID,
-					PackageVersion = new Version(0,0,0,0)
-				};
+					MessageBox.Show("Please enter a valid version number in the following format: \r\n 1.0.0");
+				}
+				
+				
 				panelDependancyError.Hide();
 				panelSuccess.Hide();
 				panelPackageInstall.Hide();
@@ -100,6 +108,11 @@ namespace OpenBve
 							TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
 						}
 						buttonSelectPackage.Text = "Install";
+					}
+					else
+					{
+						//ReadPackage returns null if the file is not a package.....
+						MessageBox.Show("This file does not appear to be a valid openBVE package.");
 					}
 				}
 
@@ -612,18 +625,32 @@ namespace OpenBve
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
 			string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
-			Manipulation.CreatePackage(newPackage,"C:\\test\\test.zip",files,"C:\\test\\");
+			Manipulation.CreatePackage(newPackage,"C:\\test\\test.zip",ImageFile,files,"C:\\test\\");
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
 			creatingPackage = true;
+			//This string must not be localised
+			textBoxPackageVersion.Text = "1.0.0";
 			panelPackageList.Hide();
 			panelVersionError.Hide();
 			panelDependancyError.Hide();
 			panelUninstallResult.Hide();
 			panelSuccess.Hide();
 			panelPackageInstall.Show();
+		}
+
+		private void pictureBoxPackageImage_Click(object sender, EventArgs e)
+		{
+			if (creatingPackage)
+			{
+				if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					ImageFile = openPackageFileDialog.FileName;
+					pictureBoxPackageImage.Image = Image.FromFile(openPackageFileDialog.FileName);
+				}
+			}
 		}
 	}
 }
