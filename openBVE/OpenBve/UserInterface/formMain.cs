@@ -972,9 +972,10 @@ namespace OpenBve {
             radiobuttonControls.BackColor = SystemColors.ButtonFace;
             radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
             UpdateRadioButtonBackColor();
-            //Load packages
+            //Load packages & rest panel states
             if (radioButtonPackages.Checked)
             {
+				ResetInstallerPanels();
                 LoadRoutePackages();
                 LoadTrainPackages();
                 PopulatePackageList();

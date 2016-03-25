@@ -72,6 +72,8 @@ namespace OpenBve
 				panelSuccess.Hide();
 				panelPackageInstall.Hide();
 				panelPackageDependsAdd.Show();
+				PopulateDependancyList(InstalledRoutes, dataGridViewRoutes);
+				PopulateDependancyList(InstalledTrains, dataGridViewTrains);
 				return;
 			}
 			//Check to see if the package is null- If null, then we haven't loaded a package yet
@@ -525,20 +527,19 @@ namespace OpenBve
 			panelUninstallResult.Show();
 		}
 
-		internal void AddDependancy(int selectedPackageIndex, List<Package> Packages)
+		internal void AddDependendsReccomends(int selectedPackageIndex, List<Package> Packages,ref List<Package> DependsReccomendsList)
 		{
 			if (newPackage != null)
 			{
+				if (DependsReccomendsList == null)
+				{
+					DependsReccomendsList = new List<Package>();
+				}
 				//TODO: Requires a version popup
-				newPackage.Dependancies.Add(Packages[selectedPackageIndex]);
-			}
-		}
-
-		internal void AddReccomends(int selectedPackageIndex, List<Package> Packages)
-		{
-			if (newPackage != null)
-			{
-				//newPackage..Add(Packages[selectedPackageIndex]);
+				if (selectedPackageIndex != -1)
+				{
+					DependsReccomendsList.Add(Packages[selectedPackageIndex]);
+				}
 			}
 		}
 
@@ -592,18 +593,24 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				AddDependancy(selectedTrainPackageIndex, InstalledTrains);
+				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref newPackage.Dependancies);
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				AddDependancy(selectedTrainPackageIndex, InstalledRoutes);
+				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref newPackage.Dependancies);
 			}
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void buttonReccomends_Click(object sender, EventArgs e)
 		{
-			//Add reccomendation.....
-			//Not implemented yet....
+			if (selectedTrainPackageIndex != -1)
+			{
+				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref newPackage.Reccomendations);
+			}
+			if (selectedRoutePackageIndex != -1)
+			{
+				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref newPackage.Reccomendations);
+			}
 		}
 
 		private void dataGridViewRoutes_SelectionChanged(object sender, EventArgs e)
@@ -758,6 +765,43 @@ namespace OpenBve
 						break;
 				}
 			}
+		}
+
+		//This method resets the package installer to the default panels when clicking away
+		private void ResetInstallerPanels()
+		{
+			//Hide all other panels
+			panelPackageInstall.Hide();
+			panelDependancyError.Hide();
+			panelVersionError.Hide();
+			panelSuccess.Hide();
+			panelUninstallResult.Hide();
+			panelPackageDependsAdd.Hide();
+			panelCreatePackage.Hide();
+			panelReplacePackage.Hide();
+			panelPackageList.Show();
+			//Reset radio buttons in the installer
+			radioButtonQ1Yes.Checked = false;
+			radioButtonQ1No.Checked = false;
+			radioButtonQ2Route.Checked = false;
+			radioButtonQ2Train.Checked = false;
+			radioButtonQ2Other.Checked = false;
+			//Reset picturebox
+			//TODO: Question mark image or something??
+			pictureBoxPackageImage.Image = null;
+			//Reset enabled boxes & panels
+			textBoxGUID.Text = null;
+			textBoxGUID.Enabled = false;
+			panelReplacePackage.Hide();
+			panelNewPackage.Enabled = false;
+			panelNewPackage.Show();
+			//Set variables to uninitialised states
+			creatingPackage = false;
+			newPackage = null;
+			selectedTrainPackageIndex = 0;
+			selectedRoutePackageIndex = 0;
+			newPackageType = PackageType.NotFound;
+			ImageFile = null;
 		}
 	}
 }

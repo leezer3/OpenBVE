@@ -57,7 +57,8 @@ namespace OpenBveApi.Packages
 		public Image PackageImage;
 		/// <summary>The list of dependancies for this package</summary>
 		public List<Package> Dependancies;
-
+		/// <summary>The list of packages that this package reccomends you also install</summary>
+		public List<Package> Reccomendations;
 		/*
 		 * These values are used by dependancies
 		 * They need to live in the base Package class to save creating another.....
