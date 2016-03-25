@@ -387,7 +387,10 @@ namespace OpenBve
 			{
 				foreach (var Texture in Textures.RegisteredTextures)
 				{
-					Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					if (Texture != null)
+					{
+						Texture.LastAccess = CPreciseTimer.GetClockTicks();
+					}
 				}
 			}
 #endif
