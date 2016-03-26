@@ -117,6 +117,12 @@ namespace OpenBve {
 				if (!(obj is PathOrigin)) return false;
 				return this.Path == ((PathOrigin)obj).Path;
 			}
+
+			/// <summary>Returns a string representing the absolute on-disk path of this texture</summary>
+			public override string ToString()
+			{
+				return this.Path;
+			}
 		}
 
 		
