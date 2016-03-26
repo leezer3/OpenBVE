@@ -290,13 +290,14 @@ namespace OpenBve
             Game.LogTrainName = System.IO.Path.GetFileName(MainLoop.currentResult.TrainFolder);
             Game.LogDateTime = DateTime.Now;
 
-
-            Textures.UnloadAllTextures();
-            
-            if (Interface.CurrentOptions.LoadInAdvance)
+			if (Interface.CurrentOptions.LoadInAdvance)
             {
                 Textures.LoadAllTextures();
             }
+			else
+			{
+				Textures.UnloadAllTextures();
+			}
             // camera
             ObjectManager.InitializeVisibility();
             TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
