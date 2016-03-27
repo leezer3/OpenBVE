@@ -595,7 +595,18 @@ namespace OpenBve
                                         break;
                                     case Interface.Command.CameraExterior:
                                         // camera: exterior
-                                        Game.AddMessage(Interface.GetInterfaceString("notification_exterior"),
+                                        if (World.CameraMode == World.CameraViewMode.Exterior)
+                                        {
+                                            if (World.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
+                                            {
+                                                World.CameraCar++;
+                                            }
+                                            else
+                                            {
+                                                World.CameraCar = 0;
+                                            }
+                                        }
+                                        Game.AddMessage(Interface.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1).ToString(),
                                             Game.MessageDependency.None, Interface.GameMode.Expert,
                                             Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
                                         SaveCameraSettings();

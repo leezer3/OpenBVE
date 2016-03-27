@@ -81,9 +81,15 @@ namespace OpenBve
             //Not doing this means that the camera doesn't move
             // update in one piece
             ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
-            if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior)
+            if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
             {
-                TrainManager.UpdateCamera(TrainManager.PlayerTrain);
+                // Cab camera must be placed in the driver's car
+                TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+            }
+            else if (World.CameraMode == World.CameraViewMode.Exterior)
+            {
+                // Enables cycling through cars
+                TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
             }
             if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
             {
@@ -476,7 +482,8 @@ namespace OpenBve
             {
                 World.CameraMode = World.CameraViewMode.InteriorLookAhead;
             }
-            TrainManager.UpdateCamera(TrainManager.PlayerTrain);
+            // Cab camera must be placed in the driver's car
+            TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
             TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
             ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
             World.CameraSavedInterior = new World.CameraAlignment();

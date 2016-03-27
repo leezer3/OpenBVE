@@ -411,6 +411,8 @@ namespace OpenBve {
 		internal const double CameraZoomTopSpeed = 2.0;
 		internal enum CameraViewMode { Interior, InteriorLookAhead, Exterior, Track, FlyBy, FlyByZooming }
 		internal static CameraViewMode CameraMode;
+		/// <summary>The current car the camera is anchored to</summary>
+		internal static int CameraCar;
 		
 		// camera memory
 		internal static CameraAlignment CameraSavedInterior;
