@@ -159,7 +159,7 @@ namespace OpenBve {
 			internal Vertex[] Vertices;
 			internal MeshMaterial[] Materials;
 			internal MeshFace[] Faces;
-		    internal Vector3[] BoundingBox;
+			internal Vector3[] BoundingBox;
 			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 			/// <param name="Vertices">The vertices that make up one face.</param>
 			/// <param name="Color">The color to be applied on the face.</param>
@@ -173,7 +173,7 @@ namespace OpenBve {
 				for (int i = 0; i < Vertices.Length; i++) {
 					this.Faces[0].Vertices[i].Index = (ushort)i;
 				}
-			    this.BoundingBox = new Vector3[2];
+				this.BoundingBox = new Vector3[2];
 			}
 			/// <summary>Creates a mesh consisting of the specified vertices, faces and color.</summary>
 			/// <param name="Vertices">The vertices used.</param>
@@ -187,7 +187,7 @@ namespace OpenBve {
 				for (int i = 0; i < FaceVertices.Length; i++) {
 					this.Faces[i] = new MeshFace(FaceVertices[i]);
 				}
-                this.BoundingBox = new Vector3[2];
+				this.BoundingBox = new Vector3[2];
 			}
 		}
 
@@ -220,13 +220,13 @@ namespace OpenBve {
 		}
 
 		// display
-        /// <summary>The current horizontal viewing angle in radians</summary>
+		/// <summary>The current horizontal viewing angle in radians</summary>
 		internal static double HorizontalViewingAngle;
-        /// <summary>The current vertical viewing angle in radians</summary>
+		/// <summary>The current vertical viewing angle in radians</summary>
 		internal static double VerticalViewingAngle;
-        /// <summary>The original vertical viewing angle in radians</summary>
+		/// <summary>The original vertical viewing angle in radians</summary>
 		internal static double OriginalVerticalViewingAngle;
-        /// <summary>The current aspect ratio</summary>
+		/// <summary>The current aspect ratio</summary>
 		internal static double AspectRatio;
 		/// <summary>The current viewing distance in the forward direction.</summary>
 		internal static double ForwardViewingDistance;
@@ -411,6 +411,8 @@ namespace OpenBve {
 		internal const double CameraZoomTopSpeed = 2.0;
 		internal enum CameraViewMode { Interior, InteriorLookAhead, Exterior, Track, FlyBy, FlyByZooming }
 		internal static CameraViewMode CameraMode;
+		/// <summary>The index of the car which the camera is currently anchored to</summary>
+		internal static int CameraCar;
 		
 		// camera memory
 		internal static CameraAlignment CameraSavedInterior;
@@ -478,51 +480,51 @@ namespace OpenBve {
 				Source = Target;
 				return true;
 			}
-		    double best = Source;
-		    const int Precision = 8;
-		    double a = Source;
-		    double b = Target;
-		    Source = Target;
-		    if (Zoom) ApplyZoom();
-		    if (PerformCameraRestrictionTest()) {
-		        return true;
-		    }
-		    double x = 0.5 * (a + b);
-		    bool q = true;
-		    for (int i = 0; i < Precision; i++) {
-                //Do not remove, this is updated via the ref & causes the panel zoom to bug out
-                Source = x;
-		        if (Zoom) ApplyZoom();
-		        q = PerformCameraRestrictionTest();
-		        if (q) {
-		            a = x;
-		            best = x;
-		        } else {
-		            b = x;
-		        }
-		        x = 0.5 * (a + b);
-		    }
-		    Source = best;
-		    if (Zoom) ApplyZoom();
-		    return q;
+			double best = Source;
+			const int Precision = 8;
+			double a = Source;
+			double b = Target;
+			Source = Target;
+			if (Zoom) ApplyZoom();
+			if (PerformCameraRestrictionTest()) {
+				return true;
+			}
+			double x = 0.5 * (a + b);
+			bool q = true;
+			for (int i = 0; i < Precision; i++) {
+				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
+				Source = x;
+				if (Zoom) ApplyZoom();
+				q = PerformCameraRestrictionTest();
+				if (q) {
+					a = x;
+					best = x;
+				} else {
+					b = x;
+				}
+				x = 0.5 * (a + b);
+			}
+			Source = best;
+			if (Zoom) ApplyZoom();
+			return q;
 		}
-        /// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
-        /// <returns>True if we are able to move the camera, false otherwise</returns>
-	    internal static bool PerformBoundingBoxTest(ref ObjectManager.StaticObject bounding, ref Vector3 cameraLocation)
-        {
-            if (cameraLocation.X < bounding.Mesh.BoundingBox[0].X || cameraLocation.X > bounding.Mesh.BoundingBox[1].X ||
-                cameraLocation.Y < bounding.Mesh.BoundingBox[0].Y || cameraLocation.Y > bounding.Mesh.BoundingBox[1].Y ||
-                cameraLocation.Z < bounding.Mesh.BoundingBox[0].Z || cameraLocation.Z > bounding.Mesh.BoundingBox[1].Z)
-            {
-                //Our bounding boxes do not intersect
-                return true;
-            }
-            return false;
-        }
+		/// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
+		/// <returns>True if we are able to move the camera, false otherwise</returns>
+		internal static bool PerformBoundingBoxTest(ref ObjectManager.StaticObject bounding, ref Vector3 cameraLocation)
+		{
+			if (cameraLocation.X < bounding.Mesh.BoundingBox[0].X || cameraLocation.X > bounding.Mesh.BoundingBox[1].X ||
+				cameraLocation.Y < bounding.Mesh.BoundingBox[0].Y || cameraLocation.Y > bounding.Mesh.BoundingBox[1].Y ||
+				cameraLocation.Z < bounding.Mesh.BoundingBox[0].Z || cameraLocation.Z > bounding.Mesh.BoundingBox[1].Z)
+			{
+				//Our bounding boxes do not intersect
+				return true;
+			}
+			return false;
+		}
 
 		internal static bool PerformCameraRestrictionTest()
 		{
-		    if (World.CameraRestriction == CameraRestrictionMode.On) {
+			if (World.CameraRestriction == CameraRestrictionMode.On) {
 				Vector3[] p = new Vector3[] { CameraRestrictionBottomLeft, CameraRestrictionTopRight };
 				Vector2[] r = new Vector2[2];
 				for (int j = 0; j < 2; j++) {
@@ -544,10 +546,10 @@ namespace OpenBve {
 				}
 				return r[0].X <= -1.0025 & r[1].X >= 1.0025 & r[0].Y <= -1.0025 & r[1].Y >= 1.0025;
 			}
-		    return true;
+			return true;
 		}
 
-	    // update absolute camera
+		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
 			double zm = World.CameraCurrentAlignment.Zoom;
@@ -607,22 +609,22 @@ namespace OpenBve {
 							double y1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * bestTrain.Cars[0].Height;
 							double z1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
 							
-                            /*
-                             * d1 is never used, so don't calculate it
-                            double d1;
+							/*
+							 * d1 is never used, so don't calculate it
+							double d1;
 							{
 								double dx = x1 - px;
 								double dy = y1 - py;
 								double dz = z1 - pz;
 								d1 = dx * dx + dy * dy + dz * dz;
 							}
-                             */
+							 */
 							double x2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.X + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * secondBestTrain.Cars[0].Height;
 							double z2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
 
-                            /*
-                             * d2 is never used, so don't calculate it
+							/*
+							 * d2 is never used, so don't calculate it
 							double d2;
 							{
 								double dx = x2 - px;
@@ -630,7 +632,7 @@ namespace OpenBve {
 								double dz = z2 - pz;
 								d2 = dx * dx + dy * dy + dz * dz;
 							}
-                             */
+							 */
 							double t = 0.5 - (secondBestDistance - bestDistance) / (2.0 * maxDistance);
 							if (t < 0.0) t = 0.0;
 							t = 2.0 * t * t; /* in order to change the shape of the interpolation curve */
@@ -1085,23 +1087,23 @@ namespace OpenBve {
 			dx *= t; dy *= t; dz *= t;
 			double oc = 1.0 - cosa;
 
-            //With any luck, this removes six multiplications from the Rotation calculation....
-		    double Opt1 = oc*dx*dy;
-		    double Opt2 = sina*dz;
-		    double Opt3 = oc*dy*dz;
-		    double Opt4 = sina*dx;
-		    double Opt5 = sina*dy;
-		    double Opt6 = oc*dx*dz;
-            double x = (cosa + oc * dx * dx) * px + (Opt1 - Opt2) * py + (Opt6 + Opt5) * pz;
-            double y = (cosa + oc * dy * dy) * py + (Opt1 + Opt2) * px + (Opt3 - Opt4) * pz;
-            double z = (cosa + oc * dz * dz) * pz + (Opt6 - Opt5) * px + (Opt3 + Opt4) * py;
+			//With any luck, this removes six multiplications from the Rotation calculation....
+			double Opt1 = oc*dx*dy;
+			double Opt2 = sina*dz;
+			double Opt3 = oc*dy*dz;
+			double Opt4 = sina*dx;
+			double Opt5 = sina*dy;
+			double Opt6 = oc*dx*dz;
+			double x = (cosa + oc * dx * dx) * px + (Opt1 - Opt2) * py + (Opt6 + Opt5) * pz;
+			double y = (cosa + oc * dy * dy) * py + (Opt1 + Opt2) * px + (Opt3 - Opt4) * pz;
+			double z = (cosa + oc * dz * dz) * pz + (Opt6 - Opt5) * px + (Opt3 + Opt4) * py;
 
-            /*
-             * Original Function Unmodified
+			/*
+			 * Original Function Unmodified
 			double x = (cosa + oc * dx * dx) * px + (oc * dx * dy - sina * dz) * py + (oc * dx * dz + sina * dy) * pz;
 			double y = (cosa + oc * dy * dy) * py + (oc * dx * dy + sina * dz) * px + (oc * dy * dz - sina * dx) * pz;
 			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
-             */
+			 */
 			px = x; py = y; pz = z;
 		}
 		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double cosa, double sina) {
@@ -1109,25 +1111,25 @@ namespace OpenBve {
 			dx *= t; dy *= t; dz *= t;
 			double oc = 1.0 - cosa;
 
-            
+			
 
-            //With any luck, this removes six multiplications from the Rotation calculation....
-            double Opt1 = oc * dx * dy;
-            double Opt2 = sina * dz;
-            double Opt3 = oc * dy * dz;
-            double Opt4 = sina * dx;
-            double Opt5 = sina * dy;
-            double Opt6 = oc * dx * dz;
-            double x = (cosa + oc * dx * dx) * (double)px + (Opt1 - Opt2) * (double)py + (Opt6 + Opt5) * (double)pz;
-            double y = (cosa + oc * dy * dy) * (double)py + (Opt1 + Opt2) * (double)px + (Opt3 - Opt4) * (double)pz;
-            double z = (cosa + oc * dz * dz) * (double)pz + (Opt6 - Opt5) * (double)px + (Opt3 + Opt4) * (double)py;
+			//With any luck, this removes six multiplications from the Rotation calculation....
+			double Opt1 = oc * dx * dy;
+			double Opt2 = sina * dz;
+			double Opt3 = oc * dy * dz;
+			double Opt4 = sina * dx;
+			double Opt5 = sina * dy;
+			double Opt6 = oc * dx * dz;
+			double x = (cosa + oc * dx * dx) * (double)px + (Opt1 - Opt2) * (double)py + (Opt6 + Opt5) * (double)pz;
+			double y = (cosa + oc * dy * dy) * (double)py + (Opt1 + Opt2) * (double)px + (Opt3 - Opt4) * (double)pz;
+			double z = (cosa + oc * dz * dz) * (double)pz + (Opt6 - Opt5) * (double)px + (Opt3 + Opt4) * (double)py;
 
-            /*
-             * Original Function Unmodified
+			/*
+			 * Original Function Unmodified
 			double x = (cosa + oc * dx * dx) * (double)px + (oc * dx * dy - sina * dz) * (double)py + (oc * dx * dz + sina * dy) * (double)pz;
 			double y = (cosa + oc * dy * dy) * (double)py + (oc * dx * dy + sina * dz) * (double)px + (oc * dy * dz - sina * dx) * (double)pz;
 			double z = (cosa + oc * dz * dz) * (double)pz + (oc * dx * dz - sina * dy) * (double)px + (oc * dy * dz + sina * dx) * (double)py;
-             */
+			 */
 
 			px = (float)x; py = (float)y; pz = (float)z;
 		}
@@ -1138,7 +1140,7 @@ namespace OpenBve {
 			Vector.Y = v;
 		}
 		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-		    var x = sx * (double)px + ux * (double)py + dx * (double)pz;
+			var x = sx * (double)px + ux * (double)py + dx * (double)pz;
 			var y = sy * (double)px + uy * (double)py + dy * (double)pz;
 			var z = sz * (double)px + uz * (double)py + dz * (double)pz;
 			px = (float)x; py = (float)y; pz = (float)z;
@@ -1240,15 +1242,15 @@ namespace OpenBve {
 					float my = (float)(ny * t);
 					float mz = (float)(nz * t);
 					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-                        if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
-                        {
+						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
+						{
 							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
 						}
 					}
 				} else {
 					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-                        if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
-                        {
+						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal))
+						{
 							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
 						}
 					}

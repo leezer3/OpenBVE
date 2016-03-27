@@ -82,9 +82,16 @@ namespace OpenBve
 			//Not doing this means that the camera doesn't move
 			// update in one piece
 			ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
-			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior)
+			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
 			{
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain);
+				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
+				//TODO: Additional available in-car views will be implemented with the new train format
+				TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+			}
+			else if (World.CameraMode == World.CameraViewMode.Exterior)
+			{
+				//Update the camera position based upon the relative car position
+				TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
 			}
 			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 			{
@@ -486,7 +493,8 @@ namespace OpenBve
 			{
 				World.CameraMode = World.CameraViewMode.InteriorLookAhead;
 			}
-			TrainManager.UpdateCamera(TrainManager.PlayerTrain);
+			//Place the initial camera in the driver car
+			TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
 			World.CameraSavedInterior = new World.CameraAlignment();
