@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -22,7 +23,6 @@ namespace OpenBve
 		internal int selectedTrainPackageIndex = 0;
 		internal int selectedRoutePackageIndex = 0;
 		internal static bool creatingPackage = false;
-		internal Package newPackage = null;
 		internal PackageType newPackageType;
 		internal string ImageFile;
 
@@ -58,14 +58,14 @@ namespace OpenBve
 					MessageBox.Show("Please enter a description.");
 					return;
 				}
-				if (!Version.TryParse(textBoxPackageVersion.Text, out newPackage.PackageVersion))
+				if (!Version.TryParse(textBoxPackageVersion.Text, out currentPackage.PackageVersion))
 				{
 					MessageBox.Show("Please enter a valid version number in the following format: \r\n 1.0.0");
 				}
 				//Only set properties after making the checks
-				newPackage.Name = textBoxPackageName.Text;
-				newPackage.Author = textBoxPackageAuthor.Text;
-				newPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
+				currentPackage.Name = textBoxPackageName.Text;
+				currentPackage.Author = textBoxPackageAuthor.Text;
+				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
 
 				
 				panelDependancyError.Hide();
@@ -190,8 +190,7 @@ namespace OpenBve
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
 		{
 			RefreshPackages();
-			panelSuccess.Hide();
-			panelPackageList.Show();
+			ResetInstallerPanels();
 		}
 
 		private static readonly string PackageDatabase = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
@@ -249,6 +248,9 @@ namespace OpenBve
 					formMain.InstalledTrains.Add(currentPackage);
 					break;
 			}
+			labelInstallSuccess1.Text = "Package installation was successful.";
+			labelInstallSuccess2.Text = "Installation Successful";
+			labelListFilesInstalled.Text = "A list of files installed is shown below:";
 			textBoxFilesInstalled.Text = PackageFiles;
 			panelDependancyError.Hide();
 			panelVersionError.Hide();
@@ -529,7 +531,7 @@ namespace OpenBve
 
 		internal void AddDependendsReccomends(int selectedPackageIndex, List<Package> Packages,ref List<Package> DependsReccomendsList)
 		{
-			if (newPackage != null)
+			if (currentPackage != null)
 			{
 				if (DependsReccomendsList == null)
 				{
@@ -584,6 +586,7 @@ namespace OpenBve
 
 		private void buttonInstallPackage_Click(object sender, EventArgs e)
 		{
+			labelInstallText.Text = "Install a Package";
 			TryLoadImage(pictureBoxPackageImage, "route_error.png");
 			panelPackageList.Hide();
 			panelPackageInstall.Show();
@@ -593,11 +596,11 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref newPackage.Dependancies);
+				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref currentPackage.Dependancies);
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref newPackage.Dependancies);
+				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref currentPackage.Dependancies);
 			}
 		}
 
@@ -605,11 +608,11 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref newPackage.Reccomendations);
+				AddDependendsReccomends(selectedTrainPackageIndex, InstalledTrains, ref currentPackage.Reccomendations);
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref newPackage.Reccomendations);
+				AddDependendsReccomends(selectedRoutePackageIndex, InstalledRoutes, ref currentPackage.Reccomendations);
 			}
 		}
 
@@ -636,18 +639,42 @@ namespace OpenBve
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
 			string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
-			Manipulation.CreatePackage(newPackage,"C:\\test\\test.zip",ImageFile,files,"C:\\test\\");
+			Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, files, "C:\\test\\");
+			labelInstallSuccess1.Text = "Package creation was successful.";
+			labelInstallSuccess2.Text = "Package Creation Successful";
+			labelListFilesInstalled.Text = "The following files were added to your package:";
+			string text = "";
+			for (int i = 0; i < files.Length; i++)
+			{
+				text += files[i] + "\r\n";
+			}
+			textBoxFilesInstalled.Text = text;
+			panelCreatePackage.Hide();
+			panelSuccess.Show();
 		}
 
 		private void button3_Click(object sender, EventArgs e)
 		{
 			creatingPackage = true;
-			textBoxPackageName.Text = newPackage.Name;
-			textBoxPackageVersion.Text = newPackage.Version;
-			textBoxPackageAuthor.Text = newPackage.Author;
-			if (newPackage.Description != null)
+			switch (newPackageType)
 			{
-				textBoxPackageDescription.Text = newPackage.Description.Replace("\\r\\n", "\r\n");
+				case PackageType.Route:
+					TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
+					break;
+				case PackageType.Train:
+					TryLoadImage(pictureBoxPackageImage, "train_unknown.png");
+					break;
+				default:
+					TryLoadImage(pictureBoxPackageImage, "logo.png");
+					break;
+			}
+			labelInstallText.Text = "Enter Package Details";
+			textBoxPackageName.Text = currentPackage.Name;
+			textBoxPackageVersion.Text = currentPackage.Version;
+			textBoxPackageAuthor.Text = currentPackage.Author;
+			if (currentPackage.Description != null)
+			{
+				textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
 			}
 			panelCreatePackage.Hide();
 			panelPackageList.Hide();
@@ -709,7 +736,7 @@ namespace OpenBve
 				panelNewPackage.Show();
 				panelNewPackage.Enabled = true;
 				string GUID = Guid.NewGuid().ToString();
-				newPackage = new Package
+				currentPackage = new Package
 				{
 					Name = textBoxPackageName.Text,
 					Author = textBoxPackageAuthor.Text,
@@ -720,7 +747,7 @@ namespace OpenBve
 					PackageVersion = new Version(0, 0, 0, 0),
 					PackageType = newPackageType
 				};
-				textBoxGUID.Text = newPackage.GUID;
+				textBoxGUID.Text = currentPackage.GUID;
 			}
 		}
 
@@ -752,22 +779,38 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						newPackage = InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
-						newPackage.PackageType = PackageType.Route;
+						currentPackage = InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage.PackageType = PackageType.Route;
 						break;
 					case PackageType.Train:
-						newPackage = InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
-						newPackage.PackageType = PackageType.Train;
+						currentPackage = InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage.PackageType = PackageType.Train;
 						break;
 					case PackageType.Other:
-						newPackage = InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
-						newPackage.PackageType = PackageType.Other;
+						currentPackage = InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage.PackageType = PackageType.Other;
 						break;
 				}
 			}
 		}
 
-		//This method resets the package installer to the default panels when clicking away
+		private void linkLabelPackageWebsite_Click(object sender, EventArgs e)
+		{
+			if (creatingPackage)
+			{
+				//TODO: Show popup dialog to enter the link.....
+			}
+			else
+			{
+				//Launch link in default web-browser
+				if (linkLabelPackageWebsite.Links[0] != null)
+				{
+					Process.Start(linkLabelPackageWebsite.Links[0].ToString());
+				}
+			}
+		}
+
+		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
 		private void ResetInstallerPanels()
 		{
 			//Hide all other panels
@@ -780,6 +823,7 @@ namespace OpenBve
 			panelCreatePackage.Hide();
 			panelReplacePackage.Hide();
 			panelPackageList.Show();
+			creatingPackage = false;
 			//Reset radio buttons in the installer
 			radioButtonQ1Yes.Checked = false;
 			radioButtonQ1No.Checked = false;
@@ -787,8 +831,7 @@ namespace OpenBve
 			radioButtonQ2Train.Checked = false;
 			radioButtonQ2Other.Checked = false;
 			//Reset picturebox
-			//TODO: Question mark image or something??
-			pictureBoxPackageImage.Image = null;
+			TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
 			//Reset enabled boxes & panels
 			textBoxGUID.Text = null;
 			textBoxGUID.Enabled = false;
@@ -797,11 +840,17 @@ namespace OpenBve
 			panelNewPackage.Show();
 			//Set variables to uninitialised states
 			creatingPackage = false;
-			newPackage = null;
+			currentPackage = null;
 			selectedTrainPackageIndex = 0;
 			selectedRoutePackageIndex = 0;
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
+			//Reset text
+			textBoxPackageAuthor.Text = "No package selected.";
+			textBoxPackageName.Text = "No package selected.";
+			textBoxPackageDescription.Text = "No package selected.";
+			textBoxPackageVersion.Text = "No package selected.";
+			buttonSelectPackage.Text = "Select Package......";
 		}
 	}
 }

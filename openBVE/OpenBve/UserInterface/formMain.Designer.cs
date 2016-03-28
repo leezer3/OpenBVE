@@ -300,7 +300,7 @@
 			this.textBoxFilesInstalled = new System.Windows.Forms.TextBox();
 			this.labelListFilesInstalled = new System.Windows.Forms.Label();
 			this.labelInstallSuccess1 = new System.Windows.Forms.Label();
-			this.labelInstallSucess2 = new System.Windows.Forms.Label();
+			this.labelInstallSuccess2 = new System.Windows.Forms.Label();
 			this.label20 = new System.Windows.Forms.Label();
 			this.buttonInstallFinish = new System.Windows.Forms.Button();
 			this.panelVersionError = new System.Windows.Forms.Panel();
@@ -3584,6 +3584,7 @@
 			this.linkLabelPackageWebsite.TabIndex = 11;
 			this.linkLabelPackageWebsite.TabStop = true;
 			this.linkLabelPackageWebsite.Text = "No package selected.";
+			this.linkLabelPackageWebsite.Click += new System.EventHandler(this.linkLabelPackageWebsite_Click);
 			// 
 			// labelPackageWebsite
 			// 
@@ -3796,7 +3797,7 @@
 			this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
 			this.panelSuccess.Controls.Add(this.labelListFilesInstalled);
 			this.panelSuccess.Controls.Add(this.labelInstallSuccess1);
-			this.panelSuccess.Controls.Add(this.labelInstallSucess2);
+			this.panelSuccess.Controls.Add(this.labelInstallSuccess2);
 			this.panelSuccess.Controls.Add(this.label20);
 			this.panelSuccess.Controls.Add(this.buttonInstallFinish);
 			this.panelSuccess.Location = new System.Drawing.Point(0, 30);
@@ -3835,20 +3836,20 @@
 			this.labelInstallSuccess1.TabIndex = 17;
 			this.labelInstallSuccess1.Text = "Installation was sucessful.";
 			// 
-			// labelInstallSucess2
+			// labelInstallSuccess2
 			// 
-			this.labelInstallSucess2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelInstallSuccess2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstallSucess2.AutoEllipsis = true;
-			this.labelInstallSucess2.AutoSize = true;
-			this.labelInstallSucess2.BackColor = System.Drawing.Color.Silver;
-			this.labelInstallSucess2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstallSucess2.ForeColor = System.Drawing.Color.Black;
-			this.labelInstallSucess2.Location = new System.Drawing.Point(232, 18);
-			this.labelInstallSucess2.Name = "labelInstallSucess2";
-			this.labelInstallSucess2.Size = new System.Drawing.Size(139, 16);
-			this.labelInstallSucess2.TabIndex = 16;
-			this.labelInstallSucess2.Text = "Installation Successful";
+			this.labelInstallSuccess2.AutoEllipsis = true;
+			this.labelInstallSuccess2.AutoSize = true;
+			this.labelInstallSuccess2.BackColor = System.Drawing.Color.Silver;
+			this.labelInstallSuccess2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstallSuccess2.ForeColor = System.Drawing.Color.Black;
+			this.labelInstallSuccess2.Location = new System.Drawing.Point(232, 18);
+			this.labelInstallSuccess2.Name = "labelInstallSuccess2";
+			this.labelInstallSuccess2.Size = new System.Drawing.Size(139, 16);
+			this.labelInstallSuccess2.TabIndex = 16;
+			this.labelInstallSuccess2.Text = "Installation Successful";
 			// 
 			// label20
 			// 
@@ -5068,7 +5069,7 @@
         private System.Windows.Forms.TextBox textBoxFilesInstalled;
         private System.Windows.Forms.Label labelListFilesInstalled;
         private System.Windows.Forms.Label labelInstallSuccess1;
-        private System.Windows.Forms.Label labelInstallSucess2;
+        private System.Windows.Forms.Label labelInstallSuccess2;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button buttonInstallFinish;
         private System.Windows.Forms.Panel panelVersionError;
