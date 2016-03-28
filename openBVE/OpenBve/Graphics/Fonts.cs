@@ -142,7 +142,8 @@ namespace OpenBve {
 				int value = char.ConvertToUtf32(text, offset);
 				int hi = value >> 8;
 				int lo = value & 0xFF;
-				if (this.Tables[hi] == null) {
+				if (this.Tables[hi] == null || this.Tables[hi].Texture == null)
+				{
 					this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
 				}
 				texture = this.Tables[hi].Texture;
@@ -169,7 +170,7 @@ namespace OpenBve {
 		/// <summary>Represents a very large sans serif font.</summary>
 		internal static readonly OpenGlFont VeryLargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 27.0f);
 
-        internal static readonly OpenGlFont EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
+		internal static readonly OpenGlFont EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
 
 		
 		// --- functions ---
@@ -181,11 +182,11 @@ namespace OpenBve {
 			if (value == 0) {
 				throw new ArgumentException();
 			}
-		    value -= 1;
-		    for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
-		        value |= value >> i;
-		    }
-		    return value + 1;
+			value -= 1;
+			for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
+				value |= value >> i;
+			}
+			return value + 1;
 		}
 		
 	}
