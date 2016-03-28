@@ -30,6 +30,10 @@ namespace OpenBve
 
 			internal static void LoadInformation()
 			{
+				if (Loading.Cancel)
+				{
+					return;
+				}
 				RouteMap		= Illustrations.CreateRouteMap(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
 				RouteMinX			= Illustrations.LastRouteMinX;
 				RouteMaxX			= Illustrations.LastRouteMaxX;
