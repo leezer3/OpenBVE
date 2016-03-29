@@ -255,7 +255,6 @@
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />
     <Compile Include="System\Functions\FileSystem.cs" />
-    <Compile Include="System\ManagedContent.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\Joysticks.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
@@ -305,7 +304,7 @@
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
-<PreBuildEvent Condition=" '$(OS)' == 'Unix' ">$(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">$(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C

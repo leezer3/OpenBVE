@@ -33,9 +33,6 @@
 			this.labelMode = new System.Windows.Forms.Label();
 			this.groupboxTrainSelection = new System.Windows.Forms.GroupBox();
 			this.tabcontrolTrainSelection = new System.Windows.Forms.TabControl();
-			this.tabpageTrainManaged = new System.Windows.Forms.TabPage();
-			this.treeviewTrainAddOns = new System.Windows.Forms.TreeView();
-			this.textboxTrainFilter = new System.Windows.Forms.TextBox();
 			this.tabpageTrainBrowse = new System.Windows.Forms.TabPage();
 			this.listviewTrainFolders = new System.Windows.Forms.ListView();
 			this.textboxTrainFolder = new System.Windows.Forms.TextBox();
@@ -62,9 +59,6 @@
 			this.labelTrain = new System.Windows.Forms.Label();
 			this.groupboxRouteSelection = new System.Windows.Forms.GroupBox();
 			this.tabcontrolRouteSelection = new System.Windows.Forms.TabControl();
-			this.tabpageRouteManaged = new System.Windows.Forms.TabPage();
-			this.treeviewRouteAddOns = new System.Windows.Forms.TreeView();
-			this.textboxRouteFilter = new System.Windows.Forms.TextBox();
 			this.tabpageRouteBrowse = new System.Windows.Forms.TabPage();
 			this.listviewRouteFiles = new System.Windows.Forms.ListView();
 			this.textboxRouteFolder = new System.Windows.Forms.TextBox();
@@ -281,7 +275,6 @@
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
 			this.tabcontrolTrainSelection.SuspendLayout();
-			this.tabpageTrainManaged.SuspendLayout();
 			this.tabpageTrainBrowse.SuspendLayout();
 			this.tabpageTrainRecently.SuspendLayout();
 			this.tabpageTrainDefault.SuspendLayout();
@@ -293,7 +286,6 @@
 			this.panelTrainEncoding.SuspendLayout();
 			this.groupboxRouteSelection.SuspendLayout();
 			this.tabcontrolRouteSelection.SuspendLayout();
-			this.tabpageRouteManaged.SuspendLayout();
 			this.tabpageRouteBrowse.SuspendLayout();
 			this.tabpageRouteRecently.SuspendLayout();
 			this.groupboxRouteDetails.SuspendLayout();
@@ -456,7 +448,6 @@
 			this.tabcontrolTrainSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainManaged);
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainBrowse);
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainRecently);
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainDefault);
@@ -465,39 +456,6 @@
 			this.tabcontrolTrainSelection.SelectedIndex = 0;
 			this.tabcontrolTrainSelection.Size = new System.Drawing.Size(300, 176);
 			this.tabcontrolTrainSelection.TabIndex = 0;
-			// 
-			// tabpageTrainManaged
-			// 
-			this.tabpageTrainManaged.Controls.Add(this.treeviewTrainAddOns);
-			this.tabpageTrainManaged.Controls.Add(this.textboxTrainFilter);
-			this.tabpageTrainManaged.Location = new System.Drawing.Point(4, 22);
-			this.tabpageTrainManaged.Name = "tabpageTrainManaged";
-			this.tabpageTrainManaged.Size = new System.Drawing.Size(292, 150);
-			this.tabpageTrainManaged.TabIndex = 3;
-			this.tabpageTrainManaged.Text = "Add-ons";
-			this.tabpageTrainManaged.UseVisualStyleBackColor = true;
-			// 
-			// treeviewTrainAddOns
-			// 
-			this.treeviewTrainAddOns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.treeviewTrainAddOns.HideSelection = false;
-			this.treeviewTrainAddOns.Location = new System.Drawing.Point(7, 31);
-			this.treeviewTrainAddOns.Name = "treeviewTrainAddOns";
-			this.treeviewTrainAddOns.Size = new System.Drawing.Size(278, 112);
-			this.treeviewTrainAddOns.TabIndex = 10;
-			this.treeviewTrainAddOns.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeviewTrainAddOnsAfterSelect);
-			// 
-			// textboxTrainFilter
-			// 
-			this.textboxTrainFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxTrainFilter.Location = new System.Drawing.Point(7, 7);
-			this.textboxTrainFilter.Name = "textboxTrainFilter";
-			this.textboxTrainFilter.Size = new System.Drawing.Size(276, 20);
-			this.textboxTrainFilter.TabIndex = 9;
-			this.textboxTrainFilter.TextChanged += new System.EventHandler(this.TextboxTrainFilterTextChanged);
 			// 
 			// tabpageTrainBrowse
 			// 
@@ -835,7 +793,6 @@
 			this.tabcontrolRouteSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tabcontrolRouteSelection.Controls.Add(this.tabpageRouteManaged);
 			this.tabcontrolRouteSelection.Controls.Add(this.tabpageRouteBrowse);
 			this.tabcontrolRouteSelection.Controls.Add(this.tabpageRouteRecently);
 			this.tabcontrolRouteSelection.Location = new System.Drawing.Point(8, 16);
@@ -843,40 +800,6 @@
 			this.tabcontrolRouteSelection.SelectedIndex = 0;
 			this.tabcontrolRouteSelection.Size = new System.Drawing.Size(300, 198);
 			this.tabcontrolRouteSelection.TabIndex = 0;
-			// 
-			// tabpageRouteManaged
-			// 
-			this.tabpageRouteManaged.Controls.Add(this.treeviewRouteAddOns);
-			this.tabpageRouteManaged.Controls.Add(this.textboxRouteFilter);
-			this.tabpageRouteManaged.Location = new System.Drawing.Point(4, 22);
-			this.tabpageRouteManaged.Name = "tabpageRouteManaged";
-			this.tabpageRouteManaged.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteManaged.Size = new System.Drawing.Size(292, 172);
-			this.tabpageRouteManaged.TabIndex = 2;
-			this.tabpageRouteManaged.Text = "Add-ons";
-			this.tabpageRouteManaged.UseVisualStyleBackColor = true;
-			// 
-			// treeviewRouteAddOns
-			// 
-			this.treeviewRouteAddOns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.treeviewRouteAddOns.HideSelection = false;
-			this.treeviewRouteAddOns.Location = new System.Drawing.Point(8, 32);
-			this.treeviewRouteAddOns.Name = "treeviewRouteAddOns";
-			this.treeviewRouteAddOns.Size = new System.Drawing.Size(278, 134);
-			this.treeviewRouteAddOns.TabIndex = 8;
-			this.treeviewRouteAddOns.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeviewRouteAddOnsAfterSelect);
-			// 
-			// textboxRouteFilter
-			// 
-			this.textboxRouteFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxRouteFilter.Location = new System.Drawing.Point(8, 8);
-			this.textboxRouteFilter.Name = "textboxRouteFilter";
-			this.textboxRouteFilter.Size = new System.Drawing.Size(276, 20);
-			this.textboxRouteFilter.TabIndex = 2;
-			this.textboxRouteFilter.TextChanged += new System.EventHandler(this.TextboxRouteFilterTextChanged);
 			// 
 			// tabpageRouteBrowse
 			// 
@@ -3462,10 +3385,10 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
+			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelPackages);
-			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
 			this.Name = "formMain";
@@ -3480,8 +3403,6 @@
 			this.panelStart.PerformLayout();
 			this.groupboxTrainSelection.ResumeLayout(false);
 			this.tabcontrolTrainSelection.ResumeLayout(false);
-			this.tabpageTrainManaged.ResumeLayout(false);
-			this.tabpageTrainManaged.PerformLayout();
 			this.tabpageTrainBrowse.ResumeLayout(false);
 			this.tabpageTrainBrowse.PerformLayout();
 			this.tabpageTrainRecently.ResumeLayout(false);
@@ -3497,8 +3418,6 @@
 			this.panelTrainEncoding.ResumeLayout(false);
 			this.groupboxRouteSelection.ResumeLayout(false);
 			this.tabcontrolRouteSelection.ResumeLayout(false);
-			this.tabpageRouteManaged.ResumeLayout(false);
-			this.tabpageRouteManaged.PerformLayout();
 			this.tabpageRouteBrowse.ResumeLayout(false);
 			this.tabpageRouteBrowse.PerformLayout();
 			this.tabpageRouteRecently.ResumeLayout(false);
@@ -3578,17 +3497,11 @@
 
         }
         private System.Windows.Forms.Label labelAntiAliasing;
-        private System.Windows.Forms.NumericUpDown updownAntiAliasing;
-        private System.Windows.Forms.TextBox textboxTrainFilter;
-        private System.Windows.Forms.TreeView treeviewTrainAddOns;
-        private System.Windows.Forms.TreeView treeviewRouteAddOns;
-        private System.Windows.Forms.ListView listviewRouteFiles;
-        private System.Windows.Forms.TextBox textboxRouteFilter;
+		private System.Windows.Forms.NumericUpDown updownAntiAliasing;
+		private System.Windows.Forms.ListView listviewRouteFiles;
         private System.Windows.Forms.CheckBox checkboxTrainDefault;
         private System.Windows.Forms.Timer timerFilter;
-        private System.Windows.Forms.Timer timerInstall;
-        private System.Windows.Forms.TabPage tabpageRouteManaged;
-        private System.Windows.Forms.TabPage tabpageTrainManaged;
+		private System.Windows.Forms.Timer timerInstall;
         private System.Windows.Forms.Label labelTransparencyPerformance;
         private System.Windows.Forms.TrackBar trackbarTransparency;
         private System.Windows.Forms.Panel panelOptionsLeft;

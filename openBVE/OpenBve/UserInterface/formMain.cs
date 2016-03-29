@@ -118,7 +118,6 @@ namespace OpenBve {
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
-			Image LibraryIcon = LoadImage(MenuFolder, "icon_library.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
@@ -140,20 +139,6 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
-			treeviewRouteAddOns.ImageList = new ImageList();
-			if (FolderIcon != null) treeviewRouteAddOns.ImageList.Images.Add("folder", FolderIcon);
-			if (RouteIcon != null) treeviewRouteAddOns.ImageList.Images.Add("route", RouteIcon);
-			foreach (string flag in flags)
-			{
-				try
-				{
-					treeviewRouteAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag),
-						Image.FromFile(flag));
-				}
-				catch
-				{
-				}
-			}
 			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
@@ -171,14 +156,6 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
-			treeviewTrainAddOns.ImageList = new ImageList();
-			if (FolderIcon != null) treeviewTrainAddOns.ImageList.Images.Add("folder", FolderIcon);
-			if (RouteIcon != null) treeviewTrainAddOns.ImageList.Images.Add("train", TrainIcon);
-			foreach (string flag in flags) {
-				try {
-					treeviewTrainAddOns.ImageList.Images.Add(System.IO.Path.GetFileNameWithoutExtension(flag), Image.FromFile(flag));
-				} catch { }
-			}
 			listviewTrainFolders.Columns.Clear();
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
@@ -501,7 +478,6 @@ namespace OpenBve {
 			labelStartTitle.Text = Interface.GetInterfaceString("start_title");
 			labelRoute.Text = " " + Interface.GetInterfaceString("start_route");
 			groupboxRouteSelection.Text = Interface.GetInterfaceString("start_route_selection");
-			tabpageRouteManaged.Text = Interface.GetInterfaceString("start_route_addons");
 			tabpageRouteBrowse.Text = Interface.GetInterfaceString("start_route_browse");
 			tabpageRouteRecently.Text = Interface.GetInterfaceString("start_route_recently");
 			groupboxRouteDetails.Text = Interface.GetInterfaceString("start_route_details");
@@ -514,7 +490,6 @@ namespace OpenBve {
 			labelRouteEncodingPreview.Text = Interface.GetInterfaceString("start_route_settings_encoding_preview");
 			labelTrain.Text = " " + Interface.GetInterfaceString("start_train");
 			groupboxTrainSelection.Text = Interface.GetInterfaceString("start_train_selection");
-			tabpageTrainManaged.Text = Interface.GetInterfaceString("start_train_addons");
 			tabpageTrainBrowse.Text = Interface.GetInterfaceString("start_train_browse");
 			tabpageTrainRecently.Text = Interface.GetInterfaceString("start_train_recently");
 			tabpageTrainDefault.Text = Interface.GetInterfaceString("start_train_default");
@@ -847,15 +822,6 @@ namespace OpenBve {
 				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height) {
 					this.WindowState = FormWindowState.Maximized;
 				}
-			}
-			// add-ons
-			TextboxTrainFilterTextChanged(null, null);
-			if (treeviewTrainAddOns.Nodes.Count == 0) {
-				tabcontrolTrainSelection.TabPages.RemoveAt(0);
-			}
-			TextboxRouteFilterTextChanged(null, null);
-			if (treeviewRouteAddOns.Nodes.Count == 0) {
-				tabcontrolRouteSelection.TabPages.RemoveAt(0);
 			}
 			radiobuttonStart.Focus();
 			// command line arguments
