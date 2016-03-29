@@ -224,11 +224,11 @@ namespace OpenBve {
 							case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
 							case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
 							case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
-							default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unkown"); break;
+							default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unknown"); break;
 					}
 					if (Game.CurrentScore.Maximum == 0) {
 						labelRatingColor.BackColor = Color.Gray;
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unkown");
+						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
 					} else {
 						Color[] Colors = new Color[] { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
 						if (index >= 0 & index < Colors.Length) {
@@ -534,7 +534,7 @@ namespace OpenBve {
 					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
 					if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
 					if (Game.CurrentScore.Maximum == 0) {
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unkown");
+						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
 					} else {
 						labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
 					}
