@@ -22,8 +22,6 @@ namespace OpenBve
         //Set LoadTextureImmediatelyMode to NotYet for the first frame
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 
-        internal static bool FirstFrame;
-
         // the static opaque lists
         /// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
         private static ObjectGroup[] StaticOpaque = new ObjectGroup[] { };

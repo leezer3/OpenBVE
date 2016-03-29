@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
-using System.Threading;
-using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -1362,9 +1359,6 @@ namespace OpenBve
 												Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
 												break;
 										}
-										break;
-
-
 										break;
 									case Interface.Command.DebugWireframe:
 										// option: wireframe

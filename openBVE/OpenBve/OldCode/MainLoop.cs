@@ -22,7 +22,6 @@ namespace OpenBve {
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
-		internal static bool OpenTKWindow;
 		internal static formMain.MainDialogResult currentResult;
 //		internal static formRouteInformation RouteInformationForm;
 //		internal static Thread RouteInfoThread;
@@ -40,91 +39,101 @@ namespace OpenBve {
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Sounds.Initialize();
-			currentResult = result;   
-			if (OpenTKWindow == false)
+			currentResult = result;
+			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,
+				Interface.CurrentOptions.AntiAliasingLevel);
+
+			/*
+			 * TODO: This should be able to be moved back into the screen initialisation file
+			 */
+			if (Interface.CurrentOptions.FullscreenMode)
 			{
-				GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
-
-				 /*
-				  * TODO: This should be able to be moved back into the screen initialisation file
-				  */
-				if (Interface.CurrentOptions.FullscreenMode)
+				IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+				bool resolutionFound = false;
+				for (int i = 0; i < resolutions.Count; i++)
 				{
-					IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
-					bool resolutionFound = false;
-					for (int i = 0; i < resolutions.Count; i++)
+
+					//Test each resolution
+					if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
+					    resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
+					    resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
 					{
-						
-						//Test each resolution
-						if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth && resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight && resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
+						try
 						{
-							try
+							OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
+							Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height, currentGraphicsMode,
+								GameWindowFlags.Default)
 							{
-								OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
-								Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height,currentGraphicsMode, GameWindowFlags.Default)
-								{
-									Visible = true,
-									WindowState = WindowState.Fullscreen
-								};
-								resolutionFound = true;
-							}
-							catch
-							{
-								//Our resolution was in the list of available resolutions presented, but the graphics card driver failed to switch
-								MessageBox.Show("Failed to change to the selected full-screen resolution:" + Environment.NewLine +
-									Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
-									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-								Program.RestartArguments = " ";
-								return;
-							}
-							break;
+								Visible = true,
+								WindowState = WindowState.Fullscreen
+							};
+							resolutionFound = true;
 						}
-					}
-					if (resolutionFound == false)
-					{
-						//Our resolution was not found at all
-						MessageBox.Show("The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine + 
-							Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine + 
-							"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-						Program.RestartArguments = " ";
-						return;
-					}
-				}
-				else
-				{
-
-					try
-					{
-						Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+						catch
 						{
-							Visible = true
-						};
-					}
-					catch
-					{
-						//Windowed mode failed to launch
-						MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
-							Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " + Environment.NewLine +
-							"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-						Program.RestartArguments = " ";
-						return;
+							//Our resolution was in the list of available resolutions presented, but the graphics card driver failed to switch
+							MessageBox.Show("Failed to change to the selected full-screen resolution:" + Environment.NewLine +
+							                Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight +
+							                " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
+							                "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
+								MessageBoxIcon.Hand);
+							Program.RestartArguments = " ";
+							return;
+						}
+						break;
 					}
 				}
-				if (Program.currentGameWindow == null)
+				if (resolutionFound == false)
 				{
-					//We should never really get an unspecified error here, but it's good manners to handle all cases
-					MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					//Our resolution was not found at all
+					MessageBox.Show(
+						"The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine +
+						Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " +
+						Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
+						"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
 					return;
 				}
-				
-				Program.currentGameWindow.TargetUpdateFrequency = 0;
-				Program.currentGameWindow.TargetRenderFrequency = 0;
-				Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
-				Program.currentGameWindow.Closing += OpenTKQuit;
-				Program.currentGameWindow.Run();
 			}
+			else
+			{
+
+				try
+				{
+					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+						Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+					{
+						Visible = true
+					};
+				}
+				catch
+				{
+					//Windowed mode failed to launch
+					MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
+					                Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " +
+					                Environment.NewLine +
+					                "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
+						MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					return;
+				}
+			}
+			if (Program.currentGameWindow == null)
+			{
+				//We should never really get an unspecified error here, but it's good manners to handle all cases
+				MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.",
+					Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				return;
+			}
+
+			Program.currentGameWindow.TargetUpdateFrequency = 0;
+			Program.currentGameWindow.TargetRenderFrequency = 0;
+			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			Program.currentGameWindow.Closing += OpenTKQuit;
+			Program.currentGameWindow.Run();
 		}
+
 		// --------------------------------
 
 		// repeats

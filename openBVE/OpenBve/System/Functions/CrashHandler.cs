@@ -107,10 +107,19 @@ namespace OpenBve
                     outputFile.WriteLine("Current screen resolution is: Windowed " + Interface.CurrentOptions.WindowWidth + "px x " + Interface.CurrentOptions.WindowHeight + "px ");
                 }
                 //Route and train
-                outputFile.WriteLine("Current routefile is: "  + Game.RouteInformation.RouteFile);
-                outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
-                outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
-                //Errors and Warnings
+	            if (Game.RouteInformation.RouteFile != null)
+	            {
+		            outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
+	            }
+	            if (Game.RouteInformation.TrainFolder != null)
+	            {
+		            outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
+	            }
+	            if (TrainManager.PlayerTrain != null)
+	            {
+		            outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
+	            }
+	            //Errors and Warnings
                 if (Game.RouteInformation.FilesNotFound != null)
                 {
                     outputFile.WriteLine(Game.RouteInformation.FilesNotFound);
