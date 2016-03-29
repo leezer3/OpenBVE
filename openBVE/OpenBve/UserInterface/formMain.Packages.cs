@@ -40,37 +40,32 @@ namespace OpenBve
 		{
 			if (creatingPackage)
 			{
-				
-				//TODO: Requires interface strings adding
-				if (textBoxPackageName.Text == "No package selected.")
+				if (textBoxPackageName.Text == Interface.GetInterfaceString("packages_selection_none"))
 				{
-					MessageBox.Show("Please enter a name.");
+					MessageBox.Show(Interface.GetInterfaceString("packages_creation_name"));
 					return;
 				}
-				if (textBoxPackageAuthor.Text == "No package selected.")
+				if (textBoxPackageAuthor.Text == Interface.GetInterfaceString("packages_selection_none"))
 				{
-					MessageBox.Show("Please enter an author.");
+					MessageBox.Show(Interface.GetInterfaceString("packages_creation_author"));
 					return;
 				}
 				//LINK: Doesn't need checking
-				if (textBoxPackageDescription.Text == "No package selected.")
+				if (textBoxPackageDescription.Text == Interface.GetInterfaceString("packages_selection_none"))
 				{
-					MessageBox.Show("Please enter a description.");
+					MessageBox.Show(Interface.GetInterfaceString("packages_creation_description"));
 					return;
 				}
 				if (!Version.TryParse(textBoxPackageVersion.Text, out currentPackage.PackageVersion))
 				{
-					MessageBox.Show("Please enter a valid version number in the following format: \r\n 1.0.0");
+					MessageBox.Show(Interface.GetInterfaceString("packages_creation_version"));
 				}
 				//Only set properties after making the checks
 				currentPackage.Name = textBoxPackageName.Text;
 				currentPackage.Author = textBoxPackageAuthor.Text;
 				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
 
-				
-				panelDependancyError.Hide();
-				panelSuccess.Hide();
-				panelPackageInstall.Hide();
+				HidePanels();
 				panelPackageDependsAdd.Show();
 				PopulateDependancyList(InstalledRoutes, dataGridViewRoutes);
 				PopulateDependancyList(InstalledTrains, dataGridViewTrains);
@@ -100,7 +95,7 @@ namespace OpenBve
 						}
 						else
 						{
-							linkLabelPackageWebsite.Text = "No website provided.";
+							linkLabelPackageWebsite.Text = Interface.GetInterfaceString("packages_selection_none_website");
 						}
 						if (currentPackage.PackageImage != null)
 						{
@@ -110,12 +105,12 @@ namespace OpenBve
 						{
 							TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
 						}
-						buttonSelectPackage.Text = "Install";
+						buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install");
 					}
 					else
 					{
 						//ReadPackage returns null if the file is not a package.....
-						MessageBox.Show("This file does not appear to be a valid openBVE package.");
+						MessageBox.Show(Interface.GetInterfaceString("packages_install_invalid"));
 					}
 				}
 
@@ -127,7 +122,7 @@ namespace OpenBve
 				{
 					//We are missing a dependancy
 					PopulateDependancyList(Dependancies, dataGridViewDependancies);
-					panelPackageInstall.Hide();
+					HidePanels();
 					panelDependancyError.Show();
 					return;
 				}
@@ -150,6 +145,7 @@ namespace OpenBve
 				if (Info == VersionInformation.NotFound)
 				{
 					panelPackageInstall.Hide();
+					panelSuccess.Show();
 					Extract();
 				}
 				else
@@ -157,15 +153,15 @@ namespace OpenBve
 					switch (Info)
 					{
 						case VersionInformation.NewerVersion:
-							labelVersionError.Text = "The selected package is already installed, and is a newer version.";
+							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_new");
 							textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
 							break;
 						case VersionInformation.SameVersion:
-							labelVersionError.Text = "The selected package is already installed, and is an identical version.";
+							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_same");
 							textBoxCurrentVersion.Text = currentPackage.PackageVersion.ToString();
 							break;
 						case VersionInformation.OlderVersion:
-							labelVersionError.Text = "The selected package is already installed, and is an older version.";
+							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_old");
 							textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
 							break;
 					}
@@ -178,9 +174,7 @@ namespace OpenBve
 							PopulateDependancyList(brokenDependancies, dataGridViewBrokenDependancies);
 						}
 					}
-					panelDependancyError.Hide();
-					panelSuccess.Hide();
-					panelPackageInstall.Hide();
+					HidePanels();
 					panelVersionError.Show();
 				}
 			}
@@ -248,12 +242,11 @@ namespace OpenBve
 					formMain.InstalledTrains.Add(currentPackage);
 					break;
 			}
-			labelInstallSuccess1.Text = "Package installation was successful.";
-			labelInstallSuccess2.Text = "Installation Successful";
-			labelListFilesInstalled.Text = "A list of files installed is shown below:";
+			labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
+			labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
+			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_files");
 			textBoxFilesInstalled.Text = PackageFiles;
-			panelDependancyError.Hide();
-			panelVersionError.Hide();
+			HidePanels();
 			panelSuccess.Show();
 		}
 
@@ -300,7 +293,7 @@ namespace OpenBve
 			}
 			catch (Exception)
 			{
-				MessageBox.Show("An error occured whilst saving the package database. \r\n Please check for write permissions.");
+				MessageBox.Show(Interface.GetInterfaceString("packages_database_save_error"));
 			}
 		}
 
@@ -513,11 +506,8 @@ namespace OpenBve
 			{
 				Packages.Remove(packageToUninstall);
 				textBoxUninstallResult.Text = uninstallResults;
-				panelPackageList.Hide();
-				panelPackageInstall.Hide();
-				panelDependancyError.Hide();
-				panelVersionError.Hide();
-				panelSuccess.Hide();
+				HidePanels();
+				panelUninstallResult.Show();
 			}
 			else
 			{
@@ -579,16 +569,16 @@ namespace OpenBve
 
 		private void buttonUninstallFinish_Click(object sender, EventArgs e)
 		{
-			panelUninstallResult.Hide();
+			HidePanels();
 			panelPackageList.Show();
 		}
 
 
 		private void buttonInstallPackage_Click(object sender, EventArgs e)
 		{
-			labelInstallText.Text = "Install a Package";
+			labelInstallText.Text = Interface.GetInterfaceString("packages_install_header");
 			TryLoadImage(pictureBoxPackageImage, "route_error.png");
-			panelPackageList.Hide();
+			HidePanels();
 			panelPackageInstall.Show();
 		}
 
@@ -640,16 +630,16 @@ namespace OpenBve
 		{
 			string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
 			Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, files, "C:\\test\\");
-			labelInstallSuccess1.Text = "Package creation was successful.";
-			labelInstallSuccess2.Text = "Package Creation Successful";
-			labelListFilesInstalled.Text = "The following files were added to your package:";
+			labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
+			labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
+			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
 			string text = "";
 			for (int i = 0; i < files.Length; i++)
 			{
 				text += files[i] + "\r\n";
 			}
 			textBoxFilesInstalled.Text = text;
-			panelCreatePackage.Hide();
+			HidePanels();
 			panelSuccess.Show();
 		}
 
@@ -668,7 +658,7 @@ namespace OpenBve
 					TryLoadImage(pictureBoxPackageImage, "logo.png");
 					break;
 			}
-			labelInstallText.Text = "Enter Package Details";
+			labelInstallText.Text = Interface.GetInterfaceString("packages_creation_header");
 			textBoxPackageName.Text = currentPackage.Name;
 			textBoxPackageVersion.Text = currentPackage.Version;
 			textBoxPackageAuthor.Text = currentPackage.Author;
@@ -676,24 +666,13 @@ namespace OpenBve
 			{
 				textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
 			}
-			panelCreatePackage.Hide();
-			panelPackageList.Hide();
-			panelVersionError.Hide();
-			panelDependancyError.Hide();
-			panelUninstallResult.Hide();
-			panelSuccess.Hide();
+			HidePanels();
 			panelPackageInstall.Show();
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			panelPackageInstall.Hide();
-			panelPackageList.Hide();
-			panelVersionError.Hide();
-			panelDependancyError.Hide();
-			panelUninstallResult.Hide();
-			panelSuccess.Hide();
-			panelPackageDependsAdd.Hide();
+			HidePanels();
 			panelCreatePackage.Show();
 		}
 
@@ -810,10 +789,8 @@ namespace OpenBve
 			}
 		}
 
-		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
-		private void ResetInstallerPanels()
+		private void HidePanels()
 		{
-			//Hide all other panels
 			panelPackageInstall.Hide();
 			panelDependancyError.Hide();
 			panelVersionError.Hide();
@@ -822,6 +799,13 @@ namespace OpenBve
 			panelPackageDependsAdd.Hide();
 			panelCreatePackage.Hide();
 			panelReplacePackage.Hide();
+			panelPackageList.Hide();
+		}
+
+		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
+		private void ResetInstallerPanels()
+		{
+			HidePanels();
 			panelPackageList.Show();
 			creatingPackage = false;
 			//Reset radio buttons in the installer
@@ -846,11 +830,11 @@ namespace OpenBve
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
 			//Reset text
-			textBoxPackageAuthor.Text = "No package selected.";
-			textBoxPackageName.Text = "No package selected.";
-			textBoxPackageDescription.Text = "No package selected.";
-			textBoxPackageVersion.Text = "No package selected.";
-			buttonSelectPackage.Text = "Select Package......";
+			textBoxPackageAuthor.Text = Interface.GetInterfaceString("packages_selection_none");
+			textBoxPackageName.Text = Interface.GetInterfaceString("packages_selection_none");
+			textBoxPackageDescription.Text = Interface.GetInterfaceString("packages_selection_none");
+			textBoxPackageVersion.Text = Interface.GetInterfaceString("packages_selection_none");
+			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install_select");
 		}
 	}
 }
