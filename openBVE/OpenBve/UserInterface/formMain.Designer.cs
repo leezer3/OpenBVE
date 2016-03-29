@@ -254,6 +254,9 @@
 			this.timerInstall = new System.Windows.Forms.Timer(this.components);
 			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
+			this.panelPleaseWait = new System.Windows.Forms.Panel();
+			this.label17 = new System.Windows.Forms.Label();
+			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.panelPackageList = new System.Windows.Forms.Panel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
@@ -441,6 +444,8 @@
 			this.panelKeyboard.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPleaseWait.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
 			this.panelPackageList.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
@@ -3295,6 +3300,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
+			this.panelPackages.Controls.Add(this.panelPleaseWait);
 			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
@@ -3311,6 +3317,43 @@
 			this.panelPackages.Name = "panelPackages";
 			this.panelPackages.Size = new System.Drawing.Size(643, 586);
 			this.panelPackages.TabIndex = 14;
+			// 
+			// panelPleaseWait
+			// 
+			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPleaseWait.Controls.Add(this.label17);
+			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
+			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
+			this.panelPleaseWait.Name = "panelPleaseWait";
+			this.panelPleaseWait.Size = new System.Drawing.Size(641, 559);
+			this.panelPleaseWait.TabIndex = 28;
+			// 
+			// label17
+			// 
+			this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label17.AutoSize = true;
+			this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label17.Location = new System.Drawing.Point(177, 390);
+			this.label17.Name = "label17";
+			this.label17.Size = new System.Drawing.Size(266, 24);
+			this.label17.TabIndex = 5;
+			this.label17.Text = "Processing, please wait......";
+			// 
+			// pictureBoxProcessing
+			// 
+			this.pictureBoxProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
+			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
+			this.pictureBoxProcessing.Size = new System.Drawing.Size(371, 332);
+			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBoxProcessing.TabIndex = 4;
+			this.pictureBoxProcessing.TabStop = false;
 			// 
 			// panelPackageList
 			// 
@@ -4752,6 +4795,9 @@
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPleaseWait.ResumeLayout(false);
+			this.panelPleaseWait.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
 			this.panelPackageList.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
@@ -5137,6 +5183,9 @@
 		private System.Windows.Forms.TextBox textBoxGUID;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Panel panelPleaseWait;
+		private System.Windows.Forms.Label label17;
+		private System.Windows.Forms.PictureBox pictureBoxProcessing;
         
     }
 }

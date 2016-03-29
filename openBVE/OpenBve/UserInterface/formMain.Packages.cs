@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -25,6 +26,7 @@ namespace OpenBve
 		internal static bool creatingPackage = false;
 		internal PackageType newPackageType;
 		internal string ImageFile;
+		internal BackgroundWorker workerThread = new BackgroundWorker();
 
 		internal void RefreshPackages()
 		{
@@ -628,23 +630,38 @@ namespace OpenBve
 
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
-			string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
-			Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, files, "C:\\test\\");
-			labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
-			labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
-			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
-			string text = "";
-			for (int i = 0; i < files.Length; i++)
-			{
-				text += files[i] + "\r\n";
-			}
-			textBoxFilesInstalled.Text = text;
 			HidePanels();
-			panelSuccess.Show();
+			panelPleaseWait.Show();
+			workerThread.DoWork += delegate
+			{
+				string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
+				Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, files, "C:\\test\\");
+				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
+				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
+				string text = "";
+				for (int i = 0; i < files.Length; i++)
+				{
+					text += files[i] + "\r\n";
+				}
+				textBoxFilesInstalled.Text = text;
+				System.Threading.Thread.Sleep(10000);
+			};
+
+			workerThread.RunWorkerCompleted += delegate {
+				label1.Text = "Finished!";
+				panelPleaseWait.Hide();
+				panelSuccess.Show();
+			};
+
+			 workerThread.RunWorkerAsync();
+			
+			
 		}
 
 		private void button3_Click(object sender, EventArgs e)
 		{
+			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_creation_proceed");
 			creatingPackage = true;
 			switch (newPackageType)
 			{
@@ -800,7 +817,9 @@ namespace OpenBve
 			panelCreatePackage.Hide();
 			panelReplacePackage.Hide();
 			panelPackageList.Hide();
+			panelPleaseWait.Hide();
 		}
+
 
 		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
 		private void ResetInstallerPanels()
@@ -816,6 +835,7 @@ namespace OpenBve
 			radioButtonQ2Other.Checked = false;
 			//Reset picturebox
 			TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
+			TryLoadImage(pictureBoxProcessing, "logo.png");
 			//Reset enabled boxes & panels
 			textBoxGUID.Text = null;
 			textBoxGUID.Enabled = false;
