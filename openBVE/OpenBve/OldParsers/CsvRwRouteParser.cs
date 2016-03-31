@@ -1819,7 +1819,7 @@ namespace OpenBve {
 							            break;
 							        }
                                     Game.UnitOfSpeed = splitArgument[0];
-							        if (!double.TryParse(splitArgument[1], out Game.SpeedConversionFactor))
+									if (!double.TryParse(splitArgument[1], NumberStyles.Float, Culture, out Game.SpeedConversionFactor))
 							        {
 							            Interface.AddMessage(Interface.MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
 							            Game.UnitOfSpeed = "km/h";

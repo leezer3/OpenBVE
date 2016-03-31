@@ -466,6 +466,12 @@ namespace OpenBve {
 					comboboxRouteEncoding.Tag = null;
 					Result.RouteEncoding = System.Text.Encoding.UTF8;
 					switch (Interface.GetEncodingFromFile(Result.RouteFile)) {
+						case Interface.Encoding.Utf7:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "(UTF-7)";
+							Result.RouteEncoding = System.Text.Encoding.UTF7;
+							break;
 						case Interface.Encoding.Utf8:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;

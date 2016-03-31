@@ -2208,16 +2208,18 @@ namespace OpenBve {
 		internal enum Encoding {
 			/// <summary>The character encoding is unknown</summary>
 			Unknown = 0,
+			/// <summary>UTF-7</summary>
+			Utf7 = 1,
 			/// <summary>UTF-8</summary>
-			Utf8 = 1,
+			Utf8 = 2,
 			/// <summary>UTF-16LE</summary>
-			Utf16Le = 2,
+			Utf16Le = 3,
 			/// <summary>UTF-16BE</summary>
-			Utf16Be = 3,
+			Utf16Be = 4,
 			/// <summary>UTF-32LE</summary>
-			Utf32Le = 4,
+			Utf32Le = 5,
 			/// <summary>UTF-32BE</summary>
-			Utf32Be = 5,
+			Utf32Be = 6,
 		}
 		/// <summary>Gets the character endcoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
@@ -2227,6 +2229,7 @@ namespace OpenBve {
 				byte[] Data = System.IO.File.ReadAllBytes(File);
 				if (Data.Length >= 3) {
 					if (Data[0] == 0xEF & Data[1] == 0xBB & Data[2] == 0xBF) return Encoding.Utf8;
+					if (Data[0] == 0x2b & Data[1] == 0x2f & Data[2] == 0x76) return Encoding.Utf7;
 				}
 				if (Data.Length >= 2) {
 					if (Data[0] == 0xFE & Data[1] == 0xFF) return Encoding.Utf16Be;
