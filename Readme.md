@@ -36,6 +36,10 @@ Project Source Code on GitHub: https://github.com/leezer3/OpenBVE
 - [BVE-Terminus](http://www.bve-terminus.org/forum)
 - [UKTrainsim](http://forums.uktrainsim.com/viewforum.php?f=66)
 
+**Official Project Forum:**
+
+http://bveworldwide.unlimitedboard.com/f14-the-sim-in-time-general-discussion
+
 ### License
 
 Michelle intended for this program to be placed in the public domain. This means that you can make any modifications to it you like and share your modifications with others.
