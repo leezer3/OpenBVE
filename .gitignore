@@ -1,7 +1,20 @@
 # git ignore file
+
+# User specific settings
 *.userprefs
 *.DotSettings.user
 *.suo
+.vs/
+
+# Versioning data
 AssemblyInfo.cs
-bin/
-obj/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Misc. Visual Studio files
+*.sdf
+*.opendb
