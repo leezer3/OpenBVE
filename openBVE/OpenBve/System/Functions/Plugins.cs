@@ -84,7 +84,16 @@ namespace OpenBve {
 					try {
 						#endif
 						Plugin plugin = new Plugin(file);
-						Assembly assembly = Assembly.LoadFile(file);
+						Assembly assembly;
+						try
+						{
+							assembly = Assembly.LoadFile(file);
+						}
+						catch
+						{
+							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
+							continue;
+						}
 						Type[] types = assembly.GetTypes();
 						bool iruntime = false;
 						foreach (Type type in types) {
