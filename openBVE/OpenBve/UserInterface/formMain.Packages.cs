@@ -4,9 +4,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenBveApi.Packages;
+
 
 namespace OpenBve
 {
@@ -37,6 +40,7 @@ namespace OpenBve
 
 		private Package currentPackage;
 		private Package oldPackage;
+		private List<string> filesToPackage;
 
 		private void buttonInstall_Click(object sender, EventArgs e)
 		{
@@ -147,7 +151,6 @@ namespace OpenBve
 				if (Info == VersionInformation.NotFound)
 				{
 					panelPackageInstall.Hide();
-					panelSuccess.Show();
 					Extract();
 				}
 				else
@@ -199,56 +202,63 @@ namespace OpenBve
 
 		private void Extract(Package packageToReplace = null)
 		{
-			string ExtractionDirectory;
-			switch (currentPackage.PackageType)
+			panelPleaseWait.Show();
+			workerThread.DoWork += delegate
 			{
-				case PackageType.Route:
-					ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
-					break;
-				case PackageType.Train:
-					ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
-					break;
-				default:
-					//TODO: Not sure this is the right place to put this, but at the moment leave it there
-					ExtractionDirectory = Program.FileSystem.DataFolder;
-					break;
-			}
-			string PackageFiles = "";
-			Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, PackageDatabase, ref PackageFiles);
-			switch (currentPackage.PackageType)
-			{
-				case PackageType.Route:
-					if (packageToReplace != null)
-					{
-						for (int i = InstalledRoutes.Count; i > 0; i--)
+				string ExtractionDirectory;
+				switch (currentPackage.PackageType)
+				{
+					case PackageType.Route:
+						ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
+						break;
+					case PackageType.Train:
+						ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+						break;
+					default:
+						//TODO: Not sure this is the right place to put this, but at the moment leave it there
+						ExtractionDirectory = Program.FileSystem.DataFolder;
+						break;
+				}
+				string PackageFiles = "";
+				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, PackageDatabase, ref PackageFiles);
+				switch (currentPackage.PackageType)
+				{
+					case PackageType.Route:
+						if (packageToReplace != null)
 						{
-							if (InstalledRoutes[i -1].GUID == currentPackage.GUID)
+							for (int i = InstalledRoutes.Count; i > 0; i--)
 							{
-								InstalledRoutes.Remove(InstalledRoutes[i -1]);
+								if (InstalledRoutes[i - 1].GUID == currentPackage.GUID)
+								{
+									InstalledRoutes.Remove(InstalledRoutes[i - 1]);
+								}
 							}
 						}
-					}
-					formMain.InstalledRoutes.Add(currentPackage);
-					break;
-				case PackageType.Train:
-					if (packageToReplace != null)
-					{
-						for (int i = InstalledTrains.Count; i > 0; i--)
+						formMain.InstalledRoutes.Add(currentPackage);
+						break;
+					case PackageType.Train:
+						if (packageToReplace != null)
 						{
-							if (InstalledTrains[i -1].GUID == currentPackage.GUID)
+							for (int i = InstalledTrains.Count; i > 0; i--)
 							{
-								InstalledTrains.Remove(InstalledTrains[i -1]);
+								if (InstalledTrains[i - 1].GUID == currentPackage.GUID)
+								{
+									InstalledTrains.Remove(InstalledTrains[i - 1]);
+								}
 							}
 						}
-					}
-					formMain.InstalledTrains.Add(currentPackage);
-					break;
-			}
-			labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
-			labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
-			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_files");
-			textBoxFilesInstalled.Text = PackageFiles;
-			HidePanels();
+						formMain.InstalledTrains.Add(currentPackage);
+						break;
+				}
+				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
+				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_files");
+				textBoxFilesInstalled.Text = PackageFiles;
+			};
+			workerThread.RunWorkerCompleted += delegate
+			{
+				panelSuccess.Show();
+			};
 			panelSuccess.Show();
 		}
 
@@ -708,6 +718,8 @@ namespace OpenBve
 
 		private void Q1_CheckedChanged(object sender, EventArgs e)
 		{
+			filesToPackage = null;
+			filesToPackageBox.Lines = null;
 			if (radioButtonQ1Yes.Checked == true)
 			{
 				panelReplacePackage.Show();
@@ -749,6 +761,8 @@ namespace OpenBve
 
 		private void Q2_CheckedChanged(object sender, EventArgs e)
 		{
+			filesToPackage = null;
+			filesToPackageBox.Lines = null;
 			radioButtonQ1Yes.Enabled = true;
 			radioButtonQ1No.Enabled = true;
 			labelReplacePackage.Enabled = true;
@@ -818,6 +832,38 @@ namespace OpenBve
 			panelReplacePackage.Hide();
 			panelPackageList.Hide();
 			panelPleaseWait.Hide();
+		}
+
+		//Don't use a file picker dialog- Select folders only.
+		private void button2_Click(object sender, EventArgs e)
+		{
+			var dialog = new CommonOpenFileDialog();
+			dialog.AllowNonFileSystemItems = true;
+			dialog.Multiselect = true;
+			dialog.IsFolderPicker = true;
+			dialog.EnsureFileExists = false;
+			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+			{
+				filesToPackage = new List<string>();
+				var tempStringList = new List<string>();
+				foreach (string rootPath in dialog.FileNames)
+				{
+					if (System.IO.File.Exists(rootPath))
+					{
+						filesToPackage.Add(rootPath);
+						continue;
+					}
+					string[] files = System.IO.Directory.GetFiles(rootPath, "*.*", System.IO.SearchOption.AllDirectories);
+					for (int i = 0; i < files.Length; i++)
+					{
+						filesToPackage.Add(files[i]);
+						tempStringList.Add(files[i].Replace(System.IO.Directory.GetParent(rootPath).ToString(),""));
+					}
+				}
+				filesToPackageBox.Lines = tempStringList.ToArray();
+			}
+			//This dialog is used elsewhere, so we'd better reset it's properties
+			openPackageFileDialog.Multiselect = false;
 		}
 
 
