@@ -750,7 +750,7 @@ namespace OpenBve
                                         Interface.HudImage Left = o < 0 ? Interface.CurrentHudElements[i].TopLeft : o == 0 ? Interface.CurrentHudElements[i].CenterLeft : Interface.CurrentHudElements[i].BottomLeft;
                                         Interface.HudImage Middle = o < 0 ? Interface.CurrentHudElements[i].TopMiddle : o == 0 ? Interface.CurrentHudElements[i].CenterMiddle : Interface.CurrentHudElements[i].BottomMiddle;
                                         Interface.HudImage Right = o < 0 ? Interface.CurrentHudElements[i].TopRight : o == 0 ? Interface.CurrentHudElements[i].CenterRight : Interface.CurrentHudElements[i].BottomRight;
-                                        Game.MessageColor sc = Game.MessageColor.Gray;
+                                        MessageColor sc = MessageColor.Gray;
                                         if (TrainManager.PlayerTrain.Plugin.Panel.Length >= 272)
                                         {
                                             switch (CurrentLampCollection.Lamps[j].Type)
@@ -758,72 +758,72 @@ namespace OpenBve
                                                 case LampType.Ats:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[256] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtsOperation:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[258] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Red;
+                                                        sc = MessageColor.Red;
                                                     } break;
                                                 case LampType.AtsPPower:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[259] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Green;
+                                                        sc = MessageColor.Green;
                                                     } break;
                                                 case LampType.AtsPPattern:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[260] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtsPBrakeOverride:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[261] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtsPBrakeOperation:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[262] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtsP:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[263] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Green;
+                                                        sc = MessageColor.Green;
                                                     } break;
                                                 case LampType.AtsPFailure:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[264] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Red;
+                                                        sc = MessageColor.Red;
                                                     } break;
                                                 case LampType.Atc:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[265] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtcPower:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[266] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtcUse:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[267] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                                 case LampType.AtcEmergency:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[268] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Red;
+                                                        sc = MessageColor.Red;
                                                     } break;
                                                 case LampType.Eb:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[270] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Green;
+                                                        sc = MessageColor.Green;
                                                     } break;
                                                 case LampType.ConstSpeed:
                                                     if (TrainManager.PlayerTrain.Plugin.Panel[269] != 0)
                                                     {
-                                                        sc = Game.MessageColor.Orange;
+                                                        sc = MessageColor.Orange;
                                                     } break;
                                             }
                                         }
@@ -938,22 +938,22 @@ namespace OpenBve
                                 y += Interface.CurrentHudElements[i].Position.Y;
                                 // command
                                 const double speed = 1.0;
-                                Game.MessageColor sc = Game.MessageColor.None;
+                                MessageColor sc = MessageColor.None;
                                 string t;
                                 switch (Command)
                                 {
                                     case "reverser":
                                         if (TrainManager.PlayerTrain.Specs.CurrentReverser.Driver < 0)
                                         {
-                                            sc = Game.MessageColor.Orange; t = Interface.QuickReferences.HandleBackward;
+                                            sc = MessageColor.Orange; t = Interface.QuickReferences.HandleBackward;
                                         }
                                         else if (TrainManager.PlayerTrain.Specs.CurrentReverser.Driver > 0)
                                         {
-                                            sc = Game.MessageColor.Blue; t = Interface.QuickReferences.HandleForward;
+                                            sc = MessageColor.Blue; t = Interface.QuickReferences.HandleForward;
                                         }
                                         else
                                         {
-                                            sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandleNeutral;
+                                            sc = MessageColor.Gray; t = Interface.QuickReferences.HandleNeutral;
                                         }
                                         Interface.CurrentHudElements[i].TransitionState = 0.0;
                                         break;
@@ -964,11 +964,11 @@ namespace OpenBve
                                         }
                                         if (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver == 0)
                                         {
-                                            sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandlePowerNull;
+                                            sc = MessageColor.Gray; t = Interface.QuickReferences.HandlePowerNull;
                                         }
                                         else
                                         {
-                                            sc = Game.MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
+                                            sc = MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
                                         }
                                         Interface.CurrentHudElements[i].TransitionState = 0.0;
                                         break;
@@ -981,38 +981,38 @@ namespace OpenBve
                                         {
                                             if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
                                             {
-                                                sc = Game.MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
+                                                sc = MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
                                             }
                                             else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Release)
                                             {
-                                                sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandleRelease;
+                                                sc = MessageColor.Gray; t = Interface.QuickReferences.HandleRelease;
                                             }
                                             else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap)
                                             {
-                                                sc = Game.MessageColor.Blue; t = Interface.QuickReferences.HandleLap;
+                                                sc = MessageColor.Blue; t = Interface.QuickReferences.HandleLap;
                                             }
                                             else
                                             {
-                                                sc = Game.MessageColor.Orange; t = Interface.QuickReferences.HandleService;
+                                                sc = MessageColor.Orange; t = Interface.QuickReferences.HandleService;
                                             }
                                         }
                                         else
                                         {
                                             if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
                                             {
-                                                sc = Game.MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
+                                                sc = MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
                                             }
                                             else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver)
                                             {
-                                                sc = Game.MessageColor.Green; t = Interface.QuickReferences.HandleHoldBrake;
+                                                sc = MessageColor.Green; t = Interface.QuickReferences.HandleHoldBrake;
                                             }
                                             else if (TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver == 0)
                                             {
-                                                sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandleBrakeNull;
+                                                sc = MessageColor.Gray; t = Interface.QuickReferences.HandleBrakeNull;
                                             }
                                             else
                                             {
-                                                sc = Game.MessageColor.Orange; t = Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver.ToString(Culture);
+                                                sc = MessageColor.Orange; t = Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver.ToString(Culture);
                                             }
                                         }
                                         Interface.CurrentHudElements[i].TransitionState = 0.0;
@@ -1024,23 +1024,23 @@ namespace OpenBve
                                         }
                                         if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver)
                                         {
-                                            sc = Game.MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
+                                            sc = MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
                                         }
                                         else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver)
                                         {
-                                            sc = Game.MessageColor.Green; t = Interface.QuickReferences.HandleHoldBrake;
+                                            sc = MessageColor.Green; t = Interface.QuickReferences.HandleHoldBrake;
                                         }
                                         else if (TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver > 0)
                                         {
-                                            sc = Game.MessageColor.Orange; t = Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver.ToString(Culture);
+                                            sc = MessageColor.Orange; t = Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver.ToString(Culture);
                                         }
                                         else if (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver > 0)
                                         {
-                                            sc = Game.MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
+                                            sc = MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
                                         }
                                         else
                                         {
-                                            sc = Game.MessageColor.Gray; t = Interface.QuickReferences.HandlePowerNull;
+                                            sc = MessageColor.Gray; t = Interface.QuickReferences.HandlePowerNull;
                                         }
                                         Interface.CurrentHudElements[i].TransitionState = 0.0;
                                         break;
@@ -1060,19 +1060,19 @@ namespace OpenBve
                                             TrainManager.TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
                                             if ((Doors & TrainManager.TrainDoorState.Mixed) != 0)
                                             {
-                                                sc = Game.MessageColor.Orange;
+                                                sc = MessageColor.Orange;
                                             }
                                             else if ((Doors & TrainManager.TrainDoorState.AllClosed) != 0)
                                             {
-                                                sc = Game.MessageColor.Gray;
+                                                sc = MessageColor.Gray;
                                             }
                                             else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == TrainManager.DoorMode.Manual)
                                             {
-                                                sc = Game.MessageColor.Green;
+                                                sc = MessageColor.Green;
                                             }
                                             else
                                             {
-                                                sc = Game.MessageColor.Blue;
+                                                sc = MessageColor.Blue;
                                             }
                                             t = Command == "doorsleft" ? Interface.QuickReferences.DoorsLeft : Interface.QuickReferences.DoorsRight;
                                         } break;
@@ -1245,15 +1245,15 @@ namespace OpenBve
                                             t = Game.CurrentScore.Value.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
                                             if (Game.CurrentScore.Value < 0)
                                             {
-                                                sc = Game.MessageColor.Red;
+                                                sc = MessageColor.Red;
                                             }
                                             else if (Game.CurrentScore.Value > 0)
                                             {
-                                                sc = Game.MessageColor.Green;
+                                                sc = MessageColor.Green;
                                             }
                                             else
                                             {
-                                                sc = Game.MessageColor.Gray;
+                                                sc = MessageColor.Gray;
                                             }
                                             Interface.CurrentHudElements[i].TransitionState = 0.0;
                                         }

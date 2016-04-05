@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -545,14 +546,14 @@ namespace OpenBve
 											Game.AddMessage(
 												Interface.GetInterfaceString("notification_interior_lookahead"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											lookahead = true;
 										}
 										else
 										{
 											Game.AddMessage(Interface.GetInterfaceString("notification_interior"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 										}
 										World.CameraMode = World.CameraViewMode.Interior;
 										RestoreCameraSettings();
@@ -593,7 +594,7 @@ namespace OpenBve
 									case Interface.Command.CameraExterior:
 										// camera: exterior
 										Game.AddMessage(Interface.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 										SaveCameraSettings();
 										World.CameraMode = World.CameraViewMode.Exterior;
 										RestoreCameraSettings();
@@ -639,7 +640,7 @@ namespace OpenBve
 											World.CameraMode = World.CameraViewMode.Track;
 											Game.AddMessage(Interface.GetInterfaceString("notification_track"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 										}
 										else
 										{
@@ -649,7 +650,7 @@ namespace OpenBve
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_flybyzooming"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											else
 											{
@@ -657,7 +658,7 @@ namespace OpenBve
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_flybynormal"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 										}
 										RestoreCameraSettings();
@@ -702,7 +703,7 @@ namespace OpenBve
 											{
 												World.CameraCar++;
 												Game.AddMessage(Interface.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											return;
 										}
@@ -716,7 +717,7 @@ namespace OpenBve
 												World.CameraMode = World.CameraViewMode.Track;
 												Game.AddMessage(Interface.GetInterfaceString("notification_track"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											double z = World.CameraCurrentAlignment.Position.Z;
 											World.CameraCurrentAlignment.Position =
@@ -769,7 +770,7 @@ namespace OpenBve
 											{
 												World.CameraCar--;
 												Game.AddMessage(Interface.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1),Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											return;
 										}
@@ -783,7 +784,7 @@ namespace OpenBve
 												World.CameraMode = World.CameraViewMode.Track;
 												Game.AddMessage(Interface.GetInterfaceString("notification_track"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											double z = World.CameraCurrentAlignment.Position.Z;
 											World.CameraCurrentAlignment.Position =
@@ -903,14 +904,14 @@ namespace OpenBve
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_camerarestriction_off"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 											else
 											{
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_camerarestriction_on"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
+													MessageColor.Blue, Game.SecondsSinceMidnight + 2.0);
 											}
 										}
 										break;
@@ -1385,7 +1386,7 @@ namespace OpenBve
 											Game.AddMessage(
 												Interface.GetInterfaceString("notification_notavailableexpert"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
 										}
 										else
 										{
@@ -1399,7 +1400,7 @@ namespace OpenBve
 													Game.AddMessage(
 														Interface.GetInterfaceString("notification_aiunable"),
 														Game.MessageDependency.None, Interface.GameMode.Expert,
-														Game.MessageColor.Blue, Game.SecondsSinceMidnight + 10.0);
+														MessageColor.Blue, Game.SecondsSinceMidnight + 10.0);
 												}
 											}
 											else
@@ -1434,7 +1435,7 @@ namespace OpenBve
 											Interface.GetInterfaceString(Renderer.OptionBackfaceCulling
 												? "notification_backfaceculling_on"
 												: "notification_backfaceculling_off"), Game.MessageDependency.None,
-											Interface.GameMode.Expert, Game.MessageColor.Blue,
+											Interface.GameMode.Expert, MessageColor.Blue,
 											Game.SecondsSinceMidnight + 2.0);
 										break;
 									case Interface.Command.MiscCPUMode:
@@ -1444,7 +1445,7 @@ namespace OpenBve
 											Interface.GetInterfaceString(LimitFramerate
 												? "notification_cpu_low"
 												: "notification_cpu_normal"), Game.MessageDependency.None,
-											Interface.GameMode.Expert, Game.MessageColor.Blue,
+											Interface.GameMode.Expert, MessageColor.Blue,
 											Game.SecondsSinceMidnight + 2.0);
 										break;
 									case Interface.Command.DebugBrakeSystems:
@@ -1454,7 +1455,7 @@ namespace OpenBve
 											Game.AddMessage(
 												Interface.GetInterfaceString("notification_notavailableexpert"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
 										}
 										else
 										{
@@ -1482,7 +1483,7 @@ namespace OpenBve
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_notavailableexpert"),
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue,
+													MessageColor.Blue,
 													Game.SecondsSinceMidnight + 5.0);
 											}
 											else
@@ -1494,7 +1495,7 @@ namespace OpenBve
 													TimeFactor.ToString(
 														System.Globalization.CultureInfo.InvariantCulture) + "x",
 													Game.MessageDependency.None, Interface.GameMode.Expert,
-													Game.MessageColor.Blue,
+													MessageColor.Blue,
 													Game.SecondsSinceMidnight + 5.0*(double) TimeFactor);
 											}
 										}
@@ -1506,7 +1507,7 @@ namespace OpenBve
 											Game.AddMessage(
 												Interface.GetInterfaceString("notification_notavailableexpert"),
 												Game.MessageDependency.None, Interface.GameMode.Expert,
-												Game.MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
+												MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
 										}
 										else
 										{

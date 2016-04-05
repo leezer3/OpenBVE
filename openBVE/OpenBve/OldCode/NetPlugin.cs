@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -56,7 +57,7 @@ namespace OpenBve {
 		
 		// --- functions ---
 		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
-			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound);
+			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.AddInterfaceMessage);
 			bool success;
 			#if !DEBUG
 			try {
@@ -246,7 +247,7 @@ namespace OpenBve {
 		}
 		internal override void SetBeacon(BeaconData beacon) {
 //			if (this.Train == TrainManager.PlayerTrain) {
-//				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
+				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
 //			}
 			#if !DEBUG
 			try {
@@ -271,6 +272,16 @@ namespace OpenBve {
 			}
 			#endif
 		}
+
+		/// <summary>May be called from a .Net plugin, in order to add a message to the in-game display</summary>
+		/// <param name="Message">The message to display</param>
+		/// <param name="Color">The color in which to display the message</param>
+		/// <param name="Time">The time in seconds for which to display the message</param>
+		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
+		{
+			Game.AddMessage(Message, Game.MessageDependency.None, Interface.GameMode.Expert, Color, Game.SecondsSinceMidnight + Time);
+		}
+
         /// <summary>May be called from a .Net plugin, in order to play a sound from the driver's car of a train</summary>
         /// <param name="index">The plugin-based of the sound to play</param>
         /// <param name="volume">The volume of the sound- A volume of 1.0 represents nominal volume</param>

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -221,11 +222,11 @@ namespace OpenBve {
 								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending) {
 									string s = Interface.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Orange, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0);
 								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
 									string s = Interface.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Red, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 10.0);
 								}
 							}
 							Train.Station = -1;
@@ -312,9 +313,9 @@ namespace OpenBve {
 					// messages
 					if (this.NextSectionIndex < 0 || !Game.Sections[this.NextSectionIndex].Invisible) {
 						if (Train.CurrentSectionLimit == 0.0) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, Game.MessageColor.Red, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity);
 						} else if (Train.Specs.CurrentAverageSpeed > Train.CurrentSectionLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity);
 						}
 					}
 				}
@@ -445,7 +446,7 @@ namespace OpenBve {
 							Train.CurrentRouteLimit = this.NextSpeedLimit;
 						}
 						if (Train.Specs.CurrentAverageSpeed > this.NextSpeedLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Interface.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity);
 						}
 					} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 						int n = Train.RouteLimits.Length;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Colors;
 
 namespace OpenBveApi.Runtime {
 	
@@ -65,6 +66,14 @@ namespace OpenBveApi.Runtime {
 	/// <returns>The handle to the sound, or a null reference if the sound could not be played.</returns>
 	/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 	public delegate SoundHandle PlaySoundDelegate(int index, double volume, double pitch, bool looped);
+
+	/// <summary>Adds a message to the in-game display</summary>
+	/// <param name="Message">The message to display</param>
+	/// <param name="Color">The color in which to display the message</param>
+	/// <param name="Time">The time in seconds for which to display the message</param>
+	public delegate void AddInterfaceMessageDelegate(string Message, MessageColor Color, double Time);
+	
+		
 	
 	/// <summary>Represents to which extent the plugin supports the AI.</summary>
 	public enum AISupport {
@@ -86,6 +95,9 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The callback function for playing sounds.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly PlaySoundDelegate MyPlaySound;
+		/// <summary>The callback function for adding interface messages.</summary>
+		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+		private readonly AddInterfaceMessageDelegate MyAddInterfaceMessage;
 		/// <summary>The extent to which the plugin supports the AI.</summary>
 		private AISupport MyAISupport;
 		/// <summary>The reason why the plugin failed loading.</summary>
@@ -118,6 +130,16 @@ namespace OpenBveApi.Runtime {
 				return this.MyPlaySound;
 			}
 		}
+
+		/// <summary>Gets the callback function for adding interface messages.</summary>
+		public AddInterfaceMessageDelegate AddMessage
+		{
+			get{
+				return this.MyAddInterfaceMessage;
+				}
+		}
+
+		//public 
 		/// <summary>Gets or sets the extent to which the plugin supports the AI.</summary>
 		public AISupport AISupport {
 			get {
@@ -141,10 +163,12 @@ namespace OpenBveApi.Runtime {
 		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
 		/// <param name="trainFolder">The absolute path to the train folder.</param>
 		/// <param name="playSound">The callback function for playing sounds.</param>
-		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound) {
+		/// /// <param name="addMessage">The callback function for adding interface messages.</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, AddInterfaceMessageDelegate addMessage) {
 			this.MyPluginFolder = pluginFolder;
 			this.MyTrainFolder = trainFolder;
 			this.MyPlaySound = playSound;
+			this.MyAddInterfaceMessage = addMessage;
 			this.MyFailureReason = null;
 		}
 	}

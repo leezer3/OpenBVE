@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -952,18 +953,7 @@ namespace OpenBve {
 
 		// ================================
 
-		// messages
-		internal enum MessageColor {
-			None = 0,
-			Black = 1,
-			Gray = 2,
-			White = 3,
-			Red = 4,
-			Orange = 5,
-			Green = 6,
-			Blue = 7,
-			Magenta = 8
-		}
+
 		internal enum MessageDependency {
 			None = 0,
 			RouteLimit = 1,
@@ -1006,7 +996,7 @@ namespace OpenBve {
 			}
 		}
 		internal static void AddDebugMessage(string text, double duration) {
-			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
+			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
 		}
 
 	    internal static double SpeedConversionFactor = 0.0;
@@ -1172,7 +1162,7 @@ namespace OpenBve {
 		    World.UpdateAbsoluteCamera(0.0);
 		    if (PointsOfInterest[j].Text != null) {
 		        double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
-		        Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.White, Game.SecondsSinceMidnight + n);
+		        Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + n);
 		    }
 		    return true;
 		}

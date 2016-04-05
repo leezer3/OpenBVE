@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -759,34 +760,34 @@ namespace OpenBve
 
 
         // get color
-        private static void CreateBackColor(Color32 Original, Game.MessageColor SystemColor, out float R, out float G, out float B, out float A)
+        private static void CreateBackColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
         {
             if (Original.R == 0 & Original.G == 0 & Original.B == 0)
             {
                 switch (SystemColor)
                 {
-                    case Game.MessageColor.Black:
+                    case MessageColor.Black:
                         R = 0.0f; G = 0.0f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Gray:
+                    case MessageColor.Gray:
                         R = 0.4f; G = 0.4f; B = 0.4f;
                         break;
-                    case Game.MessageColor.White:
+                    case MessageColor.White:
                         R = 1.0f; G = 1.0f; B = 1.0f;
                         break;
-                    case Game.MessageColor.Red:
+                    case MessageColor.Red:
                         R = 1.0f; G = 0.0f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Orange:
+                    case MessageColor.Orange:
                         R = 0.9f; G = 0.7f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Green:
+                    case MessageColor.Green:
                         R = 0.2f; G = 0.8f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Blue:
+                    case MessageColor.Blue:
                         R = 0.0f; G = 0.7f; B = 1.0f;
                         break;
-                    case Game.MessageColor.Magenta:
+                    case MessageColor.Magenta:
                         R = 1.0f; G = 0.0f; B = 0.7f;
                         break;
                     default:
@@ -802,34 +803,34 @@ namespace OpenBve
             }
             A = inv255 * (float)Original.A;
         }
-        private static void CreateTextColor(Color32 Original, Game.MessageColor SystemColor, out float R, out float G, out float B, out float A)
+        private static void CreateTextColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
         {
             if (Original.R == 0 & Original.G == 0 & Original.B == 0)
             {
                 switch (SystemColor)
                 {
-                    case Game.MessageColor.Black:
+                    case MessageColor.Black:
                         R = 0.0f; G = 0.0f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Gray:
+                    case MessageColor.Gray:
                         R = 0.4f; G = 0.4f; B = 0.4f;
                         break;
-                    case Game.MessageColor.White:
+                    case MessageColor.White:
                         R = 1.0f; G = 1.0f; B = 1.0f;
                         break;
-                    case Game.MessageColor.Red:
+                    case MessageColor.Red:
                         R = 1.0f; G = 0.0f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Orange:
+                    case MessageColor.Orange:
                         R = 0.9f; G = 0.7f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Green:
+                    case MessageColor.Green:
                         R = 0.3f; G = 1.0f; B = 0.0f;
                         break;
-                    case Game.MessageColor.Blue:
+                    case MessageColor.Blue:
                         R = 1.0f; G = 1.0f; B = 1.0f;
                         break;
-                    case Game.MessageColor.Magenta:
+                    case MessageColor.Magenta:
                         R = 1.0f; G = 0.0f; B = 0.7f;
                         break;
                     default:
