@@ -1,5 +1,3 @@
-﻿This library has been compiled using Microsoft C/C++ 6.0.
+This library has originally been compiled using Microsoft C/C++ 6.0.
 
-Only the code and export definition files are included in this distribution of the source code. You will need to create a project and import these files yourself for compilation.
-
-The encoding used by the files is US-ASCII (alternatively UTF-8 without BOM).
+It will also compile with newer compiler versions (tested with Visual Studio 2015 Update 1), however if you want to distribute such a recompiled binary with OpenBVE, users might have to install the corresponding version of the C++ runtime in order for the DLL to run.
