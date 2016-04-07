@@ -29,6 +29,8 @@ namespace OpenBve {
 		private static Encoding CurrentTrainEncoding;
 		internal static double TrainProgressCurrentSum;
 		internal static double TrainProgressCurrentWeight;
+		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
+		internal static string PluginError;
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>

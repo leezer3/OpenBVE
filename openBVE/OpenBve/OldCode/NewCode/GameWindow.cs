@@ -595,6 +595,13 @@ namespace OpenBve
 				}
 				Game.RouteInformation.FilesNotFound = NotFound;
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
+				//Print the plugin error encountered (If any) for 10s
+				//This must be done after the simulation has init, as otherwise the timeout doesn't work
+				if (Loading.PluginError != null)
+				{
+					Game.AddMessage(Loading.PluginError, Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
+					Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
+				}
 			}
 			loadComplete = true;
 			RenderRealTimeElapsed = 0.0;
