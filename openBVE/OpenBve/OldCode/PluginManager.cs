@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -485,6 +486,7 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 				return false;
 			}
+			Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
 			return LoadPlugin(train, file, trainFolder);
 		}
 		
@@ -602,6 +604,7 @@ namespace OpenBve {
 				return true;
 			} else {
 				train.Plugin = null;
+				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
 				return false;
 			}
 		}
