@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using OpenBveApi.Runtime;
 
@@ -8,7 +9,7 @@ namespace OpenBve {
 		
 		// --- win32 proxy calls ---
 		
-		[DllImport("AtsPluginProxy.dll", EntryPoint = "LoadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
+		[DllImport("AtsPluginProxy.dll", EntryPoint = "LoadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
 		private extern static int Win32LoadDLL([MarshalAs(UnmanagedType.LPWStr)]string UnicodeFileName, [MarshalAs(UnmanagedType.LPStr)]string AnsiFileName);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "UnloadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
@@ -152,6 +153,10 @@ namespace OpenBve {
 				throw;
 			}
 			if (result == 0) {
+				int errorCode = Marshal.GetLastWin32Error();
+				string errorMessage = new Win32Exception(errorCode).Message;
+				Interface.AddMessage(Interface.MessageType.Error, true,
+					$"Error loading Win32 plugin: {errorMessage} (0x{errorCode.ToString("x")})");
 				return false;
 			}
 			try {
