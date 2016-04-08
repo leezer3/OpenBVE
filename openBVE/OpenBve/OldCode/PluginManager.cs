@@ -486,8 +486,12 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 				return false;
 			}
-			Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
-			return LoadPlugin(train, file, trainFolder);
+			bool success = LoadPlugin(train, file, trainFolder);
+			if (success == false)
+			{
+				Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+			}
+			return success;
 		}
 		
 		/// <summary>Loads the default plugin for the specified train.</summary>
