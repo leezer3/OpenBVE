@@ -2032,8 +2032,8 @@ namespace OpenBve
 							if (Train.Cars[j].CarSections.Length != 0)
 							{
 								TrainManager.ChangeCarSection(Train, j, j <= Train.DriverCar | Train != PlayerTrain ? 0 : -1);
-								TrainManager.ChangeFrontBogieSection(Train, j, j <= Train.DriverCar | Train != PlayerTrain ? 0 : -1);
-								TrainManager.ChangeRearBogieSection(Train, j, j <= Train.DriverCar | Train != PlayerTrain ? 0 : -1);
+								TrainManager.ChangeFrontBogieSection(Train, j, Train != PlayerTrain ? 0 : -1);
+								TrainManager.ChangeRearBogieSection(Train, j, Train != PlayerTrain ? 0 : -1);
 							}
 							if (Train.Cars[j].Specs.IsMotorCar)
 							{
