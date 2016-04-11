@@ -156,7 +156,7 @@ namespace OpenBve {
 				int errorCode = Marshal.GetLastWin32Error();
 				string errorMessage = new Win32Exception(errorCode).Message;
 				Interface.AddMessage(Interface.MessageType.Error, true,
-					$"Error loading Win32 plugin: {errorMessage} (0x{errorCode.ToString("x")})");
+					String.Format("Error loading Win32 plugin: {0} (0x{1})", errorMessage, errorCode.ToString("x")));
 				return false;
 			}
 			try {
