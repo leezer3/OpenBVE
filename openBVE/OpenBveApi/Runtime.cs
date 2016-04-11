@@ -229,10 +229,10 @@ namespace OpenBveApi.Runtime {
 		public int AtsNotch {
 			get
 			{
-			    if (this.MyHasHoldBrake) {
+				if (this.MyHasHoldBrake) {
 					return 2;
 				}
-			    return 1;
+				return 1;
 			}
 		}
 		/// <summary>Gets the index of the brake notch that corresponds to 70% of the available brake notches.</summary>
@@ -337,26 +337,26 @@ namespace OpenBveApi.Runtime {
 		}
 	}
 
-    /// <summary>Represents a station.</summary>
-    public class Station
-    {
-        /// <summary>The name of the station.</summary>
-        public string Name;
-        /// <summary>The expected arrival time.</summary>
-        public double ArrivalTime;
-        /// <summary>The expected departure time.</summary>
-        public double DepartureTime;
-        /// <summary>The expected time stopped.</summary>
-        public double StopTime;
-        /// <summary>Whether the next signal is held red until departure.</summary>
-        public bool ForceStopSignal;
-        /// <summary>Whether the left doors are to open.</summary>
-        public bool OpenLeftDoors;
-        /// <summary>Whether the right doors are to open.</summary>
-        public bool OpenRightDoors;
-        /// <summary>The track position of this station.</summary>
-        public double DefaultTrackPosition;
-    }
+	/// <summary>Represents a station.</summary>
+	public class Station
+	{
+		/// <summary>The name of the station.</summary>
+		public string Name;
+		/// <summary>The expected arrival time.</summary>
+		public double ArrivalTime;
+		/// <summary>The expected departure time.</summary>
+		public double DepartureTime;
+		/// <summary>The expected time stopped.</summary>
+		public double StopTime;
+		/// <summary>Whether the next signal is held red until departure.</summary>
+		public bool ForceStopSignal;
+		/// <summary>Whether the left doors are to open.</summary>
+		public bool OpenLeftDoors;
+		/// <summary>Whether the right doors are to open.</summary>
+		public bool OpenRightDoors;
+		/// <summary>The track position of this station.</summary>
+		public double DefaultTrackPosition;
+	}
 	
 	/// <summary>Represents the current state of the train.</summary>
 	public class VehicleState {
@@ -375,11 +375,11 @@ namespace OpenBveApi.Runtime {
 		private readonly double MyBpPressure;
 		/// <summary>The pressure in the straight air pipe, in pascal.</summary>
 		private readonly double MySapPressure;
-        
-        private readonly double MyRadius;
-	    private readonly double MyCant;
-	    private readonly double MyPitch;
-	    
+		
+		private readonly double MyRadius;
+		private readonly double MyCant;
+		private readonly double MyPitch;
+		
 		// --- properties ---
 		/// <summary>Gets the location of the front of the train, in meters.</summary>
 		public double Location {
@@ -423,30 +423,30 @@ namespace OpenBveApi.Runtime {
 				return this.MySapPressure;
 			}
 		}
-        /// <summary>Gets the curve radius at the front axle of the driver's car in m.</summary>
-        public double Radius
-        {
-            get
-            {
-                return this.MyRadius;
-            }
-        }
-        /// <summary>Gets the curve cant at the front axle of the driver's car in mm.</summary>
-        public double Cant
-        {
-            get
-            {
-                return this.MyCant;
-            }
-        }
-        /// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
-        public double Pitch
-        {
-            get
-            {
-                return this.MyPitch;
-            }
-        }
+		/// <summary>Gets the curve radius at the front axle of the driver's car in m.</summary>
+		public double Radius
+		{
+			get
+			{
+				return this.MyRadius;
+			}
+		}
+		/// <summary>Gets the curve cant at the front axle of the driver's car in mm.</summary>
+		public double Cant
+		{
+			get
+			{
+				return this.MyCant;
+			}
+		}
+		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
+		public double Pitch
+		{
+			get
+			{
+				return this.MyPitch;
+			}
+		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="location">The location of the front of the train, in meters.</param>
@@ -456,16 +456,16 @@ namespace OpenBveApi.Runtime {
 		/// <param name="erPressure">The pressure in the emergency reservoir, in pascal.</param>
 		/// <param name="bpPressure">The pressure in the brake pipe, in pascal.</param>
 		/// <param name="sapPressure">The pressure in the straight air pipe, in pascal.</param>
-        /// <param name="Radius">The curve radius at the front of the train, in meters.</param>
-        /// <param name="Cant">The cant value for this curve radius.</param>
-        /// <param name="Pitch">The pitch value at the front of the train.</param>
+		/// <param name="Radius">The curve radius at the front of the train, in meters.</param>
+		/// <param name="Cant">The cant value for this curve radius.</param>
+		/// <param name="Pitch">The pitch value at the front of the train.</param>
 		/// Three paramaters added at the far end
 		public VehicleState(double location, Speed speed, double bcPressure, double mrPressure, double erPressure, double bpPressure, double sapPressure, double Radius, double Cant, double Pitch)
 		{
-		    this.MyRadius = Radius;
-		    this.MyCant = Cant;
-		    this.MyPitch = Pitch;
-            this.MyLocation = location;
+			this.MyRadius = Radius;
+			this.MyCant = Cant;
+			this.MyPitch = Pitch;
+			this.MyLocation = location;
 			this.MySpeed = speed;
 			this.MyBcPressure = bcPressure;
 			this.MyMrPressure = mrPressure;
@@ -474,26 +474,26 @@ namespace OpenBveApi.Runtime {
 			this.MySapPressure = sapPressure;
 		}
 
-        //This provides the overload for plugins built against versions of the OpenBVE API below 1.4.4.0
-        /// <summary>Creates a new instance of this class.</summary>
-        /// <param name="location">The location of the front of the train, in meters.</param>
-        /// <param name="speed">The speed of the train.</param>
-        /// <param name="bcPressure">The pressure in the brake cylinder, in pascal.</param>
-        /// <param name="mrPressure">The pressure in the main reservoir, in pascal.</param>
-        /// <param name="erPressure">The pressure in the emergency reservoir, in pascal.</param>
-        /// <param name="bpPressure">The pressure in the brake pipe, in pascal.</param>
-        /// <param name="sapPressure">The pressure in the straight air pipe, in pascal.</param>
-        /// Three paramaters added at the far end
-        public VehicleState(double location, Speed speed, double bcPressure, double mrPressure, double erPressure, double bpPressure, double sapPressure)
-        {
-            this.MyLocation = location;
-            this.MySpeed = speed;
-            this.MyBcPressure = bcPressure;
-            this.MyMrPressure = mrPressure;
-            this.MyErPressure = erPressure;
-            this.MyBpPressure = bpPressure;
-            this.MySapPressure = sapPressure;
-        }
+		//This provides the overload for plugins built against versions of the OpenBVE API below 1.4.4.0
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="location">The location of the front of the train, in meters.</param>
+		/// <param name="speed">The speed of the train.</param>
+		/// <param name="bcPressure">The pressure in the brake cylinder, in pascal.</param>
+		/// <param name="mrPressure">The pressure in the main reservoir, in pascal.</param>
+		/// <param name="erPressure">The pressure in the emergency reservoir, in pascal.</param>
+		/// <param name="bpPressure">The pressure in the brake pipe, in pascal.</param>
+		/// <param name="sapPressure">The pressure in the straight air pipe, in pascal.</param>
+		/// Three paramaters added at the far end
+		public VehicleState(double location, Speed speed, double bcPressure, double mrPressure, double erPressure, double bpPressure, double sapPressure)
+		{
+			this.MyLocation = location;
+			this.MySpeed = speed;
+			this.MyBcPressure = bcPressure;
+			this.MyMrPressure = mrPressure;
+			this.MyErPressure = erPressure;
+			this.MyBpPressure = bpPressure;
+			this.MySapPressure = sapPressure;
+		}
 	}
 	
 	/// <summary>Represents the current state of the preceding train.</summary>
@@ -613,30 +613,33 @@ namespace OpenBveApi.Runtime {
 		private readonly Time MyElapsedTime;
 		/// <summary>The debug message the plugin wants the host application to display.</summary>
 		private string MyDebugMessage;
-        /// <summary>Whether the plugin requests that time acceleration is disabled.</summary>
-	    private bool MyDisableTimeAcceleration;
-        /// <summary>Stores the list of current stations.</summary>
-	    private readonly List<Station> MyStations;
-        /// <summary>The current camera view mode.</summary>
-	    private readonly CameraViewMode MyCameraViewMode;
+		/// <summary>Whether the plugin requests that time acceleration is disabled.</summary>
+		private bool MyDisableTimeAcceleration;
+		/// <summary>Stores the list of current stations.</summary>
+		private readonly List<Station> MyStations;
+		/// <summary>The current camera view mode.</summary>
+		private readonly CameraViewMode MyCameraViewMode;
+		/// <summary>The current interface language code.</summary>
+		private readonly string MyLanguageCode;
 		// --- constructors ---
-	    /// <summary>Creates a new instance of this class.</summary>
-	    /// <param name="vehicle">The state of the train.</param>
-	    /// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
-	    /// <param name="handles">The virtual handles.</param>
-	    /// <param name="totalTime">The current absolute time.</param>
-	    /// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
-	    /// <param name="stations">The current route's list of stations.</param>
-	    /// <param name="cameraView">The current camera view mode</param>
-	    public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView) {
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="vehicle">The state of the train.</param>
+		/// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
+		/// <param name="handles">The virtual handles.</param>
+		/// <param name="totalTime">The current absolute time.</param>
+		/// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
+		/// <param name="stations">The current route's list of stations.</param>
+		/// <param name="cameraView">The current camera view mode</param>
+		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode) {
 			this.MyVehicle = vehicle;
 			this.MyPrecedingVehicle = precedingVehicle;
 			this.MyHandles = handles;
 			this.MyTotalTime = totalTime;
 			this.MyElapsedTime = elapsedTime;
 			this.MyDebugMessage = null;
-		    this.MyStations = stations;
-		    this.MyCameraViewMode = cameraView;
+			this.MyStations = stations;
+			this.MyCameraViewMode = cameraView;
+			this.MyLanguageCode = languageCode;
 		}
 
 
@@ -684,31 +687,39 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 
-        /// <summary>Gets or sets the disable time acceleration bool.</summary>
-        public bool DisableTimeAcceleration
-        {
-            get
-            {
-                return this.MyDisableTimeAcceleration;
-            }
-            set
-            {
-                this.MyDisableTimeAcceleration = value;
-            }
-        }
-        /// <summary>Returns the list of stations in the current route.</summary>
-	    public List<Station> Stations
-	    {
-	        get { return this.MyStations; }
-	    }
-        /// <summary>Gets the current camera view mode.</summary>
-        public CameraViewMode CameraViewMode
-        {
-            get
-            {
-                return this.MyCameraViewMode;
-            }
-        }
+		/// <summary>Gets or sets the disable time acceleration bool.</summary>
+		public bool DisableTimeAcceleration
+		{
+			get
+			{
+				return this.MyDisableTimeAcceleration;
+			}
+			set
+			{
+				this.MyDisableTimeAcceleration = value;
+			}
+		}
+		/// <summary>Returns the list of stations in the current route.</summary>
+		public List<Station> Stations
+		{
+			get { return this.MyStations; }
+		}
+		/// <summary>Gets the current camera view mode.</summary>
+		public CameraViewMode CameraViewMode
+		{
+			get
+			{
+				return this.MyCameraViewMode;
+			}
+		}
+		/// <summary>Gets the current user interface language code.</summary>
+		public string CurrentLanguageCode
+		{
+			get
+			{
+				return this.MyLanguageCode;
+			}
+		}
 	}
 	
 	// --- key down / key up ---
@@ -747,49 +758,49 @@ namespace OpenBveApi.Runtime {
 		K = 14,
 		/// <summary>The virtual L key. The default assignment is [N/A]. The numerical value of this constant is 15.</summary>
 		L = 15,
-        /// <summary>The virtual M key. The default assignment is [N/A]. The numerical value of this constant is 16.</summary>
+		/// <summary>The virtual M key. The default assignment is [N/A]. The numerical value of this constant is 16.</summary>
 		M = 16,
-        /// <summary>The virtual N key. The default assignment is [N/A]. The numerical value of this constant is 17.</summary>
+		/// <summary>The virtual N key. The default assignment is [N/A]. The numerical value of this constant is 17.</summary>
 		N = 17,
-        /// <summary>The virtual O key. The default assignment is [N/A]. The numerical value of this constant is 18.</summary>
-        O = 18,
-        /// <summary>The virtual P key. The default assignment is [N/A]. The numerical value of this constant is 19.</summary>
+		/// <summary>The virtual O key. The default assignment is [N/A]. The numerical value of this constant is 18.</summary>
+		O = 18,
+		/// <summary>The virtual P key. The default assignment is [N/A]. The numerical value of this constant is 19.</summary>
 		P = 19,
-        //Keys Added
-        //Common Keys
-        /// <summary>Increases the speed of the windscreen wipers. The default assignment is [N/A]. The numerical value of this constant is 20.</summary>
-        WiperSpeedUp = 20,
-        /// <summary>Decreases the speed of the windscreen wipers. The default assignment is [N/A]. The numerical value of this constant is 21.</summary>
-        WiperSpeedDown = 21,
-        /// <summary>Fills fuel. The default assignment is [N/A]. The numerical value of this constant is 22.</summary>
-        FillFuel = 22,
-        //Steam locomotive
-        /// <summary>Toggles the live-steam injector. The default assignment is [N/A]. The numerical value of this constant is 23.</summary>
-        LiveSteamInjector= 23,
-        /// <summary>Toggles the exhaust steam injector. The default assignment is [N/A]. The numerical value of this constant is 24.</summary>
-        ExhaustSteamInjector= 24,
-        /// <summary>Increases the cutoff. The default assignment is [N/A]. The numerical value of this constant is 25.</summary>
-        IncreaseCutoff= 25,
-        /// <summary>Decreases the cutoff. The default assignment is [N/A]. The numerical value of this constant is 26.</summary>
-        DecreaseCutoff=26,
-        /// <summary>Toggles the blowers. The default assignment is [N/A]. The numerical value of this constant is 27.</summary>
-        Blowers= 27,
-        //Diesel Locomotive
-        /// <summary>Starts the engine. The default assignment is [N/A]. The numerical value of this constant is 28.</summary>
-        EngineStart= 28,
-        /// <summary>Stops the engine. The default assignment is [N/A]. The numerical value of this constant is 29.</summary>
-        EngineStop= 29,
-        /// <summary>Changes gear up. The default assignment is [N/A]. The numerical value of this constant is 30.</summary>
-        GearUp= 30,
-        /// <summary>Changes gear down. The default assignment is [N/A]. The numerical value of this constant is 31.</summary>
-        GearDown= 31,
-        //Electric Locomotive
-        /// <summary>Raises the pantograph. The default assignment is [N/A]. The numerical value of this constant is 32.</summary>
-        RaisePantograph= 32,
-        /// <summary>Lowers the pantograph. The default assignment is [N/A]. The numerical value of this constant is 33.</summary>
-        LowerPantograph= 33,
-        /// <summary>Toggles the main breaker. The default assignment is [N/A]. The numerical value of this constant is 34.</summary>
-        MainBreaker= 34
+		//Keys Added
+		//Common Keys
+		/// <summary>Increases the speed of the windscreen wipers. The default assignment is [N/A]. The numerical value of this constant is 20.</summary>
+		WiperSpeedUp = 20,
+		/// <summary>Decreases the speed of the windscreen wipers. The default assignment is [N/A]. The numerical value of this constant is 21.</summary>
+		WiperSpeedDown = 21,
+		/// <summary>Fills fuel. The default assignment is [N/A]. The numerical value of this constant is 22.</summary>
+		FillFuel = 22,
+		//Steam locomotive
+		/// <summary>Toggles the live-steam injector. The default assignment is [N/A]. The numerical value of this constant is 23.</summary>
+		LiveSteamInjector= 23,
+		/// <summary>Toggles the exhaust steam injector. The default assignment is [N/A]. The numerical value of this constant is 24.</summary>
+		ExhaustSteamInjector= 24,
+		/// <summary>Increases the cutoff. The default assignment is [N/A]. The numerical value of this constant is 25.</summary>
+		IncreaseCutoff= 25,
+		/// <summary>Decreases the cutoff. The default assignment is [N/A]. The numerical value of this constant is 26.</summary>
+		DecreaseCutoff=26,
+		/// <summary>Toggles the blowers. The default assignment is [N/A]. The numerical value of this constant is 27.</summary>
+		Blowers= 27,
+		//Diesel Locomotive
+		/// <summary>Starts the engine. The default assignment is [N/A]. The numerical value of this constant is 28.</summary>
+		EngineStart= 28,
+		/// <summary>Stops the engine. The default assignment is [N/A]. The numerical value of this constant is 29.</summary>
+		EngineStop= 29,
+		/// <summary>Changes gear up. The default assignment is [N/A]. The numerical value of this constant is 30.</summary>
+		GearUp= 30,
+		/// <summary>Changes gear down. The default assignment is [N/A]. The numerical value of this constant is 31.</summary>
+		GearDown= 31,
+		//Electric Locomotive
+		/// <summary>Raises the pantograph. The default assignment is [N/A]. The numerical value of this constant is 32.</summary>
+		RaisePantograph= 32,
+		/// <summary>Lowers the pantograph. The default assignment is [N/A]. The numerical value of this constant is 33.</summary>
+		LowerPantograph= 33,
+		/// <summary>Toggles the main breaker. The default assignment is [N/A]. The numerical value of this constant is 34.</summary>
+		MainBreaker= 34
 
 	}
 	
@@ -806,25 +817,25 @@ namespace OpenBveApi.Runtime {
 		Music = 3
 	}
 
-    /// <summary>Represents the available camera view modes.</summary>
-    public enum CameraViewMode
-    {
-        /// <summary>The interior of a 2D cab</summary>
-        Interior,
-        /// <summary>The interior of a 3D cab</summary>
-        InteriorLookAhead,
-        /// <summary>An exterior camera attached to a train</summary>
-        Exterior,
-        /// <summary>A camera attached to the track</summary>
-        Track,
-        /// <summary>A fly-by camera attached to a point on the track</summary>
-        FlyBy,
-        /// <summary>A fly-by zooming camera attached to a point on the track</summary>
-        FlyByZooming
-    }
+	/// <summary>Represents the available camera view modes.</summary>
+	public enum CameraViewMode
+	{
+		/// <summary>The interior of a 2D cab</summary>
+		Interior,
+		/// <summary>The interior of a 3D cab</summary>
+		InteriorLookAhead,
+		/// <summary>An exterior camera attached to a train</summary>
+		Exterior,
+		/// <summary>A camera attached to the track</summary>
+		Track,
+		/// <summary>A fly-by camera attached to a point on the track</summary>
+		FlyBy,
+		/// <summary>A fly-by zooming camera attached to a point on the track</summary>
+		FlyByZooming
+	}
 
 
-    // --- door change ---
+	// --- door change ---
 	
 	/// <summary>Represents the state of the doors.</summary>
 	[Flags]
