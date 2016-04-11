@@ -80,7 +80,7 @@ namespace OpenBve
                 return Train.Cars[CarIndex].Specs.CurrentSpeed;
             }
 
-            /// <summary>Returns the speed of the selected car, accounting for wheelslip & wheel lock</summary>
+            /// <summary>Returns the speed of the selected car, accounting for wheelslip and wheel lock</summary>
             /// <param name="Train">The selected train</param>
             /// <param name="CarIndex">The car for which to get the speed</param>
             /// <returns>The speed in m/s</returns>

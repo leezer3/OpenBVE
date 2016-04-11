@@ -28,7 +28,6 @@
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
 		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
 
-		private static string lastDescription;
 		
 		// --- functions ---
 
@@ -49,7 +48,6 @@
 				{
 					break;
 				}
-				lastDescription = description;
 				if (state.IsConnected)
 				{
 					j++;

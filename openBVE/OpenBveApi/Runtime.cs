@@ -630,6 +630,7 @@ namespace OpenBveApi.Runtime {
 		/// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
 		/// <param name="stations">The current route's list of stations.</param>
 		/// <param name="cameraView">The current camera view mode</param>
+		/// <param name="languageCode">The current language code</param>
 		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode) {
 			this.MyVehicle = vehicle;
 			this.MyPrecedingVehicle = precedingVehicle;

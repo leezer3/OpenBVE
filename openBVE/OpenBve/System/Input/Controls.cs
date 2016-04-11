@@ -49,13 +49,11 @@ namespace OpenBve
             internal int Device;
             internal JoystickComponent Component;
             internal int Element;
-            internal bool Pressed;
             internal int Direction;
             internal DigitalControlState DigitalState;
             internal double AnalogState;
             internal Key Key;
             internal string LastState;
-            internal bool JoystickPressed;
         }
     }
 }

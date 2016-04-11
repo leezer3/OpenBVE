@@ -79,7 +79,7 @@ namespace OpenBve {
 		/// <returns>The route map.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
-		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false<c> = for standard window.</param>
+		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		internal static Bitmap CreateRouteMap(int Width, int Height, bool inGame)
 		{
 			int n, n0, n1;
@@ -351,7 +351,7 @@ namespace OpenBve {
 		/// <returns>The route gradient profile as Bitmap.</returns>
 		/// <param name="Width">The width of the bitmap to create.</param>
 		/// <param name="Height">The height of the bitmap to create.</param>
-		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false<c> = for standard window.</param>
+		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		internal static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
 			// Track elements are assumed to be all of the same length, and this length

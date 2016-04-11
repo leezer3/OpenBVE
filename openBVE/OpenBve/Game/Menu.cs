@@ -13,10 +13,14 @@ namespace OpenBve
 	Implemented as a singleton.
 	Keeps a stack of menus, allowing navigating forward and back */
 
+	/// <summary>Implements the in-game menu system; manages addition and removal of individual menus.</summary>
 	public sealed class Menu
 	{
+		/// <summary>The list of possible tags for a menu entry- These define the functionality of a given menu entry</summary>
 		public enum MenuTag		{ None, Caption, MenuBack, MenuJumpToStation, MenuExitToMainMenu, MenuControls, MenuQuit,
 			BackToSim, JumpToStation, ExitToMainMenu, Quit, Control };
+
+		/// <summary>The list of possible sub-menu types</summary>
 		public enum MenuType	{ None, Top, JumpToStation, ExitToMainMenu, Controls, Control, Quit };
 
 		// components of the semi-transparent screen overlay
@@ -591,7 +595,7 @@ namespace OpenBve
 		// POSITION MENU
 		//
 		/// <summary>Computes the position in the screen of the current menu.
-		/// Also sets the </summary>
+		/// Also sets the menu size</summary>
 		private void PositionMenu()
 		{
 //			int i;
