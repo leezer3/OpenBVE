@@ -247,7 +247,7 @@ namespace OpenBve {
 		}
 		internal override void SetBeacon(BeaconData beacon) {
 //			if (this.Train == TrainManager.PlayerTrain) {
-				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
+//				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
 //			}
 			#if !DEBUG
 			try {
