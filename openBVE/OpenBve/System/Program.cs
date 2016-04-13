@@ -115,7 +115,7 @@ namespace OpenBve {
 						System.Diagnostics.Process p = System.Diagnostics.Process.Start(info);
 						p.WaitForExit();
 					}
-					catch (Win32Exception ex)
+					catch (Win32Exception)
 					{
 						MessageBox.Show(
 						"An error occured during OpenAL installation....", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);

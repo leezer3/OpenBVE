@@ -5413,7 +5413,6 @@ namespace OpenBve {
 						double planar, updown;
 						if (j == 0) {
 							// rail 0
-							pos = Position;
 							planar = 0.0;
 							updown = 0.0;
 							RailTransformation = new World.Transformation(TrackTransformation, planar, updown, 0.0);
@@ -5467,10 +5466,16 @@ namespace OpenBve {
 									c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
 									h2 = c2 * p2;
 								}
+								
+								//These generate a compiler warning, as secondary tracks do not generate yaw, as they have no
+								//concept of a curve, but rather are a straight line between two points
+								//TODO: Revist the handling of secondary tracks ==> !!BACKWARDS INCOMPATIBLE!!
+								/*
 								double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
 								double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
 								World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
 								World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
+								 */
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);

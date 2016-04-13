@@ -139,8 +139,7 @@ namespace Plugin {
 		private static void QueryDimensionsFromUncompressedData(byte[] data, out int width, out int height) {
 			using (MemoryStream stream = new MemoryStream(data)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
-					ulong identifier;
-					identifier = reader.ReadUInt64();
+					ulong identifier = reader.ReadUInt64();
 					if (identifier != 0x40404153494D4953) {
 						throw new InvalidDataException();
 					}
@@ -152,7 +151,8 @@ namespace Plugin {
 					if (unknown1 != 1) {
 						throw new InvalidDataException();
 					}
-					int unknown2 = reader.ReadInt32();
+					//We don't know what this is, so reading it into a variable just generates a compiler warning....
+					reader.ReadInt32();
 					width = reader.ReadInt32();
 					height = reader.ReadInt32();
 				}
@@ -189,8 +189,7 @@ namespace Plugin {
 			using (MemoryStream stream = new MemoryStream(data)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					// --- header ---
-					ulong identifier;
-					identifier = reader.ReadUInt64();
+					ulong identifier = reader.ReadUInt64();
 					if (identifier != 0x40404153494D4953) {
 						throw new InvalidDataException();
 					}
@@ -202,7 +201,7 @@ namespace Plugin {
 					if (unknown1 != 1) {
 						throw new InvalidDataException();
 					}
-					int unknown2 = reader.ReadInt32();
+					reader.ReadInt32();
 					int width = reader.ReadInt32();
 					int height = reader.ReadInt32();
 					int type = reader.ReadInt32();
@@ -220,16 +219,26 @@ namespace Plugin {
 					if (channels != 3 & channels != 4 & channels != 5) {
 						throw new InvalidDataException();
 					}
-					int unknown3 = reader.ReadInt32();
-					byte[] name = reader.ReadBytes(16);
-					byte[] copyright = reader.ReadBytes(72);
-					int unknown4 = reader.ReadInt32();
-					if (channels == 3) {
-						byte[] unknown = reader.ReadBytes(80);
-					} else if (channels == 4) {
-						byte[] unknown = reader.ReadBytes(96);
-					} else if (channels == 5) {
-						byte[] unknown = reader.ReadBytes(112);
+					//We don't know what this is, so reading it into a variable just generates a compiler warning....
+					reader.ReadInt32();
+					//16 bytes representing the author name
+					reader.ReadBytes(16);
+					//72 bytes of copyright information
+					reader.ReadBytes(72);
+					//We don't know what this is, so reading it into a variable just generates a compiler warning....
+					reader.ReadInt32();
+					//Skip the appropriate number of padding bytes
+					switch (channels)
+					{
+						case 3:
+							reader.ReadBytes(80);
+							break;
+						case 4:
+							reader.ReadBytes(96);
+							break;
+						case 5:
+							reader.ReadBytes(112);
+							break;
 					}
 					// --- actual pixel data ---
 					byte[] bytes = new byte[4 * width * height];
@@ -398,8 +407,7 @@ namespace Plugin {
 			using (MemoryStream stream = new MemoryStream(data)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					// --- ACE header ---
-					ulong identifier;
-					identifier = reader.ReadUInt64();
+					ulong identifier = reader.ReadUInt64();
 					if (identifier != 0x46404153494D4953) {
 						throw new InvalidDataException();
 					}

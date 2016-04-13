@@ -466,14 +466,23 @@ namespace OpenBve {
 		// sound
 		internal static bool SuppressSoundEvents = false;
 		internal class SoundEvent : GeneralEvent {
-			/// <summary>HACK: Set to a null reference to indicate the train point sound.</summary>
+			/// <summary>The sound buffer to play.
+			/// HACK: Set to a null reference to indicate the train point sound.</summary>
 			internal Sounds.SoundBuffer SoundBuffer;
 			internal bool PlayerTrainOnly;
 			internal bool Once;
 			internal bool Dynamic;
 			internal Vector3 Position;
 			internal double Speed;
-			/// <param name="SoundBuffer">HACK: Set to a null reference to indicate the train point sound.</param>
+
+			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
+			/// <param name="SoundBuffer">The sound buffer to play. 
+			/// HACK: Set to a null reference to indicate the train point sound.</param>
+			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
+			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
+			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
+			/// <param name="Position">The position of the sound relative to it's track location</param>
+			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
 			internal SoundEvent(double TrackPositionDelta, Sounds.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -484,6 +493,12 @@ namespace OpenBve {
 				this.Position = Position;
 				this.Speed = Speed;
 			}
+
+			/// <summary>Triggers the playback of a sound</summary>
+			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
+			/// <param name="TriggerType">They type of event which triggered this sound</param>
+			/// <param name="Train">The root train which triggered this sound</param>
+			/// <param name="CarIndex">The car index which triggered this sound</param>
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle) {
@@ -537,6 +552,11 @@ namespace OpenBve {
 				this.NextRunIndex = NextRunIndex;
 				this.NextFlangeIndex = NextFlangeIndex;
 			}
+			/// <summary>Triggers a change in run and flange sounds</summary>
+			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
+			/// <param name="TriggerType">They type of event which triggered this sound</param>
+			/// <param name="Train">The root train which triggered this sound</param>
+			/// <param name="CarIndex">The car index which triggered this sound</param>
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 					if (Direction < 0) {

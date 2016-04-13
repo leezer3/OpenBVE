@@ -1,6 +1,5 @@
 ﻿#pragma warning disable 0660, 0661
 
-using System;
 using System.IO;
 using OpenBveApi.Sounds;
 
@@ -120,7 +119,8 @@ namespace Plugin {
 					} else {
 						throw new InvalidDataException("Invalid chunk ID");
 					}
-					uint headerCkSize = ReadUInt32(reader, endianness);
+					//Skip the header checksum
+					ReadUInt32(reader, endianness);
 					uint formType = ReadUInt32(reader, endianness);
 					if (formType != 0x45564157) {
 						throw new InvalidDataException("Unsupported format");
@@ -143,7 +143,8 @@ namespace Plugin {
 							if (dwSamplesPerSec >= 0x80000000) {
 								throw new InvalidDataException("Unsupported dwSamplesPerSec");
 							}
-							uint dwAvgBytesPerSec = ReadUInt32(reader, endianness);
+							//Skip the average bytes per second declaration
+							ReadUInt32(reader, endianness);
 							ushort wBlockAlign = ReadUInt16(reader, endianness);
 							if (wFormatTag == 1) {
 								// PCM
@@ -173,9 +174,8 @@ namespace Plugin {
 								if (wBitsPerSample != 4) {
 									throw new InvalidDataException("Unsupported wBitsPerSample");
 								}
-								ushort cbSize = ReadUInt16(reader, endianness);
-								MicrosoftAdPcmData adpcmData = new MicrosoftAdPcmData();
-								adpcmData.SamplesPerBlock = ReadUInt16(reader, endianness);
+								ReadUInt16(reader, endianness);
+								MicrosoftAdPcmData adpcmData = new MicrosoftAdPcmData {SamplesPerBlock = ReadUInt16(reader, endianness)};
 								if (adpcmData.SamplesPerBlock == 0 | adpcmData.SamplesPerBlock > 2 * ((int)wBlockAlign - 6)) {
 									throw new InvalidDataException("Unexpected nSamplesPerBlock");
 								}
@@ -214,7 +214,7 @@ namespace Plugin {
 								int dataSize = samples * format.Channels * bytesPerSample;
 								dataBytes = reader.ReadBytes(dataSize);
 								stream.Position += ckSize - dataSize;
-							} else if (data is MicrosoftAdPcmData) {
+							} else if (data != null) {
 								// Microsoft ADPCM
 								MicrosoftAdPcmData adpcmData = (MicrosoftAdPcmData)data;
 								int blocks = (int)ckSize / adpcmData.BlockSize;
