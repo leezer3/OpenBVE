@@ -98,6 +98,7 @@ namespace OpenBve {
                         Screen.Width = Interface.CurrentOptions.FullscreenWidth;
                         Screen.Height = Interface.CurrentOptions.FullscreenHeight;
                         Program.currentGameWindow.WindowState = WindowState.Fullscreen;
+				        break;
 			        }
 			    }
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
