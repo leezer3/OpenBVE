@@ -47,7 +47,6 @@ namespace OpenBve {
 			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
 			double airTemperature = Game.GetAirTemperature(elevation);
 			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double airDensity = Game.GetAirDensity(airPressure, airTemperature);
 			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
 			try {
                 AL.SpeedOfSound((float)speedOfSound);
@@ -298,7 +297,6 @@ namespace OpenBve {
 			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
 			double airTemperature = Game.GetAirTemperature(elevation);
 			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double airDensity = Game.GetAirDensity(airPressure, airTemperature);
 			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
 			try {
 				AL.SpeedOfSound((float)speedOfSound);

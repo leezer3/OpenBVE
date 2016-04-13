@@ -11,8 +11,6 @@ namespace OpenBve
             internal static Bitmap RouteMap;
             /// <summary>A bitmap storing the current route gradient profile </summary>
             internal static Bitmap GradientProfile;
-            /// <summary>A bitmap storing the current auto-generated timetable</summary>
-            internal static Bitmap TimeTable;
             /// <summary>A string storing the absolute on-disk path to a .RTF or .TXT document describing the briefing for the current scenario</summary>
             internal static string RouteBriefing;
             /// <summary>A string storing the absolute on-disk path to the current route file</summary>

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace OpenBve
 {
-    public partial class formAbout : Form
+    internal partial class formAbout : Form
     {
         private Image Logo;
 

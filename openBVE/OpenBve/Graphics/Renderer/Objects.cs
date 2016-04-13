@@ -209,7 +209,7 @@ namespace OpenBve
 							{
 								Array.Resize<BoundingBox>(ref list.BoundingBoxes, list.BoundingBoxes.Length << 1);
 							}
-							list.BoundingBoxes[Index].Lower = ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox[0];
+							list.BoundingBoxes[Index].Upper = ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox[0];
 							list.BoundingBoxes[Index].Lower = ObjectManager.Objects[ObjectIndex].Mesh.BoundingBox[1];
 						}
 					}
