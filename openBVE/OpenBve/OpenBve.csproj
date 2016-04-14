@@ -251,7 +251,6 @@
     <Compile Include="OldParsers\CsvB3dObjectParser.cs" />
     <Compile Include="OldParsers\CsvRwRouteParser.cs" />
     <Compile Include="OldParsers\SoundCfgParser.cs" />
-    <Compile Include="OldParsers\WaveParser.cs" />
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />
     <Compile Include="System\Functions\FileSystem.cs" />
