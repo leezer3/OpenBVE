@@ -2085,14 +2085,9 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
 		internal static void UpdateTrains(double TimeElapsed)
 		{
-			// individual trains (without objects)
-			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
-			{
+			for (int i = 0; i < Trains.Length; i++) {
 				UpdateTrain(Trains[i], TimeElapsed);
-			});
-			//for (int i = 0; i < Trains.Length; i++) {
-			//	UpdateTrain(Trains[i], TimeElapsed);
-			//}
+			}
 			// detect collision
 			if (!Game.MinimalisticSimulation & Interface.CurrentOptions.Collisions)
 			{
