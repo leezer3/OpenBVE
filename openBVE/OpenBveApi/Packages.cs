@@ -102,6 +102,15 @@ namespace OpenBveApi.Packages
 		Other = 3,
 	}
 
+	/// <summary>Holds the properties of a file, used during creation of a package.</summary>
+	public class PackageFile
+	{
+		/// <summary>The absolute on-disk path to the file.</summary>
+		public string absolutePath;
+		/// <summary>The relative path to the file.</summary>
+		public string relativePath;
+	}
+
 
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>
 	public static class Manipulation
@@ -161,8 +170,7 @@ namespace OpenBveApi.Packages
 		/// <param name="packageFile">The filename to save the package as</param>
 		/// <param name="packageImage">The path to the image for this package, if applicable</param>
 		/// <param name="packageFiles">The list of files to save within the package</param>
-		/// <param name="rootDirectory">The root content directory, used to determine relative paths within the archive</param>
-		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, string[] packageFiles, string rootDirectory)
+		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, List<PackageFile> packageFiles, string PathAddition)
 		{
 			//TEMP
 			File.Delete(packageFile);
@@ -171,16 +179,14 @@ namespace OpenBveApi.Packages
 			{
 				using (var zipWriter = WriterFactory.Open(zip, SharpCompress.Common.ArchiveType.Zip, CompressionType.LZMA))
 				{
-					for (int i = 0; i < packageFiles.Length; i++)
+					foreach (PackageFile currentFile in packageFiles)
 					{
-						//Convert absolute to relative paths
-						var relativePath = packageFiles[i];
-						if (relativePath.StartsWith(rootDirectory))
-						{
-							relativePath = relativePath.Substring(rootDirectory.Length);
-						}
 						//Add file to archive
-						zipWriter.Write(relativePath, packageFiles[i]);
+						if (PathAddition != null)
+						{
+							currentFile.relativePath = PathAddition + currentFile.relativePath;
+						}
+						zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
 					}
 					//Create temp directory and XML file
 					var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";

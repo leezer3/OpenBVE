@@ -378,6 +378,7 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.button4 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -3354,6 +3355,7 @@
 			// 
 			// panelNewPackage
 			// 
+			this.panelNewPackage.Controls.Add(this.button4);
 			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
 			this.panelNewPackage.Controls.Add(this.button2);
 			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
@@ -3380,9 +3382,9 @@
 			// 
 			this.button2.Location = new System.Drawing.Point(3, 233);
 			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
+			this.button2.Size = new System.Drawing.Size(121, 23);
 			this.button2.TabIndex = 28;
-			this.button2.Text = "Add File(s)";
+			this.button2.Text = "Add Item(s)";
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
@@ -3391,9 +3393,9 @@
 			this.labelSelectFiles.AutoSize = true;
 			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
 			this.labelSelectFiles.Name = "labelSelectFiles";
-			this.labelSelectFiles.Size = new System.Drawing.Size(88, 13);
+			this.labelSelectFiles.Size = new System.Drawing.Size(183, 13);
 			this.labelSelectFiles.TabIndex = 27;
-			this.labelSelectFiles.Text = "Files to package:";
+			this.labelSelectFiles.Text = "The following items will be packaged:";
 			// 
 			// label16
 			// 
@@ -4707,6 +4709,16 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(517, 233);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(121, 23);
+			this.button4.TabIndex = 30;
+			this.button4.Text = "Clear Selection";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5224,6 +5236,7 @@
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Label labelSelectFiles;
 		private System.Windows.Forms.TextBox filesToPackageBox;
+		private System.Windows.Forms.Button button4;
         
     }
 }

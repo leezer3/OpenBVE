@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -40,7 +41,7 @@ namespace OpenBve
 
 		private Package currentPackage;
 		private Package oldPackage;
-		private List<string> filesToPackage;
+		private List<PackageFile> filesToPackage;
 
 		private void buttonInstall_Click(object sender, EventArgs e)
 		{
@@ -221,6 +222,13 @@ namespace OpenBve
 				}
 				string PackageFiles = "";
 				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, PackageDatabase, ref PackageFiles);
+				textBoxFilesInstalled.Invoke((MethodInvoker) delegate
+				{
+					textBoxFilesInstalled.Text = PackageFiles;
+				});
+			};
+			workerThread.RunWorkerCompleted += delegate
+			{
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
@@ -253,10 +261,6 @@ namespace OpenBve
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
 				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_files");
-				textBoxFilesInstalled.Text = PackageFiles;
-			};
-			workerThread.RunWorkerCompleted += delegate
-			{
 				panelSuccess.Show();
 			};
 			panelSuccess.Show();
@@ -644,21 +648,23 @@ namespace OpenBve
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
 			{
-				string[] files = System.IO.Directory.GetFiles("C:\\test\\", "*.*", System.IO.SearchOption.AllDirectories);
-				Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, files, "C:\\test\\");
-				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
-				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
-				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
+				Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, filesToPackage, extractionPath);
 				string text = "";
-				for (int i = 0; i < files.Length; i++)
+				for (int i = 0; i < filesToPackage.Count; i++)
 				{
-					text += files[i] + "\r\n";
+					text += filesToPackage[i].relativePath + "\r\n";
 				}
-				textBoxFilesInstalled.Text = text;
+				textBoxFilesInstalled.Invoke((MethodInvoker) delegate
+				{
+					textBoxFilesInstalled.Text = text;
+				});
 				System.Threading.Thread.Sleep(10000);
 			};
 
 			workerThread.RunWorkerCompleted += delegate {
+				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
+				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
 				label1.Text = "Finished!";
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
@@ -834,9 +840,21 @@ namespace OpenBve
 			panelPleaseWait.Hide();
 		}
 
+		string extractionPath;
+		bool PathFound;
+
+		private void button4_Click(object sender, EventArgs e)
+		{
+			filesToPackage.Clear();
+			filesToPackageBox.Clear();
+		}
+
 		//Don't use a file picker dialog- Select folders only.
 		private void button2_Click(object sender, EventArgs e)
 		{
+			//Reset the extraction path & bool
+			extractionPath = "";
+			PathFound = false;
 			var dialog = new CommonOpenFileDialog();
 			dialog.AllowNonFileSystemItems = true;
 			dialog.Multiselect = true;
@@ -844,28 +862,198 @@ namespace OpenBve
 			dialog.EnsureFileExists = false;
 			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
 			{
-				filesToPackage = new List<string>();
-				var tempStringList = new List<string>();
+				//This dialog is used elsewhere, so we'd better reset it's properties
+				openPackageFileDialog.Multiselect = false;
+				if (filesToPackage == null)
+				{
+					filesToPackage = new List<PackageFile>();
+				}
 				foreach (string rootPath in dialog.FileNames)
 				{
+					filesToPackageBox.Text += rootPath + Environment.NewLine;
 					if (System.IO.File.Exists(rootPath))
 					{
-						filesToPackage.Add(rootPath);
+						//If this is an absolute path to a file, just add it to the list
+						var File = new PackageFile
+						{
+							absolutePath = rootPath,
+							relativePath = System.IO.Path.GetFileName(rootPath),
+						};
+						filesToPackage.Add(File);
 						continue;
 					}
+					//Otherwise, this must be a directory- Get all the files within the directory and add to our list
 					string[] files = System.IO.Directory.GetFiles(rootPath, "*.*", System.IO.SearchOption.AllDirectories);
 					for (int i = 0; i < files.Length; i++)
 					{
-						filesToPackage.Add(files[i]);
-						tempStringList.Add(files[i].Replace(System.IO.Directory.GetParent(rootPath).ToString(),""));
+						var File = new PackageFile
+						{
+							absolutePath = files[i],
+							relativePath = files[i].Replace(System.IO.Directory.GetParent(rootPath).ToString(), ""),
+						};
+						filesToPackage.Add(File);
 					}
 				}
-				filesToPackageBox.Lines = tempStringList.ToArray();
-			}
-			//This dialog is used elsewhere, so we'd better reset it's properties
-			openPackageFileDialog.Multiselect = false;
-		}
+				//Now determine whether this is part of a recognised folder structure
+				for (int i = 0; i < filesToPackage.Count; i++)
+				{
+					if (filesToPackage[i].relativePath.StartsWith("\\Railway", StringComparison.OrdinalIgnoreCase))
+					{
+						//Extraction path is the root folder
+						extractionPath = "";
+						PathFound = true;
+						return;
+					}
+					if (filesToPackage[i].relativePath.StartsWith("\\Train", StringComparison.OrdinalIgnoreCase))
+					{
+						//Extraction path is the root folder
+						extractionPath = "";
+						PathFound = true;
+						return;
+					}
+					if (filesToPackage[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway";
+						PathFound = true;
+						return;
+					}
+					if (filesToPackage[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway";
+						PathFound = true;
+						return;
+					}
+					if (filesToPackage[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway";
+						PathFound = true;
+						return;
+					}
 
+				}
+
+				for (int i = 0; i < filesToPackage.Count; i++)
+				{
+					var TestCase = filesToPackage[i].absolutePath.Replace(filesToPackage[i].absolutePath, "");
+					if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
+					{
+						//Extraction path is the root folder
+						extractionPath = "\\Railway";
+						PathFound = true;
+						return;
+					}
+					if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
+					{
+						//Extraction path is the root folder
+						extractionPath = "\\Train";
+						PathFound = true;
+						return;
+					}
+					if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway\\Route";
+						PathFound = true;
+						return;
+					}
+					if (TestCase.EndsWith("Object\\", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway\\Object";
+						PathFound = true;
+						return;
+					}
+					if (TestCase.EndsWith("Sound\\", StringComparison.OrdinalIgnoreCase))
+					{
+						//Needs to be extracted to the root railway folder
+						extractionPath = "\\Railway\\Sound";
+						PathFound = true;
+						return;
+					}
+
+				}
+				//So, this doesn't have any easily findable folders
+				//We'll have to do this the hard way.
+				//Remember that people can store stuff in odd places
+				int SoundFiles = 0;
+				int ImageFiles = 0;
+				int ObjectFiles = 0;
+				int RouteFiles = 0;
+				for (int i = 0; i < filesToPackage.Count; i++)
+				{
+					if (filesToPackage[i].relativePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+					{
+						SoundFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+					{
+						ImageFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+					{
+						ImageFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".tiff", StringComparison.OrdinalIgnoreCase))
+					{
+						ImageFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".ace", StringComparison.OrdinalIgnoreCase))
+					{
+						ImageFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase))
+					{
+						ObjectFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+					{
+						//Why on earth are CSV files both routes and objects??!!
+						RouteFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".animated", StringComparison.OrdinalIgnoreCase))
+					{
+						ObjectFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".rw", StringComparison.OrdinalIgnoreCase))
+					{
+						RouteFiles++;
+					}
+					else if (filesToPackage[i].relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+					{
+						//Not sure about this one
+						//TXT files are commonly used for includes though
+						RouteFiles++;
+					}
+				}
+				//We've counted the number of files found:
+				if (SoundFiles != 0 && ObjectFiles == 0 && ImageFiles == 0)
+				{
+					//This would appear to be a subfolder of the SOUND folder
+					extractionPath = "\\Railway\\Sound";
+					PathFound = true;
+					return;
+				}
+				if (RouteFiles != 0 && ImageFiles < 20 && ObjectFiles == 0)
+				{
+					//If this is a ROUTE subfolder, we should not find any b3d objects, and
+					//there should be less than 20 images
+					extractionPath = "\\Railway\\Route";
+					PathFound = true;
+					return;
+				}
+				if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20)
+				{
+					//We have csv or b3d files and more than 20 images
+					//this means it's almost certainly an OBJECT subfolder
+					extractionPath = "\\Railway\\Object";
+					PathFound = true;
+					return;
+				}
+			}
+		}
 
 		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
 		private void ResetInstallerPanels()
@@ -895,6 +1083,8 @@ namespace OpenBve
 			selectedRoutePackageIndex = 0;
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
+			extractionPath = null;
+			PathFound = false;
 			//Reset text
 			textBoxPackageAuthor.Text = Interface.GetInterfaceString("packages_selection_none");
 			textBoxPackageName.Text = Interface.GetInterfaceString("packages_selection_none");
