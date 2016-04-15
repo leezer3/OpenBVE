@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -648,7 +646,7 @@ namespace OpenBve
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
 			{
-				Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, filesToPackage, extractionPath);
+				Manipulation.CreatePackage(currentPackage, "C:\\test\\test.zip", ImageFile, filesToPackage);
 				string text = "";
 				for (int i = 0; i < filesToPackage.Count; i++)
 				{
@@ -784,7 +782,29 @@ namespace OpenBve
 			{
 				newPackageType = PackageType.Other;
 			}
-			
+			panelReplacePackage.Hide();
+			panelNewPackage.Show();
+			panelNewPackage.Enabled = false;
+			if (radioButtonQ1Yes.Checked || radioButtonQ1No.Checked)
+			{
+				//Don't generate a new GUID if we haven't decided whether this is a new/ replacement package
+				//Pointless & confusing UI update otherwise
+				string GUID = Guid.NewGuid().ToString();
+				currentPackage = new Package
+				{
+					Name = textBoxPackageName.Text,
+					Author = textBoxPackageAuthor.Text,
+					Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
+					//TODO:
+					//Website = linkLabelPackageWebsite.Links[0],
+					GUID = GUID,
+					PackageVersion = new Version(0, 0, 0, 0),
+					PackageType = newPackageType
+				};
+				textBoxGUID.Text = currentPackage.GUID;
+			}
+
+
 		}
 
 
@@ -840,7 +860,6 @@ namespace OpenBve
 			panelPleaseWait.Hide();
 		}
 
-		string extractionPath;
 		bool PathFound;
 
 		private void button4_Click(object sender, EventArgs e)
@@ -853,15 +872,17 @@ namespace OpenBve
 		private void button2_Click(object sender, EventArgs e)
 		{
 			//Reset the extraction path & bool
-			extractionPath = "";
 			PathFound = false;
-			var dialog = new CommonOpenFileDialog();
-			dialog.AllowNonFileSystemItems = true;
-			dialog.Multiselect = true;
-			dialog.IsFolderPicker = true;
-			dialog.EnsureFileExists = false;
+			var dialog = new CommonOpenFileDialog
+			{
+				AllowNonFileSystemItems = true,
+				Multiselect = true,
+				IsFolderPicker = true,
+				EnsureFileExists = false
+			};
 			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
 			{
+				var tempList = new List<PackageFile>();
 				//This dialog is used elsewhere, so we'd better reset it's properties
 				openPackageFileDialog.Multiselect = false;
 				if (filesToPackage == null)
@@ -891,168 +912,217 @@ namespace OpenBve
 							absolutePath = files[i],
 							relativePath = files[i].Replace(System.IO.Directory.GetParent(rootPath).ToString(), ""),
 						};
-						filesToPackage.Add(File);
+						tempList.Add(File);
 					}
 				}
-				//Now determine whether this is part of a recognised folder structure
-				for (int i = 0; i < filesToPackage.Count; i++)
-				{
-					if (filesToPackage[i].relativePath.StartsWith("\\Railway", StringComparison.OrdinalIgnoreCase))
-					{
-						//Extraction path is the root folder
-						extractionPath = "";
-						PathFound = true;
-						return;
-					}
-					if (filesToPackage[i].relativePath.StartsWith("\\Train", StringComparison.OrdinalIgnoreCase))
-					{
-						//Extraction path is the root folder
-						extractionPath = "";
-						PathFound = true;
-						return;
-					}
-					if (filesToPackage[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway";
-						PathFound = true;
-						return;
-					}
-					if (filesToPackage[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway";
-						PathFound = true;
-						return;
-					}
-					if (filesToPackage[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway";
-						PathFound = true;
-						return;
-					}
+				filesToPackage.AddRange(FindFileLocations(tempList));
+				
+			}
+		}
 
+		private void button5_Click(object sender, EventArgs e)
+		{
+			labelNewGUID.Text = "Replacing the package with the following GUID:";
+			textBoxGUID.Text = currentPackage.GUID;
+			panelReplacePackage.Hide();
+			panelNewPackage.Show();
+		}
+
+		/// <summary>This function takes a list of files, and returns the files with corrected relative paths for compression or extraction</summary>
+		/// <param name="tempList">The file list</param>
+		/// <returns>The file list with corrected relative paths</returns>
+		private List<PackageFile> FindFileLocations(List<PackageFile> tempList)
+		{
+			//Now determine whether this is part of a recognised folder structure
+			for (int i = 0; i < tempList.Count; i++)
+			{
+				if (tempList[i].relativePath.StartsWith("\\Railway", StringComparison.OrdinalIgnoreCase))
+				{
+					//Extraction path is the root folder
+					PathFound = true;
+					return tempList;
+				}
+				if (tempList[i].relativePath.StartsWith("\\Train", StringComparison.OrdinalIgnoreCase))
+				{
+					//Extraction path is the root folder
+					PathFound = true;
+					return tempList;
+				}
+				if (tempList[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
+				{
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
+					}
+					PathFound = true;
+					return tempList;
+				}
+				if (tempList[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
+				{
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
+					}
+					PathFound = true;
+					return tempList;
+				}
+				if (tempList[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
+				{
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
+					}
+					PathFound = true;
+					return tempList;
 				}
 
-				for (int i = 0; i < filesToPackage.Count; i++)
-				{
-					var TestCase = filesToPackage[i].absolutePath.Replace(filesToPackage[i].absolutePath, "");
-					if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
-					{
-						//Extraction path is the root folder
-						extractionPath = "\\Railway";
-						PathFound = true;
-						return;
-					}
-					if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
-					{
-						//Extraction path is the root folder
-						extractionPath = "\\Train";
-						PathFound = true;
-						return;
-					}
-					if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway\\Route";
-						PathFound = true;
-						return;
-					}
-					if (TestCase.EndsWith("Object\\", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway\\Object";
-						PathFound = true;
-						return;
-					}
-					if (TestCase.EndsWith("Sound\\", StringComparison.OrdinalIgnoreCase))
-					{
-						//Needs to be extracted to the root railway folder
-						extractionPath = "\\Railway\\Sound";
-						PathFound = true;
-						return;
-					}
+			}
 
-				}
-				//So, this doesn't have any easily findable folders
-				//We'll have to do this the hard way.
-				//Remember that people can store stuff in odd places
-				int SoundFiles = 0;
-				int ImageFiles = 0;
-				int ObjectFiles = 0;
-				int RouteFiles = 0;
-				for (int i = 0; i < filesToPackage.Count; i++)
+			for (int i = 0; i < tempList.Count; i++)
+			{
+				var TestCase = tempList[i].absolutePath.Replace(tempList[i].absolutePath, "");
+				if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
 				{
-					if (filesToPackage[i].relativePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+					//Extraction path is the root folder
+					for (int j = 0; j < tempList.Count; j++)
 					{
-						SoundFiles++;
+						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
 					}
-					else if (filesToPackage[i].relativePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-					{
-						ImageFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
-					{
-						ImageFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".tiff", StringComparison.OrdinalIgnoreCase))
-					{
-						ImageFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".ace", StringComparison.OrdinalIgnoreCase))
-					{
-						ImageFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase))
-					{
-						ObjectFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-					{
-						//Why on earth are CSV files both routes and objects??!!
-						RouteFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".animated", StringComparison.OrdinalIgnoreCase))
-					{
-						ObjectFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".rw", StringComparison.OrdinalIgnoreCase))
-					{
-						RouteFiles++;
-					}
-					else if (filesToPackage[i].relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
-					{
-						//Not sure about this one
-						//TXT files are commonly used for includes though
-						RouteFiles++;
-					}
-				}
-				//We've counted the number of files found:
-				if (SoundFiles != 0 && ObjectFiles == 0 && ImageFiles == 0)
-				{
-					//This would appear to be a subfolder of the SOUND folder
-					extractionPath = "\\Railway\\Sound";
 					PathFound = true;
-					return;
+					return tempList;
 				}
-				if (RouteFiles != 0 && ImageFiles < 20 && ObjectFiles == 0)
+				if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
 				{
-					//If this is a ROUTE subfolder, we should not find any b3d objects, and
-					//there should be less than 20 images
-					extractionPath = "\\Railway\\Route";
+					//Extraction path is the root folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Train" + tempList[j].relativePath;
+					}
 					PathFound = true;
-					return;
+					return tempList;
 				}
-				if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20)
+				if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
 				{
-					//We have csv or b3d files and more than 20 images
-					//this means it's almost certainly an OBJECT subfolder
-					extractionPath = "\\Railway\\Object";
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
+					}
 					PathFound = true;
-					return;
+					return tempList;
+				}
+				if (TestCase.EndsWith("Object\\", StringComparison.OrdinalIgnoreCase))
+				{
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
+					}
+					PathFound = true;
+					return tempList;
+				}
+				if (TestCase.EndsWith("Sound\\", StringComparison.OrdinalIgnoreCase))
+				{
+					//Needs to be extracted to the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
+					}
+					PathFound = true;
+					return tempList;
+				}
+
+			}
+			//So, this doesn't have any easily findable folders
+			//We'll have to do this the hard way.
+			//Remember that people can store stuff in odd places
+			int SoundFiles = 0;
+			int ImageFiles = 0;
+			int ObjectFiles = 0;
+			int RouteFiles = 0;
+			for (int i = 0; i < tempList.Count; i++)
+			{
+				if (tempList[i].relativePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+				{
+					SoundFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+				{
+					ImageFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+				{
+					ImageFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".tiff", StringComparison.OrdinalIgnoreCase))
+				{
+					ImageFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".ace", StringComparison.OrdinalIgnoreCase))
+				{
+					ImageFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase))
+				{
+					ObjectFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+				{
+					//Why on earth are CSV files both routes and objects??!!
+					RouteFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".animated", StringComparison.OrdinalIgnoreCase))
+				{
+					ObjectFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".rw", StringComparison.OrdinalIgnoreCase))
+				{
+					RouteFiles++;
+				}
+				else if (tempList[i].relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+				{
+					//Not sure about this one
+					//TXT files are commonly used for includes though
+					RouteFiles++;
 				}
 			}
+			//We've counted the number of files found:
+			if (SoundFiles != 0 && ObjectFiles == 0 && ImageFiles == 0)
+			{
+				//This would appear to be a subfolder of the SOUND folder
+				for (int j = 0; j < tempList.Count; j++)
+				{
+					tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
+				}
+				PathFound = true;
+				return tempList;
+			}
+			if (RouteFiles != 0 && ImageFiles < 20 && ObjectFiles == 0)
+			{
+				//If this is a ROUTE subfolder, we should not find any b3d objects, and
+				//there should be less than 20 images
+				for (int j = 0; j < tempList.Count; j++)
+				{
+					tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
+				}
+				PathFound = true;
+				return tempList;
+			}
+			if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20)
+			{
+				//We have csv or b3d files and more than 20 images
+				//this means it's almost certainly an OBJECT subfolder
+				for (int j = 0; j < tempList.Count; j++)
+				{
+					tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
+				}
+				PathFound = true;
+				return tempList;
+			}
+			return tempList;
 		}
 
 		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
@@ -1083,7 +1153,6 @@ namespace OpenBve
 			selectedRoutePackageIndex = 0;
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
-			extractionPath = null;
 			PathFound = false;
 			//Reset text
 			textBoxPackageAuthor.Text = Interface.GetInterfaceString("packages_selection_none");
@@ -1091,6 +1160,7 @@ namespace OpenBve
 			textBoxPackageDescription.Text = Interface.GetInterfaceString("packages_selection_none");
 			textBoxPackageVersion.Text = Interface.GetInterfaceString("packages_selection_none");
 			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install_select");
+			labelNewGUID.Text = "The new package has been assinged the following GUID:";
 		}
 	}
 }

@@ -170,7 +170,7 @@ namespace OpenBveApi.Packages
 		/// <param name="packageFile">The filename to save the package as</param>
 		/// <param name="packageImage">The path to the image for this package, if applicable</param>
 		/// <param name="packageFiles">The list of files to save within the package</param>
-		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, List<PackageFile> packageFiles, string PathAddition)
+		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, List<PackageFile> packageFiles)
 		{
 			//TEMP
 			File.Delete(packageFile);
@@ -182,10 +182,6 @@ namespace OpenBveApi.Packages
 					foreach (PackageFile currentFile in packageFiles)
 					{
 						//Add file to archive
-						if (PathAddition != null)
-						{
-							currentFile.relativePath = PathAddition + currentFile.relativePath;
-						}
 						zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
 					}
 					//Create temp directory and XML file

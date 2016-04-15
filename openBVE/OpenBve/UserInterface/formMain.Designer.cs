@@ -256,20 +256,22 @@
 			this.panelPackages = new System.Windows.Forms.Panel();
 			this.panelCreatePackage = new System.Windows.Forms.Panel();
 			this.button3 = new System.Windows.Forms.Button();
-			this.panelNewPackage = new System.Windows.Forms.Panel();
-			this.filesToPackageBox = new System.Windows.Forms.TextBox();
-			this.button2 = new System.Windows.Forms.Button();
-			this.labelSelectFiles = new System.Windows.Forms.Label();
-			this.label16 = new System.Windows.Forms.Label();
-			this.textBoxGUID = new System.Windows.Forms.TextBox();
-			this.label12 = new System.Windows.Forms.Label();
 			this.panelReplacePackage = new System.Windows.Forms.Panel();
+			this.button5 = new System.Windows.Forms.Button();
 			this.label10 = new System.Windows.Forms.Label();
 			this.dataGridViewReplacePackage = new System.Windows.Forms.DataGridView();
 			this.dataGridViewTextBoxColumn21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.panelNewPackage = new System.Windows.Forms.Panel();
+			this.button4 = new System.Windows.Forms.Button();
+			this.filesToPackageBox = new System.Windows.Forms.TextBox();
+			this.button2 = new System.Windows.Forms.Button();
+			this.labelSelectFiles = new System.Windows.Forms.Label();
+			this.label16 = new System.Windows.Forms.Label();
+			this.textBoxGUID = new System.Windows.Forms.TextBox();
+			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
@@ -378,7 +380,6 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.button4 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -449,9 +450,9 @@
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
 			this.panelCreatePackage.SuspendLayout();
-			this.panelNewPackage.SuspendLayout();
 			this.panelReplacePackage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).BeginInit();
+			this.panelNewPackage.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBoxQ1.SuspendLayout();
 			this.panelPleaseWait.SuspendLayout();
@@ -3353,83 +3354,25 @@
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
-			// panelNewPackage
-			// 
-			this.panelNewPackage.Controls.Add(this.button4);
-			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
-			this.panelNewPackage.Controls.Add(this.button2);
-			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
-			this.panelNewPackage.Controls.Add(this.label16);
-			this.panelNewPackage.Controls.Add(this.textBoxGUID);
-			this.panelNewPackage.Controls.Add(this.label12);
-			this.panelNewPackage.Enabled = false;
-			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
-			this.panelNewPackage.Name = "panelNewPackage";
-			this.panelNewPackage.Size = new System.Drawing.Size(644, 354);
-			this.panelNewPackage.TabIndex = 21;
-			// 
-			// filesToPackageBox
-			// 
-			this.filesToPackageBox.Enabled = false;
-			this.filesToPackageBox.Location = new System.Drawing.Point(8, 63);
-			this.filesToPackageBox.Multiline = true;
-			this.filesToPackageBox.Name = "filesToPackageBox";
-			this.filesToPackageBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.filesToPackageBox.Size = new System.Drawing.Size(621, 163);
-			this.filesToPackageBox.TabIndex = 29;
-			// 
-			// button2
-			// 
-			this.button2.Location = new System.Drawing.Point(3, 233);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(121, 23);
-			this.button2.TabIndex = 28;
-			this.button2.Text = "Add Item(s)";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
-			// 
-			// labelSelectFiles
-			// 
-			this.labelSelectFiles.AutoSize = true;
-			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
-			this.labelSelectFiles.Name = "labelSelectFiles";
-			this.labelSelectFiles.Size = new System.Drawing.Size(183, 13);
-			this.labelSelectFiles.TabIndex = 27;
-			this.labelSelectFiles.Text = "The following items will be packaged:";
-			// 
-			// label16
-			// 
-			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(4, 264);
-			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(360, 13);
-			this.label16.TabIndex = 26;
-			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
-			// 
-			// textBoxGUID
-			// 
-			this.textBoxGUID.Location = new System.Drawing.Point(5, 21);
-			this.textBoxGUID.Name = "textBoxGUID";
-			this.textBoxGUID.Size = new System.Drawing.Size(285, 20);
-			this.textBoxGUID.TabIndex = 25;
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(3, 3);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(281, 13);
-			this.label12.TabIndex = 24;
-			this.label12.Text = "The new package has been assinged the following GUID:";
-			// 
 			// panelReplacePackage
 			// 
+			this.panelReplacePackage.Controls.Add(this.button5);
 			this.panelReplacePackage.Controls.Add(this.label10);
 			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
 			this.panelReplacePackage.Location = new System.Drawing.Point(-2, 137);
 			this.panelReplacePackage.Name = "panelReplacePackage";
 			this.panelReplacePackage.Size = new System.Drawing.Size(644, 354);
 			this.panelReplacePackage.TabIndex = 20;
+			// 
+			// button5
+			// 
+			this.button5.Location = new System.Drawing.Point(200, 278);
+			this.button5.Name = "button5";
+			this.button5.Size = new System.Drawing.Size(159, 23);
+			this.button5.TabIndex = 25;
+			this.button5.Text = "Replace This Package";
+			this.button5.UseVisualStyleBackColor = true;
+			this.button5.Click += new System.EventHandler(this.button5_Click);
 			// 
 			// label10
 			// 
@@ -3462,7 +3405,7 @@
 			this.dataGridViewReplacePackage.RowHeadersVisible = false;
 			this.dataGridViewReplacePackage.RowHeadersWidth = 90;
 			this.dataGridViewReplacePackage.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewReplacePackage.Size = new System.Drawing.Size(627, 328);
+			this.dataGridViewReplacePackage.Size = new System.Drawing.Size(627, 254);
 			this.dataGridViewReplacePackage.TabIndex = 23;
 			this.dataGridViewReplacePackage.SelectionChanged += new System.EventHandler(this.dataGridViewReplacePackage_SelectionChanged);
 			// 
@@ -3489,6 +3432,85 @@
 			this.dataGridViewTextBoxColumn24.HeaderText = "Website";
 			this.dataGridViewTextBoxColumn24.Name = "dataGridViewTextBoxColumn24";
 			this.dataGridViewTextBoxColumn24.ReadOnly = true;
+			// 
+			// panelNewPackage
+			// 
+			this.panelNewPackage.Controls.Add(this.button4);
+			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
+			this.panelNewPackage.Controls.Add(this.button2);
+			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
+			this.panelNewPackage.Controls.Add(this.label16);
+			this.panelNewPackage.Controls.Add(this.textBoxGUID);
+			this.panelNewPackage.Controls.Add(this.labelNewGUID);
+			this.panelNewPackage.Enabled = false;
+			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
+			this.panelNewPackage.Name = "panelNewPackage";
+			this.panelNewPackage.Size = new System.Drawing.Size(644, 354);
+			this.panelNewPackage.TabIndex = 21;
+			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(517, 233);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(121, 23);
+			this.button4.TabIndex = 30;
+			this.button4.Text = "Clear Selection";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
+			// filesToPackageBox
+			// 
+			this.filesToPackageBox.Enabled = false;
+			this.filesToPackageBox.Location = new System.Drawing.Point(8, 63);
+			this.filesToPackageBox.Multiline = true;
+			this.filesToPackageBox.Name = "filesToPackageBox";
+			this.filesToPackageBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.filesToPackageBox.Size = new System.Drawing.Size(621, 163);
+			this.filesToPackageBox.TabIndex = 29;
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(3, 233);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(121, 23);
+			this.button2.TabIndex = 28;
+			this.button2.Text = "Add Item(s)";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
+			// 
+			// labelSelectFiles
+			// 
+			this.labelSelectFiles.AutoSize = true;
+			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
+			this.labelSelectFiles.Name = "labelSelectFiles";
+			this.labelSelectFiles.Size = new System.Drawing.Size(232, 13);
+			this.labelSelectFiles.TabIndex = 27;
+			this.labelSelectFiles.Text = "The following files and folders will be packaged:";
+			// 
+			// label16
+			// 
+			this.label16.AutoSize = true;
+			this.label16.Location = new System.Drawing.Point(4, 264);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(360, 13);
+			this.label16.TabIndex = 26;
+			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
+			// 
+			// textBoxGUID
+			// 
+			this.textBoxGUID.Location = new System.Drawing.Point(5, 21);
+			this.textBoxGUID.Name = "textBoxGUID";
+			this.textBoxGUID.Size = new System.Drawing.Size(285, 20);
+			this.textBoxGUID.TabIndex = 25;
+			// 
+			// labelNewGUID
+			// 
+			this.labelNewGUID.AutoSize = true;
+			this.labelNewGUID.Location = new System.Drawing.Point(3, 3);
+			this.labelNewGUID.Name = "labelNewGUID";
+			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
+			this.labelNewGUID.TabIndex = 24;
+			this.labelNewGUID.Text = "The new package has been assinged the following GUID:";
 			// 
 			// groupBox1
 			// 
@@ -4709,16 +4731,6 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
-			// button4
-			// 
-			this.button4.Location = new System.Drawing.Point(517, 233);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(121, 23);
-			this.button4.TabIndex = 30;
-			this.button4.Text = "Clear Selection";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
-			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4844,11 +4856,11 @@
 			this.panelPackages.PerformLayout();
 			this.panelCreatePackage.ResumeLayout(false);
 			this.panelCreatePackage.PerformLayout();
-			this.panelNewPackage.ResumeLayout(false);
-			this.panelNewPackage.PerformLayout();
 			this.panelReplacePackage.ResumeLayout(false);
 			this.panelReplacePackage.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).EndInit();
+			this.panelNewPackage.ResumeLayout(false);
+			this.panelNewPackage.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.groupBoxQ1.ResumeLayout(false);
@@ -5228,7 +5240,7 @@
 		private System.Windows.Forms.Panel panelNewPackage;
 		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.TextBox textBoxGUID;
-		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label labelNewGUID;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Panel panelPleaseWait;
 		private System.Windows.Forms.Label label17;
@@ -5237,6 +5249,7 @@
 		private System.Windows.Forms.Label labelSelectFiles;
 		private System.Windows.Forms.TextBox filesToPackageBox;
 		private System.Windows.Forms.Button button4;
+		private System.Windows.Forms.Button button5;
         
     }
 }
