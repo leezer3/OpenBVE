@@ -35,7 +35,7 @@ namespace OpenBve {
 				this.PreviousBackground = PreviousBackground;
 				this.NextBackground = NextBackground;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.Camera) {
 					if (Direction < 0) {
 						World.TargetBackground = this.PreviousBackground;
@@ -59,7 +59,7 @@ namespace OpenBve {
 				this.CurrentFog = CurrentFog;
 				this.NextFog = NextFog;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.Camera) {
 					if (Direction < 0) {
 						Game.PreviousFog = this.PreviousFog;
@@ -87,7 +87,7 @@ namespace OpenBve {
 				this.NextBrightness = NextBrightness;
 				this.NextDistance = NextDistance;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 					if (Direction < 0) {
 						//Train.Cars[CarIndex].Brightness.NextBrightness = Train.Cars[CarIndex].Brightness.PreviousBrightness;
@@ -113,7 +113,7 @@ namespace OpenBve {
 				this.DontTriggerAnymore = false;
 				this.Texture = texture;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction < 0) {
 						Game.RemoveMarker(this.Texture);
@@ -131,7 +131,7 @@ namespace OpenBve {
 				this.DontTriggerAnymore = false;
 				this.Texture = texture;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction < 0) {
 						Game.AddMarker(this.Texture);
@@ -147,7 +147,7 @@ namespace OpenBve {
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction > 0) {
 						int d = Train.DriverCar;
@@ -173,7 +173,7 @@ namespace OpenBve {
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.TrainFront) {
 					if (Direction < 0) {
 						Train.Station = -1;
@@ -201,7 +201,7 @@ namespace OpenBve {
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction < 0) {
 						Train.StationFrontCar = true;
