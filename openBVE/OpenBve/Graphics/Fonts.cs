@@ -114,7 +114,7 @@ namespace OpenBve {
 		}
 		
 		/// <summary>Represents a font.</summary>
-		internal class OpenGlFont {
+		internal class OpenGlFont :  IDisposable{
 			// --- members ---
 			/// <summary>The underlying font.</summary>
 			private readonly Font Font;
@@ -149,6 +149,29 @@ namespace OpenBve {
 				texture = this.Tables[hi].Texture;
 				data = this.Tables[hi].Characters[lo];
 				return value >= 0x10000 ? 2 : 1;
+			}
+
+			private bool disposed = false;
+			protected virtual void Dispose(bool disposing)
+			{
+				if (!disposed)
+				{
+					if (disposing)
+					{
+						if (Font != null)
+						{
+							Font.Dispose();
+						}
+					}
+
+					disposed = true;
+				}
+			}
+
+			public void Dispose()
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
 			}
 		}
 		
