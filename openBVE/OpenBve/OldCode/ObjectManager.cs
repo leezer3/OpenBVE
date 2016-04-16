@@ -131,18 +131,15 @@ namespace OpenBve {
 			internal double SecondsSinceLastUpdate;
 			internal int ObjectIndex;
 
-            //This section holds script files executed by CSSCript
+            //This section holds script files executed by CS-Script
             /// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
             internal string TranslateXScriptFile;
-            internal bool TranslateXScriptLoaded;
 	        internal AnimationScript TranslateXAnimationScript;
             /// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
             internal string TranslateYScriptFile;
-	        internal bool TranslateYScriptLoaded;
             internal AnimationScript TranslateYAnimationScript;
             /// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
             internal string TranslateZScriptFile;
-	        internal bool TranslateZScriptLoaded;
             internal AnimationScript TranslateZAnimationScript;
 			// methods
 			internal bool IsFreeOfFunctions() {

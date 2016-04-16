@@ -90,8 +90,7 @@ namespace Plugin {
 		private static bool CanLoadUncompressedData(byte[] data) {
 			using (MemoryStream stream = new MemoryStream(data)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
-					ulong identifier;
-					identifier = reader.ReadUInt64();
+					ulong identifier = reader.ReadUInt64();
 					if (identifier != 0x40404153494D4953) {
 						return false;
 					}

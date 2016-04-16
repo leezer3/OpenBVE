@@ -92,7 +92,7 @@ namespace OpenBve
                             if (selectSingleNode != null)
                             {
                                 //Attempt to load author information from XML
-                                MessageBox.Show(Object.Author);
+								Object.Author = selectSingleNode.InnerText.Trim();
                             }
                             selectSingleNode = node.SelectSingleNode("copyright");
                             if (selectSingleNode != null)

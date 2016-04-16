@@ -33,10 +33,7 @@ namespace Plugin {
 					data.Response = AIResponse.Long;
 					return;
 				} else if (this.Train.AtsSx.State == AtsSx.States.Chime) {
-					bool cancel = false;
-					if (this.Train.State.Location > this.Train.AtsSx.RedSignalLocation) {
-						cancel = true;
-					}
+					bool cancel = this.Train.State.Location > this.Train.AtsSx.RedSignalLocation;
 					if (cancel) {
 						this.Train.KeyDown(VirtualKeys.A1);
 						data.Response = AIResponse.Medium;

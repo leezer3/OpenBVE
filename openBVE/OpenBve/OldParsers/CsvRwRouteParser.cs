@@ -65,7 +65,6 @@ namespace OpenBve {
 			internal double Roll;
 			internal bool ShowObject;
 			internal bool ShowPost;
-			internal int GameSignalIndex;
 		}
 		private struct Section {
 			internal double TrackPosition;
@@ -104,6 +103,10 @@ namespace OpenBve {
 			internal SoundType Type;
 			internal double X;
 			internal double Y;
+			//TODO:
+			//This is always set to a constant 15.0 on loading a sound, and never touched again
+			//I presume Michelle intended to have sounds with different radii available
+			//This would require a custom or extended command which allowed the radius value to be set
 			internal double Radius;
 			internal double Speed;
 		}
@@ -3323,7 +3326,6 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Signal[n].Roll = 0.0174532925199433 * roll;
 												Data.Blocks[BlockIndex].Signal[n].ShowObject = true;
 												Data.Blocks[BlockIndex].Signal[n].ShowPost = y < 0.0;
-												Data.Blocks[BlockIndex].Signal[n].GameSignalIndex = -1;
 											} else {
 												Interface.AddMessage(Interface.MessageType.Error, false, "SignalIndex references a signal object not loaded in Track.SigF at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											}
@@ -3403,7 +3405,6 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Signal[n].Roll = 0.0174532925199433 * roll;
 											Data.Blocks[BlockIndex].Signal[n].ShowObject = x != 0.0;
 											Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
-											Data.Blocks[BlockIndex].Signal[n].GameSignalIndex = -1;
 										}
 									} break;
 								case "track.relay":

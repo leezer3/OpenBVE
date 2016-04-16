@@ -527,9 +527,12 @@ namespace OpenBve
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
 
-		// ================================
 
-		// parse panel config
+
+		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
+		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
+		/// <param name="Encoding">The automatically detected or manually set encoding of the panel configuration file.</param>
+		/// <param name="Train">The base train on which to apply the panel configuration.</param>
 		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
 		{
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");

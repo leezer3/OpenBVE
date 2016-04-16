@@ -690,8 +690,7 @@ namespace OpenBve {
 
 		// try load sound
 		private static TrainManager.CarSound TryLoadSound(string FileName, Vector3 Position, double Radius) {
-			TrainManager.CarSound s;
-			s = TrainManager.CarSound.Empty;
+			TrainManager.CarSound s = TrainManager.CarSound.Empty;
 			s.Position = Position;
 			s.Source = null;
 			if (FileName != null) {
