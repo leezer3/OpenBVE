@@ -1789,6 +1789,7 @@ namespace OpenBve
 		{
 			if (Train.Cars[CarIndex].FrontBogie.CarSections.Length == 0)
 			{
+				Train.Cars[CarIndex].FrontBogie.CurrentCarSection = -1;
 				//Hack: If no bogie objects are defined, just return
 				return;
 			}
@@ -1818,6 +1819,7 @@ namespace OpenBve
 		{
 			if (Train.Cars[CarIndex].RearBogie.CarSections.Length == 0)
 			{
+				Train.Cars[CarIndex].RearBogie.CurrentCarSection = -1;
 				//Hack: If no bogie objects are defined, just return
 				return;
 			}
@@ -2435,9 +2437,21 @@ namespace OpenBve
 					{
 						Renderer.HideObject(Train.Cars[i].CarSections[s].Elements[j].ObjectIndex);
 					}
+				}
+				s = Train.Cars[i].FrontBogie.CurrentCarSection;
+				if (s >= 0)
+				{
 					for (int j = 0; j < Train.Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
 					{
 						Renderer.HideObject(Train.Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
+					}
+				}
+				s = Train.Cars[i].RearBogie.CurrentCarSection;
+				if (s >= 0)
+				{
+					for (int j = 0; j < Train.Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
+					{
+						Renderer.HideObject(Train.Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
 					}
 				}
 			}
