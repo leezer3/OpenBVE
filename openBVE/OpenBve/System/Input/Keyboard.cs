@@ -8,7 +8,13 @@ namespace OpenBve
         /// <summary>Called when a KeyDown event is generated</summary>
         internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
         {
-            BlockKeyRepeat = true;
+	        if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Key.HasFlag(OpenTK.Input.Key.AltLeft))
+	        {
+		        // Catch standard ALT + F4 quit and push confirmation prompt
+		        Game.Menu.PushMenu(Menu.MenuType.Quit);
+		        return;
+	        }
+	        BlockKeyRepeat = true;
             //Check for modifiers
             if (e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
             if (e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
