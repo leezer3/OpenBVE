@@ -435,6 +435,7 @@ namespace OpenBve {
 				if (System.IO.File.Exists(Result.RouteFile) & System.IO.Directory.Exists(Result.TrainFolder)) {
 					Result.Start = true;
 					this.Close();
+					this.Dispose();
 				}
 			} else {
 				System.Media.SystemSounds.Exclamation.Play();
