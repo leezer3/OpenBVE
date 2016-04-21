@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -449,18 +450,130 @@ namespace OpenBve {
 		// functions
 		// =========
 
+		private BackgroundWorker workerThread;
+
+		private void workerThread_doWork(object sender, DoWorkEventArgs e)
+		{
+			Game.Reset(false);
+			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
+			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
+			
+		}
+
+		private void workerThread_completed(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (e.Error != null)
+			{
+				TryLoadImage(pictureboxRouteImage, "route_error.png");
+				textboxRouteDescription.Text = e.Error.Message;
+				textboxRouteEncodingPreview.Text = "";
+				pictureboxRouteMap.Image = null;
+				pictureboxRouteGradient.Image = null;
+				Result.RouteFile = null;
+				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+				return;
+			}
+			try
+			{
+				pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
+				pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
+					pictureboxRouteGradient.Height, false);
+				// image
+				if (Game.RouteImage.Length != 0)
+				{
+					try
+					{
+						pictureboxRouteImage.Image = Image.FromFile(Game.RouteImage);
+					}
+					catch
+					{
+						TryLoadImage(pictureboxRouteImage, "route_error.png");
+					}
+				}
+				else
+				{
+					string[] f = new string[] {".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg"};
+					int i;
+					for (i = 0; i < f.Length; i++)
+					{
+						string g = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile),
+							System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + f[i]);
+						if (System.IO.File.Exists(g))
+						{
+							try
+							{
+								pictureboxRouteImage.Image = Image.FromFile(g);
+							}
+							catch
+							{
+								pictureboxRouteImage.Image = null;
+							}
+							break;
+						}
+					}
+					if (i == f.Length)
+					{
+						TryLoadImage(pictureboxRouteImage, "route_unknown.png");
+					}
+				}
+
+				// description
+				string Description = Interface.ConvertNewlinesToCrLf(Game.RouteComment);
+				if (Description.Length != 0)
+				{
+					textboxRouteDescription.Text = Description;
+				}
+				else
+				{
+					textboxRouteDescription.Text = System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
+				}
+				textboxRouteEncodingPreview.Text = Interface.ConvertNewlinesToCrLf(Description);
+				if (Game.TrainName != null)
+				{
+					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault") + " (" + Game.TrainName + ")";
+				}
+				else
+				{
+					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+				}
+			}
+			catch (Exception ex)
+			{
+				TryLoadImage(pictureboxRouteImage, "route_error.png");
+				textboxRouteDescription.Text = ex.Message;
+				textboxRouteEncodingPreview.Text = "";
+				pictureboxRouteMap.Image = null;
+				pictureboxRouteGradient.Image = null;
+				Result.RouteFile = null;
+				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+			}
+			
+
+			if (checkboxTrainDefault.Checked)
+			{
+				ShowDefaultTrain();
+			}
+
+			this.Cursor = Cursors.Default;
+			//Deliberately select the tab when the process is complete
+			//This hopefully fixes another instance of the 'grey tabs' bug
+			tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
+
+			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
+		}
+
+
 		// show route
 		private void ShowRoute(bool UserSelectedEncoding) {
 
-			if (Result.RouteFile != null)
+			if (Result.RouteFile != null && !workerThread.IsBusy)
 			{
 				
 				this.Cursor = Cursors.WaitCursor;
-				//Calling Application.DoEvents seems to cause a crash on some Mono systems....
-				//As far as I can tell, it's not actually doing anything useful
-				//I think the original intention was probably to allow the GUI to update a little faster??
-				//Application.DoEvents();
-				
+				TryLoadImage(pictureboxRouteImage, "loading.png");
+				groupboxRouteDetails.Visible = true;
+				textboxRouteDescription.Text = Interface.GetInterfaceString("start_route_processing");
+
 				// determine encoding
 				if (!UserSelectedEncoding) {
 					comboboxRouteEncoding.Tag = new object();
@@ -529,75 +642,7 @@ namespace OpenBve {
 					}
 					comboboxRouteEncoding.Tag = null;
 				}
-				// parse route
-				try {
-					Game.Reset(false);
-					bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-					CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
-					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
-					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width, pictureboxRouteGradient.Height, false);
-					// image
-					if (Game.RouteImage.Length != 0) {
-						try {
-							pictureboxRouteImage.Image = Image.FromFile(Game.RouteImage);
-						} catch {
-							TryLoadImage(pictureboxRouteImage, "route_error.png");
-						}
-					} else {
-						string[] e = new string[] { ".png", ".bmp", ".gif", ".tiff", ".tif", ".jpeg", ".jpg" };
-						int i;
-						for (i = 0; i < e.Length; i++) {
-							string g = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(Result.RouteFile), System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile) + e[i]);
-							if (System.IO.File.Exists(g)) {
-								try {
-									pictureboxRouteImage.Image = Image.FromFile(g);
-								} catch {
-									pictureboxRouteImage.Image = null;
-								}
-								break;
-							}
-						}
-						if (i == e.Length) {
-							TryLoadImage(pictureboxRouteImage, "route_unknown.png");
-						}
-					}
-					
-					// description
-					string Description = Interface.ConvertNewlinesToCrLf(Game.RouteComment);
-					if (Description.Length != 0) {
-						textboxRouteDescription.Text = Description;
-					} else {
-						textboxRouteDescription.Text = System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
-					}
-					textboxRouteEncodingPreview.Text = Interface.ConvertNewlinesToCrLf(Description);
-					if (Game.TrainName != null) {
-						checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault") + " (" + Game.TrainName + ")";
-					} else {
-						checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
-					}
-					
-				} catch (Exception ex) {
-					// error
-					TryLoadImage(pictureboxRouteImage, "route_error.png");
-					textboxRouteDescription.Text = ex.Message;
-					textboxRouteEncodingPreview.Text = "";
-					pictureboxRouteMap.Image = null;
-					pictureboxRouteGradient.Image = null;
-					Result.RouteFile = null;
-					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
-				}
-				groupboxRouteDetails.Visible = true;
-				
-				if (checkboxTrainDefault.Checked) {
-					ShowDefaultTrain();
-				}
-				
-				this.Cursor = Cursors.Default;
-				//Deliberately select the tab when the process is complete
-				//This hopefully fixes another instance of the 'grey tabs' bug
-				tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
-			   
-				buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
+				workerThread.RunWorkerAsync();
 			}
 		}
 

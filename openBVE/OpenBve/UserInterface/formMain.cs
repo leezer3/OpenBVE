@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using OpenTK.Input;
@@ -372,6 +373,10 @@ namespace OpenBve {
 //			Result.RouteEncoding = System.Text.Encoding.UTF8;
 //			Result.TrainFolder = null;
 //			Result.TrainEncoding = System.Text.Encoding.UTF8;
+
+			workerThread = new BackgroundWorker();
+			workerThread.DoWork += workerThread_doWork;
+			workerThread.RunWorkerCompleted += workerThread_completed;
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
