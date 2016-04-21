@@ -210,13 +210,13 @@ namespace OpenBve {
 		private struct RouteData {
 			internal double TrackPosition;
 			internal double BlockInterval;
-            /// <summary>OpenBVE runs internally in meters per second
-            /// This value is used to convert between the speed set by Options.UnitsOfSpeed and m/s
-            /// </summary>
+			/// <summary>OpenBVE runs internally in meters per second
+			/// This value is used to convert between the speed set by Options.UnitsOfSpeed and m/s
+			/// </summary>
 			internal double UnitOfSpeed;
-            /// <summary>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
-            /// Certain BVE2/4 era routes used this as an animation trick
-            /// </summary>
+			/// <summary>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
+			/// Certain BVE2/4 era routes used this as an animation trick
+			/// </summary>
 			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
@@ -232,22 +232,22 @@ namespace OpenBve {
 			internal int FirstUsedBlock;
 		}
 
-        /// <summary>This method checks whether a given route file is in the .rw format</summary>
-        /// <param name="FileName">The file to check</param>
-        /// <returns>True if this file is a RW, false otherwise</returns>
-	    internal static bool isRWFile(string FileName)
-        {
-            //TODO: Write a RW check function, which *doesn't* requite checking the extension
-            //This is a kludge, and likely to fall over with misnamed files
-            return string.Equals(System.IO.Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
-        }
+		/// <summary>This method checks whether a given route file is in the .rw format</summary>
+		/// <param name="FileName">The file to check</param>
+		/// <returns>True if this file is a RW, false otherwise</returns>
+		internal static bool isRWFile(string FileName)
+		{
+			//TODO: Write a RW check function, which *doesn't* requite checking the extension
+			//This is a kludge, and likely to fall over with misnamed files
+			return string.Equals(System.IO.Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
+		}
 
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
-		    Game.UnitOfSpeed = "km/h";
-		    Game.SpeedConversionFactor = 0.0;
-		    Game.RouteInformation.RouteBriefing = null;
+			Game.UnitOfSpeed = "km/h";
+			Game.SpeedConversionFactor = 0.0;
+			Game.RouteInformation.RouteBriefing = null;
 //		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			RouteData Data = new RouteData();
@@ -266,245 +266,245 @@ namespace OpenBve {
 			Data.Blocks[0].Accuracy = 2.0;
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
 			Data.Blocks[0].CurrentTrackState = new TrackManager.TrackElement(0.0);
-		    if (!PreviewOnly)
-		    {
-		        Data.Blocks[0].Background = 0;
-		        Data.Blocks[0].Brightness = new Brightness[] {};
-		        Data.Blocks[0].Fog.Start = Game.NoFogStart;
-		        Data.Blocks[0].Fog.End = Game.NoFogEnd;
-		        Data.Blocks[0].Fog.Color = new Color24(128, 128, 128);
-		        Data.Blocks[0].Cycle = new int[] {-1};
-		        Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
-		        Data.Blocks[0].RailFreeObj = new FreeObj[][] {};
-		        Data.Blocks[0].GroundFreeObj = new FreeObj[] {};
-		        Data.Blocks[0].RailWall = new WallDike[] {};
-		        Data.Blocks[0].RailDike = new WallDike[] {};
-		        Data.Blocks[0].RailPole = new Pole[] {};
-		        Data.Blocks[0].Form = new Form[] {};
-		        Data.Blocks[0].Crack = new Crack[] {};
-		        Data.Blocks[0].Signal = new Signal[] {};
-		        Data.Blocks[0].Section = new Section[] {};
-		        Data.Blocks[0].Sound = new Sound[] {};
-		        Data.Blocks[0].Transponder = new Transponder[] {};
-		        Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
-		        Data.Markers = new Marker[] {};
-		        string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
-		        Data.Structure.Poles = new ObjectManager.UnifiedObject[][]
-		        {
-		            new ObjectManager.UnifiedObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            },
-		            new ObjectManager.UnifiedObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            },
-		            new ObjectManager.UnifiedObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            },
-		            new ObjectManager.UnifiedObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            }
-		        };
-		        Data.Structure.Rail = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.Ground = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.WallL = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.WallR = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.DikeL = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.DikeR = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.FormL = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.FormR = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.FormCL = new ObjectManager.StaticObject[] {};
-		        Data.Structure.FormCR = new ObjectManager.StaticObject[] {};
-		        Data.Structure.RoofL = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.RoofR = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.RoofCL = new ObjectManager.StaticObject[] {};
-		        Data.Structure.RoofCR = new ObjectManager.StaticObject[] {};
-		        Data.Structure.CrackL = new ObjectManager.StaticObject[] {};
-		        Data.Structure.CrackR = new ObjectManager.StaticObject[] {};
-		        Data.Structure.FreeObj = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.Beacon = new ObjectManager.UnifiedObject[] {};
-		        Data.Structure.Cycle = new int[][] {};
-		        Data.Structure.Run = new int[] {};
-		        Data.Structure.Flange = new int[] {};
-		        Data.Backgrounds = new World.Background[] {};
-		        Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
-		        Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
-		        // signals
-		        string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
-		        Data.SignalData = new SignalData[7];
-		        Data.SignalData[3] = new CompatibilitySignalData(new int[] {0, 2, 4}, new ObjectManager.StaticObject[]
-		        {
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		        });
-		        Data.SignalData[4] = new CompatibilitySignalData(new int[] {0, 1, 2, 4}, new ObjectManager.StaticObject[]
-		        {
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		        });
-		        Data.SignalData[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4}, new ObjectManager.StaticObject[]
-		        {
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
-		                ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		        });
-		        Data.SignalData[6] = new CompatibilitySignalData(new int[] {0, 3, 4}, new ObjectManager.StaticObject[]
-		        {
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-		                Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-		                Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		            ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-		                Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		        });
-		        // compatibility signals
-		        Data.CompatibilitySignalData = new CompatibilitySignalData[9];
-		        Data.CompatibilitySignalData[0] = new CompatibilitySignalData(new int[] {0, 2},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2a_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[1] = new CompatibilitySignalData(new int[] {0, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2b_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[2] = new CompatibilitySignalData(new int[] {0, 2, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[3] = new CompatibilitySignalData(new int[] {0, 1, 2, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[4] = new CompatibilitySignalData(new int[] {0, 2, 3, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_3.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[6] = new CompatibilitySignalData(new int[] {0, 2, 3, 4, 5},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5b_5.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[7] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4, 5},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_0.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_1.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_2.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_3.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_4.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_5.csv"), Encoding,
-		                    ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        Data.CompatibilitySignalData[8] = new CompatibilitySignalData(new int[] {0, 3, 4},
-		            new ObjectManager.StaticObject[]
-		            {
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-		                    Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-		                    Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
-		                ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-		                    Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false)
-		            });
-		        // game data
-		        Game.Sections = new Game.Section[1];
-		        Game.Sections[0].Aspects = new Game.SectionAspect[]
-		        {new Game.SectionAspect(0, 0.0), new Game.SectionAspect(4, double.PositiveInfinity)};
-		        Game.Sections[0].CurrentAspect = 0;
-		        Game.Sections[0].NextSection = -1;
-		        Game.Sections[0].PreviousSection = -1;
-		        Game.Sections[0].SignalIndices = new int[] {};
-		        Game.Sections[0].StationIndex = -1;
-		        Game.Sections[0].TrackPosition = 0;
-		        Game.Sections[0].Trains = new TrainManager.Train[] {};
+			if (!PreviewOnly)
+			{
+				Data.Blocks[0].Background = 0;
+				Data.Blocks[0].Brightness = new Brightness[] {};
+				Data.Blocks[0].Fog.Start = Game.NoFogStart;
+				Data.Blocks[0].Fog.End = Game.NoFogEnd;
+				Data.Blocks[0].Fog.Color = new Color24(128, 128, 128);
+				Data.Blocks[0].Cycle = new int[] {-1};
+				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
+				Data.Blocks[0].RailFreeObj = new FreeObj[][] {};
+				Data.Blocks[0].GroundFreeObj = new FreeObj[] {};
+				Data.Blocks[0].RailWall = new WallDike[] {};
+				Data.Blocks[0].RailDike = new WallDike[] {};
+				Data.Blocks[0].RailPole = new Pole[] {};
+				Data.Blocks[0].Form = new Form[] {};
+				Data.Blocks[0].Crack = new Crack[] {};
+				Data.Blocks[0].Signal = new Signal[] {};
+				Data.Blocks[0].Section = new Section[] {};
+				Data.Blocks[0].Sound = new Sound[] {};
+				Data.Blocks[0].Transponder = new Transponder[] {};
+				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
+				Data.Markers = new Marker[] {};
+				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
+				Data.Structure.Poles = new ObjectManager.UnifiedObject[][]
+				{
+					new ObjectManager.UnifiedObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					},
+					new ObjectManager.UnifiedObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					},
+					new ObjectManager.UnifiedObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					},
+					new ObjectManager.UnifiedObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					}
+				};
+				Data.Structure.Rail = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.Ground = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.WallL = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.WallR = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.DikeL = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.DikeR = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.FormL = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.FormR = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.FormCL = new ObjectManager.StaticObject[] {};
+				Data.Structure.FormCR = new ObjectManager.StaticObject[] {};
+				Data.Structure.RoofL = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.RoofR = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.RoofCL = new ObjectManager.StaticObject[] {};
+				Data.Structure.RoofCR = new ObjectManager.StaticObject[] {};
+				Data.Structure.CrackL = new ObjectManager.StaticObject[] {};
+				Data.Structure.CrackR = new ObjectManager.StaticObject[] {};
+				Data.Structure.FreeObj = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.Beacon = new ObjectManager.UnifiedObject[] {};
+				Data.Structure.Cycle = new int[][] {};
+				Data.Structure.Run = new int[] {};
+				Data.Structure.Flange = new int[] {};
+				Data.Backgrounds = new World.Background[] {};
+				Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
+				Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
+				// signals
+				string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
+				Data.SignalData = new SignalData[7];
+				Data.SignalData[3] = new CompatibilitySignalData(new int[] {0, 2, 4}, new ObjectManager.StaticObject[]
+				{
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false)
+				});
+				Data.SignalData[4] = new CompatibilitySignalData(new int[] {0, 1, 2, 4}, new ObjectManager.StaticObject[]
+				{
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false)
+				});
+				Data.SignalData[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4}, new ObjectManager.StaticObject[]
+				{
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
+						ObjectManager.ObjectLoadMode.Normal, false, false, false)
+				});
+				Data.SignalData[6] = new CompatibilitySignalData(new int[] {0, 3, 4}, new ObjectManager.StaticObject[]
+				{
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
+						Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
+						Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
+						Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false)
+				});
+				// compatibility signals
+				Data.CompatibilitySignalData = new CompatibilitySignalData[9];
+				Data.CompatibilitySignalData[0] = new CompatibilitySignalData(new int[] {0, 2},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2a_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[1] = new CompatibilitySignalData(new int[] {0, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2b_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[2] = new CompatibilitySignalData(new int[] {0, 2, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[3] = new CompatibilitySignalData(new int[] {0, 1, 2, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[4] = new CompatibilitySignalData(new int[] {0, 2, 3, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_3.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[6] = new CompatibilitySignalData(new int[] {0, 2, 3, 4, 5},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5b_5.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[7] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4, 5},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_0.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_1.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_2.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_3.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_4.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_5.csv"), Encoding,
+							ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				Data.CompatibilitySignalData[8] = new CompatibilitySignalData(new int[] {0, 3, 4},
+					new ObjectManager.StaticObject[]
+					{
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
+							Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
+							Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
+							Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false)
+					});
+				// game data
+				Game.Sections = new Game.Section[1];
+				Game.Sections[0].Aspects = new Game.SectionAspect[]
+				{new Game.SectionAspect(0, 0.0), new Game.SectionAspect(4, double.PositiveInfinity)};
+				Game.Sections[0].CurrentAspect = 0;
+				Game.Sections[0].NextSection = -1;
+				Game.Sections[0].PreviousSection = -1;
+				Game.Sections[0].SignalIndices = new int[] {};
+				Game.Sections[0].StationIndex = -1;
+				Game.Sections[0].TrackPosition = 0;
+				Game.Sections[0].Trains = new TrainManager.Train[] {};
 
-		        /*
-                 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
-                 */
-		        Data.SignalSpeeds = new double[]
-		        {0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
-		    }
+				/*
+				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
+				 */
+				Data.SignalSpeeds = new double[]
+				{0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
+			}
 			ParseRouteForData(FileName, IsRW, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;
 			ApplyRouteData(FileName, Encoding, ref Data, PreviewOnly);
@@ -532,8 +532,8 @@ namespace OpenBve {
 			PreprocessSplitIntoExpressions(FileName, IsRW, Lines, out Expressions, true, 0.0);
 			PreprocessChrRndSub(FileName, IsRW, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
-            //Set units of speed initially to km/h
-            //This represents 1km/h in m/s
+			//Set units of speed initially to km/h
+			//This represents 1km/h in m/s
 			Data.UnitOfSpeed = 0.277777777777778;
 			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
@@ -825,95 +825,95 @@ namespace OpenBve {
 										continueWithNextExpression = true;
 										break;
 									}
-							        string[] args = s.Split(';');
-							        for (int ia = 0; ia < args.Length; ia++) {
-							            args[ia] = args[ia].Trim();
-							        }
-							        int count = (args.Length + 1) / 2;
-							        string[] files = new string[count];
-							        double[] weights = new double[count];
-							        double[] offsets = new double[count];
-							        double weightsTotal = 0.0;
-							        for (int ia = 0; ia < count; ia++) {
-							            string file;
-							            double offset;
-							            int colon = args[2 * ia].IndexOf(':');
-							            if (colon >= 0) {
-							                file = args[2 * ia].Substring(0, colon).TrimEnd();
-							                string value = args[2 * ia].Substring(colon + 1).TrimStart();
-							                if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
-							                    continueWithNextExpression = true;
-							                    Interface.AddMessage(Interface.MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
-							                    break;
-							                }
-							            } else {
-							                file = args[2 * ia];
-							                offset = 0.0;
-							            }
-							            files[ia] = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
-							            offsets[ia] = offset;
-							            if (!System.IO.File.Exists(files[ia])) {
-							                continueWithNextExpression = true;
-							                Interface.AddMessage(Interface.MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
-							                break;
-							            }
-							            if (2 * ia + 1 < args.Length)
-							            {
-							                if (!Interface.TryParseDoubleVb6(args[2 * ia + 1], out weights[ia])) {
-							                    continueWithNextExpression = true;
-							                    Interface.AddMessage(Interface.MessageType.Error, false, "A weight is invalid in " + t + Epilog);
-							                    break;
-							                }
-							                if (weights[ia] <= 0.0) {
-							                    continueWithNextExpression = true;
-							                    Interface.AddMessage(Interface.MessageType.Error, false, "A weight is not positive in " + t + Epilog);
-							                    break;
-							                }
-							                weightsTotal += weights[ia];
-							            }
-							            else {
-							                weights[ia] = 1.0;
-							                weightsTotal += 1.0;
-							            }
-							        }
-							        if (count == 0) {
-							            continueWithNextExpression = true;
-							            Interface.AddMessage(Interface.MessageType.Error, false, "No file was specified in " + t + Epilog);
-							            break;
-							        }
-							        if (!continueWithNextExpression) {
-							            double number = Program.RandomNumberGenerator.NextDouble() * weightsTotal;
-							            double value = 0.0;
-							            int chosenIndex = 0;
-							            for (int ia = 0; ia < count; ia++) {
-							                value += weights[ia];
-							                if (value > number) {
-							                    chosenIndex = ia;
-							                    break;
-							                }
-							            }
-							            Expression[] expr;
-							            string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
-							            PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
-							            int length = Expressions.Length;
-							            if (expr.Length == 0) {
-							                for (int ia = i; ia < Expressions.Length - 1; ia++) {
-							                    Expressions[ia] = Expressions[ia + 1];
-							                }
-							                Array.Resize<Expression>(ref Expressions, length - 1);
-							            } else {
-							                Array.Resize<Expression>(ref Expressions, length + expr.Length - 1);
-							                for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
-							                    Expressions[ia] = Expressions[ia - expr.Length + 1];
-							                }
-							                for (int ia = 0; ia < expr.Length; ia++) {
-							                    Expressions[i + ia] = expr[ia];
-							                }
-							            }
-							            i--;
-							            continueWithNextExpression = true;
-							        }
-							        break;
+									string[] args = s.Split(';');
+									for (int ia = 0; ia < args.Length; ia++) {
+										args[ia] = args[ia].Trim();
+									}
+									int count = (args.Length + 1) / 2;
+									string[] files = new string[count];
+									double[] weights = new double[count];
+									double[] offsets = new double[count];
+									double weightsTotal = 0.0;
+									for (int ia = 0; ia < count; ia++) {
+										string file;
+										double offset;
+										int colon = args[2 * ia].IndexOf(':');
+										if (colon >= 0) {
+											file = args[2 * ia].Substring(0, colon).TrimEnd();
+											string value = args[2 * ia].Substring(colon + 1).TrimStart();
+											if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
+												continueWithNextExpression = true;
+												Interface.AddMessage(Interface.MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
+												break;
+											}
+										} else {
+											file = args[2 * ia];
+											offset = 0.0;
+										}
+										files[ia] = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+										offsets[ia] = offset;
+										if (!System.IO.File.Exists(files[ia])) {
+											continueWithNextExpression = true;
+											Interface.AddMessage(Interface.MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
+											break;
+										}
+										if (2 * ia + 1 < args.Length)
+										{
+											if (!Interface.TryParseDoubleVb6(args[2 * ia + 1], out weights[ia])) {
+												continueWithNextExpression = true;
+												Interface.AddMessage(Interface.MessageType.Error, false, "A weight is invalid in " + t + Epilog);
+												break;
+											}
+											if (weights[ia] <= 0.0) {
+												continueWithNextExpression = true;
+												Interface.AddMessage(Interface.MessageType.Error, false, "A weight is not positive in " + t + Epilog);
+												break;
+											}
+											weightsTotal += weights[ia];
+										}
+										else {
+											weights[ia] = 1.0;
+											weightsTotal += 1.0;
+										}
+									}
+									if (count == 0) {
+										continueWithNextExpression = true;
+										Interface.AddMessage(Interface.MessageType.Error, false, "No file was specified in " + t + Epilog);
+										break;
+									}
+									if (!continueWithNextExpression) {
+										double number = Program.RandomNumberGenerator.NextDouble() * weightsTotal;
+										double value = 0.0;
+										int chosenIndex = 0;
+										for (int ia = 0; ia < count; ia++) {
+											value += weights[ia];
+											if (value > number) {
+												chosenIndex = ia;
+												break;
+											}
+										}
+										Expression[] expr;
+										string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
+										PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
+										int length = Expressions.Length;
+										if (expr.Length == 0) {
+											for (int ia = i; ia < Expressions.Length - 1; ia++) {
+												Expressions[ia] = Expressions[ia + 1];
+											}
+											Array.Resize<Expression>(ref Expressions, length - 1);
+										} else {
+											Array.Resize<Expression>(ref Expressions, length + expr.Length - 1);
+											for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
+												Expressions[ia] = Expressions[ia - expr.Length + 1];
+											}
+											for (int ia = 0; ia < expr.Length; ia++) {
+												Expressions[i + ia] = expr[ia];
+											}
+										}
+										i--;
+										continueWithNextExpression = true;
+									}
+									break;
 								case "$chr":
 									{
 										int x;
@@ -1136,23 +1136,23 @@ namespace OpenBve {
 							Command = Command.Replace(".Void", "");
 						}
 						// handle indices
-					    if (Command != null && Command.EndsWith(")")) {
+						if (Command != null && Command.EndsWith(")")) {
 							for (int k = Command.Length - 2; k >= 0; k--) {
 								if (Command[k] == '(') {
 									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
 									Command = Command.Substring(0, k).TrimEnd();
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
-								    int CommandIndex1;
-								    if (h >= 0) {
+									int CommandIndex1;
+									if (h >= 0) {
 										string a = Indices.Substring(0, h).TrimEnd();
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Command = null; break;
 										}
-								        int CommandIndex2;
-								        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
-									        Command = null;
-									    }
+										int CommandIndex2;
+										if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+											Command = null;
+										}
 									} else {
 										if (Indices.Length > 0 && !Interface.TryParseIntVb6(Indices, out CommandIndex1)) {
 											Command = null;
@@ -1303,14 +1303,34 @@ namespace OpenBve {
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {
 					bool found = false;
+					bool stationName = false;
+					bool replaced = false;
 					i++;
 					while (i < Expression.Text.Length) {
+						if (Expression.Text[i] == ',' || Expression.Text[i] == ';')
+						{
+							//Only check parenthesis in the station name field- The comma and semi-colon are the argument separators
+							stationName = true;
+						}
 						if (Expression.Text[i] == '(') {
 							if (RaiseErrors & !openingerror) {
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								openingerror = true;
+								if (stationName)
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Expression.Line.ToString(Culture) + ", column " +
+										Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									openingerror = true;
+								}
+								else
+								{
+									Expression.Text = Expression.Text.Remove(i,1).Insert(i,"[");
+									replaced = true;
+								}
 							}
 						} else if (Expression.Text[i] == ')') {
+							if (stationName == false && i != Expression.Text.Length && replaced == true)
+							{
+								Expression.Text = Expression.Text.Remove(i, 1).Insert(i, "]");
+							}
 							found = true;
 							break;
 						}
@@ -1610,7 +1630,7 @@ namespace OpenBve {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										} 
-                                        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+										if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										}
@@ -1796,58 +1816,58 @@ namespace OpenBve {
 											Game.RouteAccelerationDueToGravity = a;
 										}
 									} break;
-                                //Sets the route's loading screen texture
-                                case "route.loadingscreen":
-                                    if (Arguments.Length < 1)
-                                    {
-                                        Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-                                    }
-                                    else
-                                    {
-                                        string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+								//Sets the route's loading screen texture
+								case "route.loadingscreen":
+									if (Arguments.Length < 1)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 									if (!System.IO.File.Exists (f))
 									{
 										Interface.AddMessage (Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions [j].Line.ToString (Culture) + ", column " + Expressions [j].Column.ToString (Culture) + " in file " + Expressions [j].File);
 									}
 									else
 										Renderer.SetLoadingBkg(f);
-                                    }
-							        break;
-                                //Sets a custom unit of speed to to displayed in on-screen messages
-                                case "route.displayspeed":
-                                   var splitArgument = Arguments[0].Split(',');
-							        if (splitArgument.Length != 2)
-							        {
-                                        Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have two arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-							            break;
-							        }
-                                    Game.UnitOfSpeed = splitArgument[0];
+									}
+									break;
+								//Sets a custom unit of speed to to displayed in on-screen messages
+								case "route.displayspeed":
+								   var splitArgument = Arguments[0].Split(',');
+									if (splitArgument.Length != 2)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have two arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										break;
+									}
+									Game.UnitOfSpeed = splitArgument[0];
 									if (!double.TryParse(splitArgument[1], NumberStyles.Float, Culture, out Game.SpeedConversionFactor))
-							        {
-							            Interface.AddMessage(Interface.MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
-							            Game.UnitOfSpeed = "km/h";
-							        }
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
+										Game.UnitOfSpeed = "km/h";
+									}
 
-							        break;
-                                //Sets the route's briefing data
-                                case "route.briefing":
-                                    if (Arguments.Length < 1)
-                                    {
-                                        Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-                                    }
-                                    else
-                                    {
-                                        string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
-                                        if (!System.IO.File.Exists(f))
-                                        {
-                                            Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-                                        }
-                                        else
-                                        {
-                                            Game.RouteInformation.RouteBriefing = f;
-                                        }
-                                    }
-                                    break;
+									break;
+								//Sets the route's briefing data
+								case "route.briefing":
+									if (Arguments.Length < 1)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										if (!System.IO.File.Exists(f))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										else
+										{
+											Game.RouteInformation.RouteBriefing = f;
+										}
+									}
+									break;
 								case "route.elevation":
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2884,9 +2904,9 @@ namespace OpenBve {
 										string b = Indices.Substring(h + 1).TrimStart();
 										if (a.Length > 0 && !Interface.TryParseIntVb6(a, out CommandIndex1)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-										    Command = null;
+											Command = null;
 										} 
-                                        if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
+										if (b.Length > 0 && !Interface.TryParseIntVb6(b, out CommandIndex2)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										}
@@ -4223,7 +4243,7 @@ namespace OpenBve {
 												sttype = 0;
 											}
 											if (dir <= 0 && (sttype >= Data.Structure.WallL.Length || Data.Structure.WallL[sttype] == null) ||
-											    dir >= 0 && (sttype >= Data.Structure.WallR.Length || Data.Structure.WallR[sttype] == null)) {
+												dir >= 0 && (sttype >= Data.Structure.WallR.Length || Data.Structure.WallR[sttype] == null)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "WallStructureIndex references an object not loaded in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (idx < 0) {
@@ -4287,7 +4307,7 @@ namespace OpenBve {
 												sttype = 0;
 											}
 											if (dir <= 0 && (sttype >= Data.Structure.DikeL.Length || Data.Structure.DikeL[sttype] == null) ||
-											    dir >= 0 && (sttype >= Data.Structure.DikeR.Length || Data.Structure.DikeR[sttype] == null)) {
+												dir >= 0 && (sttype >= Data.Structure.DikeR.Length || Data.Structure.DikeR[sttype] == null)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "DikeStructureIndex references an object not loaded in Track.Dike at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (idx < 0) {
@@ -4869,54 +4889,54 @@ namespace OpenBve {
 			}
 			string Name = System.IO.Path.GetFileNameWithoutExtension(BaseFile);
 			Textures.Texture[] Textures = new Textures.Texture[] { };
-		    if (Folder == null) return Textures;
-		    string[] Files = System.IO.Directory.GetFiles(Folder);
-		    for (int i = 0; i < Files.Length; i++) {
-		        string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
-                if (a == null) return Textures;
-		        if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase)) {
-		            if (a.Length > Name.Length) {
-		                string b = a.Substring(Name.Length).TrimStart();
-		                int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j)) {
-		                    if (j >= 0) {
-		                        string c = System.IO.Path.GetExtension(Files[i]);
-                                if (c == null) return Textures;
-		                        switch (c.ToLowerInvariant()) {
-		                            case ".bmp":
-		                            case ".gif":
-		                            case ".jpg":
-		                            case ".jpeg":
-		                            case ".png":
-		                            case ".tif":
-		                            case ".tiff":
-		                                if (j >= Textures.Length) {
-		                                    int n = Textures.Length;
-		                                    Array.Resize<Textures.Texture>(ref Textures, j + 1);
-		                                    for (int k = n; k < j; k++) {
-		                                        Textures[k] = null;
-		                                    }
-		                                }
-		                                if (IsGlowTexture) {
-		                                    OpenBveApi.Textures.Texture texture;
-		                                    if (Program.CurrentHost.LoadTexture(Files[i], null, out texture)) {
-		                                        if (texture.BitsPerPixel == 32) {
-		                                            byte[] bytes = texture.Bytes;
-		                                            InvertLightness(bytes);
-		                                            texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes);
-		                                        }
-		                                        Textures[j] = OpenBve.Textures.RegisterTexture(texture);
-		                                    }
-		                                } else {
-		                                    OpenBve.Textures.RegisterTexture(Files[i], new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Textures[j]);
-		                                }
-		                                break;
-		                        }
-		                    }
-		                }
-		            }
-		        }
-		    }
-		    return Textures;
+			if (Folder == null) return Textures;
+			string[] Files = System.IO.Directory.GetFiles(Folder);
+			for (int i = 0; i < Files.Length; i++) {
+				string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
+				if (a == null) return Textures;
+				if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase)) {
+					if (a.Length > Name.Length) {
+						string b = a.Substring(Name.Length).TrimStart();
+						int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j)) {
+							if (j >= 0) {
+								string c = System.IO.Path.GetExtension(Files[i]);
+								if (c == null) return Textures;
+								switch (c.ToLowerInvariant()) {
+									case ".bmp":
+									case ".gif":
+									case ".jpg":
+									case ".jpeg":
+									case ".png":
+									case ".tif":
+									case ".tiff":
+										if (j >= Textures.Length) {
+											int n = Textures.Length;
+											Array.Resize<Textures.Texture>(ref Textures, j + 1);
+											for (int k = n; k < j; k++) {
+												Textures[k] = null;
+											}
+										}
+										if (IsGlowTexture) {
+											OpenBveApi.Textures.Texture texture;
+											if (Program.CurrentHost.LoadTexture(Files[i], null, out texture)) {
+												if (texture.BitsPerPixel == 32) {
+													byte[] bytes = texture.Bytes;
+													InvertLightness(bytes);
+													texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes);
+												}
+												Textures[j] = OpenBve.Textures.RegisterTexture(texture);
+											}
+										} else {
+											OpenBve.Textures.RegisterTexture(Files[i], new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Textures[j]);
+										}
+										break;
+								}
+							}
+						}
+					}
+				}
+			}
+			return Textures;
 		}
 		
 		private static void InvertLightness(byte[] bytes) {
@@ -5340,15 +5360,15 @@ namespace OpenBve {
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
 					World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection.X, TrackManager.CurrentTrack.Elements[n].WorldDirection.Y, TrackManager.CurrentTrack.Elements[n].WorldDirection.Z, TrackManager.CurrentTrack.Elements[n].WorldSide.X, TrackManager.CurrentTrack.Elements[n].WorldSide.Y, TrackManager.CurrentTrack.Elements[n].WorldSide.Z, out TrackManager.CurrentTrack.Elements[n].WorldUp.X, out TrackManager.CurrentTrack.Elements[n].WorldUp.Y, out TrackManager.CurrentTrack.Elements[n].WorldUp.Z);
 				}
-                //Pitch
-			    if (Data.Blocks[i].Pitch != 0.0)
-			    {
-			        TrackManager.CurrentTrack.Elements[n].Pitch = Data.Blocks[i].Pitch;
-			    }
-			    else
-			    {
-                    TrackManager.CurrentTrack.Elements[n].Pitch = 0.0;
-			    }
+				//Pitch
+				if (Data.Blocks[i].Pitch != 0.0)
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = Data.Blocks[i].Pitch;
+				}
+				else
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = 0.0;
+				}
 				// curves
 				double a = 0.0;
 				double c = Data.BlockInterval;
@@ -6250,7 +6270,7 @@ namespace OpenBve {
 								int distance = Math.Min(1048575, (int)Math.Round(TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + transponder.TrackPositionDelta));
 								unchecked {
 									int value = (int)((uint)speed | ((uint)distance << 12));
-                                    transponders.Add(new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
+									transponders.Add(new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
 								}
 							}
 						}
