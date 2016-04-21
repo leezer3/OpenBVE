@@ -1330,6 +1330,7 @@ namespace OpenBve {
 							if (stationName == false && i != Expression.Text.Length && replaced == true)
 							{
 								Expression.Text = Expression.Text.Remove(i, 1).Insert(i, "]");
+								continue;
 							}
 							found = true;
 							break;

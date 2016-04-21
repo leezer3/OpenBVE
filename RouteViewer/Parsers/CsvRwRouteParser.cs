@@ -1174,16 +1174,43 @@ namespace OpenBve {
 			bool openingerror = false, closingerror = false;
 			int i;
 			for (i = 0; i < Expression.Text.Length; i++) {
-				if (Expression.Text[i] == '(') {
+				if (Expression.Text[i] == '(')
+				{
 					bool found = false;
+					bool stationName = false;
+					bool replaced = false;
 					i++;
-					while (i < Expression.Text.Length) {
-						if (Expression.Text[i] == '(') {
-							if (RaiseErrors & !openingerror) {
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								openingerror = true;
+					while (i < Expression.Text.Length)
+					{
+						if (Expression.Text[i] == ',' || Expression.Text[i] == ';')
+						{
+							//Only check parenthesis in the station name field- The comma and semi-colon are the argument separators
+							stationName = true;
+						}
+						if (Expression.Text[i] == '(')
+						{
+							if (RaiseErrors & !openingerror)
+							{
+								if (stationName)
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Expression.Line.ToString(Culture) + ", column " +
+										Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									openingerror = true;
+								}
+								else
+								{
+									Expression.Text = Expression.Text.Remove(i, 1).Insert(i, "[");
+									replaced = true;
+								}
 							}
-						} else if (Expression.Text[i] == ')') {
+						}
+						else if (Expression.Text[i] == ')')
+						{
+							if (stationName == false && i != Expression.Text.Length && replaced == true)
+							{
+								Expression.Text = Expression.Text.Remove(i, 1).Insert(i, "]");
+								continue;
+							}
 							found = true;
 							break;
 						}
