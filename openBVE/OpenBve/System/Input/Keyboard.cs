@@ -8,7 +8,7 @@ namespace OpenBve
         /// <summary>Called when a KeyDown event is generated</summary>
         internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
         {
-	        if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Key.HasFlag(OpenTK.Input.Key.AltLeft))
+	        if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
 	        {
 		        // Catch standard ALT + F4 quit and push confirmation prompt
 		        Game.Menu.PushMenu(Menu.MenuType.Quit);
