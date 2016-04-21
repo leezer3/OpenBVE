@@ -435,6 +435,9 @@ namespace OpenBve {
 				if (System.IO.File.Exists(Result.RouteFile) & System.IO.Directory.Exists(Result.TrainFolder)) {
 					Result.Start = true;
 					this.Close();
+					//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
+					//This fixes the main form failing to close on Linux
+					Application.DoEvents();
 				}
 			} else {
 				System.Media.SystemSounds.Exclamation.Play();
