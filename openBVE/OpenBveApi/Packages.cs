@@ -20,7 +20,10 @@ namespace OpenBveApi.Packages
 		/// <summary>The package version</summary>
 		[XmlIgnore] 
 		public Version PackageVersion;
-
+		/// <summary>The on-disk file of the package (Used during creation)</summary>
+		[XmlIgnore]
+		public string FileName;
+		/// <summary>The package version represented in string format</summary>
 		[XmlElement(ElementName = "PackageVersion")]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public string Version
@@ -337,7 +340,11 @@ namespace OpenBveApi.Packages
 		/// <returns>Whether the package to check is installed, and if so whether it is an older, newer or identical version</returns>
 		public static VersionInformation CheckVersion(Package currentPackage, List<Package> packageList, ref Package oldPackage)
 		{
-
+			if (packageList == null)
+			{
+				//List is null, so we can't possibly be in it
+				return VersionInformation.NotFound;
+			}
 			foreach (var Package in packageList)
 			{
 				//Check GUID
@@ -375,15 +382,19 @@ namespace OpenBveApi.Packages
 				//Itinerate through the routes list
 				if (currentDependancy.PackageType == PackageType.Route)
 				{
-					foreach (Package Package in installedRoutes)
+					if (installedRoutes != null)
 					{
-						//Check GUID
-						if (Package.GUID == currentDependancy.GUID)
+						foreach (Package Package in installedRoutes)
 						{
-							if (currentDependancy.MinimumVersion <= Package.PackageVersion && currentDependancy.MaximumVersion >= Package.PackageVersion)
+							//Check GUID
+							if (Package.GUID == currentDependancy.GUID)
 							{
-								//If the version is OK, remove
-								currentPackage.Dependancies.Remove(currentDependancy);
+								if (currentDependancy.MinimumVersion <= Package.PackageVersion &&
+								    currentDependancy.MaximumVersion >= Package.PackageVersion)
+								{
+									//If the version is OK, remove
+									currentPackage.Dependancies.Remove(currentDependancy);
+								}
 							}
 						}
 					}
@@ -391,15 +402,19 @@ namespace OpenBveApi.Packages
 				if (currentDependancy.PackageType == PackageType.Train)
 				{
 					//Itinerate through the trains list
-					foreach (Package Package in installedTrains)
+					if (installedTrains != null)
 					{
-						//Check GUID
-						if (Package.GUID == currentDependancy.GUID)
+						foreach (Package Package in installedTrains)
 						{
-							if (currentDependancy.MinimumVersion <= Package.PackageVersion && currentDependancy.MaximumVersion >= Package.PackageVersion)
+							//Check GUID
+							if (Package.GUID == currentDependancy.GUID)
 							{
-								//If the version is OK, remove
-								currentPackage.Dependancies.Remove(currentDependancy);
+								if (currentDependancy.MinimumVersion <= Package.PackageVersion &&
+								    currentDependancy.MaximumVersion >= Package.PackageVersion)
+								{
+									//If the version is OK, remove
+									currentPackage.Dependancies.Remove(currentDependancy);
+								}
 							}
 						}
 					}
@@ -417,35 +432,43 @@ namespace OpenBveApi.Packages
 		public static List<Package> UpgradeDowngradeDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)
 		{
 			List<Package> Dependancies = new List<Package>();
-			foreach (Package routePackage in installedRoutes)
+			if (installedRoutes != null)
 			{
-				//Itinerate through the routes list
-				foreach (Package Package in routePackage.Dependancies)
+				foreach (Package routePackage in installedRoutes)
 				{
-					if(Package.GUID == currentPackage.GUID)
+					//Itinerate through the routes list
+					foreach (Package Package in routePackage.Dependancies)
 					{
-						if (Package.MinimumVersion > currentPackage.PackageVersion || Package.MaximumVersion < currentPackage.PackageVersion)
+						if (Package.GUID == currentPackage.GUID)
 						{
-							Dependancies.Add(Package);
+							if (Package.MinimumVersion > currentPackage.PackageVersion ||
+							    Package.MaximumVersion < currentPackage.PackageVersion)
+							{
+								Dependancies.Add(Package);
+							}
 						}
 					}
-				}
 
+				}
 			}
-			foreach (Package trainPackage in installedTrains)
+			if (installedTrains != null)
 			{
-				//Itinerate through the routes list
-				foreach (Package Package in trainPackage.Dependancies)
+				foreach (Package trainPackage in installedTrains)
 				{
-					if (Package.GUID == currentPackage.GUID)
+					//Itinerate through the routes list
+					foreach (Package Package in trainPackage.Dependancies)
 					{
-						if (Package.MinimumVersion > currentPackage.PackageVersion || Package.MaximumVersion < currentPackage.PackageVersion)
+						if (Package.GUID == currentPackage.GUID)
 						{
-							Dependancies.Add(Package);
+							if (Package.MinimumVersion > currentPackage.PackageVersion ||
+							    Package.MaximumVersion < currentPackage.PackageVersion)
+							{
+								Dependancies.Add(Package);
+							}
 						}
 					}
-				}
 
+				}
 			}
 			if (Dependancies.Count == 0)
 			{

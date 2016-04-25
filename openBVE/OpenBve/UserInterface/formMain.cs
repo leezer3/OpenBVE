@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using OpenBveApi.Packages;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -976,9 +977,12 @@ namespace OpenBve {
             if (radioButtonPackages.Checked)
             {
 				ResetInstallerPanels();
-                LoadRoutePackages();
-                LoadTrainPackages();
-                PopulatePackageList();
+	            if (LoadPackages() == true)
+	            {
+		            PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages);
+		            PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages);
+		            PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther);
+	            }
             }
         }
 		private void UpdateRadioButtonBackColor() {

@@ -255,7 +255,18 @@
 			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
 			this.panelCreatePackage = new System.Windows.Forms.Panel();
+			this.SaveFileNameButton = new System.Windows.Forms.Button();
+			this.textBoxPackageFileName = new System.Windows.Forms.TextBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.label16 = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
+			this.panelNewPackage = new System.Windows.Forms.Panel();
+			this.button4 = new System.Windows.Forms.Button();
+			this.filesToPackageBox = new System.Windows.Forms.TextBox();
+			this.button2 = new System.Windows.Forms.Button();
+			this.labelSelectFiles = new System.Windows.Forms.Label();
+			this.textBoxGUID = new System.Windows.Forms.TextBox();
+			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.panelReplacePackage = new System.Windows.Forms.Panel();
 			this.button5 = new System.Windows.Forms.Button();
 			this.label10 = new System.Windows.Forms.Label();
@@ -264,14 +275,6 @@
 			this.dataGridViewTextBoxColumn22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn23 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn24 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.panelNewPackage = new System.Windows.Forms.Panel();
-			this.button4 = new System.Windows.Forms.Button();
-			this.filesToPackageBox = new System.Windows.Forms.TextBox();
-			this.button2 = new System.Windows.Forms.Button();
-			this.labelSelectFiles = new System.Windows.Forms.Label();
-			this.label16 = new System.Windows.Forms.Label();
-			this.textBoxGUID = new System.Windows.Forms.TextBox();
-			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.radioButtonQ2Other = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ2Train = new System.Windows.Forms.RadioButton();
@@ -380,6 +383,13 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.dataGridViewInstalledOther = new System.Windows.Forms.DataGridView();
+			this.dataGridViewTextBoxColumn25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.label18 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -450,9 +460,9 @@
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
 			this.panelCreatePackage.SuspendLayout();
+			this.panelNewPackage.SuspendLayout();
 			this.panelReplacePackage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).BeginInit();
-			this.panelNewPackage.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBoxQ1.SuspendLayout();
 			this.panelPleaseWait.SuspendLayout();
@@ -471,6 +481,7 @@
 			this.panelPackageDependsAdd.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrains)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutes)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelFillerOne
@@ -3305,9 +3316,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
+			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.panelPleaseWait);
-			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
 			this.panelPackages.Controls.Add(this.panelSuccess);
@@ -3328,6 +3339,10 @@
 			this.panelCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelCreatePackage.Controls.Add(this.SaveFileNameButton);
+			this.panelCreatePackage.Controls.Add(this.textBoxPackageFileName);
+			this.panelCreatePackage.Controls.Add(this.label12);
+			this.panelCreatePackage.Controls.Add(this.label16);
 			this.panelCreatePackage.Controls.Add(this.button3);
 			this.panelCreatePackage.Controls.Add(this.panelNewPackage);
 			this.panelCreatePackage.Controls.Add(this.panelReplacePackage);
@@ -3342,6 +3357,42 @@
 			this.panelCreatePackage.Size = new System.Drawing.Size(641, 559);
 			this.panelCreatePackage.TabIndex = 27;
 			// 
+			// SaveFileNameButton
+			// 
+			this.SaveFileNameButton.Location = new System.Drawing.Point(302, 465);
+			this.SaveFileNameButton.Name = "SaveFileNameButton";
+			this.SaveFileNameButton.Size = new System.Drawing.Size(121, 23);
+			this.SaveFileNameButton.TabIndex = 37;
+			this.SaveFileNameButton.Text = "Save As....";
+			this.SaveFileNameButton.UseVisualStyleBackColor = true;
+			this.SaveFileNameButton.Click += new System.EventHandler(this.SaveFileNameButton_Click);
+			// 
+			// textBoxPackageFileName
+			// 
+			this.textBoxPackageFileName.Location = new System.Drawing.Point(5, 467);
+			this.textBoxPackageFileName.Name = "textBoxPackageFileName";
+			this.textBoxPackageFileName.Size = new System.Drawing.Size(285, 20);
+			this.textBoxPackageFileName.TabIndex = 36;
+			this.textBoxPackageFileName.TextChanged += new System.EventHandler(this.textBoxPackageFileName_TextChanged);
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(4, 451);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(94, 13);
+			this.label12.TabIndex = 35;
+			this.label12.Text = "Save package as:";
+			// 
+			// label16
+			// 
+			this.label16.AutoSize = true;
+			this.label16.Location = new System.Drawing.Point(4, 489);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(360, 13);
+			this.label16.TabIndex = 34;
+			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
+			// 
 			// button3
 			// 
 			this.button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -3354,6 +3405,75 @@
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
+			// panelNewPackage
+			// 
+			this.panelNewPackage.Controls.Add(this.button4);
+			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
+			this.panelNewPackage.Controls.Add(this.button2);
+			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
+			this.panelNewPackage.Controls.Add(this.textBoxGUID);
+			this.panelNewPackage.Controls.Add(this.labelNewGUID);
+			this.panelNewPackage.Enabled = false;
+			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
+			this.panelNewPackage.Name = "panelNewPackage";
+			this.panelNewPackage.Size = new System.Drawing.Size(644, 311);
+			this.panelNewPackage.TabIndex = 21;
+			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(511, 282);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(121, 23);
+			this.button4.TabIndex = 30;
+			this.button4.Text = "Clear Selection";
+			this.button4.UseVisualStyleBackColor = true;
+			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
+			// filesToPackageBox
+			// 
+			this.filesToPackageBox.Enabled = false;
+			this.filesToPackageBox.Location = new System.Drawing.Point(5, 63);
+			this.filesToPackageBox.Multiline = true;
+			this.filesToPackageBox.Name = "filesToPackageBox";
+			this.filesToPackageBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.filesToPackageBox.Size = new System.Drawing.Size(621, 215);
+			this.filesToPackageBox.TabIndex = 29;
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(5, 282);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(121, 23);
+			this.button2.TabIndex = 28;
+			this.button2.Text = "Add Item(s)";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
+			// 
+			// labelSelectFiles
+			// 
+			this.labelSelectFiles.AutoSize = true;
+			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
+			this.labelSelectFiles.Name = "labelSelectFiles";
+			this.labelSelectFiles.Size = new System.Drawing.Size(232, 13);
+			this.labelSelectFiles.TabIndex = 27;
+			this.labelSelectFiles.Text = "The following files and folders will be packaged:";
+			// 
+			// textBoxGUID
+			// 
+			this.textBoxGUID.Location = new System.Drawing.Point(5, 21);
+			this.textBoxGUID.Name = "textBoxGUID";
+			this.textBoxGUID.Size = new System.Drawing.Size(285, 20);
+			this.textBoxGUID.TabIndex = 25;
+			// 
+			// labelNewGUID
+			// 
+			this.labelNewGUID.AutoSize = true;
+			this.labelNewGUID.Location = new System.Drawing.Point(3, 3);
+			this.labelNewGUID.Name = "labelNewGUID";
+			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
+			this.labelNewGUID.TabIndex = 24;
+			this.labelNewGUID.Text = "The new package has been assinged the following GUID:";
+			// 
 			// panelReplacePackage
 			// 
 			this.panelReplacePackage.Controls.Add(this.button5);
@@ -3361,7 +3481,7 @@
 			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
 			this.panelReplacePackage.Location = new System.Drawing.Point(-2, 137);
 			this.panelReplacePackage.Name = "panelReplacePackage";
-			this.panelReplacePackage.Size = new System.Drawing.Size(644, 354);
+			this.panelReplacePackage.Size = new System.Drawing.Size(644, 308);
 			this.panelReplacePackage.TabIndex = 20;
 			// 
 			// button5
@@ -3432,85 +3552,6 @@
 			this.dataGridViewTextBoxColumn24.HeaderText = "Website";
 			this.dataGridViewTextBoxColumn24.Name = "dataGridViewTextBoxColumn24";
 			this.dataGridViewTextBoxColumn24.ReadOnly = true;
-			// 
-			// panelNewPackage
-			// 
-			this.panelNewPackage.Controls.Add(this.button4);
-			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
-			this.panelNewPackage.Controls.Add(this.button2);
-			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
-			this.panelNewPackage.Controls.Add(this.label16);
-			this.panelNewPackage.Controls.Add(this.textBoxGUID);
-			this.panelNewPackage.Controls.Add(this.labelNewGUID);
-			this.panelNewPackage.Enabled = false;
-			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
-			this.panelNewPackage.Name = "panelNewPackage";
-			this.panelNewPackage.Size = new System.Drawing.Size(644, 354);
-			this.panelNewPackage.TabIndex = 21;
-			// 
-			// button4
-			// 
-			this.button4.Location = new System.Drawing.Point(517, 233);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(121, 23);
-			this.button4.TabIndex = 30;
-			this.button4.Text = "Clear Selection";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
-			// 
-			// filesToPackageBox
-			// 
-			this.filesToPackageBox.Enabled = false;
-			this.filesToPackageBox.Location = new System.Drawing.Point(8, 63);
-			this.filesToPackageBox.Multiline = true;
-			this.filesToPackageBox.Name = "filesToPackageBox";
-			this.filesToPackageBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.filesToPackageBox.Size = new System.Drawing.Size(621, 163);
-			this.filesToPackageBox.TabIndex = 29;
-			// 
-			// button2
-			// 
-			this.button2.Location = new System.Drawing.Point(3, 233);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(121, 23);
-			this.button2.TabIndex = 28;
-			this.button2.Text = "Add Item(s)";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
-			// 
-			// labelSelectFiles
-			// 
-			this.labelSelectFiles.AutoSize = true;
-			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
-			this.labelSelectFiles.Name = "labelSelectFiles";
-			this.labelSelectFiles.Size = new System.Drawing.Size(232, 13);
-			this.labelSelectFiles.TabIndex = 27;
-			this.labelSelectFiles.Text = "The following files and folders will be packaged:";
-			// 
-			// label16
-			// 
-			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(4, 264);
-			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(360, 13);
-			this.label16.TabIndex = 26;
-			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
-			// 
-			// textBoxGUID
-			// 
-			this.textBoxGUID.Location = new System.Drawing.Point(5, 21);
-			this.textBoxGUID.Name = "textBoxGUID";
-			this.textBoxGUID.Size = new System.Drawing.Size(285, 20);
-			this.textBoxGUID.TabIndex = 25;
-			// 
-			// labelNewGUID
-			// 
-			this.labelNewGUID.AutoSize = true;
-			this.labelNewGUID.Location = new System.Drawing.Point(3, 3);
-			this.labelNewGUID.Name = "labelNewGUID";
-			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
-			this.labelNewGUID.TabIndex = 24;
-			this.labelNewGUID.Text = "The new package has been assinged the following GUID:";
 			// 
 			// groupBox1
 			// 
@@ -3681,6 +3722,8 @@
 			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageList.Controls.Add(this.dataGridViewInstalledOther);
+			this.panelPackageList.Controls.Add(this.label18);
 			this.panelPackageList.Controls.Add(this.button1);
 			this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
 			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
@@ -3696,7 +3739,7 @@
 			// button1
 			// 
 			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(234, 460);
+			this.button1.Location = new System.Drawing.Point(238, 525);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(136, 23);
 			this.button1.TabIndex = 23;
@@ -3720,13 +3763,13 @@
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewTextBoxColumn4});
-			this.dataGridViewTrainPackages.Location = new System.Drawing.Point(5, 269);
+			this.dataGridViewTrainPackages.Location = new System.Drawing.Point(5, 221);
 			this.dataGridViewTrainPackages.Name = "dataGridViewTrainPackages";
 			this.dataGridViewTrainPackages.ReadOnly = true;
 			this.dataGridViewTrainPackages.RowHeadersVisible = false;
 			this.dataGridViewTrainPackages.RowHeadersWidth = 90;
 			this.dataGridViewTrainPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 185);
+			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 149);
 			this.dataGridViewTrainPackages.TabIndex = 22;
 			this.dataGridViewTrainPackages.SelectionChanged += new System.EventHandler(this.dataGridViewTrainPackages_SelectionChanged);
 			// 
@@ -3757,7 +3800,7 @@
 			// buttonUninstallPackage
 			// 
 			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUninstallPackage.Location = new System.Drawing.Point(495, 456);
+			this.buttonUninstallPackage.Location = new System.Drawing.Point(499, 524);
 			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
 			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
 			this.buttonUninstallPackage.TabIndex = 21;
@@ -3767,7 +3810,7 @@
 			// 
 			// buttonInstallPackage
 			// 
-			this.buttonInstallPackage.Location = new System.Drawing.Point(5, 457);
+			this.buttonInstallPackage.Location = new System.Drawing.Point(9, 525);
 			this.buttonInstallPackage.Name = "buttonInstallPackage";
 			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
 			this.buttonInstallPackage.TabIndex = 20;
@@ -3791,13 +3834,13 @@
             this.routeVersion,
             this.routeAuthor,
             this.routeWebsite});
-			this.dataGridViewRoutePackages.Location = new System.Drawing.Point(4, 27);
+			this.dataGridViewRoutePackages.Location = new System.Drawing.Point(4, 37);
 			this.dataGridViewRoutePackages.Name = "dataGridViewRoutePackages";
 			this.dataGridViewRoutePackages.ReadOnly = true;
 			this.dataGridViewRoutePackages.RowHeadersVisible = false;
 			this.dataGridViewRoutePackages.RowHeadersWidth = 90;
 			this.dataGridViewRoutePackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 185);
+			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 149);
 			this.dataGridViewRoutePackages.TabIndex = 19;
 			this.dataGridViewRoutePackages.SelectionChanged += new System.EventHandler(this.dataGridViewRoutePackages_SelectionChanged);
 			// 
@@ -3833,7 +3876,7 @@
 			this.labelInstalledTrains.BackColor = System.Drawing.Color.Silver;
 			this.labelInstalledTrains.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelInstalledTrains.ForeColor = System.Drawing.Color.White;
-			this.labelInstalledTrains.Location = new System.Drawing.Point(4, 242);
+			this.labelInstalledTrains.Location = new System.Drawing.Point(4, 191);
 			this.labelInstalledTrains.Name = "labelInstalledTrains";
 			this.labelInstalledTrains.Size = new System.Drawing.Size(627, 24);
 			this.labelInstalledTrains.TabIndex = 18;
@@ -3850,7 +3893,7 @@
 			this.labelInstalledRoutes.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledRoutes.Location = new System.Drawing.Point(4, 8);
 			this.labelInstalledRoutes.Name = "labelInstalledRoutes";
-			this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 16);
+			this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 24);
 			this.labelInstalledRoutes.TabIndex = 17;
 			this.labelInstalledRoutes.Text = "Installed Routes";
 			this.labelInstalledRoutes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4731,6 +4774,70 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
+			// dataGridViewInstalledOther
+			// 
+			this.dataGridViewInstalledOther.AllowUserToAddRows = false;
+			this.dataGridViewInstalledOther.AllowUserToDeleteRows = false;
+			this.dataGridViewInstalledOther.AllowUserToResizeColumns = false;
+			this.dataGridViewInstalledOther.AllowUserToResizeRows = false;
+			this.dataGridViewInstalledOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewInstalledOther.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewInstalledOther.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewInstalledOther.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewInstalledOther.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn25,
+            this.dataGridViewTextBoxColumn26,
+            this.dataGridViewTextBoxColumn27,
+            this.dataGridViewTextBoxColumn28});
+			this.dataGridViewInstalledOther.Location = new System.Drawing.Point(5, 409);
+			this.dataGridViewInstalledOther.Name = "dataGridViewInstalledOther";
+			this.dataGridViewInstalledOther.ReadOnly = true;
+			this.dataGridViewInstalledOther.RowHeadersVisible = false;
+			this.dataGridViewInstalledOther.RowHeadersWidth = 90;
+			this.dataGridViewInstalledOther.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewInstalledOther.Size = new System.Drawing.Size(627, 111);
+			this.dataGridViewInstalledOther.TabIndex = 25;
+			// 
+			// dataGridViewTextBoxColumn25
+			// 
+			this.dataGridViewTextBoxColumn25.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn25.Name = "dataGridViewTextBoxColumn25";
+			this.dataGridViewTextBoxColumn25.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn26
+			// 
+			this.dataGridViewTextBoxColumn26.HeaderText = "Version";
+			this.dataGridViewTextBoxColumn26.Name = "dataGridViewTextBoxColumn26";
+			this.dataGridViewTextBoxColumn26.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn27
+			// 
+			this.dataGridViewTextBoxColumn27.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn27.Name = "dataGridViewTextBoxColumn27";
+			this.dataGridViewTextBoxColumn27.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn28
+			// 
+			this.dataGridViewTextBoxColumn28.HeaderText = "Website";
+			this.dataGridViewTextBoxColumn28.Name = "dataGridViewTextBoxColumn28";
+			this.dataGridViewTextBoxColumn28.ReadOnly = true;
+			// 
+			// label18
+			// 
+			this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label18.AutoEllipsis = true;
+			this.label18.BackColor = System.Drawing.Color.Silver;
+			this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label18.ForeColor = System.Drawing.Color.White;
+			this.label18.Location = new System.Drawing.Point(4, 376);
+			this.label18.Name = "label18";
+			this.label18.Size = new System.Drawing.Size(627, 24);
+			this.label18.TabIndex = 24;
+			this.label18.Text = "Installed Other";
+			this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4856,11 +4963,11 @@
 			this.panelPackages.PerformLayout();
 			this.panelCreatePackage.ResumeLayout(false);
 			this.panelCreatePackage.PerformLayout();
+			this.panelNewPackage.ResumeLayout(false);
+			this.panelNewPackage.PerformLayout();
 			this.panelReplacePackage.ResumeLayout(false);
 			this.panelReplacePackage.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewReplacePackage)).EndInit();
-			this.panelNewPackage.ResumeLayout(false);
-			this.panelNewPackage.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.groupBoxQ1.ResumeLayout(false);
@@ -4888,6 +4995,7 @@
 			this.panelPackageDependsAdd.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrains)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutes)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).EndInit();
 			this.ResumeLayout(false);
 
         }
@@ -5238,7 +5346,6 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn23;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn24;
 		private System.Windows.Forms.Panel panelNewPackage;
-		private System.Windows.Forms.Label label16;
 		private System.Windows.Forms.TextBox textBoxGUID;
 		private System.Windows.Forms.Label labelNewGUID;
 		private System.Windows.Forms.Button button3;
@@ -5250,6 +5357,17 @@
 		private System.Windows.Forms.TextBox filesToPackageBox;
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.SaveFileDialog savePackageDialog;
+		private System.Windows.Forms.Button SaveFileNameButton;
+		private System.Windows.Forms.TextBox textBoxPackageFileName;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label label16;
+		private System.Windows.Forms.DataGridView dataGridViewInstalledOther;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn25;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn26;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn27;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn28;
+		private System.Windows.Forms.Label label18;
         
     }
 }
