@@ -33,9 +33,9 @@ namespace OpenBve
 		{
 			SavePackages();
 			LoadPackages();
-			PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages);
-			PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages);
-			PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther);
+			PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+			PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+			PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
 		}
 
 		private Package currentPackage;
@@ -73,8 +73,8 @@ namespace OpenBve
 
 				HidePanels();
 				panelPackageDependsAdd.Show();
-				PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutes);
-				PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrains);
+				PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutes, false);
+				PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrains, false);
 				return;
 			}
 			//Check to see if the package is null- If null, then we haven't loaded a package yet
@@ -82,7 +82,7 @@ namespace OpenBve
 			{
 				if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					currentPackage = OpenBveApi.Packages.Manipulation.ReadPackage(openPackageFileDialog.FileName);
+					currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
 					if (currentPackage != null)
 					{
 						textBoxPackageName.Text = currentPackage.Name;
@@ -95,8 +95,7 @@ namespace OpenBve
 						if (currentPackage.Website != null)
 						{
 							linkLabelPackageWebsite.Text = currentPackage.Website;
-							LinkLabel.Link link = new LinkLabel.Link();
-							link.LinkData = currentPackage.Website;
+							LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
 							linkLabelPackageWebsite.Links.Add(link);
 						}
 						else
@@ -127,7 +126,7 @@ namespace OpenBve
 				if (Dependancies != null)
 				{
 					//We are missing a dependancy
-					PopulatePackageList(Dependancies, dataGridViewDependancies);
+					PopulatePackageList(Dependancies, dataGridViewDependancies, false);
 					HidePanels();
 					panelDependancyError.Show();
 					return;
@@ -143,9 +142,7 @@ namespace OpenBve
 						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledTrains, ref oldPackage);
 						break;
 					default:
-						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledTrains, ref oldPackage);
-						//TODO: Show appropriate error message....
-						//The current info is temp, as otherwise Info may not be initialised before access
+						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledOther, ref oldPackage);
 						break;
 				}
 				if (Info == VersionInformation.NotFound)
@@ -176,7 +173,7 @@ namespace OpenBve
 						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, currentDatabase.InstalledRoutes, currentDatabase.InstalledTrains);
 						if (brokenDependancies != null)
 						{
-							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies);
+							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
 						}
 					}
 					HidePanels();
@@ -314,7 +311,8 @@ namespace OpenBve
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
 		/// <param name="packageList">The list of packages</param>
 		/// <param name="dataGrid">The datagrid view to populate</param>
-		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid)
+		/// <param name="simpleList">Whether this is a simple list or a dependancy list</param>
+		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid, bool simpleList)
 		{
 			//Clear the package list
 			dataGrid.Rows.Clear();
@@ -322,20 +320,41 @@ namespace OpenBve
 			for (int i = 0; i < packageList.Count; i++)
 			{
 				//Create row
-				object[] Package = { packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion , packageList[i].Author, 
-									   packageList[i].Website};
+				object[] packageToAdd;
+				if (!simpleList)
+				{
+					packageToAdd = new object[]
+					{
+						packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].Author,
+						packageList[i].Website
+					};
+				}
+				else
+				{
+					packageToAdd = new object[]
+					{
+						packageList[i].Name, packageList[i].Version, packageList[i].Author, packageList[i].Website
+					};
+				}
 				//Add to the datagrid view
-				dataGrid.Rows.Add(Package);
+				dataGrid.Rows.Add(packageToAdd);
 			}
 		}
 
 		/// <summary>This method should be called to uninstall a package</summary>
 		internal void UninstallPackage(int selectedPackageIndex, ref List<Package> Packages)
 		{
-			//TODO: Requires dependancy checking on uninstall
+			
 			string uninstallResults = "";
 			Package packageToUninstall = Packages[selectedPackageIndex];
-			if (OpenBveApi.Packages.Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
+			List<Package> brokenDependancies = CheckUninstallDependancies(packageToUninstall.Dependancies);
+			if (brokenDependancies.Count != 0)
+			{
+				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
+				labelMissingDepemdanciesText1.Text = "Some existing packages may be broken by this action.";
+				panelDependancyError.Show();
+			}
+			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
 			{
 				Packages.Remove(packageToUninstall);
 				textBoxUninstallResult.Text = uninstallResults;
@@ -350,6 +369,54 @@ namespace OpenBve
 				}
 			}
 			panelUninstallResult.Show();
+		}
+
+		internal List<Package> CheckUninstallDependancies(List<Package> Dependancies)
+		{
+			List<Package> brokenPackages = new List<Package>();
+			foreach (Package Route in currentDatabase.InstalledRoutes)
+			{
+				foreach (Package Dependancy in Dependancies)
+				{
+					if (Dependancy.GUID == Route.GUID)
+					{
+						brokenPackages.Add(Route);
+					}
+				}
+			}
+			foreach (Package Train in currentDatabase.InstalledTrains)
+			{
+				foreach (Package Dependancy in Dependancies)
+				{
+					if (Dependancy.GUID == Train.GUID)
+					{
+						brokenPackages.Add(Train);
+					}
+				}
+			}
+			foreach (Package Other in currentDatabase.InstalledRoutes)
+			{
+				foreach (Package Dependancy in Dependancies)
+				{
+					if (Dependancy.GUID == Other.GUID)
+					{
+						brokenPackages.Add(Other);
+					}
+				}
+			}
+			return brokenPackages;
+		}
+
+		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList)
+		{
+			if (currentPackage != null)
+			{
+				if (DependsReccomendsList == null)
+				{
+					DependsReccomendsList = new List<Package>();
+				}
+				DependsReccomendsList.Add(packageToAdd);
+			}
 		}
 
 		internal void AddDependendsReccomends(int selectedPackageIndex, List<Package> Packages,ref List<Package> DependsReccomendsList)
@@ -419,11 +486,23 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedTrainPackageIndex, currentDatabase.InstalledTrains, ref currentPackage.Dependancies);
+				Package tempPackage = currentDatabase.InstalledTrains[selectedTrainPackageIndex];
+				tempPackage.Version = null;
+				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+				    DialogResult.OK)
+				{
+					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+				}			
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedRoutePackageIndex, currentDatabase.InstalledRoutes, ref currentPackage.Dependancies);
+				Package tempPackage = currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
+				tempPackage.Version = null;
+				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+					DialogResult.OK)
+				{
+					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+				}
 			}
 		}
 
@@ -431,11 +510,23 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedTrainPackageIndex, currentDatabase.InstalledTrains, ref currentPackage.Reccomendations);
+				Package tempPackage = currentDatabase.InstalledTrains[selectedTrainPackageIndex];
+				tempPackage.Version = null;
+				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+					DialogResult.OK)
+				{
+					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+				}
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				AddDependendsReccomends(selectedRoutePackageIndex, currentDatabase.InstalledRoutes, ref currentPackage.Reccomendations);
+				Package tempPackage = currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
+				tempPackage.Version = null;
+				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+					DialogResult.OK)
+				{
+					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+				}
 			}
 		}
 
@@ -563,13 +654,13 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewReplacePackage);
+						PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
 						break;
 					case PackageType.Train:
-						PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewReplacePackage);
+						PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
 						break;
 					case PackageType.Other:
-						PopulatePackageList(currentDatabase.InstalledOther, dataGridViewReplacePackage);
+						PopulatePackageList(currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -722,6 +813,74 @@ namespace OpenBve
 			inputBox.CancelButton = cancelButton; 
 			DialogResult result = inputBox.ShowDialog();
 			input = textBox.Text;
+			return result;
+		}
+
+		private static DialogResult ShowVersionDialog(ref Version minimumVersion, ref Version maximumVersion, string currentVersion)
+		{
+			System.Drawing.Size size = new System.Drawing.Size(200, 80);
+			Form inputBox = new Form();
+
+			inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			inputBox.ClientSize = size;
+			inputBox.Text = "Minimum Version";
+
+			System.Windows.Forms.TextBox textBox = new TextBox();
+			textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
+			textBox.Location = new System.Drawing.Point(5, 5);
+			textBox.Text = currentVersion;
+			inputBox.Controls.Add(textBox);
+
+			System.Windows.Forms.TextBox textBox2 = new TextBox();
+			textBox2.Size = new System.Drawing.Size(size.Width - 10, 23);
+			textBox2.Location = new System.Drawing.Point(5, 25);
+			textBox2.Text = currentVersion;
+			inputBox.Controls.Add(textBox2);
+
+			Button okButton = new Button();
+			okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+			okButton.Name = "okButton";
+			okButton.Size = new System.Drawing.Size(75, 23);
+			okButton.Text = "&OK";
+			okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 49);
+			inputBox.Controls.Add(okButton);
+
+			Button cancelButton = new Button();
+			cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			cancelButton.Name = "cancelButton";
+			cancelButton.Size = new System.Drawing.Size(75, 23);
+			cancelButton.Text = "&Cancel";
+			cancelButton.Location = new System.Drawing.Point(size.Width - 80, 49);
+			inputBox.Controls.Add(cancelButton);
+
+			inputBox.AcceptButton = okButton;
+			inputBox.CancelButton = cancelButton;
+			inputBox.AcceptButton = okButton;
+			inputBox.CancelButton = cancelButton;
+			DialogResult result = inputBox.ShowDialog();
+			try
+			{
+				if (textBox.Text == String.Empty || textBox.Text == "0")
+				{
+					minimumVersion = null;
+				}
+				else
+				{
+					minimumVersion = Version.Parse(textBox.Text);	
+				}
+				if (textBox2.Text == String.Empty || textBox2.Text == "0")
+				{
+					minimumVersion = null;
+				}
+				else
+				{
+					maximumVersion = Version.Parse(textBox2.Text);
+				}
+			}
+			catch
+			{
+				MessageBox.Show("You have entered an invalid version number. \r\n Please try again.");
+			}
 			return result;
 		}
 

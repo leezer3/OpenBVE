@@ -254,6 +254,28 @@
 			this.timerInstall = new System.Windows.Forms.Timer(this.components);
 			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
+			this.panelPackageList = new System.Windows.Forms.Panel();
+			this.dataGridViewInstalledOther = new System.Windows.Forms.DataGridView();
+			this.dataGridViewTextBoxColumn25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.label18 = new System.Windows.Forms.Label();
+			this.button1 = new System.Windows.Forms.Button();
+			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
+			this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.buttonUninstallPackage = new System.Windows.Forms.Button();
+			this.buttonInstallPackage = new System.Windows.Forms.Button();
+			this.dataGridViewRoutePackages = new System.Windows.Forms.DataGridView();
+			this.routeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.routeVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.labelInstalledTrains = new System.Windows.Forms.Label();
+			this.labelInstalledRoutes = new System.Windows.Forms.Label();
 			this.panelCreatePackage = new System.Windows.Forms.Panel();
 			this.SaveFileNameButton = new System.Windows.Forms.Button();
 			this.textBoxPackageFileName = new System.Windows.Forms.TextBox();
@@ -289,22 +311,6 @@
 			this.panelPleaseWait = new System.Windows.Forms.Panel();
 			this.label17 = new System.Windows.Forms.Label();
 			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
-			this.panelPackageList = new System.Windows.Forms.Panel();
-			this.button1 = new System.Windows.Forms.Button();
-			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
-			this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.buttonUninstallPackage = new System.Windows.Forms.Button();
-			this.buttonInstallPackage = new System.Windows.Forms.Button();
-			this.dataGridViewRoutePackages = new System.Windows.Forms.DataGridView();
-			this.routeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.routeVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.routeAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.routeWebsite = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.labelInstalledTrains = new System.Windows.Forms.Label();
-			this.labelInstalledRoutes = new System.Windows.Forms.Label();
 			this.panelPackageInstall = new System.Windows.Forms.Panel();
 			this.labelInstallText = new System.Windows.Forms.Label();
 			this.labelInstallHeader = new System.Windows.Forms.Label();
@@ -322,10 +328,6 @@
 			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
 			this.panelDependancyError = new System.Windows.Forms.Panel();
 			this.dataGridViewDependancies = new System.Windows.Forms.DataGridView();
-			this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.labelMissingDepemdanciesText2 = new System.Windows.Forms.Label();
 			this.labelMissingDepemdanciesText1 = new System.Windows.Forms.Label();
 			this.labelDependancyErrorHeader = new System.Windows.Forms.Label();
@@ -384,12 +386,11 @@
 			this.label15 = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
-			this.dataGridViewInstalledOther = new System.Windows.Forms.DataGridView();
-			this.dataGridViewTextBoxColumn25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.label18 = new System.Windows.Forms.Label();
+			this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.website = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -459,6 +460,10 @@
 			this.panelKeyboard.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPackageList.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
 			this.panelCreatePackage.SuspendLayout();
 			this.panelNewPackage.SuspendLayout();
 			this.panelReplacePackage.SuspendLayout();
@@ -467,9 +472,6 @@
 			this.groupBoxQ1.SuspendLayout();
 			this.panelPleaseWait.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
-			this.panelPackageList.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).BeginInit();
 			this.panelPackageInstall.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelDependancyError.SuspendLayout();
@@ -481,7 +483,6 @@
 			this.panelPackageDependsAdd.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrains)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutes)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelFillerOne
@@ -3334,6 +3335,251 @@
 			this.panelPackages.Size = new System.Drawing.Size(643, 586);
 			this.panelPackages.TabIndex = 14;
 			// 
+			// panelPackageList
+			// 
+			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageList.Controls.Add(this.dataGridViewInstalledOther);
+			this.panelPackageList.Controls.Add(this.label18);
+			this.panelPackageList.Controls.Add(this.button1);
+			this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
+			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
+			this.panelPackageList.Controls.Add(this.buttonInstallPackage);
+			this.panelPackageList.Controls.Add(this.dataGridViewRoutePackages);
+			this.panelPackageList.Controls.Add(this.labelInstalledTrains);
+			this.panelPackageList.Controls.Add(this.labelInstalledRoutes);
+			this.panelPackageList.Location = new System.Drawing.Point(0, 30);
+			this.panelPackageList.Name = "panelPackageList";
+			this.panelPackageList.Size = new System.Drawing.Size(641, 559);
+			this.panelPackageList.TabIndex = 3;
+			// 
+			// dataGridViewInstalledOther
+			// 
+			this.dataGridViewInstalledOther.AllowUserToAddRows = false;
+			this.dataGridViewInstalledOther.AllowUserToDeleteRows = false;
+			this.dataGridViewInstalledOther.AllowUserToResizeColumns = false;
+			this.dataGridViewInstalledOther.AllowUserToResizeRows = false;
+			this.dataGridViewInstalledOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewInstalledOther.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewInstalledOther.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewInstalledOther.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewInstalledOther.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn25,
+            this.dataGridViewTextBoxColumn26,
+            this.dataGridViewTextBoxColumn27,
+            this.dataGridViewTextBoxColumn28});
+			this.dataGridViewInstalledOther.Location = new System.Drawing.Point(5, 409);
+			this.dataGridViewInstalledOther.Name = "dataGridViewInstalledOther";
+			this.dataGridViewInstalledOther.ReadOnly = true;
+			this.dataGridViewInstalledOther.RowHeadersVisible = false;
+			this.dataGridViewInstalledOther.RowHeadersWidth = 90;
+			this.dataGridViewInstalledOther.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewInstalledOther.Size = new System.Drawing.Size(627, 111);
+			this.dataGridViewInstalledOther.TabIndex = 25;
+			// 
+			// dataGridViewTextBoxColumn25
+			// 
+			this.dataGridViewTextBoxColumn25.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn25.Name = "dataGridViewTextBoxColumn25";
+			this.dataGridViewTextBoxColumn25.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn26
+			// 
+			this.dataGridViewTextBoxColumn26.HeaderText = "Version";
+			this.dataGridViewTextBoxColumn26.Name = "dataGridViewTextBoxColumn26";
+			this.dataGridViewTextBoxColumn26.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn27
+			// 
+			this.dataGridViewTextBoxColumn27.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn27.Name = "dataGridViewTextBoxColumn27";
+			this.dataGridViewTextBoxColumn27.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn28
+			// 
+			this.dataGridViewTextBoxColumn28.HeaderText = "Website";
+			this.dataGridViewTextBoxColumn28.Name = "dataGridViewTextBoxColumn28";
+			this.dataGridViewTextBoxColumn28.ReadOnly = true;
+			// 
+			// label18
+			// 
+			this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label18.AutoEllipsis = true;
+			this.label18.BackColor = System.Drawing.Color.Silver;
+			this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label18.ForeColor = System.Drawing.Color.White;
+			this.label18.Location = new System.Drawing.Point(4, 376);
+			this.label18.Name = "label18";
+			this.label18.Size = new System.Drawing.Size(627, 24);
+			this.label18.TabIndex = 24;
+			this.label18.Text = "Installed Other";
+			this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// button1
+			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.button1.Location = new System.Drawing.Point(238, 525);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(136, 23);
+			this.button1.TabIndex = 23;
+			this.button1.Text = "Create Package";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// dataGridViewTrainPackages
+			// 
+			this.dataGridViewTrainPackages.AllowUserToAddRows = false;
+			this.dataGridViewTrainPackages.AllowUserToDeleteRows = false;
+			this.dataGridViewTrainPackages.AllowUserToResizeColumns = false;
+			this.dataGridViewTrainPackages.AllowUserToResizeRows = false;
+			this.dataGridViewTrainPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewTrainPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewTrainPackages.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewTrainPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewTrainPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4});
+			this.dataGridViewTrainPackages.Location = new System.Drawing.Point(5, 221);
+			this.dataGridViewTrainPackages.Name = "dataGridViewTrainPackages";
+			this.dataGridViewTrainPackages.ReadOnly = true;
+			this.dataGridViewTrainPackages.RowHeadersVisible = false;
+			this.dataGridViewTrainPackages.RowHeadersWidth = 90;
+			this.dataGridViewTrainPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 149);
+			this.dataGridViewTrainPackages.TabIndex = 22;
+			this.dataGridViewTrainPackages.SelectionChanged += new System.EventHandler(this.dataGridViewTrainPackages_SelectionChanged);
+			// 
+			// dataGridViewTextBoxColumn1
+			// 
+			this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+			this.dataGridViewTextBoxColumn1.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn2
+			// 
+			this.dataGridViewTextBoxColumn2.HeaderText = "Version";
+			this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+			this.dataGridViewTextBoxColumn2.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn3
+			// 
+			this.dataGridViewTextBoxColumn3.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+			this.dataGridViewTextBoxColumn3.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn4
+			// 
+			this.dataGridViewTextBoxColumn4.HeaderText = "Website";
+			this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+			this.dataGridViewTextBoxColumn4.ReadOnly = true;
+			// 
+			// buttonUninstallPackage
+			// 
+			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonUninstallPackage.Location = new System.Drawing.Point(499, 524);
+			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
+			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonUninstallPackage.TabIndex = 21;
+			this.buttonUninstallPackage.Text = "Uninstall Package";
+			this.buttonUninstallPackage.UseVisualStyleBackColor = true;
+			this.buttonUninstallPackage.Click += new System.EventHandler(this.buttonUninstallPackage_Click);
+			// 
+			// buttonInstallPackage
+			// 
+			this.buttonInstallPackage.Location = new System.Drawing.Point(9, 525);
+			this.buttonInstallPackage.Name = "buttonInstallPackage";
+			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
+			this.buttonInstallPackage.TabIndex = 20;
+			this.buttonInstallPackage.Text = "Install Package";
+			this.buttonInstallPackage.UseVisualStyleBackColor = true;
+			this.buttonInstallPackage.Click += new System.EventHandler(this.buttonInstallPackage_Click);
+			// 
+			// dataGridViewRoutePackages
+			// 
+			this.dataGridViewRoutePackages.AllowUserToAddRows = false;
+			this.dataGridViewRoutePackages.AllowUserToDeleteRows = false;
+			this.dataGridViewRoutePackages.AllowUserToResizeColumns = false;
+			this.dataGridViewRoutePackages.AllowUserToResizeRows = false;
+			this.dataGridViewRoutePackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewRoutePackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewRoutePackages.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewRoutePackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewRoutePackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.routeName,
+            this.routeVersion,
+            this.routeAuthor,
+            this.routeWebsite});
+			this.dataGridViewRoutePackages.Location = new System.Drawing.Point(4, 37);
+			this.dataGridViewRoutePackages.Name = "dataGridViewRoutePackages";
+			this.dataGridViewRoutePackages.ReadOnly = true;
+			this.dataGridViewRoutePackages.RowHeadersVisible = false;
+			this.dataGridViewRoutePackages.RowHeadersWidth = 90;
+			this.dataGridViewRoutePackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 149);
+			this.dataGridViewRoutePackages.TabIndex = 19;
+			this.dataGridViewRoutePackages.SelectionChanged += new System.EventHandler(this.dataGridViewRoutePackages_SelectionChanged);
+			// 
+			// routeName
+			// 
+			this.routeName.HeaderText = "Name";
+			this.routeName.Name = "routeName";
+			this.routeName.ReadOnly = true;
+			// 
+			// routeVersion
+			// 
+			this.routeVersion.HeaderText = "Version";
+			this.routeVersion.Name = "routeVersion";
+			this.routeVersion.ReadOnly = true;
+			// 
+			// routeAuthor
+			// 
+			this.routeAuthor.HeaderText = "Author";
+			this.routeAuthor.Name = "routeAuthor";
+			this.routeAuthor.ReadOnly = true;
+			// 
+			// routeWebsite
+			// 
+			this.routeWebsite.HeaderText = "Website";
+			this.routeWebsite.Name = "routeWebsite";
+			this.routeWebsite.ReadOnly = true;
+			// 
+			// labelInstalledTrains
+			// 
+			this.labelInstalledTrains.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledTrains.AutoEllipsis = true;
+			this.labelInstalledTrains.BackColor = System.Drawing.Color.Silver;
+			this.labelInstalledTrains.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstalledTrains.ForeColor = System.Drawing.Color.White;
+			this.labelInstalledTrains.Location = new System.Drawing.Point(4, 191);
+			this.labelInstalledTrains.Name = "labelInstalledTrains";
+			this.labelInstalledTrains.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledTrains.TabIndex = 18;
+			this.labelInstalledTrains.Text = "Installed Trains";
+			this.labelInstalledTrains.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelInstalledRoutes
+			// 
+			this.labelInstalledRoutes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledRoutes.AutoEllipsis = true;
+			this.labelInstalledRoutes.BackColor = System.Drawing.Color.Silver;
+			this.labelInstalledRoutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstalledRoutes.ForeColor = System.Drawing.Color.White;
+			this.labelInstalledRoutes.Location = new System.Drawing.Point(4, 8);
+			this.labelInstalledRoutes.Name = "labelInstalledRoutes";
+			this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledRoutes.TabIndex = 17;
+			this.labelInstalledRoutes.Text = "Installed Routes";
+			this.labelInstalledRoutes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// panelCreatePackage
 			// 
 			this.panelCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -3717,187 +3963,6 @@
 			this.pictureBoxProcessing.TabIndex = 4;
 			this.pictureBoxProcessing.TabStop = false;
 			// 
-			// panelPackageList
-			// 
-			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPackageList.Controls.Add(this.dataGridViewInstalledOther);
-			this.panelPackageList.Controls.Add(this.label18);
-			this.panelPackageList.Controls.Add(this.button1);
-			this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
-			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
-			this.panelPackageList.Controls.Add(this.buttonInstallPackage);
-			this.panelPackageList.Controls.Add(this.dataGridViewRoutePackages);
-			this.panelPackageList.Controls.Add(this.labelInstalledTrains);
-			this.panelPackageList.Controls.Add(this.labelInstalledRoutes);
-			this.panelPackageList.Location = new System.Drawing.Point(0, 30);
-			this.panelPackageList.Name = "panelPackageList";
-			this.panelPackageList.Size = new System.Drawing.Size(641, 559);
-			this.panelPackageList.TabIndex = 3;
-			// 
-			// button1
-			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(238, 525);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(136, 23);
-			this.button1.TabIndex = 23;
-			this.button1.Text = "Create Package";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-			// 
-			// dataGridViewTrainPackages
-			// 
-			this.dataGridViewTrainPackages.AllowUserToAddRows = false;
-			this.dataGridViewTrainPackages.AllowUserToDeleteRows = false;
-			this.dataGridViewTrainPackages.AllowUserToResizeColumns = false;
-			this.dataGridViewTrainPackages.AllowUserToResizeRows = false;
-			this.dataGridViewTrainPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewTrainPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewTrainPackages.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewTrainPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewTrainPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4});
-			this.dataGridViewTrainPackages.Location = new System.Drawing.Point(5, 221);
-			this.dataGridViewTrainPackages.Name = "dataGridViewTrainPackages";
-			this.dataGridViewTrainPackages.ReadOnly = true;
-			this.dataGridViewTrainPackages.RowHeadersVisible = false;
-			this.dataGridViewTrainPackages.RowHeadersWidth = 90;
-			this.dataGridViewTrainPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 149);
-			this.dataGridViewTrainPackages.TabIndex = 22;
-			this.dataGridViewTrainPackages.SelectionChanged += new System.EventHandler(this.dataGridViewTrainPackages_SelectionChanged);
-			// 
-			// dataGridViewTextBoxColumn1
-			// 
-			this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-			this.dataGridViewTextBoxColumn1.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn2
-			// 
-			this.dataGridViewTextBoxColumn2.HeaderText = "Version";
-			this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-			this.dataGridViewTextBoxColumn2.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn3
-			// 
-			this.dataGridViewTextBoxColumn3.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-			this.dataGridViewTextBoxColumn3.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn4
-			// 
-			this.dataGridViewTextBoxColumn4.HeaderText = "Website";
-			this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-			this.dataGridViewTextBoxColumn4.ReadOnly = true;
-			// 
-			// buttonUninstallPackage
-			// 
-			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUninstallPackage.Location = new System.Drawing.Point(499, 524);
-			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
-			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
-			this.buttonUninstallPackage.TabIndex = 21;
-			this.buttonUninstallPackage.Text = "Uninstall Package";
-			this.buttonUninstallPackage.UseVisualStyleBackColor = true;
-			this.buttonUninstallPackage.Click += new System.EventHandler(this.buttonUninstallPackage_Click);
-			// 
-			// buttonInstallPackage
-			// 
-			this.buttonInstallPackage.Location = new System.Drawing.Point(9, 525);
-			this.buttonInstallPackage.Name = "buttonInstallPackage";
-			this.buttonInstallPackage.Size = new System.Drawing.Size(136, 23);
-			this.buttonInstallPackage.TabIndex = 20;
-			this.buttonInstallPackage.Text = "Install Package";
-			this.buttonInstallPackage.UseVisualStyleBackColor = true;
-			this.buttonInstallPackage.Click += new System.EventHandler(this.buttonInstallPackage_Click);
-			// 
-			// dataGridViewRoutePackages
-			// 
-			this.dataGridViewRoutePackages.AllowUserToAddRows = false;
-			this.dataGridViewRoutePackages.AllowUserToDeleteRows = false;
-			this.dataGridViewRoutePackages.AllowUserToResizeColumns = false;
-			this.dataGridViewRoutePackages.AllowUserToResizeRows = false;
-			this.dataGridViewRoutePackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewRoutePackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewRoutePackages.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewRoutePackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewRoutePackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.routeName,
-            this.routeVersion,
-            this.routeAuthor,
-            this.routeWebsite});
-			this.dataGridViewRoutePackages.Location = new System.Drawing.Point(4, 37);
-			this.dataGridViewRoutePackages.Name = "dataGridViewRoutePackages";
-			this.dataGridViewRoutePackages.ReadOnly = true;
-			this.dataGridViewRoutePackages.RowHeadersVisible = false;
-			this.dataGridViewRoutePackages.RowHeadersWidth = 90;
-			this.dataGridViewRoutePackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 149);
-			this.dataGridViewRoutePackages.TabIndex = 19;
-			this.dataGridViewRoutePackages.SelectionChanged += new System.EventHandler(this.dataGridViewRoutePackages_SelectionChanged);
-			// 
-			// routeName
-			// 
-			this.routeName.HeaderText = "Name";
-			this.routeName.Name = "routeName";
-			this.routeName.ReadOnly = true;
-			// 
-			// routeVersion
-			// 
-			this.routeVersion.HeaderText = "Version";
-			this.routeVersion.Name = "routeVersion";
-			this.routeVersion.ReadOnly = true;
-			// 
-			// routeAuthor
-			// 
-			this.routeAuthor.HeaderText = "Author";
-			this.routeAuthor.Name = "routeAuthor";
-			this.routeAuthor.ReadOnly = true;
-			// 
-			// routeWebsite
-			// 
-			this.routeWebsite.HeaderText = "Website";
-			this.routeWebsite.Name = "routeWebsite";
-			this.routeWebsite.ReadOnly = true;
-			// 
-			// labelInstalledTrains
-			// 
-			this.labelInstalledTrains.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstalledTrains.AutoEllipsis = true;
-			this.labelInstalledTrains.BackColor = System.Drawing.Color.Silver;
-			this.labelInstalledTrains.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstalledTrains.ForeColor = System.Drawing.Color.White;
-			this.labelInstalledTrains.Location = new System.Drawing.Point(4, 191);
-			this.labelInstalledTrains.Name = "labelInstalledTrains";
-			this.labelInstalledTrains.Size = new System.Drawing.Size(627, 24);
-			this.labelInstalledTrains.TabIndex = 18;
-			this.labelInstalledTrains.Text = "Installed Trains";
-			this.labelInstalledTrains.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelInstalledRoutes
-			// 
-			this.labelInstalledRoutes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInstalledRoutes.AutoEllipsis = true;
-			this.labelInstalledRoutes.BackColor = System.Drawing.Color.Silver;
-			this.labelInstalledRoutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelInstalledRoutes.ForeColor = System.Drawing.Color.White;
-			this.labelInstalledRoutes.Location = new System.Drawing.Point(4, 8);
-			this.labelInstalledRoutes.Name = "labelInstalledRoutes";
-			this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 24);
-			this.labelInstalledRoutes.TabIndex = 17;
-			this.labelInstalledRoutes.Text = "Installed Routes";
-			this.labelInstalledRoutes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// panelPackageInstall
 			// 
 			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -4108,7 +4173,8 @@
             this.dataGridViewTextBoxColumn5,
             this.dataGridViewTextBoxColumn6,
             this.dataGridViewTextBoxColumn7,
-            this.dataGridViewTextBoxColumn8});
+            this.dataGridViewTextBoxColumn8,
+            this.website});
 			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 85);
 			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
 			this.dataGridViewDependancies.ReadOnly = true;
@@ -4116,30 +4182,6 @@
 			this.dataGridViewDependancies.RowHeadersWidth = 90;
 			this.dataGridViewDependancies.Size = new System.Drawing.Size(627, 414);
 			this.dataGridViewDependancies.TabIndex = 20;
-			// 
-			// dataGridViewTextBoxColumn5
-			// 
-			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-			this.dataGridViewTextBoxColumn5.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn6
-			// 
-			this.dataGridViewTextBoxColumn6.HeaderText = "Version";
-			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-			this.dataGridViewTextBoxColumn6.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn7
-			// 
-			this.dataGridViewTextBoxColumn7.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-			this.dataGridViewTextBoxColumn7.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn8
-			// 
-			this.dataGridViewTextBoxColumn8.HeaderText = "Website";
-			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-			this.dataGridViewTextBoxColumn8.ReadOnly = true;
 			// 
 			// labelMissingDepemdanciesText2
 			// 
@@ -4774,69 +4816,35 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
-			// dataGridViewInstalledOther
+			// dataGridViewTextBoxColumn5
 			// 
-			this.dataGridViewInstalledOther.AllowUserToAddRows = false;
-			this.dataGridViewInstalledOther.AllowUserToDeleteRows = false;
-			this.dataGridViewInstalledOther.AllowUserToResizeColumns = false;
-			this.dataGridViewInstalledOther.AllowUserToResizeRows = false;
-			this.dataGridViewInstalledOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewInstalledOther.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewInstalledOther.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewInstalledOther.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewInstalledOther.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn25,
-            this.dataGridViewTextBoxColumn26,
-            this.dataGridViewTextBoxColumn27,
-            this.dataGridViewTextBoxColumn28});
-			this.dataGridViewInstalledOther.Location = new System.Drawing.Point(5, 409);
-			this.dataGridViewInstalledOther.Name = "dataGridViewInstalledOther";
-			this.dataGridViewInstalledOther.ReadOnly = true;
-			this.dataGridViewInstalledOther.RowHeadersVisible = false;
-			this.dataGridViewInstalledOther.RowHeadersWidth = 90;
-			this.dataGridViewInstalledOther.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewInstalledOther.Size = new System.Drawing.Size(627, 111);
-			this.dataGridViewInstalledOther.TabIndex = 25;
+			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+			this.dataGridViewTextBoxColumn5.ReadOnly = true;
 			// 
-			// dataGridViewTextBoxColumn25
+			// dataGridViewTextBoxColumn6
 			// 
-			this.dataGridViewTextBoxColumn25.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn25.Name = "dataGridViewTextBoxColumn25";
-			this.dataGridViewTextBoxColumn25.ReadOnly = true;
+			this.dataGridViewTextBoxColumn6.HeaderText = "Minimum Version";
+			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+			this.dataGridViewTextBoxColumn6.ReadOnly = true;
 			// 
-			// dataGridViewTextBoxColumn26
+			// dataGridViewTextBoxColumn7
 			// 
-			this.dataGridViewTextBoxColumn26.HeaderText = "Version";
-			this.dataGridViewTextBoxColumn26.Name = "dataGridViewTextBoxColumn26";
-			this.dataGridViewTextBoxColumn26.ReadOnly = true;
+			this.dataGridViewTextBoxColumn7.HeaderText = "Maximum Version";
+			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+			this.dataGridViewTextBoxColumn7.ReadOnly = true;
 			// 
-			// dataGridViewTextBoxColumn27
+			// dataGridViewTextBoxColumn8
 			// 
-			this.dataGridViewTextBoxColumn27.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn27.Name = "dataGridViewTextBoxColumn27";
-			this.dataGridViewTextBoxColumn27.ReadOnly = true;
+			this.dataGridViewTextBoxColumn8.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+			this.dataGridViewTextBoxColumn8.ReadOnly = true;
 			// 
-			// dataGridViewTextBoxColumn28
+			// website
 			// 
-			this.dataGridViewTextBoxColumn28.HeaderText = "Website";
-			this.dataGridViewTextBoxColumn28.Name = "dataGridViewTextBoxColumn28";
-			this.dataGridViewTextBoxColumn28.ReadOnly = true;
-			// 
-			// label18
-			// 
-			this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.label18.AutoEllipsis = true;
-			this.label18.BackColor = System.Drawing.Color.Silver;
-			this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label18.ForeColor = System.Drawing.Color.White;
-			this.label18.Location = new System.Drawing.Point(4, 376);
-			this.label18.Name = "label18";
-			this.label18.Size = new System.Drawing.Size(627, 24);
-			this.label18.TabIndex = 24;
-			this.label18.Text = "Installed Other";
-			this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.website.HeaderText = "Website";
+			this.website.Name = "website";
+			this.website.ReadOnly = true;
 			// 
 			// formMain
 			// 
@@ -4961,6 +4969,10 @@
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPackageList.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
 			this.panelCreatePackage.ResumeLayout(false);
 			this.panelCreatePackage.PerformLayout();
 			this.panelNewPackage.ResumeLayout(false);
@@ -4975,9 +4987,6 @@
 			this.panelPleaseWait.ResumeLayout(false);
 			this.panelPleaseWait.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
-			this.panelPackageList.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrainPackages)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutePackages)).EndInit();
 			this.panelPackageInstall.ResumeLayout(false);
 			this.panelPackageInstall.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
@@ -4995,7 +5004,6 @@
 			this.panelPackageDependsAdd.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewTrains)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoutes)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstalledOther)).EndInit();
 			this.ResumeLayout(false);
 
         }
@@ -5273,11 +5281,7 @@
         private System.Windows.Forms.Label labelDependancyErrorHeader;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button buttonProceedAnyway;
-        private System.Windows.Forms.DataGridView dataGridViewDependancies;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+		private System.Windows.Forms.DataGridView dataGridViewDependancies;
         private System.Windows.Forms.Panel panelSuccess;
         private System.Windows.Forms.TextBox textBoxFilesInstalled;
         private System.Windows.Forms.Label labelListFilesInstalled;
@@ -5368,6 +5372,11 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn27;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn28;
 		private System.Windows.Forms.Label label18;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+		private System.Windows.Forms.DataGridViewTextBoxColumn website;
         
     }
 }

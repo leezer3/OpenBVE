@@ -979,9 +979,9 @@ namespace OpenBve {
 				ResetInstallerPanels();
 	            if (LoadPackages() == true)
 	            {
-		            PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages);
-		            PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages);
-		            PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther);
+		            PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+		            PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+		            PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
 	            }
             }
         }

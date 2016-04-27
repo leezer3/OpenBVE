@@ -8,6 +8,7 @@ using SharpCompress.Writer;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Drawing;
+using System.Linq;
 
 namespace OpenBveApi.Packages
 {
@@ -67,10 +68,45 @@ namespace OpenBveApi.Packages
 		 * They need to live in the base Package class to save creating another.....
 		 */
 		/// <summary>The minimum package version</summary>
+		[XmlIgnore]
 		public Version MinimumVersion;
+		[XmlElement(ElementName = "MinimumVersion")]
+		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+		public string MinVersion
+		{
+			get
+			{
+				if (this.MinimumVersion == null)
+					return string.Empty;
+				else
+					return this.MinimumVersion.ToString();
+			}
+			set
+			{
+				if (!String.IsNullOrEmpty(value))
+					this.MinimumVersion = new Version(value);
+			}
+		}
 		/// <summary>The maximum package version</summary>
+		[XmlIgnore]
 		public Version MaximumVersion;
-		
+		[XmlElement(ElementName = "MaximumVersion")]
+		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+		public string MaxVersion
+		{
+			get
+			{
+				if (this.MaximumVersion == null)
+					return string.Empty;
+				else
+					return this.MaximumVersion.ToString();
+			}
+			set
+			{
+				if (!String.IsNullOrEmpty(value))
+					this.MaximumVersion = new Version(value);
+			}
+		}
 	}
 
 	[XmlType("openBVE")]
@@ -377,7 +413,7 @@ namespace OpenBveApi.Packages
 		/// <summary>Checks to see if this package's dependancies are installed</summary>
 		public static List<Package> CheckDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)
 		{
-			foreach (Package currentDependancy in currentPackage.Dependancies)
+			foreach (Package currentDependancy in currentPackage.Dependancies.ToList())
 			{
 				//Itinerate through the routes list
 				if (currentDependancy.PackageType == PackageType.Route)
@@ -389,8 +425,8 @@ namespace OpenBveApi.Packages
 							//Check GUID
 							if (Package.GUID == currentDependancy.GUID)
 							{
-								if (currentDependancy.MinimumVersion <= Package.PackageVersion &&
-								    currentDependancy.MaximumVersion >= Package.PackageVersion)
+								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
+									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
 								{
 									//If the version is OK, remove
 									currentPackage.Dependancies.Remove(currentDependancy);
@@ -409,8 +445,8 @@ namespace OpenBveApi.Packages
 							//Check GUID
 							if (Package.GUID == currentDependancy.GUID)
 							{
-								if (currentDependancy.MinimumVersion <= Package.PackageVersion &&
-								    currentDependancy.MaximumVersion >= Package.PackageVersion)
+								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
+								    (currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
 								{
 									//If the version is OK, remove
 									currentPackage.Dependancies.Remove(currentDependancy);
