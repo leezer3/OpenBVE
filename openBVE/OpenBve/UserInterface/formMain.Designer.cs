@@ -261,7 +261,7 @@
 			this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.label18 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
+			this.createPackageButton = new System.Windows.Forms.Button();
 			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
 			this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -283,15 +283,15 @@
 			this.label16 = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.panelNewPackage = new System.Windows.Forms.Panel();
-			this.button4 = new System.Windows.Forms.Button();
+			this.newPackageClearSelectionButton = new System.Windows.Forms.Button();
 			this.filesToPackageBox = new System.Windows.Forms.TextBox();
-			this.button2 = new System.Windows.Forms.Button();
+			this.addPackageItemsButton = new System.Windows.Forms.Button();
 			this.labelSelectFiles = new System.Windows.Forms.Label();
 			this.textBoxGUID = new System.Windows.Forms.TextBox();
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.panelReplacePackage = new System.Windows.Forms.Panel();
-			this.button5 = new System.Windows.Forms.Button();
-			this.label10 = new System.Windows.Forms.Label();
+			this.replacePackageButton = new System.Windows.Forms.Button();
+			this.packageToReplaceLabel = new System.Windows.Forms.Label();
 			this.dataGridViewReplacePackage = new System.Windows.Forms.DataGridView();
 			this.dataGridViewTextBoxColumn21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn22 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -311,6 +311,18 @@
 			this.panelPleaseWait = new System.Windows.Forms.Panel();
 			this.label17 = new System.Windows.Forms.Label();
 			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
+			this.panelDependancyError = new System.Windows.Forms.Panel();
+			this.dataGridViewDependancies = new System.Windows.Forms.DataGridView();
+			this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.website = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.labelMissingDepemdanciesText2 = new System.Windows.Forms.Label();
+			this.labelMissingDepemdanciesText1 = new System.Windows.Forms.Label();
+			this.labelDependancyErrorHeader = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.buttonProceedAnyway = new System.Windows.Forms.Button();
 			this.panelPackageInstall = new System.Windows.Forms.Panel();
 			this.labelInstallText = new System.Windows.Forms.Label();
 			this.labelInstallHeader = new System.Windows.Forms.Label();
@@ -326,13 +338,6 @@
 			this.textBoxPackageName = new System.Windows.Forms.TextBox();
 			this.labelPackageName = new System.Windows.Forms.Label();
 			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
-			this.panelDependancyError = new System.Windows.Forms.Panel();
-			this.dataGridViewDependancies = new System.Windows.Forms.DataGridView();
-			this.labelMissingDepemdanciesText2 = new System.Windows.Forms.Label();
-			this.labelMissingDepemdanciesText1 = new System.Windows.Forms.Label();
-			this.labelDependancyErrorHeader = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
-			this.buttonProceedAnyway = new System.Windows.Forms.Button();
 			this.panelSuccess = new System.Windows.Forms.Panel();
 			this.textBoxFilesInstalled = new System.Windows.Forms.TextBox();
 			this.labelListFilesInstalled = new System.Windows.Forms.Label();
@@ -386,11 +391,6 @@
 			this.label15 = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
-			this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.website = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -472,10 +472,10 @@
 			this.groupBoxQ1.SuspendLayout();
 			this.panelPleaseWait.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
-			this.panelPackageInstall.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelDependancyError.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewDependancies)).BeginInit();
+			this.panelPackageInstall.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelSuccess.SuspendLayout();
 			this.panelVersionError.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
@@ -3320,8 +3320,8 @@
 			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.panelPleaseWait);
-			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
+			this.panelPackages.Controls.Add(this.panelPackageInstall);
 			this.panelPackages.Controls.Add(this.panelSuccess);
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
@@ -3342,7 +3342,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageList.Controls.Add(this.dataGridViewInstalledOther);
 			this.panelPackageList.Controls.Add(this.label18);
-			this.panelPackageList.Controls.Add(this.button1);
+			this.panelPackageList.Controls.Add(this.createPackageButton);
 			this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
 			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
 			this.panelPackageList.Controls.Add(this.buttonInstallPackage);
@@ -3418,16 +3418,16 @@
 			this.label18.Text = "Installed Other";
 			this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// button1
+			// createPackageButton
 			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(238, 525);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(136, 23);
-			this.button1.TabIndex = 23;
-			this.button1.Text = "Create Package";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.createPackageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.createPackageButton.Location = new System.Drawing.Point(238, 525);
+			this.createPackageButton.Name = "createPackageButton";
+			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
+			this.createPackageButton.TabIndex = 23;
+			this.createPackageButton.Text = "Create Package";
+			this.createPackageButton.UseVisualStyleBackColor = true;
+			this.createPackageButton.Click += new System.EventHandler(this.createPackageButton_Click);
 			// 
 			// dataGridViewTrainPackages
 			// 
@@ -3653,9 +3653,9 @@
 			// 
 			// panelNewPackage
 			// 
-			this.panelNewPackage.Controls.Add(this.button4);
+			this.panelNewPackage.Controls.Add(this.newPackageClearSelectionButton);
 			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
-			this.panelNewPackage.Controls.Add(this.button2);
+			this.panelNewPackage.Controls.Add(this.addPackageItemsButton);
 			this.panelNewPackage.Controls.Add(this.labelSelectFiles);
 			this.panelNewPackage.Controls.Add(this.textBoxGUID);
 			this.panelNewPackage.Controls.Add(this.labelNewGUID);
@@ -3665,15 +3665,15 @@
 			this.panelNewPackage.Size = new System.Drawing.Size(644, 311);
 			this.panelNewPackage.TabIndex = 21;
 			// 
-			// button4
+			// newPackageClearSelectionButton
 			// 
-			this.button4.Location = new System.Drawing.Point(511, 282);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(121, 23);
-			this.button4.TabIndex = 30;
-			this.button4.Text = "Clear Selection";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
+			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(511, 282);
+			this.newPackageClearSelectionButton.Name = "newPackageClearSelectionButton";
+			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 23);
+			this.newPackageClearSelectionButton.TabIndex = 30;
+			this.newPackageClearSelectionButton.Text = "Clear Selection";
+			this.newPackageClearSelectionButton.UseVisualStyleBackColor = true;
+			this.newPackageClearSelectionButton.Click += new System.EventHandler(this.newPackageClearSelectionButton_Click);
 			// 
 			// filesToPackageBox
 			// 
@@ -3685,15 +3685,15 @@
 			this.filesToPackageBox.Size = new System.Drawing.Size(621, 215);
 			this.filesToPackageBox.TabIndex = 29;
 			// 
-			// button2
+			// addPackageItemsButton
 			// 
-			this.button2.Location = new System.Drawing.Point(5, 282);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(121, 23);
-			this.button2.TabIndex = 28;
-			this.button2.Text = "Add Item(s)";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.addPackageItemsButton.Location = new System.Drawing.Point(5, 282);
+			this.addPackageItemsButton.Name = "addPackageItemsButton";
+			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 23);
+			this.addPackageItemsButton.TabIndex = 28;
+			this.addPackageItemsButton.Text = "Add Item(s)";
+			this.addPackageItemsButton.UseVisualStyleBackColor = true;
+			this.addPackageItemsButton.Click += new System.EventHandler(this.addPackageItemsButton_Click);
 			// 
 			// labelSelectFiles
 			// 
@@ -3722,32 +3722,32 @@
 			// 
 			// panelReplacePackage
 			// 
-			this.panelReplacePackage.Controls.Add(this.button5);
-			this.panelReplacePackage.Controls.Add(this.label10);
+			this.panelReplacePackage.Controls.Add(this.replacePackageButton);
+			this.panelReplacePackage.Controls.Add(this.packageToReplaceLabel);
 			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
 			this.panelReplacePackage.Location = new System.Drawing.Point(-2, 137);
 			this.panelReplacePackage.Name = "panelReplacePackage";
 			this.panelReplacePackage.Size = new System.Drawing.Size(644, 308);
 			this.panelReplacePackage.TabIndex = 20;
 			// 
-			// button5
+			// replacePackageButton
 			// 
-			this.button5.Location = new System.Drawing.Point(200, 278);
-			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(159, 23);
-			this.button5.TabIndex = 25;
-			this.button5.Text = "Replace This Package";
-			this.button5.UseVisualStyleBackColor = true;
-			this.button5.Click += new System.EventHandler(this.button5_Click);
+			this.replacePackageButton.Location = new System.Drawing.Point(200, 278);
+			this.replacePackageButton.Name = "replacePackageButton";
+			this.replacePackageButton.Size = new System.Drawing.Size(159, 23);
+			this.replacePackageButton.TabIndex = 25;
+			this.replacePackageButton.Text = "Replace This Package";
+			this.replacePackageButton.UseVisualStyleBackColor = true;
+			this.replacePackageButton.Click += new System.EventHandler(this.replacePackageButton_Click);
 			// 
-			// label10
+			// packageToReplaceLabel
 			// 
-			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(3, 3);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(230, 13);
-			this.label10.TabIndex = 24;
-			this.label10.Text = "Please select the package you wish to replace:";
+			this.packageToReplaceLabel.AutoSize = true;
+			this.packageToReplaceLabel.Location = new System.Drawing.Point(3, 3);
+			this.packageToReplaceLabel.Name = "packageToReplaceLabel";
+			this.packageToReplaceLabel.Size = new System.Drawing.Size(230, 13);
+			this.packageToReplaceLabel.TabIndex = 24;
+			this.packageToReplaceLabel.Text = "Please select the package you wish to replace:";
 			// 
 			// dataGridViewReplacePackage
 			// 
@@ -3963,6 +3963,133 @@
 			this.pictureBoxProcessing.TabIndex = 4;
 			this.pictureBoxProcessing.TabStop = false;
 			// 
+			// panelDependancyError
+			// 
+			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
+			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText2);
+			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText1);
+			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
+			this.panelDependancyError.Controls.Add(this.label9);
+			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
+			this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
+			this.panelDependancyError.Name = "panelDependancyError";
+			this.panelDependancyError.Size = new System.Drawing.Size(641, 559);
+			this.panelDependancyError.TabIndex = 5;
+			// 
+			// dataGridViewDependancies
+			// 
+			this.dataGridViewDependancies.AllowUserToAddRows = false;
+			this.dataGridViewDependancies.AllowUserToDeleteRows = false;
+			this.dataGridViewDependancies.AllowUserToResizeColumns = false;
+			this.dataGridViewDependancies.AllowUserToResizeRows = false;
+			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+			this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
+			this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.website});
+			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 85);
+			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
+			this.dataGridViewDependancies.ReadOnly = true;
+			this.dataGridViewDependancies.RowHeadersVisible = false;
+			this.dataGridViewDependancies.RowHeadersWidth = 90;
+			this.dataGridViewDependancies.Size = new System.Drawing.Size(627, 414);
+			this.dataGridViewDependancies.TabIndex = 20;
+			this.dataGridViewDependancies.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDependancies_CellContentClick);
+			// 
+			// dataGridViewTextBoxColumn5
+			// 
+			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
+			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+			this.dataGridViewTextBoxColumn5.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn6
+			// 
+			this.dataGridViewTextBoxColumn6.HeaderText = "Minimum Version";
+			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+			this.dataGridViewTextBoxColumn6.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn7
+			// 
+			this.dataGridViewTextBoxColumn7.HeaderText = "Maximum Version";
+			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+			this.dataGridViewTextBoxColumn7.ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn8
+			// 
+			this.dataGridViewTextBoxColumn8.HeaderText = "Author";
+			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+			this.dataGridViewTextBoxColumn8.ReadOnly = true;
+			// 
+			// website
+			// 
+			this.website.HeaderText = "Website";
+			this.website.Name = "website";
+			this.website.ReadOnly = true;
+			// 
+			// labelMissingDepemdanciesText2
+			// 
+			this.labelMissingDepemdanciesText2.AutoSize = true;
+			this.labelMissingDepemdanciesText2.Location = new System.Drawing.Point(7, 69);
+			this.labelMissingDepemdanciesText2.Name = "labelMissingDepemdanciesText2";
+			this.labelMissingDepemdanciesText2.Size = new System.Drawing.Size(167, 13);
+			this.labelMissingDepemdanciesText2.TabIndex = 18;
+			this.labelMissingDepemdanciesText2.Text = "These are shown in the list below:";
+			// 
+			// labelMissingDepemdanciesText1
+			// 
+			this.labelMissingDepemdanciesText1.AutoSize = true;
+			this.labelMissingDepemdanciesText1.Location = new System.Drawing.Point(7, 54);
+			this.labelMissingDepemdanciesText1.Name = "labelMissingDepemdanciesText1";
+			this.labelMissingDepemdanciesText1.Size = new System.Drawing.Size(238, 13);
+			this.labelMissingDepemdanciesText1.TabIndex = 17;
+			this.labelMissingDepemdanciesText1.Text = "The current package has unment dependancies.";
+			// 
+			// labelDependancyErrorHeader
+			// 
+			this.labelDependancyErrorHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDependancyErrorHeader.AutoEllipsis = true;
+			this.labelDependancyErrorHeader.AutoSize = true;
+			this.labelDependancyErrorHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelDependancyErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelDependancyErrorHeader.ForeColor = System.Drawing.Color.Black;
+			this.labelDependancyErrorHeader.Location = new System.Drawing.Point(232, 18);
+			this.labelDependancyErrorHeader.Name = "labelDependancyErrorHeader";
+			this.labelDependancyErrorHeader.Size = new System.Drawing.Size(118, 16);
+			this.labelDependancyErrorHeader.TabIndex = 16;
+			this.labelDependancyErrorHeader.Text = "Dependancy Error";
+			// 
+			// label9
+			// 
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label9.BackColor = System.Drawing.Color.Silver;
+			this.label9.Location = new System.Drawing.Point(7, 10);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(627, 32);
+			this.label9.TabIndex = 15;
+			// 
+			// buttonProceedAnyway
+			// 
+			this.buttonProceedAnyway.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonProceedAnyway.Location = new System.Drawing.Point(198, 505);
+			this.buttonProceedAnyway.Name = "buttonProceedAnyway";
+			this.buttonProceedAnyway.Size = new System.Drawing.Size(146, 40);
+			this.buttonProceedAnyway.TabIndex = 14;
+			this.buttonProceedAnyway.Text = "Proceed Anyway";
+			this.buttonProceedAnyway.UseVisualStyleBackColor = true;
+			this.buttonProceedAnyway.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
+			// 
 			// panelPackageInstall
 			// 
 			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -4141,102 +4268,6 @@
 			this.pictureBoxPackageImage.TabIndex = 3;
 			this.pictureBoxPackageImage.TabStop = false;
 			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
-			// 
-			// panelDependancyError
-			// 
-			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
-			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText2);
-			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText1);
-			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
-			this.panelDependancyError.Controls.Add(this.label9);
-			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
-			this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
-			this.panelDependancyError.Name = "panelDependancyError";
-			this.panelDependancyError.Size = new System.Drawing.Size(641, 559);
-			this.panelDependancyError.TabIndex = 5;
-			// 
-			// dataGridViewDependancies
-			// 
-			this.dataGridViewDependancies.AllowUserToAddRows = false;
-			this.dataGridViewDependancies.AllowUserToDeleteRows = false;
-			this.dataGridViewDependancies.AllowUserToResizeColumns = false;
-			this.dataGridViewDependancies.AllowUserToResizeRows = false;
-			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
-			this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn7,
-            this.dataGridViewTextBoxColumn8,
-            this.website});
-			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 85);
-			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
-			this.dataGridViewDependancies.ReadOnly = true;
-			this.dataGridViewDependancies.RowHeadersVisible = false;
-			this.dataGridViewDependancies.RowHeadersWidth = 90;
-			this.dataGridViewDependancies.Size = new System.Drawing.Size(627, 414);
-			this.dataGridViewDependancies.TabIndex = 20;
-			// 
-			// labelMissingDepemdanciesText2
-			// 
-			this.labelMissingDepemdanciesText2.AutoSize = true;
-			this.labelMissingDepemdanciesText2.Location = new System.Drawing.Point(7, 69);
-			this.labelMissingDepemdanciesText2.Name = "labelMissingDepemdanciesText2";
-			this.labelMissingDepemdanciesText2.Size = new System.Drawing.Size(167, 13);
-			this.labelMissingDepemdanciesText2.TabIndex = 18;
-			this.labelMissingDepemdanciesText2.Text = "These are shown in the list below:";
-			// 
-			// labelMissingDepemdanciesText1
-			// 
-			this.labelMissingDepemdanciesText1.AutoSize = true;
-			this.labelMissingDepemdanciesText1.Location = new System.Drawing.Point(7, 54);
-			this.labelMissingDepemdanciesText1.Name = "labelMissingDepemdanciesText1";
-			this.labelMissingDepemdanciesText1.Size = new System.Drawing.Size(238, 13);
-			this.labelMissingDepemdanciesText1.TabIndex = 17;
-			this.labelMissingDepemdanciesText1.Text = "The current package has unment dependancies.";
-			// 
-			// labelDependancyErrorHeader
-			// 
-			this.labelDependancyErrorHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDependancyErrorHeader.AutoEllipsis = true;
-			this.labelDependancyErrorHeader.AutoSize = true;
-			this.labelDependancyErrorHeader.BackColor = System.Drawing.Color.Silver;
-			this.labelDependancyErrorHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelDependancyErrorHeader.ForeColor = System.Drawing.Color.Black;
-			this.labelDependancyErrorHeader.Location = new System.Drawing.Point(232, 18);
-			this.labelDependancyErrorHeader.Name = "labelDependancyErrorHeader";
-			this.labelDependancyErrorHeader.Size = new System.Drawing.Size(118, 16);
-			this.labelDependancyErrorHeader.TabIndex = 16;
-			this.labelDependancyErrorHeader.Text = "Dependancy Error";
-			// 
-			// label9
-			// 
-			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.label9.BackColor = System.Drawing.Color.Silver;
-			this.label9.Location = new System.Drawing.Point(7, 10);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(627, 32);
-			this.label9.TabIndex = 15;
-			// 
-			// buttonProceedAnyway
-			// 
-			this.buttonProceedAnyway.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonProceedAnyway.Location = new System.Drawing.Point(198, 505);
-			this.buttonProceedAnyway.Name = "buttonProceedAnyway";
-			this.buttonProceedAnyway.Size = new System.Drawing.Size(146, 40);
-			this.buttonProceedAnyway.TabIndex = 14;
-			this.buttonProceedAnyway.Text = "Proceed Anyway";
-			this.buttonProceedAnyway.UseVisualStyleBackColor = true;
-			this.buttonProceedAnyway.Click += new System.EventHandler(this.buttonProceedAnyway_Click);
 			// 
 			// panelSuccess
 			// 
@@ -4816,36 +4847,6 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
-			// dataGridViewTextBoxColumn5
-			// 
-			this.dataGridViewTextBoxColumn5.HeaderText = "Name";
-			this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-			this.dataGridViewTextBoxColumn5.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn6
-			// 
-			this.dataGridViewTextBoxColumn6.HeaderText = "Minimum Version";
-			this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-			this.dataGridViewTextBoxColumn6.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn7
-			// 
-			this.dataGridViewTextBoxColumn7.HeaderText = "Maximum Version";
-			this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-			this.dataGridViewTextBoxColumn7.ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn8
-			// 
-			this.dataGridViewTextBoxColumn8.HeaderText = "Author";
-			this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-			this.dataGridViewTextBoxColumn8.ReadOnly = true;
-			// 
-			// website
-			// 
-			this.website.HeaderText = "Website";
-			this.website.Name = "website";
-			this.website.ReadOnly = true;
-			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4987,12 +4988,12 @@
 			this.panelPleaseWait.ResumeLayout(false);
 			this.panelPleaseWait.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
-			this.panelPackageInstall.ResumeLayout(false);
-			this.panelPackageInstall.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelDependancyError.ResumeLayout(false);
 			this.panelDependancyError.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewDependancies)).EndInit();
+			this.panelPackageInstall.ResumeLayout(false);
+			this.panelPackageInstall.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
 			this.panelSuccess.ResumeLayout(false);
 			this.panelSuccess.PerformLayout();
 			this.panelVersionError.ResumeLayout(false);
@@ -5329,7 +5330,7 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button buttonCreatePackage;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button createPackageButton;
 		private System.Windows.Forms.Panel panelCreatePackage;
 		private System.Windows.Forms.GroupBox groupBoxQ1;
 		private System.Windows.Forms.RadioButton radioButtonQ1No;
@@ -5343,7 +5344,7 @@
 		private System.Windows.Forms.Label labelPackageType;
 		private System.Windows.Forms.RadioButton radioButtonQ2Other;
 		private System.Windows.Forms.Panel panelReplacePackage;
-		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Label packageToReplaceLabel;
 		private System.Windows.Forms.DataGridView dataGridViewReplacePackage;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn21;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn22;
@@ -5356,11 +5357,11 @@
 		private System.Windows.Forms.Panel panelPleaseWait;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.PictureBox pictureBoxProcessing;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button addPackageItemsButton;
 		private System.Windows.Forms.Label labelSelectFiles;
 		private System.Windows.Forms.TextBox filesToPackageBox;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.Button newPackageClearSelectionButton;
+		private System.Windows.Forms.Button replacePackageButton;
 		private System.Windows.Forms.SaveFileDialog savePackageDialog;
 		private System.Windows.Forms.Button SaveFileNameButton;
 		private System.Windows.Forms.TextBox textBoxPackageFileName;

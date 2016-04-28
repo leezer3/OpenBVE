@@ -347,11 +347,11 @@ namespace OpenBve
 			
 			string uninstallResults = "";
 			Package packageToUninstall = Packages[selectedPackageIndex];
-			List<Package> brokenDependancies = CheckUninstallDependancies(packageToUninstall.Dependancies);
+			List<Package> brokenDependancies = DatabaseFunctions.CheckUninstallDependancies(currentDatabase, packageToUninstall.Dependancies);
 			if (brokenDependancies.Count != 0)
 			{
 				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
-				labelMissingDepemdanciesText1.Text = "Some existing packages may be broken by this action.";
+				labelMissingDepemdanciesText1.Text = Interface.GetInterfaceString("packages_uninstall_broken");
 				panelDependancyError.Show();
 			}
 			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
@@ -365,47 +365,14 @@ namespace OpenBve
 			{
 				if (uninstallResults == null)
 				{
-					//TODO: Requires a specific error for attempting to uninstall a package with the XML file list missing
+					//Uninstall requires an XML list of files, and these were missing.......
+					textBoxUninstallResult.Text = Interface.GetInterfaceString("packages_uninstall_missing_xml");
 				}
 			}
 			panelUninstallResult.Show();
 		}
 
-		internal List<Package> CheckUninstallDependancies(List<Package> Dependancies)
-		{
-			List<Package> brokenPackages = new List<Package>();
-			foreach (Package Route in currentDatabase.InstalledRoutes)
-			{
-				foreach (Package Dependancy in Dependancies)
-				{
-					if (Dependancy.GUID == Route.GUID)
-					{
-						brokenPackages.Add(Route);
-					}
-				}
-			}
-			foreach (Package Train in currentDatabase.InstalledTrains)
-			{
-				foreach (Package Dependancy in Dependancies)
-				{
-					if (Dependancy.GUID == Train.GUID)
-					{
-						brokenPackages.Add(Train);
-					}
-				}
-			}
-			foreach (Package Other in currentDatabase.InstalledRoutes)
-			{
-				foreach (Package Dependancy in Dependancies)
-				{
-					if (Dependancy.GUID == Other.GUID)
-					{
-						brokenPackages.Add(Other);
-					}
-				}
-			}
-			return brokenPackages;
-		}
+
 
 		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList)
 		{
@@ -419,21 +386,7 @@ namespace OpenBve
 			}
 		}
 
-		internal void AddDependendsReccomends(int selectedPackageIndex, List<Package> Packages,ref List<Package> DependsReccomendsList)
-		{
-			if (currentPackage != null)
-			{
-				if (DependsReccomendsList == null)
-				{
-					DependsReccomendsList = new List<Package>();
-				}
-				//TODO: Requires a version popup
-				if (selectedPackageIndex != -1)
-				{
-					DependsReccomendsList.Add(Packages[selectedPackageIndex]);
-				}
-			}
-		}
+
 
 		private void dataGridViewTrainPackages_SelectionChanged(object sender, EventArgs e)
 		{
@@ -578,9 +531,7 @@ namespace OpenBve
 				panelSuccess.Show();
 			};
 
-			 workerThread.RunWorkerAsync();
-			
-			
+			 workerThread.RunWorkerAsync();	
 		}
 
 		private void button3_Click(object sender, EventArgs e)
@@ -624,7 +575,7 @@ namespace OpenBve
 			panelPackageInstall.Show();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void createPackageButton_Click(object sender, EventArgs e)
 		{
 			HidePanels();
 			panelCreatePackage.Show();
@@ -779,32 +730,40 @@ namespace OpenBve
 		private static DialogResult ShowInputDialog(ref string input)
 		{
 			System.Drawing.Size size = new System.Drawing.Size(200, 70);
-			Form inputBox = new Form();
+			Form inputBox = new Form
+			{
+				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				ClientSize = size,
+				Text = "Name"
+			};
 
-			inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			inputBox.ClientSize = size;
-			inputBox.Text = "Name";
 
-			System.Windows.Forms.TextBox textBox = new TextBox();
-			textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
-			textBox.Location = new System.Drawing.Point(5, 5);
-			textBox.Text = input;
+			System.Windows.Forms.TextBox textBox = new TextBox
+			{
+				Size = new System.Drawing.Size(size.Width - 10, 23),
+				Location = new System.Drawing.Point(5, 5),
+				Text = input
+			};
 			inputBox.Controls.Add(textBox);
 
-			Button okButton = new Button();
-			okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-			okButton.Name = "okButton";
-			okButton.Size = new System.Drawing.Size(75, 23);
-			okButton.Text = "&OK";
-			okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 39);
+			Button okButton = new Button
+			{
+				DialogResult = System.Windows.Forms.DialogResult.OK,
+				Name = "okButton",
+				Size = new System.Drawing.Size(75, 23),
+				Text = "&OK",
+				Location = new System.Drawing.Point(size.Width - 80 - 80, 39)
+			};
 			inputBox.Controls.Add(okButton);
 
-			Button cancelButton = new Button();
-			cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			cancelButton.Name = "cancelButton";
-			cancelButton.Size = new System.Drawing.Size(75, 23);
-			cancelButton.Text = "&Cancel";
-			cancelButton.Location = new System.Drawing.Point(size.Width - 80, 39);
+			Button cancelButton = new Button
+			{
+				DialogResult = System.Windows.Forms.DialogResult.Cancel,
+				Name = "cancelButton",
+				Size = new System.Drawing.Size(75, 23),
+				Text = "&Cancel",
+				Location = new System.Drawing.Point(size.Width - 80, 39)
+			};
 			inputBox.Controls.Add(cancelButton);
 
 			inputBox.AcceptButton = okButton;
@@ -819,16 +778,20 @@ namespace OpenBve
 		private static DialogResult ShowVersionDialog(ref Version minimumVersion, ref Version maximumVersion, string currentVersion)
 		{
 			System.Drawing.Size size = new System.Drawing.Size(200, 80);
-			Form inputBox = new Form();
+			Form inputBox = new Form
+			{
+				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				ClientSize = size,
+				Text = "Minimum Version"
+			};
 
-			inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			inputBox.ClientSize = size;
-			inputBox.Text = "Minimum Version";
 
-			System.Windows.Forms.TextBox textBox = new TextBox();
-			textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
-			textBox.Location = new System.Drawing.Point(5, 5);
-			textBox.Text = currentVersion;
+			System.Windows.Forms.TextBox textBox = new TextBox
+			{
+				Size = new System.Drawing.Size(size.Width - 10, 23),
+				Location = new System.Drawing.Point(5, 5),
+				Text = currentVersion
+			};
 			inputBox.Controls.Add(textBox);
 
 			System.Windows.Forms.TextBox textBox2 = new TextBox();
@@ -837,20 +800,24 @@ namespace OpenBve
 			textBox2.Text = currentVersion;
 			inputBox.Controls.Add(textBox2);
 
-			Button okButton = new Button();
-			okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-			okButton.Name = "okButton";
-			okButton.Size = new System.Drawing.Size(75, 23);
-			okButton.Text = "&OK";
-			okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 49);
+			Button okButton = new Button
+			{
+				DialogResult = System.Windows.Forms.DialogResult.OK,
+				Name = "okButton",
+				Size = new System.Drawing.Size(75, 23),
+				Text = "&OK",
+				Location = new System.Drawing.Point(size.Width - 80 - 80, 49)
+			};
 			inputBox.Controls.Add(okButton);
 
-			Button cancelButton = new Button();
-			cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			cancelButton.Name = "cancelButton";
-			cancelButton.Size = new System.Drawing.Size(75, 23);
-			cancelButton.Text = "&Cancel";
-			cancelButton.Location = new System.Drawing.Point(size.Width - 80, 49);
+			Button cancelButton = new Button
+			{
+				DialogResult = System.Windows.Forms.DialogResult.Cancel,
+				Name = "cancelButton",
+				Size = new System.Drawing.Size(75, 23),
+				Text = "&Cancel",
+				Location = new System.Drawing.Point(size.Width - 80, 49)
+			};
 			inputBox.Controls.Add(cancelButton);
 
 			inputBox.AcceptButton = okButton;
@@ -879,7 +846,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				MessageBox.Show("You have entered an invalid version number. \r\n Please try again.");
+				MessageBox.Show(Interface.GetInterfaceString("packages_creation_version_invalid"));
 			}
 			return result;
 		}
@@ -898,19 +865,15 @@ namespace OpenBve
 			panelPleaseWait.Hide();
 		}
 
-		bool PathFound;
-
-		private void button4_Click(object sender, EventArgs e)
+		private void newPackageClearSelectionButton_Click(object sender, EventArgs e)
 		{
 			filesToPackage.Clear();
 			filesToPackageBox.Clear();
 		}
 
 		//Don't use a file picker dialog- Select folders only.
-		private void button2_Click(object sender, EventArgs e)
+		private void addPackageItemsButton_Click(object sender, EventArgs e)
 		{
-			//Reset the extraction path & bool
-			PathFound = false;
 			var dialog = new CommonOpenFileDialog
 			{
 				AllowNonFileSystemItems = true,
@@ -953,12 +916,12 @@ namespace OpenBve
 						tempList.Add(File);
 					}
 				}
-				filesToPackage.AddRange(FindFileLocations(tempList));
+				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
 				
 			}
 		}
 
-		private void button5_Click(object sender, EventArgs e)
+		private void replacePackageButton_Click(object sender, EventArgs e)
 		{
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_replace_id");
 			textBoxGUID.Text = currentPackage.GUID;
@@ -970,13 +933,16 @@ namespace OpenBve
 
 		private void SaveFileNameButton_Click(object sender, EventArgs e)
 		{
-			savePackageDialog = new SaveFileDialog();
-			savePackageDialog.Title = Interface.GetInterfaceString("packages_creation_save");
-			savePackageDialog.CheckPathExists = true;
-			savePackageDialog.DefaultExt = "zip";
-			savePackageDialog.Filter = "ZIP files (*.zip)|*.zip|All files (*.*)|*.*";
-			savePackageDialog.FilterIndex = 2;
-			savePackageDialog.RestoreDirectory = true;  
+			savePackageDialog = new SaveFileDialog
+			{
+				Title = Interface.GetInterfaceString("packages_creation_save"),
+				CheckPathExists = true,
+				DefaultExt = "zip",
+				Filter = "ZIP files (*.zip)|*.zip|All files (*.*)|*.*",
+				FilterIndex = 2,
+				RestoreDirectory = true
+			};
+
 			if (savePackageDialog.ShowDialog() == DialogResult.OK)
 			{
 				currentPackage.FileName = savePackageDialog.FileName;
@@ -989,201 +955,16 @@ namespace OpenBve
 			currentPackage.PackageFile = textBoxPackageFileName.Text;
 		}
 
-		/// <summary>This function takes a list of files, and returns the files with corrected relative paths for compression or extraction</summary>
-		/// <param name="tempList">The file list</param>
-		/// <returns>The file list with corrected relative paths</returns>
-		private List<PackageFile> FindFileLocations(List<PackageFile> tempList)
+
+
+		private void dataGridViewDependancies_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
-			//Now determine whether this is part of a recognised folder structure
-			for (int i = 0; i < tempList.Count; i++)
+			string s = dataGridViewDependancies.SelectedCells[0].Value.ToString();
+			//HACK: Multiple cells can be selected, so we should just check the first one
+			if (s.StartsWith("www.") || s.StartsWith("http://"))
 			{
-				if (tempList[i].relativePath.StartsWith("\\Railway", StringComparison.OrdinalIgnoreCase))
-				{
-					//Extraction path is the root folder
-					PathFound = true;
-					return tempList;
-				}
-				if (tempList[i].relativePath.StartsWith("\\Train", StringComparison.OrdinalIgnoreCase))
-				{
-					//Extraction path is the root folder
-					PathFound = true;
-					return tempList;
-				}
-				if (tempList[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (tempList[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (tempList[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-
+				Process.Start(s);
 			}
-
-			for (int i = 0; i < tempList.Count; i++)
-			{
-				var TestCase = tempList[i].absolutePath.Replace(tempList[i].absolutePath, "");
-				if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
-				{
-					//Extraction path is the root folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
-				{
-					//Extraction path is the root folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Train" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (TestCase.EndsWith("Object\\", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-				if (TestCase.EndsWith("Sound\\", StringComparison.OrdinalIgnoreCase))
-				{
-					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
-					}
-					PathFound = true;
-					return tempList;
-				}
-
-			}
-			//So, this doesn't have any easily findable folders
-			//We'll have to do this the hard way.
-			//Remember that people can store stuff in odd places
-			int SoundFiles = 0;
-			int ImageFiles = 0;
-			int ObjectFiles = 0;
-			int RouteFiles = 0;
-			for (int i = 0; i < tempList.Count; i++)
-			{
-				if (tempList[i].relativePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
-				{
-					SoundFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-				{
-					ImageFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
-				{
-					ImageFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".tiff", StringComparison.OrdinalIgnoreCase))
-				{
-					ImageFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".ace", StringComparison.OrdinalIgnoreCase))
-				{
-					ImageFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase))
-				{
-					ObjectFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-				{
-					//Why on earth are CSV files both routes and objects??!!
-					RouteFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".animated", StringComparison.OrdinalIgnoreCase))
-				{
-					ObjectFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".rw", StringComparison.OrdinalIgnoreCase))
-				{
-					RouteFiles++;
-				}
-				else if (tempList[i].relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
-				{
-					//Not sure about this one
-					//TXT files are commonly used for includes though
-					RouteFiles++;
-				}
-			}
-			//We've counted the number of files found:
-			if (SoundFiles != 0 && ObjectFiles == 0 && ImageFiles == 0)
-			{
-				//This would appear to be a subfolder of the SOUND folder
-				for (int j = 0; j < tempList.Count; j++)
-				{
-					tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
-				}
-				PathFound = true;
-				return tempList;
-			}
-			if (RouteFiles != 0 && ImageFiles < 20 && ObjectFiles == 0)
-			{
-				//If this is a ROUTE subfolder, we should not find any b3d objects, and
-				//there should be less than 20 images
-				for (int j = 0; j < tempList.Count; j++)
-				{
-					tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
-				}
-				PathFound = true;
-				return tempList;
-			}
-			if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20)
-			{
-				//We have csv or b3d files and more than 20 images
-				//this means it's almost certainly an OBJECT subfolder
-				for (int j = 0; j < tempList.Count; j++)
-				{
-					tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
-				}
-				PathFound = true;
-				return tempList;
-			}
-			return tempList;
 		}
 
 		//This method resets the package installer to the default panels when clicking away, or when a creation/ install has finished
@@ -1215,7 +996,6 @@ namespace OpenBve
 			selectedRoutePackageIndex = 0;
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
-			PathFound = false;
 			//Reset text
 			textBoxPackageAuthor.Text = Interface.GetInterfaceString("packages_selection_none");
 			textBoxPackageName.Text = Interface.GetInterfaceString("packages_selection_none");
