@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace OpenBveApi.Packages
 {
-	/// <summary>Returns lists of all packages installed</summary>
+	/* ----------------------------------------
+	 * TODO: This part of the API is unstable.
+	 *       Modifications can be made at will.
+	 * ---------------------------------------- */
+
+	/// <summary>Defines a package database</summary>
 	[Serializable]
 	[XmlType("openBVE")]
 	public class PackageDatabase
@@ -19,14 +27,143 @@ namespace OpenBveApi.Packages
 		public List<Package> InstalledOther;
 	}
 
-	/// <summary>Contains the database functions</summary>
-	public class DatabaseFunctions
+	/// <summary>Stores the current package database</summary>
+	public static class Database
 	{
+		/// <summary>The current package database</summary>
+		public static PackageDatabase currentDatabase;
+		private static string currentDatabaseFolder;
+		private static string currentDatabaseFile;
+		/// <summary>Call this method to save the package list to disk.</summary>
+		/// <remarks>Returns false if an error was encountered whilst saving the database.</remarks>
+		public static bool SaveDatabase()
+		{
+			try
+			{
+				if (!Directory.Exists(currentDatabaseFolder))
+				{
+					Directory.CreateDirectory(currentDatabaseFolder);
+				}
+				if (File.Exists(currentDatabaseFile))
+				{
+					File.Delete(currentDatabaseFile);
+				}
+				using (StreamWriter sw = new StreamWriter(currentDatabaseFile))
+				{
+					XmlSerializer listWriter = new XmlSerializer(typeof(PackageDatabase));
+					listWriter.Serialize(sw, currentDatabase);
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+			return true;
+		}
+		/// <summary>Loads a package database XML file as the current database</summary>
+		/// <param name="Folder">The root database folder</param>
+		/// <param name="File">The database file</param>
+		/// <returns>Whether the loading succeded</returns>
+		public static bool LoadDatabase(string Folder, string File)
+		{
+			currentDatabaseFolder = Folder;
+			currentDatabaseFile = File;
+			try
+			{
+				XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
+				currentDatabase = (PackageDatabase)listReader.Deserialize(XmlReader.Create(currentDatabaseFile));
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+
+
+
+
+		/*
+		 * DATABASE FUNCTIONS
+		 * 
+		 */
+
+		/// <summary>Checks to see if this package's dependancies are installed</summary>
+		public static List<Package> CheckDependancies(Package currentPackage)
+		{
+			foreach (Package currentDependancy in currentPackage.Dependancies.ToList())
+			{
+				//Itinerate through the routes list
+				if (currentDependancy.PackageType == PackageType.Route)
+				{
+					if (currentDatabase.InstalledRoutes != null)
+					{
+						foreach (Package Package in currentDatabase.InstalledRoutes)
+						{
+							//Check GUID
+							if (Package.GUID == currentDependancy.GUID)
+							{
+								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
+									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
+								{
+									//If the version is OK, remove
+									currentPackage.Dependancies.Remove(currentDependancy);
+								}
+							}
+						}
+					}
+				}
+				if (currentDependancy.PackageType == PackageType.Train)
+				{
+					if (currentDatabase.InstalledTrains != null)
+					{
+						foreach (Package Package in currentDatabase.InstalledTrains)
+						{
+							//Check GUID
+							if (Package.GUID == currentDependancy.GUID)
+							{
+								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
+									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
+								{
+									//If the version is OK, remove
+									currentPackage.Dependancies.Remove(currentDependancy);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					if (currentDatabase.InstalledOther != null)
+					{
+						foreach (Package Package in currentDatabase.InstalledOther)
+						{
+							//Check GUID
+							if (Package.GUID == currentDependancy.GUID)
+							{
+								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
+									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
+								{
+									//If the version is OK, remove
+									currentPackage.Dependancies.Remove(currentDependancy);
+								}
+							}
+						}
+					}
+				}
+			}
+			if (currentPackage.Dependancies.Count == 0)
+			{
+				//Return null if there are no unmet dependancies
+				return null;
+			}
+			return currentPackage.Dependancies;
+		}
+
 		/// <summary>Checks whether uninstalling a package will break any dependancies</summary>
-		/// <param name="currentDatabase">The database to check against</param>
 		/// <param name="packagesToRemove">The list of packages that will be removed</param>
 		/// <returns>A list of potentially broken packages</returns>
-		public static List<Package> CheckUninstallDependancies(PackageDatabase currentDatabase, List<Package> packagesToRemove)
+		public static List<Package> CheckUninstallDependancies(List<Package> packagesToRemove)
 		{
 			List<Package> brokenPackages = new List<Package>();
 			foreach (Package Route in currentDatabase.InstalledRoutes)
@@ -74,6 +211,11 @@ namespace OpenBveApi.Packages
 			return brokenPackages;
 		}
 
+	}
+
+	/// <summary>Contains the database functions</summary>
+	public class DatabaseFunctions
+	{
 		/// <summary>This function takes a list of files, and returns the files with corrected relative paths for compression or extraction</summary>
 		/// <param name="tempList">The file list</param>
 		/// <returns>The file list with corrected relative paths</returns>

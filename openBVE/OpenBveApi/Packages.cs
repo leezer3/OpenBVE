@@ -12,7 +12,10 @@ using System.Linq;
 
 namespace OpenBveApi.Packages
 {
-	
+	/* ----------------------------------------
+	 * TODO: This part of the API is unstable.
+	 *       Modifications can be made at will.
+	 * ---------------------------------------- */
 
 	/// <summary>Defines an OpenBVE Package</summary>
 	[XmlType("Package")]
@@ -410,59 +413,7 @@ namespace OpenBveApi.Packages
 			return VersionInformation.NotFound;
 		}
 
-		/// <summary>Checks to see if this package's dependancies are installed</summary>
-		public static List<Package> CheckDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)
-		{
-			foreach (Package currentDependancy in currentPackage.Dependancies.ToList())
-			{
-				//Itinerate through the routes list
-				if (currentDependancy.PackageType == PackageType.Route)
-				{
-					if (installedRoutes != null)
-					{
-						foreach (Package Package in installedRoutes)
-						{
-							//Check GUID
-							if (Package.GUID == currentDependancy.GUID)
-							{
-								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
-									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
-								{
-									//If the version is OK, remove
-									currentPackage.Dependancies.Remove(currentDependancy);
-								}
-							}
-						}
-					}
-				}
-				if (currentDependancy.PackageType == PackageType.Train)
-				{
-					//Itinerate through the trains list
-					if (installedTrains != null)
-					{
-						foreach (Package Package in installedTrains)
-						{
-							//Check GUID
-							if (Package.GUID == currentDependancy.GUID)
-							{
-								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
-								    (currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
-								{
-									//If the version is OK, remove
-									currentPackage.Dependancies.Remove(currentDependancy);
-								}
-							}
-						}
-					}
-				}
-			}
-			if (currentPackage.Dependancies.Count == 0)
-			{
-				//Return null if there are no unmet dependancies
-				return null;
-			}
-			return currentPackage.Dependancies;
-		}
+		
 
 		/// <summary>Checks to see if upgrading or downgrading this package will break any dependancies</summary>
 		public static List<Package> UpgradeDowngradeDependancies(Package currentPackage, List<Package> installedRoutes, List<Package> installedTrains)

@@ -257,7 +257,7 @@
 			this.dataGridViewTextBoxColumn26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn28 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.label18 = new System.Windows.Forms.Label();
+			this.labelInstalledOther = new System.Windows.Forms.Label();
 			this.createPackageButton = new System.Windows.Forms.Button();
 			this.dataGridViewTrainPackages = new System.Windows.Forms.DataGridView();
 			this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -276,9 +276,9 @@
 			this.panelCreatePackage = new System.Windows.Forms.Panel();
 			this.SaveFileNameButton = new System.Windows.Forms.Button();
 			this.textBoxPackageFileName = new System.Windows.Forms.TextBox();
-			this.label12 = new System.Windows.Forms.Label();
-			this.label16 = new System.Windows.Forms.Label();
-			this.button3 = new System.Windows.Forms.Button();
+			this.labelSaveAs = new System.Windows.Forms.Label();
+			this.labelDependanciesNextStep = new System.Windows.Forms.Label();
+			this.buttonCreateProceed = new System.Windows.Forms.Button();
 			this.panelNewPackage = new System.Windows.Forms.Panel();
 			this.newPackageClearSelectionButton = new System.Windows.Forms.Button();
 			this.filesToPackageBox = new System.Windows.Forms.TextBox();
@@ -302,11 +302,11 @@
 			this.groupBoxQ1 = new System.Windows.Forms.GroupBox();
 			this.radioButtonQ1No = new System.Windows.Forms.RadioButton();
 			this.radioButtonQ1Yes = new System.Windows.Forms.RadioButton();
-			this.label7 = new System.Windows.Forms.Label();
-			this.label8 = new System.Windows.Forms.Label();
+			this.labelPackageCreationHeader = new System.Windows.Forms.Label();
+			this.labelPackageCreationHeaderBacking = new System.Windows.Forms.Label();
 			this.labelReplacePackage = new System.Windows.Forms.Label();
 			this.panelPleaseWait = new System.Windows.Forms.Panel();
-			this.label17 = new System.Windows.Forms.Label();
+			this.labelPleaseWait = new System.Windows.Forms.Label();
 			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.panelDependancyError = new System.Windows.Forms.Panel();
 			this.dataGridViewDependancies = new System.Windows.Forms.DataGridView();
@@ -315,10 +315,10 @@
 			this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.website = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.labelMissingDepemdanciesText2 = new System.Windows.Forms.Label();
-			this.labelMissingDepemdanciesText1 = new System.Windows.Forms.Label();
+			this.labelMissingDependanciesText2 = new System.Windows.Forms.Label();
+			this.labelMissingDependanciesText1 = new System.Windows.Forms.Label();
 			this.labelDependancyErrorHeader = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
+			this.labelDependancyErrorHeaderBacking = new System.Windows.Forms.Label();
 			this.buttonProceedAnyway = new System.Windows.Forms.Button();
 			this.panelPackageInstall = new System.Windows.Forms.Panel();
 			this.labelInstallText = new System.Windows.Forms.Label();
@@ -987,7 +987,7 @@
 			this.tabpageRouteRecently.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteRecently.Name = "tabpageRouteRecently";
 			this.tabpageRouteRecently.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteRecently.Size = new System.Drawing.Size(292, 172);
+			this.tabpageRouteRecently.Size = new System.Drawing.Size(292, 152);
 			this.tabpageRouteRecently.TabIndex = 1;
 			this.tabpageRouteRecently.Text = "Recently used";
 			this.tabpageRouteRecently.UseVisualStyleBackColor = true;
@@ -1084,7 +1084,7 @@
 			this.tabpageRouteMap.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteMap.Name = "tabpageRouteMap";
 			this.tabpageRouteMap.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteMap.Size = new System.Drawing.Size(292, 172);
+			this.tabpageRouteMap.Size = new System.Drawing.Size(292, 152);
 			this.tabpageRouteMap.TabIndex = 1;
 			this.tabpageRouteMap.Text = "Map";
 			this.tabpageRouteMap.UseVisualStyleBackColor = true;
@@ -1107,7 +1107,7 @@
 			this.tabpageRouteGradient.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteGradient.Name = "tabpageRouteGradient";
 			this.tabpageRouteGradient.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteGradient.Size = new System.Drawing.Size(292, 172);
+			this.tabpageRouteGradient.Size = new System.Drawing.Size(292, 152);
 			this.tabpageRouteGradient.TabIndex = 2;
 			this.tabpageRouteGradient.Text = "Gradient profile";
 			this.tabpageRouteGradient.UseVisualStyleBackColor = true;
@@ -1132,7 +1132,7 @@
 			this.tabpageRouteSettings.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteSettings.Name = "tabpageRouteSettings";
 			this.tabpageRouteSettings.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteSettings.Size = new System.Drawing.Size(292, 172);
+			this.tabpageRouteSettings.Size = new System.Drawing.Size(292, 152);
 			this.tabpageRouteSettings.TabIndex = 3;
 			this.tabpageRouteSettings.Text = "Settings";
 			this.tabpageRouteSettings.UseVisualStyleBackColor = true;
@@ -3306,7 +3306,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageList.Controls.Add(this.dataGridViewInstalledOther);
-			this.panelPackageList.Controls.Add(this.label18);
+			this.panelPackageList.Controls.Add(this.labelInstalledOther);
 			this.panelPackageList.Controls.Add(this.createPackageButton);
 			this.panelPackageList.Controls.Add(this.dataGridViewTrainPackages);
 			this.panelPackageList.Controls.Add(this.buttonUninstallPackage);
@@ -3368,20 +3368,20 @@
 			this.dataGridViewTextBoxColumn28.Name = "dataGridViewTextBoxColumn28";
 			this.dataGridViewTextBoxColumn28.ReadOnly = true;
 			// 
-			// label18
+			// labelInstalledOther
 			// 
-			this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelInstalledOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label18.AutoEllipsis = true;
-			this.label18.BackColor = System.Drawing.Color.Silver;
-			this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label18.ForeColor = System.Drawing.Color.White;
-			this.label18.Location = new System.Drawing.Point(4, 376);
-			this.label18.Name = "label18";
-			this.label18.Size = new System.Drawing.Size(627, 24);
-			this.label18.TabIndex = 24;
-			this.label18.Text = "Installed Other";
-			this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelInstalledOther.AutoEllipsis = true;
+			this.labelInstalledOther.BackColor = System.Drawing.Color.Silver;
+			this.labelInstalledOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelInstalledOther.ForeColor = System.Drawing.Color.White;
+			this.labelInstalledOther.Location = new System.Drawing.Point(4, 376);
+			this.labelInstalledOther.Name = "labelInstalledOther";
+			this.labelInstalledOther.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledOther.TabIndex = 24;
+			this.labelInstalledOther.Text = "Installed Other";
+			this.labelInstalledOther.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// createPackageButton
 			// 
@@ -3552,16 +3552,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelCreatePackage.Controls.Add(this.SaveFileNameButton);
 			this.panelCreatePackage.Controls.Add(this.textBoxPackageFileName);
-			this.panelCreatePackage.Controls.Add(this.label12);
-			this.panelCreatePackage.Controls.Add(this.label16);
-			this.panelCreatePackage.Controls.Add(this.button3);
+			this.panelCreatePackage.Controls.Add(this.labelSaveAs);
+			this.panelCreatePackage.Controls.Add(this.labelDependanciesNextStep);
+			this.panelCreatePackage.Controls.Add(this.buttonCreateProceed);
 			this.panelCreatePackage.Controls.Add(this.panelNewPackage);
 			this.panelCreatePackage.Controls.Add(this.panelReplacePackage);
 			this.panelCreatePackage.Controls.Add(this.groupBox1);
 			this.panelCreatePackage.Controls.Add(this.labelPackageType);
 			this.panelCreatePackage.Controls.Add(this.groupBoxQ1);
-			this.panelCreatePackage.Controls.Add(this.label7);
-			this.panelCreatePackage.Controls.Add(this.label8);
+			this.panelCreatePackage.Controls.Add(this.labelPackageCreationHeader);
+			this.panelCreatePackage.Controls.Add(this.labelPackageCreationHeaderBacking);
 			this.panelCreatePackage.Controls.Add(this.labelReplacePackage);
 			this.panelCreatePackage.Location = new System.Drawing.Point(0, 30);
 			this.panelCreatePackage.Name = "panelCreatePackage";
@@ -3586,35 +3586,35 @@
 			this.textBoxPackageFileName.TabIndex = 36;
 			this.textBoxPackageFileName.TextChanged += new System.EventHandler(this.textBoxPackageFileName_TextChanged);
 			// 
-			// label12
+			// labelSaveAs
 			// 
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(4, 451);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(94, 13);
-			this.label12.TabIndex = 35;
-			this.label12.Text = "Save package as:";
+			this.labelSaveAs.AutoSize = true;
+			this.labelSaveAs.Location = new System.Drawing.Point(4, 451);
+			this.labelSaveAs.Name = "labelSaveAs";
+			this.labelSaveAs.Size = new System.Drawing.Size(94, 13);
+			this.labelSaveAs.TabIndex = 35;
+			this.labelSaveAs.Text = "Save package as:";
 			// 
-			// label16
+			// labelDependanciesNextStep
 			// 
-			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(4, 489);
-			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(360, 13);
-			this.label16.TabIndex = 34;
-			this.label16.Text = "Package details and dependancies may be assigned in the following steps.";
+			this.labelDependanciesNextStep.AutoSize = true;
+			this.labelDependanciesNextStep.Location = new System.Drawing.Point(4, 489);
+			this.labelDependanciesNextStep.Name = "labelDependanciesNextStep";
+			this.labelDependanciesNextStep.Size = new System.Drawing.Size(360, 13);
+			this.labelDependanciesNextStep.TabIndex = 34;
+			this.labelDependanciesNextStep.Text = "Package details and dependancies may be assigned in the following steps.";
 			// 
-			// button3
+			// buttonCreateProceed
 			// 
-			this.button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.button3.Location = new System.Drawing.Point(198, 485);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(146, 40);
-			this.button3.TabIndex = 22;
-			this.button3.Text = "Proceed......";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.buttonCreateProceed.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.buttonCreateProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonCreateProceed.Location = new System.Drawing.Point(198, 485);
+			this.buttonCreateProceed.Name = "buttonCreateProceed";
+			this.buttonCreateProceed.Size = new System.Drawing.Size(146, 40);
+			this.buttonCreateProceed.TabIndex = 22;
+			this.buttonCreateProceed.Text = "Proceed......";
+			this.buttonCreateProceed.UseVisualStyleBackColor = true;
+			this.buttonCreateProceed.Click += new System.EventHandler(this.button3_Click);
 			// 
 			// panelNewPackage
 			// 
@@ -3856,30 +3856,30 @@
 			this.radioButtonQ1Yes.UseVisualStyleBackColor = true;
 			this.radioButtonQ1Yes.CheckedChanged += new System.EventHandler(this.Q1_CheckedChanged);
 			// 
-			// label7
+			// labelPackageCreationHeader
 			// 
-			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelPackageCreationHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label7.AutoEllipsis = true;
-			this.label7.AutoSize = true;
-			this.label7.BackColor = System.Drawing.Color.Silver;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.ForeColor = System.Drawing.Color.Black;
-			this.label7.Location = new System.Drawing.Point(232, 18);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(117, 16);
-			this.label7.TabIndex = 16;
-			this.label7.Text = "Create a Package";
+			this.labelPackageCreationHeader.AutoEllipsis = true;
+			this.labelPackageCreationHeader.AutoSize = true;
+			this.labelPackageCreationHeader.BackColor = System.Drawing.Color.Silver;
+			this.labelPackageCreationHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPackageCreationHeader.ForeColor = System.Drawing.Color.Black;
+			this.labelPackageCreationHeader.Location = new System.Drawing.Point(232, 18);
+			this.labelPackageCreationHeader.Name = "labelPackageCreationHeader";
+			this.labelPackageCreationHeader.Size = new System.Drawing.Size(117, 16);
+			this.labelPackageCreationHeader.TabIndex = 16;
+			this.labelPackageCreationHeader.Text = "Create a Package";
 			// 
-			// label8
+			// labelPackageCreationHeaderBacking
 			// 
-			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelPackageCreationHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label8.BackColor = System.Drawing.Color.Silver;
-			this.label8.Location = new System.Drawing.Point(7, 10);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(627, 32);
-			this.label8.TabIndex = 15;
+			this.labelPackageCreationHeaderBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelPackageCreationHeaderBacking.Location = new System.Drawing.Point(7, 10);
+			this.labelPackageCreationHeaderBacking.Name = "labelPackageCreationHeaderBacking";
+			this.labelPackageCreationHeaderBacking.Size = new System.Drawing.Size(627, 32);
+			this.labelPackageCreationHeaderBacking.TabIndex = 15;
 			// 
 			// labelReplacePackage
 			// 
@@ -3896,24 +3896,24 @@
 			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPleaseWait.Controls.Add(this.label17);
+			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
 			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
 			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
 			this.panelPleaseWait.Name = "panelPleaseWait";
 			this.panelPleaseWait.Size = new System.Drawing.Size(641, 539);
 			this.panelPleaseWait.TabIndex = 28;
 			// 
-			// label17
+			// labelPleaseWait
 			// 
-			this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label17.AutoSize = true;
-			this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label17.Location = new System.Drawing.Point(177, 370);
-			this.label17.Name = "label17";
-			this.label17.Size = new System.Drawing.Size(266, 24);
-			this.label17.TabIndex = 5;
-			this.label17.Text = "Processing, please wait......";
+			this.labelPleaseWait.AutoSize = true;
+			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPleaseWait.Location = new System.Drawing.Point(177, 370);
+			this.labelPleaseWait.Name = "labelPleaseWait";
+			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
+			this.labelPleaseWait.TabIndex = 5;
+			this.labelPleaseWait.Text = "Processing, please wait......";
 			// 
 			// pictureBoxProcessing
 			// 
@@ -3934,10 +3934,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
-			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText2);
-			this.panelDependancyError.Controls.Add(this.labelMissingDepemdanciesText1);
+			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText2);
+			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText1);
 			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeader);
-			this.panelDependancyError.Controls.Add(this.label9);
+			this.panelDependancyError.Controls.Add(this.labelDependancyErrorHeaderBacking);
 			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
 			this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
 			this.panelDependancyError.Name = "panelDependancyError";
@@ -4000,23 +4000,23 @@
 			this.website.Name = "website";
 			this.website.ReadOnly = true;
 			// 
-			// labelMissingDepemdanciesText2
+			// labelMissingDependanciesText2
 			// 
-			this.labelMissingDepemdanciesText2.AutoSize = true;
-			this.labelMissingDepemdanciesText2.Location = new System.Drawing.Point(7, 69);
-			this.labelMissingDepemdanciesText2.Name = "labelMissingDepemdanciesText2";
-			this.labelMissingDepemdanciesText2.Size = new System.Drawing.Size(167, 13);
-			this.labelMissingDepemdanciesText2.TabIndex = 18;
-			this.labelMissingDepemdanciesText2.Text = "These are shown in the list below:";
+			this.labelMissingDependanciesText2.AutoSize = true;
+			this.labelMissingDependanciesText2.Location = new System.Drawing.Point(7, 69);
+			this.labelMissingDependanciesText2.Name = "labelMissingDependanciesText2";
+			this.labelMissingDependanciesText2.Size = new System.Drawing.Size(167, 13);
+			this.labelMissingDependanciesText2.TabIndex = 18;
+			this.labelMissingDependanciesText2.Text = "These are shown in the list below:";
 			// 
-			// labelMissingDepemdanciesText1
+			// labelMissingDependanciesText1
 			// 
-			this.labelMissingDepemdanciesText1.AutoSize = true;
-			this.labelMissingDepemdanciesText1.Location = new System.Drawing.Point(7, 54);
-			this.labelMissingDepemdanciesText1.Name = "labelMissingDepemdanciesText1";
-			this.labelMissingDepemdanciesText1.Size = new System.Drawing.Size(238, 13);
-			this.labelMissingDepemdanciesText1.TabIndex = 17;
-			this.labelMissingDepemdanciesText1.Text = "The current package has unment dependancies.";
+			this.labelMissingDependanciesText1.AutoSize = true;
+			this.labelMissingDependanciesText1.Location = new System.Drawing.Point(7, 54);
+			this.labelMissingDependanciesText1.Name = "labelMissingDependanciesText1";
+			this.labelMissingDependanciesText1.Size = new System.Drawing.Size(238, 13);
+			this.labelMissingDependanciesText1.TabIndex = 17;
+			this.labelMissingDependanciesText1.Text = "The current package has unment dependancies.";
 			// 
 			// labelDependancyErrorHeader
 			// 
@@ -4033,15 +4033,15 @@
 			this.labelDependancyErrorHeader.TabIndex = 16;
 			this.labelDependancyErrorHeader.Text = "Dependancy Error";
 			// 
-			// label9
+			// labelDependancyErrorHeaderBacking
 			// 
-			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.labelDependancyErrorHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label9.BackColor = System.Drawing.Color.Silver;
-			this.label9.Location = new System.Drawing.Point(7, 10);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(627, 32);
-			this.label9.TabIndex = 15;
+			this.labelDependancyErrorHeaderBacking.BackColor = System.Drawing.Color.Silver;
+			this.labelDependancyErrorHeaderBacking.Location = new System.Drawing.Point(7, 10);
+			this.labelDependancyErrorHeaderBacking.Name = "labelDependancyErrorHeaderBacking";
+			this.labelDependancyErrorHeaderBacking.Size = new System.Drawing.Size(627, 32);
+			this.labelDependancyErrorHeaderBacking.TabIndex = 15;
 			// 
 			// buttonProceedAnyway
 			// 
@@ -5233,10 +5233,10 @@
         private System.Windows.Forms.Label labelInstallText;
         private System.Windows.Forms.Label labelInstallHeader;
         private System.Windows.Forms.Panel panelDependancyError;
-        private System.Windows.Forms.Label labelMissingDepemdanciesText2;
-        private System.Windows.Forms.Label labelMissingDepemdanciesText1;
+        private System.Windows.Forms.Label labelMissingDependanciesText2;
+        private System.Windows.Forms.Label labelMissingDependanciesText1;
         private System.Windows.Forms.Label labelDependancyErrorHeader;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelDependancyErrorHeaderBacking;
         private System.Windows.Forms.Button buttonProceedAnyway;
 		private System.Windows.Forms.DataGridView dataGridViewDependancies;
         private System.Windows.Forms.Panel panelSuccess;
@@ -5291,8 +5291,8 @@
 		private System.Windows.Forms.GroupBox groupBoxQ1;
 		private System.Windows.Forms.RadioButton radioButtonQ1No;
 		private System.Windows.Forms.RadioButton radioButtonQ1Yes;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label labelPackageCreationHeader;
+		private System.Windows.Forms.Label labelPackageCreationHeaderBacking;
 		private System.Windows.Forms.Label labelReplacePackage;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.RadioButton radioButtonQ2Train;
@@ -5309,9 +5309,9 @@
 		private System.Windows.Forms.Panel panelNewPackage;
 		private System.Windows.Forms.TextBox textBoxGUID;
 		private System.Windows.Forms.Label labelNewGUID;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button buttonCreateProceed;
 		private System.Windows.Forms.Panel panelPleaseWait;
-		private System.Windows.Forms.Label label17;
+		private System.Windows.Forms.Label labelPleaseWait;
 		private System.Windows.Forms.PictureBox pictureBoxProcessing;
 		private System.Windows.Forms.Button addPackageItemsButton;
 		private System.Windows.Forms.Label labelSelectFiles;
@@ -5324,14 +5324,14 @@
 		private System.Windows.Forms.GroupBox groupBoxOther;
 		private System.Windows.Forms.ComboBox comboBoxTimeTableDisplayMode;
 		private System.Windows.Forms.Label labelTimeTableDisplayMode;
-		private System.Windows.Forms.Label label12;
-		private System.Windows.Forms.Label label16;
+		private System.Windows.Forms.Label labelSaveAs;
+		private System.Windows.Forms.Label labelDependanciesNextStep;
 		private System.Windows.Forms.DataGridView dataGridViewInstalledOther;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn25;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn26;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn27;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn28;
-		private System.Windows.Forms.Label label18;
+		private System.Windows.Forms.Label labelInstalledOther;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;

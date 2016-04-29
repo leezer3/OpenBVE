@@ -613,6 +613,51 @@ namespace OpenBve {
 				listviewControls.Items.AddRange(Items);
 				listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
+			/*
+			 * Localisation for strings in package management display
+			 * 
+			 */
+			//Main display tab
+			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
+			buttonUninstallPackage.Text = Interface.GetInterfaceString("packages_uninstall_button");
+			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_creation_button");
+			//Creation tab 1
+			labelPackageCreationHeader.Text = Interface.GetInterfaceString("packages_creation_header");
+			SaveFileNameButton.Text = Interface.GetInterfaceString("packages_creation_saveas_button");
+			labelSaveAs.Text = Interface.GetInterfaceString("packages_creation_saveas_label");
+			labelDependanciesNextStep.Text = Interface.GetInterfaceString("packages_creation_dependancies_nextstep");
+			buttonCreateProceed.Text = Interface.GetInterfaceString("packages_proceed");
+			newPackageClearSelectionButton.Text = Interface.GetInterfaceString("packages_creation_clearselection");
+			addPackageItemsButton.Text = Interface.GetInterfaceString("packages_creation_additems");
+			labelSelectFiles.Text = Interface.GetInterfaceString("packages_creation_selecteditems");
+			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_guid");
+			//Replace package panel of creation tab
+			replacePackageButton.Text = Interface.GetInterfaceString("packages_replace_select");
+			packageToReplaceLabel.Text = Interface.GetInterfaceString("packages_replace_choose");
+			//New package panel
+			radioButtonQ2Other.Text = Interface.GetInterfaceString("packages_type_other");
+			radioButtonQ2Route.Text = Interface.GetInterfaceString("packages_type_route");
+			radioButtonQ2Train.Text = Interface.GetInterfaceString("packages_type_train");
+			labelPackageType.Text = Interface.GetInterfaceString("packages_type_select");
+			//Please wait tab
+			labelPleaseWait.Text = Interface.GetInterfaceString("packages_processing");
+			//Missing dependancies tab
+			/*
+			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND MAY BE UPDATED AT RUNTIME
+			 * REMEMBER TO RESET AFTERWARDS
+			 * 
+			 */
+			labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
+			labelMissingDependanciesText2.Text = Interface.GetInterfaceString("packages_shownlist");
+			labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_header");
+			buttonProceedAnyway.Text = Interface.GetInterfaceString("packages_proceed_anyway");
+			//Install tab
+			/*
+			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND THE HEADER MAY BE UPDATED AT RUNTIME
+			 * REMEMBER TO RESET AFTERWARDS
+			 * 
+			 */
+
 		}
 
 		// form closing
@@ -972,11 +1017,11 @@ namespace OpenBve {
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-	            if (LoadPackages() == true)
+	            if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
 	            {
-		            PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
-		            PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
-		            PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+		            PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+		            PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+		            PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
 	            }
 			}
 		}

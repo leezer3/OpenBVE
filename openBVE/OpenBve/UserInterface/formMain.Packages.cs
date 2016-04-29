@@ -31,11 +31,14 @@ namespace OpenBve
 
 		internal void RefreshPackages()
 		{
-			SavePackages();
-			LoadPackages();
-			PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
-			PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
-			PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+			if (Database.SaveDatabase() == false)
+			{
+				MessageBox.Show(Interface.GetInterfaceString("packages_database_save_error"));
+			}
+			Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile);
+			PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+			PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+			PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
 		}
 
 		private Package currentPackage;
@@ -73,8 +76,8 @@ namespace OpenBve
 
 				HidePanels();
 				panelPackageDependsAdd.Show();
-				PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewRoutes, false);
-				PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrains, false);
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutes, false);
+				PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrains, false);
 				return;
 			}
 			//Check to see if the package is null- If null, then we haven't loaded a package yet
@@ -122,7 +125,7 @@ namespace OpenBve
 			}
 			else
 			{
-				List<Package> Dependancies = Information.CheckDependancies(currentPackage, currentDatabase.InstalledRoutes, currentDatabase.InstalledTrains);
+				List<Package> Dependancies = Database.CheckDependancies(currentPackage);
 				if (Dependancies != null)
 				{
 					//We are missing a dependancy
@@ -136,13 +139,13 @@ namespace OpenBve
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
-						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledRoutes, ref oldPackage);
+						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledRoutes, ref oldPackage);
 						break;
 					case PackageType.Train:
-						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledTrains, ref oldPackage);
+						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledTrains, ref oldPackage);
 						break;
 					default:
-						Info = Information.CheckVersion(currentPackage, currentDatabase.InstalledOther, ref oldPackage);
+						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledOther, ref oldPackage);
 						break;
 				}
 				if (Info == VersionInformation.NotFound)
@@ -170,7 +173,7 @@ namespace OpenBve
 					textBoxNewVersion.Text = currentPackage.PackageVersion.ToString();
 					if (currentPackage.Dependancies.Count != 0)
 					{
-						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, currentDatabase.InstalledRoutes, currentDatabase.InstalledTrains);
+						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
 						if (brokenDependancies != null)
 						{
 							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
@@ -189,17 +192,13 @@ namespace OpenBve
 			ResetInstallerPanels();
 		}
 
-		private static PackageDatabase currentDatabase = new PackageDatabase
-		{
-			InstalledRoutes =  new List<Package>(),
-			InstalledTrains = new List<Package>(),
-			InstalledOther =  new List<Package>()
-		};
 		private static readonly string currentDatabaseFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
 		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(currentDatabaseFolder, "packages.xml");
 
 		private void buttonProceedAnyway_Click(object sender, EventArgs e)
 		{
+			panelDependancyError.Hide();
+			labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
 			Extract(oldPackage);
 		}
 
@@ -236,76 +235,37 @@ namespace OpenBve
 					case PackageType.Route:
 						if (packageToReplace != null)
 						{
-							for (int i = currentDatabase.InstalledRoutes.Count; i > 0; i--)
+							for (int i = Database.currentDatabase.InstalledRoutes.Count; i > 0; i--)
 							{
-								if (currentDatabase.InstalledRoutes[i - 1].GUID == currentPackage.GUID)
+								if (Database.currentDatabase.InstalledRoutes[i - 1].GUID == currentPackage.GUID)
 								{
-									currentDatabase.InstalledRoutes.Remove(currentDatabase.InstalledRoutes[i - 1]);
+									Database.currentDatabase.InstalledRoutes.Remove(Database.currentDatabase.InstalledRoutes[i - 1]);
 								}
 							}
 						}
-						currentDatabase.InstalledRoutes.Add(currentPackage);
+						Database.currentDatabase.InstalledRoutes.Add(currentPackage);
 						break;
 					case PackageType.Train:
 						if (packageToReplace != null)
 						{
-							for (int i = currentDatabase.InstalledTrains.Count; i > 0; i--)
+							for (int i = Database.currentDatabase.InstalledTrains.Count; i > 0; i--)
 							{
-								if (currentDatabase.InstalledTrains[i - 1].GUID == currentPackage.GUID)
+								if (Database.currentDatabase.InstalledTrains[i - 1].GUID == currentPackage.GUID)
 								{
-									currentDatabase.InstalledTrains.Remove(currentDatabase.InstalledTrains[i - 1]);
+									Database.currentDatabase.InstalledTrains.Remove(Database.currentDatabase.InstalledTrains[i - 1]);
 								}
 							}
 						}
-						currentDatabase.InstalledTrains.Add(currentPackage);
+						Database.currentDatabase.InstalledTrains.Add(currentPackage);
 						break;
 				}
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
-				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_files");
+				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_success_files");
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
 			workerThread.RunWorkerAsync();
-		}
-
-		/// <summary>Call this method to save the package list to disk.</summary>
-		internal void SavePackages()
-		{
-			try
-			{
-				if (!Directory.Exists(currentDatabaseFolder))
-				{
-					Directory.CreateDirectory(currentDatabaseFolder);
-				}
-				if (File.Exists(currentDatabaseFile))
-				{
-					File.Delete(currentDatabaseFile);
-				}
-				using (StreamWriter sw = new StreamWriter(currentDatabaseFile))
-				{
-						XmlSerializer listWriter = new XmlSerializer(typeof(PackageDatabase));
-						listWriter.Serialize(sw, currentDatabase);
-				}
-			}
-			catch (Exception)
-			{
-				MessageBox.Show(Interface.GetInterfaceString("packages_database_save_error"));
-			}
-		}
-
-		internal bool LoadPackages()
-		{
-			try
-			{
-				XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
-				currentDatabase = (PackageDatabase) listReader.Deserialize(XmlReader.Create(currentDatabaseFile));
-			}
-			catch
-			{
-				return false;
-			}
-			return true;
 		}
 
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
@@ -347,11 +307,11 @@ namespace OpenBve
 			
 			string uninstallResults = "";
 			Package packageToUninstall = Packages[selectedPackageIndex];
-			List<Package> brokenDependancies = DatabaseFunctions.CheckUninstallDependancies(currentDatabase, packageToUninstall.Dependancies);
+			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
 			if (brokenDependancies.Count != 0)
 			{
 				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
-				labelMissingDepemdanciesText1.Text = Interface.GetInterfaceString("packages_uninstall_broken");
+				labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_uninstall_broken");
 				panelDependancyError.Show();
 			}
 			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
@@ -412,11 +372,11 @@ namespace OpenBve
 		{
 			if (selectedRoutePackageIndex != -1)
 			{
-				UninstallPackage(selectedRoutePackageIndex, ref currentDatabase.InstalledRoutes);
+				UninstallPackage(selectedRoutePackageIndex, ref Database.currentDatabase.InstalledRoutes);
 			}
 			if (selectedTrainPackageIndex != -1)
 			{
-				UninstallPackage(selectedTrainPackageIndex, ref currentDatabase.InstalledTrains);
+				UninstallPackage(selectedTrainPackageIndex, ref Database.currentDatabase.InstalledTrains);
 			}
 		}
 
@@ -439,7 +399,7 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				Package tempPackage = currentDatabase.InstalledTrains[selectedTrainPackageIndex];
+				Package tempPackage = Database.currentDatabase.InstalledTrains[selectedTrainPackageIndex];
 				tempPackage.Version = null;
 				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 				    DialogResult.OK)
@@ -449,7 +409,7 @@ namespace OpenBve
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				Package tempPackage = currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
+				Package tempPackage = Database.currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
 				tempPackage.Version = null;
 				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 					DialogResult.OK)
@@ -463,7 +423,7 @@ namespace OpenBve
 		{
 			if (selectedTrainPackageIndex != -1)
 			{
-				Package tempPackage = currentDatabase.InstalledTrains[selectedTrainPackageIndex];
+				Package tempPackage = Database.currentDatabase.InstalledTrains[selectedTrainPackageIndex];
 				tempPackage.Version = null;
 				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 					DialogResult.OK)
@@ -473,7 +433,7 @@ namespace OpenBve
 			}
 			if (selectedRoutePackageIndex != -1)
 			{
-				Package tempPackage = currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
+				Package tempPackage = Database.currentDatabase.InstalledRoutes[selectedRoutePackageIndex];
 				tempPackage.Version = null;
 				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 					DialogResult.OK)
@@ -605,13 +565,13 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						PopulatePackageList(currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
 						break;
 					case PackageType.Train:
-						PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
 						break;
 					case PackageType.Other:
-						PopulatePackageList(currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -691,15 +651,15 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						currentPackage = currentDatabase.InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
 						currentPackage.PackageType = PackageType.Route;
 						break;
 					case PackageType.Train:
-						currentPackage = currentDatabase.InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
 						currentPackage.PackageType = PackageType.Train;
 						break;
 					case PackageType.Other:
-						currentPackage = currentDatabase.InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
 						currentPackage.PackageType = PackageType.Other;
 						break;
 				}
