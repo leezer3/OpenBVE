@@ -86,6 +86,12 @@
     <Reference Include="CSScriptLibrary">
       <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>..\..\Dependencies\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>..\..\Dependencies\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
@@ -139,21 +145,12 @@
     <Compile Include="System\Input\Keyboard.cs" />
     <Compile Include="System\Input\ProcessControls.cs" />
     <Compile Include="System\Scripting.cs" />
-    <Compile Include="UserInterface\formPackageInstall.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\formPackageInstall.Designer.cs">
-      <DependentUpon>formPackageInstall.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formAbout.resx">
       <DependentUpon>formAbout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\formPackageInstall.resx">
-      <DependentUpon>formPackageInstall.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />

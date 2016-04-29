@@ -375,9 +375,9 @@ namespace OpenBve {
 //			Result.TrainFolder = null;
 //			Result.TrainEncoding = System.Text.Encoding.UTF8;
 
-			routeWorkerThread = new BackgroundWorker();
-			routeWorkerThread.DoWork += routeWorkerThread_doWork;
-			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+			workerThread = new BackgroundWorker();
+			workerThread.DoWork += workerThread_doWork;
+			workerThread.RunWorkerCompleted += workerThread_completed;
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
@@ -954,6 +954,7 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
 			UpdateRadioButtonBackColor();
 		}
+<<<<<<< HEAD
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
 			panelOptions.Visible = false;
@@ -968,9 +969,32 @@ namespace OpenBve {
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
 			UpdateRadioButtonBackColor();
-            //Load packages & rest panel states
+			//Load packages
 			if (radioButtonPackages.Checked)
 			{
+				LoadRoutePackages();
+				LoadTrainPackages();
+				PopulatePackageList();
+			}
+		}
+=======
+        private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
+        {
+            panelOptions.Visible = false;
+            panelStart.Visible = false;
+            panelReview.Visible = false;
+            panelControls.Visible = false;
+            panelPackages.Visible = true;
+            panelPanels.BackColor = labelPackages.BackColor;
+            pictureboxJoysticks.Visible = false;
+            radiobuttonStart.BackColor = SystemColors.ButtonFace;
+            radiobuttonReview.BackColor = SystemColors.ButtonFace;
+            radiobuttonControls.BackColor = SystemColors.ButtonFace;
+            radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
+            UpdateRadioButtonBackColor();
+            //Load packages & rest panel states
+            if (radioButtonPackages.Checked)
+            {
 				ResetInstallerPanels();
 	            if (LoadPackages() == true)
 	            {
@@ -978,8 +1002,9 @@ namespace OpenBve {
 		            PopulatePackageList(currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
 		            PopulatePackageList(currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
 	            }
-			}
-		}
+            }
+        }
+>>>>>>> PackageInstaller
 		private void UpdateRadioButtonBackColor() {
 			// work-around for button-style radio buttons on Mono
 			if (Program.CurrentlyRunningOnMono) {
@@ -1086,8 +1111,9 @@ namespace OpenBve {
 		// functions
 		// =========
 
+<<<<<<< HEAD
 		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-        private Image LoadImage(string Folder, string Title) {
+		private Image LoadImage(string Folder, string Title) {
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Folder, Title);
@@ -1107,6 +1133,29 @@ namespace OpenBve {
 			{
 				return null;
 			}
+=======
+        /// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
+        internal Image LoadImage(string Folder, string Title) {
+		    try
+		    {
+		        string File = OpenBveApi.Path.CombineFile(Folder, Title);
+		        if (System.IO.File.Exists(File))
+		        {
+		            try
+		            {
+		                return Image.FromFile(File);
+		            }
+		            catch
+		            {
+		            }
+		        }
+		        return null;
+		    }
+		    catch
+		    {
+		        return null;
+		    }
+>>>>>>> PackageInstaller
 		}
 
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
@@ -1136,6 +1185,28 @@ namespace OpenBve {
 			}
 		}
 
+<<<<<<< HEAD
+		private void buttonInstallRoute_Click(object sender, EventArgs e)
+		{
+			var PackageInstallForm = new formPackageInstall();
+			PackageInstallForm.ShowDialog();
+		}
+=======
+        private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxLoadInAdvance.Checked)
+            {
+                //Load in advance negates unloading textures...
+                checkBoxUnloadTextures.Checked = false;
+                checkBoxUnloadTextures.Enabled = false;
+            }
+            else
+            {
+                checkBoxUnloadTextures.Enabled = true;
+            }
+        }
+>>>>>>> PackageInstaller
+
 		private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
 		{
 			if (checkBoxLoadInAdvance.Checked)
@@ -1150,6 +1221,7 @@ namespace OpenBve {
 			}
 		}
 
+<<<<<<< HEAD
 		internal formAbout AboutDialog;
 
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1159,6 +1231,15 @@ namespace OpenBve {
 				AboutDialog = new formAbout();
 				AboutDialog.Show();
 			}
+=======
+        private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (AboutDialog == null || AboutDialog.Visible == false)
+            {
+                AboutDialog = new formAbout();
+                AboutDialog.Show();
+            }
+>>>>>>> PackageInstaller
 		}
 	}
 }

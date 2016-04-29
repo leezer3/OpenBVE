@@ -22,6 +22,9 @@ namespace OpenBve {
 		/// <summary>The initial location of the Railway/Route folder.</summary>
 		internal string InitialRouteFolder;
 
+        /// <summary>The initial location of the Railway folder.</summary>
+        internal string InitialRailwayFolder;
+
 		/// <summary>The initial location of the Train folder.</summary>
 		internal string InitialTrainFolder;
 		
@@ -38,11 +41,13 @@ namespace OpenBve {
 		internal FileSystem() {
 			string assemblyFile = Assembly.GetExecutingAssembly().Location;
 			string assemblyFolder = Path.GetDirectoryName(assemblyFile);
-			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
+            //This copy of openBVE is a special string, and should not be localised
+            string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
 			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
 			this.InitialRouteFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
+            this.InitialRailwayFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
 			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			this.RestartProcess = assemblyFile;
 			this.RestartArguments = string.Empty;

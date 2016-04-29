@@ -450,9 +450,9 @@ namespace OpenBve {
 		// functions
 		// =========
 
-		private BackgroundWorker workerThread;
+		private BackgroundWorker routeWorkerThread;
 
-		private void workerThread_doWork(object sender, DoWorkEventArgs e)
+		private void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
 			Game.Reset(false);
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
@@ -460,7 +460,7 @@ namespace OpenBve {
 			
 		}
 
-		private void workerThread_completed(object sender, RunWorkerCompletedEventArgs e)
+		private void routeWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)
 		{
 			if (e.Error != null)
 			{
@@ -566,7 +566,7 @@ namespace OpenBve {
 		// show route
 		private void ShowRoute(bool UserSelectedEncoding) {
 
-			if (Result.RouteFile != null && !workerThread.IsBusy)
+			if (Result.RouteFile != null && !routeWorkerThread.IsBusy)
 			{
 				
 				this.Cursor = Cursors.WaitCursor;
@@ -642,7 +642,7 @@ namespace OpenBve {
 					}
 					comboboxRouteEncoding.Tag = null;
 				}
-				workerThread.RunWorkerAsync();
+				routeWorkerThread.RunWorkerAsync();
 			}
 		}
 
