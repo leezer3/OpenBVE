@@ -69,29 +69,26 @@ namespace OpenBve {
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
 			} catch { }
-			// use button-style radio buttons on non-Mono
-			if (!Program.CurrentlyRunningOnMono) {
-				radiobuttonStart.Appearance = Appearance.Button;
-				radiobuttonStart.AutoSize = false;
-				radiobuttonStart.Size = new Size(buttonClose.Width, buttonClose.Height);
-				radiobuttonStart.TextAlign = ContentAlignment.MiddleCenter;
-				radiobuttonReview.Appearance = Appearance.Button;
-				radiobuttonReview.AutoSize = false;
-				radiobuttonReview.Size = new Size(buttonClose.Width, buttonClose.Height);
-				radiobuttonReview.TextAlign = ContentAlignment.MiddleCenter;
-				radiobuttonControls.Appearance = Appearance.Button;
-				radiobuttonControls.AutoSize = false;
-				radiobuttonControls.Size = new Size(buttonClose.Width, buttonClose.Height);
-				radiobuttonControls.TextAlign = ContentAlignment.MiddleCenter;
-				radiobuttonOptions.Appearance = Appearance.Button;
-				radiobuttonOptions.AutoSize = false;
-				radiobuttonOptions.Size = new Size(buttonClose.Width, buttonClose.Height);
-				radiobuttonOptions.TextAlign = ContentAlignment.MiddleCenter;
-				radioButtonPackages.Appearance = Appearance.Button;
-				radioButtonPackages.AutoSize = false;
-				radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
-				radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
-			}
+			radiobuttonStart.Appearance = Appearance.Button;
+			radiobuttonStart.AutoSize = false;
+			radiobuttonStart.Size = new Size(buttonClose.Width, buttonClose.Height);
+			radiobuttonStart.TextAlign = ContentAlignment.MiddleCenter;
+			radiobuttonReview.Appearance = Appearance.Button;
+			radiobuttonReview.AutoSize = false;
+			radiobuttonReview.Size = new Size(buttonClose.Width, buttonClose.Height);
+			radiobuttonReview.TextAlign = ContentAlignment.MiddleCenter;
+			radiobuttonControls.Appearance = Appearance.Button;
+			radiobuttonControls.AutoSize = false;
+			radiobuttonControls.Size = new Size(buttonClose.Width, buttonClose.Height);
+			radiobuttonControls.TextAlign = ContentAlignment.MiddleCenter;
+			radiobuttonOptions.Appearance = Appearance.Button;
+			radiobuttonOptions.AutoSize = false;
+			radiobuttonOptions.Size = new Size(buttonClose.Width, buttonClose.Height);
+			radiobuttonOptions.TextAlign = ContentAlignment.MiddleCenter;
+			radioButtonPackages.Appearance = Appearance.Button;
+			radioButtonPackages.AutoSize = false;
+			radioButtonPackages.Size = new Size(buttonClose.Width, buttonClose.Height);
+			radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
 			// options
 			Interface.LoadLogs();
 			ListLanguages();
@@ -955,7 +952,7 @@ namespace OpenBve {
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			UpdateRadioButtonBackColor();
+			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e) {
 			panelReview.Visible = true;
@@ -969,7 +966,7 @@ namespace OpenBve {
 			radiobuttonReview.BackColor = SystemColors.ButtonHighlight;
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			UpdateRadioButtonBackColor();
+			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e) {
 			panelControls.Visible = true;
@@ -983,7 +980,7 @@ namespace OpenBve {
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
 			radiobuttonControls.BackColor = SystemColors.ButtonHighlight;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
-			UpdateRadioButtonBackColor();
+			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e) {
 			panelOptions.Visible = true;
@@ -997,7 +994,7 @@ namespace OpenBve {
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-			UpdateRadioButtonBackColor();
+			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1011,27 +1008,18 @@ namespace OpenBve {
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
-			radiobuttonOptions.BackColor = SystemColors.ButtonHighlight;
-			UpdateRadioButtonBackColor();
-            //Load packages & rest panel states
+			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
+			radioButtonPackages.BackColor = SystemColors.ButtonHighlight;
+			//Load packages & rest panel states
 			if (radioButtonPackages.Checked)
 			{
 				ResetInstallerPanels();
-	            if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
-	            {
-		            PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
-		            PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
-		            PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
-	            }
-			}
-		}
-		private void UpdateRadioButtonBackColor() {
-			// work-around for button-style radio buttons on Mono
-			if (Program.CurrentlyRunningOnMono) {
-				radiobuttonStart.BackColor = panelPanels.BackColor;
-				radiobuttonReview.BackColor = panelPanels.BackColor;
-				radiobuttonControls.BackColor = panelPanels.BackColor;
-				radiobuttonOptions.BackColor = panelPanels.BackColor;
+				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
+				{
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+				}
 			}
 		}
 
@@ -1132,7 +1120,7 @@ namespace OpenBve {
 		// =========
 
 		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-        private Image LoadImage(string Folder, string Title) {
+		private Image LoadImage(string Folder, string Title) {
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Folder, Title);
