@@ -229,7 +229,7 @@ namespace OpenBve {
 						labelRatingColor.BackColor = Color.Gray;
 						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
 					} else {
-						Color[] Colors = new Color[] { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
+						Color[] Colors = { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
 						if (index >= 0 & index < Colors.Length) {
 							labelRatingColor.BackColor = Colors[index];
 						} else {
@@ -596,8 +596,7 @@ namespace OpenBve {
 					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
-
-				foreach (string currentKey in Enum.GetNames(typeof(OpenTK.Input.Key)))
+				foreach (string currentKey in Enum.GetNames(typeof(Key)))
 				{
 					comboboxKeyboardKey.Items.Add(currentKey);
 				}

@@ -1634,11 +1634,11 @@
 			this.checkboxBlackBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkboxBlackBox.AutoEllipsis = true;
+			this.checkboxBlackBox.AutoSize = true;
 			this.checkboxBlackBox.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 24);
 			this.checkboxBlackBox.Name = "checkboxBlackBox";
-			this.checkboxBlackBox.Size = new System.Drawing.Size(136, 48);
+			this.checkboxBlackBox.Size = new System.Drawing.Size(108, 17);
 			this.checkboxBlackBox.TabIndex = 3;
 			this.checkboxBlackBox.Text = "Enable black box";
 			this.checkboxBlackBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -1759,9 +1759,9 @@
 			this.labelTimeTableDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTimeTableDisplayMode.AutoEllipsis = true;
-			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(8, 16);
+			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(4, 16);
 			this.labelTimeTableDisplayMode.Name = "labelTimeTableDisplayMode";
-			this.labelTimeTableDisplayMode.Size = new System.Drawing.Size(141, 16);
+			this.labelTimeTableDisplayMode.Size = new System.Drawing.Size(128, 16);
 			this.labelTimeTableDisplayMode.TabIndex = 0;
 			this.labelTimeTableDisplayMode.Text = "Timetable Display Mode:";
 			this.labelTimeTableDisplayMode.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -4819,6 +4819,7 @@
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(803, 586);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelInfo);
@@ -4828,7 +4829,6 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
-			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
