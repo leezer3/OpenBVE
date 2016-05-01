@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenBveApi.Packages;
 
 namespace OpenBve
@@ -35,10 +31,12 @@ namespace OpenBve
 			{
 				MessageBox.Show(Interface.GetInterfaceString("packages_database_save_error"));
 			}
-			Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile);
-			PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
-			PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
-			PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+			if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
+			{
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
+				PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
+				PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+			}
 		}
 
 		private Package currentPackage;
@@ -73,7 +71,6 @@ namespace OpenBve
 				currentPackage.Name = textBoxPackageName.Text;
 				currentPackage.Author = textBoxPackageAuthor.Text;
 				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
-
 				HidePanels();
 				panelPackageDependsAdd.Show();
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutes, false);
@@ -299,6 +296,7 @@ namespace OpenBve
 				//Add to the datagrid view
 				dataGrid.Rows.Add(packageToAdd);
 			}
+			dataGrid.ClearSelection();
 		}
 
 		/// <summary>This method should be called to uninstall a package</summary>
@@ -350,6 +348,8 @@ namespace OpenBve
 
 		private void dataGridViewTrainPackages_SelectionChanged(object sender, EventArgs e)
 		{
+			dataGridViewRoutePackages.ClearSelection();
+			dataGridViewInstalledOther.ClearSelection();
 			selectedRoutePackageIndex = -1;
 			selectedTrainPackageIndex = -1;
 			if (dataGridViewTrainPackages.SelectedRows.Count > 0)
@@ -360,6 +360,8 @@ namespace OpenBve
 
 		private void dataGridViewRoutePackages_SelectionChanged(object sender, EventArgs e)
 		{
+			dataGridViewTrainPackages.ClearSelection();
+			dataGridViewInstalledOther.ClearSelection();
 			selectedTrainPackageIndex = -1;
 			selectedRoutePackageIndex = -1;
 			if (dataGridViewRoutePackages.SelectedRows.Count > 0)
@@ -382,8 +384,8 @@ namespace OpenBve
 
 		private void buttonUninstallFinish_Click(object sender, EventArgs e)
 		{
-			HidePanels();
-			panelPackageList.Show();
+			RefreshPackages();
+			ResetInstallerPanels();
 		}
 
 
@@ -557,7 +559,7 @@ namespace OpenBve
 		private void Q1_CheckedChanged(object sender, EventArgs e)
 		{
 			filesToPackage = null;
-			filesToPackageBox.Lines = null;
+			filesToPackageBox.Text = String.Empty;
 			if (radioButtonQ1Yes.Checked == true)
 			{
 				panelReplacePackage.Show();
@@ -601,7 +603,7 @@ namespace OpenBve
 		private void Q2_CheckedChanged(object sender, EventArgs e)
 		{
 			filesToPackage = null;
-			filesToPackageBox.Lines = null;
+			filesToPackageBox.Text = string.Empty;
 			radioButtonQ1Yes.Enabled = true;
 			radioButtonQ1No.Enabled = true;
 			labelReplacePackage.Enabled = true;
@@ -831,17 +833,11 @@ namespace OpenBve
 			filesToPackageBox.Clear();
 		}
 
-		//Don't use a file picker dialog- Select folders only.
+		//This uses a folder picker dialog to add folders
 		private void addPackageItemsButton_Click(object sender, EventArgs e)
 		{
-			var dialog = new CommonOpenFileDialog
-			{
-				AllowNonFileSystemItems = true,
-				Multiselect = true,
-				IsFolderPicker = true,
-				EnsureFileExists = false
-			};
-			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+			var dialog = new FolderSelectDialog();
+			if (dialog.Show(Handle))
 			{
 				var tempList = new List<PackageFile>();
 				//This dialog is used elsewhere, so we'd better reset it's properties
@@ -850,32 +846,19 @@ namespace OpenBve
 				{
 					filesToPackage = new List<PackageFile>();
 				}
-				foreach (string rootPath in dialog.FileNames)
+				filesToPackageBox.Text += dialog.FileName + Environment.NewLine;
+				//Directory- Get all the files within the directory and add to our list
+				string[] files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+				for (int i = 0; i < files.Length; i++)
 				{
-					filesToPackageBox.Text += rootPath + Environment.NewLine;
-					if (System.IO.File.Exists(rootPath))
+					var File = new PackageFile
 					{
-						//If this is an absolute path to a file, just add it to the list
-						var File = new PackageFile
-						{
-							absolutePath = rootPath,
-							relativePath = System.IO.Path.GetFileName(rootPath),
-						};
-						filesToPackage.Add(File);
-						continue;
-					}
-					//Otherwise, this must be a directory- Get all the files within the directory and add to our list
-					string[] files = System.IO.Directory.GetFiles(rootPath, "*.*", System.IO.SearchOption.AllDirectories);
-					for (int i = 0; i < files.Length; i++)
-					{
-						var File = new PackageFile
-						{
-							absolutePath = files[i],
-							relativePath = files[i].Replace(System.IO.Directory.GetParent(rootPath).ToString(), ""),
-						};
-						tempList.Add(File);
-					}
+						absolutePath = files[i],
+						relativePath = files[i].Replace(System.IO.Directory.GetParent(dialog.FileName).ToString(), ""),
+					};
+					tempList.Add(File);
 				}
+
 				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
 				
 			}
@@ -885,6 +868,8 @@ namespace OpenBve
 		{
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_replace_id");
 			textBoxGUID.Text = currentPackage.GUID;
+			addPackageItemsButton.Enabled = true;
+			newPackageClearSelectionButton.Enabled = true;
 			SaveFileNameButton.Enabled = true;
 			panelReplacePackage.Hide();
 			panelNewPackage.Show();
@@ -943,7 +928,7 @@ namespace OpenBve
 			TryLoadImage(pictureBoxPackageImage, "route_unknown.png");
 			TryLoadImage(pictureBoxProcessing, "logo.png");
 			//Reset enabled boxes & panels
-			textBoxGUID.Text = null;
+			textBoxGUID.Text = string.Empty;
 			textBoxGUID.Enabled = false;
 			SaveFileNameButton.Enabled = false;
 			panelReplacePackage.Hide();

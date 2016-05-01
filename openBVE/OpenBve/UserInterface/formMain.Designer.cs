@@ -506,7 +506,7 @@
 			this.labelVerticalSeparator.BackColor = System.Drawing.Color.White;
 			this.labelVerticalSeparator.Location = new System.Drawing.Point(158, 0);
 			this.labelVerticalSeparator.Name = "labelVerticalSeparator";
-			this.labelVerticalSeparator.Size = new System.Drawing.Size(2, 606);
+			this.labelVerticalSeparator.Size = new System.Drawing.Size(2, 626);
 			this.labelVerticalSeparator.TabIndex = 9;
 			// 
 			// buttonClose
@@ -514,7 +514,7 @@
 			this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonClose.AutoEllipsis = true;
 			this.buttonClose.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonClose.Location = new System.Drawing.Point(8, 554);
+			this.buttonClose.Location = new System.Drawing.Point(8, 574);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(144, 24);
 			this.buttonClose.TabIndex = 5;
@@ -544,7 +544,7 @@
 			this.panelStart.Controls.Add(this.labelStartTitleBackground);
 			this.panelStart.Location = new System.Drawing.Point(160, 0);
 			this.panelStart.Name = "panelStart";
-			this.panelStart.Size = new System.Drawing.Size(643, 586);
+			this.panelStart.Size = new System.Drawing.Size(659, 606);
 			this.panelStart.TabIndex = 7;
 			// 
 			// comboboxMode
@@ -552,7 +552,7 @@
 			this.comboboxMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.comboboxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxMode.FormattingEnabled = true;
-			this.comboboxMode.Location = new System.Drawing.Point(144, 554);
+			this.comboboxMode.Location = new System.Drawing.Point(144, 574);
 			this.comboboxMode.Name = "comboboxMode";
 			this.comboboxMode.Size = new System.Drawing.Size(144, 21);
 			this.comboboxMode.TabIndex = 11;
@@ -562,7 +562,7 @@
 			this.labelMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelMode.AutoEllipsis = true;
 			this.labelMode.ForeColor = System.Drawing.Color.Black;
-			this.labelMode.Location = new System.Drawing.Point(16, 554);
+			this.labelMode.Location = new System.Drawing.Point(16, 574);
 			this.labelMode.Name = "labelMode";
 			this.labelMode.Size = new System.Drawing.Size(128, 16);
 			this.labelMode.TabIndex = 10;
@@ -574,7 +574,7 @@
 			this.groupboxTrainSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.groupboxTrainSelection.Controls.Add(this.tabcontrolTrainSelection);
 			this.groupboxTrainSelection.ForeColor = System.Drawing.Color.Black;
-			this.groupboxTrainSelection.Location = new System.Drawing.Point(8, 314);
+			this.groupboxTrainSelection.Location = new System.Drawing.Point(8, 334);
 			this.groupboxTrainSelection.Name = "groupboxTrainSelection";
 			this.groupboxTrainSelection.Size = new System.Drawing.Size(316, 200);
 			this.groupboxTrainSelection.TabIndex = 7;
@@ -698,7 +698,7 @@
 			this.groupboxTrainDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.groupboxTrainDetails.Controls.Add(this.tabcontrolTrainDetails);
 			this.groupboxTrainDetails.ForeColor = System.Drawing.Color.Black;
-			this.groupboxTrainDetails.Location = new System.Drawing.Point(332, 314);
+			this.groupboxTrainDetails.Location = new System.Drawing.Point(332, 334);
 			this.groupboxTrainDetails.Name = "groupboxTrainDetails";
 			this.groupboxTrainDetails.Size = new System.Drawing.Size(316, 200);
 			this.groupboxTrainDetails.TabIndex = 8;
@@ -875,7 +875,7 @@
 			this.buttonStart.AutoEllipsis = true;
 			this.buttonStart.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.buttonStart.Enabled = false;
-			this.buttonStart.Location = new System.Drawing.Point(515, 554);
+			this.buttonStart.Location = new System.Drawing.Point(531, 574);
 			this.buttonStart.Name = "buttonStart";
 			this.buttonStart.Size = new System.Drawing.Size(120, 24);
 			this.buttonStart.TabIndex = 12;
@@ -891,9 +891,9 @@
 			this.labelStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(130)))), ((int)(((byte)(153)))));
 			this.labelStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelStart.ForeColor = System.Drawing.Color.White;
-			this.labelStart.Location = new System.Drawing.Point(7, 522);
+			this.labelStart.Location = new System.Drawing.Point(7, 542);
 			this.labelStart.Name = "labelStart";
-			this.labelStart.Size = new System.Drawing.Size(628, 24);
+			this.labelStart.Size = new System.Drawing.Size(644, 24);
 			this.labelStart.TabIndex = 9;
 			this.labelStart.Text = "Start";
 			this.labelStart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -906,9 +906,9 @@
 			this.labelTrain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(130)))), ((int)(((byte)(153)))));
 			this.labelTrain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelTrain.ForeColor = System.Drawing.Color.White;
-			this.labelTrain.Location = new System.Drawing.Point(8, 282);
+			this.labelTrain.Location = new System.Drawing.Point(8, 302);
 			this.labelTrain.Name = "labelTrain";
-			this.labelTrain.Size = new System.Drawing.Size(627, 24);
+			this.labelTrain.Size = new System.Drawing.Size(643, 24);
 			this.labelTrain.TabIndex = 6;
 			this.labelTrain.Text = "Train";
 			this.labelTrain.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -921,7 +921,7 @@
 			this.groupboxRouteSelection.ForeColor = System.Drawing.Color.Black;
 			this.groupboxRouteSelection.Location = new System.Drawing.Point(8, 72);
 			this.groupboxRouteSelection.Name = "groupboxRouteSelection";
-			this.groupboxRouteSelection.Size = new System.Drawing.Size(316, 202);
+			this.groupboxRouteSelection.Size = new System.Drawing.Size(316, 222);
 			this.groupboxRouteSelection.TabIndex = 4;
 			this.groupboxRouteSelection.TabStop = false;
 			this.groupboxRouteSelection.Text = "Selection";
@@ -936,7 +936,7 @@
 			this.tabcontrolRouteSelection.Location = new System.Drawing.Point(8, 16);
 			this.tabcontrolRouteSelection.Name = "tabcontrolRouteSelection";
 			this.tabcontrolRouteSelection.SelectedIndex = 0;
-			this.tabcontrolRouteSelection.Size = new System.Drawing.Size(300, 178);
+			this.tabcontrolRouteSelection.Size = new System.Drawing.Size(300, 198);
 			this.tabcontrolRouteSelection.TabIndex = 0;
 			// 
 			// tabpageRouteBrowse
@@ -946,7 +946,7 @@
 			this.tabpageRouteBrowse.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteBrowse.Name = "tabpageRouteBrowse";
 			this.tabpageRouteBrowse.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteBrowse.Size = new System.Drawing.Size(292, 152);
+			this.tabpageRouteBrowse.Size = new System.Drawing.Size(292, 172);
 			this.tabpageRouteBrowse.TabIndex = 0;
 			this.tabpageRouteBrowse.Text = "File browser";
 			this.tabpageRouteBrowse.UseVisualStyleBackColor = true;
@@ -963,7 +963,7 @@
 			this.listviewRouteFiles.MultiSelect = false;
 			this.listviewRouteFiles.Name = "listviewRouteFiles";
 			this.listviewRouteFiles.ShowGroups = false;
-			this.listviewRouteFiles.Size = new System.Drawing.Size(276, 91);
+			this.listviewRouteFiles.Size = new System.Drawing.Size(276, 111);
 			this.listviewRouteFiles.TabIndex = 1;
 			this.listviewRouteFiles.UseCompatibleStateImageBehavior = false;
 			this.listviewRouteFiles.View = System.Windows.Forms.View.Details;
@@ -1018,7 +1018,7 @@
 			this.groupboxRouteDetails.ForeColor = System.Drawing.Color.Black;
 			this.groupboxRouteDetails.Location = new System.Drawing.Point(332, 72);
 			this.groupboxRouteDetails.Name = "groupboxRouteDetails";
-			this.groupboxRouteDetails.Size = new System.Drawing.Size(316, 202);
+			this.groupboxRouteDetails.Size = new System.Drawing.Size(316, 222);
 			this.groupboxRouteDetails.TabIndex = 5;
 			this.groupboxRouteDetails.TabStop = false;
 			this.groupboxRouteDetails.Text = "Details";
@@ -1036,7 +1036,7 @@
 			this.tabcontrolRouteDetails.Location = new System.Drawing.Point(8, 16);
 			this.tabcontrolRouteDetails.Name = "tabcontrolRouteDetails";
 			this.tabcontrolRouteDetails.SelectedIndex = 0;
-			this.tabcontrolRouteDetails.Size = new System.Drawing.Size(300, 178);
+			this.tabcontrolRouteDetails.Size = new System.Drawing.Size(300, 198);
 			this.tabcontrolRouteDetails.TabIndex = 19;
 			// 
 			// tabpageRouteDescription
@@ -1046,7 +1046,7 @@
 			this.tabpageRouteDescription.Location = new System.Drawing.Point(4, 22);
 			this.tabpageRouteDescription.Name = "tabpageRouteDescription";
 			this.tabpageRouteDescription.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageRouteDescription.Size = new System.Drawing.Size(292, 152);
+			this.tabpageRouteDescription.Size = new System.Drawing.Size(292, 172);
 			this.tabpageRouteDescription.TabIndex = 0;
 			this.tabpageRouteDescription.Text = "Description";
 			this.tabpageRouteDescription.UseVisualStyleBackColor = true;
@@ -1062,7 +1062,7 @@
 			this.textboxRouteDescription.Name = "textboxRouteDescription";
 			this.textboxRouteDescription.ReadOnly = true;
 			this.textboxRouteDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textboxRouteDescription.Size = new System.Drawing.Size(116, 138);
+			this.textboxRouteDescription.Size = new System.Drawing.Size(116, 158);
 			this.textboxRouteDescription.TabIndex = 0;
 			// 
 			// pictureboxRouteImage
@@ -1072,7 +1072,7 @@
 			this.pictureboxRouteImage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureboxRouteImage.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxRouteImage.Name = "pictureboxRouteImage";
-			this.pictureboxRouteImage.Size = new System.Drawing.Size(152, 138);
+			this.pictureboxRouteImage.Size = new System.Drawing.Size(152, 158);
 			this.pictureboxRouteImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureboxRouteImage.TabIndex = 0;
 			this.pictureboxRouteImage.TabStop = false;
@@ -1248,7 +1248,7 @@
 			this.labelRoute.ForeColor = System.Drawing.Color.White;
 			this.labelRoute.Location = new System.Drawing.Point(8, 40);
 			this.labelRoute.Name = "labelRoute";
-			this.labelRoute.Size = new System.Drawing.Size(627, 24);
+			this.labelRoute.Size = new System.Drawing.Size(643, 24);
 			this.labelRoute.TabIndex = 3;
 			this.labelRoute.Text = "Route";
 			this.labelRoute.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1260,7 +1260,7 @@
 			this.labelStartTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelStartTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelStartTitleSeparator.Name = "labelStartTitleSeparator";
-			this.labelStartTitleSeparator.Size = new System.Drawing.Size(643, 2);
+			this.labelStartTitleSeparator.Size = new System.Drawing.Size(659, 2);
 			this.labelStartTitleSeparator.TabIndex = 2;
 			// 
 			// labelStartTitle
@@ -1285,7 +1285,7 @@
 			this.label13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
 			this.label13.Location = new System.Drawing.Point(0, 0);
 			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(643, 32);
+			this.label13.Size = new System.Drawing.Size(659, 32);
 			this.label13.TabIndex = 0;
 			// 
 			// labelStartTitleBackground
@@ -1295,7 +1295,7 @@
 			this.labelStartTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
 			this.labelStartTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelStartTitleBackground.Name = "labelStartTitleBackground";
-			this.labelStartTitleBackground.Size = new System.Drawing.Size(643, 32);
+			this.labelStartTitleBackground.Size = new System.Drawing.Size(659, 32);
 			this.labelStartTitleBackground.TabIndex = 0;
 			// 
 			// labelFillerTwo
@@ -1305,7 +1305,7 @@
 			this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
 			this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
 			this.labelFillerTwo.Name = "labelFillerTwo";
-			this.labelFillerTwo.Size = new System.Drawing.Size(160, 144);
+			this.labelFillerTwo.Size = new System.Drawing.Size(160, 164);
 			this.labelFillerTwo.TabIndex = 2;
 			// 
 			// panelOptions
@@ -1323,7 +1323,7 @@
 			this.panelOptions.Controls.Add(this.labelOptionsTitleBackground);
 			this.panelOptions.Location = new System.Drawing.Point(160, 0);
 			this.panelOptions.Name = "panelOptions";
-			this.panelOptions.Size = new System.Drawing.Size(643, 586);
+			this.panelOptions.Size = new System.Drawing.Size(659, 606);
 			this.panelOptions.TabIndex = 0;
 			// 
 			// panelOptionsRight
@@ -1759,7 +1759,7 @@
 			this.labelTimeTableDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTimeTableDisplayMode.AutoEllipsis = true;
-			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(4, 16);
+			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(8, 16);
 			this.labelTimeTableDisplayMode.Name = "labelTimeTableDisplayMode";
 			this.labelTimeTableDisplayMode.Size = new System.Drawing.Size(128, 16);
 			this.labelTimeTableDisplayMode.TabIndex = 0;
@@ -2189,7 +2189,7 @@
 			this.labelOptionsTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelOptionsTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelOptionsTitleSeparator.Name = "labelOptionsTitleSeparator";
-			this.labelOptionsTitleSeparator.Size = new System.Drawing.Size(643, 2);
+			this.labelOptionsTitleSeparator.Size = new System.Drawing.Size(659, 2);
 			this.labelOptionsTitleSeparator.TabIndex = 2;
 			// 
 			// labelOptionsTitle
@@ -2214,14 +2214,14 @@
 			this.labelOptionsTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(153)))), ((int)(((byte)(61)))));
 			this.labelOptionsTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelOptionsTitleBackground.Name = "labelOptionsTitleBackground";
-			this.labelOptionsTitleBackground.Size = new System.Drawing.Size(643, 32);
+			this.labelOptionsTitleBackground.Size = new System.Drawing.Size(659, 32);
 			this.labelOptionsTitleBackground.TabIndex = 0;
 			// 
 			// labelFillerThree
 			// 
 			this.labelFillerThree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelFillerThree.BackColor = System.Drawing.Color.Silver;
-			this.labelFillerThree.Location = new System.Drawing.Point(0, 538);
+			this.labelFillerThree.Location = new System.Drawing.Point(0, 558);
 			this.labelFillerThree.Name = "labelFillerThree";
 			this.labelFillerThree.Size = new System.Drawing.Size(160, 48);
 			this.labelFillerThree.TabIndex = 4;
@@ -2340,7 +2340,7 @@
 			this.panelReview.Controls.Add(this.labelReviewTitleBackground);
 			this.panelReview.Location = new System.Drawing.Point(160, 0);
 			this.panelReview.Name = "panelReview";
-			this.panelReview.Size = new System.Drawing.Size(643, 586);
+			this.panelReview.Size = new System.Drawing.Size(659, 606);
 			this.panelReview.TabIndex = 10;
 			// 
 			// comboboxBlackBoxFormat
@@ -2348,7 +2348,7 @@
 			this.comboboxBlackBoxFormat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.comboboxBlackBoxFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxBlackBoxFormat.FormattingEnabled = true;
-			this.comboboxBlackBoxFormat.Location = new System.Drawing.Point(104, 554);
+			this.comboboxBlackBoxFormat.Location = new System.Drawing.Point(104, 574);
 			this.comboboxBlackBoxFormat.Name = "comboboxBlackBoxFormat";
 			this.comboboxBlackBoxFormat.Size = new System.Drawing.Size(144, 21);
 			this.comboboxBlackBoxFormat.TabIndex = 12;
@@ -2358,7 +2358,7 @@
 			this.labelBlackBoxFormat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelBlackBoxFormat.AutoEllipsis = true;
 			this.labelBlackBoxFormat.ForeColor = System.Drawing.Color.Black;
-			this.labelBlackBoxFormat.Location = new System.Drawing.Point(8, 554);
+			this.labelBlackBoxFormat.Location = new System.Drawing.Point(8, 574);
 			this.labelBlackBoxFormat.Name = "labelBlackBoxFormat";
 			this.labelBlackBoxFormat.Size = new System.Drawing.Size(96, 16);
 			this.labelBlackBoxFormat.TabIndex = 11;
@@ -2425,7 +2425,7 @@
 			// 
 			this.buttonBlackBoxExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonBlackBoxExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonBlackBoxExport.Location = new System.Drawing.Point(256, 554);
+			this.buttonBlackBoxExport.Location = new System.Drawing.Point(256, 574);
 			this.buttonBlackBoxExport.Name = "buttonBlackBoxExport";
 			this.buttonBlackBoxExport.Size = new System.Drawing.Size(120, 24);
 			this.buttonBlackBoxExport.TabIndex = 13;
@@ -2441,9 +2441,9 @@
 			this.labelBlackBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(107)))), ((int)(((byte)(107)))));
 			this.labelBlackBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelBlackBox.ForeColor = System.Drawing.Color.White;
-			this.labelBlackBox.Location = new System.Drawing.Point(8, 522);
+			this.labelBlackBox.Location = new System.Drawing.Point(8, 542);
 			this.labelBlackBox.Name = "labelBlackBox";
-			this.labelBlackBox.Size = new System.Drawing.Size(627, 24);
+			this.labelBlackBox.Size = new System.Drawing.Size(643, 24);
 			this.labelBlackBox.TabIndex = 10;
 			this.labelBlackBox.Text = "Black box";
 			this.labelBlackBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2458,7 +2458,7 @@
 			this.groupboxScore.Controls.Add(this.listviewScore);
 			this.groupboxScore.Location = new System.Drawing.Point(272, 176);
 			this.groupboxScore.Name = "groupboxScore";
-			this.groupboxScore.Size = new System.Drawing.Size(363, 338);
+			this.groupboxScore.Size = new System.Drawing.Size(379, 358);
 			this.groupboxScore.TabIndex = 0;
 			this.groupboxScore.TabStop = false;
 			this.groupboxScore.Text = "Log";
@@ -2467,7 +2467,7 @@
 			// 
 			this.checkboxScorePenalties.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.checkboxScorePenalties.AutoSize = true;
-			this.checkboxScorePenalties.Location = new System.Drawing.Point(8, 306);
+			this.checkboxScorePenalties.Location = new System.Drawing.Point(8, 326);
 			this.checkboxScorePenalties.Name = "checkboxScorePenalties";
 			this.checkboxScorePenalties.Size = new System.Drawing.Size(120, 17);
 			this.checkboxScorePenalties.TabIndex = 1;
@@ -2479,7 +2479,7 @@
 			// 
 			this.buttonScoreExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonScoreExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonScoreExport.Location = new System.Drawing.Point(235, 306);
+			this.buttonScoreExport.Location = new System.Drawing.Point(251, 326);
 			this.buttonScoreExport.Name = "buttonScoreExport";
 			this.buttonScoreExport.Size = new System.Drawing.Size(120, 24);
 			this.buttonScoreExport.TabIndex = 2;
@@ -2506,7 +2506,7 @@
 			this.listviewScore.MultiSelect = false;
 			this.listviewScore.Name = "listviewScore";
 			this.listviewScore.ShowGroups = false;
-			this.listviewScore.Size = new System.Drawing.Size(347, 282);
+			this.listviewScore.Size = new System.Drawing.Size(363, 302);
 			this.listviewScore.TabIndex = 0;
 			this.listviewScore.UseCompatibleStateImageBehavior = false;
 			this.listviewScore.View = System.Windows.Forms.View.Details;
@@ -2610,7 +2610,7 @@
 			this.labelConditions.ForeColor = System.Drawing.Color.White;
 			this.labelConditions.Location = new System.Drawing.Point(8, 40);
 			this.labelConditions.Name = "labelConditions";
-			this.labelConditions.Size = new System.Drawing.Size(627, 24);
+			this.labelConditions.Size = new System.Drawing.Size(643, 24);
 			this.labelConditions.TabIndex = 3;
 			this.labelConditions.Text = "Conditions";
 			this.labelConditions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2751,7 +2751,7 @@
 			this.labelScore.ForeColor = System.Drawing.Color.White;
 			this.labelScore.Location = new System.Drawing.Point(8, 144);
 			this.labelScore.Name = "labelScore";
-			this.labelScore.Size = new System.Drawing.Size(627, 24);
+			this.labelScore.Size = new System.Drawing.Size(643, 24);
 			this.labelScore.TabIndex = 7;
 			this.labelScore.Text = "Score";
 			this.labelScore.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2763,7 +2763,7 @@
 			this.labelReviewTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelReviewTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelReviewTitleSeparator.Name = "labelReviewTitleSeparator";
-			this.labelReviewTitleSeparator.Size = new System.Drawing.Size(643, 2);
+			this.labelReviewTitleSeparator.Size = new System.Drawing.Size(659, 2);
 			this.labelReviewTitleSeparator.TabIndex = 2;
 			// 
 			// labelReviewTitle
@@ -2788,7 +2788,7 @@
 			this.labelReviewTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
 			this.labelReviewTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelReviewTitleBackground.Name = "labelReviewTitleBackground";
-			this.labelReviewTitleBackground.Size = new System.Drawing.Size(643, 32);
+			this.labelReviewTitleBackground.Size = new System.Drawing.Size(659, 32);
 			this.labelReviewTitleBackground.TabIndex = 0;
 			// 
 			// timerEvents
@@ -2817,14 +2817,14 @@
 			this.panelControls.Controls.Add(this.groupboxControl);
 			this.panelControls.Location = new System.Drawing.Point(160, 0);
 			this.panelControls.Name = "panelControls";
-			this.panelControls.Size = new System.Drawing.Size(643, 586);
+			this.panelControls.Size = new System.Drawing.Size(659, 606);
 			this.panelControls.TabIndex = 13;
 			// 
 			// buttonControlReset
 			// 
 			this.buttonControlReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlReset.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlReset.Location = new System.Drawing.Point(8, 248);
+			this.buttonControlReset.Location = new System.Drawing.Point(8, 268);
 			this.buttonControlReset.Name = "buttonControlReset";
 			this.buttonControlReset.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlReset.TabIndex = 12;
@@ -2836,7 +2836,7 @@
 			// 
 			this.buttonControlsExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlsExport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlsExport.Location = new System.Drawing.Point(320, 219);
+			this.buttonControlsExport.Location = new System.Drawing.Point(320, 239);
 			this.buttonControlsExport.Name = "buttonControlsExport";
 			this.buttonControlsExport.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlsExport.TabIndex = 7;
@@ -2848,7 +2848,7 @@
 			// 
 			this.buttonControlsImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlsImport.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlsImport.Location = new System.Drawing.Point(216, 219);
+			this.buttonControlsImport.Location = new System.Drawing.Point(216, 239);
 			this.buttonControlsImport.Name = "buttonControlsImport";
 			this.buttonControlsImport.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlsImport.TabIndex = 6;
@@ -2860,7 +2860,7 @@
 			// 
 			this.buttonControlDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonControlDown.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlDown.Location = new System.Drawing.Point(531, 219);
+			this.buttonControlDown.Location = new System.Drawing.Point(547, 239);
 			this.buttonControlDown.Name = "buttonControlDown";
 			this.buttonControlDown.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlDown.TabIndex = 9;
@@ -2872,7 +2872,7 @@
 			// 
 			this.buttonControlUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonControlUp.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlUp.Location = new System.Drawing.Point(427, 219);
+			this.buttonControlUp.Location = new System.Drawing.Point(443, 239);
 			this.buttonControlUp.Name = "buttonControlUp";
 			this.buttonControlUp.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlUp.TabIndex = 8;
@@ -2884,7 +2884,7 @@
 			// 
 			this.buttonControlRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlRemove.Location = new System.Drawing.Point(112, 219);
+			this.buttonControlRemove.Location = new System.Drawing.Point(112, 239);
 			this.buttonControlRemove.Name = "buttonControlRemove";
 			this.buttonControlRemove.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlRemove.TabIndex = 5;
@@ -2896,7 +2896,7 @@
 			// 
 			this.buttonControlAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonControlAdd.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonControlAdd.Location = new System.Drawing.Point(8, 219);
+			this.buttonControlAdd.Location = new System.Drawing.Point(8, 239);
 			this.buttonControlAdd.Name = "buttonControlAdd";
 			this.buttonControlAdd.Size = new System.Drawing.Size(96, 24);
 			this.buttonControlAdd.TabIndex = 4;
@@ -2910,9 +2910,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxJoysticks.Controls.Add(this.pictureboxJoysticks);
 			this.groupboxJoysticks.ForeColor = System.Drawing.Color.Black;
-			this.groupboxJoysticks.Location = new System.Drawing.Point(8, 410);
+			this.groupboxJoysticks.Location = new System.Drawing.Point(8, 430);
 			this.groupboxJoysticks.Name = "groupboxJoysticks";
-			this.groupboxJoysticks.Size = new System.Drawing.Size(627, 168);
+			this.groupboxJoysticks.Size = new System.Drawing.Size(643, 168);
 			this.groupboxJoysticks.TabIndex = 11;
 			this.groupboxJoysticks.TabStop = false;
 			this.groupboxJoysticks.Text = "Attached joysticks";
@@ -2924,7 +2924,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureboxJoysticks.Location = new System.Drawing.Point(8, 16);
 			this.pictureboxJoysticks.Name = "pictureboxJoysticks";
-			this.pictureboxJoysticks.Size = new System.Drawing.Size(611, 144);
+			this.pictureboxJoysticks.Size = new System.Drawing.Size(627, 144);
 			this.pictureboxJoysticks.TabIndex = 27;
 			this.pictureboxJoysticks.TabStop = false;
 			this.pictureboxJoysticks.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureboxJoysticks_Paint);
@@ -2947,7 +2947,7 @@
 			this.listviewControls.MultiSelect = false;
 			this.listviewControls.Name = "listviewControls";
 			this.listviewControls.ShowGroups = false;
-			this.listviewControls.Size = new System.Drawing.Size(627, 168);
+			this.listviewControls.Size = new System.Drawing.Size(643, 188);
 			this.listviewControls.TabIndex = 3;
 			this.listviewControls.UseCompatibleStateImageBehavior = false;
 			this.listviewControls.View = System.Windows.Forms.View.Details;
@@ -2979,7 +2979,7 @@
 			this.labelControlsTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelControlsTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelControlsTitleSeparator.Name = "labelControlsTitleSeparator";
-			this.labelControlsTitleSeparator.Size = new System.Drawing.Size(643, 2);
+			this.labelControlsTitleSeparator.Size = new System.Drawing.Size(659, 2);
 			this.labelControlsTitleSeparator.TabIndex = 2;
 			// 
 			// labelControlsTitle
@@ -3004,7 +3004,7 @@
 			this.labelControlsTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(137)))), ((int)(((byte)(54)))));
 			this.labelControlsTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelControlsTitleBackground.Name = "labelControlsTitleBackground";
-			this.labelControlsTitleBackground.Size = new System.Drawing.Size(643, 32);
+			this.labelControlsTitleBackground.Size = new System.Drawing.Size(659, 32);
 			this.labelControlsTitleBackground.TabIndex = 0;
 			// 
 			// groupboxControl
@@ -3019,9 +3019,9 @@
 			this.groupboxControl.Controls.Add(this.radiobuttonKeyboard);
 			this.groupboxControl.Enabled = false;
 			this.groupboxControl.ForeColor = System.Drawing.Color.Black;
-			this.groupboxControl.Location = new System.Drawing.Point(8, 274);
+			this.groupboxControl.Location = new System.Drawing.Point(8, 294);
 			this.groupboxControl.Name = "groupboxControl";
-			this.groupboxControl.Size = new System.Drawing.Size(627, 128);
+			this.groupboxControl.Size = new System.Drawing.Size(643, 128);
 			this.groupboxControl.TabIndex = 10;
 			this.groupboxControl.TabStop = false;
 			this.groupboxControl.Text = "Currently selected control";
@@ -3034,7 +3034,7 @@
 			this.comboboxCommand.FormattingEnabled = true;
 			this.comboboxCommand.Location = new System.Drawing.Point(88, 24);
 			this.comboboxCommand.Name = "comboboxCommand";
-			this.comboboxCommand.Size = new System.Drawing.Size(531, 21);
+			this.comboboxCommand.Size = new System.Drawing.Size(547, 21);
 			this.comboboxCommand.TabIndex = 1;
 			this.comboboxCommand.SelectedIndexChanged += new System.EventHandler(this.comboboxCommand_SelectedIndexChanged);
 			// 
@@ -3058,7 +3058,7 @@
 			this.panelJoystick.Enabled = false;
 			this.panelJoystick.Location = new System.Drawing.Point(264, 72);
 			this.panelJoystick.Name = "panelJoystick";
-			this.panelJoystick.Size = new System.Drawing.Size(355, 48);
+			this.panelJoystick.Size = new System.Drawing.Size(371, 48);
 			this.panelJoystick.TabIndex = 4;
 			// 
 			// labelJoystickAssignmentCaption
@@ -3079,7 +3079,7 @@
 			this.textboxJoystickGrab.Multiline = true;
 			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
 			this.textboxJoystickGrab.ReadOnly = true;
-			this.textboxJoystickGrab.Size = new System.Drawing.Size(163, 48);
+			this.textboxJoystickGrab.Size = new System.Drawing.Size(179, 48);
 			this.textboxJoystickGrab.TabIndex = 10;
 			this.textboxJoystickGrab.Text = "Joystick grab";
 			this.textboxJoystickGrab.Enter += new System.EventHandler(this.textboxJoystickGrab_Enter);
@@ -3206,7 +3206,7 @@
 			this.panelInfo.Controls.Add(this.labelVersion);
 			this.panelInfo.Controls.Add(this.labelInfoBottom);
 			this.panelInfo.Controls.Add(this.labelInfoTop);
-			this.panelInfo.Location = new System.Drawing.Point(0, 477);
+			this.panelInfo.Location = new System.Drawing.Point(0, 497);
 			this.panelInfo.Name = "panelInfo";
 			this.panelInfo.Size = new System.Drawing.Size(160, 61);
 			this.panelInfo.TabIndex = 3;
@@ -3282,22 +3282,22 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
-			this.panelPackages.Controls.Add(this.panelPackageList);
 			this.panelPackages.Controls.Add(this.panelCreatePackage);
-			this.panelPackages.Controls.Add(this.panelPleaseWait);
-			this.panelPackages.Controls.Add(this.panelDependancyError);
-			this.panelPackages.Controls.Add(this.panelPackageInstall);
-			this.panelPackages.Controls.Add(this.panelSuccess);
+			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
-			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
+			this.panelPackages.Controls.Add(this.panelSuccess);
+			this.panelPackages.Controls.Add(this.panelDependancyError);
+			this.panelPackages.Controls.Add(this.panelPackageInstall);
+			this.panelPackages.Controls.Add(this.panelPackageList);
+			this.panelPackages.Controls.Add(this.panelPleaseWait);
 			this.panelPackages.Controls.Add(this.labelPackages);
 			this.panelPackages.Controls.Add(this.label11);
 			this.panelPackages.Controls.Add(this.label14);
 			this.panelPackages.Controls.Add(this.label15);
 			this.panelPackages.Location = new System.Drawing.Point(160, 0);
 			this.panelPackages.Name = "panelPackages";
-			this.panelPackages.Size = new System.Drawing.Size(643, 586);
+			this.panelPackages.Size = new System.Drawing.Size(659, 606);
 			this.panelPackages.TabIndex = 14;
 			// 
 			// panelPackageList
@@ -3316,7 +3316,7 @@
 			this.panelPackageList.Controls.Add(this.labelInstalledRoutes);
 			this.panelPackageList.Location = new System.Drawing.Point(0, 30);
 			this.panelPackageList.Name = "panelPackageList";
-			this.panelPackageList.Size = new System.Drawing.Size(641, 539);
+			this.panelPackageList.Size = new System.Drawing.Size(657, 559);
 			this.panelPackageList.TabIndex = 3;
 			// 
 			// dataGridViewInstalledOther
@@ -3341,7 +3341,7 @@
 			this.dataGridViewInstalledOther.RowHeadersVisible = false;
 			this.dataGridViewInstalledOther.RowHeadersWidth = 90;
 			this.dataGridViewInstalledOther.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewInstalledOther.Size = new System.Drawing.Size(627, 111);
+			this.dataGridViewInstalledOther.Size = new System.Drawing.Size(643, 111);
 			this.dataGridViewInstalledOther.TabIndex = 25;
 			// 
 			// dataGridViewTextBoxColumn25
@@ -3378,7 +3378,7 @@
 			this.labelInstalledOther.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledOther.Location = new System.Drawing.Point(4, 376);
 			this.labelInstalledOther.Name = "labelInstalledOther";
-			this.labelInstalledOther.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledOther.Size = new System.Drawing.Size(643, 24);
 			this.labelInstalledOther.TabIndex = 24;
 			this.labelInstalledOther.Text = "Installed Other";
 			this.labelInstalledOther.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3386,7 +3386,7 @@
 			// createPackageButton
 			// 
 			this.createPackageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.createPackageButton.Location = new System.Drawing.Point(238, 525);
+			this.createPackageButton.Location = new System.Drawing.Point(254, 525);
 			this.createPackageButton.Name = "createPackageButton";
 			this.createPackageButton.Size = new System.Drawing.Size(136, 23);
 			this.createPackageButton.TabIndex = 23;
@@ -3416,7 +3416,7 @@
 			this.dataGridViewTrainPackages.RowHeadersVisible = false;
 			this.dataGridViewTrainPackages.RowHeadersWidth = 90;
 			this.dataGridViewTrainPackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(627, 149);
+			this.dataGridViewTrainPackages.Size = new System.Drawing.Size(643, 149);
 			this.dataGridViewTrainPackages.TabIndex = 22;
 			this.dataGridViewTrainPackages.SelectionChanged += new System.EventHandler(this.dataGridViewTrainPackages_SelectionChanged);
 			// 
@@ -3447,7 +3447,7 @@
 			// buttonUninstallPackage
 			// 
 			this.buttonUninstallPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUninstallPackage.Location = new System.Drawing.Point(499, 524);
+			this.buttonUninstallPackage.Location = new System.Drawing.Point(515, 524);
 			this.buttonUninstallPackage.Name = "buttonUninstallPackage";
 			this.buttonUninstallPackage.Size = new System.Drawing.Size(136, 23);
 			this.buttonUninstallPackage.TabIndex = 21;
@@ -3487,7 +3487,7 @@
 			this.dataGridViewRoutePackages.RowHeadersVisible = false;
 			this.dataGridViewRoutePackages.RowHeadersWidth = 90;
 			this.dataGridViewRoutePackages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(627, 149);
+			this.dataGridViewRoutePackages.Size = new System.Drawing.Size(643, 149);
 			this.dataGridViewRoutePackages.TabIndex = 19;
 			this.dataGridViewRoutePackages.SelectionChanged += new System.EventHandler(this.dataGridViewRoutePackages_SelectionChanged);
 			// 
@@ -3525,7 +3525,7 @@
 			this.labelInstalledTrains.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledTrains.Location = new System.Drawing.Point(4, 191);
 			this.labelInstalledTrains.Name = "labelInstalledTrains";
-			this.labelInstalledTrains.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledTrains.Size = new System.Drawing.Size(643, 24);
 			this.labelInstalledTrains.TabIndex = 18;
 			this.labelInstalledTrains.Text = "Installed Trains";
 			this.labelInstalledTrains.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3540,7 +3540,7 @@
 			this.labelInstalledRoutes.ForeColor = System.Drawing.Color.White;
 			this.labelInstalledRoutes.Location = new System.Drawing.Point(4, 8);
 			this.labelInstalledRoutes.Name = "labelInstalledRoutes";
-			this.labelInstalledRoutes.Size = new System.Drawing.Size(627, 24);
+			this.labelInstalledRoutes.Size = new System.Drawing.Size(643, 24);
 			this.labelInstalledRoutes.TabIndex = 17;
 			this.labelInstalledRoutes.Text = "Installed Routes";
 			this.labelInstalledRoutes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3555,8 +3555,8 @@
 			this.panelCreatePackage.Controls.Add(this.labelSaveAs);
 			this.panelCreatePackage.Controls.Add(this.labelDependanciesNextStep);
 			this.panelCreatePackage.Controls.Add(this.buttonCreateProceed);
-			this.panelCreatePackage.Controls.Add(this.panelNewPackage);
 			this.panelCreatePackage.Controls.Add(this.panelReplacePackage);
+			this.panelCreatePackage.Controls.Add(this.panelNewPackage);
 			this.panelCreatePackage.Controls.Add(this.groupBox1);
 			this.panelCreatePackage.Controls.Add(this.labelPackageType);
 			this.panelCreatePackage.Controls.Add(this.groupBoxQ1);
@@ -3565,12 +3565,13 @@
 			this.panelCreatePackage.Controls.Add(this.labelReplacePackage);
 			this.panelCreatePackage.Location = new System.Drawing.Point(0, 30);
 			this.panelCreatePackage.Name = "panelCreatePackage";
-			this.panelCreatePackage.Size = new System.Drawing.Size(641, 539);
+			this.panelCreatePackage.Size = new System.Drawing.Size(657, 573);
 			this.panelCreatePackage.TabIndex = 27;
 			// 
 			// SaveFileNameButton
 			// 
-			this.SaveFileNameButton.Location = new System.Drawing.Point(302, 465);
+			this.SaveFileNameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.SaveFileNameButton.Location = new System.Drawing.Point(302, 485);
 			this.SaveFileNameButton.Name = "SaveFileNameButton";
 			this.SaveFileNameButton.Size = new System.Drawing.Size(121, 23);
 			this.SaveFileNameButton.TabIndex = 37;
@@ -3580,7 +3581,8 @@
 			// 
 			// textBoxPackageFileName
 			// 
-			this.textBoxPackageFileName.Location = new System.Drawing.Point(5, 467);
+			this.textBoxPackageFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.textBoxPackageFileName.Location = new System.Drawing.Point(5, 487);
 			this.textBoxPackageFileName.Name = "textBoxPackageFileName";
 			this.textBoxPackageFileName.Size = new System.Drawing.Size(285, 20);
 			this.textBoxPackageFileName.TabIndex = 36;
@@ -3588,8 +3590,9 @@
 			// 
 			// labelSaveAs
 			// 
+			this.labelSaveAs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelSaveAs.AutoSize = true;
-			this.labelSaveAs.Location = new System.Drawing.Point(4, 451);
+			this.labelSaveAs.Location = new System.Drawing.Point(4, 471);
 			this.labelSaveAs.Name = "labelSaveAs";
 			this.labelSaveAs.Size = new System.Drawing.Size(94, 13);
 			this.labelSaveAs.TabIndex = 35;
@@ -3597,8 +3600,9 @@
 			// 
 			// labelDependanciesNextStep
 			// 
+			this.labelDependanciesNextStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelDependanciesNextStep.AutoSize = true;
-			this.labelDependanciesNextStep.Location = new System.Drawing.Point(4, 489);
+			this.labelDependanciesNextStep.Location = new System.Drawing.Point(4, 509);
 			this.labelDependanciesNextStep.Name = "labelDependanciesNextStep";
 			this.labelDependanciesNextStep.Size = new System.Drawing.Size(360, 13);
 			this.labelDependanciesNextStep.TabIndex = 34;
@@ -3608,7 +3612,7 @@
 			// 
 			this.buttonCreateProceed.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonCreateProceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreateProceed.Location = new System.Drawing.Point(198, 485);
+			this.buttonCreateProceed.Location = new System.Drawing.Point(206, 527);
 			this.buttonCreateProceed.Name = "buttonCreateProceed";
 			this.buttonCreateProceed.Size = new System.Drawing.Size(146, 40);
 			this.buttonCreateProceed.TabIndex = 22;
@@ -3618,6 +3622,9 @@
 			// 
 			// panelNewPackage
 			// 
+			this.panelNewPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelNewPackage.Controls.Add(this.newPackageClearSelectionButton);
 			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
 			this.panelNewPackage.Controls.Add(this.addPackageItemsButton);
@@ -3627,12 +3634,13 @@
 			this.panelNewPackage.Enabled = false;
 			this.panelNewPackage.Location = new System.Drawing.Point(-2, 137);
 			this.panelNewPackage.Name = "panelNewPackage";
-			this.panelNewPackage.Size = new System.Drawing.Size(644, 311);
+			this.panelNewPackage.Size = new System.Drawing.Size(660, 331);
 			this.panelNewPackage.TabIndex = 21;
 			// 
 			// newPackageClearSelectionButton
 			// 
-			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(511, 282);
+			this.newPackageClearSelectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.newPackageClearSelectionButton.Location = new System.Drawing.Point(511, 302);
 			this.newPackageClearSelectionButton.Name = "newPackageClearSelectionButton";
 			this.newPackageClearSelectionButton.Size = new System.Drawing.Size(121, 23);
 			this.newPackageClearSelectionButton.TabIndex = 30;
@@ -3642,21 +3650,25 @@
 			// 
 			// filesToPackageBox
 			// 
+			this.filesToPackageBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.filesToPackageBox.Enabled = false;
 			this.filesToPackageBox.Location = new System.Drawing.Point(5, 63);
 			this.filesToPackageBox.Multiline = true;
 			this.filesToPackageBox.Name = "filesToPackageBox";
 			this.filesToPackageBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.filesToPackageBox.Size = new System.Drawing.Size(621, 215);
+			this.filesToPackageBox.Size = new System.Drawing.Size(637, 235);
 			this.filesToPackageBox.TabIndex = 29;
 			// 
 			// addPackageItemsButton
 			// 
-			this.addPackageItemsButton.Location = new System.Drawing.Point(5, 282);
+			this.addPackageItemsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.addPackageItemsButton.Location = new System.Drawing.Point(5, 302);
 			this.addPackageItemsButton.Name = "addPackageItemsButton";
 			this.addPackageItemsButton.Size = new System.Drawing.Size(121, 23);
 			this.addPackageItemsButton.TabIndex = 28;
-			this.addPackageItemsButton.Text = "Add Item(s)";
+			this.addPackageItemsButton.Text = "Add Folder";
 			this.addPackageItemsButton.UseVisualStyleBackColor = true;
 			this.addPackageItemsButton.Click += new System.EventHandler(this.addPackageItemsButton_Click);
 			// 
@@ -3665,9 +3677,9 @@
 			this.labelSelectFiles.AutoSize = true;
 			this.labelSelectFiles.Location = new System.Drawing.Point(7, 49);
 			this.labelSelectFiles.Name = "labelSelectFiles";
-			this.labelSelectFiles.Size = new System.Drawing.Size(232, 13);
+			this.labelSelectFiles.Size = new System.Drawing.Size(190, 13);
 			this.labelSelectFiles.TabIndex = 27;
-			this.labelSelectFiles.Text = "The following files and folders will be packaged:";
+			this.labelSelectFiles.Text = "The following folders will be packaged:";
 			// 
 			// textBoxGUID
 			// 
@@ -3692,7 +3704,7 @@
 			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
 			this.panelReplacePackage.Location = new System.Drawing.Point(-2, 137);
 			this.panelReplacePackage.Name = "panelReplacePackage";
-			this.panelReplacePackage.Size = new System.Drawing.Size(644, 308);
+			this.panelReplacePackage.Size = new System.Drawing.Size(661, 327);
 			this.panelReplacePackage.TabIndex = 20;
 			// 
 			// replacePackageButton
@@ -3736,7 +3748,7 @@
 			this.dataGridViewReplacePackage.RowHeadersVisible = false;
 			this.dataGridViewReplacePackage.RowHeadersWidth = 90;
 			this.dataGridViewReplacePackage.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewReplacePackage.Size = new System.Drawing.Size(627, 254);
+			this.dataGridViewReplacePackage.Size = new System.Drawing.Size(644, 254);
 			this.dataGridViewReplacePackage.TabIndex = 23;
 			this.dataGridViewReplacePackage.SelectionChanged += new System.EventHandler(this.dataGridViewReplacePackage_SelectionChanged);
 			// 
@@ -3878,7 +3890,7 @@
 			this.labelPackageCreationHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelPackageCreationHeaderBacking.Location = new System.Drawing.Point(7, 10);
 			this.labelPackageCreationHeaderBacking.Name = "labelPackageCreationHeaderBacking";
-			this.labelPackageCreationHeaderBacking.Size = new System.Drawing.Size(627, 32);
+			this.labelPackageCreationHeaderBacking.Size = new System.Drawing.Size(643, 32);
 			this.labelPackageCreationHeaderBacking.TabIndex = 15;
 			// 
 			// labelReplacePackage
@@ -3900,7 +3912,7 @@
 			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
 			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
 			this.panelPleaseWait.Name = "panelPleaseWait";
-			this.panelPleaseWait.Size = new System.Drawing.Size(641, 539);
+			this.panelPleaseWait.Size = new System.Drawing.Size(657, 559);
 			this.panelPleaseWait.TabIndex = 28;
 			// 
 			// labelPleaseWait
@@ -3909,7 +3921,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPleaseWait.AutoSize = true;
 			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPleaseWait.Location = new System.Drawing.Point(177, 370);
+			this.labelPleaseWait.Location = new System.Drawing.Point(177, 390);
 			this.labelPleaseWait.Name = "labelPleaseWait";
 			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
 			this.labelPleaseWait.TabIndex = 5;
@@ -3923,7 +3935,7 @@
 			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
 			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
-			this.pictureBoxProcessing.Size = new System.Drawing.Size(371, 312);
+			this.pictureBoxProcessing.Size = new System.Drawing.Size(387, 332);
 			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.pictureBoxProcessing.TabIndex = 4;
 			this.pictureBoxProcessing.TabStop = false;
@@ -3941,7 +3953,7 @@
 			this.panelDependancyError.Controls.Add(this.buttonProceedAnyway);
 			this.panelDependancyError.Location = new System.Drawing.Point(0, 30);
 			this.panelDependancyError.Name = "panelDependancyError";
-			this.panelDependancyError.Size = new System.Drawing.Size(641, 539);
+			this.panelDependancyError.Size = new System.Drawing.Size(657, 582);
 			this.panelDependancyError.TabIndex = 5;
 			// 
 			// dataGridViewDependancies
@@ -3966,7 +3978,7 @@
 			this.dataGridViewDependancies.ReadOnly = true;
 			this.dataGridViewDependancies.RowHeadersVisible = false;
 			this.dataGridViewDependancies.RowHeadersWidth = 90;
-			this.dataGridViewDependancies.Size = new System.Drawing.Size(627, 414);
+			this.dataGridViewDependancies.Size = new System.Drawing.Size(643, 414);
 			this.dataGridViewDependancies.TabIndex = 20;
 			this.dataGridViewDependancies.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDependancies_CellContentClick);
 			// 
@@ -4040,14 +4052,14 @@
 			this.labelDependancyErrorHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelDependancyErrorHeaderBacking.Location = new System.Drawing.Point(7, 10);
 			this.labelDependancyErrorHeaderBacking.Name = "labelDependancyErrorHeaderBacking";
-			this.labelDependancyErrorHeaderBacking.Size = new System.Drawing.Size(627, 32);
+			this.labelDependancyErrorHeaderBacking.Size = new System.Drawing.Size(643, 32);
 			this.labelDependancyErrorHeaderBacking.TabIndex = 15;
 			// 
 			// buttonProceedAnyway
 			// 
 			this.buttonProceedAnyway.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonProceedAnyway.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonProceedAnyway.Location = new System.Drawing.Point(198, 485);
+			this.buttonProceedAnyway.Location = new System.Drawing.Point(206, 527);
 			this.buttonProceedAnyway.Name = "buttonProceedAnyway";
 			this.buttonProceedAnyway.Size = new System.Drawing.Size(146, 40);
 			this.buttonProceedAnyway.TabIndex = 14;
@@ -4076,7 +4088,7 @@
 			this.panelPackageInstall.Controls.Add(this.pictureBoxPackageImage);
 			this.panelPackageInstall.Location = new System.Drawing.Point(0, 30);
 			this.panelPackageInstall.Name = "panelPackageInstall";
-			this.panelPackageInstall.Size = new System.Drawing.Size(641, 539);
+			this.panelPackageInstall.Size = new System.Drawing.Size(657, 577);
 			this.panelPackageInstall.TabIndex = 4;
 			// 
 			// labelInstallText
@@ -4101,14 +4113,14 @@
 			this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
 			this.labelInstallHeader.Location = new System.Drawing.Point(7, 10);
 			this.labelInstallHeader.Name = "labelInstallHeader";
-			this.labelInstallHeader.Size = new System.Drawing.Size(627, 32);
+			this.labelInstallHeader.Size = new System.Drawing.Size(643, 32);
 			this.labelInstallHeader.TabIndex = 15;
 			// 
 			// buttonSelectPackage
 			// 
 			this.buttonSelectPackage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonSelectPackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonSelectPackage.Location = new System.Drawing.Point(198, 485);
+			this.buttonSelectPackage.Location = new System.Drawing.Point(206, 527);
 			this.buttonSelectPackage.Name = "buttonSelectPackage";
 			this.buttonSelectPackage.Size = new System.Drawing.Size(146, 40);
 			this.buttonSelectPackage.TabIndex = 14;
@@ -4120,10 +4132,10 @@
 			// 
 			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 359);
+			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 397);
 			this.textBoxPackageDescription.Multiline = true;
 			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
-			this.textBoxPackageDescription.Size = new System.Drawing.Size(493, 112);
+			this.textBoxPackageDescription.Size = new System.Drawing.Size(509, 112);
 			this.textBoxPackageDescription.TabIndex = 13;
 			this.textBoxPackageDescription.Text = "No package selected.";
 			// 
@@ -4131,7 +4143,7 @@
 			// 
 			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageDescription.AutoSize = true;
-			this.labelPackageDescription.Location = new System.Drawing.Point(8, 362);
+			this.labelPackageDescription.Location = new System.Drawing.Point(8, 400);
 			this.labelPackageDescription.Name = "labelPackageDescription";
 			this.labelPackageDescription.Size = new System.Drawing.Size(109, 13);
 			this.labelPackageDescription.TabIndex = 12;
@@ -4142,7 +4154,7 @@
 			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.linkLabelPackageWebsite.AutoSize = true;
-			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(136, 339);
+			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(136, 377);
 			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
 			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
 			this.linkLabelPackageWebsite.TabIndex = 11;
@@ -4154,7 +4166,7 @@
 			// 
 			this.labelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageWebsite.AutoSize = true;
-			this.labelPackageWebsite.Location = new System.Drawing.Point(6, 340);
+			this.labelPackageWebsite.Location = new System.Drawing.Point(6, 378);
 			this.labelPackageWebsite.Name = "labelPackageWebsite";
 			this.labelPackageWebsite.Size = new System.Drawing.Size(95, 13);
 			this.labelPackageWebsite.TabIndex = 10;
@@ -4164,9 +4176,9 @@
 			// 
 			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 311);
+			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 349);
 			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
-			this.textBoxPackageVersion.Size = new System.Drawing.Size(493, 20);
+			this.textBoxPackageVersion.Size = new System.Drawing.Size(509, 20);
 			this.textBoxPackageVersion.TabIndex = 9;
 			this.textBoxPackageVersion.Text = "No package selected.";
 			// 
@@ -4174,7 +4186,7 @@
 			// 
 			this.labelPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageVersion.AutoSize = true;
-			this.labelPackageVersion.Location = new System.Drawing.Point(6, 314);
+			this.labelPackageVersion.Location = new System.Drawing.Point(6, 352);
 			this.labelPackageVersion.Name = "labelPackageVersion";
 			this.labelPackageVersion.Size = new System.Drawing.Size(91, 13);
 			this.labelPackageVersion.TabIndex = 8;
@@ -4184,9 +4196,9 @@
 			// 
 			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 287);
+			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 325);
 			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
-			this.textBoxPackageAuthor.Size = new System.Drawing.Size(493, 20);
+			this.textBoxPackageAuthor.Size = new System.Drawing.Size(509, 20);
 			this.textBoxPackageAuthor.TabIndex = 7;
 			this.textBoxPackageAuthor.Text = "No package selected.";
 			// 
@@ -4194,7 +4206,7 @@
 			// 
 			this.labelPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageAuthor.AutoSize = true;
-			this.labelPackageAuthor.Location = new System.Drawing.Point(6, 290);
+			this.labelPackageAuthor.Location = new System.Drawing.Point(6, 328);
 			this.labelPackageAuthor.Name = "labelPackageAuthor";
 			this.labelPackageAuthor.Size = new System.Drawing.Size(87, 13);
 			this.labelPackageAuthor.TabIndex = 6;
@@ -4204,9 +4216,9 @@
 			// 
 			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPackageName.Location = new System.Drawing.Point(134, 263);
+			this.textBoxPackageName.Location = new System.Drawing.Point(134, 301);
 			this.textBoxPackageName.Name = "textBoxPackageName";
-			this.textBoxPackageName.Size = new System.Drawing.Size(493, 20);
+			this.textBoxPackageName.Size = new System.Drawing.Size(509, 20);
 			this.textBoxPackageName.TabIndex = 5;
 			this.textBoxPackageName.Text = "No package selected.";
 			// 
@@ -4214,7 +4226,7 @@
 			// 
 			this.labelPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageName.AutoSize = true;
-			this.labelPackageName.Location = new System.Drawing.Point(6, 266);
+			this.labelPackageName.Location = new System.Drawing.Point(6, 304);
 			this.labelPackageName.Name = "labelPackageName";
 			this.labelPackageName.Size = new System.Drawing.Size(84, 13);
 			this.labelPackageName.TabIndex = 4;
@@ -4228,7 +4240,7 @@
 			this.pictureBoxPackageImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pictureBoxPackageImage.Location = new System.Drawing.Point(164, 54);
 			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
-			this.pictureBoxPackageImage.Size = new System.Drawing.Size(256, 183);
+			this.pictureBoxPackageImage.Size = new System.Drawing.Size(272, 221);
 			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.pictureBoxPackageImage.TabIndex = 3;
 			this.pictureBoxPackageImage.TabStop = false;
@@ -4247,7 +4259,7 @@
 			this.panelSuccess.Controls.Add(this.buttonInstallFinish);
 			this.panelSuccess.Location = new System.Drawing.Point(0, 30);
 			this.panelSuccess.Name = "panelSuccess";
-			this.panelSuccess.Size = new System.Drawing.Size(641, 539);
+			this.panelSuccess.Size = new System.Drawing.Size(657, 579);
 			this.panelSuccess.TabIndex = 23;
 			// 
 			// textBoxFilesInstalled
@@ -4260,7 +4272,7 @@
 			this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 85);
 			this.textBoxFilesInstalled.Multiline = true;
 			this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
-			this.textBoxFilesInstalled.Size = new System.Drawing.Size(628, 398);
+			this.textBoxFilesInstalled.Size = new System.Drawing.Size(644, 438);
 			this.textBoxFilesInstalled.TabIndex = 19;
 			// 
 			// labelListFilesInstalled
@@ -4303,14 +4315,14 @@
 			this.label20.BackColor = System.Drawing.Color.Silver;
 			this.label20.Location = new System.Drawing.Point(7, 10);
 			this.label20.Name = "label20";
-			this.label20.Size = new System.Drawing.Size(627, 32);
+			this.label20.Size = new System.Drawing.Size(643, 32);
 			this.label20.TabIndex = 15;
 			// 
 			// buttonInstallFinish
 			// 
 			this.buttonInstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonInstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonInstallFinish.Location = new System.Drawing.Point(198, 485);
+			this.buttonInstallFinish.Location = new System.Drawing.Point(206, 527);
 			this.buttonInstallFinish.Name = "buttonInstallFinish";
 			this.buttonInstallFinish.Size = new System.Drawing.Size(146, 40);
 			this.buttonInstallFinish.TabIndex = 14;
@@ -4335,7 +4347,7 @@
 			this.panelVersionError.Controls.Add(this.buttonProceedAnyway1);
 			this.panelVersionError.Location = new System.Drawing.Point(0, 30);
 			this.panelVersionError.Name = "panelVersionError";
-			this.panelVersionError.Size = new System.Drawing.Size(641, 539);
+			this.panelVersionError.Size = new System.Drawing.Size(657, 582);
 			this.panelVersionError.TabIndex = 24;
 			// 
 			// dataGridViewBrokenDependancies
@@ -4359,7 +4371,7 @@
 			this.dataGridViewBrokenDependancies.ReadOnly = true;
 			this.dataGridViewBrokenDependancies.RowHeadersVisible = false;
 			this.dataGridViewBrokenDependancies.RowHeadersWidth = 90;
-			this.dataGridViewBrokenDependancies.Size = new System.Drawing.Size(627, 345);
+			this.dataGridViewBrokenDependancies.Size = new System.Drawing.Size(643, 345);
 			this.dataGridViewBrokenDependancies.TabIndex = 25;
 			// 
 			// dataGridViewTextBoxColumn9
@@ -4458,14 +4470,14 @@
 			this.label22.BackColor = System.Drawing.Color.Silver;
 			this.label22.Location = new System.Drawing.Point(7, 10);
 			this.label22.Name = "label22";
-			this.label22.Size = new System.Drawing.Size(627, 32);
+			this.label22.Size = new System.Drawing.Size(643, 32);
 			this.label22.TabIndex = 15;
 			// 
 			// buttonProceedAnyway1
 			// 
 			this.buttonProceedAnyway1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonProceedAnyway1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonProceedAnyway1.Location = new System.Drawing.Point(198, 485);
+			this.buttonProceedAnyway1.Location = new System.Drawing.Point(206, 527);
 			this.buttonProceedAnyway1.Name = "buttonProceedAnyway1";
 			this.buttonProceedAnyway1.Size = new System.Drawing.Size(146, 40);
 			this.buttonProceedAnyway1.TabIndex = 14;
@@ -4486,7 +4498,7 @@
 			this.panelUninstallResult.Controls.Add(this.buttonUninstallFinish);
 			this.panelUninstallResult.Location = new System.Drawing.Point(0, 30);
 			this.panelUninstallResult.Name = "panelUninstallResult";
-			this.panelUninstallResult.Size = new System.Drawing.Size(641, 539);
+			this.panelUninstallResult.Size = new System.Drawing.Size(657, 582);
 			this.panelUninstallResult.TabIndex = 25;
 			// 
 			// textBoxUninstallResult
@@ -4499,7 +4511,7 @@
 			this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 85);
 			this.textBoxUninstallResult.Multiline = true;
 			this.textBoxUninstallResult.Name = "textBoxUninstallResult";
-			this.textBoxUninstallResult.Size = new System.Drawing.Size(628, 398);
+			this.textBoxUninstallResult.Size = new System.Drawing.Size(644, 441);
 			this.textBoxUninstallResult.TabIndex = 19;
 			// 
 			// labelUninstallLog
@@ -4542,14 +4554,14 @@
 			this.label29.BackColor = System.Drawing.Color.Silver;
 			this.label29.Location = new System.Drawing.Point(7, 10);
 			this.label29.Name = "label29";
-			this.label29.Size = new System.Drawing.Size(627, 32);
+			this.label29.Size = new System.Drawing.Size(643, 32);
 			this.label29.TabIndex = 15;
 			// 
 			// buttonUninstallFinish
 			// 
 			this.buttonUninstallFinish.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonUninstallFinish.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonUninstallFinish.Location = new System.Drawing.Point(198, 485);
+			this.buttonUninstallFinish.Location = new System.Drawing.Point(206, 527);
 			this.buttonUninstallFinish.Name = "buttonUninstallFinish";
 			this.buttonUninstallFinish.Size = new System.Drawing.Size(146, 40);
 			this.buttonUninstallFinish.TabIndex = 14;
@@ -4573,7 +4585,7 @@
 			this.panelPackageDependsAdd.Controls.Add(this.buttonCreatePackage);
 			this.panelPackageDependsAdd.Location = new System.Drawing.Point(0, 30);
 			this.panelPackageDependsAdd.Name = "panelPackageDependsAdd";
-			this.panelPackageDependsAdd.Size = new System.Drawing.Size(641, 539);
+			this.panelPackageDependsAdd.Size = new System.Drawing.Size(657, 581);
 			this.panelPackageDependsAdd.TabIndex = 26;
 			// 
 			// buttonReccomends
@@ -4618,7 +4630,7 @@
 			this.dataGridViewTrains.RowHeadersVisible = false;
 			this.dataGridViewTrains.RowHeadersWidth = 90;
 			this.dataGridViewTrains.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewTrains.Size = new System.Drawing.Size(627, 162);
+			this.dataGridViewTrains.Size = new System.Drawing.Size(643, 162);
 			this.dataGridViewTrains.TabIndex = 22;
 			this.dataGridViewTrains.SelectionChanged += new System.EventHandler(this.dataGridViewTrains_SelectionChanged);
 			// 
@@ -4668,7 +4680,7 @@
 			this.dataGridViewRoutes.RowHeadersVisible = false;
 			this.dataGridViewRoutes.RowHeadersWidth = 90;
 			this.dataGridViewRoutes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewRoutes.Size = new System.Drawing.Size(627, 162);
+			this.dataGridViewRoutes.Size = new System.Drawing.Size(643, 162);
 			this.dataGridViewRoutes.TabIndex = 21;
 			this.dataGridViewRoutes.SelectionChanged += new System.EventHandler(this.dataGridViewRoutes_SelectionChanged);
 			// 
@@ -4706,7 +4718,7 @@
 			this.label6.ForeColor = System.Drawing.Color.White;
 			this.label6.Location = new System.Drawing.Point(4, 50);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(627, 16);
+			this.label6.Size = new System.Drawing.Size(643, 16);
 			this.label6.TabIndex = 20;
 			this.label6.Text = "Installed Routes";
 			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4721,7 +4733,7 @@
 			this.label5.ForeColor = System.Drawing.Color.White;
 			this.label5.Location = new System.Drawing.Point(4, 242);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(627, 24);
+			this.label5.Size = new System.Drawing.Size(643, 24);
 			this.label5.TabIndex = 19;
 			this.label5.Text = "Installed Trains";
 			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -4748,14 +4760,14 @@
 			this.label4.BackColor = System.Drawing.Color.Silver;
 			this.label4.Location = new System.Drawing.Point(7, 10);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(627, 32);
+			this.label4.Size = new System.Drawing.Size(643, 32);
 			this.label4.TabIndex = 15;
 			// 
 			// buttonCreatePackage
 			// 
 			this.buttonCreatePackage.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.buttonCreatePackage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreatePackage.Location = new System.Drawing.Point(198, 485);
+			this.buttonCreatePackage.Location = new System.Drawing.Point(206, 527);
 			this.buttonCreatePackage.Name = "buttonCreatePackage";
 			this.buttonCreatePackage.Size = new System.Drawing.Size(146, 40);
 			this.buttonCreatePackage.TabIndex = 14;
@@ -4785,7 +4797,7 @@
 			this.label11.BackColor = System.Drawing.Color.White;
 			this.label11.Location = new System.Drawing.Point(0, 0);
 			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(643, 2);
+			this.label11.Size = new System.Drawing.Size(659, 2);
 			this.label11.TabIndex = 2;
 			// 
 			// label14
@@ -4795,7 +4807,7 @@
 			this.label14.BackColor = System.Drawing.Color.DarkGray;
 			this.label14.Location = new System.Drawing.Point(0, 0);
 			this.label14.Name = "label14";
-			this.label14.Size = new System.Drawing.Size(643, 32);
+			this.label14.Size = new System.Drawing.Size(659, 32);
 			this.label14.TabIndex = 0;
 			// 
 			// label15
@@ -4805,7 +4817,7 @@
 			this.label15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
 			this.label15.Location = new System.Drawing.Point(0, 0);
 			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(643, 32);
+			this.label15.Size = new System.Drawing.Size(659, 32);
 			this.label15.TabIndex = 0;
 			// 
 			// openPackageFileDialog
@@ -4817,11 +4829,11 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
-			this.ClientSize = new System.Drawing.Size(803, 586);
+			this.ClientSize = new System.Drawing.Size(819, 606);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelStart);
-			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelInfo);
 			this.Controls.Add(this.panelPanels);
 			this.Controls.Add(this.buttonClose);

@@ -254,7 +254,7 @@ namespace OpenBveApi.Packages
 		/// <returns>True if uninstall succeeded with no errors, false otherwise</returns>
 		public static bool UninstallPackage(Package currentPackage, string databaseFolder, ref string PackageFiles)
 		{
-			var fileList = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID + ".xml");
+			var fileList = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID.ToUpper() + ".xml");
 			if (!File.Exists(fileList))
 			{
 				PackageFiles = null;

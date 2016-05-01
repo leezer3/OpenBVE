@@ -126,6 +126,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="System\Functions\CrashHandler.cs" />
+    <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Translations\InterfaceStrings.cs" />

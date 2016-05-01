@@ -46,6 +46,7 @@ namespace OpenBveApi.Packages
 				}
 				if (File.Exists(currentDatabaseFile))
 				{
+
 					File.Delete(currentDatabaseFile);
 				}
 				using (StreamWriter sw = new StreamWriter(currentDatabaseFile))
@@ -71,10 +72,19 @@ namespace OpenBveApi.Packages
 			try
 			{
 				XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
-				currentDatabase = (PackageDatabase)listReader.Deserialize(XmlReader.Create(currentDatabaseFile));
+				using (XmlReader reader = XmlReader.Create(currentDatabaseFile))
+				{
+					currentDatabase = (PackageDatabase)listReader.Deserialize(reader);
+				}
 			}
 			catch
 			{
+				currentDatabase = new PackageDatabase
+				{
+					InstalledRoutes = new List<Package>(),
+					InstalledTrains = new List<Package>(),
+					InstalledOther = new List<Package>()
+				};
 				return false;
 			}
 			return true;
