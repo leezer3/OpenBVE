@@ -315,6 +315,19 @@ namespace OpenBve
 			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
 			{
 				Packages.Remove(packageToUninstall);
+				switch (packageToUninstall.PackageType)
+				{
+					case PackageType.Other:
+						//TODO: Define the other directory
+						break;
+					case PackageType.Route:
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialRailwayFolder, ref uninstallResults);
+						break;
+					case PackageType.Train:
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialTrainFolder, ref uninstallResults);
+						break;
+				}
+				
 				textBoxUninstallResult.Text = uninstallResults;
 				HidePanels();
 				panelUninstallResult.Show();

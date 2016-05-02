@@ -61,6 +61,7 @@ namespace OpenBveApi.Packages
 			}
 			return true;
 		}
+
 		/// <summary>Loads a package database XML file as the current database</summary>
 		/// <param name="Folder">The root database folder</param>
 		/// <param name="File">The database file</param>
@@ -69,15 +70,23 @@ namespace OpenBveApi.Packages
 		{
 			currentDatabaseFolder = Folder;
 			currentDatabaseFile = File;
-			try
+			if (System.IO.File.Exists(currentDatabaseFile))
 			{
-				XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
-				using (XmlReader reader = XmlReader.Create(currentDatabaseFile))
+				try
 				{
-					currentDatabase = (PackageDatabase)listReader.Deserialize(reader);
+					XmlSerializer listReader = new XmlSerializer(typeof(PackageDatabase));
+					using (XmlReader reader = XmlReader.Create(currentDatabaseFile))
+					{
+						currentDatabase = (PackageDatabase) listReader.Deserialize(reader);
+					}
+				}
+				catch
+				{
+					//Loading the DB failed, so just create a new one
+					currentDatabase = null;
 				}
 			}
-			catch
+			if (currentDatabase == null)
 			{
 				currentDatabase = new PackageDatabase
 				{
@@ -234,41 +243,37 @@ namespace OpenBveApi.Packages
 			//Now determine whether this is part of a recognised folder structure
 			for (int i = 0; i < tempList.Count; i++)
 			{
-				if (tempList[i].relativePath.StartsWith("\\Railway", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith("\\Railway\\", StringComparison.OrdinalIgnoreCase))
 				{
-					//Extraction path is the root folder
+					//Extraction path is the root railway folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = tempList[j].relativePath.Remove(0,8);
+					}
 					return tempList;
 				}
-				if (tempList[i].relativePath.StartsWith("\\Train", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith("\\Train\\", StringComparison.OrdinalIgnoreCase))
 				{
-					//Extraction path is the root folder
+					//Extraction path is the root train folder
+					for (int j = 0; j < tempList.Count; j++)
+					{
+						tempList[j].relativePath = tempList[j].relativePath.Remove(0, 7);
+					}
 					return tempList;
 				}
 				if (tempList[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
 					return tempList;
 				}
 				if (tempList[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
 					return tempList;
 				}
 				if (tempList[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
 					return tempList;
 				}
 
@@ -280,19 +285,11 @@ namespace OpenBveApi.Packages
 				if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Railway" + tempList[j].relativePath;
-					}
 					return tempList;
 				}
 				if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root folder
-					for (int j = 0; j < tempList.Count; j++)
-					{
-						tempList[j].relativePath = "\\Train" + tempList[j].relativePath;
-					}
 					return tempList;
 				}
 				if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
@@ -300,7 +297,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
+						tempList[j].relativePath = "\\Route" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -309,7 +306,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
+						tempList[j].relativePath = "\\Object" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -318,7 +315,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
+						tempList[j].relativePath = "\\Sound" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -383,7 +380,7 @@ namespace OpenBveApi.Packages
 				//This would appear to be a subfolder of the SOUND folder
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Railway\\Sound" + tempList[j].relativePath;
+					tempList[j].relativePath = "\\Sound" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
@@ -393,7 +390,7 @@ namespace OpenBveApi.Packages
 				//there should be less than 20 images
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Railway\\Route" + tempList[j].relativePath;
+					tempList[j].relativePath = "\\Route" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
@@ -403,11 +400,42 @@ namespace OpenBveApi.Packages
 				//this means it's almost certainly an OBJECT subfolder
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Railway\\Object" + tempList[j].relativePath;
+					tempList[j].relativePath = "\\Object" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
 			return tempList;
+		}
+
+		/// <summary>This function cleans empty subdirectories after the uninstallation of a package</summary>
+		/// <param name="currentDirectory">The directory to clean (Normally the root package install directory)</param>
+		/// <param name="Result">The results output string</param>
+		public static void cleanDirectory(string currentDirectory, ref string Result)
+		{
+			if (!Directory.Exists(currentDirectory))
+			{
+				return;
+			}
+			foreach (var directory in Directory.EnumerateDirectories(currentDirectory))
+			{
+				cleanDirectory(directory, ref Result);		
+			}
+			IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(currentDirectory);
+			if (!entries.Any())
+			{
+				Directory.Delete(currentDirectory, false);
+				Result += currentDirectory + " deleted successfully. \r\n";
+			}
+			else
+			{
+				if (entries.Count() == 1 && File.Exists(currentDirectory + "thumbs.db"))
+				{
+					//thumbs.db files are auto-generated by Windows in any folder with pictures....
+					File.Delete(currentDirectory + "thumbs.db");
+					Directory.Delete(currentDirectory, false);
+					Result += currentDirectory + " deleted successfully. \r\n";
+				}
+			}
 		}
 	}
 
