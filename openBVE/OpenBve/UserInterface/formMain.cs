@@ -617,6 +617,9 @@ namespace OpenBve {
 			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
 			buttonUninstallPackage.Text = Interface.GetInterfaceString("packages_uninstall_button");
 			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_creation_button");
+			comboBoxPackageType.Items[0] = Interface.GetInterfaceString("packages_type_route");
+			comboBoxPackageType.Items[1] = Interface.GetInterfaceString("packages_type_train");
+			comboBoxPackageType.Items[2] = Interface.GetInterfaceString("packages_type_other");
 			//Creation tab 1
 			labelPackageCreationHeader.Text = Interface.GetInterfaceString("packages_creation_header");
 			SaveFileNameButton.Text = Interface.GetInterfaceString("packages_creation_saveas_button");
@@ -653,6 +656,11 @@ namespace OpenBve {
 			 * REMEMBER TO RESET AFTERWARDS
 			 * 
 			 */
+
+			//Add dependancies tab
+			comboBoxDependancyType.Items[0] = Interface.GetInterfaceString("packages_type_route");
+			comboBoxDependancyType.Items[1] = Interface.GetInterfaceString("packages_type_train");
+			comboBoxDependancyType.Items[2] = Interface.GetInterfaceString("packages_type_other");
 
 		}
 
@@ -1015,9 +1023,7 @@ namespace OpenBve {
 				ResetInstallerPanels();
 				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
 				{
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewRoutePackages, true);
-					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewTrainPackages, true);
-					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewInstalledOther, true);
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
 				}
 			}
 		}
