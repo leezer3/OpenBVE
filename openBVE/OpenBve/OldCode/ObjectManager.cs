@@ -163,7 +163,7 @@ namespace OpenBve {
 					Result.States[i].Position = this.States[i].Position;
 					Result.States[i].Object = CloneObject(this.States[i].Object);
 				}
-				Result.TrackFollowerFunction = this.TrackFollowerFunction;
+				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();
 				Result.FrontAxlePosition = this.FrontAxlePosition;
 				Result.RearAxlePosition = this.RearAxlePosition;
 				Result.TranslateXScriptFile = this.TranslateXScriptFile;
