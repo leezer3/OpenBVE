@@ -256,6 +256,9 @@ namespace OpenBve {
                         Application.DoEvents();
 	                }
 	                break;
+				case Key.F10:
+			        Renderer.RenderStatsOverlay = !Renderer.RenderStatsOverlay;
+					break;
 	            case Key.A:
 	            case Key.Keypad4:
 	                World.CameraAlignmentDirection.Position.X = -World.CameraExteriorTopSpeed*speedModified;

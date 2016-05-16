@@ -27,6 +27,7 @@ namespace OpenBve
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+	        Game.InfoFrameRate = RenderFrequency;
             GL.ClearColor(0.75f, 0.75f, 0.75f, 1.0f);
             //Do not do anything whilst loading
             if (currentlyLoading)

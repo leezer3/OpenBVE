@@ -60,6 +60,9 @@ namespace OpenBve {
 		private static double[] OverlayListDistance = new double[256];
 		internal static int OverlayListCount = 0;
 
+		//Stats
+		internal static bool RenderStatsOverlay = true;
+
 		// current opengl data
 		private static AlphaFunction AlphaFuncComparison = 0;
 		private static float AlphaFuncValue = 0.0f;
@@ -70,7 +73,7 @@ namespace OpenBve {
 		internal static bool FogEnabled = false;
 		private static bool TexturingEnabled = false;
 		private static bool EmissiveEnabled = false;
-	    internal static bool TransparentColorDepthSorting = false;
+		internal static bool TransparentColorDepthSorting = false;
 
 		// textures
 		private static int BackgroundChangeTexture = -1;
@@ -164,10 +167,10 @@ namespace OpenBve {
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.PushMatrix();
 			GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-            //TODO: May be required??
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
+			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
+			//TODO: May be required??
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.LoadMatrix(ref lookat);
 			GL.PopMatrix();
 			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
 		}
@@ -229,10 +232,10 @@ namespace OpenBve {
 			double ux = World.AbsoluteCameraUp.X;
 			double uy = World.AbsoluteCameraUp.Y;
 			double uz = World.AbsoluteCameraUp.Z;
-            Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
-            GL.MatrixMode(MatrixMode.Modelview);
-            //TODO: May be required
-            GL.LoadMatrix(ref lookat);
+			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			GL.MatrixMode(MatrixMode.Modelview);
+			//TODO: May be required
+			GL.LoadMatrix(ref lookat);
 			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			if (OptionLighting) {
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { OptionLightPosition.X, OptionLightPosition.Y, OptionLightPosition.Z, 0.0f });
@@ -947,21 +950,19 @@ namespace OpenBve {
 				RenderString(4.0, 4.0, Fonts.FontType.Small, "Loading...", -1, 1.0f, 1.0f, 1.0f, true);
 			} else {
 				if (ObjectManager.ObjectsUsed == 0) {
-					string[][] Keys;
-                    Keys = new string[][] { new string[] { "F7" }, new string[] { "F8" } };
+					string[][] Keys = { new string[] { "F7" }, new string[] { "F8" } };
 					RenderKeys(4.0, 4.0, 24.0, Keys);
 					RenderString(32.0, 4.0, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-                    RenderString(32.0, 24.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(32.0, 24.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
 					RenderString((double)ScreenWidth - 8.0, (double)ScreenHeight - 20.0, Fonts.FontType.Small, "v" + System.Windows.Forms.Application.ProductVersion, 1, 1.0f, 1.0f, 1.0f, true);
 				} else if (OptionInterface) {
 					// keys
-					string[][] Keys;
-                    Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
+					string[][] Keys = { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
 					RenderKeys(4.0, 4.0, 24.0, Keys);
 					RenderString(32.0, 4.0, Fonts.FontType.Small, "Reload route", -1, 1.0f, 1.0f, 1.0f, true);
 					RenderString(32.0, 24.0, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-                    RenderString(32.0, 44.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
-					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" } };
+					RenderString(32.0, 44.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
+					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" }};
 					RenderKeys((double)ScreenWidth - 20.0, 4.0, 16.0, Keys);
 					RenderString((double)ScreenWidth - 32.0, 4.0, Fonts.FontType.Small, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
 					RenderString((double)ScreenWidth - 32.0, 24.0, Fonts.FontType.Small, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
@@ -969,6 +970,9 @@ namespace OpenBve {
 					RenderString((double)ScreenWidth - 32.0, 64.0, Fonts.FontType.Small, "CPU: " + (Program.CpuAutomaticMode ? "auto " + (Program.CpuReducedMode ? "(low)" : "(high)") : "high"), 1, 1.0f, 1.0f, 1.0f, true);
 					RenderString((double)ScreenWidth - 32.0, 84.0, Fonts.FontType.Small, "Mute: " + (SoundManager.Mute ? "yes" : "no"), 1, 1.0f, 1.0f, 1.0f, true);
 					RenderString((double)ScreenWidth - 32.0, 104.0, Fonts.FontType.Small, "Hide interface", 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString((double)ScreenWidth - 38.0, 124.0, Fonts.FontType.Small, (RenderStatsOverlay ? "Hide" : "Show" ) +" renderer statistics", 1, 1.0f, 1.0f, 1.0f, true);
+					Keys = new string[][] { new string[] { "F10" } };
+					RenderKeys((double)ScreenWidth - 32.0, 124.0, 30.0, Keys);
 					Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
 					RenderKeys(4.0, (double)ScreenHeight - 40.0, 16.0, Keys);
 					Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
@@ -1032,7 +1036,18 @@ namespace OpenBve {
 						RenderKeys(4.0, 72.0, 24.0, Keys);
 						RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", -1, 1.0f, 0.5f, 0.5f, true);
 					}
+					if (RenderStatsOverlay)
+					{
+
+						RenderKeys(4.0, (double)ScreenHeight - 126.0, 116.0, new string[][] { new string[] { "Renderer Statistics" } });
+						RenderString(4.0, (double)ScreenHeight - 112.0, Fonts.FontType.Small, "Total static objects: " + ObjectManager.ObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4.0, (double)ScreenHeight - 100.0, Fonts.FontType.Small, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4.0, (double)ScreenHeight - 88.0, Fonts.FontType.Small, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4.0, (double)ScreenHeight - 76.0, Fonts.FontType.Small, "Total opaque faces: "+ Game.InfoStaticOpaqueFaceCount, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4.0, (double)ScreenHeight - 64.0, Fonts.FontType.Small, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), -1, 1.0f, 1.0f, 1.0f, true);
+					}
 				}
+
 			}
 			// finalize
 			GL.PopMatrix();
@@ -1280,6 +1295,7 @@ namespace OpenBve {
 							AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
 							ObjectList[ObjectListCount].FaceListIndices[i] = (AlphaListCount << 2) + 2;
 							AlphaListCount++;
+							//Game.
 						} else if (transparentcolor) {
 							/// transparent color
 							if (TransparentColorListCount >= TransparentColorList.Length) {
@@ -1301,6 +1317,7 @@ namespace OpenBve {
 							OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
 							ObjectList[ObjectListCount].FaceListIndices[i] = OpaqueListCount << 2;
 							OpaqueListCount++;
+							Game.InfoStaticOpaqueFaceCount++;
 						}
 					}
 				}
@@ -1323,6 +1340,7 @@ namespace OpenBve {
 							/// opaque
 							OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
 							OpaqueListCount--;
+							Game.InfoStaticOpaqueFaceCount--;
 							ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
 							break;
 						case 1:

@@ -54,7 +54,7 @@
         .xml;
         .dll.config
     </AllowedReferenceRelatedFileExtensions>
-</PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -132,7 +132,7 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\openBVE\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
