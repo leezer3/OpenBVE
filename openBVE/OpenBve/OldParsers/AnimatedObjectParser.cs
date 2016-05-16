@@ -498,7 +498,6 @@ namespace OpenBve
 															//A function script must be evaluated every frame, no matter if it is a constant value
 															//If we add this to the position instead, this gives a minor speedup
 															StaticXRotation = true;
-															break;
 														}
 														Result.Objects[ObjectCount].RotateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
 													}
@@ -512,7 +511,6 @@ namespace OpenBve
 														if (double.TryParse(b, out RotateY))
 														{
 															StaticYRotation = true;
-															break;
 														}
 														Result.Objects[ObjectCount].RotateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
 													}
@@ -526,7 +524,6 @@ namespace OpenBve
 														if (double.TryParse(b, out RotateZ))
 														{
 															StaticZRotation = true;
-															break;
 														}
 														Result.Objects[ObjectCount].RotateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
 													}
@@ -767,90 +764,120 @@ namespace OpenBve
 										{
 											Result.Objects[ObjectCount].States[k].Object = null;
 										}
-										for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++)
+										
+									}
+									for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++)
+									{
+
+										//Rotate X
+										if (Result.Objects[ObjectCount].States[j].Object == null)
+										{
+											continue;
+										}
+										for (int l = 0; l < Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices.Length; l++)
 										{
 											//Apply position
 											Result.Objects[ObjectCount].States[j].Position = Position;
-											//Rotate X
-											if (Result.Objects[ObjectCount].States[j].Object == null)
+											//Test whether the object contains non static rotation functions
+											//If so, the results may be off so don't optimise
+											if (!StaticXRotation)
 											{
-												continue;
-											}
-											for (int l = 0; l < Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices.Length; l++)
-											{
-												if (StaticXRotation)
+												if (Result.Objects[ObjectCount].RotateXFunction != null)
 												{
-													double x = Result.Objects[ObjectCount].RotateXDirection.X;
-													double y = Result.Objects[ObjectCount].RotateXDirection.Y;
-													double z = Result.Objects[ObjectCount].RotateXDirection.Z;
-													double t = x * x + y * y + z * z;
-													if (t == 0.0)
-													{
-														x = 1.0;
-														y = 0.0;
-														z = 0.0;
-														t = 1.0;
-													}
-													if (RotateX != 0.0)
-													{
-														t = 1.0 / Math.Sqrt(t);
-														x *= t;
-														y *= t;
-														z *= t;
-													}
-													double cosX = Math.Cos(RotateX);
-													double sinX = Math.Sin(RotateX);
-													World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosX, sinX);
-												}
-												if (StaticYRotation)
-												{
-													double x = Result.Objects[ObjectCount].RotateYDirection.X;
-													double y = Result.Objects[ObjectCount].RotateYDirection.Y;
-													double z = Result.Objects[ObjectCount].RotateYDirection.Z;
-													double t = x * x + y * y + z * z;
-													if (t == 0.0)
-													{
-														x = 1.0;
-														y = 0.0;
-														z = 0.0;
-														t = 1.0;
-													}
-													if (RotateX != 0.0)
-													{
-														t = 1.0 / Math.Sqrt(t);
-														x *= t;
-														y *= t;
-														z *= t;
-													}
-													double cosY = Math.Cos(RotateY);
-													double sinY = Math.Sin(RotateY);
-													World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosY, sinY);
-												}
-												if (StaticZRotation)
-												{
-													double x = Result.Objects[ObjectCount].RotateZDirection.X;
-													double y = Result.Objects[ObjectCount].RotateZDirection.Y;
-													double z = Result.Objects[ObjectCount].RotateZDirection.Z;
-													double t = x * x + y * y + z * z;
-													if (t == 0.0)
-													{
-														x = 1.0;
-														y = 0.0;
-														z = 0.0;
-														t = 1.0;
-													}
-													if (RotateX != 0.0)
-													{
-														t = 1.0 / Math.Sqrt(t);
-														x *= t;
-														y *= t;
-														z *= t;
-													}
-													double cosZ = Math.Cos(RotateZ);
-													double sinZ = Math.Sin(RotateZ);
-													World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosZ, sinZ);
+													break;
 												}
 											}
+											if (!StaticYRotation)
+											{
+												if (Result.Objects[ObjectCount].RotateYFunction != null)
+												{
+													break;
+												}
+											}
+											if (!StaticZRotation)
+											{
+												if (Result.Objects[ObjectCount].RotateZFunction != null)
+												{
+													break;
+												}
+											}
+											if (StaticXRotation)
+											{
+												double x = Result.Objects[ObjectCount].RotateXDirection.X;
+												double y = Result.Objects[ObjectCount].RotateXDirection.Y;
+												double z = Result.Objects[ObjectCount].RotateXDirection.Z;
+												double t = x * x + y * y + z * z;
+												if (t == 0.0)
+												{
+													x = 1.0;
+													y = 0.0;
+													z = 0.0;
+													t = 1.0;
+												}
+												if (RotateX != 0.0)
+												{
+													t = 1.0 / Math.Sqrt(t);
+													x *= t;
+													y *= t;
+													z *= t;
+												}
+												double cosX = Math.Cos(RotateX);
+												double sinX = Math.Sin(RotateX);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosX, sinX);
+												Result.Objects[ObjectCount].RotateXFunction = null;
+											}
+											if (StaticYRotation)
+											{
+												double x = Result.Objects[ObjectCount].RotateYDirection.X;
+												double y = Result.Objects[ObjectCount].RotateYDirection.Y;
+												double z = Result.Objects[ObjectCount].RotateYDirection.Z;
+												double t = x * x + y * y + z * z;
+												if (t == 0.0)
+												{
+													x = 1.0;
+													y = 0.0;
+													z = 0.0;
+													t = 1.0;
+												}
+												if (RotateY != 0.0)
+												{
+													t = 1.0 / Math.Sqrt(t);
+													x *= t;
+													y *= t;
+													z *= t;
+												}
+												double cosY = Math.Cos(RotateY);
+												double sinY = Math.Sin(RotateY);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosY, sinY);
+												Result.Objects[ObjectCount].RotateYFunction = null;
+											}
+											if (StaticZRotation)
+											{
+												double x = Result.Objects[ObjectCount].RotateZDirection.X;
+												double y = Result.Objects[ObjectCount].RotateZDirection.Y;
+												double z = Result.Objects[ObjectCount].RotateZDirection.Z;
+												double t = x * x + y * y + z * z;
+												if (t == 0.0)
+												{
+													x = 1.0;
+													y = 0.0;
+													z = 0.0;
+													t = 1.0;
+												}
+												if (RotateZ != 0.0)
+												{
+													t = 1.0 / Math.Sqrt(t);
+													x *= t;
+													y *= t;
+													z *= t;
+												}
+												double cosZ = Math.Cos(RotateZ);
+												double sinZ = Math.Sin(RotateZ);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosZ, sinZ);
+												Result.Objects[ObjectCount].RotateZFunction = null;
+											}
+
+											
 										}
 									}
 								}
