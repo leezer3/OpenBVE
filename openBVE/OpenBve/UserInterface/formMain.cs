@@ -1025,6 +1025,7 @@ namespace OpenBve {
 				{
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
 				}
+				comboBoxPackageType.SelectedIndex = 0;
 			}
 		}
 

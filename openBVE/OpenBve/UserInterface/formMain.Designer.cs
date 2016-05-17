@@ -3833,7 +3833,6 @@
 			this.textBoxPackageFileName.Name = "textBoxPackageFileName";
 			this.textBoxPackageFileName.Size = new System.Drawing.Size(285, 20);
 			this.textBoxPackageFileName.TabIndex = 36;
-			this.textBoxPackageFileName.TextChanged += new System.EventHandler(this.textBoxPackageFileName_TextChanged);
 			// 
 			// labelSaveAs
 			// 

@@ -530,6 +530,7 @@ namespace OpenBve
 
 		private void button3_Click(object sender, EventArgs e)
 		{
+			currentPackage.FileName = textBoxPackageFileName.Text;
 			System.IO.FileInfo fi = null;
 			try
 			{
@@ -582,7 +583,15 @@ namespace OpenBve
 				if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
 				{
 					ImageFile = openPackageFileDialog.FileName;
-					pictureBoxPackageImage.Image = Image.FromFile(openPackageFileDialog.FileName);
+					try
+					{
+						pictureBoxPackageImage.Image = Image.FromFile(openPackageFileDialog.FileName);
+					}
+					catch
+					{
+						//Not an image we can load, so reset the image file
+						ImageFile = null;
+					}
 				}
 			}
 		}
@@ -651,27 +660,48 @@ namespace OpenBve
 			{
 				newPackageType = PackageType.Other;
 			}
-			panelReplacePackage.Hide();
-			panelNewPackage.Show();
-			panelNewPackage.Enabled = false;
-			if (radioButtonQ1Yes.Checked || radioButtonQ1No.Checked)
+			if (radioButtonQ1Yes.Checked == true)
 			{
-				//Don't generate a new GUID if we haven't decided whether this is a new/ replacement package
-				//Pointless & confusing UI update otherwise
-				string GUID = Guid.NewGuid().ToString();
-				currentPackage = new Package
+				panelReplacePackage.Show();
+				panelNewPackage.Hide();
+				switch (newPackageType)
 				{
-					Name = textBoxPackageName.Text,
-					Author = textBoxPackageAuthor.Text,
-					Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
-					//TODO:
-					//Website = linkLabelPackageWebsite.Links[0],
-					GUID = GUID,
-					PackageVersion = new Version(0, 0, 0, 0),
-					PackageType = newPackageType
-				};
-				textBoxGUID.Text = currentPackage.GUID;
-				SaveFileNameButton.Enabled = true;
+					case PackageType.Route:
+						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
+						break;
+					case PackageType.Train:
+						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
+						break;
+					case PackageType.Other:
+						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
+						break;
+				}
+				dataGridViewReplacePackage.ClearSelection();
+			}
+			else
+			{
+				panelReplacePackage.Hide();
+				panelNewPackage.Show();
+				panelNewPackage.Enabled = false;
+				if (radioButtonQ1Yes.Checked || radioButtonQ1No.Checked)
+				{
+					//Don't generate a new GUID if we haven't decided whether this is a new/ replacement package
+					//Pointless & confusing UI update otherwise
+					string GUID = Guid.NewGuid().ToString();
+					currentPackage = new Package
+					{
+						Name = textBoxPackageName.Text,
+						Author = textBoxPackageAuthor.Text,
+						Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n"),
+						//TODO:
+						//Website = linkLabelPackageWebsite.Links[0],
+						GUID = GUID,
+						PackageVersion = new Version(0, 0, 0, 0),
+						PackageType = newPackageType
+					};
+					textBoxGUID.Text = currentPackage.GUID;
+					SaveFileNameButton.Enabled = true;
+				}
 			}
 
 
@@ -926,12 +956,6 @@ namespace OpenBve
 				textBoxPackageFileName.Text = savePackageDialog.FileName;
 			}
 		}
-
-		private void textBoxPackageFileName_TextChanged(object sender, EventArgs e)
-		{
-			currentPackage.PackageFile = textBoxPackageFileName.Text;
-		}
-
 
 		private void comboBoxPackageType_SelectedIndexChanged(object sender, EventArgs e)
 		{
