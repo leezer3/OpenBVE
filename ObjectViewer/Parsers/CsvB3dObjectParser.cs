@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -14,6 +16,10 @@ namespace OpenBve {
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
 			internal ushort GlowAttenuationData;
+			internal Color TextColor;
+			internal Color BackgroundColor;
+			internal string Font;
+			internal Vector2 TextPadding; 
 			internal Material() {
 				this.Color = new World.ColorRGBA(255, 255, 255, 255);
 				this.EmissiveColor = new World.ColorRGB(0, 0, 0);
@@ -24,6 +30,10 @@ namespace OpenBve {
 				this.NighttimeTexture = null;
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
+				this.TextColor = System.Drawing.Color.Black;
+				this.BackgroundColor = System.Drawing.Color.White;
+				this.TextPadding = new Vector2(0, 0);
+				this.Font = "Arial";
 			}
 			internal Material(Material Prototype) {
 				this.Color = Prototype.Color;
@@ -35,6 +45,10 @@ namespace OpenBve {
 				this.NighttimeTexture = Prototype.NighttimeTexture;
 				this.BlendMode = Prototype.BlendMode;
 				this.GlowAttenuationData = Prototype.GlowAttenuationData;
+				this.TextColor = Prototype.TextColor;
+				this.BackgroundColor = Prototype.BackgroundColor;
+				this.TextPadding = Prototype.TextPadding;
+				this.Font = Prototype.Font;
 			}
 		}
 		private class MeshBuilder {
@@ -711,6 +725,157 @@ namespace OpenBve {
 									Builder.Materials[j].NighttimeTexture = tnight;
 								}
 							} break;
+						case "settext":
+						case "text":
+							{
+								if (cmd == "settext" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "SetText is not a supported command - did you mean Text? - at line " + (i + 1).ToString(Culture) + " in file " +
+									  FileName);
+								}
+								else if (cmd == "text" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "Text is not a supported command - did you mean SetText? - at line " + (i + 1).ToString(Culture) + " in file " +
+									  FileName);
+								}
+
+								if (Arguments.Length > 2)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "At most 2 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " +
+									  FileName);
+								}
+								string text = "TEXT:" + Arguments[0];
+
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].DaytimeTexture = text;
+									Builder.Materials[j].NighttimeTexture = null;
+								}
+							}
+							break;
+						case "settextcolor":
+						case "textcolor":
+							{
+								if (cmd == "settextcolor" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "SetTextColor is not a supported command - did you mean TextColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "textcolor" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "TextColor is not a supported command - did you mean SetTextColor? - at line " + (i + 1).ToString(Culture) + " in file " +
+									  FileName);
+								}
+
+								if (Arguments.Length != 3)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0;
+								int.TryParse(Arguments[0], out r);
+								int.TryParse(Arguments[1], out g);
+								int.TryParse(Arguments[2], out b);
+								Color textColor = Color.FromArgb(r, g, b);
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].TextColor = textColor;
+								}
+							}
+							break;
+						case "setbackgroundcolor":
+						case "backgroundcolor":
+							{
+								if (cmd == "setbackgroundcolor" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "SetBackgroundColor is not a supported command - did you mean TextColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "backgroundcolor" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "BackgroundColor is not a supported command - did you mean SetBackgroundColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+								if (Arguments.Length != 3)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								int r = 0, g = 0, b = 0;
+								int.TryParse(Arguments[0], out r);
+								int.TryParse(Arguments[1], out g);
+								int.TryParse(Arguments[2], out b);
+								Color textColor = Color.FromArgb(r, g, b);
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].BackgroundColor = textColor;
+								}
+							}
+							break;
+						case "settextpadding":
+						case "textpadding":
+							{
+								if (cmd == "settextpadding" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "SetTextPadding is not a supported command - did you mean TextPadding? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "backgroundcolor" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "TextPadding is not a supported command - did you mean SetTextPadding? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+								if (Arguments.Length > 2)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "At most 2 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								Vector2 Padding = new Vector2(0, 0);
+								double.TryParse(Arguments[0], out Padding.X);
+								double.TryParse(Arguments[1], out Padding.Y);
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].TextPadding = Padding;
+								}
+							}
+							break;
+						case "setfont":
+						case "font":
+							{
+								if (cmd == "setfont" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "SetFont is not a supported command - did you mean Font? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "backgroundcolor" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "Font is not a supported command - did you mean SetFont? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+								if (Arguments.Length > 1)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "1 argument is expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (!FontAvailable(Arguments[0]))
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false,
+									  "Font " + Arguments[0] + "is not available at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].Font = Arguments[0];
+								}
+
+							}
+							break; 
 						case "settexturecoordinates":
 						case "coordinates":
 							{
@@ -1046,8 +1211,20 @@ namespace OpenBve {
 							}
 						}
 					}
-					if (Builder.Materials[i].DaytimeTexture != null) {
-						int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+					if (Builder.Materials[i].DaytimeTexture != null)
+					{
+						int tday;
+						if (Builder.Materials[i].DaytimeTexture.StartsWith("TEXT:", StringComparison.OrdinalIgnoreCase))
+						{
+							var String = Builder.Materials[i].DaytimeTexture.Remove(0, 5);
+							Bitmap texture = TextToBitmap(String, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
+							tday = TextureManager.RegisterTexture(texture, false);
+						}
+						else
+						{
+							tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture,Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte) 1 : (byte) 0, WrapX,WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+
+						}
 						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
 					} else {
 						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = -1;
@@ -1063,6 +1240,35 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
 				}
+			}
+		}
+
+		private static Bitmap TextToBitmap(string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, Vector2 Padding)
+		{
+			SizeF size;
+			Bitmap bmp = new Bitmap(1024, 1024);
+			using (Graphics graphics = Graphics.FromImage(bmp))
+			{
+				Font font = new Font(fontname, fontsize);
+				size = graphics.MeasureString(txt, font);
+				graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int)Padding.X * 2, size.Height + (int)Padding.Y * 2);
+				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int)Padding.X, (int)Padding.Y);
+				graphics.Flush();
+				font.Dispose();
+				graphics.Dispose();
+			}
+			Rectangle cropArea = new Rectangle(0, 0, (int)size.Width + (int)Padding.X * 2, (int)size.Height + (int)Padding.Y * 2);
+			return bmp.Clone(cropArea, bmp.PixelFormat);
+		}
+
+		private static bool FontAvailable(string fontName)
+		{
+			using (var testFont = new Font(fontName, 8))
+			{
+				return 0 == string.Compare(
+				  fontName,
+				  testFont.Name,
+				  StringComparison.InvariantCultureIgnoreCase);
 			}
 		}
 
