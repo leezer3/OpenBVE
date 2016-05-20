@@ -133,11 +133,21 @@ namespace OpenBve {
 			// --- members ---
 			/// <summary>The bitmap.</summary>
 			internal Bitmap Bitmap;
+			internal OpenBveApi.Textures.TextureParameters Parameters;
 			// --- constructors ---
 			/// <summary>Creates a new bitmap origin.</summary>
 			/// <param name="bitmap">The bitmap.</param>
 			internal BitmapOrigin(Bitmap bitmap) {
 				this.Bitmap = bitmap;
+			}
+
+			/// <summary>Creates a new bitmap origin.</summary>
+			/// <param name="bitmap">The bitmap.</param>
+			/// <param name="parameters">The texture parameters</param>
+			internal BitmapOrigin(Bitmap bitmap, OpenBveApi.Textures.TextureParameters parameters)
+			{
+				this.Bitmap = bitmap;
+				this.Parameters = parameters;
 			}
 			// --- functions ---
 			/// <summary>Gets the texture from this origin.</summary>
@@ -180,6 +190,7 @@ namespace OpenBve {
 						raw[i + 2] = temp;
 					}
 					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw);
+					texture = texture.ApplyParameters(this.Parameters);
 					return true;
 				}
 			    /*

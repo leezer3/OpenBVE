@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -19,7 +20,8 @@ namespace OpenBve {
 			internal Color TextColor;
 			internal Color BackgroundColor;
 			internal string Font;
-			internal Vector2 TextPadding; 
+			internal Vector2 TextPadding;
+			internal string Text;
 			internal Material() {
 				this.Color = new World.ColorRGBA(255, 255, 255, 255);
 				this.EmissiveColor = new World.ColorRGB(0, 0, 0);
@@ -68,7 +70,7 @@ namespace OpenBve {
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
-        /// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
+		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -83,7 +85,7 @@ namespace OpenBve {
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			World.Vector3Df[] Normals = new World.Vector3Df[4];
-		    bool CommentStarted = false;
+			bool CommentStarted = false;
 			for (int i = 0; i < Lines.Length; i++) {
 				{
 					// Strip OpenBVE original standard comments
@@ -91,49 +93,49 @@ namespace OpenBve {
 					if (j >= 0) {
 						Lines[i] = Lines[i].Substring(0, j);
 					}
-                    // Strip double backslash comments
-                    int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
-                    if (k >= 0)
-                    {
-                        Lines[i] = Lines[i].Substring(0, k);
-                    }
-                    //Strip star backslash comments
-				    if (!CommentStarted)
-				    {
-				        int l = Lines[i].IndexOf("/*", StringComparison.Ordinal);
-                        if(l >= 0)
-                        {
-                            CommentStarted = true;
-                            string Part1 = Lines[i].Substring(0, l);
-                            int m = Lines[i].IndexOf("*/", StringComparison.Ordinal);
-                            string Part2 = "";
-                            if (m >= 0)
-                            {
-                                Part2 = Lines[i].Substring(m + 2, Lines[i].Length -2);
-                            }
-                            Lines[i] = String.Concat(Part1, Part2);
-                        }
-				    }
-				    else
-				    {
-				        int l = Lines[i].IndexOf("*/", StringComparison.Ordinal);
-				        if (l >= 0)
-				        {
-				            CommentStarted = false;
-				            if (l + 2 != Lines[i].Length)
-				            {
-				                Lines[i] = Lines[i].Substring(l + 2, (Lines[i].Length - 2));
-				            }
-				            else
-				            {
-				                Lines[i] = "";
-				            }
-				        }
-				        else
-				        {
-				            Lines[i] = "";
-				        }
-				    }
+					// Strip double backslash comments
+					int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
+					if (k >= 0)
+					{
+						Lines[i] = Lines[i].Substring(0, k);
+					}
+					//Strip star backslash comments
+					if (!CommentStarted)
+					{
+						int l = Lines[i].IndexOf("/*", StringComparison.Ordinal);
+						if(l >= 0)
+						{
+							CommentStarted = true;
+							string Part1 = Lines[i].Substring(0, l);
+							int m = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+							string Part2 = "";
+							if (m >= 0)
+							{
+								Part2 = Lines[i].Substring(m + 2, Lines[i].Length -2);
+							}
+							Lines[i] = String.Concat(Part1, Part2);
+						}
+					}
+					else
+					{
+						int l = Lines[i].IndexOf("*/", StringComparison.Ordinal);
+						if (l >= 0)
+						{
+							CommentStarted = false;
+							if (l + 2 != Lines[i].Length)
+							{
+								Lines[i] = Lines[i].Substring(l + 2, (Lines[i].Length - 2));
+							}
+							else
+							{
+								Lines[i] = "";
+							}
+						}
+						else
+						{
+							Lines[i] = "";
+						}
+					}
 				}
 				// collect arguments
 				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
@@ -747,12 +749,11 @@ namespace OpenBve {
 									  "At most 2 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " +
 									  FileName);
 								}
-								string text = "TEXT:" + Arguments[0];
+								string text = Arguments[0];
 
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
-									Builder.Materials[j].DaytimeTexture = text;
-									Builder.Materials[j].NighttimeTexture = null;
+									Builder.Materials[j].Text = text;
 								}
 							}
 							break;
@@ -864,7 +865,7 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Warning, false,
 									  "1 argument is expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								if (!FontAvailable(Arguments[0]))
+								if (!TextOverlay.FontAvailable(Arguments[0]))
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,
 									  "Font " + Arguments[0] + "is not available at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1211,14 +1212,18 @@ namespace OpenBve {
 							}
 						}
 					}
-					if (Builder.Materials[i].DaytimeTexture != null)
+					if (Builder.Materials[i].DaytimeTexture != null || Builder.Materials[i].Text != null)
 					{
 						int tday;
-						if (Builder.Materials[i].DaytimeTexture.StartsWith("TEXT:", StringComparison.OrdinalIgnoreCase))
+						if (Builder.Materials[i].Text != null)
 						{
-							var String = Builder.Materials[i].DaytimeTexture.Remove(0, 5);
-							Bitmap texture = TextToBitmap(String, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
-							tday = TextureManager.RegisterTexture(texture, false);
+							Bitmap bitmap = null;
+							if (Builder.Materials[i].DaytimeTexture != null)
+							{
+								bitmap = new Bitmap(Builder.Materials[i].DaytimeTexture);
+							}
+							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Builder.Materials[i].Text, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
+							tday = TextureManager.RegisterTexture(texture, Builder.Materials[i].TransparentColor);
 						}
 						else
 						{
@@ -1242,35 +1247,5 @@ namespace OpenBve {
 				}
 			}
 		}
-
-		private static Bitmap TextToBitmap(string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, Vector2 Padding)
-		{
-			SizeF size;
-			Bitmap bmp = new Bitmap(1024, 1024);
-			using (Graphics graphics = Graphics.FromImage(bmp))
-			{
-				Font font = new Font(fontname, fontsize);
-				size = graphics.MeasureString(txt, font);
-				graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int)Padding.X * 2, size.Height + (int)Padding.Y * 2);
-				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int)Padding.X, (int)Padding.Y);
-				graphics.Flush();
-				font.Dispose();
-				graphics.Dispose();
-			}
-			Rectangle cropArea = new Rectangle(0, 0, (int)size.Width + (int)Padding.X * 2, (int)size.Height + (int)Padding.Y * 2);
-			return bmp.Clone(cropArea, bmp.PixelFormat);
-		}
-
-		private static bool FontAvailable(string fontName)
-		{
-			using (var testFont = new Font(fontName, 8))
-			{
-				return 0 == string.Compare(
-				  fontName,
-				  testFont.Name,
-				  StringComparison.InvariantCultureIgnoreCase);
-			}
-		}
-
 	}
 }

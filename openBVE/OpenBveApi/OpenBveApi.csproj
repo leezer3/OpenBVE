@@ -76,6 +76,7 @@
     <Compile Include="SharedMesh.cs">
       <DependentUpon>Objects.cs</DependentUpon>
     </Compile>
+    <Compile Include="Textures.TextOverlay.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="Textures.Functions.cs">

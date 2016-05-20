@@ -62,6 +62,15 @@ namespace OpenBve {
 				this.Origin = new BitmapOrigin(bitmap);
 				this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
 			}
+
+			/// <summary>Creates a new texture.</summary>
+			/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
+			/// <param name="parameters">The parameters that specify how to process the texture.</param>
+			internal Texture(Bitmap bitmap, OpenBveApi.Textures.TextureParameters parameters)
+			{
+				this.Origin = new BitmapOrigin(bitmap, parameters);
+				this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+			}
 			/// <summary>Creates a new texture.</summary>
 			/// <param name="texture">The texture raw data.</param>
 			internal Texture(OpenBveApi.Textures.Texture texture) {

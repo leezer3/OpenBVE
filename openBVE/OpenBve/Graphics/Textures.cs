@@ -135,6 +135,25 @@ namespace OpenBve
 
 		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
 		/// <param name="bitmap">The bitmap that contains the texture.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		/// <returns>The handle to the texture.</returns>
+		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
+		internal static Texture RegisterTexture(Bitmap bitmap, OpenBveApi.Textures.TextureParameters parameters)
+		{
+			/*
+			 * Register the texture and return the newly created handle.
+			 * */
+			if (RegisteredTextures.Length == RegisteredTexturesCount)
+			{
+				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
+			}
+			RegisteredTextures[RegisteredTexturesCount] = new Texture(bitmap, parameters);
+			RegisteredTexturesCount++;
+			return RegisteredTextures[RegisteredTexturesCount - 1];
+		}
+
+		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
+		/// <param name="bitmap">The bitmap that contains the texture.</param>
 		/// <returns>The handle to the texture.</returns>
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
 		internal static Texture RegisterTexture(Bitmap bitmap)

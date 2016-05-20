@@ -2,6 +2,7 @@
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -17,6 +18,7 @@ namespace OpenBve {
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
 			internal ushort GlowAttenuationData;
+			internal string Text;
 			internal Color TextColor;
 			internal Color BackgroundColor;
 			internal string Font;
@@ -758,12 +760,11 @@ namespace OpenBve {
 									  "At most 2 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " +
 									  FileName);
 								}
-								string text = "TEXT:" + Arguments[0];
+								string text = Arguments[0];
 
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
-									Builder.Materials[j].DaytimeTexture = text;
-									Builder.Materials[j].NighttimeTexture = null;
+									Builder.Materials[j].Text = text;
 								}
 							}
 							break;
@@ -875,7 +876,7 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Warning, false,
 									  "1 argument is expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								if (!FontAvailable(Arguments[0]))
+								if (!TextOverlay.FontAvailable(Arguments[0]))
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,
 									  "Font " + Arguments[0] + "is not available at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1201,14 +1202,18 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					if (Builder.Materials[i].DaytimeTexture != null)
+					if (Builder.Materials[i].DaytimeTexture != null || Builder.Materials[i].Text != null)
 					{
 						Textures.Texture tday;
-						if (Builder.Materials[i].DaytimeTexture.StartsWith("TEXT:"))
+						if (Builder.Materials[i].Text != null)
 						{
-							var String = Builder.Materials[i].DaytimeTexture.Remove(0, 5);
-							Bitmap texture = TextToBitmap(String, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
-							tday = Textures.RegisterTexture(texture);
+							Bitmap bitmap = null;
+							if (Builder.Materials[i].DaytimeTexture != null)
+							{
+								bitmap = new Bitmap(Builder.Materials[i].DaytimeTexture);
+							}
+							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Builder.Materials[i].Text, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
+							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)));
 						}
 						else
 						{
@@ -1223,19 +1228,8 @@ namespace OpenBve {
 							{
 								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
 							}
-							if (Builder.Materials[i].TransparentColorUsed)
-							{
-								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture,
-									new OpenBveApi.Textures.TextureParameters(null,
-										new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G,
-											Builder.Materials[i].TransparentColor.B)), out tday);
-							}
-							else
-							{
-								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
-							}
-							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 					}
 					else
 					{
@@ -1260,34 +1254,7 @@ namespace OpenBve {
 			}
 		}
 
-		private static Bitmap TextToBitmap(string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, Vector2 Padding)
-		{
-			SizeF size;
-			Bitmap bmp = new Bitmap(1024, 1024);
-			using (Graphics graphics = Graphics.FromImage(bmp))
-			{
-				Font font = new Font(fontname, fontsize);
-				size = graphics.MeasureString(txt, font);
-				graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int)Padding.X * 2, size.Height + (int)Padding.Y * 2);
-				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int)Padding.X, (int)Padding.Y);
-				graphics.Flush();
-				font.Dispose();
-				graphics.Dispose();
-			}
-			Rectangle cropArea = new Rectangle(0, 0, (int)size.Width + (int)Padding.X * 2, (int)size.Height + (int)Padding.Y * 2);
-			return bmp.Clone(cropArea, bmp.PixelFormat);
-		}
 
-		private static bool FontAvailable(string fontName)
-		{
-			using (var testFont = new Font(fontName, 8))
-			{
-				return 0 == string.Compare(
-				  fontName,
-				  testFont.Name,
-				  StringComparison.InvariantCultureIgnoreCase);
-			}
-		}
 		
 	}
 
