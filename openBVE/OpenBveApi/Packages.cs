@@ -180,6 +180,10 @@ namespace OpenBveApi.Packages
 					{
 						//Skip package information files
 					}
+					else if (archiveEntry.Size == 0)
+					{
+						//Skip zero-byte files
+					}
 					else
 					{
 						//Extract everything else, preserving directory structure
@@ -235,6 +239,11 @@ namespace OpenBveApi.Packages
 						{
 							//Skip thumbs.db files, as they're often locked when creating or extracting
 							//Pointless too.....
+							continue;
+						}
+						if (new FileInfo(currentFile.absolutePath).Length == 0)
+						{
+							//Don't archive zero-byte files, as Sharpcompress doesn't like them.....
 							continue;
 						}
 						//Add file to archive
