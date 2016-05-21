@@ -251,6 +251,11 @@
 			this.timerInstall = new System.Windows.Forms.Timer(this.components);
 			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
+			this.panelPleaseWait = new System.Windows.Forms.Panel();
+			this.labelProgressFile = new System.Windows.Forms.Label();
+			this.labelProgressPercent = new System.Windows.Forms.Label();
+			this.labelPleaseWait = new System.Windows.Forms.Label();
+			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.panelVersionError = new System.Windows.Forms.Panel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.radioButtonCancel = new System.Windows.Forms.RadioButton();
@@ -369,9 +374,6 @@
 			this.textBoxPackageName = new System.Windows.Forms.TextBox();
 			this.labelPackageName = new System.Windows.Forms.Label();
 			this.pictureBoxPackageImage = new System.Windows.Forms.PictureBox();
-			this.panelPleaseWait = new System.Windows.Forms.Panel();
-			this.labelPleaseWait = new System.Windows.Forms.Label();
-			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.labelPackages = new System.Windows.Forms.Label();
 			this.label11 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
@@ -446,6 +448,8 @@
 			this.panelKeyboard.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPleaseWait.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
 			this.panelVersionError.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewBrokenDependancies)).BeginInit();
@@ -465,8 +469,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewDependancies)).BeginInit();
 			this.panelPackageInstall.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
-			this.panelPleaseWait.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelFillerOne
@@ -3270,15 +3272,15 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
+			this.panelPackages.Controls.Add(this.panelPackageInstall);
+			this.panelPackages.Controls.Add(this.panelPleaseWait);
+			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.panelVersionError);
 			this.panelPackages.Controls.Add(this.panelPackageDependsAdd);
 			this.panelPackages.Controls.Add(this.panelPackageList);
-			this.panelPackages.Controls.Add(this.panelCreatePackage);
 			this.panelPackages.Controls.Add(this.panelUninstallResult);
 			this.panelPackages.Controls.Add(this.panelSuccess);
 			this.panelPackages.Controls.Add(this.panelDependancyError);
-			this.panelPackages.Controls.Add(this.panelPackageInstall);
-			this.panelPackages.Controls.Add(this.panelPleaseWait);
 			this.panelPackages.Controls.Add(this.labelPackages);
 			this.panelPackages.Controls.Add(this.label11);
 			this.panelPackages.Controls.Add(this.label14);
@@ -3287,6 +3289,71 @@
 			this.panelPackages.Name = "panelPackages";
 			this.panelPackages.Size = new System.Drawing.Size(659, 606);
 			this.panelPackages.TabIndex = 14;
+			// 
+			// panelPleaseWait
+			// 
+			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
+			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
+			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
+			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
+			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
+			this.panelPleaseWait.Name = "panelPleaseWait";
+			this.panelPleaseWait.Size = new System.Drawing.Size(657, 578);
+			this.panelPleaseWait.TabIndex = 28;
+			// 
+			// labelProgressFile
+			// 
+			this.labelProgressFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressFile.AutoSize = true;
+			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressFile.Location = new System.Drawing.Point(222, 422);
+			this.labelProgressFile.Name = "labelProgressFile";
+			this.labelProgressFile.Size = new System.Drawing.Size(168, 24);
+			this.labelProgressFile.TabIndex = 7;
+			this.labelProgressFile.Text = "Unknown File.....";
+			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelProgressPercent
+			// 
+			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressPercent.Location = new System.Drawing.Point(275, 392);
+			this.labelProgressPercent.Name = "labelProgressPercent";
+			this.labelProgressPercent.Size = new System.Drawing.Size(37, 24);
+			this.labelProgressPercent.TabIndex = 6;
+			this.labelProgressPercent.Text = "0%";
+			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPleaseWait
+			// 
+			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPleaseWait.AutoSize = true;
+			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPleaseWait.Location = new System.Drawing.Point(177, 453);
+			this.labelPleaseWait.Name = "labelPleaseWait";
+			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
+			this.labelPleaseWait.TabIndex = 5;
+			this.labelPleaseWait.Text = "Processing, please wait......";
+			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// pictureBoxProcessing
+			// 
+			this.pictureBoxProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
+			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
+			this.pictureBoxProcessing.Size = new System.Drawing.Size(387, 351);
+			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBoxProcessing.TabIndex = 4;
+			this.pictureBoxProcessing.TabStop = false;
 			// 
 			// panelVersionError
 			// 
@@ -4623,43 +4690,6 @@
 			this.pictureBoxPackageImage.TabStop = false;
 			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
 			// 
-			// panelPleaseWait
-			// 
-			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
-			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
-			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
-			this.panelPleaseWait.Name = "panelPleaseWait";
-			this.panelPleaseWait.Size = new System.Drawing.Size(657, 559);
-			this.panelPleaseWait.TabIndex = 28;
-			// 
-			// labelPleaseWait
-			// 
-			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelPleaseWait.AutoSize = true;
-			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPleaseWait.Location = new System.Drawing.Point(177, 390);
-			this.labelPleaseWait.Name = "labelPleaseWait";
-			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
-			this.labelPleaseWait.TabIndex = 5;
-			this.labelPleaseWait.Text = "Processing, please wait......";
-			// 
-			// pictureBoxProcessing
-			// 
-			this.pictureBoxProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
-			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
-			this.pictureBoxProcessing.Size = new System.Drawing.Size(387, 332);
-			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBoxProcessing.TabIndex = 4;
-			this.pictureBoxProcessing.TabStop = false;
-			// 
 			// labelPackages
 			// 
 			this.labelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -4829,6 +4859,9 @@
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPleaseWait.ResumeLayout(false);
+			this.panelPleaseWait.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
 			this.panelVersionError.ResumeLayout(false);
 			this.panelVersionError.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
@@ -4861,9 +4894,6 @@
 			this.panelPackageInstall.ResumeLayout(false);
 			this.panelPackageInstall.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
-			this.panelPleaseWait.ResumeLayout(false);
-			this.panelPleaseWait.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
 			this.ResumeLayout(false);
 
         }
@@ -5224,6 +5254,8 @@
 		private System.Windows.Forms.RadioButton radioButtonCancel;
 		private System.Windows.Forms.RadioButton radioButtonReplace;
 		private System.Windows.Forms.RadioButton radioButtonOverwrite;
+		private System.Windows.Forms.Label labelProgressFile;
+		private System.Windows.Forms.Label labelProgressPercent;
         
     }
 }

@@ -262,6 +262,23 @@ namespace OpenBve
 			workerThread.RunWorkerAsync();
 		}
 
+		private void OnWorkerProgressChanged(object sender, ProgressReport e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					OnWorkerProgressChanged(sender, e);
+				});
+				return;
+			}
+
+			//Actually change the controls text
+			labelProgressPercent.Text = e.Progress + @"%";
+			labelProgressFile.Text = e.CurrentFile;
+		}
+
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
 		/// <param name="packageList">The list of packages</param>
 		/// <param name="dataGrid">The datagrid view to populate</param>
@@ -297,16 +314,17 @@ namespace OpenBve
 		}
 
 		/// <summary>This method should be called to uninstall a package</summary>
-		internal void UninstallPackage(int selectedPackageIndex, ref List<Package> Packages)
+		internal void UninstallPackage(int packageIndex, ref List<Package> Packages)
 		{
 			
 			string uninstallResults = "";
-			Package packageToUninstall = Packages[selectedPackageIndex];
+			Package packageToUninstall = Packages[packageIndex];
 			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
 			if (brokenDependancies.Count != 0)
 			{
 				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
 				labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_uninstall_broken");
+				HidePanels();
 				panelDependancyError.Show();
 			}
 			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
@@ -337,6 +355,7 @@ namespace OpenBve
 					textBoxUninstallResult.Text = Interface.GetInterfaceString("packages_uninstall_missing_xml");
 				}
 			}
+			HidePanels();
 			panelUninstallResult.Show();
 		}
 
@@ -503,6 +522,7 @@ namespace OpenBve
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
 			{
+				Manipulation.ProgressChanged += OnWorkerProgressChanged;
 				Manipulation.CreatePackage(currentPackage, currentPackage.FileName, ImageFile, filesToPackage);
 				string text = "";
 				for (int i = 0; i < filesToPackage.Count; i++)
@@ -851,7 +871,7 @@ namespace OpenBve
 			DialogResult result = inputBox.ShowDialog();
 			try
 			{
-				if (textBox.Text == String.Empty || textBox.Text == "0")
+				if (textBox.Text == String.Empty || textBox.Text == @"0")
 				{
 					minimumVersion = null;
 				}
@@ -859,7 +879,7 @@ namespace OpenBve
 				{
 					minimumVersion = Version.Parse(textBox.Text);	
 				}
-				if (textBox2.Text == String.Empty || textBox2.Text == "0")
+				if (textBox2.Text == String.Empty || textBox2.Text == @"0")
 				{
 					minimumVersion = null;
 				}
@@ -1090,6 +1110,9 @@ namespace OpenBve
 			textBoxPackageVersion.Text = Interface.GetInterfaceString("packages_selection_none");
 			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install_select");
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_id");
+			//Reset the worker thread
+			workerThread = null;
+			workerThread = new BackgroundWorker();
 		}
 	}
 }

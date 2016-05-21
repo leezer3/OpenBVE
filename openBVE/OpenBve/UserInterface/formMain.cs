@@ -375,6 +375,7 @@ namespace OpenBve {
 			routeWorkerThread = new BackgroundWorker();
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
 			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
+			Manipulation.ProgressChanged += new EventHandler<ProgressReport>(OnWorkerProgressChanged);
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>

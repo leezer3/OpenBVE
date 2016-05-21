@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Drawing;
 using System.Linq;
+using SharpCompress.Archive;
 
 namespace OpenBveApi.Packages
 {
@@ -73,6 +74,7 @@ namespace OpenBveApi.Packages
 		/// <summary>The minimum package version</summary>
 		[XmlIgnore]
 		public Version MinimumVersion;
+		/// <summary>The minimum package version represented in string format</summary>
 		[XmlElement(ElementName = "MinimumVersion")]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public string MinVersion
@@ -93,6 +95,7 @@ namespace OpenBveApi.Packages
 		/// <summary>The maximum package version</summary>
 		[XmlIgnore]
 		public Version MaximumVersion;
+		/// <summary>The maximum package version represented in string format</summary>
 		[XmlElement(ElementName = "MaximumVersion")]
 		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
 		public string MaxVersion
@@ -167,25 +170,30 @@ namespace OpenBveApi.Packages
 			using (Stream stream = File.OpenRead(currentPackage.PackageFile))
 			{
 
-				var reader = ReaderFactory.Open(stream);
+				var reader = ArchiveFactory.Open(stream);
 				List<string> PackageFiles = new List<string>();
-				while (reader.MoveToNextEntry())
+				int i = 0;
+				foreach (var archiveEntry in reader.Entries)
 				{
-					if (reader.Entry.Key.ToLowerInvariant() == "package.xml" || reader.Entry.Key.ToLowerInvariant() == "package.png" || reader.Entry.Key.ToLowerInvariant() == "package.rtf")
+					
+					if (archiveEntry.Key.ToLowerInvariant() == "package.xml" || archiveEntry.Key.ToLowerInvariant() == "package.png" || archiveEntry.Key.ToLowerInvariant() == "package.rtf" || archiveEntry.Key.ToLowerInvariant() == "thumbs.db")
 					{
 						//Skip package information files
 					}
 					else
 					{
 						//Extract everything else, preserving directory structure
-						reader.WriteEntryToDirectory(extractionDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+						archiveEntry.WriteToDirectory(extractionDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 						//We don't want to add directories to the list of files
-						if (!reader.Entry.IsDirectory)
+						if (!archiveEntry.IsDirectory)
 						{
-							PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory , reader.Entry.Key));
+							PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory, archiveEntry.Key));
 						}
 					}
+					i++;
+					OnProgressChanged(null, new ProgressReport((int)((double)i / reader.Entries.Count() * 100), archiveEntry.Key));
 				}
+				
 				string Text = "";
 				foreach (var FileName in PackageFiles)
 				{
@@ -216,15 +224,22 @@ namespace OpenBveApi.Packages
 		{
 			//TEMP
 			File.Delete(packageFile);
-
 			using (var zip = File.OpenWrite(packageFile))
 			{
 				using (var zipWriter = WriterFactory.Open(zip, SharpCompress.Common.ArchiveType.Zip, CompressionType.LZMA))
 				{
-					foreach (PackageFile currentFile in packageFiles)
+					for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
 					{
+						PackageFile currentFile = packageFiles[fileToAdd];
+						if (currentFile.absolutePath.EndsWith("thumbs.db", StringComparison.InvariantCultureIgnoreCase))
+						{
+							//Skip thumbs.db files, as they're often locked when creating or extracting
+							//Pointless too.....
+							continue;
+						}
 						//Add file to archive
 						zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
+						OnProgressChanged(null, new ProgressReport((int)((double)fileToAdd / packageFiles.Count * 100), currentFile.absolutePath));
 					}
 					//Create temp directory and XML file
 					var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
@@ -366,6 +381,28 @@ namespace OpenBveApi.Packages
 			currentPackage.PackageFile = packageFile;
 			return currentPackage;
 		}
+
+		public static event EventHandler<ProgressReport> ProgressChanged;
+		
+		public static void OnProgressChanged(object sender, ProgressReport progressReport)
+		{
+			if (ProgressChanged != null)
+			{
+				ProgressChanged(null, progressReport);
+			}
+		}
+	}
+
+	public class ProgressReport : EventArgs
+	{
+		public event EventHandler<ProgressReport> ProgressChanged;
+		public int Progress {get;private set;}
+		public string CurrentFile { get; private set; }
+        public ProgressReport(int progress, string file)
+        {
+            Progress = progress;
+	        CurrentFile = file;
+        }
 	}
 
 	/// <summary>Provides information functions for OpenBVE packages</summary>
