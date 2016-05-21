@@ -78,12 +78,9 @@ namespace Plugin {
 		
 		/// <summary>Is called when the system should initialize.</summary>
 		/// <param name="mode">The initialization mode.</param>
-		internal override void Initialize(InitializationModes mode) {
-			if (mode == InitializationModes.OffEmergency) {
-				this.State = States.Suppressed;
-			} else {
-				this.State = States.Normal;
-			}
+		internal override void Initialize(InitializationModes mode)
+		{
+			this.State = mode == InitializationModes.OffEmergency ? States.Suppressed : States.Normal;
 		}
 
 		/// <summary>Is called every frame.</summary>

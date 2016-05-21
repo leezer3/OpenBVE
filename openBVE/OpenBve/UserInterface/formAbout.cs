@@ -10,7 +10,7 @@ namespace OpenBve
         public formAbout()
         {
             InitializeComponent();
-            labelProductName.Text = "openBVE v" + Application.ProductVersion + Program.VersionSuffix;
+            labelProductName.Text = @"openBVE v" + Application.ProductVersion + Program.VersionSuffix;
             try
             {
                 string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Menu"), "logo.png");

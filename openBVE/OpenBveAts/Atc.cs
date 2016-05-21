@@ -282,8 +282,7 @@ namespace Plugin {
 				}
 			} else {
 				if (this.State == States.Normal | this.State == States.Service | this.State == States.Emergency) {
-					double speed;
-					speed = GetCurrentAtcSpeed();
+					var speed = GetCurrentAtcSpeed();
 					if (speed != this.CurrentAtcSpeed) {
 						this.Train.Sounds.AtcBell.Play();
 					}

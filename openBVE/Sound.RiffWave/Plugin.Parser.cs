@@ -162,8 +162,7 @@ namespace Plugin {
 								format.SampleRate = (int)dwSamplesPerSec;
 								format.BitsPerSample = (int)wBitsPerSample;
 								format.Channels = (int)wChannels;
-								PcmData pcmData = new PcmData();
-								pcmData.BlockSize = (int)wBlockAlign;
+								PcmData pcmData = new PcmData {BlockSize = (int) wBlockAlign};
 								data = pcmData;
 							} else if (wFormatTag == 2) {
 								// Microsoft ADPCM

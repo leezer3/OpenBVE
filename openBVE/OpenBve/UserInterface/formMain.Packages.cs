@@ -838,10 +838,12 @@ namespace OpenBve
 			};
 			inputBox.Controls.Add(textBox);
 
-			System.Windows.Forms.TextBox textBox2 = new TextBox();
-			textBox2.Size = new System.Drawing.Size(size.Width - 10, 23);
-			textBox2.Location = new System.Drawing.Point(5, 25);
-			textBox2.Text = currentVersion;
+			System.Windows.Forms.TextBox textBox2 = new TextBox
+			{
+				Size = new System.Drawing.Size(size.Width - 10, 23),
+				Location = new System.Drawing.Point(5, 25),
+				Text = currentVersion
+			};
 			inputBox.Controls.Add(textBox2);
 
 			Button okButton = new Button
@@ -965,7 +967,7 @@ namespace OpenBve
 				Title = Interface.GetInterfaceString("packages_creation_save"),
 				CheckPathExists = true,
 				DefaultExt = "zip",
-				Filter = "ZIP files (*.zip)|*.zip|All files (*.*)|*.*",
+				Filter = @"ZIP files (*.zip)|*.zip|All files (*.*)|*.*",
 				FilterIndex = 2,
 				RestoreDirectory = true
 			};

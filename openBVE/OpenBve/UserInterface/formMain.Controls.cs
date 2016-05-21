@@ -336,8 +336,8 @@ namespace OpenBve {
 			{
 				CheckFileExists = true,
 				Filter =
-					Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
-					Interface.GetInterfaceString("dialog_allfiles") + "|*"
+					Interface.GetInterfaceString("dialog_controlsfiles") + @"|*.controls|" +
+					Interface.GetInterfaceString("dialog_allfiles") + @"|*"
 			};
 			//Dialog.InitialDirectory = Interface.GetControlsFolder();
 			if (Dialog.ShowDialog() == DialogResult.OK) {

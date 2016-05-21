@@ -62,7 +62,7 @@ namespace OpenBve {
 				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				this.CenterToScreen();
 			}
-			labelVersion.Text = "v" + Application.ProductVersion + Program.VersionSuffix;
+			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
 			try {
@@ -375,7 +375,7 @@ namespace OpenBve {
 			routeWorkerThread = new BackgroundWorker();
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
 			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
-			Manipulation.ProgressChanged += new EventHandler<ProgressReport>(OnWorkerProgressChanged);
+			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
@@ -904,7 +904,7 @@ namespace OpenBve {
 						string Code = Title.Substring(0, Title.Length - 4);
 						string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
 						string Section = "";
-						string Name = Code;
+						string languageName = Code;
 						for (int j = 0; j < Lines.Length; j++) {
 							Lines[j] = Lines[j].Trim();
 							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
@@ -915,14 +915,14 @@ namespace OpenBve {
 									string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
 									string Value = Lines[j].Substring(k + 1).TrimStart();
 									if (Section == "language" & Key == "name") {
-										Name = Value;
+										languageName = Value;
 										break;
 									}
 								}
 							}
 						}
 						LanguageFiles[n] = Files[i];
-						LanguageNames[n] = Name;
+						LanguageNames[n] = languageName;
 						n++;
 					}
 				}

@@ -602,9 +602,11 @@ namespace OpenBve {
 				using (System.IO.MemoryStream Stream = new System.IO.MemoryStream(Data)) {
 					using (System.IO.BinaryReader Reader = new System.IO.BinaryReader(Stream)) {
 						Stream.Position = StartingPosition;
-						BinaryCache Cache = new BinaryCache();
-						Cache.IntegersRemaining = 0;
-						Cache.FloatsRemaining = 0;
+						BinaryCache Cache = new BinaryCache
+						{
+							IntegersRemaining = 0,
+							FloatsRemaining = 0
+						};
 						Result = ReadBinaryTemplate(FileName, Reader, FloatingPointSize, new Template("", new string[] { "[...]" }), false, ref Cache, out Structure);
 						Reader.Close();
 					}

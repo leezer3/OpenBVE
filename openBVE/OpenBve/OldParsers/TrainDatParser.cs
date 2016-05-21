@@ -355,7 +355,6 @@ namespace OpenBve {
 										} else {
 											CarExposedFrontalArea = a;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
-											break;
 										} break;
 									case 10:
 										if (a <= 0.0) {

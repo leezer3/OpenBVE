@@ -76,16 +76,18 @@ namespace OpenBve {
                     currentRouteStations = new List<Station>();
 			        foreach (Game.Station selectedStation in Game.Stations)
 			        {
-			            Station i = new Station();
-			            i.Name = selectedStation.Name;
-			            i.ArrivalTime = selectedStation.ArrivalTime;
-			            i.DepartureTime = selectedStation.DepartureTime;
-			            i.StopTime = selectedStation.StopTime;
-			            i.OpenLeftDoors = selectedStation.OpenLeftDoors;
-			            i.OpenRightDoors = selectedStation.OpenRightDoors;
-			            i.ForceStopSignal = selectedStation.ForceStopSignal;
-			            i.DefaultTrackPosition = selectedStation.DefaultTrackPosition;
-			            currentRouteStations.Add(i);
+				        Station i = new Station
+				        {
+					        Name = selectedStation.Name,
+					        ArrivalTime = selectedStation.ArrivalTime,
+					        DepartureTime = selectedStation.DepartureTime,
+					        StopTime = selectedStation.StopTime,
+					        OpenLeftDoors = selectedStation.OpenLeftDoors,
+					        OpenRightDoors = selectedStation.OpenRightDoors,
+					        ForceStopSignal = selectedStation.ForceStopSignal,
+					        DefaultTrackPosition = selectedStation.DefaultTrackPosition
+				        };
+				        currentRouteStations.Add(i);
 			        }
 			        StationsLoaded = true;
 			    }
@@ -112,12 +114,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				PrecedingVehicleState precedingVehicle;
-				if (bestLocation != double.MaxValue) {
-					precedingVehicle = new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed));
-				} else {
-					precedingVehicle = null;
-				}
+				var precedingVehicle = bestLocation != double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
 				/*
 				 * Get the driver handles.
 				 * */

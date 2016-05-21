@@ -236,10 +236,12 @@ namespace Plugin {
 			this.SignalPattern = new Pattern(this);
 			this.CompatibilityTemporaryPattern = new Pattern(this);
 			this.CompatibilityPermanentPattern = new Pattern(this);
-			List<Pattern> patterns = new List<Pattern>();
-			patterns.Add(this.SignalPattern);
-			patterns.Add(this.CompatibilityTemporaryPattern);
-			patterns.Add(this.CompatibilityPermanentPattern);
+			List<Pattern> patterns = new List<Pattern>
+			{
+				this.SignalPattern,
+				this.CompatibilityTemporaryPattern,
+				this.CompatibilityPermanentPattern
+			};
 			this.Patterns = patterns.ToArray();
 		}
 		

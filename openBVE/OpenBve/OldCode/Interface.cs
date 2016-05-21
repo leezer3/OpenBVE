@@ -1601,7 +1601,7 @@ namespace OpenBve {
 				for (int i = 0; i < Lines.Length; i++) {
 					Lines[i] = Lines[i].Trim();
 					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
-						string[] Terms = Lines[i].Split(new char[] { ',' });
+						string[] Terms = Lines[i].Split(',');
 						for (int j = 0; j < Terms.Length; j++) {
 							Terms[j] = Terms[j].Trim();
 						}

@@ -250,11 +250,13 @@ namespace OpenBve {
 			Game.RouteInformation.RouteBriefing = null;
 //		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
-			RouteData Data = new RouteData();
-			Data.BlockInterval = 25.0;
-			Data.AccurateObjectDisposal = false;
-			Data.FirstUsedBlock = -1;
-			Data.Blocks = new Block[1];
+			RouteData Data = new RouteData
+			{
+				BlockInterval = 25.0,
+				AccurateObjectDisposal = false,
+				FirstUsedBlock = -1,
+				Blocks = new Block[1]
+			};
 			Data.Blocks[0] = new Block();
 			Data.Blocks[0].Rail = new Rail[1];
 			Data.Blocks[0].Rail[0].RailStart = true;
@@ -628,12 +630,14 @@ namespace OpenBve {
 								if (Level == 0 & !IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";")) {
-										Expressions[e] = new Expression();
-										Expressions[e].File = FileName;
-										Expressions[e].Text = t;
-										Expressions[e].Line = i + 1;
-										Expressions[e].Column = c + 1;
-										Expressions[e].TrackPositionOffset = trackPositionOffset;
+										Expressions[e] = new Expression
+										{
+											File = FileName,
+											Text = t,
+											Line = i + 1,
+											Column = c + 1,
+											TrackPositionOffset = trackPositionOffset
+										};
 										e++;
 									}
 									a = j + 1;
@@ -644,12 +648,14 @@ namespace OpenBve {
 								if (Level == 0 & IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";")) {
-										Expressions[e] = new Expression();
-										Expressions[e].File = FileName;
-										Expressions[e].Text = t;
-										Expressions[e].Line = i + 1;
-										Expressions[e].Column = c + 1;
-										Expressions[e].TrackPositionOffset = trackPositionOffset;
+										Expressions[e] = new Expression
+										{
+											File = FileName,
+											Text = t,
+											Line = i + 1,
+											Column = c + 1,
+											TrackPositionOffset = trackPositionOffset
+										};
 										e++;
 									}
 									a = j + 1;
@@ -661,12 +667,14 @@ namespace OpenBve {
 					if (Lines[i].Length - a > 0) {
 						string t = Lines[i].Substring(a).Trim();
 						if (t.Length > 0 && !t.StartsWith(";")) {
-							Expressions[e] = new Expression();
-							Expressions[e].File = FileName;
-							Expressions[e].Text = t;
-							Expressions[e].Line = i + 1;
-							Expressions[e].Column = c + 1;
-							Expressions[e].TrackPositionOffset = trackPositionOffset;
+							Expressions[e] = new Expression
+							{
+								File = FileName,
+								Text = t,
+								Line = i + 1,
+								Column = c + 1,
+								TrackPositionOffset = trackPositionOffset
+							};
 							e++;
 						}
 					}
@@ -2623,9 +2631,11 @@ namespace OpenBve {
 															Interface.AddMessage(Interface.MessageType.Warning, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														}
 														string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-														Bve4SignalData Signal = new Bve4SignalData();
-														Signal.BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-														Signal.GlowObject = null;
+														Bve4SignalData Signal = new Bve4SignalData
+														{
+															BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
+															GlowObject = null
+														};
 														string Folder = System.IO.Path.GetDirectoryName(f);
 														if (!System.IO.Directory.Exists(Folder)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "The folder " + Folder + " could not be found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -4500,8 +4510,7 @@ namespace OpenBve {
 														roll = 0.0;
 													}
 													if (idx == -1) {
-														int n;
-														n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
+														int n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
 														Array.Resize<FreeObj>(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
 														Data.Blocks[BlockIndex].GroundFreeObj[n].TrackPosition = Data.TrackPosition;
 														Data.Blocks[BlockIndex].GroundFreeObj[n].Type = sttype;
@@ -5104,8 +5113,7 @@ namespace OpenBve {
 			// create objects and track
 			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 			Vector2 Direction = new Vector2(0.0, 1.0);
-			TrackManager.CurrentTrack = new TrackManager.Track();
-			TrackManager.CurrentTrack.Elements = new TrackManager.TrackElement[] { };
+			TrackManager.CurrentTrack = new TrackManager.Track {Elements = new TrackManager.TrackElement[] {}};
 			double CurrentSpeedLimit = double.PositiveInfinity;
 			int CurrentRunIndex = 0;
 			int CurrentFlangeIndex = 0;

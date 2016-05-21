@@ -279,19 +279,13 @@ namespace Plugin {
 			} else if (key == VirtualKeys.E) {
 				// --- disable safety systems ---
 				if (this.AtsSx != null) {
-					if (this.AtsSx.State != AtsSx.States.Disabled) {
-						this.AtsSx.State = AtsSx.States.Disabled;
-					}
+					this.AtsSx.State = AtsSx.States.Disabled;
 				}
 				if (this.AtsP != null) {
-					if (this.AtsP.State != AtsP.States.Disabled) {
-						this.AtsP.State = AtsP.States.Disabled;
-					}
+					this.AtsP.State = AtsP.States.Disabled;
 				}
 				if (this.Atc != null) {
-					if (this.Atc.State != Atc.States.Disabled) {
-						this.Atc.State = Atc.States.Disabled;
-					}
+					this.Atc.State = Atc.States.Disabled;
 				}
 			} else {
 				// --- other functions ---

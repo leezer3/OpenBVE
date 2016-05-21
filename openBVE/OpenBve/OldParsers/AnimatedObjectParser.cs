@@ -16,8 +16,10 @@ namespace OpenBve
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-			Result.Objects = new ObjectManager.AnimatedObject[4];
+			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			{
+				Objects = new ObjectManager.AnimatedObject[4]
+			};
 			int ObjectCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
@@ -132,9 +134,11 @@ namespace OpenBve
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-											aos.Object = s;
-											aos.Position = position;
+											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+											{
+												Object = s,
+												Position = position
+											};
 											a.States = new ObjectManager.AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
@@ -169,19 +173,21 @@ namespace OpenBve
 								{
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
-								Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
-								Result.Objects[ObjectCount].CurrentState = -1;
-								Result.Objects[ObjectCount].TranslateXDirection = new Vector3(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].TranslateYDirection = new Vector3(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].TranslateZDirection = new Vector3(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].RotateYDirection = new Vector3(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].RotateZDirection = new Vector3(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(1.0, 0.0);
-								Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(0.0, 1.0);
-								Result.Objects[ObjectCount].RefreshRate = 0.0;
-								Result.Objects[ObjectCount].ObjectIndex = -1;
+								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
+								{
+									States = new ObjectManager.AnimatedObjectState[] {},
+									CurrentState = -1,
+									TranslateXDirection = new Vector3(1.0, 0.0, 0.0),
+									TranslateYDirection = new Vector3(0.0, 1.0, 0.0),
+									TranslateZDirection = new Vector3(0.0, 0.0, 1.0),
+									RotateXDirection = new Vector3(1.0, 0.0, 0.0),
+									RotateYDirection = new Vector3(0.0, 1.0, 0.0),
+									RotateZDirection = new Vector3(0.0, 0.0, 1.0),
+									TextureShiftXDirection = new Vector2(1.0, 0.0),
+									TextureShiftYDirection = new Vector2(0.0, 1.0),
+									RefreshRate = 0.0,
+									ObjectIndex = -1
+								};
 								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 								double RotateX = 0;
 								bool StaticXRotation = false;

@@ -225,10 +225,15 @@ namespace OpenBve {
 				ObjectManager.Objects[i].Mesh.Materials = Object.States[t].Object.Mesh.Materials;
 			} else {
 				ObjectManager.Objects[i] = null;
-				ObjectManager.Objects[i] = new StaticObject();
-				ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[] { };
-				ObjectManager.Objects[i].Mesh.Materials = new World.MeshMaterial[] { };
-				ObjectManager.Objects[i].Mesh.Vertices = new World.Vertex[] { };
+				ObjectManager.Objects[i] = new StaticObject
+				{
+					Mesh =
+					{
+						Faces = new World.MeshFace[] {},
+						Materials = new World.MeshMaterial[] {},
+						Vertices = new World.Vertex[] {}
+					}
+				};
 			}
 			Object.CurrentState = StateIndex;
 			if (Show) {
@@ -1013,7 +1018,6 @@ namespace OpenBve {
 						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
 						if (System.IO.File.Exists(f)) {
 							FileName = f;
-							break;
 						}
 						break;
 					}

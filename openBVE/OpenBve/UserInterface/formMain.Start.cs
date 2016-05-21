@@ -52,10 +52,10 @@ namespace OpenBve {
 						for (int i = 0; i < Folders.Length; i++) {
 							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
 							if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0) {
-								string Name = System.IO.Path.GetFileName(Folders[i]);
-								if (!string.IsNullOrEmpty(Name) && Name[0] != '.') {
-									ListViewItem Item = listviewRouteFiles.Items.Add(Name);
-									Item.ImageKey = "folder";
+								string folderName = System.IO.Path.GetFileName(Folders[i]);
+								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.') {
+									ListViewItem Item = listviewRouteFiles.Items.Add(folderName);
+									Item.ImageKey = @"folder";
 									Item.Tag = Folders[i];
 								}
 							}
@@ -72,9 +72,9 @@ namespace OpenBve {
 							switch (Extension) {
 								case ".rw":
 								case ".csv":
-									string Name = System.IO.Path.GetFileName(Files[i]);
-									if (!string.IsNullOrEmpty(Name) && Name[0] != '.') {
-										ListViewItem Item = listviewRouteFiles.Items.Add(Name);
+									string fileName = System.IO.Path.GetFileName(Files[i]);
+									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.') {
+										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
 										if (Extension == ".csv") {
 											try {
 												string text = System.IO.File.ReadAllText(Files[i], Encoding.UTF8);
@@ -262,15 +262,11 @@ namespace OpenBve {
 							try {
 								System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
 								if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0) {
-									string Name = System.IO.Path.GetFileName(Folders[i]);
-									if (!string.IsNullOrEmpty(Name) && Name[0] != '.') {
+									string folderName = System.IO.Path.GetFileName(Folders[i]);
+									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.') {
 										string File = OpenBveApi.Path.CombineFile(Folders[i], "train.dat");
-										ListViewItem Item = listviewTrainFolders.Items.Add(Name);
-										if (System.IO.File.Exists(File)) {
-											Item.ImageKey = "train";
-										} else {
-											Item.ImageKey = "folder";
-										}
+										ListViewItem Item = listviewTrainFolders.Items.Add(folderName);
+										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
 								}
@@ -530,7 +526,7 @@ namespace OpenBve {
 				textboxRouteEncodingPreview.Text = Interface.ConvertNewlinesToCrLf(Description);
 				if (Game.TrainName != null)
 				{
-					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault") + " (" + Game.TrainName + ")";
+					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault") + @" (" + Game.TrainName + @")";
 				}
 				else
 				{
