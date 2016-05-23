@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Net;
 using System.Windows.Forms;
+using System.Xml;
 using OpenBveApi.Packages;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -402,6 +404,7 @@ namespace OpenBve {
 			linkHomepage.Text = Interface.GetInterfaceString("panel_homepage");
 			buttonClose.Text = Interface.GetInterfaceString("panel_close");
 			radioButtonPackages.Text = Interface.GetInterfaceString("panel_packages");
+			linkLabelCheckUpdates.Text = Interface.GetInterfaceString("panel_updates");
 			/*
 			 * Localisation for strings in the options pane
 			 */
@@ -1239,6 +1242,80 @@ namespace OpenBve {
 			}
 		}
 
+		private void checkForUpdate()
+		{
+			string xmlURL = "http://openbve-project.net/version.xml";
+			HttpWebRequest hwRequest = (HttpWebRequest) WebRequest.Create(xmlURL);
+			hwRequest.Timeout = 5000;
+			HttpWebResponse hwResponse = null;
+			XmlTextReader reader = null;
+			string url = null;
+			string date = null;
+			Version newVersion = new Version();
+			try
+			{
+				hwResponse = (HttpWebResponse) hwRequest.GetResponse();
+				reader = new XmlTextReader(hwResponse.GetResponseStream());
+				reader.MoveToContent();
+				string elementName = "";
+				if ((reader.NodeType == XmlNodeType.Element) &&
+				    (reader.Name == "openBVE"))
+				{
+					while (reader.Read())
+					{
+						if (reader.NodeType == XmlNodeType.Element)
+							elementName = reader.Name.ToLowerInvariant();
+						else
+						{
+							if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
+							{
+								switch (elementName)
+								{
+									case "version":
+										newVersion = new Version(reader.Value);
+										break;
+									case "url":
+										url = reader.Value;
+										break;
+									case "date":
+										date = reader.Value;
+										break;
+								}
+							}
+						}
+					}
+				}
+
+			}
+			finally
+			{
+				if (reader != null) reader.Close();
+				if (hwResponse != null) hwResponse.Close();
+			}
+			Version curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			bool newerVersion = curVersion.CompareTo(newVersion) < 0;
+			if (url == null)
+			{
+				//The internet connection is broken.....
+				MessageBox.Show(Interface.GetInterfaceString("panel_updates_invalid"));
+				return;
+			}
+			if (newerVersion)
+			{
+				string question = Interface.GetInterfaceString("panel_updates_new");
+				question = question.Replace("[version]", newVersion.ToString());
+				question = question.Replace("[date]", date);
+				if (DialogResult.OK == MessageBox.Show(this, question, Interface.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+				{
+					System.Diagnostics.Process.Start(url);
+				}  
+			}
+			else
+			{
+				MessageBox.Show(Interface.GetInterfaceString("panel_updates_old"));
+			}
+		}
+
 		internal formAbout AboutDialog;
 
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1248,6 +1325,11 @@ namespace OpenBve {
 				AboutDialog = new formAbout();
 				AboutDialog.Show();
 			}
+		}
+
+		private void linkLabelCheckUpdates_Click(object sender, EventArgs e)
+		{
+			checkForUpdate();
 		}
 	}
 }

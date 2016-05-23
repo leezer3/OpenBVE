@@ -243,6 +243,7 @@
 			this.radiobuttonJoystick = new System.Windows.Forms.RadioButton();
 			this.radiobuttonKeyboard = new System.Windows.Forms.RadioButton();
 			this.panelInfo = new System.Windows.Forms.Panel();
+			this.linkLabelCheckUpdates = new System.Windows.Forms.LinkLabel();
 			this.aboutLabel = new System.Windows.Forms.LinkLabel();
 			this.linkHomepage = new System.Windows.Forms.LinkLabel();
 			this.labelVersion = new System.Windows.Forms.Label();
@@ -1295,7 +1296,7 @@
 			this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
 			this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
 			this.labelFillerTwo.Name = "labelFillerTwo";
-			this.labelFillerTwo.Size = new System.Drawing.Size(160, 164);
+			this.labelFillerTwo.Size = new System.Drawing.Size(160, 146);
 			this.labelFillerTwo.TabIndex = 2;
 			// 
 			// panelOptions
@@ -3191,15 +3192,33 @@
 			// 
 			this.panelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.panelInfo.BackColor = System.Drawing.Color.Gray;
+			this.panelInfo.Controls.Add(this.linkLabelCheckUpdates);
 			this.panelInfo.Controls.Add(this.aboutLabel);
 			this.panelInfo.Controls.Add(this.linkHomepage);
 			this.panelInfo.Controls.Add(this.labelVersion);
 			this.panelInfo.Controls.Add(this.labelInfoBottom);
 			this.panelInfo.Controls.Add(this.labelInfoTop);
-			this.panelInfo.Location = new System.Drawing.Point(0, 497);
+			this.panelInfo.Location = new System.Drawing.Point(0, 483);
 			this.panelInfo.Name = "panelInfo";
-			this.panelInfo.Size = new System.Drawing.Size(160, 61);
+			this.panelInfo.Size = new System.Drawing.Size(160, 75);
 			this.panelInfo.TabIndex = 3;
+			// 
+			// linkLabelCheckUpdates
+			// 
+			this.linkLabelCheckUpdates.ActiveLinkColor = System.Drawing.Color.Crimson;
+			this.linkLabelCheckUpdates.AutoEllipsis = true;
+			this.linkLabelCheckUpdates.DisabledLinkColor = System.Drawing.Color.Silver;
+			this.linkLabelCheckUpdates.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+			this.linkLabelCheckUpdates.LinkColor = System.Drawing.Color.Gold;
+			this.linkLabelCheckUpdates.Location = new System.Drawing.Point(8, 40);
+			this.linkLabelCheckUpdates.Name = "linkLabelCheckUpdates";
+			this.linkLabelCheckUpdates.Size = new System.Drawing.Size(128, 16);
+			this.linkLabelCheckUpdates.TabIndex = 7;
+			this.linkLabelCheckUpdates.TabStop = true;
+			this.linkLabelCheckUpdates.Text = "Check for updates";
+			this.linkLabelCheckUpdates.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.linkLabelCheckUpdates.VisitedLinkColor = System.Drawing.Color.Gold;
+			this.linkLabelCheckUpdates.Click += new System.EventHandler(this.linkLabelCheckUpdates_Click);
 			// 
 			// aboutLabel
 			// 
@@ -3208,7 +3227,7 @@
 			this.aboutLabel.DisabledLinkColor = System.Drawing.Color.Silver;
 			this.aboutLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
 			this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
-			this.aboutLabel.Location = new System.Drawing.Point(8, 40);
+			this.aboutLabel.Location = new System.Drawing.Point(8, 56);
 			this.aboutLabel.Name = "aboutLabel";
 			this.aboutLabel.Size = new System.Drawing.Size(128, 16);
 			this.aboutLabel.TabIndex = 6;
@@ -3253,7 +3272,7 @@
 			// 
 			this.labelInfoBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelInfoBottom.BackColor = System.Drawing.Color.White;
-			this.labelInfoBottom.Location = new System.Drawing.Point(0, 59);
+			this.labelInfoBottom.Location = new System.Drawing.Point(0, 73);
 			this.labelInfoBottom.Name = "labelInfoBottom";
 			this.labelInfoBottom.Size = new System.Drawing.Size(160, 2);
 			this.labelInfoBottom.TabIndex = 5;
@@ -5256,6 +5275,7 @@
 		private System.Windows.Forms.RadioButton radioButtonOverwrite;
 		private System.Windows.Forms.Label labelProgressFile;
 		private System.Windows.Forms.Label labelProgressPercent;
+		private System.Windows.Forms.LinkLabel linkLabelCheckUpdates;
         
     }
 }
