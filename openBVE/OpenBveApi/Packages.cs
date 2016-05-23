@@ -29,8 +29,7 @@ namespace OpenBveApi.Packages
 		[XmlIgnore]
 		public string FileName;
 		/// <summary>The package version represented in string format</summary>
-		[XmlElement(ElementName = "PackageVersion")]
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+		[XmlElement(ElementName = "PackageVersion"), EditorBrowsable(EditorBrowsableState.Never), Browsable(false),Bindable(false)]
 		public string Version
 		{
 			get
@@ -75,8 +74,7 @@ namespace OpenBveApi.Packages
 		[XmlIgnore]
 		public Version MinimumVersion;
 		/// <summary>The minimum package version represented in string format</summary>
-		[XmlElement(ElementName = "MinimumVersion")]
-		[EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+		[XmlElement(ElementName = "MinimumVersion"), Browsable(false), Bindable(false),EditorBrowsable(EditorBrowsableState.Never)]
 		public string MinVersion
 		{
 			get
@@ -115,9 +113,11 @@ namespace OpenBveApi.Packages
 		}
 	}
 
-	[XmlType("openBVE")]
+	/// <summary>This class is used by the XML serializer to provide a correctly readable structure</summary>
+	[Browsable(false), Bindable(false), EditorBrowsable(EditorBrowsableState.Never), XmlType("openBVE")]
 	public class SerializedPackage
 	{
+		/// <summary>The base package</summary>
 		public Package Package;
 	}
 
@@ -323,7 +323,6 @@ namespace OpenBveApi.Packages
 		public static Package ReadPackage(string packageFile)
 		{
 			bool InfoFound = false;
-			XmlDocument CurrentXML = new XmlDocument();
 			//Create a random temp directory
 			string TempDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
 
@@ -391,8 +390,10 @@ namespace OpenBveApi.Packages
 			return currentPackage;
 		}
 
+		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
 		public static event EventHandler<ProgressReport> ProgressChanged;
-		
+
+		/// <summary>This is called whenever the progress changes</summary>
 		public static void OnProgressChanged(object sender, ProgressReport progressReport)
 		{
 			if (ProgressChanged != null)
@@ -402,11 +403,14 @@ namespace OpenBveApi.Packages
 		}
 	}
 
+	/// <summary>Defines a progress report</summary>
 	public class ProgressReport : EventArgs
 	{
-		public event EventHandler<ProgressReport> ProgressChanged;
+		/// <summary>The current progress percentage</summary>
 		public int Progress {get;private set;}
+		/// <summary>The file currently being processed</summary>
 		public string CurrentFile { get; private set; }
+		/// <summary>The progress report</summary>
 		public ProgressReport(int progress, string file)
 		{
 			Progress = progress;

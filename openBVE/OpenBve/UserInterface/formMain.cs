@@ -970,6 +970,12 @@ namespace OpenBve {
 
 		// page selection
 		private void radiobuttonStart_CheckedChanged(object sender, EventArgs e) {
+			if (workerThread.IsBusy)
+			{
+				radioButtonPackages.Checked = true;
+				//If the worker thread is currently extracting or creating a package, don't allow the user to cancel...
+				return;
+			}
 			panelStart.Visible = true;
 			panelReview.Visible = false;
 			panelControls.Visible = false;
@@ -984,6 +990,12 @@ namespace OpenBve {
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e) {
+			if (workerThread.IsBusy)
+			{
+				radioButtonPackages.Checked = true;
+				//If the worker thread is currently extracting or creating a package, don't allow the user to cancel...
+				return;
+			}
 			panelReview.Visible = true;
 			panelStart.Visible = false;
 			panelControls.Visible = false;
@@ -998,6 +1010,12 @@ namespace OpenBve {
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e) {
+			if (workerThread.IsBusy)
+			{
+				radioButtonPackages.Checked = true;
+				//If the worker thread is currently extracting or creating a package, don't allow the user to cancel...
+				return;
+			}
 			panelControls.Visible = true;
 			panelStart.Visible = false;
 			panelReview.Visible = false;
@@ -1012,6 +1030,12 @@ namespace OpenBve {
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
 		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e) {
+			if (workerThread.IsBusy)
+			{
+				radioButtonPackages.Checked = true;
+				//If the worker thread is currently extracting or creating a package, don't allow the user to cancel...
+				return;
+			}
 			panelOptions.Visible = true;
 			panelStart.Visible = false;
 			panelReview.Visible = false;
@@ -1027,6 +1051,10 @@ namespace OpenBve {
 		}
 		private void radioButtonPackages_CheckedChanged(object sender, EventArgs e)
 		{
+			if (radioButtonPackages.Checked && workerThread.IsBusy)
+			{
+				return;
+			}
 			panelOptions.Visible = false;
 			panelStart.Visible = false;
 			panelReview.Visible = false;

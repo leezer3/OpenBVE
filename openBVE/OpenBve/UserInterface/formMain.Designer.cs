@@ -4110,7 +4110,7 @@
 			this.buttonCreateProceed.TabIndex = 22;
 			this.buttonCreateProceed.Text = "Proceed......";
 			this.buttonCreateProceed.UseVisualStyleBackColor = true;
-			this.buttonCreateProceed.Click += new System.EventHandler(this.button3_Click);
+			this.buttonCreateProceed.Click += new System.EventHandler(this.buttonCreateProceed_Click);
 			// 
 			// panelReplacePackage
 			// 

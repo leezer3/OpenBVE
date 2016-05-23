@@ -557,8 +557,13 @@ namespace OpenBve
 			 workerThread.RunWorkerAsync();	
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		private void buttonCreateProceed_Click(object sender, EventArgs e)
 		{
+			if (currentPackage == null || currentPackage.GUID == null)
+			{
+				//Don't crash if we've clicked on the button without selecting anything
+				return;
+			}
 			currentPackage.FileName = textBoxPackageFileName.Text;
 			System.IO.FileInfo fi = null;
 			try
