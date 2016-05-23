@@ -407,11 +407,11 @@ namespace OpenBveApi.Packages
 		public event EventHandler<ProgressReport> ProgressChanged;
 		public int Progress {get;private set;}
 		public string CurrentFile { get; private set; }
-        public ProgressReport(int progress, string file)
-        {
-            Progress = progress;
-	        CurrentFile = file;
-        }
+		public ProgressReport(int progress, string file)
+		{
+			Progress = progress;
+			CurrentFile = file;
+		}
 	}
 
 	/// <summary>Provides information functions for OpenBVE packages</summary>
@@ -475,7 +475,7 @@ namespace OpenBveApi.Packages
 						if (Package.GUID == currentPackage.GUID)
 						{
 							if (Package.MinimumVersion > currentPackage.PackageVersion ||
-							    Package.MaximumVersion < currentPackage.PackageVersion)
+								Package.MaximumVersion < currentPackage.PackageVersion)
 							{
 								Dependancies.Add(Package);
 							}
@@ -494,7 +494,7 @@ namespace OpenBveApi.Packages
 						if (Package.GUID == currentPackage.GUID)
 						{
 							if (Package.MinimumVersion > currentPackage.PackageVersion ||
-							    Package.MaximumVersion < currentPackage.PackageVersion)
+								Package.MaximumVersion < currentPackage.PackageVersion)
 							{
 								Dependancies.Add(Package);
 							}

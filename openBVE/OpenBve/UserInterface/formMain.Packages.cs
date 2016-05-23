@@ -254,7 +254,7 @@ namespace OpenBve
 						break;
 				}
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
-				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_header");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_success_header");
 				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_success_files");
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
@@ -342,17 +342,26 @@ namespace OpenBve
 						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialTrainFolder, ref uninstallResults);
 						break;
 				}
-				
+				labelUninstallSuccess.Text = Interface.GetInterfaceString("packages_uninstall_success");
+				labelUninstallSuccessHeader.Text = Interface.GetInterfaceString("packages_uninstall_success_header");
 				textBoxUninstallResult.Text = uninstallResults;
 				HidePanels();
 				panelUninstallResult.Show();
 			}
 			else
 			{
+				labelUninstallSuccess.Text = Interface.GetInterfaceString("packages_uninstall_success");
+				labelUninstallSuccessHeader.Text = Interface.GetInterfaceString("packages_uninstall_success_header");
 				if (uninstallResults == null)
 				{
 					//Uninstall requires an XML list of files, and these were missing.......
 					textBoxUninstallResult.Text = Interface.GetInterfaceString("packages_uninstall_missing_xml");
+				}
+				else
+				{
+					//Something went wrong in the uninstallation process, so show the log
+					//TODO: This doesn't log anything other than a list of files at the minute
+					textBoxUninstallResult.Text = uninstallResults;
 				}
 			}
 			HidePanels();
@@ -952,6 +961,7 @@ namespace OpenBve
 		{
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_replace_id");
 			textBoxGUID.Text = currentPackage.GUID;
+			panelNewPackage.Enabled = true;
 			addPackageItemsButton.Enabled = true;
 			newPackageClearSelectionButton.Enabled = true;
 			SaveFileNameButton.Enabled = true;

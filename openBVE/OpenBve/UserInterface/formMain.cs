@@ -401,6 +401,7 @@ namespace OpenBve {
 			radiobuttonOptions.Text = Interface.GetInterfaceString("panel_options");
 			linkHomepage.Text = Interface.GetInterfaceString("panel_homepage");
 			buttonClose.Text = Interface.GetInterfaceString("panel_close");
+			radioButtonPackages.Text = Interface.GetInterfaceString("panel_packages");
 			/*
 			 * Localisation for strings in the options pane
 			 */
@@ -615,6 +616,8 @@ namespace OpenBve {
 			 * 
 			 */
 			//Main display tab
+			labelInstalledPackages.Text = Interface.GetInterfaceString("packages_list");
+			labelPackageListType.Text = Interface.GetInterfaceString("packages_list_type");
 			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
 			buttonUninstallPackage.Text = Interface.GetInterfaceString("packages_uninstall_button");
 			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_creation_button");
@@ -658,10 +661,28 @@ namespace OpenBve {
 			 * 
 			 */
 
-			//Add dependancies tab
+			//Add dependancies panel
+			labelDependanciesHeader.Text = Interface.GetInterfaceString("packages_creation_dependancies");
+			labelInstalledDependancies.Text = Interface.GetInterfaceString("packages_list");
+			labelDependancyType.Text = Interface.GetInterfaceString("packages_list_type");
 			comboBoxDependancyType.Items[0] = Interface.GetInterfaceString("packages_type_route");
 			comboBoxDependancyType.Items[1] = Interface.GetInterfaceString("packages_type_train");
 			comboBoxDependancyType.Items[2] = Interface.GetInterfaceString("packages_type_other");
+			buttonDepends.Text = Interface.GetInterfaceString("packages_creation_dependancies_add");
+			buttonReccomends.Text = Interface.GetInterfaceString("packages_creation_reccomends_add");
+			//Version Error panel
+			labelBrokenDependancies.Text = Interface.GetInterfaceString("packages_install_dependancies_broken");
+			labelNewVersion.Text = Interface.GetInterfaceString("packages_version_new");
+			labelCurrentVersion.Text = Interface.GetInterfaceString("packages_version_current");
+			// *** labelVersionError.Text is set dynamically at runtime ***
+			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_version_error");
+			//Please Wait panel
+			labelPleaseWait.Text = Interface.GetInterfaceString("packages_processing");
+			//Success panel
+			// *** Multi-functional, all labels set at runtime ***
+			//Uninstall result panel
+			// *** All labels set at runtime ***
+
 
 		}
 
