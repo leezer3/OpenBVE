@@ -91,6 +91,7 @@ namespace OpenBve
 						textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
 						if (currentPackage.Website != null)
 						{
+							linkLabelPackageWebsite.Links.Clear();
 							linkLabelPackageWebsite.Text = currentPackage.Website;
 							LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
 							linkLabelPackageWebsite.Links.Add(link);
@@ -1127,6 +1128,10 @@ namespace OpenBve
 			textBoxPackageVersion.Text = Interface.GetInterfaceString("packages_selection_none");
 			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install_select");
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_id");
+			linkLabelPackageWebsite.Links.Clear();
+			linkLabelPackageWebsite.Text = "No package selected.";
+			LinkLabel.Link link = new LinkLabel.Link { LinkData = null };
+			linkLabelPackageWebsite.Links.Add(link);
 			//Reset the worker thread
 			workerThread = null;
 			workerThread = new BackgroundWorker();
