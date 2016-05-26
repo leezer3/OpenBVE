@@ -289,9 +289,9 @@ namespace OpenBveApi.Textures {
 	public class TextureParameters {
 		// --- members ---
 		/// <summary>The region in the texture to be extracted, or a null reference for the entire texture.</summary>
-		private TextureClipRegion MyClipRegion;
+		private readonly TextureClipRegion MyClipRegion;
 		/// <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
-		private Nullable<Color24> MyTransparentColor;
+		private readonly Nullable<Color24> MyTransparentColor;
 		// --- properties ---
 		/// <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
 		public TextureClipRegion ClipRegion {

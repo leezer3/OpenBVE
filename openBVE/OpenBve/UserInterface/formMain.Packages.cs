@@ -23,6 +23,9 @@ namespace OpenBve
 		internal PackageType selectedPackageType;
 		internal string ImageFile;
 		internal BackgroundWorker workerThread = new BackgroundWorker();
+		internal CompressionType packageCompressionType;
+
+		
 
 
 		internal void RefreshPackages()
@@ -206,14 +209,13 @@ namespace OpenBve
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
-						ExtractionDirectory = Program.FileSystem.InitialRailwayFolder;
+						ExtractionDirectory = Program.FileSystem.RouteInstallationDirectory;
 						break;
 					case PackageType.Train:
-						ExtractionDirectory = Program.FileSystem.InitialTrainFolder;
+						ExtractionDirectory = Program.FileSystem.TrainInstallationDirectory;
 						break;
 					default:
-						//TODO: Not sure this is the right place to put this, but at the moment leave it there
-						ExtractionDirectory = Program.FileSystem.DataFolder;
+						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
 						break;
 				}
 				string PackageFiles = "";
@@ -334,13 +336,13 @@ namespace OpenBve
 				switch (packageToUninstall.PackageType)
 				{
 					case PackageType.Other:
-						//TODO: Define the other directory
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.OtherInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Route:
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialRailwayFolder, ref uninstallResults);
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref uninstallResults);
 						break;
 					case PackageType.Train:
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialTrainFolder, ref uninstallResults);
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
 						break;
 				}
 				labelUninstallSuccess.Text = Interface.GetInterfaceString("packages_uninstall_success");
@@ -533,7 +535,7 @@ namespace OpenBve
 			workerThread.DoWork += delegate
 			{
 				Manipulation.ProgressChanged += OnWorkerProgressChanged;
-				Manipulation.CreatePackage(currentPackage, currentPackage.FileName, ImageFile, filesToPackage);
+				Manipulation.CreatePackage(currentPackage, CompressionType.Zip, currentPackage.FileName, ImageFile, filesToPackage);
 				string text = "";
 				for (int i = 0; i < filesToPackage.Count; i++)
 				{
@@ -576,6 +578,17 @@ namespace OpenBve
 			}
 			if (fi == null)
 			{
+				//The supplied filename was invalid
+				MessageBox.Show(Interface.GetInterfaceString("packages_creation_invalid_filename"));
+				return;
+			}
+			try
+			{
+				System.IO.File.Delete(currentPackage.FileName);
+			}
+			catch
+			{
+				//The file is locked or otherwise unavailable
 				MessageBox.Show(Interface.GetInterfaceString("packages_creation_invalid_filename"));
 				return;
 			}
@@ -1051,7 +1064,7 @@ namespace OpenBve
 								Database.currentDatabase.InstalledRoutes.RemoveAt(i);
 							}
 						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialRailwayFolder, ref result);
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref result);
 						break;
 					case PackageType.Train:
 						for (int i = Database.currentDatabase.InstalledTrains.Count - 1; i >= 0; i--)
@@ -1061,7 +1074,7 @@ namespace OpenBve
 								Database.currentDatabase.InstalledTrains.RemoveAt(i);
 							}
 						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.InitialTrainFolder, ref result);
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref result);
 						break;
 					case PackageType.Other:
 						for (int i = Database.currentDatabase.InstalledOther.Count - 1; i >= 0; i--)

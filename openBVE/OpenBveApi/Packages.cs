@@ -156,6 +156,17 @@ namespace OpenBveApi.Packages
 		public string relativePath;
 	}
 
+	/// <summary>Defines the types of compression a package file may use.</summary>
+	public enum CompressionType
+	{
+		/// <summary>RAR compression (Best)</summary>
+		RAR,
+		/// <summary>Zip compression (Medium)</summary>
+		Zip,
+		/// <summary>TarGz compression (Worst)</summary>
+		TarGZ
+	}
+
 
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>
 	public static class Manipulation
@@ -221,16 +232,32 @@ namespace OpenBveApi.Packages
 
 		/// <summary>Creates a new packaged archive</summary>
 		/// <param name="currentPackage">The package data we wish to compress into an archive</param>
+		/// <param name="compressionType">The compression type to use for this archive</param>
 		/// <param name="packageFile">The filename to save the package as</param>
 		/// <param name="packageImage">The path to the image for this package, if applicable</param>
 		/// <param name="packageFiles">The list of files to save within the package</param>
-		public static void CreatePackage(Package currentPackage, string packageFile, string packageImage, List<PackageFile> packageFiles)
+		public static void CreatePackage(Package currentPackage, CompressionType compressionType, string packageFile, string packageImage, List<PackageFile> packageFiles)
 		{
-			//TEMP
-			File.Delete(packageFile);
 			using (var zip = File.OpenWrite(packageFile))
 			{
-				using (var zipWriter = WriterFactory.Open(zip, SharpCompress.Common.ArchiveType.Zip, CompressionType.LZMA))
+				SharpCompress.Common.ArchiveType type;
+				SharpCompress.Common.CompressionType compression;
+				switch (compressionType)
+				{
+					case CompressionType.RAR:
+						type = ArchiveType.Rar;
+						compression = SharpCompress.Common.CompressionType.Rar;
+						break;
+					case CompressionType.Zip:
+						type = ArchiveType.Zip;
+						compression = SharpCompress.Common.CompressionType.LZMA;
+						break;
+					default:
+						type = ArchiveType.GZip;
+						compression = SharpCompress.Common.CompressionType.BZip2;
+						break;
+				}
+				using (var zipWriter = WriterFactory.Open(zip, type, compression))
 				{
 					for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
 					{

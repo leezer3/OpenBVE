@@ -720,10 +720,10 @@ namespace OpenBve {
 				string File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.txt");
 				if (System.IO.File.Exists(File)) {
 					try {
-						string Text = System.IO.File.ReadAllText(File, Result.TrainEncoding);
-						Text = Interface.ConvertNewlinesToCrLf(Text);
-						textboxTrainDescription.Text = Text;
-						textboxTrainEncodingPreview.Text = Text;
+						string trainText = System.IO.File.ReadAllText(File, Result.TrainEncoding);
+						trainText = Interface.ConvertNewlinesToCrLf(trainText);
+						textboxTrainDescription.Text = trainText;
+						textboxTrainEncodingPreview.Text = trainText;
 					} catch {
 						textboxTrainDescription.Text = System.IO.Path.GetFileName(Result.TrainFolder);
 						textboxTrainEncodingPreview.Text = "";

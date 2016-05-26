@@ -22,8 +22,8 @@ namespace OpenBve {
 		/// <summary>The initial location of the Railway/Route folder.</summary>
 		internal string InitialRouteFolder;
 
-        /// <summary>The initial location of the Railway folder.</summary>
-        internal string InitialRailwayFolder;
+		/// <summary>The initial location of the Railway folder.</summary>
+		internal string InitialRailwayFolder;
 
 		/// <summary>The initial location of the Train folder.</summary>
 		internal string InitialTrainFolder;
@@ -33,6 +33,15 @@ namespace OpenBve {
 		
 		/// <summary>The arguments to supply to the process on restarting the program.</summary>
 		internal string RestartArguments;
+
+		/// <summary>The location to which packaged routes will be installed</summary>
+		internal string RouteInstallationDirectory;
+
+		/// <summary>The location to which packaged trains will be installed</summary>
+		internal string TrainInstallationDirectory;
+
+		/// <summary>The location to which packaged other items will be installed</summary>
+		internal string OtherInstallationDirectory;
 		
 		
 		// --- constructors ---
@@ -41,14 +50,17 @@ namespace OpenBve {
 		internal FileSystem() {
 			string assemblyFile = Assembly.GetExecutingAssembly().Location;
 			string assemblyFolder = Path.GetDirectoryName(assemblyFile);
-            //This copy of openBVE is a special string, and should not be localised
-            string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
+			//This copy of openBVE is a special string, and should not be localised
+			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
 			this.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
 			this.InitialRouteFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
-            this.InitialRailwayFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
+			this.InitialRailwayFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
+			this.RouteInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
 			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
+			this.TrainInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
+			this.OtherInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
 			this.RestartProcess = assemblyFile;
 			this.RestartArguments = string.Empty;
 		}
@@ -69,11 +81,80 @@ namespace OpenBve {
 			string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile)) {
 				return FromConfigurationFile(configFile);
-			} else {
-				return new FileSystem();
+			}
+			configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE"), "Settings"), "filesystem.cfg");
+			if (File.Exists(configFile))
+			{
+				return FromConfigurationFile(configFile);
+			}	
+			return new FileSystem();
+			
+		}
+
+		internal static void SaveCurrentFileSystemConfiguration()
+		{
+			string file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "FileSystem.cfg");
+			StringBuilder newLines = new StringBuilder();
+			try
+			{
+				if (File.Exists(file))
+				{
+					string[] lines = File.ReadAllLines(file, Encoding.UTF8);
+					foreach (string line in lines)
+					{
+						int equals = line.IndexOf('=');
+						if (equals >= 0)
+						{
+							string key = line.Substring(0, equals).Trim().ToLowerInvariant();
+							switch (key)
+							{
+								case "data":
+								case "settings":
+								case "initialroute":
+								case "initialtrain":
+								case "restartprocess":
+								case "restartarguments":
+									newLines.AppendLine(line);
+									break;
+							}
+						}
+					}
+				}
+				else
+				{
+					//Create a new filesystem.cfg file using the current filesystem setup as a base
+					//Where does the Debian package point it's filesystem.cfg to??
+					newLines.AppendLine("Data=" + Program.FileSystem.DataFolder);
+					newLines.AppendLine("Settings=" + Program.FileSystem.SettingsFolder);
+					newLines.AppendLine("InitialRoute=" + Program.FileSystem.InitialRouteFolder);
+					newLines.AppendLine("InitialTrain=" + Program.FileSystem.InitialTrainFolder);
+					newLines.AppendLine("RestartProcess=" + Program.FileSystem.RestartProcess);
+					newLines.AppendLine("RestartArguments=" + Program.FileSystem.RestartArguments);
+				}
+				if (Program.FileSystem.RouteInstallationDirectory != null &&
+					Directory.Exists(Program.FileSystem.RouteInstallationDirectory))
+				{
+					newLines.AppendLine("RoutePackageInstall=" + Program.FileSystem.RouteInstallationDirectory);
+				}
+
+				if (Program.FileSystem.TrainInstallationDirectory != null &&
+					Directory.Exists(Program.FileSystem.TrainInstallationDirectory))
+				{
+					newLines.AppendLine("TrainPackageInstall=" + Program.FileSystem.TrainInstallationDirectory);
+				}
+				if (Program.FileSystem.OtherInstallationDirectory != null &&
+					Directory.Exists(Program.FileSystem.OtherInstallationDirectory))
+				{
+					newLines.AppendLine("OtherPackageInstall=" + Program.FileSystem.OtherInstallationDirectory);
+				}
+				System.IO.File.WriteAllText(file, newLines.ToString(), new System.Text.UTF8Encoding(true));
+			}
+			catch
+			{
+				
 			}
 		}
-		
+	
 		/// <summary>Creates all folders in the file system that can later be written to.</summary>
 		internal void CreateFileSystem() {
 			try {
@@ -142,6 +223,15 @@ namespace OpenBve {
 								break;
 							case "restartarguments":
 								system.RestartArguments = GetAbsolutePath(value, false);
+								break;
+							case "routepackageinstall":
+								system.RouteInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							case "trainpackageinstall":
+								system.TrainInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							case "otherpackageinstall":
+								system.OtherInstallationDirectory = GetAbsolutePath(value, true);
 								break;
 						}
 					}

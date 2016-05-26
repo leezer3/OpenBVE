@@ -15,11 +15,11 @@ namespace OpenBveApi.Sounds {
 	public class Sound {
 		// --- members ---
 		/// <summary>The number of samples per second.</summary>
-		private int MySampleRate;
+		private readonly int MySampleRate;
 		/// <summary>The number of bits per sample. Allowed values are 8 or 16.</summary>
-		private int MyBitsPerSample;
+		private readonly int MyBitsPerSample;
 		/// <summary>The PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
-		private byte[][] MyBytes;
+		private readonly byte[][] MyBytes;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="sampleRate">The number of samples per second.</param>

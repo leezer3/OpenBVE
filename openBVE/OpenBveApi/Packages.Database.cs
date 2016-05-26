@@ -281,18 +281,18 @@ namespace OpenBveApi.Packages
 
 			for (int i = 0; i < tempList.Count; i++)
 			{
-				var TestCase = tempList[i].absolutePath.Replace(tempList[i].absolutePath, "");
-				if (TestCase.EndsWith("Railway\\", StringComparison.OrdinalIgnoreCase))
+				var TestCase = tempList[i].absolutePath.Replace(tempList[i].relativePath, "");
+				if (TestCase.EndsWith("Railway", StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root folder
 					return tempList;
 				}
-				if (TestCase.EndsWith("Train\\", StringComparison.OrdinalIgnoreCase))
+				if (TestCase.EndsWith("Train", StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root folder
 					return tempList;
 				}
-				if (TestCase.EndsWith("Route\\", StringComparison.OrdinalIgnoreCase))
+				if (TestCase.EndsWith("Route", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
@@ -301,7 +301,7 @@ namespace OpenBveApi.Packages
 					}
 					return tempList;
 				}
-				if (TestCase.EndsWith("Object\\", StringComparison.OrdinalIgnoreCase))
+				if (TestCase.EndsWith("Object", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
@@ -310,7 +310,7 @@ namespace OpenBveApi.Packages
 					}
 					return tempList;
 				}
-				if (TestCase.EndsWith("Sound\\", StringComparison.OrdinalIgnoreCase))
+				if (TestCase.EndsWith("Sound", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
@@ -328,6 +328,7 @@ namespace OpenBveApi.Packages
 			int ImageFiles = 0;
 			int ObjectFiles = 0;
 			int RouteFiles = 0;
+			int TrainFiles = 0;
 			for (int i = 0; i < tempList.Count; i++)
 			{
 				if (tempList[i].relativePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
@@ -367,12 +368,20 @@ namespace OpenBveApi.Packages
 				{
 					RouteFiles++;
 				}
+				else if (tempList[i].relativePath.EndsWith("train.dat", StringComparison.OrdinalIgnoreCase) || tempList[i].relativePath.EndsWith("panel.cfg", StringComparison.OrdinalIgnoreCase)
+				|| tempList[i].relativePath.EndsWith("panel2.cfg", StringComparison.OrdinalIgnoreCase) || tempList[i].relativePath.EndsWith("extensions.cfg", StringComparison.OrdinalIgnoreCase)
+				|| tempList[i].relativePath.EndsWith("ats.cfg", StringComparison.OrdinalIgnoreCase) || tempList[i].relativePath.EndsWith("train.txt", StringComparison.OrdinalIgnoreCase))
+				{
+					TrainFiles++;
+				}
 				else if (tempList[i].relativePath.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
 				{
 					//Not sure about this one
 					//TXT files are commonly used for includes though
 					RouteFiles++;
 				}
+				
+				
 			}
 			//We've counted the number of files found:
 			if (SoundFiles != 0 && ObjectFiles == 0 && ImageFiles == 0)
@@ -394,16 +403,28 @@ namespace OpenBveApi.Packages
 				}
 				return tempList;
 			}
-			if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20)
+			if ((ObjectFiles != 0 || RouteFiles != 0) && ImageFiles > 20 && (TrainFiles < 2 || ImageFiles > 200))
 			{
 				//We have csv or b3d files and more than 20 images
 				//this means it's almost certainly an OBJECT subfolder
+
+				//HACK:
+				//If more than 200 images but also train stuff, assume it's a route object folder containing a misplaced DLL or something
+				//NWM.....
 				for (int j = 0; j < tempList.Count; j++)
 				{
 					tempList[j].relativePath = "\\Object" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
+			if (TrainFiles > 2 && ImageFiles > 2 && SoundFiles > 2)
+			{
+				for (int j = 0; j < tempList.Count; j++)
+				{
+					tempList[j].relativePath = "\\Train" + tempList[j].relativePath;
+				}
+			}
+			//Can't decide, so just return the base list......
 			return tempList;
 		}
 

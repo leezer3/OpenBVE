@@ -5,7 +5,7 @@ namespace OpenBve
 {
     internal partial class formAbout : Form
     {
-        private Image Logo;
+        private readonly Image Logo;
 
         public formAbout()
         {
