@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -345,7 +346,7 @@ namespace OpenBve
 													try
 													{
 														double X;
-														if (double.TryParse(b, out X))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
 														{
 															Position.X = X;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -371,7 +372,7 @@ namespace OpenBve
 													try
 													{
 														double Y;
-														if (double.TryParse(b, out Y))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
 														{
 															Position.Y = Y;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -397,7 +398,7 @@ namespace OpenBve
 													try
 													{
 														double Z;
-														if (double.TryParse(b, out Z))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
 														{
 															Position.Z = Z;
 															//A function script must be evaluated every frame, no matter if it is a constant value
@@ -499,7 +500,7 @@ namespace OpenBve
 												case "rotatexfunction":
 													try
 													{
-														if (double.TryParse(b, out RotateX))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateX))
 														{
 															//A function script must be evaluated every frame, no matter if it is a constant value
 															//If we add this to the position instead, this gives a minor speedup
@@ -514,7 +515,7 @@ namespace OpenBve
 												case "rotateyfunction":
 													try
 													{
-														if (double.TryParse(b, out RotateY))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateY))
 														{
 															StaticYRotation = true;
 														}
@@ -527,7 +528,7 @@ namespace OpenBve
 												case "rotatezfunction":
 													try
 													{
-														if (double.TryParse(b, out RotateZ))
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateZ))
 														{
 															StaticZRotation = true;
 														}
