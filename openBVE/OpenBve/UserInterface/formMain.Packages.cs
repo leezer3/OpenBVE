@@ -445,25 +445,40 @@ namespace OpenBve
 
 		private void buttonDepends_Click(object sender, EventArgs e)
 		{
-			if (selectedPackageIndex != -1)
+			if (selectedPackageIndex != -1 && selectedPackageType != PackageType.NotFound)
 			{
-				Package tempPackage = Database.currentDatabase.InstalledTrains[selectedPackageIndex];
-				tempPackage.Version = null;
-				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
-				    DialogResult.OK)
+				Package tempPackage;
+				switch (selectedPackageType)
 				{
-					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
-				}			
-			}
-			if (selectedPackageIndex != -1)
-			{
-				Package tempPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
-				tempPackage.Version = null;
-				if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
-					DialogResult.OK)
-				{
-					AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+					case PackageType.Route:
+						tempPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
+						tempPackage.Version = null;
+						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+							DialogResult.OK)
+						{
+							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+						}
+						break;
+					case PackageType.Train:
+						tempPackage = Database.currentDatabase.InstalledTrains[selectedPackageIndex];
+						tempPackage.Version = null;
+						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+							DialogResult.OK)
+						{
+							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+						}
+						break;
+					case PackageType.Other:
+						tempPackage = Database.currentDatabase.InstalledOther[selectedPackageIndex];
+						tempPackage.Version = null;
+						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
+							DialogResult.OK)
+						{
+							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+						}
+						break;
 				}
+
 			}
 		}
 
@@ -480,7 +495,7 @@ namespace OpenBve
 						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 						    DialogResult.OK)
 						{
-							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+							AddDependendsReccomends(tempPackage, ref currentPackage.Reccomendations);
 						}
 						break;
 					case PackageType.Train:
@@ -489,7 +504,7 @@ namespace OpenBve
 						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 						    DialogResult.OK)
 						{
-							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+							AddDependendsReccomends(tempPackage, ref currentPackage.Reccomendations);
 						}
 						break;
 					case PackageType.Other:
@@ -498,7 +513,7 @@ namespace OpenBve
 						if (ShowVersionDialog(ref tempPackage.MinimumVersion, ref tempPackage.MaximumVersion, tempPackage.Version) ==
 						    DialogResult.OK)
 						{
-							AddDependendsReccomends(tempPackage, ref currentPackage.Dependancies);
+							AddDependendsReccomends(tempPackage, ref currentPackage.Reccomendations);
 						}
 						break;
 				}
@@ -1026,7 +1041,7 @@ namespace OpenBve
 
 		private void comboBoxDependancyType_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			switch (comboBoxPackageType.SelectedIndex)
+			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
 					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true);
@@ -1148,6 +1163,6 @@ namespace OpenBve
 			//Reset the worker thread
 			workerThread = null;
 			workerThread = new BackgroundWorker();
-		}
+		}	
 	}
 }

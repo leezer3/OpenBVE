@@ -668,7 +668,7 @@ namespace OpenBve {
 			 */
 			labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
 			labelMissingDependanciesText2.Text = Interface.GetInterfaceString("packages_shownlist");
-			labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_header");
+			labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
 			buttonProceedAnyway.Text = Interface.GetInterfaceString("packages_proceed_anyway");
 			//Install tab
 			/*

@@ -4025,11 +4025,10 @@
 			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBoxPackageImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBoxPackageImage.Location = new System.Drawing.Point(164, 54);
+			this.pictureBoxPackageImage.Location = new System.Drawing.Point(12, 54);
 			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
-			this.pictureBoxPackageImage.Size = new System.Drawing.Size(272, 221);
-			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBoxPackageImage.Size = new System.Drawing.Size(634, 221);
+			this.pictureBoxPackageImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBoxPackageImage.TabIndex = 3;
 			this.pictureBoxPackageImage.TabStop = false;
 			this.pictureBoxPackageImage.Click += new System.EventHandler(this.pictureBoxPackageImage_Click);
