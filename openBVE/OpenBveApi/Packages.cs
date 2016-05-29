@@ -8,6 +8,7 @@ using SharpCompress.Writer;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Drawing;
+using System.IO.Pipes;
 using System.Linq;
 using SharpCompress.Archive;
 
@@ -159,12 +160,12 @@ namespace OpenBveApi.Packages
 	/// <summary>Defines the types of compression a package file may use.</summary>
 	public enum CompressionType
 	{
-		/// <summary>RAR compression (Best)</summary>
-		RAR,
-		/// <summary>Zip compression (Medium)</summary>
+		/// <summary>LZMA Zip compression</summary>
 		Zip,
-		/// <summary>TarGz compression (Worst)</summary>
-		TarGZ
+		/// <summary>G compression</summary>
+		TarGZ,
+		/// <summary>BZip2 compression</summary>
+		BZ2
 	}
 
 
@@ -244,17 +245,21 @@ namespace OpenBveApi.Packages
 				SharpCompress.Common.CompressionType compression;
 				switch (compressionType)
 				{
-					case CompressionType.RAR:
-						type = ArchiveType.Rar;
-						compression = SharpCompress.Common.CompressionType.Rar;
-						break;
 					case CompressionType.Zip:
 						type = ArchiveType.Zip;
 						compression = SharpCompress.Common.CompressionType.LZMA;
 						break;
-					default:
-						type = ArchiveType.GZip;
+					case CompressionType.BZ2:
+						type = ArchiveType.Zip;
 						compression = SharpCompress.Common.CompressionType.BZip2;
+						break;
+					case CompressionType.TarGZ:
+						type = ArchiveType.Tar;
+						compression = SharpCompress.Common.CompressionType.GZip;
+						break;
+					default:
+						type = ArchiveType.Zip;
+						compression = SharpCompress.Common.CompressionType.LZMA;
 						break;
 				}
 				using (var zipWriter = WriterFactory.Open(zip, type, compression))

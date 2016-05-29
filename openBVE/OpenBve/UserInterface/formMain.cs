@@ -334,6 +334,7 @@ namespace OpenBve {
 			updownSoundNumber.Value = (decimal)Interface.CurrentOptions.SoundNumber;
 			checkboxWarningMessages.Checked = Interface.CurrentOptions.ShowWarningMessages;
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
+			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
 			// language
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
@@ -1396,7 +1397,18 @@ namespace OpenBve {
 
 		private void comboBoxCompressionFormat_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			packageCompressionType = (CompressionType) comboBoxCompressionFormat.SelectedIndex;
+			switch (comboBoxCompressionFormat.SelectedIndex)
+			{
+				case 0:
+					Interface.CurrentOptions.packageCompressionType = CompressionType.Zip;
+					break;
+				case 1:
+					Interface.CurrentOptions.packageCompressionType = CompressionType.TarGZ;
+					break;
+				case 2:
+					Interface.CurrentOptions.packageCompressionType = CompressionType.BZ2;
+					break;
+			}
 		}
 	}
 }

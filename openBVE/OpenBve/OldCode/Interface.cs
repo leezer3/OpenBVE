@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
+using OpenBveApi.Packages;
 using OpenBveApi.Runtime;
 using OpenTK.Input;
 
@@ -187,6 +188,8 @@ namespace OpenBve {
 			internal bool PreferNativeBackend = true;
 
 			internal TimeTableMode TimeTableStyle;
+
+			internal CompressionType packageCompressionType;
 			/*
 			 * Note: Disabling texture resizing may produce artifacts at the edges of textures,
 			 * and may display issues with certain graphics cards.
@@ -254,6 +257,7 @@ namespace OpenBve {
 				this.TimeAccelerationFactor = 5;
 				this.AllowAxisEB = true;
 				this.TimeTableStyle = TimeTableMode.Default;
+				this.packageCompressionType = CompressionType.Zip;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -568,6 +572,24 @@ namespace OpenBve {
 											Interface.CurrentOptions.ProxyPassword = Value;
 											break;
 									} break;
+								case "packages":
+									switch (Key)
+									{
+										case "compression":
+											switch (Value.ToLowerInvariant())
+											{
+												case "zip":
+													Interface.CurrentOptions.packageCompressionType = CompressionType.Zip;
+													break;
+												case "bzip":
+													Interface.CurrentOptions.packageCompressionType = CompressionType.BZ2;
+													break;
+												case "gzip":
+													Interface.CurrentOptions.packageCompressionType = CompressionType.TarGZ;
+													break;
+											}
+											break;
+									} break;
 								case "recentlyusedroutes":
 									{
 										int n = Interface.CurrentOptions.RecentlyUsedRoutes.Length;
@@ -741,6 +763,16 @@ namespace OpenBve {
 			Builder.AppendLine("url = " + CurrentOptions.ProxyUrl);
 			Builder.AppendLine("username = " + CurrentOptions.ProxyUserName);
 			Builder.AppendLine("password = " + CurrentOptions.ProxyPassword);
+			Builder.AppendLine();
+			Builder.AppendLine("[packages]");
+			Builder.Append("compression = ");
+			switch (CurrentOptions.packageCompressionType)
+			{
+				case CompressionType.Zip: Builder.AppendLine("zip"); break;
+				case CompressionType.TarGZ: Builder.AppendLine("gzip"); break;
+				case CompressionType.BZ2: Builder.AppendLine("bzip"); break;
+				default: Builder.AppendLine("zip"); break;
+			}
 			Builder.AppendLine();
 			Builder.AppendLine("[folders]");
 			Builder.AppendLine("route = " + CurrentOptions.RouteFolder);

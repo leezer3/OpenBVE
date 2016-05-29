@@ -1374,9 +1374,9 @@
 			// 
 			this.comboBoxCompressionFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxCompressionFormat.Items.AddRange(new object[] {
-            "WinRAR ( .rar )",
-            "ZIP ( .zip )",
-            "Gzip ( .tar.gz )"});
+            "LZMA ZIP ( .zip )",
+            "GZip ( .tgz )",
+            "BZip2 ( .bz2 )"});
 			this.comboBoxCompressionFormat.Location = new System.Drawing.Point(200, 117);
 			this.comboBoxCompressionFormat.Name = "comboBoxCompressionFormat";
 			this.comboBoxCompressionFormat.Size = new System.Drawing.Size(188, 21);

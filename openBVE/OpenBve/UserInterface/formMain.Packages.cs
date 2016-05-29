@@ -23,7 +23,7 @@ namespace OpenBve
 		internal PackageType selectedPackageType;
 		internal string ImageFile;
 		internal BackgroundWorker workerThread = new BackgroundWorker();
-		internal CompressionType packageCompressionType;
+
 
 		
 
@@ -550,7 +550,7 @@ namespace OpenBve
 			workerThread.DoWork += delegate
 			{
 				Manipulation.ProgressChanged += OnWorkerProgressChanged;
-				Manipulation.CreatePackage(currentPackage, CompressionType.Zip, currentPackage.FileName, ImageFile, filesToPackage);
+				Manipulation.CreatePackage(currentPackage, Interface.CurrentOptions.packageCompressionType, currentPackage.FileName, ImageFile, filesToPackage);
 				string text = "";
 				for (int i = 0; i < filesToPackage.Count; i++)
 				{
