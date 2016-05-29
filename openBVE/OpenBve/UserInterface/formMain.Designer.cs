@@ -4617,6 +4617,7 @@
 			this.textBoxUninstallResult.Multiline = true;
 			this.textBoxUninstallResult.Name = "textBoxUninstallResult";
 			this.textBoxUninstallResult.ReadOnly = true;
+			this.textBoxUninstallResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.textBoxUninstallResult.Size = new System.Drawing.Size(644, 441);
 			this.textBoxUninstallResult.TabIndex = 19;
 			// 
@@ -4701,6 +4702,7 @@
 			this.textBoxFilesInstalled.Multiline = true;
 			this.textBoxFilesInstalled.Name = "textBoxFilesInstalled";
 			this.textBoxFilesInstalled.ReadOnly = true;
+			this.textBoxFilesInstalled.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.textBoxFilesInstalled.Size = new System.Drawing.Size(644, 438);
 			this.textBoxFilesInstalled.TabIndex = 19;
 			// 

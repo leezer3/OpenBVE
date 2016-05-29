@@ -956,7 +956,10 @@ namespace OpenBve
 
 		private void newPackageClearSelectionButton_Click(object sender, EventArgs e)
 		{
-			filesToPackage.Clear();
+			if (filesToPackage != null)
+			{
+				filesToPackage.Clear();
+			}
 			filesToPackageBox.Clear();
 		}
 
