@@ -630,6 +630,10 @@ namespace OpenBve
 				textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
 			}
 			HidePanels();
+			textBoxPackageDescription.ReadOnly = false;
+			textBoxPackageName.ReadOnly = false;
+			textBoxPackageVersion.ReadOnly = false;
+			textBoxPackageAuthor.ReadOnly = false;
 			panelPackageInstall.Show();
 		}
 
@@ -1146,6 +1150,10 @@ namespace OpenBve
 			panelReplacePackage.Hide();
 			panelNewPackage.Enabled = false;
 			panelNewPackage.Show();
+			textBoxPackageDescription.ReadOnly = true;
+			textBoxPackageName.ReadOnly = true;
+			textBoxPackageVersion.ReadOnly = true;
+			textBoxPackageAuthor.ReadOnly = true;
 			//Set variables to uninitialised states
 			creatingPackage = false;
 			currentPackage = null;

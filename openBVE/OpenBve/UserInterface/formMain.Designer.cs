@@ -3923,6 +3923,8 @@
 			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 397);
 			this.textBoxPackageDescription.Multiline = true;
 			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
+			this.textBoxPackageDescription.ReadOnly = true;
+			this.textBoxPackageDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.textBoxPackageDescription.Size = new System.Drawing.Size(509, 112);
 			this.textBoxPackageDescription.TabIndex = 13;
 			this.textBoxPackageDescription.Text = "No package selected.";
