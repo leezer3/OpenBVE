@@ -10,6 +10,9 @@ namespace OpenBve {
 			BogieObjects = new ObjectManager.UnifiedObject[Train.Cars.Length * 2];
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
+
+			bool[] CarsDefined = new bool[Train.Cars.Length];
+			bool[] BogiesDefined = new bool[Train.Cars.Length * 2];
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "extensions.cfg");
 			if (System.IO.File.Exists(FileName)) {
@@ -67,7 +70,13 @@ namespace OpenBve {
 									// car
 									string t = Lines[i].Substring(4, Lines[i].Length - 5);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
-										if (n >= 0 & n < Train.Cars.Length) {
+										if (n >= 0 & n < Train.Cars.Length)
+										{
+											if (CarsDefined[n])
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Car " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											}
+											CarsDefined[n] = true;
 											bool DefinedLength = false;
 											bool DefinedAxles = false;
 											i++;
@@ -209,6 +218,11 @@ namespace OpenBve {
 									string t = Lines[i].Substring(6, Lines[i].Length - 7);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
 									{
+										if (BogiesDefined[n])
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Bogie " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										}
+										BogiesDefined[n] = true;
 										//Assuming that there are two bogies per car
 										bool IsOdd = (n % 2 != 0);
 										int CarIndex = n / 2;
