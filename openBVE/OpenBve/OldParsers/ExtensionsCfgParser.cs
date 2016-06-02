@@ -419,24 +419,24 @@ namespace OpenBve {
 								if (IsOdd)
 								{
 									double temp = Train.Cars[CarIndex].FrontBogie.FrontAxlePosition;
-									Train.Cars[i].FrontAxlePosition = -Train.Cars[CarIndex].FrontBogie.RearAxlePosition;
+									Train.Cars[i].FrontBogie.FrontAxlePosition = -Train.Cars[CarIndex].FrontBogie.RearAxlePosition;
 									Train.Cars[i].FrontBogie.RearAxlePosition = -temp;
 								}
 								else
 								{
 									double temp = Train.Cars[CarIndex].RearBogie.FrontAxlePosition;
-									Train.Cars[i].FrontAxlePosition = -Train.Cars[CarIndex].RearBogie.RearAxlePosition;
+									Train.Cars[i].RearBogie.FrontAxlePosition = -Train.Cars[CarIndex].RearBogie.RearAxlePosition;
 									Train.Cars[i].RearBogie.RearAxlePosition = -temp;
 								}
 							}
 							if (BogieObjects[i] is ObjectManager.StaticObject)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
+								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
 								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
 							}
 							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
+								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)BogieObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
