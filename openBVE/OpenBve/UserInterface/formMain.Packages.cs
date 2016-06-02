@@ -359,6 +359,7 @@ namespace OpenBve
 				{
 					//Uninstall requires an XML list of files, and these were missing.......
 					textBoxUninstallResult.Text = Interface.GetInterfaceString("packages_uninstall_missing_xml");
+					currentPackage = packageToUninstall;
 				}
 				else
 				{
@@ -430,6 +431,27 @@ namespace OpenBve
 
 		private void buttonUninstallFinish_Click(object sender, EventArgs e)
 		{
+			if (currentPackage != null)
+			{
+				//We were unable to uninstall the package
+				//Prompt as to whether the user would like to remove the broken package
+				if (MessageBox.Show(Interface.GetInterfaceString("packages_uninstall_database_remove"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					switch (currentPackage.PackageType)
+					{
+						case PackageType.Other:
+							Database.currentDatabase.InstalledOther.Remove(currentPackage);
+							break;
+						case PackageType.Route:
+							Database.currentDatabase.InstalledRoutes.Remove(currentPackage);
+							break;
+						case PackageType.Train:
+							Database.currentDatabase.InstalledTrains.Remove(currentPackage);
+							break;
+					}
+				}
+				currentPackage = null;
+			}
 			RefreshPackages();
 			ResetInstallerPanels();
 		}
@@ -670,6 +692,14 @@ namespace OpenBve
 			filesToPackageBox.Text = String.Empty;
 			if (radioButtonQ1Yes.Checked == true)
 			{
+				if (Database.currentDatabase.InstalledRoutes.Count == 0 && Database.currentDatabase.InstalledTrains.Count == 0 && Database.currentDatabase.InstalledOther.Count == 0)
+				{
+					//There are no packages available to replace....
+					string test = Interface.GetInterfaceString("packages_replace_noneavailable");
+					MessageBox.Show(test);
+					radioButtonQ1No.Checked = true;
+					return;
+				}
 				panelReplacePackage.Show();
 				panelNewPackage.Hide();
 				switch (newPackageType)
@@ -1000,6 +1030,11 @@ namespace OpenBve
 
 		private void replacePackageButton_Click(object sender, EventArgs e)
 		{
+			if (dataGridViewReplacePackage.SelectedRows.Count == 0)
+			{
+				//Don't crash if we haven't selected a package to replace....
+				return;
+			}
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_replace_id");
 			textBoxGUID.Text = currentPackage.GUID;
 			panelNewPackage.Enabled = true;
