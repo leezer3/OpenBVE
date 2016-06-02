@@ -731,6 +731,7 @@ namespace OpenBve {
 						case "settext":
 						case "text":
 							{
+								Interface.AddMessage(Interface.MessageType.Information, false, "" + cmd + " is only supported in OpenBVE versions 1.4.4.0 and above at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								if (cmd == "settext" & IsB3D)
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,
@@ -760,7 +761,7 @@ namespace OpenBve {
 							break;
 						case "settextcolor":
 						case "textcolor":
-							{
+						{
 								if (cmd == "settextcolor" & IsB3D)
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,

@@ -1030,11 +1030,36 @@ namespace OpenBve {
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
 						RenderKeys(4.0, 72.0, 24.0, Keys);
-						RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 message recently generated.", -1, 1.0f, 0.5f, 0.5f, true);
+						if (Interface.Messages[0].Type != Interface.MessageType.Information)
+						{
+							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 error message recently generated.", -1, 1.0f, 0.5f, 0.5f,true);
+						}
+						else
+						{
+							//If all of our messages are information, then print the message text in grey
+							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 message recently generated.", -1, 1.0f, 1.0f, 1.0f, true);
+						}
 					} else if (Interface.MessageCount > 1) {
 						Keys = new string[][] { new string[] { "F9" } };
 						RenderKeys(4.0, 72.0, 24.0, Keys);
-						RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", -1, 1.0f, 0.5f, 0.5f, true);
+						bool error = false;
+						for (int i = 0; i < Interface.MessageCount; i++)
+						{
+							if (Interface.Messages[i].Type != Interface.MessageType.Information)
+							{
+								error = true;
+							}
+
+						}
+						if (error)
+						{
+							RenderString(32.0, 72.0, Fonts.FontType.Small,"Display the " + Interface.MessageCount.ToString(Culture) + " error messages recently generated.", -1, 1.0f, 0.5f,0.5f, true);
+						}
+						else
+						{
+							//If all of our messages are information, then print the message text in grey
+							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", -1, 1.0f, 1.0f, 1.0f, true);
+						}
 					}
 					if (RenderStatsOverlay)
 					{
