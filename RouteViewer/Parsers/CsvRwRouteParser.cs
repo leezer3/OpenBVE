@@ -2819,6 +2819,8 @@ namespace OpenBve {
 								case "texture.background.x":
 								case "texture.background.aspect":
 								case "cycle.ground":
+								case "route.loadingscreen":
+								case "route.displayspeed":
 									break;
 									// track
 								case "track.railstart":
