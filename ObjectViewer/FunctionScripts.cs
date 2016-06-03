@@ -13,15 +13,15 @@ namespace OpenBve {
 			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
 			CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 			LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
-			TimeSecondsSinceMidnight, CameraDistance,
+			TimeSecondsSinceMidnight, CameraDistance,CameraView,
 			TrainCars,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius,CurveCant,
+			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Odometer, OdometerOfCar,
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake,
+			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon,
 			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
@@ -261,6 +261,17 @@ namespace OpenBve {
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
+					case Instructions.CameraView:
+						//Returns whether the camera is in interior or exterior mode
+						if (World.CameraMode == World.CameraViewMode.Interior)
+						{
+							Function.Stack[s] = 0;
+						}
+						else
+						{
+							Function.Stack[s] = 1;
+						}
+						s++; break;
 						// train
 					case Instructions.TrainCars:
 						if (Train != null) {
@@ -491,6 +502,13 @@ namespace OpenBve {
                             }
                         }
                         break;
+					case Instructions.Odometer:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+					case Instructions.OdometerOfCar:
+						Function.Stack[s -1] = 0.0;
+						break;
 					case Instructions.TrainTrackDistanceToCar:
 						if (Train != null) {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
@@ -756,6 +774,10 @@ namespace OpenBve {
 						} else {
 							Function.Stack[s] = 0.0;
 						}
+						s++; break;
+					case Instructions.Klaxon:
+						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero....
+						Function.Stack[s] = 0.0;
 						s++; break;
 					case Instructions.HasAirBrake:
 						if (Train != null) {
@@ -1570,8 +1592,11 @@ namespace OpenBve {
 					// train
 				case "distance":
 				case "trackdistance":
-                case "curveradius":
-                case "curvecant":
+				case "curveradius":
+				case "frontaxlecurveradius":
+				case "rearaxlecurveradius":
+				case "curvecant":
+				case "odometer":
 				case "speed":
 				case "speedometer":
 				case "acceleration":
@@ -2425,6 +2450,20 @@ namespace OpenBve {
                             if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
                             Result.Instructions[n] = Instructions.CurveRadius;
                             n++; break;
+						case "curvecantindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurveCant;
+							n++; break;
+						case "odometer":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Odometer;
+							n++; s++; if (s >= m) m = s; break;
+						case "odometerindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.OdometerOfCar;
+							n++; break;
 							// train: doors
 						case "doors":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
@@ -2503,6 +2542,10 @@ namespace OpenBve {
 						case "emergencybrake":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.EmergencyBrake;
+							n++; s++; if (s >= m) m = s; break;
+						case "klaxon":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Klaxon;
 							n++; s++; if (s >= m) m = s; break;
 						case "hasairbrake":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);

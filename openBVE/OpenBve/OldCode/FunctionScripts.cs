@@ -306,7 +306,6 @@ namespace OpenBve {
 					case Instructions.TrainSpeedometer:
 						if (Train != null) {
 							Function.Stack[s] = Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed;
-							//Train.Cars[CarIndex].Specs.
 						} else {
 							Function.Stack[s] = 0.0;
 						}
