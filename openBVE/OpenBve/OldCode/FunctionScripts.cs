@@ -24,7 +24,7 @@ namespace OpenBve {
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake,
+			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon,
 			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
@@ -799,6 +799,33 @@ namespace OpenBve {
 						if (Train != null) {
 							Function.Stack[s] = Train.Specs.CurrentEmergencyBrake.Driver ? 1.0 : 0.0;
 						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.Klaxon:
+						if (Train != null)
+						{
+							for (int j = 0; j < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns.Length; j++)
+							{
+								/* Return the index of the currently playing horn sound
+								 *
+								 * 1 ==> Primary horn
+								 * 2 ==> Secondary horn
+								 * 3 ==> Music horn
+								 */
+								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Sound.Source))
+								{
+									Function.Stack[s] = j + 1;
+									break;
+								}
+								if (j == TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns.Length -1)
+								{
+									Function.Stack[s] = 0.0;
+								}
+							}
+						}
+						else
+						{
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
@@ -2450,6 +2477,10 @@ namespace OpenBve {
 						case "emergencybrake":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.EmergencyBrake;
+							n++; s++; if (s >= m) m = s; break;
+						case "klaxon":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Klaxon;
 							n++; s++; if (s >= m) m = s; break;
 						case "hasairbrake":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
