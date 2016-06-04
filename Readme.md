@@ -1,18 +1,27 @@
 ## openBVE Source Code - Readme
 
-This source code is an experimental port of OpenBVE to the OpenTK framework. 
+This source code is an experimental port of openBVE to the OpenTK framework. 
 
-# Compatibility Changes
+### Compatibility Changes
 
 There have also been various additions, including to the OpenBveApi, and animated objects which are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes).
 
-# Fixed Errata
+### Fixed Errata
 
 These are described fully [here] (https://github.com/leezer3/OpenBVE/wiki/Errata).
 
+### Nightly Builds
+
 Automatically generated daily builds are available [here](http://vps.bvecornwall.co.uk/OpenBVE/Builds/).
 
+### Developer Documentation
+
 Documentation for development of add-ons (update version of docs originally written by _michelle_) can be found [here](https://github.com/leezer3/OpenBVE/tree/master/Documentation).
+
+### Packages
+
+openBVE now supports the installation of 'package files' , which are intended as a replacement for the now defunct managed content.
+These are described fully [here] (http://openbve-project.net/packages/).
 
 ### Notes
 
@@ -35,6 +44,10 @@ Joystick hat support does not function correctly in the current release build of
 - Maurizo M. Gavioli
 
 ### Links
+
+**Project Website**:
+
+http://www.openbve-project.net
 
 Project Source Code on GitHub: https://github.com/leezer3/OpenBVE
 
