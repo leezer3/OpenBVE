@@ -199,11 +199,11 @@ namespace OpenBve {
 															    {
 															        NullObject = false;
 															    }
-															    if (NullObject == true)
-															    {
-                                                                    Interface.AddMessage(Interface.MessageType.Error, false, "No statefiles were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															        return null;
-															    }
+															}
+															if (NullObject == true)
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "No statefiles were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																return null;
 															}
 														} else {
 															Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);

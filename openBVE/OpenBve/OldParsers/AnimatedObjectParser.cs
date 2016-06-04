@@ -272,12 +272,12 @@ namespace OpenBve
 																if (StateFiles[k] != null)
 																{
 																	NullObject = false;
-																}
-																if (NullObject == true)
-																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	return null;
-																}
+																}	
+															}
+															if (NullObject == true)
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																return null;
 															}
 														}
 														else
