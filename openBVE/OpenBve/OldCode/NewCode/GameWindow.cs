@@ -335,6 +335,36 @@ namespace OpenBve
 					if (s >= 0)
 					{
 						PlayerFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;
+
+						double TrainLength = 0.0;
+						for (int c = 0; c < TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars.Length; c++)
+						{
+							TrainLength += TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars[c].Length;
+						}
+						
+						for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
+						{
+							if (PlayerFirstStationPosition > Game.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Game.BufferTrackPositions[j])
+							{
+								/*
+								 * HACK: The initial start position for the player train is stuck on a set of buffers
+								 * This means we have to make some one the fly adjustments to the first station stop position
+								 */
+
+								//Set the start position to be the buffer position plus the train length plus 1m
+								PlayerFirstStationPosition = Game.BufferTrackPositions[j] + TrainLength + 1;							
+								//Update the station stop location
+								if (s >= 0)
+								{
+									Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
+								}
+								else
+								{
+									Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
+								}
+								break;
+							}
+						}
 					}
 					else
 					{
