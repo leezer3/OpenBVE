@@ -102,15 +102,23 @@ namespace OpenBveApi {
 							 * */
 					            bool found = false;
 					            if (System.IO.Directory.Exists(absolute)) {
-					                string[] directories = System.IO.Directory.GetDirectories(absolute);
-					                for (int j = 0; j < directories.Length; j++) {
-					                    string name = System.IO.Path.GetFileName(directories[j]);
-					                    if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase)) {
-					                        absolute = directories[j];
-					                        found = true;
-					                        break;
-					                    }
-					                }
+						            try
+						            {
+							            string[] directories = System.IO.Directory.GetDirectories(absolute);
+							            for (int j = 0; j < directories.Length; j++)
+							            {
+								            string name = System.IO.Path.GetFileName(directories[j]);
+								            if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase))
+								            {
+									            absolute = directories[j];
+									            found = true;
+									            break;
+								            }
+							            }
+						            }
+						            catch
+						            {
+						            }
 					            }
 					            if (!found) {
 					                absolute = directory;
