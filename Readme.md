@@ -1,6 +1,14 @@
 ## openBVE Source Code - Readme
 
-This source code is an experimental port of OpenBVE to the OpenTK framework. There have also been backwards compatible changes made to the OpenBveApi, and animated objects which are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes).
+This source code is an experimental port of OpenBVE to the OpenTK framework. 
+
+# Compatibility Changes
+
+There have also been various additions, including to the OpenBveApi, and animated objects which are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes).
+
+# Fixed Errata
+
+These are described fully [here] (https://github.com/leezer3/OpenBVE/wiki/Errata).
 
 Automatically generated daily builds are available [here](http://vps.bvecornwall.co.uk/OpenBVE/Builds/).
 
