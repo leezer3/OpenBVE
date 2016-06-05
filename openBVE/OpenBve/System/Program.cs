@@ -125,8 +125,6 @@ namespace OpenBve {
 			}
 
 
-			// --- set up packages ---
-			SetPackageLookupDirectories();
 			// --- load options and controls ---
 			Interface.LoadOptions();
 			//Switch between SDL2 and native backends; use native backend by default
@@ -320,32 +318,7 @@ namespace OpenBve {
 				currentGameWindow.Dispose();
 			}
 		}
-		
-		/// <summary>Provides the API with lookup directories for all installed packages.</summary>
-		internal static void SetPackageLookupDirectories() {
-			int size = 16;
-			string[] names = new string[size];
-			string[] directories = new string[size];
-			int count = 0;
-			foreach (string lookupDirectory in FileSystem.ManagedContentFolders) {
-				string[] packageDirectories = System.IO.Directory.GetDirectories(lookupDirectory);
-				foreach (string packageDirectory in packageDirectories) {
-					string package = System.IO.Path.GetFileName(packageDirectory);
-					if (count == size) {
-						size <<= 1;
-						Array.Resize<string>(ref names, size);
-						Array.Resize<string>(ref directories, size);
-					}
-					names[count] = package;
-					directories[count] = packageDirectory;
-					count++;
-				}
-			}
-			Array.Resize<string>(ref names, count);
-			Array.Resize<string>(ref directories, count);
-			SetPackageLookupDirectoriesAuthentication = OpenBveApi.Path.SetPackageLookupDirectories(names, directories, SetPackageLookupDirectoriesAuthentication);
-		}
-		
+				
 		/// <summary>Clears the log file.</summary>
 		internal static void ClearLogFile() {
 			try {

@@ -2334,8 +2334,7 @@ namespace OpenBve
 								if (da < db)
 								{
 									// front
-									TrackManager.UpdateTrackFollower(ref Trains[i].Cars[0].FrontAxle.Follower,Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - da, false, false);
-									TrackManager.UpdateTrackFollower(ref Trains[i].Cars[0].RearAxle.Follower,Trains[i].Cars[0].RearAxle.Follower.TrackPosition - da, false, false);
+									TrackManager.UpdateCarFollowers(ref Trains[i].Cars[0], -da, false, false);
 									if (Interface.CurrentOptions.Derailments &&
 										Math.Abs(Trains[i].Cars[0].Specs.CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
 									{
@@ -2352,8 +2351,7 @@ namespace OpenBve
 										if (d < 0.0)
 										{
 											d -= 0.0001;
-											TrackManager.UpdateTrackFollower(ref Trains[i].Cars[h].FrontAxle.Follower,Trains[i].Cars[h].FrontAxle.Follower.TrackPosition + d, false, false);
-											TrackManager.UpdateTrackFollower(ref Trains[i].Cars[h].RearAxle.Follower,Trains[i].Cars[h].RearAxle.Follower.TrackPosition + d, false, false);
+											TrackManager.UpdateCarFollowers(ref Trains[i].Cars[h], d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].Specs.CurrentSpeed) >
 												Game.CriticalCollisionSpeedDifference)
@@ -2368,8 +2366,7 @@ namespace OpenBve
 								{
 									// rear
 									int c = Trains[i].Cars.Length - 1;
-									TrackManager.UpdateTrackFollower(ref Trains[i].Cars[c].FrontAxle.Follower,Trains[i].Cars[c].FrontAxle.Follower.TrackPosition + db, false, false);
-									TrackManager.UpdateTrackFollower(ref Trains[i].Cars[c].RearAxle.Follower,Trains[i].Cars[c].RearAxle.Follower.TrackPosition + db, false, false);
+									TrackManager.UpdateCarFollowers(ref Trains[i].Cars[c], db, false, false);
 									if (Interface.CurrentOptions.Derailments &&
 										Math.Abs(Trains[i].Cars[c].Specs.CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
 									{
@@ -2386,8 +2383,7 @@ namespace OpenBve
 										if (d < 0.0)
 										{
 											d -= 0.0001;
-											TrackManager.UpdateTrackFollower(ref Trains[i].Cars[h].FrontAxle.Follower,Trains[i].Cars[h].FrontAxle.Follower.TrackPosition - d, false, false);
-											TrackManager.UpdateTrackFollower(ref Trains[i].Cars[h].RearAxle.Follower,Trains[i].Cars[h].RearAxle.Follower.TrackPosition - d, false, false);
+											TrackManager.UpdateCarFollowers(ref Trains[i].Cars[h], -d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].Specs.CurrentSpeed) >
 												Game.CriticalCollisionSpeedDifference)
@@ -4628,25 +4624,8 @@ namespace OpenBve
 						double t = (min - d) / (Train.Cars[p].Specs.MassCurrent + Train.Cars[s].Specs.MassCurrent);
 						double tp = t * Train.Cars[s].Specs.MassCurrent;
 						double ts = t * Train.Cars[p].Specs.MassCurrent;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontAxle.Follower, Train.Cars[p].FrontAxle.Follower.TrackPosition + tp, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontBogie.FrontAxle.Follower, Train.Cars[p].FrontBogie.FrontAxle.Follower.TrackPosition + tp, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontBogie.RearAxle.Follower, Train.Cars[p].FrontBogie.RearAxle.Follower.TrackPosition + tp, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearAxle.Follower, Train.Cars[p].RearAxle.Follower.TrackPosition + tp, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearBogie.FrontAxle.Follower, Train.Cars[p].RearBogie.FrontAxle.Follower.TrackPosition + tp, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearBogie.RearAxle.Follower, Train.Cars[p].RearBogie.RearAxle.Follower.TrackPosition + tp, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontAxle.Follower, Train.Cars[s].FrontAxle.Follower.TrackPosition - ts, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontBogie.FrontAxle.Follower, Train.Cars[s].FrontBogie.FrontAxle.Follower.TrackPosition - ts, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontBogie.RearAxle.Follower, Train.Cars[s].FrontBogie.RearAxle.Follower.TrackPosition - ts, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearAxle.Follower, Train.Cars[s].RearAxle.Follower.TrackPosition - ts, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearBogie.FrontAxle.Follower, Train.Cars[s].RearBogie.FrontAxle.Follower.TrackPosition - ts, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearBogie.RearAxle.Follower, Train.Cars[s].RearBogie.RearAxle.Follower.TrackPosition - ts, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[p], tp, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[s], -ts, false, false);
 						CenterOfCarPositions[p] += tp;
 						CenterOfCarPositions[s] -= ts;
 						CouplerCollision[p] = true;
@@ -4656,26 +4635,9 @@ namespace OpenBve
 						double t = (d - max) / (Train.Cars[p].Specs.MassCurrent + Train.Cars[s].Specs.MassCurrent);
 						double tp = t * Train.Cars[s].Specs.MassCurrent;
 						double ts = t * Train.Cars[p].Specs.MassCurrent;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontAxle.Follower, Train.Cars[p].FrontAxle.Follower.TrackPosition - tp, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontBogie.FrontAxle.Follower, Train.Cars[p].FrontBogie.FrontAxle.Follower.TrackPosition - tp, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].FrontBogie.RearAxle.Follower, Train.Cars[p].FrontBogie.RearAxle.Follower.TrackPosition - tp, false, false);
 
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearAxle.Follower, Train.Cars[p].RearAxle.Follower.TrackPosition - tp, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearBogie.FrontAxle.Follower, Train.Cars[p].RearBogie.FrontAxle.Follower.TrackPosition - tp, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[p].RearBogie.RearAxle.Follower, Train.Cars[p].RearBogie.RearAxle.Follower.TrackPosition - tp, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontAxle.Follower, Train.Cars[s].FrontAxle.Follower.TrackPosition + ts, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontBogie.FrontAxle.Follower, Train.Cars[s].FrontBogie.FrontAxle.Follower.TrackPosition + ts, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].FrontBogie.RearAxle.Follower, Train.Cars[s].FrontBogie.RearAxle.Follower.TrackPosition + ts, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearAxle.Follower, Train.Cars[s].RearAxle.Follower.TrackPosition + ts, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearBogie.FrontAxle.Follower, Train.Cars[s].RearBogie.FrontAxle.Follower.TrackPosition + ts, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[s].RearBogie.RearAxle.Follower, Train.Cars[s].RearBogie.RearAxle.Follower.TrackPosition + ts, false, false);
-
+						TrackManager.UpdateCarFollowers(ref Train.Cars[p], -tp, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[s], ts, false, false);
 						CenterOfCarPositions[p] -= tp;
 						CenterOfCarPositions[s] += ts;
 						CouplerCollision[p] = true;
@@ -4698,31 +4660,14 @@ namespace OpenBve
 					if (d < min)
 					{
 						double t = min - d + 0.0001;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, Train.Cars[i].FrontAxle.Follower.TrackPosition + t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.FrontAxle.Follower, Train.Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition + t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.RearAxle.Follower, Train.Cars[i].FrontBogie.RearAxle.Follower.TrackPosition + t, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, Train.Cars[i].RearAxle.Follower.TrackPosition + t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.FrontAxle.Follower, Train.Cars[i].RearBogie.FrontAxle.Follower.TrackPosition + t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.RearAxle.Follower, Train.Cars[i].RearBogie.RearAxle.Follower.TrackPosition + t, false, false);
-
+						TrackManager.UpdateCarFollowers(ref Train.Cars[i], t, false, false);
 						CenterOfCarPositions[i] += t;
 						CouplerCollision[i] = true;
 					}
 					else if (d > max & !Train.Cars[i].Derailed & !Train.Cars[i + 1].Derailed)
 					{
 						double t = d - max + 0.0001;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, Train.Cars[i].FrontAxle.Follower.TrackPosition - t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.FrontAxle.Follower, Train.Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition - t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.RearAxle.Follower, Train.Cars[i].FrontBogie.RearAxle.Follower.TrackPosition - t, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, Train.Cars[i].RearAxle.Follower.TrackPosition - t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.FrontAxle.Follower, Train.Cars[i].RearBogie.FrontAxle.Follower.TrackPosition - t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.RearAxle.Follower, Train.Cars[i].RearBogie.RearAxle.Follower.TrackPosition - t, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[i], -t, false, false);
 						CenterOfCarPositions[i] -= t;
 						CouplerCollision[i] = true;
 					}
@@ -4736,30 +4681,14 @@ namespace OpenBve
 					if (d < min)
 					{
 						double t = min - d + 0.0001;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, Train.Cars[i].FrontAxle.Follower.TrackPosition - t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.FrontAxle.Follower, Train.Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition - t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.RearAxle.Follower, Train.Cars[i].FrontBogie.RearAxle.Follower.TrackPosition - t, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, Train.Cars[i].RearAxle.Follower.TrackPosition - t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.FrontAxle.Follower, Train.Cars[i].RearBogie.FrontAxle.Follower.TrackPosition - t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.RearAxle.Follower, Train.Cars[i].RearBogie.RearAxle.Follower.TrackPosition - t, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[i], -t, false, false);
 						CenterOfCarPositions[i] -= t;
 						CouplerCollision[i - 1] = true;
 					}
 					else if (d > max & !Train.Cars[i].Derailed & !Train.Cars[i - 1].Derailed)
 					{
 						double t = d - max + 0.0001;
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, Train.Cars[i].FrontAxle.Follower.TrackPosition + t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.FrontAxle.Follower, Train.Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition + t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontBogie.RearAxle.Follower, Train.Cars[i].FrontBogie.RearAxle.Follower.TrackPosition + t, false, false);
-
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, Train.Cars[i].RearAxle.Follower.TrackPosition + t, false, false);
-						//
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.FrontAxle.Follower, Train.Cars[i].RearBogie.FrontAxle.Follower.TrackPosition + t, false, false);
-						TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearBogie.RearAxle.Follower, Train.Cars[i].RearBogie.RearAxle.Follower.TrackPosition + t, false, false);
+						TrackManager.UpdateCarFollowers(ref Train.Cars[i], t, false, false);
 
 						CenterOfCarPositions[i] += t;
 						CouplerCollision[i - 1] = true;

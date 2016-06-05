@@ -652,6 +652,30 @@ namespace OpenBve {
 			}
 		}
 
+		/// <summary>Call this method to update all track followers attached to a car</summary>
+		/// <param name="car">The car for which to update, passed via 'ref'</param>
+		/// <param name="NewTrackPosition">The track position change</param>
+		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
+		/// <param name="AddTrackInaccurary">Whether to add track innaccuarcy</param>
+		internal static void UpdateCarFollowers(ref TrainManager.Car car, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary)
+		{
+			//Car axles
+			UpdateTrackFollower(ref car.FrontAxle.Follower, car.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+			UpdateTrackFollower(ref car.RearAxle.Follower, car.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+			//Front bogie axles
+			UpdateTrackFollower(ref car.FrontBogie.FrontAxle.Follower, car.FrontBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+			UpdateTrackFollower(ref car.FrontBogie.RearAxle.Follower, car.FrontBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+			//Rear bogie axles
+
+			UpdateTrackFollower(ref car.RearBogie.FrontAxle.Follower, car.RearBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+			UpdateTrackFollower(ref car.RearBogie.RearAxle.Follower, car.RearBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+		}
+
+		/// <summary>Call this method to update a single track follower</summary>
+		/// <param name="Follower">The follower to update</param>
+		/// <param name="NewTrackPosition">The new track position of the follower</param>
+		/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
+		/// <param name="AddTrackInaccurary">Whether to add track innacuracy</param>
 		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
 			if (CurrentTrack.Elements.Length == 0) return;
 			int i = Follower.LastTrackElement;
@@ -830,7 +854,12 @@ namespace OpenBve {
 			Follower.LastTrackElement = i;
 		}
 		
-		// get inaccuracies
+		/// <summary>Gets the innacuracy (Gauge spread & track bounce) for a given track position and routefile innacuracy value</summary>
+		/// <param name="position">The track position</param>
+		/// <param name="inaccuracy">The openBVE innacuaracy value</param>
+		/// <param name="x">The X (horizontal) co-ordinate to update</param>
+		/// <param name="y">The Y (vertical) co-ordinate to update</param>
+		/// <param name="c">???</param>
 		private static void GetInaccuracies(double position, double inaccuracy, out double x, out double y, out double c) {
 			if (inaccuracy <= 0.0) {
 				x = 0.0;
