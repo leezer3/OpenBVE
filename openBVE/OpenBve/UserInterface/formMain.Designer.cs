@@ -4946,6 +4946,7 @@
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(819, 606);
 			this.Controls.Add(this.labelVerticalSeparator);
+			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelStart);
@@ -4956,7 +4957,6 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
-			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
 			this.Name = "formMain";

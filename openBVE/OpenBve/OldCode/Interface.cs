@@ -1429,8 +1429,8 @@ namespace OpenBve {
 		
 
 		// control descriptions
-		internal static string[] ControlDescriptions = new string[] { };
-		internal static CommandInfo[] CommandInfos = new CommandInfo[] {
+		internal static string[] ControlDescriptions = { };
+		internal static CommandInfo[] CommandInfos = {
 			new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE"),
 			new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE"),
 			new CommandInfo(Command.PowerHalfAxis, CommandType.AnalogHalf, "POWER_HALFAXIS"),
@@ -1454,6 +1454,8 @@ namespace OpenBve {
 			new CommandInfo(Command.HornSecondary, CommandType.Digital, "HORN_SECONDARY"),
 			new CommandInfo(Command.HornMusic, CommandType.Digital, "HORN_MUSIC"),
 			new CommandInfo(Command.DeviceConstSpeed, CommandType.Digital, "DEVICE_CONSTSPEED"),
+
+
 			new CommandInfo(Command.SecurityS, CommandType.Digital, "SECURITY_S"),
 			new CommandInfo(Command.SecurityA1, CommandType.Digital, "SECURITY_A1"),
 			new CommandInfo(Command.SecurityA2, CommandType.Digital, "SECURITY_A2"),
@@ -1474,18 +1476,31 @@ namespace OpenBve {
 			new CommandInfo(Command.SecurityN, CommandType.Digital, "SECURITY_N"),
 			new CommandInfo(Command.SecurityO, CommandType.Digital, "SECURITY_O"),
 			new CommandInfo(Command.SecurityP, CommandType.Digital, "SECURITY_P"),
+			
+			
+			//Common Keys
 			new CommandInfo(Command.WiperSpeedUp, CommandType.Digital, "WIPER_SPEED_UP"),
 			new CommandInfo(Command.WiperSpeedDown, CommandType.Digital, "WIPER_SPEED_DOWN"),
-			/*
-			//Common Keys
-			WiperSpeedUp,WiperSpeedDown,FillFuel,
+			new CommandInfo(Command.FillFuel, CommandType.Digital, "FILL_FUEL"),
+			new CommandInfo(Command.Headlights, CommandType.Digital, "HEADLIGHTS"),
 			//Steam locomotive
-			LiveSteamInjector,ExhaustSteamInjector,IncreaseCutoff,DecreaseCutoff,Blowers,
+			new CommandInfo(Command.LiveSteamInjector, CommandType.Digital, "LIVE_STEAM_INJECTOR"),
+			new CommandInfo(Command.ExhaustSteamInjector, CommandType.Digital, "EXHAUST_STEAM_INJECTOR"),
+			new CommandInfo(Command.IncreaseCutoff, CommandType.Digital, "INCREASE_CUTOFF"),
+			new CommandInfo(Command.DecreaseCutoff, CommandType.Digital, "DECREASE_CUTOFF"),
+			new CommandInfo(Command.Blowers, CommandType.Digital, "BLOWERS"),
 			//Diesel Locomotive
-			EngineStart,EngineStop,GearUp,GearDown,
+			new CommandInfo(Command.EngineStart, CommandType.Digital, "ENGINE_START"),
+			new CommandInfo(Command.EngineStop, CommandType.Digital, "ENGINE_STOP"),
+			new CommandInfo(Command.GearUp, CommandType.Digital, "GEAR_UP"),
+			new CommandInfo(Command.GearDown, CommandType.Digital, "GEAR_DOWN"),
+			
 			//Electric Locomotive
-			RaisePantograph,LowerPantograph,MainBreaker
-			 */
+			new CommandInfo(Command.RaisePantograph, CommandType.Digital, "RAISE_PANTOGRAPH"),
+			new CommandInfo(Command.LowerPantograph, CommandType.Digital, "LOWER_PANTOGRAPH"),
+			new CommandInfo(Command.MainBreaker, CommandType.Digital, "MAIN_BREAKER"),
+			 
+			//Simulation controls
 			new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_INTERIOR"),
 			new CommandInfo(Command.CameraExterior, CommandType.Digital, "CAMERA_EXTERIOR"),
 			new CommandInfo(Command.CameraTrack, CommandType.Digital, "CAMERA_TRACK"),
@@ -1533,7 +1548,7 @@ namespace OpenBve {
 			new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE"),
 			new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
 		};
-		internal static Control[] CurrentControls = new Control[] { };
+		internal static Control[] CurrentControls = { };
 
 		// try get command info
 		internal static bool TryGetCommandInfo(Command Value, out CommandInfo Info) {
