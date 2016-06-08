@@ -21,6 +21,17 @@ HORN_SECONDARY, keyboard, Enter, 1
 HORN_SECONDARY, keyboard, KeypadPlus, 0
 HORN_MUSIC, keyboard, Enter, 2
 HORN_MUSIC, keyboard, KeypadMinus, 0
+HEADLIGHTS, keyboard, H, 0
+LIVE_STEAM_INJECTOR, keyboard, I, 0
+EXHAUST_STEAM_INJECTOR, keyboard, O, 0
+BLOWERS, keyboard, K, 0
+GEAR_UP, keyboard, G, 0
+GEAR_DOWN, keyboard, G, 2
+RAISE_PANTOGRAPH, keyboard, P, 0
+LOWER_PANTOGRAPH, keyboard, P, 2
+MAIN_BREAKER, keyboard, B, 0
+ENGINE_START, keyboard, E, 0
+ENGINE_STOP, keyboard, E, 2
 DEVICE_CONSTSPEED, keyboard, BackSpace, 0
 SECURITY_S, keyboard, Space, 0
 SECURITY_A1, keyboard, Insert, 0
@@ -80,7 +91,4 @@ MISC_MUTE, keyboard, M, 2
 MISC_INTERFACE, keyboard, F10, 0
 MISC_BACKFACE, keyboard, F11, 0
 MISC_CPUMODE, keyboard, F12, 0
-DEBUG_WIREFRAME, keyboard, W, 2
-DEBUG_NORMALS, keyboard, N, 2
-DEBUG_BRAKE, keyboard, B, 2
 ROUTE_INFORMATION, keyboard, F8, 0

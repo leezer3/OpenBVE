@@ -34,9 +34,6 @@ namespace OpenBve {
 		/// <summary>Information about the file system organization.</summary>
 		internal static FileSystem FileSystem = null;
 		
-		/// <summary>The object that serves as an authentication for the SetPackageLookupDirectories call.</summary>
-		private static object SetPackageLookupDirectoriesAuthentication = null;
-
 		/// <summary>If the program is to be restarted, this contains the command-line arguments that should be passed to the process, or a null reference otherwise.</summary>
 		internal static string RestartArguments = null;
 

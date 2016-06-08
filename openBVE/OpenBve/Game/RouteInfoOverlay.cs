@@ -1,6 +1,5 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
-using System;
 using System.Drawing;
 
 namespace OpenBve
@@ -10,6 +9,7 @@ namespace OpenBve
 	*********************
 	Implements the in-game overlay with graphical information about the route: map and gradient. */
 
+	/// <summary>Displays an in-game overlay with information about the route, including a map and gradient profile</summary>
 	public class RouteInfoOverlay
 	{
 		//
@@ -39,13 +39,6 @@ namespace OpenBve
 		private Size				gradientSize;
 		private Textures.Texture	mapImage		= null;
 		private Size				mapSize;
-
-		//
-		// C'TOR
-		//
-		public RouteInfoOverlay()
-		{
-		}
 
 		/********************
 			PUBLIC METHODS
@@ -118,9 +111,7 @@ namespace OpenBve
 			}
 		}
 
-		//
-		// IS ACTIVE
-		//
+		/// <summary>Returns whether the Route Information display is currently showing on screen</summary>
 		public bool IsActive()
 		{
 			return currentState != state.none;

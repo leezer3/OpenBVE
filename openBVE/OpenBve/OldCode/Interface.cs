@@ -1455,7 +1455,8 @@ namespace OpenBve {
 			new CommandInfo(Command.HornMusic, CommandType.Digital, "HORN_MUSIC"),
 			new CommandInfo(Command.DeviceConstSpeed, CommandType.Digital, "DEVICE_CONSTSPEED"),
 
-
+//We only want to mark these as obsolete for new users of the API
+#pragma warning disable 618
 			new CommandInfo(Command.SecurityS, CommandType.Digital, "SECURITY_S"),
 			new CommandInfo(Command.SecurityA1, CommandType.Digital, "SECURITY_A1"),
 			new CommandInfo(Command.SecurityA2, CommandType.Digital, "SECURITY_A2"),
@@ -1476,7 +1477,7 @@ namespace OpenBve {
 			new CommandInfo(Command.SecurityN, CommandType.Digital, "SECURITY_N"),
 			new CommandInfo(Command.SecurityO, CommandType.Digital, "SECURITY_O"),
 			new CommandInfo(Command.SecurityP, CommandType.Digital, "SECURITY_P"),
-			
+#pragma warning restore 618			
 			
 			//Common Keys
 			new CommandInfo(Command.WiperSpeedUp, CommandType.Digital, "WIPER_SPEED_UP"),

@@ -854,7 +854,7 @@ namespace OpenBve {
 			Follower.LastTrackElement = i;
 		}
 		
-		/// <summary>Gets the innacuracy (Gauge spread & track bounce) for a given track position and routefile innacuracy value</summary>
+		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
 		/// <param name="position">The track position</param>
 		/// <param name="inaccuracy">The openBVE innacuaracy value</param>
 		/// <param name="x">The X (horizontal) co-ordinate to update</param>

@@ -491,6 +491,8 @@ namespace OpenBve
 		{
 			Pending = 0, Boarding = 1, Completed = 2
 		}
+
+		/// <summary>The root class for a train within the simulation</summary>
 		public class Train
 		{
 			/// <summary>The plugin used by this train.</summary>

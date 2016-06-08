@@ -604,13 +604,13 @@ namespace OpenBve
 										SaveCameraSettings();
 										World.CameraMode = World.CameraViewMode.Exterior;
 										RestoreCameraSettings();
-                                        if (TrainManager.PlayerTrain.Cars.Length >= 1 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.Length >= 2)
+										if (TrainManager.PlayerTrain.Cars.Length >= 1 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.Length >= 2)
 										{
-                                            TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, 1);
+											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, 1);
 										}
 										else
 										{
-                                            TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, -1);
+											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, -1);
 										}
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
@@ -688,8 +688,8 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
 												.CarSections.Length >= 2)
 										{
-	                                        TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-		                                        TrainManager.PlayerTrain.DriverCar, 1);
+											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
+												TrainManager.PlayerTrain.DriverCar, 1);
 										}
 										else
 										{
@@ -792,9 +792,9 @@ namespace OpenBve
 													{
 														TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
 
-                                                    }
-                                                }
-                                            }
+													}
+												}
+											}
 
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
@@ -1353,6 +1353,8 @@ namespace OpenBve
 											}
 										}
 										break;
+//We only want to mark these as obsolete for new users of the API
+#pragma warning disable 618
 									case Interface.Command.SecurityS:
 									case Interface.Command.SecurityA1:
 									case Interface.Command.SecurityA2:
@@ -1373,6 +1375,7 @@ namespace OpenBve
 									case Interface.Command.SecurityN:
 									case Interface.Command.SecurityO:
 									case Interface.Command.SecurityP:
+#pragma warning restore 618
 									case Interface.Command.WiperSpeedUp:
 									case Interface.Command.WiperSpeedDown:
 									case Interface.Command.FillFuel:
@@ -1661,6 +1664,8 @@ namespace OpenBve
 									Interface.DigitalControlState.ReleasedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
+//We only want to mark these as obsolete for new users of the API
+#pragma warning disable 618
 									case Interface.Command.SecurityS:
 									case Interface.Command.SecurityA1:
 									case Interface.Command.SecurityA2:
@@ -1681,6 +1686,7 @@ namespace OpenBve
 									case Interface.Command.SecurityN:
 									case Interface.Command.SecurityO:
 									case Interface.Command.SecurityP:
+#pragma warning restore 618
 									case Interface.Command.WiperSpeedUp:
 									case Interface.Command.WiperSpeedDown:
 									case Interface.Command.FillFuel:

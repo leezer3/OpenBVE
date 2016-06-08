@@ -13,18 +13,32 @@ namespace OpenBve
 		private string _title;
 		private string _fileName = "";
 
+		/// <summary>
+		/// Gets or sets the initial directory for the folderbrowser dialog to show
+		/// </summary>
 		public string InitialDirectory
 		{
 			get { return string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory; }
 			set { _initialDirectory = value; }
 		}
+
+		/// <summary>
+		/// Gets or sets the title of the dialog
+		/// </summary>
 		public string Title
 		{
 			get { return _title ?? "Select a folder"; }
 			set { _title = value; }
 		}
+
+		/// <summary>
+		/// The selected filename
+		/// </summary>
 		public string FileName { get { return _fileName; } }
 
+		/// <summary>
+		/// Shows the dialog
+		/// </summary>
 		public bool Show() { return Show(IntPtr.Zero); }
 
 		/// <param name="hWndOwner">Handle of the control or window to be the parent of the file dialog</param>
