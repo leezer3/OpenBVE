@@ -1933,7 +1933,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].RearBogie.CurrentCarSection,Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,Side, Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
+				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].FrontBogie.CurrentCarSection,Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,Side, Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
 			}
 		}
 
