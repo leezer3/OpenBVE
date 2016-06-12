@@ -3,22 +3,23 @@ using CSScriptLibrary;
 using OpenBveApi.Math;
 
 namespace OpenBve {
+	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static class ObjectManager
 	{
 		// unified objects
 		internal abstract class UnifiedObject { }
-        /// <summary>Interfaces with the CS Script Library </summary>
-        public interface AnimationScript
-        {
-            /// <summary> Call to execute this script </summary>
-            /// <param name="Train">A reference to the nearest train</param>
-            /// <param name="Position">The object's absolute in world position</param>
-            /// <param name="TrackPosition">The object's track position</param>
-            /// <param name="SectionIndex"></param>
-            /// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
-            /// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
-            double ExecuteScript(TrainManager.Train Train, Vector3 Position, double TrackPosition,int SectionIndex,bool IsPartOfTrain,double TimeElapsed);
-        }
+		/// <summary>Interfaces with the CS Script Library </summary>
+		public interface AnimationScript
+		{
+			/// <summary> Call to execute this script </summary>
+			/// <param name="Train">A reference to the nearest train</param>
+			/// <param name="Position">The object's absolute in world position</param>
+			/// <param name="TrackPosition">The object's track position</param>
+			/// <param name="SectionIndex"></param>
+			/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
+			/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
+			double ExecuteScript(TrainManager.Train Train, Vector3 Position, double TrackPosition,int SectionIndex,bool IsPartOfTrain,double TimeElapsed);
+		}
 
 		// static objects
 		internal class StaticObject : UnifiedObject {
@@ -33,10 +34,10 @@ namespace OpenBve {
 			internal short GroupIndex;
 			/// <summary>Whether the object is dynamic, i.e. not static.</summary>
 			internal bool Dynamic;
-            /// <summary> Stores the author for this object.</summary>
-		    internal string Author;
-            /// <summary> Stores the copyright information for this object.</summary>
-		    internal string Copyright;
+			/// <summary> Stores the author for this object.</summary>
+			internal string Author;
+			/// <summary> Stores the copyright information for this object.</summary>
+			internal string Copyright;
 		}
 		internal static StaticObject[] Objects = new StaticObject[16];
 		internal static int ObjectsUsed;
@@ -60,31 +61,31 @@ namespace OpenBve {
 			internal double CurrentTimeDelta;
 			internal Damping(double NaturalFrequency, double DampingRatio)
 			{
-			    if (NaturalFrequency < 0.0) {
+				if (NaturalFrequency < 0.0) {
 					throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
 				}
-			    if (DampingRatio < 0.0) {
-			        throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
-			    }
-			    this.NaturalFrequency = NaturalFrequency;
-			    this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-			    this.DampingRatio = DampingRatio;
-			    if (DampingRatio < 1.0) {
-			        this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-			    } else if (DampingRatio == 1.0) {
-			        this.NaturalDampingFrequency = NaturalFrequency;
-			    } else {
-			        this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-			    }
-			    this.OriginalAngle = 0.0;
-			    this.OriginalDerivative = 0.0;
-			    this.TargetAngle = 0.0;
-			    this.CurrentAngle = 0.0;
-			    this.CurrentValue = 1.0;
-			    this.CurrentTimeDelta = 0.0;
+				if (DampingRatio < 0.0) {
+					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
+				}
+				this.NaturalFrequency = NaturalFrequency;
+				this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
+				this.DampingRatio = DampingRatio;
+				if (DampingRatio < 1.0) {
+					this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
+				} else if (DampingRatio == 1.0) {
+					this.NaturalDampingFrequency = NaturalFrequency;
+				} else {
+					this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
+				}
+				this.OriginalAngle = 0.0;
+				this.OriginalDerivative = 0.0;
+				this.TargetAngle = 0.0;
+				this.CurrentAngle = 0.0;
+				this.CurrentValue = 1.0;
+				this.CurrentTimeDelta = 0.0;
 			}
 
-		    internal Damping Clone() {
+			internal Damping Clone() {
 				return (Damping)this.MemberwiseClone();
 			}
 		}
@@ -93,9 +94,9 @@ namespace OpenBve {
 			internal ObjectManager.StaticObject Object;
 		}
 
-        
+		
 
-	    internal class AnimatedObject {
+		internal class AnimatedObject {
 			// states
 			internal AnimatedObjectState[] States;
 			internal FunctionScripts.FunctionScript StateFunction;
@@ -106,7 +107,7 @@ namespace OpenBve {
 			internal FunctionScripts.FunctionScript TranslateXFunction;
 			internal FunctionScripts.FunctionScript TranslateYFunction;
 			internal FunctionScripts.FunctionScript TranslateZFunction;
-		    
+			
 			internal Vector3 RotateXDirection;
 			internal Vector3 RotateYDirection;
 			internal Vector3 RotateZDirection;
@@ -131,16 +132,16 @@ namespace OpenBve {
 			internal double SecondsSinceLastUpdate;
 			internal int ObjectIndex;
 
-            //This section holds script files executed by CS-Script
-            /// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
-            internal string TranslateXScriptFile;
-	        internal AnimationScript TranslateXAnimationScript;
-            /// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
-            internal string TranslateYScriptFile;
-            internal AnimationScript TranslateYAnimationScript;
-            /// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
-            internal string TranslateZScriptFile;
-            internal AnimationScript TranslateZAnimationScript;
+			//This section holds script files executed by CS-Script
+			/// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
+			internal string TranslateXScriptFile;
+			internal AnimationScript TranslateXAnimationScript;
+			/// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
+			internal string TranslateYScriptFile;
+			internal AnimationScript TranslateYAnimationScript;
+			/// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
+			internal string TranslateZScriptFile;
+			internal AnimationScript TranslateZAnimationScript;
 			// methods
 			internal bool IsFreeOfFunctions() {
 				if (this.StateFunction != null) return false;
@@ -148,16 +149,16 @@ namespace OpenBve {
 				if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 				if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
 				if (this.LEDFunction != null) return false;
-			    if (this.TranslateXScriptFile != null | this.TranslateYScriptFile != null | this.TranslateZScriptFile != null) return false;
+				if (this.TranslateXScriptFile != null | this.TranslateYScriptFile != null | this.TranslateZScriptFile != null) return false;
 				return true;
 			}
 			internal AnimatedObject Clone() {
-			    AnimatedObject Result = new AnimatedObject {States = new AnimatedObjectState[this.States.Length]};
-			    for (int i = 0; i < this.States.Length; i++) {
+				AnimatedObject Result = new AnimatedObject {States = new AnimatedObjectState[this.States.Length]};
+				for (int i = 0; i < this.States.Length; i++) {
 					Result.States[i].Position = this.States[i].Position;
 					Result.States[i].Object = CloneObject(this.States[i].Object);
 				}
-			    Result.TranslateXScriptFile = this.TranslateXScriptFile;
+				Result.TranslateXScriptFile = this.TranslateXScriptFile;
 				Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
 				Result.CurrentState = this.CurrentState;
 				Result.TranslateZDirection = this.TranslateZDirection;
@@ -245,6 +246,21 @@ namespace OpenBve {
 			}
 		}
 
+		/// <summary> Updates the position and state of the specified animated object</summary>
+		/// <param name="Object">The object to update</param>
+		/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
+		/// <param name="Train">The train, or a null reference otherwise</param>
+		/// <param name="CarIndex">If this object forms part of a train, the car index it refers to</param>
+		/// <param name="SectionIndex">If this object has been placed via Track.Sig, the index of the section it is attached to</param>
+		/// <param name="TrackPosition"></param>
+		/// <param name="Position"></param>
+		/// <param name="Direction"></param>
+		/// <param name="Up"></param>
+		/// <param name="Side"></param>
+		/// <param name="Overlay">Whether this object should be overlaid over the other objects on-screen (Forms part of the cab etc.)</param>
+		/// <param name="UpdateFunctions">Whether the functions associated with this object should be re-evaluated</param>
+		/// <param name="Show"></param>
+		/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 		internal static void UpdateAnimatedObject(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed) {
 			int s = Object.CurrentState;
 			int i = Object.ObjectIndex;
@@ -274,39 +290,39 @@ namespace OpenBve {
 				Position.Y += x * ry;
 				Position.Z += x * rz;
 			}
-		    else if (Object.TranslateXScriptFile != null)
-		    {
-		        //Translate X Script
-		        if (Object.TranslateXAnimationScript == null)
-		        {
-		            //Load the script if required
-		            try
-		            {
-		                CSScript.GlobalSettings.TargetFramework = "v4.0";
-		                Object.TranslateXAnimationScript = CSScript.LoadCodeFrom(Object.TranslateXScriptFile)
-		                    .CreateObject("OpenBVEScript")
-		                    .AlignToInterface<AnimationScript>(true);
-		            }
-		            catch
-		            {
-		                Interface.AddMessage(Interface.MessageType.Error, false,
-		                    "An error occcured whilst parsing script " + Object.TranslateXScriptFile);
-		                Object.TranslateXScriptFile = null;
-		                return;
-		            }
-		        }
-		        double x = Object.TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-		            IsPartOfTrain, TimeElapsed);
-		        double rx = Object.TranslateXDirection.X, ry = Object.TranslateXDirection.Y, rz = Object.TranslateXDirection.Z;
-		        World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-		            Side.Z);
-		        Position.X += x*rx;
-		        Position.Y += x*ry;
-		        Position.Z += x*rz;
-		    }
+			else if (Object.TranslateXScriptFile != null)
+			{
+				//Translate X Script
+				if (Object.TranslateXAnimationScript == null)
+				{
+					//Load the script if required
+					try
+					{
+						CSScript.GlobalSettings.TargetFramework = "v4.0";
+						Object.TranslateXAnimationScript = CSScript.LoadCodeFrom(Object.TranslateXScriptFile)
+							.CreateObject("OpenBVEScript")
+							.AlignToInterface<AnimationScript>(true);
+					}
+					catch
+					{
+						Interface.AddMessage(Interface.MessageType.Error, false,
+							"An error occcured whilst parsing script " + Object.TranslateXScriptFile);
+						Object.TranslateXScriptFile = null;
+						return;
+					}
+				}
+				double x = Object.TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+					IsPartOfTrain, TimeElapsed);
+				double rx = Object.TranslateXDirection.X, ry = Object.TranslateXDirection.Y, rz = Object.TranslateXDirection.Z;
+				World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+					Side.Z);
+				Position.X += x*rx;
+				Position.Y += x*ry;
+				Position.Z += x*rz;
+			}
 
 
-		    if (Object.TranslateYFunction != null) {
+			if (Object.TranslateYFunction != null) {
 				double y;
 				if (UpdateFunctions) {
 					y = Object.TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
@@ -319,36 +335,36 @@ namespace OpenBve {
 				Position.Y += y * ry;
 				Position.Z += y * rz;
 			}
-            else if (Object.TranslateYScriptFile != null)
-            {
-                //Translate X Script
-                if (Object.TranslateYAnimationScript == null)
-                {
-                    //Load the script if required
-                    try
-                    {
-                        CSScript.GlobalSettings.TargetFramework = "v4.0";
-                        Object.TranslateYAnimationScript = CSScript.LoadCodeFrom(Object.TranslateYScriptFile)
-                            .CreateObject("OpenBVEScript")
-                            .AlignToInterface<AnimationScript>(true);
-                    }
-                    catch
-                    {
-                        Interface.AddMessage(Interface.MessageType.Error, false,
-                            "An error occcured whilst parsing script " + Object.TranslateYScriptFile);
-                        Object.TranslateYScriptFile = null;
-                        return;
-                    }
-                }
-                double y = Object.TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-                    IsPartOfTrain, TimeElapsed);
-                double rx = Object.TranslateYDirection.X, ry = Object.TranslateYDirection.Y, rz = Object.TranslateYDirection.Z;
-                World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-                    Side.Z);
-                Position.X += y * rx;
-                Position.Y += y * ry;
-                Position.Z += y * rz;
-            }
+			else if (Object.TranslateYScriptFile != null)
+			{
+				//Translate X Script
+				if (Object.TranslateYAnimationScript == null)
+				{
+					//Load the script if required
+					try
+					{
+						CSScript.GlobalSettings.TargetFramework = "v4.0";
+						Object.TranslateYAnimationScript = CSScript.LoadCodeFrom(Object.TranslateYScriptFile)
+							.CreateObject("OpenBVEScript")
+							.AlignToInterface<AnimationScript>(true);
+					}
+					catch
+					{
+						Interface.AddMessage(Interface.MessageType.Error, false,
+							"An error occcured whilst parsing script " + Object.TranslateYScriptFile);
+						Object.TranslateYScriptFile = null;
+						return;
+					}
+				}
+				double y = Object.TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+					IsPartOfTrain, TimeElapsed);
+				double rx = Object.TranslateYDirection.X, ry = Object.TranslateYDirection.Y, rz = Object.TranslateYDirection.Z;
+				World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+					Side.Z);
+				Position.X += y * rx;
+				Position.Y += y * ry;
+				Position.Z += y * rz;
+			}
 
 			if (Object.TranslateZFunction != null) {
 				double z;
@@ -363,36 +379,36 @@ namespace OpenBve {
 				Position.Y += z * ry;
 				Position.Z += z * rz;
 			}
-            else if (Object.TranslateZScriptFile != null)
-            {
-                //Translate X Script
-                if (Object.TranslateZAnimationScript == null)
-                {
-                    //Load the script if required
-                    try
-                    {
-                        CSScript.GlobalSettings.TargetFramework = "v4.0";
-                        Object.TranslateZAnimationScript = CSScript.LoadCodeFrom(Object.TranslateZScriptFile)
-                            .CreateObject("OpenBVEScript")
-                            .AlignToInterface<AnimationScript>(true);
-                    }
-                    catch
-                    {
-                        Interface.AddMessage(Interface.MessageType.Error, false,
-                            "An error occcured whilst parsing script " + Object.TranslateZScriptFile);
-                        Object.TranslateZScriptFile = null;
-                        return;
-                    }
-                }
-                double z = Object.TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-                    IsPartOfTrain, TimeElapsed);
-                double rx = Object.TranslateZDirection.X, ry = Object.TranslateZDirection.Y, rz = Object.TranslateZDirection.Z;
-                World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-                    Side.Z);
-                Position.X += z * rx;
-                Position.Y += z * ry;
-                Position.Z += z * rz;
-            }
+			else if (Object.TranslateZScriptFile != null)
+			{
+				//Translate X Script
+				if (Object.TranslateZAnimationScript == null)
+				{
+					//Load the script if required
+					try
+					{
+						CSScript.GlobalSettings.TargetFramework = "v4.0";
+						Object.TranslateZAnimationScript = CSScript.LoadCodeFrom(Object.TranslateZScriptFile)
+							.CreateObject("OpenBVEScript")
+							.AlignToInterface<AnimationScript>(true);
+					}
+					catch
+					{
+						Interface.AddMessage(Interface.MessageType.Error, false,
+							"An error occcured whilst parsing script " + Object.TranslateZScriptFile);
+						Object.TranslateZScriptFile = null;
+						return;
+					}
+				}
+				double z = Object.TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+					IsPartOfTrain, TimeElapsed);
+				double rx = Object.TranslateZDirection.X, ry = Object.TranslateZDirection.Y, rz = Object.TranslateZDirection.Z;
+				World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
+					Side.Z);
+				Position.X += z * rx;
+				Position.Y += z * ry;
+				Position.Z += z * rz;
+			}
 			// rotation
 			bool rotateX = Object.RotateXFunction != null;
 			bool rotateY = Object.RotateYFunction != null;
@@ -708,8 +724,8 @@ namespace OpenBve {
 					ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
 				}
 				for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++) {
-                    if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
-                    {
+					if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
+					{
 						if (rotateX) {
 							World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.X, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Y, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Z, Object.RotateXDirection.X, Object.RotateXDirection.Y, Object.RotateXDirection.Z, cosX, sinX);
 						}
@@ -791,16 +807,22 @@ namespace OpenBve {
 			}
 		}
 
-		// animated world object
+		/// <summary>Holds the properties for an animated object within the simulation world</summary>
 		internal class AnimatedWorldObject {
+			/// <summary>The object's absolute position wthin the 3-D world space</summary>
 			internal Vector3 Position;
+			/// <summary>The object's relative track position</summary>
 			internal double TrackPosition;
 			internal Vector3 Direction;
 			internal Vector3 Up;
 			internal Vector3 Side;
+			/// <summary>The actual animated object</summary>
 			internal AnimatedObject Object;
+			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 			internal int SectionIndex;
+			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
+			/// <summary>Whether the object is currently visible</summary>
 			internal bool Visible;
 		}
 		internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
@@ -845,29 +867,29 @@ namespace OpenBve {
 				Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 			}
 			World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
-		    AnimatedWorldObjects[a] = new AnimatedWorldObject
-		    {
-		        Position = Position,
-		        Direction = FinalTransformation.Z,
-		        Up = FinalTransformation.Y,
-		        Side = FinalTransformation.X,
-		        Object = Prototype.Clone()
-		    };
-		    AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
+			AnimatedWorldObjects[a] = new AnimatedWorldObject
+			{
+				Position = Position,
+				Direction = FinalTransformation.Z,
+				Up = FinalTransformation.Y,
+				Side = FinalTransformation.X,
+				Object = Prototype.Clone()
+			};
+			AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
 			AnimatedWorldObjects[a].SectionIndex = SectionIndex;
 			AnimatedWorldObjects[a].TrackPosition = TrackPosition;
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				if (AnimatedWorldObjects[a].Object.States[i].Object == null) {
-				    AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
-				    {
-				        Mesh =
-				        {
-				            Faces = new World.MeshFace[] {},
-				            Materials = new World.MeshMaterial[] {},
-				            Vertices = new World.Vertex[] {}
-				        },
-				        RendererIndex = -1
-				    };
+					AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
+					{
+						Mesh =
+						{
+							Faces = new World.MeshFace[] {},
+							Materials = new World.MeshMaterial[] {},
+							Vertices = new World.Vertex[] {}
+						},
+						RendererIndex = -1
+					};
 				}
 			}
 			double r = 0.0;
@@ -948,7 +970,7 @@ namespace OpenBve {
 				#endif
 				if (!System.IO.Path.HasExtension(FileName)) {
 					while (true) {
-					    var f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+						var f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
 						if (System.IO.File.Exists(f)) {
 							FileName = f;
 							break;
@@ -963,11 +985,11 @@ namespace OpenBve {
 							FileName = f;
 							break;
 						}
-                        f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".xml");
-                        if (System.IO.File.Exists(f))
-                        {
-                            FileName = f;
-                        }
+						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".xml");
+						if (System.IO.File.Exists(f))
+						{
+							FileName = f;
+						}
 						break;
 					}
 				}
@@ -983,9 +1005,9 @@ namespace OpenBve {
 					case ".animated":
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
 						break;
-                    case ".xml":
-                        Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
-                        break;
+					case ".xml":
+						Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						break;
 					default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
@@ -1005,7 +1027,7 @@ namespace OpenBve {
 				#endif
 				if (!System.IO.Path.HasExtension(FileName)) {
 					while (true) {
-					    string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
 						if (System.IO.File.Exists(f)) {
 							FileName = f;
 							break;
@@ -1034,13 +1056,13 @@ namespace OpenBve {
 					case ".animated":
 						Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 						return null;
-                        /*
-                         * This will require implementing a specific static object load function- Leave alone for the moment
-                         * 
-                    case ".xml":
-                        Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
-                        break;
-                         */
+						/*
+						 * This will require implementing a specific static object load function- Leave alone for the moment
+						 * 
+					case ".xml":
+						Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						break;
+						 */
 					default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
@@ -1506,35 +1528,35 @@ namespace OpenBve {
 		// join objects
 		internal static void JoinObjects(ref StaticObject Base, StaticObject Add)
 		{
-		    if (Base == null & Add == null) {
+			if (Base == null & Add == null) {
 				return;
 			}
-		    if (Base == null) {
-		        Base = CloneObject(Add);
-		    } else if (Add != null) {
-		        int mf = Base.Mesh.Faces.Length;
-		        int mm = Base.Mesh.Materials.Length;
-		        int mv = Base.Mesh.Vertices.Length;
-		        Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
-		        Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
-		        Array.Resize<World.Vertex>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
-		        for (int i = 0; i < Add.Mesh.Faces.Length; i++) {
-		            Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
-		            for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++) {
-		                Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-		            }
-		            Base.Mesh.Faces[mf + i].Material += (ushort)mm;
-		        }
-		        for (int i = 0; i < Add.Mesh.Materials.Length; i++) {
-		            Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
-		        }
-		        for (int i = 0; i < Add.Mesh.Vertices.Length; i++) {
-		            Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
-		        }
-		    }
+			if (Base == null) {
+				Base = CloneObject(Add);
+			} else if (Add != null) {
+				int mf = Base.Mesh.Faces.Length;
+				int mm = Base.Mesh.Materials.Length;
+				int mv = Base.Mesh.Vertices.Length;
+				Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
+				Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
+				Array.Resize<World.Vertex>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+				for (int i = 0; i < Add.Mesh.Faces.Length; i++) {
+					Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
+					for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++) {
+						Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+					}
+					Base.Mesh.Faces[mf + i].Material += (ushort)mm;
+				}
+				for (int i = 0; i < Add.Mesh.Materials.Length; i++) {
+					Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
+				}
+				for (int i = 0; i < Add.Mesh.Vertices.Length; i++) {
+					Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
+				}
+			}
 		}
 
-	    // create object
+		// create object
 		internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
 			CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
 		}
@@ -1582,15 +1604,15 @@ namespace OpenBve {
 		}
 		internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 		{
-            //Object is not actually overwritten by this call
-		    Object = new StaticObject
-		    {
-		        StartingDistance = float.MaxValue,
-		        EndingDistance = float.MinValue,
-		        Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
-		    };
-		    // vertices
-		    for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
+			//Object is not actually overwritten by this call
+			Object = new StaticObject
+			{
+				StartingDistance = float.MaxValue,
+				EndingDistance = float.MinValue,
+				Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
+			};
+			// vertices
+			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
 				Object.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
 				if (AccurateObjectDisposal) {
 					World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
@@ -1670,21 +1692,22 @@ namespace OpenBve {
 			if (a >= Objects.Length) {
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
-		    Objects[a] = new StaticObject
-		    {
-		        Mesh =
-		        {
-		            Faces = new World.MeshFace[] {},
-		            Materials = new World.MeshMaterial[] {},
-		            Vertices = new World.Vertex[] {}
-		        },
-		        Dynamic = true
-		    };
-		    ObjectsUsed++;
+			Objects[a] = new StaticObject
+			{
+				Mesh =
+				{
+					Faces = new World.MeshFace[] {},
+					Materials = new World.MeshMaterial[] {},
+					Vertices = new World.Vertex[] {}
+				},
+				Dynamic = true
+			};
+			ObjectsUsed++;
 			return a;
 		}
 
-		// clone object
+		/// <summary>Creates a clone of the specified object.</summary>
+		/// <param name="Prototype">The prototype.</param>
 		internal static StaticObject CloneObject(StaticObject Prototype) {
 			if (Prototype == null) return null;
 			return CloneObject(Prototype, null, null);
@@ -1696,15 +1719,15 @@ namespace OpenBve {
 		/// <returns></returns>
 		internal static StaticObject CloneObject(StaticObject Prototype, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture) {
 			if (Prototype == null) return null;
-		    StaticObject Result = new StaticObject
-		    {
-		        StartingDistance = Prototype.StartingDistance,
-		        EndingDistance = Prototype.EndingDistance,
-		        Dynamic = Prototype.Dynamic,
-		        Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
-		    };
-		    // vertices
-		    for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
+			StaticObject Result = new StaticObject
+			{
+				StartingDistance = Prototype.StartingDistance,
+				EndingDistance = Prototype.EndingDistance,
+				Dynamic = Prototype.Dynamic,
+				Mesh = {Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length]}
+			};
+			// vertices
+			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
 				Result.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
 			}
 			// faces
@@ -1791,7 +1814,7 @@ namespace OpenBve {
 		internal static void UpdateVisibility(double TrackPosition) {
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-		    double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
 			if (d < 0.0) {
 				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
 				if (ObjectsSortedByEndPointer >= n) ObjectsSortedByEndPointer = n - 1;
