@@ -171,7 +171,6 @@ namespace OpenBve {
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
-			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
 			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
 			double large = 30.0;
 			double medium = 10.0;

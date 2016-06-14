@@ -265,8 +265,6 @@
 			this.labelVersion = new System.Windows.Forms.Label();
 			this.labelInfoBottom = new System.Windows.Forms.Label();
 			this.labelInfoTop = new System.Windows.Forms.Label();
-			this.timerInstall = new System.Windows.Forms.Timer(this.components);
-			this.timerFilter = new System.Windows.Forms.Timer(this.components);
 			this.panelPackages = new System.Windows.Forms.Panel();
 			this.panelPackageList = new System.Windows.Forms.Panel();
 			this.comboBoxPackageType = new System.Windows.Forms.ComboBox();
@@ -5122,9 +5120,7 @@
         private System.Windows.Forms.Label labelAntiAliasing;
 		private System.Windows.Forms.NumericUpDown updownAntiAliasing;
 		private System.Windows.Forms.ListView listviewRouteFiles;
-        private System.Windows.Forms.CheckBox checkboxTrainDefault;
-        private System.Windows.Forms.Timer timerFilter;
-		private System.Windows.Forms.Timer timerInstall;
+		private System.Windows.Forms.CheckBox checkboxTrainDefault;
         private System.Windows.Forms.Label labelTransparencyPerformance;
         private System.Windows.Forms.TrackBar trackbarTransparency;
         private System.Windows.Forms.Panel panelOptionsLeft;
