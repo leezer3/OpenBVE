@@ -125,6 +125,12 @@
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Translations\InterfaceStrings.cs" />
     <Compile Include="System\Translations\LanguageFile.cs" />
+    <Compile Include="UserInterface\formBugReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formBugReport.Designer.cs">
+      <DependentUpon>formBugReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -247,6 +253,9 @@
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="UserInterface\formBugReport.resx">
+      <DependentUpon>formBugReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formImage.resx">
       <SubType>Designer</SubType>
       <DependentUpon>formImage.cs</DependentUpon>

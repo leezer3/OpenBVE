@@ -100,8 +100,10 @@ namespace OpenBve {
 				if (File.Exists(file))
 				{
 					string[] lines = File.ReadAllLines(file, Encoding.UTF8);
-					foreach (string line in lines)
+					for (int i = 0; i < lines.Length; i++)
 					{
+						string line = ReplacePath(lines[i]);
+						
 						int equals = line.IndexOf('=');
 						if (equals >= 0)
 						{
@@ -118,6 +120,7 @@ namespace OpenBve {
 									break;
 							}
 						}
+
 					}
 				}
 				else
@@ -134,18 +137,18 @@ namespace OpenBve {
 				if (Program.FileSystem.RouteInstallationDirectory != null &&
 					Directory.Exists(Program.FileSystem.RouteInstallationDirectory))
 				{
-					newLines.AppendLine("RoutePackageInstall=" + Program.FileSystem.RouteInstallationDirectory);
+					newLines.AppendLine("RoutePackageInstall=" + ReplacePath(Program.FileSystem.RouteInstallationDirectory));
 				}
 
 				if (Program.FileSystem.TrainInstallationDirectory != null &&
 					Directory.Exists(Program.FileSystem.TrainInstallationDirectory))
 				{
-					newLines.AppendLine("TrainPackageInstall=" + Program.FileSystem.TrainInstallationDirectory);
+					newLines.AppendLine("TrainPackageInstall=" + ReplacePath(Program.FileSystem.TrainInstallationDirectory));
 				}
 				if (Program.FileSystem.OtherInstallationDirectory != null &&
 					Directory.Exists(Program.FileSystem.OtherInstallationDirectory))
 				{
-					newLines.AppendLine("OtherPackageInstall=" + Program.FileSystem.OtherInstallationDirectory);
+					newLines.AppendLine("OtherPackageInstall=" + ReplacePath(Program.FileSystem.OtherInstallationDirectory));
 				}
 				System.IO.File.WriteAllText(file, newLines.ToString(), new System.Text.UTF8Encoding(true));
 			}
@@ -154,7 +157,25 @@ namespace OpenBve {
 				
 			}
 		}
-	
+
+		/// <summary> Replaces all instances of absolute paths within a string with their relative equivilants</summary>
+		internal static string ReplacePath(string line)
+		{
+			try
+			{
+				line = line.Replace(Assembly.GetExecutingAssembly().Location, "$[AssemblyFile]");
+				line = line.Replace(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "$[AssemblyFolder]");
+				line = line.Replace(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "$[ApplicationData]");
+				line = line.Replace(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+					"$[CommonApplicationData]");
+				line = line.Replace(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "$[Personal]");
+			}
+			catch
+			{
+			}
+			return line;
+		}
+
 		/// <summary>Creates all folders in the file system that can later be written to.</summary>
 		internal void CreateFileSystem() {
 			try {

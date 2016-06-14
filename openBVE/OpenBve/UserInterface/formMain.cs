@@ -1410,5 +1410,11 @@ namespace OpenBve {
 					break;
 			}
 		}
+
+		private void linkLabelReportBug_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			var bugReportForm = new formBugReport();
+			bugReportForm.ShowDialog();
+		}
 	}
 }

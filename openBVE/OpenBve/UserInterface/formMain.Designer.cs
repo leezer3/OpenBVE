@@ -258,6 +258,7 @@
 			this.radiobuttonJoystick = new System.Windows.Forms.RadioButton();
 			this.radiobuttonKeyboard = new System.Windows.Forms.RadioButton();
 			this.panelInfo = new System.Windows.Forms.Panel();
+			this.linkLabelReportBug = new System.Windows.Forms.LinkLabel();
 			this.linkLabelCheckUpdates = new System.Windows.Forms.LinkLabel();
 			this.aboutLabel = new System.Windows.Forms.LinkLabel();
 			this.linkHomepage = new System.Windows.Forms.LinkLabel();
@@ -1313,7 +1314,7 @@
 			this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
 			this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
 			this.labelFillerTwo.Name = "labelFillerTwo";
-			this.labelFillerTwo.Size = new System.Drawing.Size(160, 146);
+			this.labelFillerTwo.Size = new System.Drawing.Size(160, 126);
 			this.labelFillerTwo.TabIndex = 2;
 			// 
 			// panelOptions
@@ -3370,16 +3371,34 @@
 			// 
 			this.panelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.panelInfo.BackColor = System.Drawing.Color.Gray;
+			this.panelInfo.Controls.Add(this.linkLabelReportBug);
 			this.panelInfo.Controls.Add(this.linkLabelCheckUpdates);
 			this.panelInfo.Controls.Add(this.aboutLabel);
 			this.panelInfo.Controls.Add(this.linkHomepage);
 			this.panelInfo.Controls.Add(this.labelVersion);
 			this.panelInfo.Controls.Add(this.labelInfoBottom);
 			this.panelInfo.Controls.Add(this.labelInfoTop);
-			this.panelInfo.Location = new System.Drawing.Point(0, 483);
+			this.panelInfo.Location = new System.Drawing.Point(0, 462);
 			this.panelInfo.Name = "panelInfo";
-			this.panelInfo.Size = new System.Drawing.Size(160, 75);
+			this.panelInfo.Size = new System.Drawing.Size(160, 96);
 			this.panelInfo.TabIndex = 3;
+			// 
+			// linkLabelReportBug
+			// 
+			this.linkLabelReportBug.ActiveLinkColor = System.Drawing.Color.Crimson;
+			this.linkLabelReportBug.AutoEllipsis = true;
+			this.linkLabelReportBug.DisabledLinkColor = System.Drawing.Color.Silver;
+			this.linkLabelReportBug.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
+			this.linkLabelReportBug.LinkColor = System.Drawing.Color.Gold;
+			this.linkLabelReportBug.Location = new System.Drawing.Point(8, 56);
+			this.linkLabelReportBug.Name = "linkLabelReportBug";
+			this.linkLabelReportBug.Size = new System.Drawing.Size(128, 16);
+			this.linkLabelReportBug.TabIndex = 8;
+			this.linkLabelReportBug.TabStop = true;
+			this.linkLabelReportBug.Text = "Report Problem";
+			this.linkLabelReportBug.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.linkLabelReportBug.VisitedLinkColor = System.Drawing.Color.Gold;
+			this.linkLabelReportBug.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelReportBug_LinkClicked);
 			// 
 			// linkLabelCheckUpdates
 			// 
@@ -3405,7 +3424,7 @@
 			this.aboutLabel.DisabledLinkColor = System.Drawing.Color.Silver;
 			this.aboutLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
 			this.aboutLabel.LinkColor = System.Drawing.Color.Gold;
-			this.aboutLabel.Location = new System.Drawing.Point(8, 56);
+			this.aboutLabel.Location = new System.Drawing.Point(8, 72);
 			this.aboutLabel.Name = "aboutLabel";
 			this.aboutLabel.Size = new System.Drawing.Size(128, 16);
 			this.aboutLabel.TabIndex = 6;
@@ -3450,7 +3469,7 @@
 			// 
 			this.labelInfoBottom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelInfoBottom.BackColor = System.Drawing.Color.White;
-			this.labelInfoBottom.Location = new System.Drawing.Point(0, 73);
+			this.labelInfoBottom.Location = new System.Drawing.Point(0, 94);
 			this.labelInfoBottom.Name = "labelInfoBottom";
 			this.labelInfoBottom.Size = new System.Drawing.Size(160, 2);
 			this.labelInfoBottom.TabIndex = 5;
@@ -5475,6 +5494,7 @@
 		private System.Windows.Forms.Button buttonSetRouteDirectory;
 		private System.Windows.Forms.Label labelRouteInstallDirectory;
 		private System.Windows.Forms.TextBox textBoxRouteDirectory;
+		private System.Windows.Forms.LinkLabel linkLabelReportBug;
         
     }
 }

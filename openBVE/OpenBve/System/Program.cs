@@ -320,7 +320,7 @@ namespace OpenBve {
 		internal static void ClearLogFile() {
 			try {
 				string file = System.IO.Path.Combine(Program.FileSystem.SettingsFolder, "log.txt");
-				System.IO.File.WriteAllText(file, string.Empty, new System.Text.UTF8Encoding(true));
+				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
 			} catch { }
 		}
 		
