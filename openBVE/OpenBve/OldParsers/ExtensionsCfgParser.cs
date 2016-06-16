@@ -262,30 +262,7 @@ namespace OpenBve {
 																break;
 															case "length":
 																{
-																	double m;
-																	if (double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out m))
-																	{
-																		if (m > 0.0)
-																		{
-																			if (IsOdd)
-																			{
-																				Train.Cars[CarIndex].FrontBogie.Length = m;
-																			}
-																			else
-																			{
-																				Train.Cars[CarIndex].RearBogie.Length = m;
-																			}
-																			DefinedLength = true;
-																		}
-																		else
-																		{
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																		}
-																	}
-																	else
-																	{
-																		Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																	}
+																	Interface.AddMessage(Interface.MessageType.Error, false, "A defined length is not supported for bogies at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}
 																break;
 															case "axles":
