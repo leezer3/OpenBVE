@@ -33,8 +33,8 @@ after_success:
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create OpenBVE-$(date '+%F').dmg -volname "OpenBVE" -fs HFS+ -srcfolder "OpenBVE.app"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 #Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create openBVE-$($TRAVIS_TAG).dmg -volname "openBVE" -fs HFS+ -srcfolder "OpenBVE.app"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$($TRAVIS_TAG).dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create openBVE-$TRAVIS_TAG.dmg -volname "openBVE" -fs HFS+ -srcfolder "OpenBVE.app"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 addons:
   apt:
     packages:

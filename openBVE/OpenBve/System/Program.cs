@@ -131,6 +131,23 @@ namespace OpenBve {
 				options.Backend = PlatformBackend.PreferNative;
 			}
 			Toolkit.Init(options);
+			// --- load language ---
+			{
+				string folder = Program.FileSystem.GetDataFolder("Languages");
+				try
+				{
+					string[] LanguageFiles = Directory.GetFiles(folder, "*.cfg");
+					foreach (var File in LanguageFiles)
+					{
+						Interface.AddLanguage(File);
+					}
+				}
+				catch
+				{
+					MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
+					//Environment.Exit(0);
+				}
+			}
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			{
 				string folder = Program.FileSystem.GetDataFolder("Controls");
@@ -139,15 +156,7 @@ namespace OpenBve {
 				Interface.LoadControls(file, out controls);
 				Interface.AddControls(ref Interface.CurrentControls, controls);
 			}
-			// --- load language ---
-			{
-				string folder = Program.FileSystem.GetDataFolder("Languages");
-				string[] LanguageFiles = Directory.GetFiles(folder, "*.cfg");
-				foreach (var File in LanguageFiles)
-				{
-					Interface.AddLanguage(File);
-				}
-			}
+			
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
 			for (int i = 0; i < args.Length; i++) {

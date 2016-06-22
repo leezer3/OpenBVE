@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.5.0.1"
+#define MyAppVersion "1.5.0.2"
 #define MyAppPublisher "Christopher Lees"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
@@ -46,7 +46,7 @@ Source: "C:\Program Files (x86)\openBVE\OpenBveApi.xml"; DestDir: "{app}"; Flags
 Source: "C:\Program Files (x86)\openBVE\OpenTK.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\OpenTK.dll.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\SharpCompress.Unsigned.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files (x86)\openBVE\Data\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Program Files (x86)\openBVE\Data\*"; DestDir: "{app}\Data"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
