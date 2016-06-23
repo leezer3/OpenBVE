@@ -151,7 +151,7 @@ namespace OpenBve
 					if (jump > 0)
 						Items[1]	= new MenuCommand(Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
 					Items[1+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
-					Items[2+jump]	= new MenuCommand("Customise Controls", MenuTag.MenuControls, 0);
+					Items[2+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
 					Items[3+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
 					break;
 
@@ -230,17 +230,17 @@ namespace OpenBve
 					{
 					case Interface.ControlMethod.Keyboard:
 						if (loadedControl.Modifier != Interface.KeyboardModifier.None)
-							str = "Keyboard [" + loadedControl.Modifier + "-" + loadedControl.Key + "]";
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + loadedControl.Key + "]";
 						else
-							str = "Keyboard [" + loadedControl.Key + "]";
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Key + "]";
 						break;
 					case Interface.ControlMethod.Joystick:
-						str = "Joystick " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
+						str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
 						switch (loadedControl.Component)
 						{
 						case Interface.JoystickComponent.FullAxis:
 						case Interface.JoystickComponent.Axis:
-							str += " " + (loadedControl.Direction == 1 ? "Positive" : "Negative");
+							str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
 							break;
 //						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
 //							str = str;
@@ -249,17 +249,17 @@ namespace OpenBve
 							str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
 							break;
 						case Interface.JoystickComponent.Invalid:
-							str = "N/A";
+							str = Interface.GetInterfaceString("menu_joystick_notavailable");
 							break;
 						}
 						break;
 					case Interface.ControlMethod.Invalid:
-						str = "N/A";
+						str = Interface.GetInterfaceString("menu_joystick_notavailable");
 						break;
 					}
-					Items[1]	= new MenuCommand("Current assignment: " + str, MenuTag.None, 0);
+					Items[1]	= new MenuCommand(Interface.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
 					Items[2]	= new MenuCommand(" ", MenuTag.None, 0);
-					Items[3]	= new MenuCommand("Please press any key or move a joystick axis to set this control...", MenuTag.None, 0);
+					Items[3]	= new MenuCommand(Interface.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 					break;
 				}
 

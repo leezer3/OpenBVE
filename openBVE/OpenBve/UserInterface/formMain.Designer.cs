@@ -1385,7 +1385,7 @@
 			// labelPackageCompression
 			// 
 			this.labelPackageCompression.AutoSize = true;
-			this.labelPackageCompression.Location = new System.Drawing.Point(10, 121);
+			this.labelPackageCompression.Location = new System.Drawing.Point(6, 121);
 			this.labelPackageCompression.Name = "labelPackageCompression";
 			this.labelPackageCompression.Size = new System.Drawing.Size(147, 13);
 			this.labelPackageCompression.TabIndex = 9;
@@ -1420,7 +1420,7 @@
 			// 
 			// buttonTrainInstallationDirectory
 			// 
-			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(557, 51);
+			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(556, 51);
 			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
 			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
 			this.buttonTrainInstallationDirectory.TabIndex = 5;
@@ -1431,7 +1431,7 @@
 			// labelTrainInstallDirectory
 			// 
 			this.labelTrainInstallDirectory.AutoSize = true;
-			this.labelTrainInstallDirectory.Location = new System.Drawing.Point(7, 52);
+			this.labelTrainInstallDirectory.Location = new System.Drawing.Point(6, 52);
 			this.labelTrainInstallDirectory.Name = "labelTrainInstallDirectory";
 			this.labelTrainInstallDirectory.Size = new System.Drawing.Size(129, 13);
 			this.labelTrainInstallDirectory.TabIndex = 4;
@@ -1439,7 +1439,7 @@
 			// 
 			// textBoxTrainDirectory
 			// 
-			this.textBoxTrainDirectory.Location = new System.Drawing.Point(201, 51);
+			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
 			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
 			this.textBoxTrainDirectory.ReadOnly = true;
 			this.textBoxTrainDirectory.Size = new System.Drawing.Size(349, 20);
@@ -3950,7 +3950,7 @@
 			// 
 			this.labelPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelPackageDescription.AutoSize = true;
-			this.labelPackageDescription.Location = new System.Drawing.Point(8, 400);
+			this.labelPackageDescription.Location = new System.Drawing.Point(6, 400);
 			this.labelPackageDescription.Name = "labelPackageDescription";
 			this.labelPackageDescription.Size = new System.Drawing.Size(109, 13);
 			this.labelPackageDescription.TabIndex = 12;
@@ -3961,7 +3961,7 @@
 			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.linkLabelPackageWebsite.AutoSize = true;
-			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(136, 377);
+			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 377);
 			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
 			this.linkLabelPackageWebsite.Size = new System.Drawing.Size(112, 13);
 			this.linkLabelPackageWebsite.TabIndex = 11;
@@ -4477,7 +4477,7 @@
 			// labelNewGUID
 			// 
 			this.labelNewGUID.AutoSize = true;
-			this.labelNewGUID.Location = new System.Drawing.Point(3, 3);
+			this.labelNewGUID.Location = new System.Drawing.Point(7, 3);
 			this.labelNewGUID.Name = "labelNewGUID";
 			this.labelNewGUID.Size = new System.Drawing.Size(281, 13);
 			this.labelNewGUID.TabIndex = 24;
