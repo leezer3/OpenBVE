@@ -11,6 +11,7 @@ cd -P -- "$(dirname -- "$0")"
 if (git describe --tags --exact-match 2> /dev/null)
 then
 Version=$(git describe --tags)
+InfoVersion=$(git describe --tags)
 else
 
 # determine revision and build numbers
@@ -24,8 +25,8 @@ Revision=$(( ( ($(date "+%s") - $(date --date="2016-03-08" +%s))/(60*60*24) )+40
 Minutes=$(( ( $(date "+%s") - $(date -d "today 0" +%s))/60 ))
 fi
 
-Version=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
-
+Version=$MajorVersion.$MinorVersion.$Revision.$Minutes
+InfoVersion=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
 fi
 
 cat > AssemblyInfo.cs << EOF
@@ -43,7 +44,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("The openBVE Project")]
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion("$Version")]
-[assembly: AssemblyInformationalVersion("$Version")]
+[assembly: AssemblyInformationalVersion("$InfoVersion")]
 [assembly: AssemblyFileVersion("$Version")]
 [assembly: CLSCompliant(true)]
 
