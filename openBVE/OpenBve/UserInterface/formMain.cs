@@ -1277,6 +1277,7 @@ namespace OpenBve {
 			}
 		}
 
+
 		private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
 		{
 			if (checkBoxLoadInAdvance.Checked)
@@ -1288,6 +1289,22 @@ namespace OpenBve {
 			else
 			{
 				checkBoxUnloadTextures.Enabled = true;
+				checkBoxDisableDisplayLists.Enabled = true;
+			}
+		}
+
+		private void checkBoxUnloadTextures_CheckedChanged(object sender, EventArgs e)
+		{
+			if (checkBoxUnloadTextures.Checked)
+			{
+				//If we use display lists, a stale texture reference may remain in the GPU, resulting in untextured faces
+				checkBoxDisableDisplayLists.Checked = true;
+				checkBoxDisableDisplayLists.Enabled = false;
+			}
+			else
+			{
+				checkBoxDisableDisplayLists.Enabled = true;
+				checkBoxDisableDisplayLists.Checked = false;
 			}
 		}
 

@@ -1717,7 +1717,7 @@
 			this.checkBoxUnloadTextures.TabIndex = 13;
 			this.checkBoxUnloadTextures.Text = "Unload unused textures";
 			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
-			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
+			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxUnloadTextures_CheckedChanged);
 			// 
 			// label2
 			// 
