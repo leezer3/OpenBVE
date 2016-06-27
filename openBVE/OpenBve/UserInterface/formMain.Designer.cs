@@ -4088,6 +4088,7 @@
 			// radioButtonCancel
 			// 
 			this.radioButtonCancel.AutoSize = true;
+			this.radioButtonCancel.Checked = true;
 			this.radioButtonCancel.Location = new System.Drawing.Point(173, 16);
 			this.radioButtonCancel.Name = "radioButtonCancel";
 			this.radioButtonCancel.Size = new System.Drawing.Size(58, 17);
@@ -4103,7 +4104,6 @@
 			this.radioButtonReplace.Name = "radioButtonReplace";
 			this.radioButtonReplace.Size = new System.Drawing.Size(65, 17);
 			this.radioButtonReplace.TabIndex = 1;
-			this.radioButtonReplace.TabStop = true;
 			this.radioButtonReplace.Text = "Replace";
 			this.radioButtonReplace.UseVisualStyleBackColor = true;
 			// 
@@ -4114,7 +4114,6 @@
 			this.radioButtonOverwrite.Name = "radioButtonOverwrite";
 			this.radioButtonOverwrite.Size = new System.Drawing.Size(70, 17);
 			this.radioButtonOverwrite.TabIndex = 0;
-			this.radioButtonOverwrite.TabStop = true;
 			this.radioButtonOverwrite.Text = "Overwrite";
 			this.radioButtonOverwrite.UseVisualStyleBackColor = true;
 			// 
