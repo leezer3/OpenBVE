@@ -71,6 +71,7 @@ namespace OpenBve
 				currentPackage.Author = textBoxPackageAuthor.Text;
 				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
 				HidePanels();
+				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false);
 				return;
@@ -548,7 +549,7 @@ namespace OpenBve
 				return;
 			}
 			var selectedPackageIndex = dataGridViewPackages2.SelectedRows[0].Index;
-			switch (comboBoxPackageType.SelectedIndex)
+			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
 					dependantPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
