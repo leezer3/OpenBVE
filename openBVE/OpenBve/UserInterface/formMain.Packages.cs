@@ -71,6 +71,7 @@ namespace OpenBve
 				currentPackage.Author = textBoxPackageAuthor.Text;
 				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
 				HidePanels();
+				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false);
 				return;
@@ -548,7 +549,7 @@ namespace OpenBve
 				return;
 			}
 			var selectedPackageIndex = dataGridViewPackages2.SelectedRows[0].Index;
-			switch (comboBoxPackageType.SelectedIndex)
+			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
 					dependantPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
@@ -587,7 +588,7 @@ namespace OpenBve
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
 				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
-				label1.Text = "Finished!";
+				label1.Text = Interface.GetInterfaceString("packages_success");
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
@@ -854,7 +855,7 @@ namespace OpenBve
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
 				ClientSize = size,
-				Text = "Name"
+				Text = Interface.GetInterfaceString("list_name")
 			};
 
 
@@ -902,7 +903,7 @@ namespace OpenBve
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
 				ClientSize = size,
-				Text = "Minimum Version"
+				Text = Interface.GetInterfaceString("list_minimum")
 			};
 
 
@@ -1205,7 +1206,7 @@ namespace OpenBve
 			buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install_select");
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_id");
 			linkLabelPackageWebsite.Links.Clear();
-			linkLabelPackageWebsite.Text = "No package selected.";
+			linkLabelPackageWebsite.Text = Interface.GetInterfaceString("packages_selection_none_website");
 			LinkLabel.Link link = new LinkLabel.Link { LinkData = null };
 			linkLabelPackageWebsite.Links.Add(link);
 			//Reset the worker thread

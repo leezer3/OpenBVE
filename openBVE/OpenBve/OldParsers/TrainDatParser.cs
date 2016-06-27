@@ -7,9 +7,17 @@ namespace OpenBve {
 		// parse train data
 		internal static void ParseTrainData(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			//Create the array using the default compatibility train.dat
+			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};
 			// load file
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "train.dat");
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			try
+			{
+				Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			}
+			catch
+			{
+			}
 			if (Lines.Length == 0)
 			{
 				//Catch zero-length train.dat files

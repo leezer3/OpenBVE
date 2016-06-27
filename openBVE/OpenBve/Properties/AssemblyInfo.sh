@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
+#Set base development branch revision numbers
+#This needs to be bumped once we have a stable release branch
 MajorVersion=1
 MinorVersion=4
 
 # cd to correct directory
 cd -P -- "$(dirname -- "$0")"
+
+#If we're a tagged commit
+if (git describe --tags --exact-match 2> /dev/null)
+then
+Version=$(git describe --tags)
+InfoVersion=$(git describe --tags)
+else
 
 # determine revision and build numbers
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -16,6 +25,9 @@ Revision=$(( ( ($(date "+%s") - $(date --date="2016-03-08" +%s))/(60*60*24) )+40
 Minutes=$(( ( $(date "+%s") - $(date -d "today 0" +%s))/60 ))
 fi
 
+Version=$MajorVersion.$MinorVersion.$Revision.$Minutes
+InfoVersion=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
+fi
 
 cat > AssemblyInfo.cs << EOF
 
@@ -31,9 +43,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("openBVE")]
 [assembly: AssemblyCopyright("The openBVE Project")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("$MajorVersion.$MinorVersion.$Revision.$Minutes")]
-[assembly: AssemblyInformationalVersion("$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER")]
-[assembly: AssemblyFileVersion("$MajorVersion.$MinorVersion.$Revision.$Minutes")]
+[assembly: AssemblyVersion("$Version")]
+[assembly: AssemblyInformationalVersion("$InfoVersion")]
+[assembly: AssemblyFileVersion("$Version")]
 [assembly: CLSCompliant(true)]
 
 namespace OpenBve {

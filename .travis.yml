@@ -11,25 +11,30 @@ script:
   - LC_ALL=C xbuild /t:Build /p:Configuration=Release openBVE/OpenBve.sln
 after_success:
 #Export SSH password for whichever platform we are building on
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && export SSHPASS=$DEPLOY_PASS
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
 #Linux Build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && mkdir build 
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv openBVE/OpenBve/bin/Release/* build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && cd build
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && mkdir build 
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && mv openBVE/OpenBve/bin/Release/* build
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && cd build
+#Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" *
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+#Release build
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "openBVE-$TRAVIS_TAG.tar.gz" *
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
  #OSX Build
  #Install sshpass (Possibly we need to create a local brew script, but not at the minute...)
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && brew install hudochenkov/sshpass/sshpass
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mkdir Mac
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependencies/MacBundle.tgz
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv openBVE/OpenBve/bin/Release/* Mac/OpenBVE.app/Contents/Resources/
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && cd Mac
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && brew install hudochenkov/sshpass/sshpass
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mkdir Mac
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependencies/MacBundle.tgz
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mv openBVE/OpenBve/bin/Release/* Mac/OpenBVE.app/Contents/Resources/
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && cd Mac
+#Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create OpenBVE-$(date '+%F').dmg -volname "OpenBVE" -fs HFS+ -srcfolder "OpenBVE.app"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
- 
-
- 
+#Release build
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create openBVE-$TRAVIS_TAG.dmg -volname "openBVE" -fs HFS+ -srcfolder "OpenBVE.app"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 addons:
   apt:
     packages:
@@ -40,6 +45,6 @@ env:
     - secure: "MENrO/nw7Qon6cgCPF4WMWzzSzZK368ZpetdP0cO4Mijmxa+LoLYONl7cxGgwj9IdreVyJXuriKAUuiAcLhd74MVjoMrfsfmPA3veDXTj+lGTF5JpL8NR+eyax4joOEiv7VNPnemNU35v2s6SaiofSGuCcvag0gIBxmMQ8OaZNCDtUSaM4pj71AXOBpAKU7+j1dW2QVfk1xt9MvluR9/Xp51kN3HlFD1iowSNRf3hY9xnFKR+5iAv+1fx4ZVJzm0A8Gx7YWUZ5taYXm11ozG/9UbTSIZOh0676AKax10Ur+iUTqVvB6fTQzNINaRA7wu/BEpWE1gV4cUgMzZZTh31PtzfxwFrsSsdwSDbkdzUgmMW+ifdqJDxOBfRGslOYDNYEA3iFBNi3gWQ3T36qxyFvST98teB+UXcs40bQ/E9yV73pdRXRp0+WPbQevVHCh/wia/3CSoNsX5KonvhRkgm2D4oPqfSJmejqkdsEW2XnAqP+P2q77n81Fi+IVcejZG07ORco+oiHVVjfnmiYy100/yg63SDwNKBDbiGcY7ngSsnKPyYunTLOqeNzJ2hpnyUIs/qHedZYSOGJs5BCSsHE/zrFcQSNjjhmdkxLj7vpCyCWCWEg4pgzFbhxScKUhJ6he/J3kb60x4JrSfkFg+pScQboeoYQaRvRp50MhlB6s="
     - secure: "01QIDNccjTagPaT6ZxzBO2qCA65ju6hImlcMia8bZoDT2ufWtxhN94RiZA9WN0jQ8fCnbXFW3HVUWywrb9OblJXAGBW9pxrTGTbSkVm5eMfgEII2RTxW0yWfnWajhm0TnK0wFHVT6eP72gZrv9C2ieAikZdXaNQKa+wlnLPaiEeFUz/8KgaK85ANJ3j1PQ4mhMJ3po9uchAmfF4xsWfoJGth+hXAN16UMCKbbTFqtTdEhecdTh2PiE64O1yJTL9E5WXDD6mxXZi/gsGaFbLQQNS9v+CyGuNafWggTNKI9FwN9/i85MS+0UmD0aParkCoBN6HTiEHqW0KgCH9C3qxLBN5hlB+C+4r92/jeC31NU6OFi/Fh722qBPQs2dmm+O3dKRb1bgJ7KzhGIJRuFa+GhqoyIJejWFmishEouLdDrAPr1hW8h4SP2WtPir+3wTrqoSHIt6VvpF0jy2oKFiSKl5bOdC3UAq1V04gNUeq6giUTL56XfPyLOOimwchGR6VnZ1JTc0TPdaA+R7qaAMZhm26QZI05O6fWkhtiLjOhf1JQVY47oUwIyIJB7nczTeZtYeetWdRCSmAvXUyIMRbTaqy8QsQPtuNfzWj4iuaSPez8G6xUcN1qKZchaOFLOSv9UeNvaq624M0M/nT1JEbhLknASRa6UinJeLAbezNFTk="
     - secure: "A/0AimkzkRNbOW8OjymGx6gR5tbGDvSz3An1Wwco5nqSrDaZebG0viFtYcLX1RmZ9aqS4Hr8v9ksi1Chu1nE9Swp/VQeMgDRUTi4jEzytJpUvIpHJWFJ/Pn7XoXHanLHqDaj2A8oEZSx8doFvTIN8a9ousP/xJYp9a9xo33ulBkTVftalgyCvhYfz+a9BeDVlgL9/IBNfAT3fY+c+P8l/AjgWF6oN0rYAiDQHsxx8kQQxboZihAYTbkSonxbF5BgoLjKpAmPOkMT3oWat5GXKH/6yHfk+JIBaATSQqUik8VNqoyO7rIGz68Jodhs5PDHfENrZ17FIt0/lpjE6l/3oHwzs/RhgyD64x2bEf/KeVqJ7+R0kvgTVdg2pjpb4AHc8SGk1ARoDWvCdRPcM+Sii9iavJQtCuTDir24DNzknHxvnqlR8vUsYFBOhfcMTL1y/2tNJY9NiH39bkJsGLz8NqAipC+IoR7Jm4WhEgemAfnpicrOjZVAUL6sGwHIg99MSKAMpliXvqE/EAlY0aWYnx2W6HuFy3g2cCJ16JJABJFDK/H6a1V485naI9DT4/nHXJjuweN0ijm9jBpDMpIJ9E3uyDXBkjWGkxmIE9HPYdiJIdGqxQ5SzaN8XmRLRo6AQnsDX243TurWld7hXcyktVFXxsHUmAMpN0tR3EJcJQM="
-
+    - secure: "xhY40lPWCokuabAfN7t2gd4DTrNXpxvKiH6Xobo5XkAiDNseBw+MZ/ce4XZeAXnq9jHdeTXVMu1rtcdFlC5St2XCeltNpchS4Km8dv+7ErtTBAawgl+5rGwTTnIF5jUTPsbzfEcIgnL6ud7NWDEqYQm5oeEMpuS3z/gqSc/HKx3Fp5cIPte65Oo37oMuL0dwNh2XIwrogaSOHX+Jwh7B5ZkCMzAe/MOxg0b34A4noAtCHbtc2QmmDhOhdlk+OBx5iSIwqUvmW8YYUX+14mIFAqWQ6E7MOUY9gjDgedXnbfvPsw+gLeXyCoNunc980EMdrIF2KHaPa772TFi7MzOiPwXno2jxlK3INvGylYdymI4YwI97H53oasfT1RiOzG9j1zCqJZv3U1L5KdscX8LKPYXsOeP78okB5lXt2E2jiO7hVJMIhQtJrNiCmlok3/U65jD30WLBsZtIBzZ4RhpESYr2a5QayhFmbHmIeMbfhY6OkRiE/enCMYuCFlnV6twWA4J6gBUVilYj+qjR6Js2xRAtaY0ljnPhK0EE2RIjPOKks3CPlchP3ZbI9jFCaupBfLlT0uBfmMu0aD/q/AZ0wDf1Dp1OdRzGbBcvhDcijpmZ8GatLyZS64Iq27WqUC6XouI17SIj0XftnBkcKTbSXY9UbSXM2bPYuHLIGk61aXU="
 notifications:
       email: false
