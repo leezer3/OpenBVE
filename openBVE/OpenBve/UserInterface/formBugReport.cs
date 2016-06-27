@@ -44,10 +44,11 @@ namespace OpenBve
 			{
 				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
 				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
-				Process.Start(file.DirectoryName + "\\" + file.Name);
+				Process.Start(Path.Combine(file.DirectoryName,file.Name));
 			}
 			catch
 			{
+				MessageBox.Show("No crash logs were found.");
 			}
 		}
 
@@ -55,7 +56,7 @@ namespace OpenBve
 		{
 			try
 			{
-				using (var ProblemReport = File.OpenWrite(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip"))
+				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) , "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip")))
 				{
 					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
 					{
@@ -77,7 +78,7 @@ namespace OpenBve
 						}
 						if (crashLog != null)
 						{
-							zipWriter.Write(crashLog.Name, crashLog.DirectoryName + "\\" + crashLog.Name);
+							zipWriter.Write(crashLog.Name, crashLog);
 						}
 						//Save the problem description to the archive using a memory stream
 						MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(textBoxProblemDescription.Text));
