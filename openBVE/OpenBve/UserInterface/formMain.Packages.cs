@@ -843,10 +843,22 @@ namespace OpenBve
 				//Launch link in default web-browser
 				if (currentPackage != null && currentPackage.Website != null)
 				{
-					Process.Start(currentPackage.Website);
+					string launchLink = null;
+					if (!currentPackage.Website.ToLowerInvariant().StartsWith("http://"))
+					{
+						launchLink += "http://";
+					}
+					launchLink += currentPackage.Website;
+					Uri URL;
+					bool result = Uri.TryCreate(launchLink, UriKind.Absolute, out URL) && (URL.Scheme == Uri.UriSchemeHttp || URL.Scheme == Uri.UriSchemeHttps);
+					if (result == true)
+					{
+						Process.Start(launchLink);
+					}
 				}
 			}
 		}
+
 
 		private static DialogResult ShowInputDialog(ref string input)
 		{
