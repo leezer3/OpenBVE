@@ -107,76 +107,64 @@ namespace OpenBveApi.Packages
 		 * 
 		 */
 
-		/// <summary>Checks to see if this package's dependancies are installed</summary>
-		public static List<Package> CheckDependancies(Package currentPackage)
+		/// <summary>Checks a list of dependancies or reccomendations to see if they are installed</summary>
+		public static List<Package> checkDependsReccomends(List<Package> currentList)
 		{
-			foreach (Package currentDependancy in currentPackage.Dependancies.ToList())
+			foreach (Package currentDependancy in currentList)
 			{
-				//Itinerate through the routes list
-				if (currentDependancy.PackageType == PackageType.Route)
+				switch (currentDependancy.PackageType)
 				{
-					if (currentDatabase.InstalledRoutes != null)
-					{
-						foreach (Package Package in currentDatabase.InstalledRoutes)
+					case PackageType.Route:
+						if (DependancyMet(currentDependancy, currentDatabase.InstalledRoutes))
 						{
-							//Check GUID
-							if (Package.GUID == currentDependancy.GUID)
-							{
-								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
-									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
-								{
-									//If the version is OK, remove
-									currentPackage.Dependancies.Remove(currentDependancy);
-								}
-							}
+							currentList.Remove(currentDependancy);
 						}
-					}
-				}
-				if (currentDependancy.PackageType == PackageType.Train)
-				{
-					if (currentDatabase.InstalledTrains != null)
-					{
-						foreach (Package Package in currentDatabase.InstalledTrains)
+					break;
+					case PackageType.Train:
+						if (DependancyMet(currentDependancy, currentDatabase.InstalledTrains))
 						{
-							//Check GUID
-							if (Package.GUID == currentDependancy.GUID)
-							{
-								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
-									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
-								{
-									//If the version is OK, remove
-									currentPackage.Dependancies.Remove(currentDependancy);
-								}
-							}
+							currentList.Remove(currentDependancy);
 						}
-					}
-				}
-				else
-				{
-					if (currentDatabase.InstalledOther != null)
-					{
-						foreach (Package Package in currentDatabase.InstalledOther)
+					break;
+					case PackageType.Other:
+						if (DependancyMet(currentDependancy, currentDatabase.InstalledOther))
 						{
-							//Check GUID
-							if (Package.GUID == currentDependancy.GUID)
-							{
-								if ((currentDependancy.MinimumVersion == null || currentDependancy.MinimumVersion >= Package.PackageVersion) &&
-									(currentDependancy.MaximumVersion == null || currentDependancy.MaximumVersion <= Package.PackageVersion))
-								{
-									//If the version is OK, remove
-									currentPackage.Dependancies.Remove(currentDependancy);
-								}
-							}
+							currentList.Remove(currentDependancy);
 						}
-					}
+					break;
 				}
 			}
-			if (currentPackage.Dependancies.Count == 0)
+			if (currentList.Count == 0)
 			{
 				//Return null if there are no unmet dependancies
 				return null;
 			}
-			return currentPackage.Dependancies;
+			return currentList;
+		}
+
+		/// <summary>Checks whether a dependancy is met by a member of a list of packages</summary>
+		/// <param name="dependancy">The dependancy</param>
+		/// <param name="currentList">The package list to check</param>
+		public static bool DependancyMet(Package dependancy, List<Package> currentList)
+		{
+			if (currentList == null)
+			{
+				return false;
+			}
+			foreach (Package Package in currentList)
+			{
+				//Check GUID
+				if (Package.GUID == dependancy.GUID)
+				{
+					if ((dependancy.MinimumVersion == null || dependancy.MinimumVersion <= Package.PackageVersion) &&
+						(dependancy.MaximumVersion == null || dependancy.MaximumVersion >= Package.PackageVersion))
+					{
+						//If the version is OK, remove
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		/// <summary>Checks whether uninstalling a package will break any dependancies</summary>

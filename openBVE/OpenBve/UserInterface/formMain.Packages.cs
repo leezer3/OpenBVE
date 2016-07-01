@@ -122,11 +122,24 @@ namespace OpenBve
 			}
 			else
 			{
-				List<Package> Dependancies = Database.CheckDependancies(currentPackage);
+				List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies);
 				if (Dependancies != null)
 				{
 					//We are missing a dependancy
+					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
+					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
 					PopulatePackageList(Dependancies, dataGridViewDependancies, false);
+					HidePanels();
+					panelDependancyError.Show();
+					return;
+				}
+				List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations);
+				if (Reccomendations != null)
+				{
+					//We are missing a reccomendation
+					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet_header");
+					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet");
+					PopulatePackageList(Reccomendations, dataGridViewDependancies, false);
 					HidePanels();
 					panelDependancyError.Show();
 					return;
@@ -381,6 +394,7 @@ namespace OpenBve
 				{
 					DependsReccomendsList = new List<Package>();
 				}
+				packageToAdd.PackageVersion = null;
 				DependsReccomendsList.Add(packageToAdd);
 			}
 		}
@@ -485,21 +499,21 @@ namespace OpenBve
 				switch (dependantPackage.PackageType)
 				{
 					case PackageType.Route:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
 							dependantPackage = null;
 						}
 						break;
 					case PackageType.Train:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
 							dependantPackage = null;
 						}
 						break;
 					case PackageType.Other:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
 							dependantPackage = null;
@@ -517,21 +531,21 @@ namespace OpenBve
 				switch (dependantPackage.PackageType)
 				{
 					case PackageType.Route:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
 							dependantPackage = null;
 						}
 						break;
 					case PackageType.Train:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
 							dependantPackage = null;
 						}
 						break;
 					case PackageType.Other:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version) == DialogResult.OK)
+						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
 						{
 							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
 							dependantPackage = null;
@@ -869,8 +883,6 @@ namespace OpenBve
 				ClientSize = size,
 				Text = Interface.GetInterfaceString("list_name")
 			};
-
-
 			System.Windows.Forms.TextBox textBox = new TextBox
 			{
 				Size = new System.Drawing.Size(size.Width - 10, 23),
@@ -908,29 +920,42 @@ namespace OpenBve
 			return result;
 		}
 
-		private static DialogResult ShowVersionDialog(ref Version minimumVersion, ref Version maximumVersion, string currentVersion)
+		private static DialogResult ShowVersionDialog(ref Version minimumVersion, ref Version maximumVersion, string currentVersion, string label)
 		{
-			System.Drawing.Size size = new System.Drawing.Size(200, 80);
+			System.Drawing.Size size = new System.Drawing.Size(300, 80);
 			Form inputBox = new Form
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
 				ClientSize = size,
-				Text = Interface.GetInterfaceString("list_minimum")
+				Text = Interface.GetInterfaceString(label)
 			};
 
+			System.Windows.Forms.Label minLabel = new Label
+			{
+				Text = Interface.GetInterfaceString("packages_list_minimum"),
+				Location = new System.Drawing.Point(5, 5),
+			};
+			inputBox.Controls.Add(minLabel);
 
 			System.Windows.Forms.TextBox textBox = new TextBox
 			{
-				Size = new System.Drawing.Size(size.Width - 10, 23),
-				Location = new System.Drawing.Point(5, 5),
+				Size = new System.Drawing.Size(size.Width - 110, 23),
+				Location = new System.Drawing.Point(105, 5),
 				Text = currentVersion
 			};
 			inputBox.Controls.Add(textBox);
 
+			System.Windows.Forms.Label maxLabel = new Label
+			{
+				Text = Interface.GetInterfaceString("packages_list_maximum"),
+				Location = new System.Drawing.Point(5, 25),
+			};
+			inputBox.Controls.Add(maxLabel);
+
 			System.Windows.Forms.TextBox textBox2 = new TextBox
 			{
-				Size = new System.Drawing.Size(size.Width - 10, 23),
-				Location = new System.Drawing.Point(5, 25),
+				Size = new System.Drawing.Size(size.Width - 110, 23),
+				Location = new System.Drawing.Point(105, 25),
 				Text = currentVersion
 			};
 			inputBox.Controls.Add(textBox2);
