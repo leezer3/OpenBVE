@@ -491,6 +491,10 @@ namespace OpenBve {
 			 * Options Page 2
 			 */
 			//Package directories
+			groupBoxPackageOptions.Text = Interface.GetInterfaceString("panel_packages");
+			buttonSetRouteDirectory.Text = Interface.GetInterfaceString("options_package_choose");
+			buttonTrainInstallationDirectory.Text = Interface.GetInterfaceString("options_package_choose");
+			buttonOtherDirectory.Text = Interface.GetInterfaceString("options_package_choose");
 			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
 			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
 			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
@@ -637,7 +641,7 @@ namespace OpenBve {
 			 * Localisation for strings in package management display
 			 * 
 			 */
-			//Main display tab			labelPackages.Text = Interface.GetInterfaceString("packages_title");
+			//Main display tab			labelPackagesTitle.Text = Interface.GetInterfaceString("packages_title");
 			labelInstalledPackages.Text = Interface.GetInterfaceString("packages_list");
 			labelPackageListType.Text = Interface.GetInterfaceString("packages_list_type");
 			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
@@ -700,6 +704,7 @@ namespace OpenBve {
 			//Add dependancies panel
 			labelDependanciesHeader.Text = Interface.GetInterfaceString("packages_creation_dependancies");
 			labelInstalledDependancies.Text = Interface.GetInterfaceString("packages_list");
+			labelSelectedDependencies.Text = Interface.GetInterfaceString("packages_selected");
 			labelDependancyType.Text = Interface.GetInterfaceString("packages_list_type");
 			comboBoxDependancyType.Items[0] = Interface.GetInterfaceString("packages_type_route");
 			comboBoxDependancyType.Items[1] = Interface.GetInterfaceString("packages_type_train");
@@ -720,7 +725,7 @@ namespace OpenBve {
 			labelNewVersion.Text = Interface.GetInterfaceString("packages_version_new");
 			labelCurrentVersion.Text = Interface.GetInterfaceString("packages_version_current");
 			// *** labelVersionError.Text is set dynamically at runtime ***
-			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_version_error");
+			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_install_version_error");
 			dataGridViewTextBoxColumn9.HeaderText = Interface.GetInterfaceString("packages_list_name");
 			dataGridViewTextBoxColumn10.HeaderText = Interface.GetInterfaceString("packages_list_version");
 			dataGridViewTextBoxColumn11.HeaderText = Interface.GetInterfaceString("packages_list_author");
@@ -1112,7 +1117,7 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = true;
-			panelPanels.BackColor = labelPackages.BackColor;
+			panelPanels.BackColor = labelPackagesTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
@@ -1465,5 +1470,5 @@ namespace OpenBve {
 			var bugReportForm = new formBugReport();
 			bugReportForm.ShowDialog();
 		}
-	}
+    }
 }

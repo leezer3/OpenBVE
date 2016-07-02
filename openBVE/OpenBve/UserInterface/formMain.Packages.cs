@@ -73,6 +73,7 @@ namespace OpenBve
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
+				dataGridViewPackages3.Rows.Clear();
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false);
 				return;
 			}
@@ -167,20 +168,20 @@ namespace OpenBve
 				{
 					switch (Info)
 					{
-						case VersionInformation.NewerVersion:
+												case VersionInformation.NewerVersion:
 							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_new");
-							textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
+							labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 							break;
 						case VersionInformation.SameVersion:
 							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_same");
-							textBoxCurrentVersion.Text = currentPackage.PackageVersion.ToString();
+							labelCurrentVersionNumber.Text = currentPackage.PackageVersion.ToString();
 							break;
 						case VersionInformation.OlderVersion:
 							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_old");
-							textBoxCurrentVersion.Text = oldPackage.PackageVersion.ToString();
+							labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 							break;
 					}
-					textBoxNewVersion.Text = currentPackage.PackageVersion.ToString();
+					labelNewVersionNumber.Text = currentPackage.PackageVersion.ToString();
 					if (currentPackage.Dependancies.Count != 0)
 					{
 						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
@@ -396,6 +397,8 @@ namespace OpenBve
 				}
 				packageToAdd.PackageVersion = null;
 				DependsReccomendsList.Add(packageToAdd);
+				dataGridViewPackages3.Rows.Clear();
+				PopulatePackageList(DependsReccomendsList, dataGridViewPackages3, false);
 			}
 		}
 
@@ -880,8 +883,10 @@ namespace OpenBve
 			Form inputBox = new Form
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				MaximizeBox = false,
+				MinimizeBox = false,
 				ClientSize = size,
-				Text = Interface.GetInterfaceString("list_name")
+				Text = Interface.GetInterfaceString("packages_list_website")
 			};
 			System.Windows.Forms.TextBox textBox = new TextBox
 			{
@@ -926,14 +931,16 @@ namespace OpenBve
 			Form inputBox = new Form
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
+				MaximizeBox = false,
+				MinimizeBox = false,
 				ClientSize = size,
-				Text = Interface.GetInterfaceString(label)
+				Text = Interface.GetInterfaceString("packages_list_version")
 			};
 
 			System.Windows.Forms.Label minLabel = new Label
 			{
 				Text = Interface.GetInterfaceString("packages_list_minimum"),
-				Location = new System.Drawing.Point(5, 5),
+				Location = new System.Drawing.Point(5, 6),
 			};
 			inputBox.Controls.Add(minLabel);
 
@@ -948,7 +955,7 @@ namespace OpenBve
 			System.Windows.Forms.Label maxLabel = new Label
 			{
 				Text = Interface.GetInterfaceString("packages_list_maximum"),
-				Location = new System.Drawing.Point(5, 25),
+				Location = new System.Drawing.Point(5, 26),
 			};
 			inputBox.Controls.Add(maxLabel);
 
