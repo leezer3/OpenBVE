@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Packages;
 
@@ -65,6 +67,7 @@ namespace OpenBve
 				if (!Version.TryParse(textBoxPackageVersion.Text, out currentPackage.PackageVersion))
 				{
 					MessageBox.Show(Interface.GetInterfaceString("packages_creation_version"));
+					return;
 				}
 				//Only set properties after making the checks
 				currentPackage.Name = textBoxPackageName.Text;
@@ -302,6 +305,12 @@ namespace OpenBve
 		{
 			//Clear the package list
 			dataGrid.Rows.Clear();
+			//Add the key column programatically if required
+			if (dataGrid.Columns[dataGrid.ColumnCount - 1].Name != "key")
+			{
+				dataGrid.Columns.Add("key", "key");
+				dataGrid.Columns[dataGrid.ColumnCount - 1].Visible = false;
+			}
 			//We have route packages in our list!
 			for (int i = 0; i < packageList.Count; i++)
 			{
@@ -312,14 +321,14 @@ namespace OpenBve
 					packageToAdd = new object[]
 					{
 						packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].Author,
-						packageList[i].Website
+						packageList[i].Website, packageList[i].GUID
 					};
 				}
 				else
 				{
 					packageToAdd = new object[]
 					{
-						packageList[i].Name, packageList[i].Version, packageList[i].Author, packageList[i].Website
+						packageList[i].Name, packageList[i].Version, packageList[i].Author, packageList[i].Website, packageList[i].GUID
 					};
 				}
 				//Add to the datagrid view
@@ -409,17 +418,18 @@ namespace OpenBve
 				currentPackage = null;
 				return;
 			}
-			var selectedPackageIndex = dataGridViewPackages.SelectedRows[0].Index;
+			var row = dataGridViewPackages.SelectedRows[0].Index;
+			var key = dataGridViewPackages.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString(); 
 			switch (comboBoxPackageType.SelectedIndex)
 			{
 				case 0:
-					currentPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
+					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
 					break;
 				case 1:
-					currentPackage = Database.currentDatabase.InstalledTrains[selectedPackageIndex];
+					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
 					break;
 				case 2:
-					currentPackage = Database.currentDatabase.InstalledOther[selectedPackageIndex];
+					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
 					break;
 			}
 		}
@@ -562,17 +572,18 @@ namespace OpenBve
 				dependantPackage = null;
 				return;
 			}
-			var selectedPackageIndex = dataGridViewPackages2.SelectedRows[0].Index;
+			var row = dataGridViewPackages2.SelectedRows[0].Index;
+			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount -1].Value.ToString();
 			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
-					dependantPackage = Database.currentDatabase.InstalledRoutes[selectedPackageIndex];
+					dependantPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true);
 					break;
 				case 1:
-					dependantPackage = Database.currentDatabase.InstalledTrains[selectedPackageIndex];
+					dependantPackage = new Package(Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key), true);
 					break;
 				case 2:
-					dependantPackage = Database.currentDatabase.InstalledOther[selectedPackageIndex];
+					dependantPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), true);
 					break;
 			}
 		}
@@ -1247,6 +1258,10 @@ namespace OpenBve
 			LinkLabel.Link link = new LinkLabel.Link { LinkData = null };
 			linkLabelPackageWebsite.Links.Add(link);
 			//Reset the worker thread
+			while (workerThread.IsBusy)
+			{
+				Thread.Sleep(10);
+			}
 			workerThread = null;
 			workerThread = new BackgroundWorker();
 		}	
