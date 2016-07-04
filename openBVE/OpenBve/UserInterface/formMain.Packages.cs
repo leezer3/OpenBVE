@@ -24,6 +24,7 @@ namespace OpenBve
 		internal BackgroundWorker workerThread = new BackgroundWorker();
 		internal bool RemoveFromDatabase = true;
 		internal Package dependantPackage;
+		internal List<string> selectedDependacies = new List<string>();
 
 		
 
@@ -36,8 +37,10 @@ namespace OpenBve
 			}
 			if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
 			{
-				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
+				comboBoxPackageType.SelectedIndex = 0;
 			}
+			currentPackage = null;
 		}
 
 		private Package currentPackage;
@@ -76,8 +79,7 @@ namespace OpenBve
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
-				dataGridViewPackages3.Rows.Clear();
-				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false);
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false, false, false);
 				return;
 			}
 			//Check to see if the package is null- If null, then we haven't loaded a package yet
@@ -132,7 +134,7 @@ namespace OpenBve
 					//We are missing a dependancy
 					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
 					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
-					PopulatePackageList(Dependancies, dataGridViewDependancies, false);
+					PopulatePackageList(Dependancies, dataGridViewDependancies, false, false, false);
 					HidePanels();
 					panelDependancyError.Show();
 					return;
@@ -143,7 +145,7 @@ namespace OpenBve
 					//We are missing a reccomendation
 					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet_header");
 					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet");
-					PopulatePackageList(Reccomendations, dataGridViewDependancies, false);
+					PopulatePackageList(Reccomendations, dataGridViewDependancies, false, false, false);
 					HidePanels();
 					panelDependancyError.Show();
 					return;
@@ -171,7 +173,7 @@ namespace OpenBve
 				{
 					switch (Info)
 					{
-												case VersionInformation.NewerVersion:
+						case VersionInformation.NewerVersion:
 							labelVersionError.Text = Interface.GetInterfaceString("packages_install_version_new");
 							labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 							break;
@@ -190,7 +192,7 @@ namespace OpenBve
 						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
 						if (brokenDependancies != null)
 						{
-							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
+							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
 						}
 					}
 					HidePanels();
@@ -202,7 +204,10 @@ namespace OpenBve
 
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
 		{
-			RefreshPackages();
+			if (!creatingPackage)
+			{
+				RefreshPackages();
+			}
 			ResetInstallerPanels();
 		}
 
@@ -271,6 +276,19 @@ namespace OpenBve
 						}
 						Database.currentDatabase.InstalledTrains.Add(currentPackage);
 						break;
+					default:
+						if (packageToReplace != null)
+						{
+							for (int i = Database.currentDatabase.InstalledOther.Count; i > 0; i--)
+							{
+								if (Database.currentDatabase.InstalledOther[i - 1].GUID == currentPackage.GUID)
+								{
+									Database.currentDatabase.InstalledOther.Remove(Database.currentDatabase.InstalledOther[i - 1]);
+								}
+							}
+						}
+						Database.currentDatabase.InstalledOther.Add(currentPackage);
+						break;
 				}
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_success_header");
@@ -302,10 +320,13 @@ namespace OpenBve
 		/// <param name="packageList">The list of packages</param>
 		/// <param name="dataGrid">The datagrid view to populate</param>
 		/// <param name="simpleList">Whether this is a simple list or a dependancy list</param>
-		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid, bool simpleList)
+		/// <param name="isDependancy">Whether this is a package needed by another or not</param>
+		/// <param name="isRecommendation">Whether this is a package recommended by another or not</param>
+		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid, bool simpleList, bool isDependancy, bool isRecommendation)
 		{
 			//Clear the package list
-			dataGrid.Rows.Clear();
+			// HACK: If we are working with recommendations, do not clear the list to show them together with dependancies
+			if (!isRecommendation) dataGrid.Rows.Clear();
 			//Add the key column programatically if required
 			if (dataGrid.Columns[dataGrid.ColumnCount - 1].Name != "key")
 			{
@@ -319,11 +340,30 @@ namespace OpenBve
 				object[] packageToAdd;
 				if (!simpleList)
 				{
-					packageToAdd = new object[]
+					if (isDependancy)
 					{
+						packageToAdd = new object[]
+						{
+							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].PackageType.ToString(),
+							Interface.GetInterfaceString("packages_dependancy"), packageList[i].GUID
+						};
+					}
+					else if (isRecommendation)
+					{
+						packageToAdd = new object[]
+						{
+							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].PackageType.ToString(),
+							Interface.GetInterfaceString("packages_recommendation"), packageList[i].GUID
+						};
+					}
+					else
+					{
+						packageToAdd = new object[]
+						{
 						packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].Author,
 						packageList[i].Website, packageList[i].GUID
-					};
+						};
+					}
 				}
 				else
 				{
@@ -332,8 +372,11 @@ namespace OpenBve
 						packageList[i].Name, packageList[i].Version, packageList[i].Author, packageList[i].Website, packageList[i].GUID
 					};
 				}
-				//Add to the datagrid view
-				dataGrid.Rows.Add(packageToAdd);
+				//Add to the datagrid view if not selected as dependancy or recommendation
+				if (!selectedDependacies.Contains(packageList[i].GUID) || isDependancy || isRecommendation)
+				{
+					dataGrid.Rows.Add(packageToAdd);
+				}
 			}
 			dataGrid.ClearSelection();
 		}
@@ -346,7 +389,7 @@ namespace OpenBve
 			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
 			if (brokenDependancies.Count != 0)
 			{
-				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false);
+				PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
 				labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_uninstall_broken");
 				HidePanels();
 				panelDependancyError.Show();
@@ -396,19 +439,21 @@ namespace OpenBve
 
 
 
-		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList)
+		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList, bool recommendsOnly)
 		{
-			if (currentPackage != null)
+			var row = dataGridViewPackages2.SelectedRows[0].Index;
+			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
+			selectedDependacies.Add(key);
+			dataGridViewPackages2.Rows.RemoveAt(row);
+			if (DependsReccomendsList == null)
 			{
-				if (DependsReccomendsList == null)
-				{
-					DependsReccomendsList = new List<Package>();
-				}
-				packageToAdd.PackageVersion = null;
-				DependsReccomendsList.Add(packageToAdd);
-				dataGridViewPackages3.Rows.Clear();
-				PopulatePackageList(DependsReccomendsList, dataGridViewPackages3, false);
+				DependsReccomendsList = new List<Package>();
 			}
+			packageToAdd.PackageVersion = null;
+			DependsReccomendsList.Add(packageToAdd);
+			dataGridViewPackages2.ClearSelection();
+			if (currentPackage.Dependancies != null) PopulatePackageList(currentPackage.Dependancies, dataGridViewPackages3, false, true, false);
+			if (currentPackage.Reccomendations != null) PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
 		}
 
 
@@ -422,17 +467,17 @@ namespace OpenBve
 				return;
 			}
 			var row = dataGridViewPackages.SelectedRows[0].Index;
-			var key = dataGridViewPackages.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString(); 
+			var key = dataGridViewPackages.Rows[row].Cells[dataGridViewPackages.ColumnCount - 1].Value.ToString();
 			switch (comboBoxPackageType.SelectedIndex)
 			{
 				case 0:
-					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
+					currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
 					break;
 				case 1:
-					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
+					currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
 					break;
 				case 2:
-					currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true); 
+					currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
 					break;
 			}
 		}
@@ -506,65 +551,59 @@ namespace OpenBve
 
 		private void buttonDepends_Click(object sender, EventArgs e)
 		{
-			if (dependantPackage != null)
+			//dependantPackage.Version = null;
+			switch (dependantPackage.PackageType)
 			{
-				dependantPackage.Version = null;
-				switch (dependantPackage.PackageType)
-				{
-					case PackageType.Route:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion,dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
-							dependantPackage = null;
-						}
-						break;
-					case PackageType.Train:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
-							dependantPackage = null;
-						}
-						break;
-					case PackageType.Other:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies);
-							dependantPackage = null;
-						}
-						break;
-				}
+				case PackageType.Route:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
+						dependantPackage = null;
+					}
+					break;
+				case PackageType.Train:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
+						dependantPackage = null;
+					}
+					break;
+				case PackageType.Other:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_dependancies_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Dependancies, false);
+						dependantPackage = null;
+					}
+					break;
 			}
 		}
 
 		private void buttonReccomends_Click(object sender, EventArgs e)
 		{
-			if (dependantPackage != null)
+			//dependantPackage.Version = null;
+			switch (dependantPackage.PackageType)
 			{
-				dependantPackage.Version = null;
-				switch (dependantPackage.PackageType)
-				{
-					case PackageType.Route:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
-							dependantPackage = null;
-						}
-						break;
-					case PackageType.Train:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
-							dependantPackage = null;
-						}
-						break;
-					case PackageType.Other:
-						if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
-						{
-							AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations);
-							dependantPackage = null;
-						}
-						break;
-				}
+				case PackageType.Route:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
+						dependantPackage = null;
+					}
+					break;
+				case PackageType.Train:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
+						dependantPackage = null;
+					}
+					break;
+				case PackageType.Other:
+					if (ShowVersionDialog(ref dependantPackage.MinimumVersion, ref dependantPackage.MaximumVersion, dependantPackage.Version, Interface.GetInterfaceString("packages_creation_reccomends_add")) == DialogResult.OK)
+					{
+						AddDependendsReccomends(dependantPackage, ref currentPackage.Reccomendations, true);
+						dependantPackage = null;
+					}
+					break;
 			}
 		}
 
@@ -572,11 +611,15 @@ namespace OpenBve
 		{
 			if (dataGridViewPackages2.SelectedRows.Count == 0)
 			{
+				buttonDepends.Enabled = false;
+				buttonReccomends.Enabled = false;
 				dependantPackage = null;
 				return;
 			}
+			buttonDepends.Enabled = true;
+			buttonReccomends.Enabled = true;
 			var row = dataGridViewPackages2.SelectedRows[0].Index;
-			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount -1].Value.ToString();
+			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
 			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
@@ -587,6 +630,46 @@ namespace OpenBve
 					break;
 				case 2:
 					dependantPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), true);
+					break;
+			}
+		}
+
+		private void dataGridViewPackages3_SelectionChanged(object sender, EventArgs e)
+		{
+			if (dataGridViewPackages3.SelectedRows.Count == 0)
+			{
+				buttonRemove.Enabled = false;
+				return;
+			}
+			buttonRemove.Enabled = true;
+		}
+
+		private void buttonRemove_Click(object sender, EventArgs e)
+		{
+			var row = dataGridViewPackages3.SelectedRows[0].Index;
+			var key = dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 1].Value.ToString();
+			selectedDependacies.Remove(key);
+
+			if (dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 2].Value.ToString() == Interface.GetInterfaceString("packages_dependancy"))
+			{
+				currentPackage.Dependancies.Remove(currentPackage.Dependancies.FirstOrDefault(x => x.GUID == key));
+			}
+			else
+			{
+				currentPackage.Reccomendations.Remove(currentPackage.Reccomendations.FirstOrDefault(x => x.GUID == key));
+			}
+			dataGridViewPackages3.Rows.RemoveAt(row);
+			dataGridViewPackages3.ClearSelection();
+			switch (comboBoxDependancyType.SelectedIndex)
+			{
+				case 0:
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
+					break;
+				case 1:
+					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages2, true, false, false);
+					break;
+				case 2:
+					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages2, true, false, false);
 					break;
 			}
 		}
@@ -733,13 +816,13 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, true, false, false);
 						break;
 					case PackageType.Train:
-						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, true, false, false);
 						break;
 					case PackageType.Other:
-						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, true, false, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -792,13 +875,13 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewReplacePackage, true, false, false);
 						break;
 					case PackageType.Train:
-						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewReplacePackage, true, false, false);
 						break;
 					case PackageType.Other:
-						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, false);
+						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewReplacePackage, true, false, false);
 						break;
 				}
 				dataGridViewReplacePackage.ClearSelection();
@@ -896,6 +979,7 @@ namespace OpenBve
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
 				MaximizeBox = false,
 				MinimizeBox = false,
+				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
 				Text = Interface.GetInterfaceString("packages_list_website")
 			};
@@ -944,6 +1028,7 @@ namespace OpenBve
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog,
 				MaximizeBox = false,
 				MinimizeBox = false,
+				StartPosition = FormStartPosition.CenterScreen,
 				ClientSize = size,
 				Text = Interface.GetInterfaceString("packages_list_version")
 			};
@@ -1015,7 +1100,7 @@ namespace OpenBve
 				}
 				if (textBox2.Text == String.Empty || textBox2.Text == @"0")
 				{
-					minimumVersion = null;
+					maximumVersion = null;
 				}
 				else
 				{
@@ -1125,13 +1210,13 @@ namespace OpenBve
 			switch (comboBoxPackageType.SelectedIndex)
 			{
 				case 0:
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 					break;
 				case 1:
-					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages, true, false, false);
 					break;
 				case 2:
-					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages, true, false, false);
 					break;
 			}
 			currentPackage = null;
@@ -1143,13 +1228,13 @@ namespace OpenBve
 			switch (comboBoxDependancyType.SelectedIndex)
 			{
 				case 0:
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true);
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
 					break;
 				case 1:
-					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages2, true);
+					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages2, true, false, false);
 					break;
 				case 2:
-					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages2, true);
+					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages2, true, false, false);
 					break;
 			}
 		}
@@ -1253,6 +1338,10 @@ namespace OpenBve
 			newPackageType = PackageType.NotFound;
 			ImageFile = null;
 			RemoveFromDatabase = true;
+			selectedDependacies = new List<string>();
+			//Reset package lists
+			dataGridViewPackages2.Rows.Clear();
+			dataGridViewPackages3.Rows.Clear();
 			//Reset text
 			textBoxPackageAuthor.Text = Interface.GetInterfaceString("packages_selection_none");
 			textBoxPackageName.Text = Interface.GetInterfaceString("packages_selection_none");

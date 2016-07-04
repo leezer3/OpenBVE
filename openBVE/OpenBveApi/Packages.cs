@@ -112,21 +112,20 @@ namespace OpenBveApi.Packages
 					this.MaximumVersion = new Version(value);
 			}
 		}
-
 		/// <summary>Creates a clone of the specified package</summary>
 		/// <param name="packageToClone">The package to clone</param>
 		/// <param name="dependancy">Whether this package is part of a dependancy list</param>
 		public Package(Package packageToClone, bool dependancy)
 		{
-			this.Name = packageToClone.Name;
-			this.Author = packageToClone.Author;
-			this.GUID = packageToClone.GUID;
-			this.Website = packageToClone.Website;
-			this.PackageType = packageToClone.PackageType;
-			this.Description = packageToClone.Description;
-			this.Dependancies = packageToClone.Dependancies;
-			this.Reccomendations = packageToClone.Reccomendations;
-			this.Version = packageToClone.Version;
+			Name = packageToClone.Name;
+			Author = packageToClone.Author;
+			GUID = packageToClone.GUID;
+			Website = packageToClone.Website;
+			PackageType = packageToClone.PackageType;
+			Description = packageToClone.Description;
+			Dependancies = packageToClone.Dependancies;
+			Reccomendations = packageToClone.Reccomendations;
+			Version = packageToClone.Version;
 			/*
 			 * If we are cloning a package, we can assume that the image will change, as these are only currently stored in archives TODO: Serialize to XML? Bad idea?
 			 */

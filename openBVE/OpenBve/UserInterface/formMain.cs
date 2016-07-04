@@ -1130,7 +1130,7 @@ namespace OpenBve {
 				ResetInstallerPanels();
 				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
 				{
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
 				comboBoxPackageType.SelectedIndex = 0;
 			}
