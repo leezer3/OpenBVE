@@ -266,6 +266,11 @@
 			this.labelInfoBottom = new System.Windows.Forms.Label();
 			this.labelInfoTop = new System.Windows.Forms.Label();
 			this.panelPackages = new System.Windows.Forms.Panel();
+			this.panelPleaseWait = new System.Windows.Forms.Panel();
+			this.labelProgressFile = new System.Windows.Forms.Label();
+			this.labelProgressPercent = new System.Windows.Forms.Label();
+			this.labelPleaseWait = new System.Windows.Forms.Label();
+			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.panelPackageList = new System.Windows.Forms.Panel();
 			this.comboBoxPackageType = new System.Windows.Forms.ComboBox();
 			this.labelPackageListType = new System.Windows.Forms.Label();
@@ -292,11 +297,6 @@
 			this.labelDependanciesHeader = new System.Windows.Forms.Label();
 			this.labelDependanciesHeaderBacking = new System.Windows.Forms.Label();
 			this.buttonCreatePackage = new System.Windows.Forms.Button();
-			this.panelPleaseWait = new System.Windows.Forms.Panel();
-			this.labelProgressFile = new System.Windows.Forms.Label();
-			this.labelProgressPercent = new System.Windows.Forms.Label();
-			this.labelPleaseWait = new System.Windows.Forms.Label();
-			this.pictureBoxProcessing = new System.Windows.Forms.PictureBox();
 			this.panelPackageInstall = new System.Windows.Forms.Panel();
 			this.labelInstallText = new System.Windows.Forms.Label();
 			this.labelInstallHeader = new System.Windows.Forms.Label();
@@ -465,12 +465,12 @@
 			this.panelKeyboard.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
+			this.panelPleaseWait.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
 			this.panelPackageList.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).BeginInit();
 			this.panelPackageDependsAdd.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages2)).BeginInit();
-			this.panelPleaseWait.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).BeginInit();
 			this.panelPackageInstall.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).BeginInit();
 			this.panelVersionError.SuspendLayout();
@@ -3504,6 +3504,70 @@
 			this.panelPackages.Size = new System.Drawing.Size(659, 606);
 			this.panelPackages.TabIndex = 14;
 			// 
+			// panelPleaseWait
+			// 
+			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
+			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
+			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
+			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
+			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
+			this.panelPleaseWait.Name = "panelPleaseWait";
+			this.panelPleaseWait.Size = new System.Drawing.Size(657, 578);
+			this.panelPleaseWait.TabIndex = 28;
+			// 
+			// labelProgressFile
+			// 
+			this.labelProgressFile.AutoSize = true;
+			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressFile.Location = new System.Drawing.Point(222, 422);
+			this.labelProgressFile.Name = "labelProgressFile";
+			this.labelProgressFile.Size = new System.Drawing.Size(168, 24);
+			this.labelProgressFile.TabIndex = 7;
+			this.labelProgressFile.Text = "Unknown File.....";
+			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelProgressFile.SizeChanged += new System.EventHandler(this.labelProgressFile_SizeChanged);
+			// 
+			// labelProgressPercent
+			// 
+			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelProgressPercent.AutoSize = true;
+			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProgressPercent.Location = new System.Drawing.Point(275, 392);
+			this.labelProgressPercent.Name = "labelProgressPercent";
+			this.labelProgressPercent.Size = new System.Drawing.Size(37, 24);
+			this.labelProgressPercent.TabIndex = 6;
+			this.labelProgressPercent.Text = "0%";
+			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPleaseWait
+			// 
+			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPleaseWait.AutoSize = true;
+			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPleaseWait.Location = new System.Drawing.Point(177, 453);
+			this.labelPleaseWait.Name = "labelPleaseWait";
+			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
+			this.labelPleaseWait.TabIndex = 5;
+			this.labelPleaseWait.Text = "Processing, please wait......";
+			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// pictureBoxProcessing
+			// 
+			this.pictureBoxProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
+			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
+			this.pictureBoxProcessing.Size = new System.Drawing.Size(387, 351);
+			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBoxProcessing.TabIndex = 4;
+			this.pictureBoxProcessing.TabStop = false;
+			// 
 			// panelPackageList
 			// 
 			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -3806,71 +3870,6 @@
 			this.buttonCreatePackage.Text = "Create Package";
 			this.buttonCreatePackage.UseVisualStyleBackColor = true;
 			this.buttonCreatePackage.Click += new System.EventHandler(this.buttonCreatePackage_Click);
-			// 
-			// panelPleaseWait
-			// 
-			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
-			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
-			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
-			this.panelPleaseWait.Controls.Add(this.pictureBoxProcessing);
-			this.panelPleaseWait.Location = new System.Drawing.Point(0, 30);
-			this.panelPleaseWait.Name = "panelPleaseWait";
-			this.panelPleaseWait.Size = new System.Drawing.Size(657, 578);
-			this.panelPleaseWait.TabIndex = 28;
-			// 
-			// labelProgressFile
-			// 
-			this.labelProgressFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelProgressFile.AutoSize = true;
-			this.labelProgressFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelProgressFile.Location = new System.Drawing.Point(222, 422);
-			this.labelProgressFile.Name = "labelProgressFile";
-			this.labelProgressFile.Size = new System.Drawing.Size(168, 24);
-			this.labelProgressFile.TabIndex = 7;
-			this.labelProgressFile.Text = "Unknown File.....";
-			this.labelProgressFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelProgressPercent
-			// 
-			this.labelProgressPercent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelProgressPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelProgressPercent.Location = new System.Drawing.Point(275, 392);
-			this.labelProgressPercent.Name = "labelProgressPercent";
-			this.labelProgressPercent.Size = new System.Drawing.Size(37, 24);
-			this.labelProgressPercent.TabIndex = 6;
-			this.labelProgressPercent.Text = "0%";
-			this.labelProgressPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPleaseWait
-			// 
-			this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelPleaseWait.AutoSize = true;
-			this.labelPleaseWait.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPleaseWait.Location = new System.Drawing.Point(177, 453);
-			this.labelPleaseWait.Name = "labelPleaseWait";
-			this.labelPleaseWait.Size = new System.Drawing.Size(266, 24);
-			this.labelPleaseWait.TabIndex = 5;
-			this.labelPleaseWait.Text = "Processing, please wait......";
-			this.labelPleaseWait.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// pictureBoxProcessing
-			// 
-			this.pictureBoxProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBoxProcessing.Location = new System.Drawing.Point(127, 37);
-			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
-			this.pictureBoxProcessing.Size = new System.Drawing.Size(387, 351);
-			this.pictureBoxProcessing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.pictureBoxProcessing.TabIndex = 4;
-			this.pictureBoxProcessing.TabStop = false;
 			// 
 			// panelPackageInstall
 			// 
@@ -5078,15 +5077,15 @@
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();
+			this.panelPleaseWait.ResumeLayout(false);
+			this.panelPleaseWait.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
 			this.panelPackageList.ResumeLayout(false);
 			this.panelPackageList.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages)).EndInit();
 			this.panelPackageDependsAdd.ResumeLayout(false);
 			this.panelPackageDependsAdd.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages2)).EndInit();
-			this.panelPleaseWait.ResumeLayout(false);
-			this.panelPleaseWait.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessing)).EndInit();
 			this.panelPackageInstall.ResumeLayout(false);
 			this.panelPackageInstall.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxPackageImage)).EndInit();
@@ -5471,7 +5470,6 @@
 		private System.Windows.Forms.RadioButton radioButtonCancel;
 		private System.Windows.Forms.RadioButton radioButtonReplace;
 		private System.Windows.Forms.RadioButton radioButtonOverwrite;
-		private System.Windows.Forms.Label labelProgressFile;
 		private System.Windows.Forms.Label labelProgressPercent;
 		private System.Windows.Forms.LinkLabel linkLabelCheckUpdates;
 		private System.Windows.Forms.Button buttonOptionsPrevious;
@@ -5490,6 +5488,7 @@
 		private System.Windows.Forms.Label labelRouteInstallDirectory;
 		private System.Windows.Forms.TextBox textBoxRouteDirectory;
 		private System.Windows.Forms.LinkLabel linkLabelReportBug;
+		private System.Windows.Forms.Label labelProgressFile;
         
     }
 }

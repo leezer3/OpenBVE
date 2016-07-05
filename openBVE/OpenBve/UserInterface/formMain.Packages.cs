@@ -606,7 +606,6 @@ namespace OpenBve
 				{
 					textBoxFilesInstalled.Text = text;
 				});
-				System.Threading.Thread.Sleep(10000);
 			};
 
 			workerThread.RunWorkerCompleted += delegate {
@@ -1048,31 +1047,50 @@ namespace OpenBve
 		//This uses a folder picker dialog to add folders
 		private void addPackageItemsButton_Click(object sender, EventArgs e)
 		{
-			var dialog = new FolderSelectDialog();
-			if (dialog.Show(Handle))
+			bool DialogOK = false;
+			string[] files = null;
+			string folder = "";
+			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
-				var tempList = new List<PackageFile>();
-				//This dialog is used elsewhere, so we'd better reset it's properties
-				openPackageFileDialog.Multiselect = false;
-				if (filesToPackage == null)
+				//Mono doesn't like our fancy folder selector
+				//Some versions of OS-X crash, and Linux just falls back- Safer to specifically use the old version on these...
+				var MonoDialog = new FolderBrowserDialog();
+				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					filesToPackage = new List<PackageFile>();
+					folder = MonoDialog.SelectedPath;
+					files = System.IO.Directory.GetFiles(folder, "*.*", System.IO.SearchOption.AllDirectories);
+					DialogOK = true;
 				}
-				filesToPackageBox.Text += dialog.FileName + Environment.NewLine;
-				//Directory- Get all the files within the directory and add to our list
-				string[] files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+			}
+			else
+			{
+				//Use the fancy folder selector dialog on Windows
+				var dialog = new FolderSelectDialog();
+				if (dialog.Show(Handle))
+				{
+					DialogOK = true;
+					folder = System.IO.Directory.GetParent(dialog.FileName).ToString();
+					files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+				}
+
+			}
+
+			if (DialogOK && files.Length != 0)
+			{
+
+				filesToPackageBox.Text += folder;
+				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
 					var File = new PackageFile
 					{
 						absolutePath = files[i],
-						relativePath = files[i].Replace(System.IO.Directory.GetParent(dialog.FileName).ToString(), ""),
+						relativePath = files[i].Replace(folder, ""),
 					};
 					tempList.Add(File);
 				}
-
+				filesToPackage = new List<PackageFile>();
 				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
-				
 			}
 		}
 
@@ -1264,6 +1282,17 @@ namespace OpenBve
 			}
 			workerThread = null;
 			workerThread = new BackgroundWorker();
-		}	
+		}
+
+		//This method is used to keep the progress file centered
+		private void labelProgressFile_SizeChanged(object sender, EventArgs e)
+		{
+			var Position = (this.ClientSize.Width - labelProgressFile.Size.Width) / 2;
+			if (Position < 2)
+			{
+				Position = 2;
+			}
+			labelProgressFile.Left = Position;
+		}
 	}
 }
