@@ -119,20 +119,21 @@ namespace OpenBveApi.Packages
 						{
 							currentList.Remove(currentDependancy);
 						}
-					break;
+						break;
 					case PackageType.Train:
 						if (DependancyMet(currentDependancy, currentDatabase.InstalledTrains))
 						{
 							currentList.Remove(currentDependancy);
 						}
-					break;
+						break;
 					case PackageType.Other:
 						if (DependancyMet(currentDependancy, currentDatabase.InstalledOther))
 						{
 							currentList.Remove(currentDependancy);
 						}
-					break;
+						break;
 				}
+				if (currentList.Count == 0) break;
 			}
 			if (currentList.Count == 0)
 			{
