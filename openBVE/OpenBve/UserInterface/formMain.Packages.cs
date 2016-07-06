@@ -62,6 +62,7 @@ namespace OpenBve
 					return;
 				}
 				//LINK: Doesn't need checking
+
 				if (textBoxPackageDescription.Text == Interface.GetInterfaceString("packages_selection_none"))
 				{
 					MessageBox.Show(Interface.GetInterfaceString("packages_creation_description"));
@@ -73,58 +74,15 @@ namespace OpenBve
 					return;
 				}
 				//Only set properties after making the checks
+
 				currentPackage.Name = textBoxPackageName.Text;
 				currentPackage.Author = textBoxPackageAuthor.Text;
-				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n","\\r\\n");
+				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n");
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false, false, false);
 				return;
-			}
-			//Check to see if the package is null- If null, then we haven't loaded a package yet
-			if (currentPackage == null)
-			{
-				if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
-				{
-					currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
-					if (currentPackage != null)
-					{
-						textBoxPackageName.Text = currentPackage.Name;
-						textBoxPackageAuthor.Text = currentPackage.Author;
-						if (currentPackage.Description != null)
-						{
-							textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
-						}
-						textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
-						if (currentPackage.Website != null)
-						{
-							linkLabelPackageWebsite.Links.Clear();
-							linkLabelPackageWebsite.Text = currentPackage.Website;
-							LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
-							linkLabelPackageWebsite.Links.Add(link);
-						}
-						else
-						{
-							linkLabelPackageWebsite.Text = Interface.GetInterfaceString("packages_selection_none_website");
-						}
-						if (currentPackage.PackageImage != null)
-						{
-							pictureBoxPackageImage.Image = currentPackage.PackageImage;
-						}
-						else
-						{
-							TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
-						}
-						buttonSelectPackage.Text = Interface.GetInterfaceString("packages_install");
-					}
-					else
-					{
-						//ReadPackage returns null if the file is not a package.....
-						MessageBox.Show(Interface.GetInterfaceString("packages_install_invalid"));
-					}
-				}
-
 			}
 			else
 			{
@@ -132,6 +90,7 @@ namespace OpenBve
 				if (Dependancies != null)
 				{
 					//We are missing a dependancy
+
 					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
 					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
 					PopulatePackageList(Dependancies, dataGridViewDependancies, false, false, false);
@@ -143,6 +102,7 @@ namespace OpenBve
 				if (Reccomendations != null)
 				{
 					//We are missing a reccomendation
+
 					labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet_header");
 					labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_reccomends_unmet");
 					PopulatePackageList(Reccomendations, dataGridViewDependancies, false, false, false);
@@ -199,7 +159,50 @@ namespace OpenBve
 					panelVersionError.Show();
 				}
 			}
-				
+		}
+
+		private void buttonSelectPackage_Click(object sender, EventArgs e)
+		{
+			if (openPackageFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				currentPackage = Manipulation.ReadPackage(openPackageFileDialog.FileName);
+				if (currentPackage != null)
+				{
+					buttonNext.Enabled = true;
+					textBoxPackageName.Text = currentPackage.Name;
+					textBoxPackageAuthor.Text = currentPackage.Author;
+					if (currentPackage.Description != null)
+					{
+						textBoxPackageDescription.Text = currentPackage.Description.Replace("\\r\\n", "\r\n");
+					}
+					textBoxPackageVersion.Text = currentPackage.PackageVersion.ToString();
+					if (currentPackage.Website != null)
+					{
+						linkLabelPackageWebsite.Links.Clear();
+						linkLabelPackageWebsite.Text = currentPackage.Website;
+						LinkLabel.Link link = new LinkLabel.Link { LinkData = currentPackage.Website };
+						linkLabelPackageWebsite.Links.Add(link);
+					}
+					else
+					{
+						linkLabelPackageWebsite.Text = Interface.GetInterfaceString("packages_selection_none_website");
+					}
+					if (currentPackage.PackageImage != null)
+					{
+						pictureBoxPackageImage.Image = currentPackage.PackageImage;
+					}
+					else
+					{
+						TryLoadImage(pictureBoxPackageImage, currentPackage.PackageType == 0 ? "route_unknown.png" : "train_unknown.png");
+					}
+				}
+				else
+				{
+					//ReadPackage returns null if the file is not a package.....
+
+					MessageBox.Show(Interface.GetInterfaceString("packages_install_invalid"));
+				}
+			}
 		}
 
 		private void buttonInstallFinished_Click(object sender, EventArgs e)
@@ -544,6 +547,7 @@ namespace OpenBve
 		{
 			currentPackage = null;
 			labelInstallText.Text = Interface.GetInterfaceString("packages_install_header");
+			buttonBack2.Text = Interface.GetInterfaceString("packages_button_cancel");
 			TryLoadImage(pictureBoxPackageImage, "route_error.png");
 			HidePanels();
 			panelPackageInstall.Show();
@@ -692,7 +696,6 @@ namespace OpenBve
 				{
 					textBoxFilesInstalled.Text = text;
 				});
-				System.Threading.Thread.Sleep(10000);
 			};
 
 			workerThread.RunWorkerCompleted += delegate {
@@ -773,6 +776,8 @@ namespace OpenBve
 		{
 			currentPackage = null;
 			HidePanels();
+			buttonSelectPackage.Visible = false;
+			buttonNext.Enabled = true;
 			panelCreatePackage.Show();
 		}
 
@@ -920,22 +925,26 @@ namespace OpenBve
 		{
 			if (dataGridViewReplacePackage.SelectedRows.Count > 0)
 			{
+				replacePackageButton.Enabled = true;
+				var row = dataGridViewReplacePackage.SelectedRows[0].Index;
+				var key = dataGridViewReplacePackage.Rows[row].Cells[dataGridViewReplacePackage.ColumnCount - 1].Value.ToString();
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						currentPackage = Database.currentDatabase.InstalledRoutes[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
 						currentPackage.PackageType = PackageType.Route;
 						break;
 					case PackageType.Train:
-						currentPackage = Database.currentDatabase.InstalledTrains[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
 						currentPackage.PackageType = PackageType.Train;
 						break;
 					case PackageType.Other:
-						currentPackage = Database.currentDatabase.InstalledOther[dataGridViewReplacePackage.SelectedRows[0].Index];
+						currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
 						currentPackage.PackageType = PackageType.Other;
 						break;
 				}
 			}
+			else replacePackageButton.Enabled = false;
 		}
 
 		private void linkLabelPackageWebsite_Click(object sender, EventArgs e)
@@ -1140,31 +1149,50 @@ namespace OpenBve
 		//This uses a folder picker dialog to add folders
 		private void addPackageItemsButton_Click(object sender, EventArgs e)
 		{
-			var dialog = new FolderSelectDialog();
-			if (dialog.Show(Handle))
+			bool DialogOK = false;
+			string[] files = null;
+			string folder = "";
+			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
-				var tempList = new List<PackageFile>();
-				//This dialog is used elsewhere, so we'd better reset it's properties
-				openPackageFileDialog.Multiselect = false;
-				if (filesToPackage == null)
+				//Mono doesn't like our fancy folder selector
+				//Some versions of OS-X crash, and Linux just falls back- Safer to specifically use the old version on these...
+				var MonoDialog = new FolderBrowserDialog();
+				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					filesToPackage = new List<PackageFile>();
+					folder = MonoDialog.SelectedPath;
+					files = System.IO.Directory.GetFiles(folder, "*.*", System.IO.SearchOption.AllDirectories);
+					DialogOK = true;
 				}
-				filesToPackageBox.Text += dialog.FileName + Environment.NewLine;
-				//Directory- Get all the files within the directory and add to our list
-				string[] files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+			}
+			else
+			{
+				//Use the fancy folder selector dialog on Windows
+				var dialog = new FolderSelectDialog();
+				if (dialog.Show(Handle))
+				{
+					DialogOK = true;
+					folder = System.IO.Directory.GetParent(dialog.FileName).ToString();
+					files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
+				}
+
+			}
+
+			if (DialogOK && files.Length != 0)
+			{
+
+				filesToPackageBox.Text += folder;
+				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
 					var File = new PackageFile
 					{
 						absolutePath = files[i],
-						relativePath = files[i].Replace(System.IO.Directory.GetParent(dialog.FileName).ToString(), ""),
+						relativePath = files[i].Replace(folder, ""),
 					};
 					tempList.Add(File);
 				}
-
+				filesToPackage = new List<PackageFile>();
 				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
-				
 			}
 		}
 
@@ -1287,11 +1315,6 @@ namespace OpenBve
 				}
 				Extract();
 			}
-			else if(radioButtonCancel.Checked)
-			{
-				//Cancel
-				ResetInstallerPanels();
-			}
 
 		}
 
@@ -1353,6 +1376,9 @@ namespace OpenBve
 			linkLabelPackageWebsite.Text = Interface.GetInterfaceString("packages_selection_none_website");
 			LinkLabel.Link link = new LinkLabel.Link { LinkData = null };
 			linkLabelPackageWebsite.Links.Add(link);
+			buttonBack2.Text = Interface.GetInterfaceString("packages_button_back");
+			buttonNext.Enabled = false;
+			buttonSelectPackage.Visible = true;
 			//Reset the worker thread
 			while (workerThread.IsBusy)
 			{
@@ -1361,5 +1387,30 @@ namespace OpenBve
 			workerThread = null;
 			workerThread = new BackgroundWorker();
 		}	
+
+
+		private void buttonBack_Click(object sender, EventArgs e)
+		{
+			HidePanels();
+			panelPackageInstall.Show();
+		}
+
+		private void buttonBack2_Click(object sender, EventArgs e)
+		{
+			if (!creatingPackage)
+			{
+				ResetInstallerPanels();
+			}
+			else
+			{
+				HidePanels();
+				panelCreatePackage.Show();
+			}
+		}
+
+		private void buttonCancel_Click(object sender, EventArgs e)
+		{
+			ResetInstallerPanels();
+		}
 	}
 }
