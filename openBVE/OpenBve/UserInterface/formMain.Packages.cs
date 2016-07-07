@@ -1386,18 +1386,7 @@ namespace OpenBve
 			}
 			workerThread = null;
 			workerThread = new BackgroundWorker();
-		}
-
-		//This method is used to keep the progress file centered
-		private void labelProgressFile_SizeChanged(object sender, EventArgs e)
-		{
-			var Position = (this.ClientSize.Width - labelProgressFile.Size.Width) / 2;
-			if (Position < 2)
-			{
-				Position = 2;
-			}
-			labelProgressFile.Left = Position;
-		}
+		}	
 
 
 		private void buttonBack_Click(object sender, EventArgs e)
