@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Runtime;
+using OpenBveApi.Signalling;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -648,31 +648,15 @@ namespace OpenBve {
 		// ================================
 
 		// sections
-		internal enum SectionType { ValueBased, IndexBased }
-		internal struct SectionAspect {
-			internal int Number;
-			internal double Speed;
-			internal SectionAspect(int Number, double Speed) {
-				this.Number = Number;
-				this.Speed = Speed;
-			}
-		}
+		
 
-	    public struct Section {
-			internal int PreviousSection;
-			internal int NextSection;
+		/// <summary>Defines a signalling section</summary>
+	    public class Section : OpenBveApi.Signalling.Section {
+
+			/// <summary>The trains within the section</summary>
 			internal TrainManager.Train[] Trains;
-			internal bool TrainReachedStopPoint;
-			internal int StationIndex;
-			internal bool Invisible;
-			internal int[] SignalIndices;
-			internal double TrackPosition;
-			internal SectionType Type;
-			internal SectionAspect[] Aspects;
-            /// <summary>A public read-only variable, which returns the current aspect to external scripts</summary>
-            public int currentAspect{ get { return CurrentAspect; }}
-			internal int CurrentAspect;
-			internal int FreeSections;
+			
+			/// <summary>This function is called whenever a train enters the section, and adds it to the array of trains within the section if it is not already</summary>
 			internal void Enter(TrainManager.Train Train) {
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++) {
@@ -681,6 +665,7 @@ namespace OpenBve {
 				Array.Resize<TrainManager.Train>(ref this.Trains, n + 1);
 				this.Trains[n] = Train;
 			}
+			/// <summary>This function is called whenever a train leaves the section in order to remove it from the array of trains</summary>
 			internal void Leave(TrainManager.Train Train) {
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++) {
@@ -693,6 +678,9 @@ namespace OpenBve {
 					}
 				}
 			}
+			/// <summary>Checks whether the specified train is currently within the section</summary>
+			/// <param name="Train">The train to check</param>
+			/// <returns>True if the train is within the section, false otherwise</returns>
 			internal bool Exists(TrainManager.Train Train) {
 				for (int i = 0; i < this.Trains.Length; i++) {
 					if (this.Trains[i] == Train)
@@ -711,6 +699,7 @@ namespace OpenBve {
 				}
 				return true;
 			}
+			/// <summary>Checks whether the section is free</summary>
 			internal bool IsFree() {
 				for (int i = 0; i < this.Trains.Length; i++) {
 					if (this.Trains[i].State == TrainManager.TrainState.Available | this.Trains[i].State == TrainManager.TrainState.Bogus) {
@@ -719,6 +708,9 @@ namespace OpenBve {
 				}
 				return true;
 			}
+			/// <summary>Gets the first train within the section</summary>
+			/// <param name="AllowBogusTrain">If set to true, Bogus trains (those added by the .PreTrain command) will be returned</param>
+			/// <returns>The first train within the section</returns>
 			internal TrainManager.Train GetFirstTrain(bool AllowBogusTrain) {
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
@@ -733,17 +725,23 @@ namespace OpenBve {
 			}
 		}
 		public static Section[] Sections = new Section[] { };
+		/// <summary>Updates all sections within the game</summary>
 		internal static void UpdateAllSections() {
 			if (Sections.Length != 0) {
 				UpdateSection(Sections.Length - 1);
 			}
 		}
+		/// <summary>Updates the aspect displayed by the given section</summary>
 		internal static void UpdateSection(int SectionIndex) {
-			// preparations
+			///<summary>The red (Zero) aspect for this section</summary>
 			int zeroaspect;
-			bool settored = false;
-			if (Sections[SectionIndex].Type == SectionType.ValueBased) {
-				// value-based
+			
+			///<summary>Whether this signal should be set to red (Always starts at false)</summary>
+			bool SetToRed = false;
+
+			//First, we must determine the red (zero) aspect
+			if (Sections[SectionIndex].Type == OpenBveApi.Signalling.SectionType.ValueBased) {
+				//This section uses value based aspects, so we must find the zero-aspect
 				zeroaspect = 0;
 				for (int i = 1; i < Sections[SectionIndex].Aspects.Length; i++) {
 					if (Sections[SectionIndex].Aspects[i].Number < Sections[SectionIndex].Aspects[zeroaspect].Number) {
@@ -751,10 +749,15 @@ namespace OpenBve {
 					}
 				}
 			} else {
-				// index-based
+				//This section uses simple index based aspects, so the red aspect will always be zero
 				zeroaspect = 0;
 			}
-			// hold station departure signal at red
+			//Check if this section contains an approach controlled signal held at red
+			if(Sections[SectionIndex].ApproachControlled == true)
+			{
+				SetToRed = Sections[SectionIndex].ApproachControlAtRed;
+			}
+			//If this signal is a station departure signal, check if it should be held at red until the departure time
 			int d = Sections[SectionIndex].StationIndex;
 			if (d >= 0) {
 				// look for train in previous blocks
@@ -805,23 +808,26 @@ namespace OpenBve {
 						t = Stations[d].ArrivalTime;
 					}
 					if (train == TrainManager.PlayerTrain & Stations[d].StationType != StationType.Normal & Stations[d].DepartureTime < 0.0) {
-						settored = true;
+						SetToRed = true;
 					} else if (t >= 0.0 & SecondsSinceMidnight < t - train.TimetableDelta) {
-						settored = true;
+						SetToRed = true;
 					} else if (!Sections[SectionIndex].TrainReachedStopPoint) {
-						settored = true;
+						SetToRed = true;
 					}
 				} else if (Stations[d].StationType != StationType.Normal) {
-					settored = true;
+					SetToRed = true;
 				}
 			}
-			// train in block
+			//If the next section is *not* free, then the signal should be held to red
+			//TODO: Implement timer based check
 			if (!Sections[SectionIndex].IsFree()) {
-				settored = true;
+				SetToRed = true;
 			}
-			// free sections
+			//Otherwise, we must determine the number of free sections
+			//openBVE uses a simple incremental signalling model- The zero aspect is red, and the aspect displayed represents
+			//the number of free sections ahead of the train
 			int newaspect = -1;
-			if (settored) {
+			if (SetToRed) {
 				Sections[SectionIndex].FreeSections = 0;
 				newaspect = zeroaspect;
 			} else {
@@ -836,15 +842,15 @@ namespace OpenBve {
 					Sections[SectionIndex].FreeSections = -1;
 				}
 			}
-			// change aspect
+			//We have now determined the new aspect for the section to display, and must update it
 			if (newaspect == -1) {
-				if (Sections[SectionIndex].Type == SectionType.ValueBased) {
+				if (Sections[SectionIndex].Type == OpenBveApi.Signalling.SectionType.ValueBased) {
 					// value-based
 					int n = Sections[SectionIndex].NextSection;
 					int a = Sections[SectionIndex].Aspects[Sections[SectionIndex].Aspects.Length - 1].Number;
-					if (n >= 0 && Sections[n].CurrentAspect >= 0) {
+					if (n >= 0 && Sections[n].currentAspect >= 0) {
 						
-						a = Sections[n].Aspects[Sections[n].CurrentAspect].Number;
+						a = Sections[n].Aspects[Sections[n].currentAspect].Number;
 					}
 					for (int i = Sections[SectionIndex].Aspects.Length - 1; i >= 0; i--) {
 						if (Sections[SectionIndex].Aspects[i].Number > a) {
@@ -863,9 +869,9 @@ namespace OpenBve {
 					}
 				}
 			}
-			// apply new aspect
-			Sections[SectionIndex].CurrentAspect = newaspect;
-			// update previous section
+			Sections[SectionIndex].SetAspect(newaspect);
+			//Finally, we must update the previous section
+			//If the complete train has now passed out of the section, then this will trigger the signal tree to update and so-on
 			if (Sections[SectionIndex].PreviousSection >= 0) {
 				UpdateSection(Sections[SectionIndex].PreviousSection);
 			}
@@ -880,7 +886,7 @@ namespace OpenBve {
 			if (Sections[section].Exists(train)) {
 				int aspect;
 				if (Sections[section].IsFree(train)) {
-					if (Sections[section].Type == SectionType.IndexBased) {
+					if (Sections[section].Type == OpenBveApi.Signalling.SectionType.IndexBased) {
 						if (section + 1 < Sections.Length) {
 							int value = Sections[section + 1].FreeSections;
 							if (value == -1) {
@@ -901,7 +907,7 @@ namespace OpenBve {
 					} else {
 						aspect = Sections[section].Aspects[Sections[section].Aspects.Length - 1].Number;
 						if (section < Sections.Length - 1) {
-							int value = Sections[section + 1].Aspects[Sections[section + 1].CurrentAspect].Number;
+							int value = Sections[section + 1].Aspects[Sections[section + 1].currentAspect].Number;
 							for (int i = 0; i < Sections[section].Aspects.Length; i++) {
 								if (Sections[section].Aspects[i].Number > value) {
 									aspect = Sections[section].Aspects[i].Number;
@@ -911,13 +917,13 @@ namespace OpenBve {
 						}
 					}
 				} else {
-					aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
+					aspect = Sections[section].Aspects[Sections[section].currentAspect].Number;
 				}
 				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxlePosition + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
 				return new OpenBveApi.Runtime.SignalData(aspect, distance);
 			} else {
-				int aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
+				int aspect = Sections[section].Aspects[Sections[section].currentAspect].Number;
 				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxlePosition + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
 				return new OpenBveApi.Runtime.SignalData(aspect, distance);
@@ -999,7 +1005,9 @@ namespace OpenBve {
 			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
 		}
 
+		/// <summary>Stores the conversion factor between km/h and the current display speed (0.0 by default)</summary>
 	    internal static double SpeedConversionFactor = 0.0;
+		/// <summary>Stores the textual representation of the current units of speed displayed in on-screen messages</summary>
 	    internal static string UnitOfSpeed = "km/h";
 
 		internal static void UpdateMessages() {

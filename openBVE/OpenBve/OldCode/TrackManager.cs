@@ -299,8 +299,8 @@ namespace OpenBve {
 					// update train
 					if (this.NextSectionIndex >= 0) {
 						if (!Game.Sections[this.NextSectionIndex].Invisible) {
-							if (Game.Sections[this.NextSectionIndex].CurrentAspect >= 0) {
-								Train.CurrentSectionLimit = Game.Sections[this.NextSectionIndex].Aspects[Game.Sections[this.NextSectionIndex].CurrentAspect].Speed;
+							if (Game.Sections[this.NextSectionIndex].currentAspect >= 0) {
+								Train.CurrentSectionLimit = Game.Sections[this.NextSectionIndex].Aspects[Game.Sections[this.NextSectionIndex].currentAspect].Speed;
 							} else {
 								Train.CurrentSectionLimit = double.PositiveInfinity;
 							}
@@ -386,7 +386,7 @@ namespace OpenBve {
 									s = this.SectionIndex;
 									break;
 								}
-								int a = Game.Sections[s].CurrentAspect;
+								int a = Game.Sections[s].currentAspect;
 								if (a >= 0) {
 									if (Game.Sections[s].Aspects[a].Number == 0) {
 										break;

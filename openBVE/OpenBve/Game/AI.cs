@@ -412,9 +412,9 @@ namespace OpenBve
                                     TrackManager.SectionChangeEvent e = (TrackManager.SectionChangeEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
                                     if (stp + e.TrackPositionDelta > tp)
                                     {
-                                        if (!Game.Sections[e.NextSectionIndex].Invisible & Game.Sections[e.NextSectionIndex].CurrentAspect >= 0)
+                                        if (!Game.Sections[e.NextSectionIndex].Invisible & Game.Sections[e.NextSectionIndex].currentAspect >= 0)
                                         {
-                                            double elim = Game.Sections[e.NextSectionIndex].Aspects[Game.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
+                                            double elim = Game.Sections[e.NextSectionIndex].Aspects[Game.Sections[e.NextSectionIndex].currentAspect].Speed * this.CurrentSpeedFactor;
                                             if (elim < spd | spd <= 0.0)
                                             {
                                                 double dist = stp + e.TrackPositionDelta - tp;

@@ -992,7 +992,7 @@ namespace OpenBve {
 						if (IsPartOfTrain) {
 							int nextSectionIndex = Train.CurrentSectionIndex + 1;
 							if (nextSectionIndex >= 0 & nextSectionIndex < Game.Sections.Length) {
-								int a = Game.Sections[nextSectionIndex].CurrentAspect;
+								int a = Game.Sections[nextSectionIndex].currentAspect;
 								if (a >= 0 & a < Game.Sections[nextSectionIndex].Aspects.Length) {
 									Function.Stack[s] = (double)Game.Sections[nextSectionIndex].Aspects[a].Number;
 								} else {
@@ -1000,7 +1000,7 @@ namespace OpenBve {
 								}
 							}
 						} else if (SectionIndex >= 0 & SectionIndex < Game.Sections.Length) {
-							int a = Game.Sections[SectionIndex].CurrentAspect;
+							int a = Game.Sections[SectionIndex].currentAspect;
 							if (a >= 0 & a < Game.Sections[SectionIndex].Aspects.Length) {
 								Function.Stack[s] = (double)Game.Sections[SectionIndex].Aspects[a].Number;
 							} else {

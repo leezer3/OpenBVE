@@ -4,6 +4,7 @@ using System.Globalization;
 
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Signalling;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -71,7 +72,7 @@ namespace OpenBve {
 			internal int[] Aspects;
 			internal int DepartureStationIndex;
 			internal bool Invisible;
-			internal Game.SectionType Type;
+			internal OpenBveApi.Signalling.SectionType Type;
 		}
 		private struct Limit {
 			internal double TrackPosition;
@@ -504,9 +505,14 @@ namespace OpenBve {
 					});
 				// game data
 				Game.Sections = new Game.Section[1];
-				Game.Sections[0].Aspects = new Game.SectionAspect[]
-				{new Game.SectionAspect(0, 0.0), new Game.SectionAspect(4, double.PositiveInfinity)};
-				Game.Sections[0].CurrentAspect = 0;
+				Game.Sections[0] = new Game.Section
+				{
+					Aspects = new OpenBveApi.Signalling.SignalAspect[]
+					{
+						new OpenBveApi.Signalling.SignalAspect(0, 0.0), new OpenBveApi.Signalling.SignalAspect(4, double.PositiveInfinity)
+					}
+				};
+				Game.Sections[0].SetAspect(0);
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
 				Game.Sections[0].SignalIndices = new int[] {};
@@ -3309,7 +3315,7 @@ namespace OpenBve {
 												Array.Resize<Section>(ref Data.Blocks[BlockIndex].Section, n + 1);
 												Data.Blocks[BlockIndex].Section[n].TrackPosition = Data.TrackPosition;
 												Data.Blocks[BlockIndex].Section[n].Aspects = aspects;
-												Data.Blocks[BlockIndex].Section[n].Type = valueBased ? Game.SectionType.ValueBased : Game.SectionType.IndexBased;
+												Data.Blocks[BlockIndex].Section[n].Type = valueBased ? OpenBveApi.Signalling.SectionType.ValueBased : OpenBveApi.Signalling.SectionType.IndexBased;
 												Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = -1;
 												if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 													if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
@@ -3321,6 +3327,22 @@ namespace OpenBve {
 											}
 										}
 									} break;
+								case "track.sectiona":
+									{
+										//Creates an approach based signalling section
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length == 0)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is required in " + Command + "at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else
+											{
+												//Data.Blocks[BlockIndex].Section[CurrentSection - 1].ApproachControlled = true;
+											}
+										}
+									}
+									break;
 								case "track.sigf":
 									{
 										if (!PreviewOnly) {
@@ -3428,7 +3450,7 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Section[n].Aspects = aspects;
 											Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = -1;
 											Data.Blocks[BlockIndex].Section[n].Invisible = x == 0.0;
-											Data.Blocks[BlockIndex].Section[n].Type = Game.SectionType.ValueBased;
+											Data.Blocks[BlockIndex].Section[n].Type = OpenBveApi.Signalling.SectionType.ValueBased;
 											if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 												if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
 													Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = CurrentStation;
@@ -6005,6 +6027,7 @@ namespace OpenBve {
 							for (int k = 0; k < Data.Blocks[i].Section.Length; k++) {
 								int m = Game.Sections.Length;
 								Array.Resize<Game.Section>(ref Game.Sections, m + 1);
+								Game.Sections[m] = new Game.Section();
 								Game.Sections[m].SignalIndices = new int[] { };
 								// create associated transponders
 								for (int g = 0; g <= i; g++) {
@@ -6020,7 +6043,7 @@ namespace OpenBve {
 								}
 								// create section
 								Game.Sections[m].TrackPosition = Data.Blocks[i].Section[k].TrackPosition;
-								Game.Sections[m].Aspects = new Game.SectionAspect[Data.Blocks[i].Section[k].Aspects.Length];
+								Game.Sections[m].Aspects = new OpenBveApi.Signalling.SignalAspect[Data.Blocks[i].Section[k].Aspects.Length];
 								for (int l = 0; l < Data.Blocks[i].Section[k].Aspects.Length; l++) {
 									Game.Sections[m].Aspects[l].Number = Data.Blocks[i].Section[k].Aspects[l];
 									if (Data.Blocks[i].Section[k].Aspects[l] >= 0 & Data.Blocks[i].Section[k].Aspects[l] < Data.SignalSpeeds.Length) {
@@ -6030,7 +6053,7 @@ namespace OpenBve {
 									}
 								}
 								Game.Sections[m].Type = Data.Blocks[i].Section[k].Type;
-								Game.Sections[m].CurrentAspect = -1;
+								Game.Sections[m].SetAspect(-1);
 								if (m > 0) {
 									Game.Sections[m].PreviousSection = m - 1;
 									Game.Sections[m - 1].NextSection = m;
