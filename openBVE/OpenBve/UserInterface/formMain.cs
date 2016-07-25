@@ -10,11 +10,13 @@ using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
 namespace OpenBve {
-	internal partial class formMain : Form {
-		internal formMain() {
+	internal partial class formMain : Form
+	{
+		internal formMain()
+		{
 			InitializeComponent();
 			this.Text = Interface.GetInterfaceString("program_title");
-			}
+		}
 
 		public sealed override string Text
 		{
@@ -23,54 +25,62 @@ namespace OpenBve {
 		}
 
 		// show main dialog
-		internal struct MainDialogResult {
+		internal struct MainDialogResult
+		{
 			internal bool Start;
 			internal string RouteFile;
 			internal System.Text.Encoding RouteEncoding;
 			internal string TrainFolder;
 			internal System.Text.Encoding TrainEncoding;
 		}
-		internal static MainDialogResult ShowMainDialog(MainDialogResult initial) {
-				using (formMain Dialog = new formMain())
-				{
-					Dialog.Result = initial;
-					Dialog.ShowDialog();
-					MainDialogResult result = Dialog.Result;
-					Dialog.Dispose();
-					return result;
-				}
+		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
+		{
+			using (formMain Dialog = new formMain())
+			{
+				Dialog.Result = initial;
+				Dialog.ShowDialog();
+				MainDialogResult result = Dialog.Result;
+				Dialog.Dispose();
+				return result;
+			}
 		}
 
 		// members
 		private MainDialogResult Result;
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
-		
+
 		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
-		
-		
+
+
 		// ====
 		// form
 		// ====
 
 		// load
-		private void formMain_Load(object sender, EventArgs e) {
+		private void formMain_Load(object sender, EventArgs e)
+		{
 			this.MinimumSize = this.Size;
-			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1) {
+			if (Interface.CurrentOptions.MainMenuWidth == -1 & Interface.CurrentOptions.MainMenuHeight == -1)
+			{
 				this.WindowState = FormWindowState.Maximized;
-			} else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0) {
+			}
+			else if (Interface.CurrentOptions.MainMenuWidth > 0 & Interface.CurrentOptions.MainMenuHeight > 0)
+			{
 				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				this.CenterToScreen();
 			}
 			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
-			try {
+			try
+			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
-			} catch { }
+			}
+			catch { }
 			radiobuttonStart.Appearance = Appearance.Button;
 			radiobuttonStart.AutoSize = false;
 			radiobuttonStart.Size = new Size(buttonClose.Width, buttonClose.Height);
@@ -97,20 +107,23 @@ namespace OpenBve {
 			{
 				int Tab = 0;
 				string[] Args = System.Environment.GetCommandLineArgs();
-				for (int i = 1; i < Args.Length; i++) {
-					switch (Args[i].ToLowerInvariant()) {
-							case "/newgame": Tab = 0; break;
-							case "/review": Tab = 1; break;
-							case "/controls": Tab = 2; break;
-							case "/options": Tab = 3; break;
+				for (int i = 1; i < Args.Length; i++)
+				{
+					switch (Args[i].ToLowerInvariant())
+					{
+						case "/newgame": Tab = 0; break;
+						case "/review": Tab = 1; break;
+						case "/controls": Tab = 2; break;
+						case "/options": Tab = 3; break;
 					}
 				}
-				switch (Tab) {
-						case 1: radiobuttonReview.Checked = true; break;
-						case 2: radiobuttonControls.Checked = true; break;
-						case 3: radiobuttonOptions.Checked = true; break;
-						case 4: radioButtonPackages.Checked = true; break;
-						default: radiobuttonStart.Checked = true; break;
+				switch (Tab)
+				{
+					case 1: radiobuttonReview.Checked = true; break;
+					case 2: radiobuttonControls.Checked = true; break;
+					case 3: radiobuttonOptions.Checked = true; break;
+					case 4: radioButtonPackages.Checked = true; break;
+					default: radiobuttonStart.Checked = true; break;
 				}
 			}
 			// icons and images
@@ -127,7 +140,7 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
-			string[] flags = new string[] {};
+			string[] flags = new string[] { };
 			try
 			{
 				flags = System.IO.Directory.GetFiles(flagsFolder);
@@ -136,7 +149,7 @@ namespace OpenBve {
 			{
 			}
 			// route selection
-			listviewRouteFiles.SmallImageList = new ImageList {TransparentColor = Color.White};
+			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
@@ -144,16 +157,17 @@ namespace OpenBve {
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
 			listviewRouteRecently.Columns.Add("");
-			listviewRouteRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+			listviewRouteRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (RouteIcon != null) listviewRouteRecently.SmallImageList.Images.Add("route", RouteIcon);
-			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++) {
+			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
+			{
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
 				Item.ImageKey = "route";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// train selection
-			listviewTrainFolders.SmallImageList = new ImageList {TransparentColor = Color.White};
+			listviewTrainFolders.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
@@ -161,23 +175,28 @@ namespace OpenBve {
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
 			listviewTrainRecently.Columns.Add("");
-			listviewTrainRecently.SmallImageList = new ImageList {TransparentColor = Color.White};
+			listviewTrainRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
-			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++) {
+			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
+			{
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
 				Item.ImageKey = "train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
 			}
 			listviewTrainRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// text boxes
-			if (Interface.CurrentOptions.RouteFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.RouteFolder)) {
+			if (Interface.CurrentOptions.RouteFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.RouteFolder))
+			{
 				textboxRouteFolder.Text = Interface.CurrentOptions.RouteFolder;
-			} else {
+			}
+			else {
 				textboxRouteFolder.Text = Program.FileSystem.InitialRouteFolder;
 			}
-			if (Interface.CurrentOptions.TrainFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.TrainFolder)) {
+			if (Interface.CurrentOptions.TrainFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.TrainFolder))
+			{
 				textboxTrainFolder.Text = Interface.CurrentOptions.TrainFolder;
-			} else {
+			}
+			else {
 				textboxTrainFolder.Text = Program.FileSystem.InitialTrainFolder;
 			}
 			// encodings
@@ -187,18 +206,23 @@ namespace OpenBve {
 				string[] EncodingDescriptions = new string[Info.Length + 1];
 				EncodingCodepages[0] = System.Text.Encoding.UTF8.CodePage;
 				EncodingDescriptions[0] = "(UTF-8)";
-				for (int i = 0; i < Info.Length; i++) {
+				for (int i = 0; i < Info.Length; i++)
+				{
 					EncodingCodepages[i + 1] = Info[i].CodePage;
-					try { // MoMA says that DisplayName is flagged with [MonoTodo]
+					try
+					{ // MoMA says that DisplayName is flagged with [MonoTodo]
 						EncodingDescriptions[i + 1] = Info[i].DisplayName + " - " + Info[i].CodePage.ToString(Culture);
-					} catch {
+					}
+					catch
+					{
 						EncodingDescriptions[i + 1] = Info[i].Name;
 					}
 				}
 				Array.Sort<string, int>(EncodingDescriptions, EncodingCodepages, 1, Info.Length);
 				comboboxRouteEncoding.Items.Clear();
 				comboboxTrainEncoding.Items.Clear();
-				for (int i = 0; i < Info.Length + 1; i++) {
+				for (int i = 0; i < Info.Length + 1; i++)
+				{
 					comboboxRouteEncoding.Items.Add(EncodingDescriptions[i]);
 					comboboxTrainEncoding.Items.Add(EncodingDescriptions[i]);
 				}
@@ -209,9 +233,11 @@ namespace OpenBve {
 			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == Interface.GameMode.Expert ? 2 : 1;
 			// review last game
 			{
-				if (Game.LogRouteName.Length == 0 | Game.LogTrainName.Length == 0) {
+				if (Game.LogRouteName.Length == 0 | Game.LogTrainName.Length == 0)
+				{
 					radiobuttonReview.Enabled = false;
-				} else {
+				}
+				else {
 					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
@@ -221,20 +247,25 @@ namespace OpenBve {
 					labelReviewTrainValue.Text = Game.LogTrainName;
 					labelReviewDateValue.Text = Game.LogDateTime.ToString("yyyy-MM-dd", Culture);
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
-					switch (Interface.CurrentOptions.GameMode) {
-							case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
-							case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
-							case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
-							default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unknown"); break;
+					switch (Interface.CurrentOptions.GameMode)
+					{
+						case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
+						case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
+						case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
+						default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unknown"); break;
 					}
-					if (Game.CurrentScore.Maximum == 0) {
+					if (Game.CurrentScore.Maximum == 0)
+					{
 						labelRatingColor.BackColor = Color.Gray;
 						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
-					} else {
+					}
+					else {
 						Color[] Colors = { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
-						if (index >= 0 & index < Colors.Length) {
+						if (index >= 0 & index < Colors.Length)
+						{
 							labelRatingColor.BackColor = Colors[index];
-						} else {
+						}
+						else {
 							labelRatingColor.BackColor = Color.Gray;
 						}
 						labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(Culture));
@@ -247,22 +278,25 @@ namespace OpenBve {
 			comboboxBlackBoxFormat.Items.Clear();
 			comboboxBlackBoxFormat.Items.AddRange(new object[] { "", "" });
 			comboboxBlackBoxFormat.SelectedIndex = 1;
-			if (Game.BlackBoxEntryCount == 0) {
+			if (Game.BlackBoxEntryCount == 0)
+			{
 				labelBlackBox.Enabled = false;
 				labelBlackBoxFormat.Enabled = false;
 				comboboxBlackBoxFormat.Enabled = false;
 				buttonBlackBoxExport.Enabled = false;
 			}
 			// controls
-			listviewControls.SmallImageList = new ImageList {TransparentColor = Color.White};
+			listviewControls.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (KeyboardIcon != null) listviewControls.SmallImageList.Images.Add("keyboard", KeyboardIcon);
 			if (MouseIcon != null) listviewControls.SmallImageList.Images.Add("mouse", MouseIcon);
 			if (JoystickIcon != null) listviewControls.SmallImageList.Images.Add("joystick", JoystickIcon);
 			if (GamepadIcon != null) listviewControls.SmallImageList.Images.Add("gamepad", GamepadIcon);
 			// options
-			if (Interface.CurrentOptions.FullscreenMode) {
+			if (Interface.CurrentOptions.FullscreenMode)
+			{
 				radiobuttonFullscreen.Checked = true;
-			} else {
+			}
+			else {
 				radiobuttonWindow.Checked = true;
 			}
 			comboboxVSync.Items.Clear();
@@ -279,9 +313,11 @@ namespace OpenBve {
 			comboboxFullscreenBits.SelectedIndex = Interface.CurrentOptions.FullscreenBits == 16 ? 0 : 1;
 			comboboxInterpolation.Items.Clear();
 			comboboxInterpolation.Items.AddRange(new object[] { "", "", "", "", "", "" });
-			if ((int)Interface.CurrentOptions.Interpolation >= 0 & (int)Interface.CurrentOptions.Interpolation < comboboxInterpolation.Items.Count) {
+			if ((int)Interface.CurrentOptions.Interpolation >= 0 & (int)Interface.CurrentOptions.Interpolation < comboboxInterpolation.Items.Count)
+			{
 				comboboxInterpolation.SelectedIndex = (int)Interface.CurrentOptions.Interpolation;
-			} else {
+			}
+			else {
 				comboboxInterpolation.SelectedIndex = 3;
 			}
 			comboBoxTimeTableDisplayMode.Items.Clear();
@@ -294,17 +330,21 @@ namespace OpenBve {
 			{
 				comboBoxTimeTableDisplayMode.SelectedIndex = 1;
 			}
-			if (Interface.CurrentOptions.AnisotropicFilteringMaximum <= 0) {
+			if (Interface.CurrentOptions.AnisotropicFilteringMaximum <= 0)
+			{
 				labelAnisotropic.Enabled = false;
 				updownAnisotropic.Enabled = false;
 				updownAnisotropic.Minimum = (decimal)0;
 				updownAnisotropic.Maximum = (decimal)0;
-			} else {
+			}
+			else {
 				updownAnisotropic.Minimum = (decimal)1;
 				updownAnisotropic.Maximum = (decimal)Interface.CurrentOptions.AnisotropicFilteringMaximum;
-				if ((decimal)Interface.CurrentOptions.AnisotropicFilteringLevel >= updownAnisotropic.Minimum & (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel <= updownAnisotropic.Maximum) {
+				if ((decimal)Interface.CurrentOptions.AnisotropicFilteringLevel >= updownAnisotropic.Minimum & (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel <= updownAnisotropic.Maximum)
+				{
 					updownAnisotropic.Value = (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel;
-				} else {
+				}
+				else {
 					updownAnisotropic.Value = updownAnisotropic.Minimum;
 				}
 			}
@@ -339,25 +379,31 @@ namespace OpenBve {
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
 				int j;
-				for (j = 0; j < LanguageFiles.Length; j++) {
+				for (j = 0; j < LanguageFiles.Length; j++)
+				{
 					string File = OpenBveApi.Path.CombineFile(Folder, Interface.CurrentOptions.LanguageCode + ".cfg");
-					if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0) {
+					if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0)
+					{
 						comboboxLanguages.SelectedIndex = j;
 						break;
 					}
 				}
-				if (j == LanguageFiles.Length) {
-					#if !DEBUG
-					try {
-						#endif
+				if (j == LanguageFiles.Length)
+				{
+#if !DEBUG
+					try
+					{
+#endif
 						string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
 						Interface.LoadLanguage(File);
 						ApplyLanguage(Interface.CurrentLanguageCode);
-						#if !DEBUG
-					} catch (Exception ex) {
+#if !DEBUG
+					}
+					catch (Exception ex)
+					{
 						MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
-					#endif
+#endif
 				}
 			}
 			if (Program.CurrentlyRunningOnMono)
@@ -370,10 +416,10 @@ namespace OpenBve {
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			// result
 			Result.Start = false;
-//			Result.RouteFile = null;
-//			Result.RouteEncoding = System.Text.Encoding.UTF8;
-//			Result.TrainFolder = null;
-//			Result.TrainEncoding = System.Text.Encoding.UTF8;
+			//			Result.RouteFile = null;
+			//			Result.RouteEncoding = System.Text.Encoding.UTF8;
+			//			Result.TrainFolder = null;
+			//			Result.TrainEncoding = System.Text.Encoding.UTF8;
 
 			routeWorkerThread = new BackgroundWorker();
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
@@ -382,7 +428,8 @@ namespace OpenBve {
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
-		private void ApplyLanguage(string Language) {
+		private void ApplyLanguage(string Language)
+		{
 			//Set command infos to the translated strings
 			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
 			{
@@ -394,7 +441,7 @@ namespace OpenBve {
 					break;
 				}
 			}
-			
+
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -491,6 +538,10 @@ namespace OpenBve {
 			 * Options Page 2
 			 */
 			//Package directories
+			groupBoxPackageOptions.Text = Interface.GetInterfaceString("panel_packages");
+			buttonSetRouteDirectory.Text = Interface.GetInterfaceString("options_package_choose");
+			buttonTrainInstallationDirectory.Text = Interface.GetInterfaceString("options_package_choose");
+			buttonOtherDirectory.Text = Interface.GetInterfaceString("options_package_choose");
 			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
 			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
 			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
@@ -548,23 +599,26 @@ namespace OpenBve {
 			labelScore.Text = " " + Interface.GetInterfaceString("review_score");
 			groupboxRating.Text = Interface.GetInterfaceString("review_score_rating");
 			labelRatingModeCaption.Text = Interface.GetInterfaceString("review_score_rating_mode");
-			switch (Interface.CurrentOptions.GameMode) {
-					case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
-					case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
-					case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
-					default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unkown"); break;
+			switch (Interface.CurrentOptions.GameMode)
+			{
+				case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
+				case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
+				case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
+				default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unkown"); break;
 			}
 			{
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
-					if (ratio < 0.0) ratio = 0.0;
-					if (ratio > 1.0) ratio = 1.0;
-					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
-					if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
-					if (Game.CurrentScore.Maximum == 0) {
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
-					} else {
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					}
+				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
+				if (ratio < 0.0) ratio = 0.0;
+				if (ratio > 1.0) ratio = 1.0;
+				int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
+				if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
+				if (Game.CurrentScore.Maximum == 0)
+				{
+					labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
+				}
+				else {
+					labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				}
 			}
 			labelRatingAchievedCaption.Text = Interface.GetInterfaceString("review_score_rating_achieved");
 			labelRatingMaximumCaption.Text = Interface.GetInterfaceString("review_score_rating_maximum");
@@ -586,7 +640,8 @@ namespace OpenBve {
 			/*
 			 * Localisation for strings related to controls (Keyboard etc.)
 			 */
-			for (int i = 0; i < listviewControls.SelectedItems.Count; i++) {
+			for (int i = 0; i < listviewControls.SelectedItems.Count; i++)
+			{
 				listviewControls.SelectedItems[i].Selected = false;
 			}
 			labelControlsTitle.Text = Interface.GetInterfaceString("controls_title");
@@ -616,7 +671,8 @@ namespace OpenBve {
 			{
 				listviewControls.Items.Clear();
 				comboboxCommand.Items.Clear();
-				for (int i = 0; i < Interface.CommandInfos.Length; i++) {
+				for (int i = 0; i < Interface.CommandInfos.Length; i++)
+				{
 					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
@@ -626,7 +682,8 @@ namespace OpenBve {
 				}
 
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
-				for (int i = 0; i < Interface.CurrentControls.Length; i++) {
+				for (int i = 0; i < Interface.CurrentControls.Length; i++)
+				{
 					Items[i] = new ListViewItem(new string[] { "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
@@ -637,12 +694,23 @@ namespace OpenBve {
 			 * Localisation for strings in package management display
 			 * 
 			 */
-			//Main display tab			labelPackages.Text = Interface.GetInterfaceString("packages_title");
+			//Navigation buttons
+			buttonBack.Text = Interface.GetInterfaceString("packages_button_back");
+			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_button_create");
+			buttonBack2.Text = Interface.GetInterfaceString("packages_button_back");
+			buttonNext.Text = Interface.GetInterfaceString("packages_button_next");
+			buttonCancel.Text = Interface.GetInterfaceString("packages_button_cancel");
+			buttonProceedAnyway1.Text = Interface.GetInterfaceString("packages_button_install");
+			buttonCancel2.Text = Interface.GetInterfaceString("packages_button_cancel");
+			buttonCreateProceed.Text = Interface.GetInterfaceString("packages_button_next");
+			buttonAbort.Text = Interface.GetInterfaceString("packages_button_abort");
+			buttonProceedAnyway.Text = Interface.GetInterfaceString("packages_button_ignore");
+			//Main display tab
+			labelPackagesTitle.Text = Interface.GetInterfaceString("packages_title");
 			labelInstalledPackages.Text = Interface.GetInterfaceString("packages_list");
 			labelPackageListType.Text = Interface.GetInterfaceString("packages_list_type");
 			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
 			buttonUninstallPackage.Text = Interface.GetInterfaceString("packages_uninstall_button");
-			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_creation_button");
 			createPackageButton.Text = Interface.GetInterfaceString("packages_creation_button");
 			comboBoxPackageType.Items[0] = Interface.GetInterfaceString("packages_type_route");
 			comboBoxPackageType.Items[1] = Interface.GetInterfaceString("packages_type_train");
@@ -656,11 +724,14 @@ namespace OpenBve {
 			SaveFileNameButton.Text = Interface.GetInterfaceString("packages_creation_saveas_button");
 			labelSaveAs.Text = Interface.GetInterfaceString("packages_creation_saveas_label");
 			labelDependanciesNextStep.Text = Interface.GetInterfaceString("packages_creation_dependancies_nextstep");
-			buttonCreateProceed.Text = Interface.GetInterfaceString("packages_proceed");
 			newPackageClearSelectionButton.Text = Interface.GetInterfaceString("packages_creation_clearselection");
 			addPackageItemsButton.Text = Interface.GetInterfaceString("packages_creation_additems");
 			labelSelectFiles.Text = Interface.GetInterfaceString("packages_creation_selecteditems");
 			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_guid");
+			dataGridViewTextBoxColumn21.HeaderText = Interface.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn22.HeaderText = Interface.GetInterfaceString("packages_list_version");
+			dataGridViewTextBoxColumn23.HeaderText = Interface.GetInterfaceString("packages_list_author");
+			dataGridViewTextBoxColumn24.HeaderText = Interface.GetInterfaceString("packages_list_website");
 			//Replace package panel of creation tab
 			replacePackageButton.Text = Interface.GetInterfaceString("packages_replace_select");
 			packageToReplaceLabel.Text = Interface.GetInterfaceString("packages_replace_choose");
@@ -684,7 +755,6 @@ namespace OpenBve {
 			labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
 			labelMissingDependanciesText2.Text = Interface.GetInterfaceString("packages_shownlist");
 			labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
-			buttonProceedAnyway.Text = Interface.GetInterfaceString("packages_proceed_anyway");
 			//Install tab
 			/*
 			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND THE HEADER MAY BE UPDATED AT RUNTIME
@@ -700,6 +770,7 @@ namespace OpenBve {
 			//Add dependancies panel
 			labelDependanciesHeader.Text = Interface.GetInterfaceString("packages_creation_dependancies");
 			labelInstalledDependancies.Text = Interface.GetInterfaceString("packages_list");
+			labelSelectedDependencies.Text = Interface.GetInterfaceString("packages_selected");
 			labelDependancyType.Text = Interface.GetInterfaceString("packages_list_type");
 			comboBoxDependancyType.Items[0] = Interface.GetInterfaceString("packages_type_route");
 			comboBoxDependancyType.Items[1] = Interface.GetInterfaceString("packages_type_train");
@@ -710,17 +781,26 @@ namespace OpenBve {
 			dataGridViewTextBoxColumn14.HeaderText = Interface.GetInterfaceString("packages_list_version");
 			dataGridViewTextBoxColumn15.HeaderText = Interface.GetInterfaceString("packages_list_author");
 			dataGridViewTextBoxColumn16.HeaderText = Interface.GetInterfaceString("packages_list_website");
-			dataGridViewTextBoxColumn5.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn6.HeaderText = Interface.GetInterfaceString("packages_list_minimum");
-			dataGridViewTextBoxColumn7.HeaderText = Interface.GetInterfaceString("packages_list_maximum");
-			dataGridViewTextBoxColumn8.HeaderText = Interface.GetInterfaceString("packages_list_author");
+			dataGridViewTextBoxColumn1.HeaderText = Interface.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn2.HeaderText = Interface.GetInterfaceString("packages_list_minimum");
+			dataGridViewTextBoxColumn3.HeaderText = Interface.GetInterfaceString("packages_list_maximum");
+			dataGridViewTextBoxColumn4.HeaderText = Interface.GetInterfaceString("packages_list_packagetype");
+			buttonRemove.Text = Interface.GetInterfaceString("packages_creation_dependancies_remove");
 			website.HeaderText = Interface.GetInterfaceString("packages_list_website");
 			//Version Error panel
 			labelBrokenDependancies.Text = Interface.GetInterfaceString("packages_install_dependancies_broken");
 			labelNewVersion.Text = Interface.GetInterfaceString("packages_version_new");
 			labelCurrentVersion.Text = Interface.GetInterfaceString("packages_version_current");
+			dataGridViewTextBoxColumn5.HeaderText = Interface.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn6.HeaderText = Interface.GetInterfaceString("packages_list_maximum");
+			dataGridViewTextBoxColumn7.HeaderText = Interface.GetInterfaceString("packages_list_minimum");
+			dataGridViewTextBoxColumn8.HeaderText = Interface.GetInterfaceString("packages_list_author");
+			website.HeaderText = Interface.GetInterfaceString("packages_list_website");
+			groupBoxVersionErrorAction.Text = Interface.GetInterfaceString("packages_error_action");
+			radioButtonOverwrite.Text = Interface.GetInterfaceString("packages_error_overwrite");
+			radioButtonReplace.Text = Interface.GetInterfaceString("packages_error_replace");
 			// *** labelVersionError.Text is set dynamically at runtime ***
-			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_version_error");
+			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_install_version_error");
 			dataGridViewTextBoxColumn9.HeaderText = Interface.GetInterfaceString("packages_list_name");
 			dataGridViewTextBoxColumn10.HeaderText = Interface.GetInterfaceString("packages_list_version");
 			dataGridViewTextBoxColumn11.HeaderText = Interface.GetInterfaceString("packages_list_author");
@@ -738,7 +818,8 @@ namespace OpenBve {
 		}
 
 		// form closing
-		private void formMain_FormClosing(object sender, FormClosingEventArgs e) {
+		private void formMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
 			Interface.CurrentOptions.LanguageCode = CurrentLanguageCode;
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
@@ -772,39 +853,56 @@ namespace OpenBve {
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
 			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
-			if (Result.Start) {
+			if (Result.Start)
+			{
 				// recently used routes
-				if (Interface.CurrentOptions.RecentlyUsedLimit > 0) {
-					int i; for (i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++) {
-						if (string.Compare(Result.RouteFile, Interface.CurrentOptions.RecentlyUsedRoutes[i], StringComparison.OrdinalIgnoreCase) == 0) {
+				if (Interface.CurrentOptions.RecentlyUsedLimit > 0)
+				{
+					int i; for (i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
+					{
+						if (string.Compare(Result.RouteFile, Interface.CurrentOptions.RecentlyUsedRoutes[i], StringComparison.OrdinalIgnoreCase) == 0)
+						{
 							break;
 						}
-					} if (i == Interface.CurrentOptions.RecentlyUsedRoutes.Length) {
-						if (Interface.CurrentOptions.RecentlyUsedRoutes.Length < Interface.CurrentOptions.RecentlyUsedLimit) {
+					}
+					if (i == Interface.CurrentOptions.RecentlyUsedRoutes.Length)
+					{
+						if (Interface.CurrentOptions.RecentlyUsedRoutes.Length < Interface.CurrentOptions.RecentlyUsedLimit)
+						{
 							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
-						} else {
+						}
+						else {
 							i--;
 						}
 					}
-					for (int j = i; j > 0; j--) {
+					for (int j = i; j > 0; j--)
+					{
 						Interface.CurrentOptions.RecentlyUsedRoutes[j] = Interface.CurrentOptions.RecentlyUsedRoutes[j - 1];
 					}
 					Interface.CurrentOptions.RecentlyUsedRoutes[0] = Result.RouteFile;
 				}
 				// recently used trains
-				if (Interface.CurrentOptions.RecentlyUsedLimit > 0) {
-					int i; for (i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++) {
-						if (string.Compare(Result.TrainFolder, Interface.CurrentOptions.RecentlyUsedTrains[i], StringComparison.OrdinalIgnoreCase) == 0) {
+				if (Interface.CurrentOptions.RecentlyUsedLimit > 0)
+				{
+					int i; for (i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
+					{
+						if (string.Compare(Result.TrainFolder, Interface.CurrentOptions.RecentlyUsedTrains[i], StringComparison.OrdinalIgnoreCase) == 0)
+						{
 							break;
 						}
-					} if (i == Interface.CurrentOptions.RecentlyUsedTrains.Length) {
-						if (Interface.CurrentOptions.RecentlyUsedTrains.Length < Interface.CurrentOptions.RecentlyUsedLimit) {
+					}
+					if (i == Interface.CurrentOptions.RecentlyUsedTrains.Length)
+					{
+						if (Interface.CurrentOptions.RecentlyUsedTrains.Length < Interface.CurrentOptions.RecentlyUsedLimit)
+						{
 							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
-						} else {
+						}
+						else {
 							i--;
 						}
 					}
-					for (int j = i; j > 0; j--) {
+					for (int j = i; j > 0; j--)
+					{
 						Interface.CurrentOptions.RecentlyUsedTrains[j] = Interface.CurrentOptions.RecentlyUsedTrains[j - 1];
 					}
 					Interface.CurrentOptions.RecentlyUsedTrains[0] = Result.TrainFolder;
@@ -814,8 +912,10 @@ namespace OpenBve {
 			{
 				int n = 0;
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedRoutes.Length];
-				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++) {
-					if (System.IO.File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i])) {
+				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
+				{
+					if (System.IO.File.Exists(Interface.CurrentOptions.RecentlyUsedRoutes[i]))
+					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 						n++;
 					}
@@ -827,8 +927,10 @@ namespace OpenBve {
 			{
 				int n = 0;
 				string[] a = new string[Interface.CurrentOptions.RecentlyUsedTrains.Length];
-				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++) {
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i])) {
+				for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
+				{
+					if (System.IO.Directory.Exists(Interface.CurrentOptions.RecentlyUsedTrains[i]))
+					{
 						a[n] = Interface.CurrentOptions.RecentlyUsedTrains[i];
 						n++;
 					}
@@ -840,8 +942,10 @@ namespace OpenBve {
 			{
 				int n = 0;
 				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
-				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++) {
-					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value)) {
+				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
+				{
+					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
+					{
 						a[n] = Interface.CurrentOptions.RouteEncodings[i];
 						n++;
 					}
@@ -853,8 +957,10 @@ namespace OpenBve {
 			{
 				int n = 0;
 				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
-				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++) {
-					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value)) {
+				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++)
+				{
+					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
+					{
 						a[n] = Interface.CurrentOptions.TrainEncodings[i];
 						n++;
 					}
@@ -864,30 +970,38 @@ namespace OpenBve {
 			}
 			Sounds.Deinitialize();
 			// finish
-			#if !DEBUG
-			try {
-				#endif
+#if !DEBUG
+			try
+			{
+#endif
 				Interface.SaveOptions();
 				FileSystem.SaveCurrentFileSystemConfiguration();
-				#if !DEBUG
-			} catch (Exception ex) {
+#if !DEBUG
+			}
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message, "Save options", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
-			#endif
-			#if !DEBUG
-			try {
-				#endif
+#endif
+#if !DEBUG
+			try
+			{
+#endif
 				Interface.SaveControls(null);
-				#if !DEBUG
-			} catch (Exception ex) {
+#if !DEBUG
+			}
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message, "Save controls", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
-			#endif
+#endif
 		}
 
 		// resize
-		private void formMain_Resize(object sender, EventArgs e) {
-			try {
+		private void formMain_Resize(object sender, EventArgs e)
+		{
+			try
+			{
 				int wt = panelStart.Width;
 				int ox = labelStart.Left;
 				int wa = (wt - 3 * ox) / 2;
@@ -915,79 +1029,106 @@ namespace OpenBve {
 				tabcontrolTrainSelection.Height = groupboxTrainSelection.Height - 3 * tabcontrolTrainSelection.Top / 2;
 				tabcontrolTrainDetails.Width = groupboxTrainDetails.Width - 2 * tabcontrolTrainDetails.Left;
 				tabcontrolTrainDetails.Height = groupboxTrainDetails.Height - 3 * tabcontrolTrainDetails.Top / 2;
-			} catch { }
-			try {
+			}
+			catch { }
+			try
+			{
 				int width = Math.Min((panelOptions.Width - 24) / 2, 420);
 				panelOptionsLeft.Width = width;
 				panelOptionsRight.Left = panelOptionsLeft.Left + width + 8;
 				panelOptionsRight.Width = width;
-			} catch { }
-			try {
+			}
+			catch { }
+			try
+			{
 				int width = Math.Min((panelReview.Width - 32) / 3, 360);
 				groupboxReviewRoute.Width = width;
 				groupboxReviewTrain.Left = groupboxReviewRoute.Left + width + 8;
 				groupboxReviewTrain.Width = width;
 				groupboxReviewDateTime.Left = groupboxReviewTrain.Left + width + 8;
 				groupboxReviewDateTime.Width = width;
-			} catch { }
+			}
+			catch { }
 		}
 
 		// shown
-		private void formMain_Shown(object sender, EventArgs e) {
-			if (radiobuttonStart.Checked) {
+		private void formMain_Shown(object sender, EventArgs e)
+		{
+			if (radiobuttonStart.Checked)
+			{
 				listviewRouteFiles.Focus();
-			} else if (radiobuttonReview.Checked) {
+			}
+			else if (radiobuttonReview.Checked)
+			{
 				listviewScore.Focus();
-			} else if (radiobuttonControls.Checked) {
+			}
+			else if (radiobuttonControls.Checked)
+			{
 				listviewControls.Focus();
-			} else if (radiobuttonOptions.Checked) {
+			}
+			else if (radiobuttonOptions.Checked)
+			{
 				comboboxLanguages.Focus();
 			}
 			//TODO: Needs focus changing when packages tab is selected
 			formMain_Resize(null, null);
-			if (this.WindowState != FormWindowState.Maximized) {
+			if (this.WindowState != FormWindowState.Maximized)
+			{
 				Size sss = this.ClientRectangle.Size;
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
-				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height) {
+				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height)
+				{
 					this.WindowState = FormWindowState.Maximized;
 				}
 			}
 			radiobuttonStart.Focus();
 			// command line arguments
-			if (Result.TrainFolder != null) {
+			if (Result.TrainFolder != null)
+			{
 				if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
 				ShowTrain(false);
 			}
-			if (Result.RouteFile != null) {
+			if (Result.RouteFile != null)
+			{
 				ShowRoute(false);
 			}
 		}
 
 		// list languages
-		private void ListLanguages() {
+		private void ListLanguages()
+		{
 			string Folder = Program.FileSystem.GetDataFolder("Languages");
-			if (System.IO.Directory.Exists(Folder)) {
+			if (System.IO.Directory.Exists(Folder))
+			{
 				string[] Files = System.IO.Directory.GetFiles(Folder);
 				string[] LanguageNames = new string[Files.Length];
 				LanguageFiles = new string[Files.Length];
 				int n = 0;
-				for (int i = 0; i < Files.Length; i++) {
+				for (int i = 0; i < Files.Length; i++)
+				{
 					string Title = System.IO.Path.GetFileName(Files[i]);
-					if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) {
+					if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
+					{
 						string Code = Title.Substring(0, Title.Length - 4);
 						string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
 						string Section = "";
 						string languageName = Code;
-						for (int j = 0; j < Lines.Length; j++) {
+						for (int j = 0; j < Lines.Length; j++)
+						{
 							Lines[j] = Lines[j].Trim();
-							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
+							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal))
+							{
 								Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
-							} else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
+							}
+							else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+							{
 								int k = Lines[j].IndexOf('=');
-								if (k >= 0) {
+								if (k >= 0)
+								{
 									string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
 									string Value = Lines[j].Substring(k + 1).TrimStart();
-									if (Section == "language" & Key == "name") {
+									if (Section == "language" & Key == "name")
+									{
 										languageName = Value;
 										break;
 									}
@@ -1008,20 +1149,22 @@ namespace OpenBve {
 				{
 					comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
 				}
-			} else {
+			}
+			else {
 				LanguageFiles = new string[] { };
 				comboboxLanguages.Items.Clear();
 			}
 		}
 
-		
-		
+
+
 		// ========
 		// top page
 		// ========
 
 		// page selection
-		private void radiobuttonStart_CheckedChanged(object sender, EventArgs e) {
+		private void radiobuttonStart_CheckedChanged(object sender, EventArgs e)
+		{
 			if (workerThread.IsBusy)
 			{
 				radioButtonPackages.Checked = true;
@@ -1041,7 +1184,8 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
-		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e) {
+		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e)
+		{
 			if (workerThread.IsBusy)
 			{
 				radioButtonPackages.Checked = true;
@@ -1061,7 +1205,8 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
-		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e) {
+		private void radiobuttonControls_CheckedChanged(object sender, EventArgs e)
+		{
 			if (workerThread.IsBusy)
 			{
 				radioButtonPackages.Checked = true;
@@ -1081,7 +1226,8 @@ namespace OpenBve {
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
 		}
-		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e) {
+		private void radiobuttonOptions_CheckedChanged(object sender, EventArgs e)
+		{
 			if (workerThread.IsBusy)
 			{
 				radioButtonPackages.Checked = true;
@@ -1112,7 +1258,7 @@ namespace OpenBve {
 			panelReview.Visible = false;
 			panelControls.Visible = false;
 			panelPackages.Visible = true;
-			panelPanels.BackColor = labelPackages.BackColor;
+			panelPanels.BackColor = labelPackagesTitle.BackColor;
 			pictureboxJoysticks.Visible = false;
 			radiobuttonStart.BackColor = SystemColors.ButtonFace;
 			radiobuttonReview.BackColor = SystemColors.ButtonFace;
@@ -1125,25 +1271,30 @@ namespace OpenBve {
 				ResetInstallerPanels();
 				if (Database.LoadDatabase(currentDatabaseFolder, currentDatabaseFile) == true)
 				{
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true);
+					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages, true, false, false);
 				}
 				comboBoxPackageType.SelectedIndex = 0;
 			}
 		}
 
 		/// <summary>Launches a web-browser linked to the project homepage</summary>
-		private void linkHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+		private void linkHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
 			const string Url = "http://github.com/leezer3/OpenBVE/";
-			try {
+			try
+			{
 				System.Diagnostics.Process.Start(Url);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
 		}
 
 
 		// close
-		private void buttonClose_Click(object sender, EventArgs e) {
+		private void buttonClose_Click(object sender, EventArgs e)
+		{
 			this.Close();
 		}
 
@@ -1156,16 +1307,20 @@ namespace OpenBve {
 		// tick
 
 
-		private void timerEvents_Tick(object sender, EventArgs e) {
+		private void timerEvents_Tick(object sender, EventArgs e)
+		{
 			Joysticks.RefreshJoysticks();
-			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1)
+			{
 				int j = listviewControls.SelectedIndices[0];
-				for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++) {
+				for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++)
+				{
 					int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
 					for (int i = 0; i < axes; i++)
 					{
-						double a = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i);
-						if (a < -0.75) {
+						double a = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis)i);
+						if (a < -0.75)
+						{
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 							Interface.CurrentControls[j].Element = i;
@@ -1175,7 +1330,8 @@ namespace OpenBve {
 							UpdateControlListElement(listviewControls.Items[j], j, true);
 							return;
 						}
-						if (a > 0.75) {
+						if (a > 0.75)
+						{
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 							Interface.CurrentControls[j].Element = i;
@@ -1187,8 +1343,10 @@ namespace OpenBve {
 						}
 					}
 					int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
-					for (int i = 0; i < buttons; i++) {
-						if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton)i) == ButtonState.Pressed) {
+					for (int i = 0; i < buttons; i++)
+					{
+						if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton)i) == ButtonState.Pressed)
+						{
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
 							Interface.CurrentControls[j].Element = i;
@@ -1200,7 +1358,8 @@ namespace OpenBve {
 						}
 					}
 					int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
-					for (int i = 0; i < hats; i++) {
+					for (int i = 0; i < hats; i++)
+					{
 						JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
 						if (hat.Position != HatPosition.Centered)
 						{
@@ -1216,19 +1375,20 @@ namespace OpenBve {
 					}
 				}
 			}
-			
+
 			pictureboxJoysticks.Invalidate();
-			
+
 		}
 
-		
-		
+
+
 		// =========
 		// functions
 		// =========
 
 		/// <summary>Attempts to load an image into memory using the OpenBVE path resolution API</summary>
-		private Image LoadImage(string Folder, string Title) {
+		private Image LoadImage(string Folder, string Title)
+		{
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Folder, Title);
@@ -1251,7 +1411,8 @@ namespace OpenBve {
 		}
 
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
-		private void TryLoadImage(PictureBox Box, string Title) {
+		private void TryLoadImage(PictureBox Box, string Title)
+		{
 			try
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Menu");
@@ -1311,7 +1472,7 @@ namespace OpenBve {
 		private void checkForUpdate()
 		{
 			string xmlURL = "http://openbve-project.net/version.xml";
-			HttpWebRequest hwRequest = (HttpWebRequest) WebRequest.Create(xmlURL);
+			HttpWebRequest hwRequest = (HttpWebRequest)WebRequest.Create(xmlURL);
 			hwRequest.Timeout = 5000;
 			HttpWebResponse hwResponse = null;
 			XmlTextReader reader = null;
@@ -1320,12 +1481,12 @@ namespace OpenBve {
 			Version newVersion = new Version();
 			try
 			{
-				hwResponse = (HttpWebResponse) hwRequest.GetResponse();
+				hwResponse = (HttpWebResponse)hwRequest.GetResponse();
 				reader = new XmlTextReader(hwResponse.GetResponseStream());
 				reader.MoveToContent();
 				string elementName = "";
 				if ((reader.NodeType == XmlNodeType.Element) &&
-				    (reader.Name == "openBVE"))
+					(reader.Name == "openBVE"))
 				{
 					while (reader.Read())
 					{
@@ -1374,7 +1535,7 @@ namespace OpenBve {
 				if (DialogResult.OK == MessageBox.Show(this, question, Interface.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
 					System.Diagnostics.Process.Start(url);
-				}  
+				}
 			}
 			else
 			{
@@ -1465,5 +1626,5 @@ namespace OpenBve {
 			var bugReportForm = new formBugReport();
 			bugReportForm.ShowDialog();
 		}
-	}
+    }
 }

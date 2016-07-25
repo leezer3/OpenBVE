@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 namespace OpenBve {
 	/// <summary>Represents the program's organization of files and folders.</summary>
@@ -212,21 +213,39 @@ namespace OpenBve {
 		/// <param name="file">The configuration file describing the file system.</param>
 		/// <returns>The file system.</returns>
 		private static FileSystem FromConfigurationFile(string file) {
+			string assemblyFile = Assembly.GetExecutingAssembly().Location;
+			string assemblyFolder = Path.GetDirectoryName(assemblyFile);
 			FileSystem system = new FileSystem();
-			try {
+			try
+			{
 				string[] lines = File.ReadAllLines(file, Encoding.UTF8);
-				foreach (string line in lines) {
+				foreach (string line in lines)
+				{
 					int equals = line.IndexOf('=');
-					if (equals >= 0) {
+					if (equals >= 0)
+					{
 						string key = line.Substring(0, equals).Trim().ToLowerInvariant();
 						string value = line.Substring(equals + 1).Trim();
-						switch (key) {
+						switch (key)
+						{
 							case "data":
+
 								system.DataFolder = GetAbsolutePath(value, true);
+								if (!Directory.Exists(system.DataFolder))
+								{
+									system.DataFolder = OpenBveApi.Path.CombineDirectory(assemblyFolder, "Data");
+									if (!Directory.Exists(system.DataFolder))
+									{
+										//If we are unable to find the data folder, this is a critical error, as it contains all sorts of essential stuff.....
+										MessageBox.Show(@"Critical error:" + Environment.NewLine + @"Unable to find the openBVE data folder.....", @"openBVE", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										Environment.Exit(0);
+									}
+								}
 								break;
 							case "managedcontent":
 								system.ManagedContentFolders = value.Split(',');
-								for (int i = 0; i < system.ManagedContentFolders.Length; i++) {
+								for (int i = 0; i < system.ManagedContentFolders.Length; i++)
+								{
 									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(), true);
 								}
 								break;
@@ -257,7 +276,8 @@ namespace OpenBve {
 						}
 					}
 				}
-			} catch { }
+			}
+			catch { }
 			return system;
 		}
 

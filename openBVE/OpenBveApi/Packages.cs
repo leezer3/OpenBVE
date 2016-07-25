@@ -54,7 +54,7 @@ namespace OpenBveApi.Packages
 		public string Website;
 		/// <summary>The GUID for this package</summary>
 		public string GUID;
-		/// <summary>Stores the package type- 0 for routes and 1 for trains</summary>
+		/// <summary>Stores the package type</summary>
 		public PackageType PackageType;
 		/// <summary>The file this package was installed from</summary>
 		public string PackageFile;
@@ -111,6 +111,30 @@ namespace OpenBveApi.Packages
 				if (!String.IsNullOrEmpty(value))
 					this.MaximumVersion = new Version(value);
 			}
+		}
+		/// <summary>Creates a clone of the specified package</summary>
+		/// <param name="packageToClone">The package to clone</param>
+		/// <param name="dependancy">Whether this package is part of a dependancy list</param>
+		public Package(Package packageToClone, bool dependancy)
+		{
+			Name = packageToClone.Name;
+			Author = packageToClone.Author;
+			GUID = packageToClone.GUID;
+			Website = packageToClone.Website;
+			PackageType = packageToClone.PackageType;
+			Description = packageToClone.Description;
+			Dependancies = packageToClone.Dependancies;
+			Reccomendations = packageToClone.Reccomendations;
+			Version = packageToClone.Version;
+			/*
+			 * If we are cloning a package, we can assume that the image will change, as these are only currently stored in archives TODO: Serialize to XML? Bad idea?
+			 */
+
+		}
+		/// <summary>Creates a new package</summary>
+		/// An empty default constructor is required as we've also specified a non default constructor
+		public Package()
+		{
 		}
 	}
 
