@@ -114,6 +114,10 @@
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="Parsers\Bve5ScenarioParser.Components.cs" />
+    <Compile Include="Parsers\Bve5ScenarioParser.Commands.cs" />
+    <Compile Include="Parsers\Bve5ScenarioParser.cs" />
+    <Compile Include="Parsers\Bve5ScenarioParser.Functions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

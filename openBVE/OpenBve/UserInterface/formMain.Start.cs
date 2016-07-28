@@ -451,8 +451,16 @@ namespace OpenBve {
 		private void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
 			Game.Reset(false);
-			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
+			bool IsRW = CsvRwRouteParser.isRWFile(Result.RouteFile);
+			bool IsBve5 = Bve5ScenarioParser.IsBve5(Result.RouteFile);
+			if (IsBve5)
+			{
+				Bve5ScenarioParser.ParseRoute(Result.RouteFile, IsRW, null, null, null, null, true);
+			}
+			else
+			{
+				CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
+			}
 			
 		}
 

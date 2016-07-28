@@ -193,8 +193,17 @@ namespace OpenBve {
 			}
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null) {
-				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
+				bool IsRW = CsvRwRouteParser.isRWFile(result.RouteFile);
+				bool IsBve5 = Bve5ScenarioParser.IsBve5(result.RouteFile);
+				if (IsBve5)
+				{
+					Bve5ScenarioParser.ParseRoute(result.RouteFile, IsRW, null, null, null, null, true);
+				}
+				else
+				{
+					CsvRwRouteParser.ParseRoute(result.RouteFile, IsRW, result.RouteEncoding, null, null, null, true);
+				}
+				
 				if (!string.IsNullOrEmpty(Game.TrainName)) {
 					string folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {

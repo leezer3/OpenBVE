@@ -619,6 +619,8 @@ namespace OpenBve {
 			internal Textures.Texture TimetableDaytimeTexture;
 			internal Textures.Texture TimetableNighttimeTexture;
 			internal double DefaultTrackPosition;
+			//TODO: Temp variable added for BVE5 parser, remove ASAP
+			internal string Key;
 		}
 		internal static Station[] Stations = new Station[] { };
 		internal static int GetStopIndex(int StationIndex, int Cars) {
