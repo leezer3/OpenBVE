@@ -99,6 +99,8 @@ namespace OpenBve {
 				Data.Blocks[0].Fog.End = Game.NoFogEnd;
 				Data.Blocks[0].Fog.Color = new Color24(128, 128, 128);
 				Data.Blocks[0].Cycle = new int[] {-1};
+				Data.Blocks[0].RailCycle = new RailCycle[1];
+                Data.Blocks[0].RailCycle[0].RailCycleIndex = -1;
 				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
 				Data.Blocks[0].RailFreeObj = new FreeObj[][] {};
 				Data.Blocks[0].GroundFreeObj = new FreeObj[] {};
@@ -156,6 +158,7 @@ namespace OpenBve {
 				Data.Structure.FreeObj = new ObjectManager.UnifiedObject[] {};
 				Data.Structure.Beacon = new ObjectManager.UnifiedObject[] {};
 				Data.Structure.Cycle = new int[][] {};
+				Data.Structure.RailCycle = new int[][] { };
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
 				Data.Backgrounds = new World.Background[] {};
@@ -2591,6 +2594,31 @@ namespace OpenBve {
 											Data.Structure.Cycle[CommandIndex1][k] = ix;
 										}
 									} break;
+									// rail cycle
+								case "cycle.rail":
+									if (!PreviewOnly)
+									{
+										if (CommandIndex1 >= Data.Structure.RailCycle.Length)
+										{
+											Array.Resize<int[]>(ref Data.Structure.RailCycle, CommandIndex1 + 1);
+                                        }
+										Data.Structure.RailCycle[CommandIndex1] = new int[Arguments.Length];
+                                        for (int k = 0; k < Arguments.Length; k++)
+										{
+											int ix = 0;
+											if (Arguments[k].Length > 0 && !Interface.TryParseIntVb6(Arguments[k], out ix))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex" + (k + 1).ToString(Culture) + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												ix = 0;
+											}
+											if (ix < 0 | ix >= Data.Structure.Rail.Length)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex" + (k + 1).ToString(Culture) + " is out of range in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												ix = 0;
+											}
+											Data.Structure.RailCycle[CommandIndex1][k] = ix;
+										}
+									} break;
 							}
 						}
 					}
@@ -2819,6 +2847,9 @@ namespace OpenBve {
 								case "texture.background.x":
 								case "texture.background.aspect":
 								case "cycle.ground":
+								case "cycle.rail":
+								case "route.loadingscreen":
+								case "route.displayspeed":
 									break;
 									// track
 								case "track.railstart":
@@ -2840,6 +2871,11 @@ namespace OpenBve {
 												}
 												if (Data.Blocks[BlockIndex].Rail.Length <= idx) {
 													Array.Resize<Rail>(ref Data.Blocks[BlockIndex].Rail, idx + 1);
+													Array.Resize<RailCycle>(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
+                                                    for (int rc = 0; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
+                                                    {
+                                                        Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
+                                                    }
 												}
 												if (Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed) {
 													Data.Blocks[BlockIndex].Rail[idx].RailEnd = true;
@@ -2887,7 +2923,15 @@ namespace OpenBve {
 														} else if (sttype >= Data.Structure.Rail.Length || Data.Structure.Rail[sttype] == null) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex "+ sttype + " references an object not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															Data.Blocks[BlockIndex].RailType[idx] = sttype;
+															if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null) {
+                                                                Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
+                                                                Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = sttype;
+                                                                Data.Blocks[BlockIndex].RailCycle[idx].CurrentCycle = 0;
+                                                            }
+                                                            else {
+                                                                Data.Blocks[BlockIndex].RailType[idx] = sttype;
+                                                                Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = -1;
+                                                            }
 														}
 													}
 												}
@@ -2957,7 +3001,15 @@ namespace OpenBve {
 													if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
 														Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
 													}
-													Data.Blocks[BlockIndex].RailType[idx] = sttype;
+													if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null) {
+                                                        Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
+                                                        Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = sttype;
+                                                        Data.Blocks[BlockIndex].RailCycle[idx].CurrentCycle = 0;
+                                                    }
+                                                    else {
+                                                        Data.Blocks[BlockIndex].RailType[idx] = sttype;
+                                                        Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = -1;
+                                                    }
 												}
 											}
 										}
@@ -4570,11 +4622,29 @@ namespace OpenBve {
 						Data.Blocks[i].Fog = Data.Blocks[i - 1].Fog;
 						Data.Blocks[i].FogDefined = false;
 						Data.Blocks[i].Cycle = Data.Blocks[i - 1].Cycle;
+						Data.Blocks[i].RailCycle = Data.Blocks[i - 1].RailCycle;
 						Data.Blocks[i].Height = double.NaN;
 					}
 					Data.Blocks[i].RailType = new int[Data.Blocks[i - 1].RailType.Length];
-					for (int j = 0; j < Data.Blocks[i].RailType.Length; j++) {
-						Data.Blocks[i].RailType[j] = Data.Blocks[i - 1].RailType[j];
+					if (!PreviewOnly) {
+						for (int j = 0; j < Data.Blocks[i].RailType.Length; j++) {
+							int rc = Data.Blocks[i].RailCycle[j].RailCycleIndex;
+							if (rc != -1 && Data.Structure.RailCycle[rc].Length > 1) {
+								int cc = Data.Blocks[i].RailCycle[j].CurrentCycle;
+								if (cc == Data.Structure.RailCycle[rc].Length - 1) {
+									Data.Blocks[i].RailType[j] = Data.Structure.RailCycle[rc][0];
+									Data.Blocks[i].RailCycle[j].CurrentCycle = 0;
+								}
+								else {
+									cc++;
+									Data.Blocks[i].RailType[j] = Data.Structure.RailCycle[rc][cc];
+									Data.Blocks[i].RailCycle[j].CurrentCycle++;
+								}
+							}
+							else {
+								Data.Blocks[i].RailType[j] = Data.Blocks[i - 1].RailType[j];
+							}
+						}
 					}
 					Data.Blocks[i].Rail = new Rail[Data.Blocks[i - 1].Rail.Length];
 					for (int j = 0; j < Data.Blocks[i].Rail.Length; j++) {
