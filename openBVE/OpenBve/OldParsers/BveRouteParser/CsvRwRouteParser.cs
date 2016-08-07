@@ -2871,11 +2871,12 @@ namespace OpenBve {
 												}
 												if (Data.Blocks[BlockIndex].Rail.Length <= idx) {
 													Array.Resize<Rail>(ref Data.Blocks[BlockIndex].Rail, idx + 1);
+													int ol = Data.Blocks[BlockIndex].RailCycle.Length;
 													Array.Resize<RailCycle>(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
-                                                    for (int rc = 0; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
-                                                    {
-                                                        Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
-                                                    }
+													for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
+													{
+														Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
+													}
 												}
 												if (Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed) {
 													Data.Blocks[BlockIndex].Rail[idx].RailEnd = true;
