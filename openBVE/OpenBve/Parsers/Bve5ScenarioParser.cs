@@ -320,6 +320,9 @@ namespace OpenBve
 					case "route":
 						RouteFile = Path.GetDirectoryName(FileName) + "\\" + key[1].Trim();
 						break;
+					case "image":
+						Game.RouteImage = Path.GetDirectoryName(FileName) + "\\" + key[1].Trim();
+						break;
 				}
 			}
 			ParseRouteForData(RouteFile, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
@@ -345,7 +348,7 @@ namespace OpenBve
 			int BlockIndex = 0;
 			for (int e = 0; e < Expressions.Length; e++)
 			{
-				if (Expressions[e].Text.StartsWith("#"))
+				if (Expressions[e].Text.StartsWith("#") || Expressions[e].Text.StartsWith("//"))
 				{
 					//Skip comments
 					continue;

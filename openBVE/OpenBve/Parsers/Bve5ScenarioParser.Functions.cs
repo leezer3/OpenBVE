@@ -199,7 +199,7 @@ namespace OpenBve
 				{
 					double version = 0;
 					Interface.TryParseDoubleVb6(b, out version);
-					if (version != 2.0)
+					if (version > 2.0)
 					{
 						throw new Exception(version + " is not a supported BVE5 scenario version");
 					}
@@ -220,34 +220,16 @@ namespace OpenBve
 		{
 			using (StreamReader reader = new StreamReader(FileName))
 			{
-				var firstLine = reader.ReadLine() ?? "";
-				string b = String.Empty;
-				
-				for (int i = firstLine.Length -1; i > 0; i--)
+				var firstLine = reader.ReadLine();
+				string[] Header = firstLine.Split(':');
+				if (Header.Length == 1)
 				{
-					if (firstLine[i] != ':')
-					{
-						b = firstLine[i] + b;
-					}
-					else
-					{
-						break;
-					}
+					return Encoding.UTF8;
 				}
-				if (b.Length > 0)
-				{
-					try
-					{
-						b = b.Trim();
-						Encoding enc = Encoding.GetEncoding(b);
-						return enc;
-					}
-					catch
-					{
-					}
-				}
+				string[] Arguments = Header[1].Split(',');
+				try { return Encoding.GetEncoding(Arguments[0].ToLowerInvariant().Trim()); }
+				catch { return Encoding.UTF8; }
 			}
-			return SystemEncoding;
 		}
 	}
 }
