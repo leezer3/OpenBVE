@@ -455,7 +455,8 @@ namespace OpenBve {
 			bool IsBve5 = Bve5ScenarioParser.IsBve5(Result.RouteFile);
 			if (IsBve5)
 			{
-				Bve5ScenarioParser.ParseRoute(Result.RouteFile, IsRW, null, null, null, null, true);
+				Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(Result.RouteFile, Result.RouteEncoding);
+				Bve5ScenarioParser.ParseRoute(Result.RouteFile, IsRW, enc, null, null, null, true);
 			}
 			else
 			{

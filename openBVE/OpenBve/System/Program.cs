@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using OpenTK;
@@ -197,7 +198,8 @@ namespace OpenBve {
 				bool IsBve5 = Bve5ScenarioParser.IsBve5(result.RouteFile);
 				if (IsBve5)
 				{
-					Bve5ScenarioParser.ParseRoute(result.RouteFile, IsRW, null, null, null, null, true);
+					Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(result.RouteFile, result.RouteEncoding);
+					Bve5ScenarioParser.ParseRoute(result.RouteFile, IsRW, enc, null, null, null, true);
 				}
 				else
 				{

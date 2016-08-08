@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Text;
 
 namespace OpenBve
 {
@@ -207,6 +208,44 @@ namespace OpenBve
 				}
 			}
 			return true;
+		}
+
+		/// <summary>Attempts to determine the System.Text.Encoding value for a given BVE5 file</summary>
+		/// <param name="FileName">The filename</param>
+		/// <param name="SystemEncoding">The current openBVE encoding (Used by default if no ecoding is found)</param>
+		/// <returns>The detected encoding, or the current openBVE encoding if this is not found</returns>
+		internal static Encoding DetermineFileEncoding(string FileName, Encoding SystemEncoding)
+		{
+			using (StreamReader reader = new StreamReader(FileName))
+			{
+				var firstLine = reader.ReadLine() ?? "";
+				string b = String.Empty;
+				
+				for (int i = firstLine.Length -1; i > 0; i--)
+				{
+					if (firstLine[i] != ':')
+					{
+						b = firstLine[i] + b;
+					}
+					else
+					{
+						break;
+					}
+				}
+				if (b.Length > 0)
+				{
+					try
+					{
+						b = b.Trim();
+						Encoding enc = Encoding.GetEncoding(b);
+						return enc;
+					}
+					catch
+					{
+					}
+				}
+			}
+			return SystemEncoding;
 		}
 	}
 }

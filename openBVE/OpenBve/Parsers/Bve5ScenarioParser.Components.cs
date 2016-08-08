@@ -12,7 +12,7 @@ namespace OpenBve
 		private static void LoadObjects(string ObjectList, ref RouteData Data, System.Text.Encoding Encoding, bool PreviewOnly)
 		{
 			//Read object list file into memory
-			string[] Lines = File.ReadAllLines(ObjectList);
+			string[] Lines = File.ReadAllLines(ObjectList, Encoding);
 			string b = String.Empty;
 			if (!Lines[0].ToLowerInvariant().StartsWith("bvets structure list"))
 			{
@@ -89,10 +89,10 @@ namespace OpenBve
 		/// <param name="StationList">The absolute on-disk path to the station list</param>
 		/// <param name="Data">The route data</param>
 		/// <param name="PreviewOnly">Whether this is a preview only</param>
-		private static void LoadStations(string StationList, ref RouteData Data, bool PreviewOnly)
+		private static void LoadStations(string StationList, ref RouteData Data, System.Text.Encoding Encoding, bool PreviewOnly)
 		{
 			//Read station list file into memory
-			string[] Lines = File.ReadAllLines(StationList);
+			string[] Lines = File.ReadAllLines(StationList, Encoding);
 			string b = String.Empty;
 			if (!Lines[0].ToLowerInvariant().StartsWith("bvets station list"))
 			{
@@ -249,7 +249,7 @@ namespace OpenBve
 		private static void LoadSections(string SectionList, ref RouteData Data, System.Text.Encoding Encoding)
 		{
 			//Read section list file into memory
-			string[] Lines = File.ReadAllLines(SectionList);
+			string[] Lines = File.ReadAllLines(SectionList, Encoding);
 			string b = String.Empty;
 			if (!Lines[0].ToLowerInvariant().StartsWith("bvets signal aspects list"))
 			{

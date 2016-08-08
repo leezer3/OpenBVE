@@ -722,7 +722,9 @@ namespace OpenBve
 													Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
 												}
 												//Call the loader method
-												LoadObjects(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName),Arguments[i]), ref Data, Encoding, PreviewOnly);
+												var StructureFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StructureFile, Encoding);
+												LoadObjects(StructureFile, ref Data, enc, PreviewOnly);
 											}
 										}
 									} break;
@@ -742,8 +744,10 @@ namespace OpenBve
 												{
 													Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
 												}
+												var StationFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StationFile, Encoding);
 												//Call the loader method
-												LoadStations(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]), ref Data, PreviewOnly);
+												LoadStations(StationFile, ref Data, enc, PreviewOnly);
 											}
 										}
 									} break;
@@ -767,8 +771,10 @@ namespace OpenBve
 												{
 													Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
 												}
+												var SignalFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(SignalFile, Encoding);
 												//Call the loader method
-												LoadSections(OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]), ref Data, Encoding);
+												LoadSections(SignalFile, ref Data, enc);
 											}
 										}
 									} break;
