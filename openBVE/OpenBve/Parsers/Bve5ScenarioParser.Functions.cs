@@ -59,6 +59,8 @@ namespace OpenBve
 						Data.Blocks[i].FogDefined = false;
 						Data.Blocks[i].Cycle = Data.Blocks[i - 1].Cycle;
 						Data.Blocks[i].Height = double.NaN;
+						Data.Blocks[i].RunSounds = new TrackSound[1];
+						Data.Blocks[i].RunSounds[0] = Data.Blocks[i - 1].RunSounds[Data.Blocks[i - 1].RunSounds.Length - 1];
 					}
 					Data.Blocks[i].RailType = new int[Data.Blocks[i - 1].RailType.Length];
 					for (int j = 0; j < Data.Blocks[i].RailType.Length; j++)

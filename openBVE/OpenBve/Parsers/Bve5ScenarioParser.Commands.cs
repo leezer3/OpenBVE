@@ -20,8 +20,7 @@ namespace OpenBve
 				case "curve":
 				{
 					double radius = 0.0;
-					if (Arguments.Length >= 1 && Arguments[0].Length > 0 &&
-					    !Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius))
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius))
 					{
 						//Interface.AddMessage(Interface.MessageType.Error, false, "Radius is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						radius = 0.0;
@@ -110,6 +109,15 @@ namespace OpenBve
 						Data.Blocks[BlockIndex].Fog.Color = new Color24((byte) r, (byte) g, (byte) b);
 						Data.Blocks[BlockIndex].FogDefined = true;
 					}
+					break;
+				case "pitch":
+					double p = 0.0;
+					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[0], out p))
+					{
+						//Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPermille is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+						p = 0.0;
+					}
+					Data.Blocks[BlockIndex].Pitch = 0.001 * p;
 					break;
 			}
 		}
@@ -596,6 +604,64 @@ namespace OpenBve
 			Data.Blocks[BlockIndex].Signal[n].ShowObject = x != 0.0;
 			Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
 
+		}
+
+		/// <summary>Changes the current track run sound</summary>
+		/// <param name="RunSoundIndex">The index of the new run sound from this point onwards</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		static void ChangeRunSound(int RunSoundIndex, ref RouteData Data, int BlockIndex)
+		{
+			int idx = -1;
+			for (int i = 0; i < Data.Blocks[BlockIndex].RunSounds.Length; i++)
+			{
+				if (Data.Blocks[BlockIndex].RunSounds[i].TrackPosition == Data.TrackPosition)
+				{
+					idx = i;
+					break;
+				}
+			}
+			if (idx == -1)
+			{
+				idx = Data.Blocks[BlockIndex].RunSounds.Length;
+				Array.Resize(ref Data.Blocks[BlockIndex].RunSounds, idx + 1);
+				Data.Blocks[BlockIndex].RunSounds[idx] = new TrackSound(Data.TrackPosition, RunSoundIndex, Data.Blocks[BlockIndex].RunSounds[idx - 1].FlangeSoundIndex);
+				
+			}
+			else
+			{
+				Data.Blocks[BlockIndex].RunSounds[idx].RunSoundIndex = RunSoundIndex;
+			}
+			idx++;
+			
+		}
+
+		/// <summary>Changes the current flange sound</summary>
+		/// <param name="FlangeSoundIndex">The index of the new flange sound from this point onwards</param>
+		/// <param name="Data">The RouteData (updated via 'ref')</param>
+		/// <param name="BlockIndex">The index of the current block</param>
+		static void ChangeFlangeSound(int FlangeSoundIndex, ref RouteData Data, int BlockIndex)
+		{
+			int idx = -1;
+			for (int i = 0; i < Data.Blocks[BlockIndex].RunSounds.Length; i++)
+			{
+				if (Data.Blocks[BlockIndex].RunSounds[i].TrackPosition == Data.TrackPosition)
+				{
+					idx = i;
+					break;
+				}
+			}
+			if (idx == -1)
+			{
+				idx = Data.Blocks[BlockIndex].RunSounds.Length;
+				Array.Resize(ref Data.Blocks[BlockIndex].RunSounds, idx + 1);
+				Data.Blocks[BlockIndex].RunSounds[idx] = new TrackSound(Data.TrackPosition, Data.Blocks[BlockIndex].RunSounds[idx - 1].RunSoundIndex, FlangeSoundIndex);
+			}
+			else
+			{
+				Data.Blocks[BlockIndex].RunSounds[idx].FlangeSoundIndex = FlangeSoundIndex;
+			}
+			idx++;
 		}
 	}
 }

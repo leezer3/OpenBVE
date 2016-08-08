@@ -148,6 +148,8 @@ namespace OpenBve
 			internal Section[] Section;
 			internal Limit[] Limit;
 			internal Stop[] Stop;
+			internal TrackSound[] RunSounds;
+			internal TrackSound[] FlangeSounds;
 			internal TrackManager.TrackElement CurrentTrackState;
 			internal double Pitch;
 			internal double Turn;
@@ -155,6 +157,20 @@ namespace OpenBve
 			internal bool StationPassAlarm;
 			internal double Accuracy;
 			internal double AdhesionMultiplier;
+		}
+
+		private struct TrackSound
+		{
+			internal double TrackPosition;
+			internal int RunSoundIndex;
+			internal int FlangeSoundIndex;
+
+			internal TrackSound(double TrackPosition, int Run, int Flange)
+			{
+				this.TrackPosition = TrackPosition;
+				this.RunSoundIndex = Run;
+				this.FlangeSoundIndex = Flange;
+			}
 		}
 
 		private struct StructureData
@@ -264,6 +280,7 @@ namespace OpenBve
 				Data.Blocks[0].GroundFreeObj = new Object[] { };
 				Data.Blocks[0].Signal = new Signal[] { };
 				Data.Blocks[0].Section = new Section[] { };
+				Data.Blocks[0].RunSounds = new TrackSound[] { new TrackSound(0.0, 0, 0) };
 				Data.Structure.Cycle = new int[][] { };
 				Data.Structure.Run = new int[] { };
 				Data.Structure.Flange = new int[] { };
@@ -454,18 +471,14 @@ namespace OpenBve
 						}
 						if (command.StartsWith("section.") && !PreviewOnly)
 						{
-							//Add speed limit
+							//Starts a new signalling section
 							int ida = Expressions[e].Text.IndexOf('.');
 							int idb = Expressions[e].Text.IndexOf('(');
 							string key = Expressions[e].Text.Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
 							switch (key)
 							{
 								case "begin":
-									double limit;
-									if (Interface.TryParseDoubleVb6(Arguments[0], out limit))
-									{
-										StartSection(Arguments, ref Data, BlockIndex, ref CurrentSection, UnitOfLength);
-									}
+									StartSection(Arguments, ref Data, BlockIndex, ref CurrentSection, UnitOfLength);
 									break;
 								default:
 									//Unsupported section statement
@@ -489,6 +502,50 @@ namespace OpenBve
 							{
 								PlaceSignal(key, Arguments, ref Data, BlockIndex, CurrentSection, UnitOfLength);
 							}
+						}
+						if (command.StartsWith("rollingnoise.") && !PreviewOnly)
+						{
+							//Change the wheel noise
+							int ida = Expressions[e].Text.IndexOf('.');
+							int idb = Expressions[e].Text.IndexOf('(');
+							string key = Expressions[e].Text.Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
+							switch (key)
+							{
+								case "change":
+									int RollingNoise;
+									if (Interface.TryParseIntVb6(Arguments[0], out RollingNoise))
+									{
+										ChangeRunSound(RollingNoise, ref Data, BlockIndex);
+									}
+									break;
+								default:
+									//Not a number
+									break;
+
+							}
+							continue;
+						}
+						if (command.StartsWith("flangenoise.") && !PreviewOnly)
+						{
+							//Change the flange noise
+							int ida = Expressions[e].Text.IndexOf('.');
+							int idb = Expressions[e].Text.IndexOf('(');
+							string key = Expressions[e].Text.Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
+							switch (key)
+							{
+								case "change":
+									int FlangeNoise;
+									if (Interface.TryParseIntVb6(Arguments[0], out FlangeNoise))
+									{
+										ChangeFlangeSound(FlangeNoise, ref Data, BlockIndex);
+									}
+									break;
+								default:
+									//Not a number
+									break;
+
+							}
+							continue;
 						}
 					}
 					continue;
@@ -1304,14 +1361,27 @@ namespace OpenBve
 				// rail sounds
 				if (!PreviewOnly)
 				{
-					int j = Data.Blocks[i].RailType[0];
-					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
-					int f = j < Data.Structure.Flange.Length ? Data.Structure.Flange[j] : 0;
-					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-					Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
-					CurrentRunIndex = r;
-					CurrentFlangeIndex = f;
+					for (int k = 0; k < Data.Blocks[i].RunSounds.Length; k++)
+					{
+						//Get & check our variables
+						int r = Data.Blocks[i].RunSounds[k].RunSoundIndex;
+						int f = Data.Blocks[i].RunSounds[k].FlangeSoundIndex;
+						if (r != CurrentRunIndex || f != CurrentFlangeIndex)
+						{
+							//If either of these differ, we first need to resize the array for the current block
+							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
+							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							double d = Data.Blocks[i].RunSounds[k].TrackPosition - StartingDistance;
+							if (d > 0.0)
+							{
+								d = 0.0;
+							}
+							//Add event
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(d, CurrentRunIndex,CurrentFlangeIndex, r, f);
+							CurrentRunIndex = r;
+							CurrentFlangeIndex = f;
+						}
+					}
 				}
 				// point sound
 				if (!PreviewOnly)
