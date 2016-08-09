@@ -155,6 +155,10 @@
 			internal double Roll;
 			internal string Text;
 		}
+		private struct RailCycle {
+            internal int RailCycleIndex;
+            internal int CurrentCycle;
+        }
 		private class Block
 		{
 			internal int Background;
@@ -162,6 +166,7 @@
 			internal Game.Fog Fog;
 			internal bool FogDefined;
 			internal int[] Cycle;
+			internal RailCycle[] RailCycle;
 			internal double Height;
 			internal Rail[] Rail;
 			internal int[] RailType;
@@ -209,6 +214,7 @@
 			internal ObjectManager.UnifiedObject[] FreeObj;
 			internal ObjectManager.UnifiedObject[] Beacon;
 			internal int[][] Cycle;
+			internal int[][] RailCycle;
 			internal int[] Run;
 			internal int[] Flange;
 		}
