@@ -350,7 +350,7 @@ namespace OpenBve
 			{
 				if (Expressions[e].Text.StartsWith("#") || Expressions[e].Text.StartsWith("//"))
 				{
-					//Skip comments
+					//Skip comments and blank lines
 					continue;
 				}
 				double Number;
@@ -490,7 +490,7 @@ namespace OpenBve
 							}
 							continue;
 						}
-						if (command.StartsWith("signal") && !PreviewOnly && !command.StartsWith("signal.load"))
+						if (command.StartsWith("signal") && !PreviewOnly && !command.StartsWith("signal.load") && !command.StartsWith("signal.speedlimit"))
 						{
 							//Add signal
 							int ida = Expressions[e].Text.IndexOf('[');
@@ -783,7 +783,7 @@ namespace OpenBve
 												}
 												//Call the loader method
 												var StructureFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
-												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StructureFile, Encoding);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StructureFile);
 												LoadObjects(StructureFile, ref Data, enc, PreviewOnly);
 											}
 										}
@@ -805,7 +805,7 @@ namespace OpenBve
 													Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
 												}
 												var StationFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
-												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StationFile, Encoding);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(StationFile);
 												//Call the loader method
 												LoadStations(StationFile, ref Data, enc, PreviewOnly);
 											}
@@ -832,7 +832,7 @@ namespace OpenBve
 													Arguments[i] = Arguments[i].Substring(1, Arguments[i].Length - 2);
 												}
 												var SignalFile = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[i]);
-												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(SignalFile, Encoding);
+												Encoding enc = Bve5ScenarioParser.DetermineFileEncoding(SignalFile);
 												//Call the loader method
 												LoadSections(SignalFile, ref Data, enc);
 											}

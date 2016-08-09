@@ -214,9 +214,8 @@ namespace OpenBve
 
 		/// <summary>Attempts to determine the System.Text.Encoding value for a given BVE5 file</summary>
 		/// <param name="FileName">The filename</param>
-		/// <param name="SystemEncoding">The current openBVE encoding (Used by default if no ecoding is found)</param>
-		/// <returns>The detected encoding, or the current openBVE encoding if this is not found</returns>
-		internal static Encoding DetermineFileEncoding(string FileName, Encoding SystemEncoding)
+		/// <returns>The detected encoding, or UTF-8 if this is not found</returns>
+		internal static Encoding DetermineFileEncoding(string FileName)
 		{
 			using (StreamReader reader = new StreamReader(FileName))
 			{
@@ -231,5 +230,6 @@ namespace OpenBve
 				catch { return Encoding.UTF8; }
 			}
 		}
+
 	}
 }
