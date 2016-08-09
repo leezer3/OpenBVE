@@ -50,16 +50,7 @@ namespace OpenBve
 				// --KEY USED BY ROUTEFILE-- , --PATH TO OBJECT RELATIVE TO STRUCTURE FILE--
 
 				//Remove comments
-				int j = Lines[i].IndexOf('#');
-				if (j >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, j);
-				}
-				int k = Lines[i].IndexOf("//");
-				if (k >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, k);
-				}
+				Lines[i].TrimBVE5Comments();
 				if (Lines[i].Length == 0)
 				{
 					continue;
@@ -142,16 +133,7 @@ namespace OpenBve
 			int CurrentStation = 0;
 			for (int i = 1; i < Lines.Length; i++)
 			{
-				//Remove comments				int j = Lines[i].IndexOf('#');
-				if (j >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, j);
-				}
-				int k = Lines[i].IndexOf("//");
-				if (k >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, k);
-				}
+				//Remove comments				Lines[i].TrimBVE5Comments();
 				if (Lines[i].Length == 0)
 				{
 					continue;
@@ -310,16 +292,7 @@ namespace OpenBve
 			for (int i = 1; i < Lines.Length; i++)
 			{
 				//Remove comments
-				int h = Lines[i].IndexOf('#');
-				if (h >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, h);
-				}
-				int k = Lines[i].IndexOf("//");
-				if (k >= 0)
-				{
-					Lines[i] = Lines[i].Substring(0, k);
-				}
+				Lines[i].TrimBVE5Comments();
 				if (Lines[i].Length == 0)
 				{
 					continue;

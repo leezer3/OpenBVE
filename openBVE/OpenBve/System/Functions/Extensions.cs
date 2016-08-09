@@ -69,4 +69,25 @@ namespace OpenBve
             return true;
         }
     }
+
+	/// <summary>Provides extension methods for working with text</summary>
+	public static class TextExtensions
+	{
+		/// <summary>Trims BVE5 comments from a string.</summary>
+		/// <param name="String">The string to trim.</param>
+		public static string TrimBVE5Comments(this string String)
+		{
+			int j = String.IndexOf('#');
+			if (j >= 0)
+			{
+				String = String.Substring(0, j);
+			}
+			int k = String.IndexOf("//");
+			if (k >= 0)
+			{
+				String = String.Substring(0, k);
+			}
+			return String;
+		}
+	}
 }
