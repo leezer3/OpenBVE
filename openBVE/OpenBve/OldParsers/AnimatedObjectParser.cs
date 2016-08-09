@@ -420,11 +420,48 @@ namespace OpenBve
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
-												/*
-												 * RPN Functions were added by Michelle, and she stated that they should not be used other than in debugging
-												 * Not aware of any uses, but these should stay there anyway
-												 * 
-												 */
+												case "trackfollowerfunction":
+													try
+													{
+														Result.Objects[ObjectCount].TrackFollowerFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													} break;
+												case "axles":
+													try
+													{
+														double FrontAxlePosition;
+														double RearAxlePosition;
+														var splitValue = b.Split(',');
+														Double.TryParse(splitValue[0], out FrontAxlePosition);
+														Double.TryParse(splitValue[1], out RearAxlePosition);
+														if (FrontAxlePosition > RearAxlePosition)
+														{
+															Result.Objects[ObjectCount].FrontAxlePosition = FrontAxlePosition;
+															Result.Objects[ObjectCount].RearAxlePosition = RearAxlePosition;
+														}
+														else if (FrontAxlePosition < RearAxlePosition)
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false,"Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+														}
+														else
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Rear must not equal Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														}
+
+													}
+													catch(Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+													/*
+													 * RPN Functions were added by Michelle, and she stated that they should not be used other than in debugging
+													 * Not aware of any uses, but these should stay there anyway
+													 * 
+													 */
 												case "translatexfunctionrpn":
 													try
 													{

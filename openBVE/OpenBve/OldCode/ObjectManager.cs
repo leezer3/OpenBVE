@@ -137,14 +137,20 @@ namespace OpenBve {
 			internal string TranslateXScriptFile;
 			internal AnimationScript TranslateXAnimationScript;
 			/// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
-			internal string TranslateYScriptFile;
 			internal AnimationScript TranslateYAnimationScript;
+			internal string TranslateYScriptFile;
 			/// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
-			internal string TranslateZScriptFile;
 			internal AnimationScript TranslateZAnimationScript;
+			internal string TranslateZScriptFile;
+
+			internal FunctionScripts.FunctionScript TrackFollowerFunction;
+			//This section holds parameters used by the track following function
+			internal double FrontAxlePosition = 1;
+			internal double RearAxlePosition = -1;
 			// methods
 			internal bool IsFreeOfFunctions() {
 				if (this.StateFunction != null) return false;
+				if (this.TrackFollowerFunction != null) return false;
 				if (this.TranslateXFunction != null | this.TranslateYFunction != null | this.TranslateZFunction != null) return false;
 				if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
 				if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
@@ -158,6 +164,9 @@ namespace OpenBve {
 					Result.States[i].Position = this.States[i].Position;
 					Result.States[i].Object = CloneObject(this.States[i].Object);
 				}
+				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();
+				Result.FrontAxlePosition = this.FrontAxlePosition;
+				Result.RearAxlePosition = this.RearAxlePosition;
 				Result.TranslateXScriptFile = this.TranslateXScriptFile;
 				Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
 				Result.CurrentState = this.CurrentState;
@@ -244,6 +253,28 @@ namespace OpenBve {
 					Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
 				}
 			}
+		}
+
+		internal static double UpdateTrackFollowerScript(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)
+		{
+			if (Object.CurrentState == -1)
+			{
+				return 0;
+			}
+			double x = 0.0;
+			if (Object.TrackFollowerFunction != null)
+			{
+				if (UpdateFunctions)
+				{
+					x = Object.TrackFollowerFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain,
+						TimeElapsed);
+				}
+				else
+				{
+					x = Object.TrackFollowerFunction.LastResult;
+				}
+			}
+			return x;
 		}
 
 		/// <summary> Updates the position and state of the specified animated object</summary>
@@ -807,9 +838,15 @@ namespace OpenBve {
 			}
 		}
 
+		// animated world object
+		internal class AnimatedWorldObject
+		{
+			internal bool FollowsTrack = false;
+			internal TrackManager.TrackFollower FrontAxleFollower;
+			internal TrackManager.TrackFollower RearAxleFollower;
+			internal double FrontAxlePosition;
+			internal double RearAxlePosition;
 		/// <summary>Holds the properties for an animated object within the simulation world</summary>
-		internal class AnimatedWorldObject {
-			/// <summary>The object's absolute position wthin the 3-D world space</summary>
 			internal Vector3 Position;
 			/// <summary>The object's relative track position</summary>
 			internal double TrackPosition;
@@ -824,6 +861,11 @@ namespace OpenBve {
 			internal double Radius;
 			/// <summary>Whether the object is currently visible</summary>
 			internal bool Visible;
+			/*
+			 * NOT IMPLEMENTED, BUT REQUIRED LATER
+			 */
+			internal double CurrentRollDueToTopplingAngle = 0;
+			internal double CurrentRollDueToCantAngle = 0;
 		}
 		internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
 		internal static int AnimatedWorldObjectsUsed = 0;
@@ -878,6 +920,15 @@ namespace OpenBve {
 			AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
 			AnimatedWorldObjects[a].SectionIndex = SectionIndex;
 			AnimatedWorldObjects[a].TrackPosition = TrackPosition;
+			//Place track followers if required
+			if (Prototype.TrackFollowerFunction != null)
+			{
+				AnimatedWorldObjects[a].FollowsTrack = true;
+				AnimatedWorldObjects[a].FrontAxleFollower.TrackPosition = TrackPosition + Prototype.FrontAxlePosition;
+				AnimatedWorldObjects[a].RearAxleFollower.TrackPosition = TrackPosition + Prototype.RearAxlePosition;
+				AnimatedWorldObjects[a].FrontAxlePosition = Prototype.FrontAxlePosition;
+				AnimatedWorldObjects[a].RearAxlePosition = Prototype.RearAxlePosition;
+			}
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				if (AnimatedWorldObjects[a].Object.States[i].Object == null) {
 					AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
@@ -944,7 +995,27 @@ namespace OpenBve {
 								}
 							}
 						}
-						UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+						if (AnimatedWorldObjects[i].FollowsTrack)
+						{
+							//Calculate the distance travelled
+							double delta = UpdateTrackFollowerScript(ref AnimatedWorldObjects[i].Object, false, train,train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition,
+								AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up,AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+							
+							//Update the front and rear axle track followers
+							TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].FrontAxleFollower,(AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
+							TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].RearAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
+							//Update the base object position
+							UpdateTrackFollowingObject(ref AnimatedWorldObjects[i]);
+							//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
+							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition - AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition,
+								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+						}
+						else
+						{
+							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar,AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position,
+								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true,timeDelta);
+						}
+
 					} else {
 						AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
 					}
@@ -960,6 +1031,70 @@ namespace OpenBve {
 					}
 				}
 			}
+		}
+
+		/// <summary>Updates the position and rotation of an animated object which follows a track</summary>
+		/// <param name="Object">The animated object to update</param>
+		internal static void UpdateTrackFollowingObject(ref AnimatedWorldObject Object)
+		{
+			//Get vectors
+			double dx, dy, dz;
+			double ux, uy, uz;
+			double sx, sy, sz;
+			{
+				dx = Object.FrontAxleFollower.WorldPosition.X -
+					 Object.RearAxleFollower.WorldPosition.X;
+				dy = Object.FrontAxleFollower.WorldPosition.Y -
+					 Object.RearAxleFollower.WorldPosition.Y;
+				dz = Object.FrontAxleFollower.WorldPosition.Z -
+					 Object.RearAxleFollower.WorldPosition.Z;
+				double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+				dx *= t;
+				dy *= t;
+				dz *= t;
+				t = 1.0 / Math.Sqrt(dx * dx + dz * dz);
+				double ex = dx * t;
+				double ez = dz * t;
+				sx = ez;
+				sy = 0.0;
+				sz = -ex;
+				World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
+			}
+			
+			// apply position due to cant/toppling
+			{
+				double a = Object.CurrentRollDueToTopplingAngle +
+						   Object.CurrentRollDueToCantAngle;
+				double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
+				double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+				double cx = sx * x + ux * y;
+				double cy = sy * x + uy * y;
+				double cz = sz * x + uz * y;
+				Object.FrontAxleFollower.WorldPosition.X += cx;
+				Object.FrontAxleFollower.WorldPosition.Y += cy;
+				Object.FrontAxleFollower.WorldPosition.Z += cz;
+				Object.RearAxleFollower.WorldPosition.X += cx;
+				Object.RearAxleFollower.WorldPosition.Y += cy;
+				Object.RearAxleFollower.WorldPosition.Z += cz;
+			}
+			// apply rolling
+			{
+				double a = Object.CurrentRollDueToTopplingAngle -
+						   Object.CurrentRollDueToCantAngle;
+				double cosa = Math.Cos(a);
+				double sina = Math.Sin(a);
+				World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+				World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
+				Object.Up.X = ux;
+				Object.Up.Y = uy;
+				Object.Up.Z = uz;
+			}
+			Object.Direction.X = dx;
+			Object.Direction.Y = dy;
+			Object.Direction.Z = dz;
+			Object.Side.X = sx;
+			Object.Side.Y = sy;
+			Object.Side.Z = sz;
 		}
 
 		// load object
