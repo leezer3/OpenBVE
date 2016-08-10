@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -662,6 +663,93 @@ namespace OpenBve
 				Data.Blocks[BlockIndex].RunSounds[idx].FlangeSoundIndex = FlangeSoundIndex;
 			}
 			idx++;
+		}
+
+		/// <summary>Sets the route ambient light</summary>
+		/// <param name="Arguments">The command arguments</param>
+		static void SetAmbientLight(string[] Arguments)
+		{
+			float r = 1, g = 1, b = 1;
+			if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseFloatVb6(Arguments[0], out r))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			else if (r < 0 | r > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is required to be within the range from 0 to 1 in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+				r = r < 0 ? 0 : 1;
+			}
+			if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !Interface.TryParseFloatVb6(Arguments[1], out g))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "GreenValue is invalid in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			else if (g < 0 | g > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "GreenValue is required to be within the range from 0 to 1 in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+				g = g < 0 ? 0 : 1;
+			}
+			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !Interface.TryParseFloatVb6(Arguments[2], out b))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "BlueValue is invalid in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			else if (b < 0 | b > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "BlueValue is required to be within the range from 0 to 1 in Light.Ambient at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+				b = b < 0 ? 0 : 1;
+			}
+			Renderer.OptionAmbientColor = new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+		}
+
+		/// <summary>Sets the route diffuse light</summary>
+		/// <param name="Arguments">The command arguments</param>
+		static void SetDiffuseLight(string[] Arguments)
+		{
+			float r = 1, g = 1, b = 1;
+			if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseFloatVb6(Arguments[0], out r))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			else if (r < 0 | r > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is required to be within the range from 0 to 1 in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);				r = r < 0 ? 0 : 1;
+			}
+			if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !Interface.TryParseFloatVb6(Arguments[1], out g))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "GreenValue is invalid in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			else if (g < 0 | g > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "GreenValue is required to be within the range from 0 to 1 in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);				g = g < 0 ? 0 : 1;
+			}
+			if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !Interface.TryParseFloatVb6(Arguments[2], out b))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "BlueValue is invalid in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);			}
+			else if (b < 0 | b > 1)
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "BlueValue is required to be within the range from 0 to 1 in Light.Diffuse at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);				b = b < 0 ? 0 : 1;
+			}
+			Renderer.OptionDiffuseColor = new Color24((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+		}
+
+		/// <summary>Sets the direction of the route diffuse light</summary>
+		/// <param name="Arguments">The command arguments</param>
+		static void SetLightDirection(string[] Arguments)
+		{
+			double theta = 60.0, phi = -26.565051177078;
+			if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[0], out theta))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "Theta is invalid in Light.Direction at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[1], out phi))
+			{
+				//Interface.AddMessage(Interface.MessageType.Error, false, "Phi is invalid in Light.Direction at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+			}
+			theta *= 0.0174532925199433;
+			phi *= 0.0174532925199433;
+			double dx = Math.Cos(theta) * Math.Sin(phi);
+			double dy = -Math.Sin(theta);
+			double dz = Math.Cos(theta) * Math.Cos(phi);
+			Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
 		}
 	}
 }

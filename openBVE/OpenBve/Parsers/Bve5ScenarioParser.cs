@@ -550,6 +550,26 @@ namespace OpenBve
 							}
 							continue;
 						}
+						if (command.StartsWith("light.") && !PreviewOnly)
+						{
+							//Configures the route light							int ida = Expressions[e].Text.IndexOf('.');
+							int idb = Expressions[e].Text.IndexOf('(');
+							string key = Expressions[e].Text.Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
+							switch (key)
+							{
+								case "ambient":
+									SetAmbientLight(Arguments);
+									break;
+								case "diffuse":
+									SetDiffuseLight(Arguments);
+									break;
+								case "direction":
+									SetLightDirection(Arguments);
+									break;
+
+							}
+							continue;
+						}
 					}
 					continue;
 				}
