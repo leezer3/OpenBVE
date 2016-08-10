@@ -35,7 +35,7 @@
             this.tabcontrolTrainSelection = new System.Windows.Forms.TabControl();
             this.tabpageTrainBrowse = new System.Windows.Forms.TabPage();
             this.listviewTrainFolders = new System.Windows.Forms.ListView();
-            this.textboxTrainFolder = new System.Windows.Forms.TextBox();
+			this.textboxTrainFolder = new System.Windows.Forms.ComboBox();
             this.tabpageTrainRecently = new System.Windows.Forms.TabPage();
             this.listviewTrainRecently = new System.Windows.Forms.ListView();
             this.tabpageTrainDefault = new System.Windows.Forms.TabPage();
@@ -61,7 +61,7 @@
             this.tabcontrolRouteSelection = new System.Windows.Forms.TabControl();
             this.tabpageRouteBrowse = new System.Windows.Forms.TabPage();
             this.listviewRouteFiles = new System.Windows.Forms.ListView();
-            this.textboxRouteFolder = new System.Windows.Forms.TextBox();
+			this.textboxRouteFolder = new System.Windows.Forms.ComboBox();
             this.tabpageRouteRecently = new System.Windows.Forms.TabPage();
             this.listviewRouteRecently = new System.Windows.Forms.ListView();
             this.groupboxRouteDetails = new System.Windows.Forms.GroupBox();
@@ -5400,7 +5400,7 @@
         private System.Windows.Forms.TabPage tabpageRouteRecently;
         private System.Windows.Forms.GroupBox groupboxRouteDetails;
         private System.Windows.Forms.Label labelRoute;
-        private System.Windows.Forms.TextBox textboxRouteFolder;
+        private System.Windows.Forms.ComboBox textboxRouteFolder;
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Label labelStart;
         private System.Windows.Forms.Label labelTrain;
@@ -5414,7 +5414,7 @@
         private System.Windows.Forms.GroupBox groupboxTrainSelection;
         private System.Windows.Forms.TabControl tabcontrolTrainSelection;
         private System.Windows.Forms.TabPage tabpageTrainBrowse;
-        private System.Windows.Forms.TextBox textboxTrainFolder;
+        private System.Windows.Forms.ComboBox textboxTrainFolder;
         private System.Windows.Forms.TabPage tabpageTrainRecently;
         private System.Windows.Forms.GroupBox groupboxTrainDetails;
         private System.Windows.Forms.TabControl tabcontrolTrainDetails;
