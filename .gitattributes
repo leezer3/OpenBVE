@@ -1,0 +1,27 @@
+* text eol=auto
+*.fs text
+*.cs text
+*.csproj text
+*.sln text
+*.config text
+*.txt text
+*.xml text
+*.csv text
+*.controls text
+
+*.dll binary
+*.exe binary
+*.so binary
+*.dylib binary
+*.snk binary
+*.bmp binary
+*.dds binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.wav binary
+*.ogg binary
+*.zip binary
+*.pdf binary
+*.bin binary
+*.dat binary
