@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -681,6 +682,53 @@ namespace OpenBve
 
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
+			var directory = Path.GetDirectoryName(currentPackage.FileName);
+			try
+			{
+				if (directory == null)
+				{
+					throw new DirectoryNotFoundException();
+				}
+				if (!Directory.Exists(directory))
+				{
+					throw new DirectoryNotFoundException(directory);
+				}
+				System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				using (FileStream fs = File.OpenWrite(currentPackage.FileName))
+				{
+					//Just attempt to open the file with to write as a test
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex is DirectoryNotFoundException)
+				{
+					//We didn't find the directory
+					//In theory this shouldn't happen, but handle it just in case
+					if (ex.Message == string.Empty)
+					{
+						//Our filename is blank
+						MessageBox.Show(Interface.GetInterfaceString("packages_filename_empty"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
+					else
+					{
+						//Directory doesn't exist
+						MessageBox.Show(Interface.GetInterfaceString("packages_directory_missing") + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
+
+				}
+				else if (ex is UnauthorizedAccessException)
+				{
+					//No permissions from access control
+					MessageBox.Show(Interface.GetInterfaceString("packages_directory_nowrite") + directory, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				else
+				{
+					//Generic error
+					MessageBox.Show(Interface.GetInterfaceString("packages_file_generic") + currentPackage.FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				return;
+			}
 			HidePanels();
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
