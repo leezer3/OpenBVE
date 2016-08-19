@@ -1590,7 +1590,7 @@
 			// checkBoxUnloadTextures
 			// 
 			this.checkBoxUnloadTextures.AutoSize = true;
-			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(5, 58);
+			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 58);
 			this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
 			this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
 			this.checkBoxUnloadTextures.TabIndex = 13;
@@ -1642,7 +1642,7 @@
 			// checkBoxDisableDisplayLists
 			// 
 			this.checkBoxDisableDisplayLists.AutoSize = true;
-			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(5, 41);
+			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 41);
 			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
 			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
 			this.checkBoxDisableDisplayLists.TabIndex = 2;
@@ -1652,7 +1652,7 @@
 			// checkBoxLoadInAdvance
 			// 
 			this.checkBoxLoadInAdvance.AutoSize = true;
-			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(5, 24);
+			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(8, 24);
 			this.checkBoxLoadInAdvance.Name = "checkBoxLoadInAdvance";
 			this.checkBoxLoadInAdvance.Size = new System.Drawing.Size(106, 17);
 			this.checkBoxLoadInAdvance.TabIndex = 1;

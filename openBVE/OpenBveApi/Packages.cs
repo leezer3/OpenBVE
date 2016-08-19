@@ -203,55 +203,67 @@ namespace OpenBveApi.Packages
 		/// <param name="packageFiles">Returns via 'ref' a string containing a list of files in the package (Used to update the dialog)</param>
 		public static void ExtractPackage(Package currentPackage, string extractionDirectory, string databaseFolder, ref string packageFiles)
 		{
-			using (Stream stream = File.OpenRead(currentPackage.PackageFile))
+			int i = 0;
+			int j = 0;
+			string fp = String.Empty;
+			try
 			{
+				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
+				{
 
-				var reader = ArchiveFactory.Open(stream);
-				List<string> PackageFiles = new List<string>();
-				int i = 0;
-				foreach (var archiveEntry in reader.Entries)
-				{
-					
-					if (archiveEntry.Key.ToLowerInvariant() == "package.xml" || archiveEntry.Key.ToLowerInvariant() == "package.png" || archiveEntry.Key.ToLowerInvariant() == "package.rtf" || archiveEntry.Key.ToLowerInvariant() == "thumbs.db")
+					var reader = ArchiveFactory.Open(stream);
+					List<string> PackageFiles = new List<string>();
+					j = reader.Entries.Count();
+					foreach (var archiveEntry in reader.Entries)
 					{
-						//Skip package information files
-					}
-					else if (archiveEntry.Size == 0)
-					{
-						//Skip zero-byte files
-					}
-					else
-					{
-						//Extract everything else, preserving directory structure
-						archiveEntry.WriteToDirectory(extractionDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-						//We don't want to add directories to the list of files
-						if (!archiveEntry.IsDirectory)
+						fp = archiveEntry.Key;
+						if (archiveEntry.Key.ToLowerInvariant() == "package.xml" || archiveEntry.Key.ToLowerInvariant() == "package.png" ||
+						    archiveEntry.Key.ToLowerInvariant() == "package.rtf" || archiveEntry.Key.ToLowerInvariant() == "thumbs.db")
 						{
-							PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory, archiveEntry.Key));
+							//Skip package information files
 						}
+						else if (archiveEntry.Size == 0)
+						{
+							//Skip zero-byte files
+						}
+						else
+						{
+							//Extract everything else, preserving directory structure
+							archiveEntry.WriteToDirectory(extractionDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+							//We don't want to add directories to the list of files
+							if (!archiveEntry.IsDirectory)
+							{
+								PackageFiles.Add(OpenBveApi.Path.CombineFile(extractionDirectory, archiveEntry.Key));
+							}
+						}
+						i++;
+						OnProgressChanged(null, new ProgressReport((int) ((double) i / j * 100), archiveEntry.Key));
 					}
-					i++;
-					OnProgressChanged(null, new ProgressReport((int)((double)i / reader.Entries.Count() * 100), archiveEntry.Key));
+
+					string Text = "";
+					foreach (var FileName in PackageFiles)
+					{
+						Text += FileName + "\r\n";
+					}
+					packageFiles = Text;
+					//Write out the package file list
+					var fileListDirectory = OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed");
+					if (!Directory.Exists(fileListDirectory))
+					{
+						Directory.CreateDirectory(fileListDirectory);
+					}
+					var fileList = OpenBveApi.Path.CombineFile(fileListDirectory, currentPackage.GUID.ToUpper() + ".xml");
+					using (StreamWriter sw = new StreamWriter(fileList))
+					{
+						XmlSerializer listWriter = new XmlSerializer(typeof(List<string>));
+						listWriter.Serialize(sw, PackageFiles);
+					}
 				}
-				
-				string Text = "";
-				foreach (var FileName in PackageFiles)
-				{
-					Text += FileName + "\r\n";
-				}
-				packageFiles = Text;
-				//Write out the package file list
-				var fileListDirectory = OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed");
-				if (!Directory.Exists(fileListDirectory))
-				{
-					Directory.CreateDirectory(fileListDirectory);
-				}
-				var fileList = OpenBveApi.Path.CombineFile(fileListDirectory, currentPackage.GUID.ToUpper() + ".xml");
-				using (StreamWriter sw = new StreamWriter(fileList))
-				{
-					XmlSerializer listWriter = new XmlSerializer(typeof(List<string>));
-					listWriter.Serialize(sw, PackageFiles);
-				}
+
+			}
+			catch (Exception ex)
+			{
+				OnProblemReport(null, new ProblemReport((int)((double)i / j * 100), fp, ex));
 			}
 		}
 
@@ -263,67 +275,80 @@ namespace OpenBveApi.Packages
 		/// <param name="packageFiles">The list of files to save within the package</param>
 		public static void CreatePackage(Package currentPackage, CompressionType compressionType, string packageFile, string packageImage, List<PackageFile> packageFiles)
 		{
-			using (var zip = File.OpenWrite(packageFile))
+			int cf = 0;
+			
+			string fp = String.Empty;
+			try
 			{
-				SharpCompress.Common.ArchiveType type;
-				SharpCompress.Common.CompressionType compression;
-				switch (compressionType)
+				using (var zip = File.OpenWrite(packageFile))
 				{
-					case CompressionType.Zip:
-						type = ArchiveType.Zip;
-						compression = SharpCompress.Common.CompressionType.LZMA;
-						break;
-					case CompressionType.BZ2:
-						type = ArchiveType.Zip;
-						compression = SharpCompress.Common.CompressionType.BZip2;
-						break;
-					case CompressionType.TarGZ:
-						type = ArchiveType.Tar;
-						compression = SharpCompress.Common.CompressionType.GZip;
-						break;
-					default:
-						type = ArchiveType.Zip;
-						compression = SharpCompress.Common.CompressionType.LZMA;
-						break;
-				}
-				using (var zipWriter = WriterFactory.Open(zip, type, compression))
-				{
-					for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
+					SharpCompress.Common.ArchiveType type;
+					SharpCompress.Common.CompressionType compression;
+					switch (compressionType)
 					{
-						PackageFile currentFile = packageFiles[fileToAdd];
-						if (currentFile.absolutePath.EndsWith("thumbs.db", StringComparison.InvariantCultureIgnoreCase))
+						case CompressionType.Zip:
+							type = ArchiveType.Zip;
+							compression = SharpCompress.Common.CompressionType.LZMA;
+							break;
+						case CompressionType.BZ2:
+							type = ArchiveType.Zip;
+							compression = SharpCompress.Common.CompressionType.BZip2;
+							break;
+						case CompressionType.TarGZ:
+							type = ArchiveType.Tar;
+							compression = SharpCompress.Common.CompressionType.GZip;
+							break;
+						default:
+							type = ArchiveType.Zip;
+							compression = SharpCompress.Common.CompressionType.LZMA;
+							break;
+					}
+					using (var zipWriter = WriterFactory.Open(zip, type, compression))
+					{
+						for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
 						{
-							//Skip thumbs.db files, as they're often locked when creating or extracting
-							//Pointless too.....
-							continue;
+							cf = fileToAdd;
+							PackageFile currentFile = packageFiles[fileToAdd];
+							fp = currentFile.absolutePath;
+							if (currentFile.absolutePath.EndsWith("thumbs.db", StringComparison.InvariantCultureIgnoreCase))
+							{
+								//Skip thumbs.db files, as they're often locked when creating or extracting
+								//Pointless too.....
+								continue;
+							}
+							if (new FileInfo(currentFile.absolutePath).Length == 0)
+							{
+								//Don't archive zero-byte files, as Sharpcompress doesn't like them.....
+								continue;
+							}
+							//Add file to archive
+							zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
+							OnProgressChanged(null,
+								new ProgressReport((int) ((double) fileToAdd/packageFiles.Count*100), currentFile.absolutePath));
 						}
-						if (new FileInfo(currentFile.absolutePath).Length == 0)
+						//Create temp directory and XML file
+						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
+						Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempXML));
+						using (StreamWriter sw = new StreamWriter(tempXML))
 						{
-							//Don't archive zero-byte files, as Sharpcompress doesn't like them.....
-							continue;
+							//TODO: Let's see if we can get the serializer working everywhere in the solution.....
+							//Haven't checked whether these are read by the reader yet.
+							XmlSerializer listWriter = new XmlSerializer(typeof(SerializedPackage));
+							listWriter.Serialize(sw, new SerializedPackage {Package = currentPackage});
 						}
-						//Add file to archive
-						zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
-						OnProgressChanged(null, new ProgressReport((int)((double)fileToAdd / packageFiles.Count * 100), currentFile.absolutePath));
-					}
-					//Create temp directory and XML file
-					var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
-					Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempXML));
-					using (StreamWriter sw = new StreamWriter(tempXML))
-					{
-						//TODO: Let's see if we can get the serializer working everywhere in the solution.....
-						//Haven't checked whether these are read by the reader yet.
-						XmlSerializer listWriter = new XmlSerializer(typeof(SerializedPackage));
-						listWriter.Serialize(sw, new SerializedPackage{Package = currentPackage});
-					}
-					//Write out XML
-					zipWriter.Write("Package.xml",tempXML);
-					//Write out image
-					if (System.IO.File.Exists(packageImage))
-					{
-						zipWriter.Write("Package.png", packageImage);
+						//Write out XML
+						zipWriter.Write("Package.xml", tempXML);
+						//Write out image
+						if (System.IO.File.Exists(packageImage))
+						{
+							zipWriter.Write("Package.png", packageImage);
+						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				OnProblemReport(null, new ProblemReport((int)((double)cf / packageFiles.Count * 100), fp, ex));
 			}
 		}
 
@@ -446,6 +471,10 @@ namespace OpenBveApi.Packages
 			return currentPackage;
 		}
 
+		/*
+		 * Events
+		 */
+
 		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
 		public static event EventHandler<ProgressReport> ProgressChanged;
 
@@ -457,6 +486,19 @@ namespace OpenBveApi.Packages
 				ProgressChanged(null, progressReport);
 			}
 		}
+
+		/// <summary>Reports the current progress of a package installation or uninstallation</summary>
+		public static event EventHandler<ProblemReport> ProblemReport;
+
+		/// <summary>This is called whenever the progress changes</summary>
+		public static void OnProblemReport(object sender, ProblemReport problemReport)
+		{
+			if (ProblemReport != null)
+			{
+				ProblemReport(null, problemReport);
+			}
+		}
+
 	}
 
 	/// <summary>Defines a progress report</summary>
@@ -471,6 +513,25 @@ namespace OpenBveApi.Packages
 		{
 			Progress = progress;
 			CurrentFile = file;
+		}
+	}
+
+	/// <summary>Defines a progress report</summary>
+	public class ProblemReport : EventArgs
+	{
+		/// <summary>The current progress percentage</summary>
+		public int Progress { get; private set; }
+		/// <summary>The file currently being processed</summary>
+		public string CurrentFile { get; private set; }
+
+		/// <summary>The file currently being processed</summary>
+		public Exception Exception { get; private set; }
+		/// <summary>The progress report</summary>
+		public ProblemReport(int progress, string file, Exception ex)
+		{
+			Progress = progress;
+			CurrentFile = file;
+			Exception = ex;
 		}
 	}
 
