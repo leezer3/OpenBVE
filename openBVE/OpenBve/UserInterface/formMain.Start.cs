@@ -14,6 +14,10 @@ namespace OpenBve {
 
 		// route folder
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e) {
+			if (listviewRouteFiles.Columns.Count == 0)
+			{
+				return;
+			}
 			string Folder = textboxRouteFolder.Text;
 			try {
 				if (Folder.Length == 0) {
@@ -223,6 +227,10 @@ namespace OpenBve {
 
 		// train folder
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e) {
+			if (listviewTrainFolders.Columns.Count == 0)
+			{
+				return;
+			}
 			string Folder = textboxTrainFolder.Text;
 			try {
 				if (Folder.Length == 0) {

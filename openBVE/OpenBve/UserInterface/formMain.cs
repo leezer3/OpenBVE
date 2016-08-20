@@ -1195,6 +1195,10 @@ namespace OpenBve {
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			//Update the route/ train displays in case a package has been installed
+			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
+			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
+			
 		}
 		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e)
 		{

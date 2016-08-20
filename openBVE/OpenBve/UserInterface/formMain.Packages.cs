@@ -354,7 +354,7 @@ namespace OpenBve
 			}
 			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_failure_error");
 			
-			label1.Text = Interface.GetInterfaceString("packages_success");
+			buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
 			//Non-localised string as this is a specific error message
 			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" + e.CurrentFile + "at "+ e.Progress + "% completion.";
 			//Create crash dump file
@@ -790,7 +790,7 @@ namespace OpenBve
 					labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
 					labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
 					labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
-					label1.Text = Interface.GetInterfaceString("packages_success");
+					buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
 				}
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
@@ -1240,7 +1240,8 @@ namespace OpenBve
 		{
 			bool DialogOK = false;
 			string[] files = null;
-			string folder = "";
+			string folder = String.Empty;
+			string folderDisplay = String.Empty;
 			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
 				//Mono doesn't like our fancy folder selector
@@ -1261,6 +1262,7 @@ namespace OpenBve
 				{
 					DialogOK = true;
 					folder = System.IO.Directory.GetParent(dialog.FileName).ToString();
+					folderDisplay = dialog.FileName;
 					files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
 				}
 
@@ -1269,7 +1271,7 @@ namespace OpenBve
 			if (DialogOK && files.Length != 0)
 			{
 
-				filesToPackageBox.Text += folder;
+				filesToPackageBox.Text += folderDisplay;
 				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{

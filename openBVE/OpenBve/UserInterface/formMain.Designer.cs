@@ -109,7 +109,7 @@
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelNumberZero = new System.Windows.Forms.Label();
 			this.labelTimeAcceleration = new System.Windows.Forms.Label();
 			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
 			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
@@ -1575,7 +1575,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
 			this.groupBoxAdvancedOptions.Controls.Add(this.label2);
-			this.groupBoxAdvancedOptions.Controls.Add(this.label1);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
 			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
 			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
@@ -1607,14 +1607,14 @@
 			this.label2.TabIndex = 12;
 			this.label2.Text = "5";
 			// 
-			// label1
+			// labelNumberZero
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(147, 120);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(13, 13);
-			this.label1.TabIndex = 11;
-			this.label1.Text = "0";
+			this.labelNumberZero.AutoSize = true;
+			this.labelNumberZero.Location = new System.Drawing.Point(147, 120);
+			this.labelNumberZero.Name = "labelNumberZero";
+			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberZero.TabIndex = 11;
+			this.labelNumberZero.Text = "0";
 			// 
 			// labelTimeAcceleration
 			// 
@@ -4863,7 +4863,6 @@
 			// pictureBoxProcessing
 			// 
 			this.pictureBoxProcessing.Anchor = System.Windows.Forms.AnchorStyles.None;
-			this.pictureBoxProcessing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pictureBoxProcessing.Location = new System.Drawing.Point(154, 34);
 			this.pictureBoxProcessing.Name = "pictureBoxProcessing";
 			this.pictureBoxProcessing.Size = new System.Drawing.Size(350, 350);
@@ -5545,7 +5544,7 @@
         private System.Windows.Forms.Panel panelTrainEncoding;
         private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelNumberZero;
         private System.Windows.Forms.Label labelTimeAcceleration;
         private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
         private System.Windows.Forms.Label labelTransparencyQuality;
