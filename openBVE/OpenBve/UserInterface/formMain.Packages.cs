@@ -83,7 +83,7 @@ namespace OpenBve
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
-				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false, false, false);
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
 				return;
 			}
 			else
@@ -626,7 +626,6 @@ namespace OpenBve
 
 		private void buttonReccomends_Click(object sender, EventArgs e)
 		{
-			//dependantPackage.Version = null;
 			switch (dependantPackage.PackageType)
 			{
 				case PackageType.Route:
