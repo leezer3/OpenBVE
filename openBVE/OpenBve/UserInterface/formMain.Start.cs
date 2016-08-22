@@ -14,6 +14,9 @@ namespace OpenBve {
 
 		// route folder
 		private string rf;
+		private FileSystemWatcher routeWatcher;
+		private FileSystemWatcher trainWatcher;
+
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e) {
 			if (listviewRouteFiles.Columns.Count == 0)
 			{
@@ -24,11 +27,35 @@ namespace OpenBve {
 			{
 				Folder = Directory.GetParent(Folder).ToString();
 			}
+			
 			if (rf != Folder)
 			{
 				populateRouteList(Folder);
 			}
 			rf = Folder;
+			
+			routeWatcher = new FileSystemWatcher();
+			routeWatcher.Path = Folder + "\\";
+			routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			routeWatcher.Filter = "*.*";
+			routeWatcher.Changed += onRouteFolderChanged;
+			routeWatcher.EnableRaisingEvents = true;
+			
+			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		private void onRouteFolderChanged(object sender, EventArgs e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					onRouteFolderChanged(this, e);
+				});
+				return;
+			}
+			populateRouteList(rf);
 			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
@@ -259,6 +286,29 @@ namespace OpenBve {
 				populateTrainList(Folder);
 			}
 			tf = Folder;
+
+			trainWatcher = new FileSystemWatcher();
+			trainWatcher.Path = Folder + "\\";
+			trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			trainWatcher.Filter = "*.*";
+			trainWatcher.Changed += onTrainFolderChanged;
+			trainWatcher.EnableRaisingEvents = true;
+
+			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		private void onTrainFolderChanged(object sender, EventArgs e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					onTrainFolderChanged(this, e);
+				});
+				return;
+			}
+			populateTrainList(tf);
 			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 

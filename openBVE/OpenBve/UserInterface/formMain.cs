@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -437,6 +438,7 @@ namespace OpenBve {
 			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
+			
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
