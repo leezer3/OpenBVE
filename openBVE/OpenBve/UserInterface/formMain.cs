@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -164,6 +165,12 @@ namespace OpenBve {
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
 				Item.ImageKey = "route";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
+				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
+				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
+				{
+					textboxRouteFolder.Items.Add(RoutePath);
+				}
+
 			}
 			listviewRouteRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// train selection
@@ -182,6 +189,11 @@ namespace OpenBve {
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
 				Item.ImageKey = "train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
+				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
+				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(TrainPath))
+				{
+					textboxTrainFolder.Items.Add(TrainPath);
+				}
 			}
 			listviewTrainRecently.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			// text boxes
@@ -425,6 +437,8 @@ namespace OpenBve {
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
 			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
+			Manipulation.ProblemReport += OnWorkerReportsProblem;
+			
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
@@ -1183,6 +1197,10 @@ namespace OpenBve {
 			radiobuttonControls.BackColor = SystemColors.ButtonFace;
 			radiobuttonOptions.BackColor = SystemColors.ButtonFace;
 			radioButtonPackages.BackColor = SystemColors.ButtonFace;
+			//Update the route/ train displays in case a package has been installed
+			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
+			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
+			
 		}
 		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e)
 		{

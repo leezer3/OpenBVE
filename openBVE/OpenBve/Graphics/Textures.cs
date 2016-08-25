@@ -61,6 +61,14 @@ namespace OpenBve
 			* 
 			* There appears to be a timing issue somewhere whilst loading, as this only happens intermittantly
 			*/
+			if (RegisteredTexturesCount > RegisteredTextures.Length)
+			{
+				/* BUG:
+				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashses possibly?)
+				 * This then crashes when we attempt to itinerate the array, so reset it...
+				 */
+				RegisteredTexturesCount = RegisteredTextures.Length;
+			}
 			if (RegisteredTexturesCount != 0)
 			{
 				try
@@ -78,6 +86,7 @@ namespace OpenBve
 				{
 				}
 			}
+			
 			/*
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.

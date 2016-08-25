@@ -13,8 +13,56 @@ namespace OpenBve {
 		// ===============
 
 		// route folder
+		private string rf;
+		private FileSystemWatcher routeWatcher;
+		private FileSystemWatcher trainWatcher;
+
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e) {
+			if (listviewRouteFiles.Columns.Count == 0)
+			{
+				return;
+			}
 			string Folder = textboxRouteFolder.Text;
+			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder))
+			{
+				Folder = Directory.GetParent(Folder).ToString();
+			}
+			
+			if (rf != Folder)
+			{
+				populateRouteList(Folder);
+			}
+			rf = Folder;
+			
+			routeWatcher = new FileSystemWatcher();
+			routeWatcher.Path = Folder + "\\";
+			routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			routeWatcher.Filter = "*.*";
+			routeWatcher.Changed += onRouteFolderChanged;
+			routeWatcher.EnableRaisingEvents = true;
+			
+			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		private void onRouteFolderChanged(object sender, EventArgs e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					onRouteFolderChanged(this, e);
+				});
+				return;
+			}
+			populateRouteList(rf);
+			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		/// <summary>Populates the route display list from the selected folder</summary>
+		/// <param name="Folder">The folder containing route files</param>
+		private void populateRouteList(string Folder)
+		{
 			try {
 				if (Folder.Length == 0) {
 					// drives
@@ -93,7 +141,6 @@ namespace OpenBve {
 					} catch { }
 				}
 			} catch { }
-			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
 		// route files
@@ -222,60 +269,124 @@ namespace OpenBve {
 		// ===============
 
 		// train folder
+
+		private string tf;
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e) {
+			if (listviewTrainFolders.Columns.Count == 0)
+			{
+				return;
+			}
 			string Folder = textboxTrainFolder.Text;
-			try {
-				if (Folder.Length == 0) {
+			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder))
+			{
+				Folder = Directory.GetParent(Folder).ToString();
+			}
+			if (tf != Folder)
+			{
+				populateTrainList(Folder);
+			}
+			tf = Folder;
+
+			trainWatcher = new FileSystemWatcher();
+			trainWatcher.Path = Folder + "\\";
+			trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+			trainWatcher.Filter = "*.*";
+			trainWatcher.Changed += onTrainFolderChanged;
+			trainWatcher.EnableRaisingEvents = true;
+
+			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		private void onTrainFolderChanged(object sender, EventArgs e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					onTrainFolderChanged(this, e);
+				});
+				return;
+			}
+			populateTrainList(tf);
+			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+		}
+
+		/// <summary>Populates the train display list from the selected folder</summary>
+		/// <param name="Folder">The folder containing train folders</param>
+		private void populateTrainList(string Folder)
+		{
+			try
+			{
+				if (Folder.Length == 0)
+				{
 					// drives
 					listviewTrainFolders.Items.Clear();
-					try { // MoMA says that GetDrives is flagged with [MonoTodo]
+					try
+					{ // MoMA says that GetDrives is flagged with [MonoTodo]
 						System.IO.DriveInfo[] driveInfos = System.IO.DriveInfo.GetDrives();
-						for (int i = 0; i < driveInfos.Length; i++) {
+						for (int i = 0; i < driveInfos.Length; i++)
+						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
 							Item.ImageKey = "folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewTrainFolders.Tag = null;
 						}
-					} catch { }
-				} else if (System.IO.Directory.Exists(Folder)) {
+					}
+					catch { }
+				}
+				else if (System.IO.Directory.Exists(Folder))
+				{
 					listviewTrainFolders.Items.Clear();
 					// parent
-					try {
+					try
+					{
 						System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-						if (Info != null) {
+						if (Info != null)
+						{
 							ListViewItem Item = listviewTrainFolders.Items.Add("..");
 							Item.ImageKey = "parent";
 							Item.Tag = Info.FullName;
 							listviewTrainFolders.Tag = Info.FullName;
-						} else {
+						}
+						else
+						{
 							ListViewItem Item = listviewTrainFolders.Items.Add("..");
 							Item.ImageKey = "parent";
 							Item.Tag = "";
 							listviewTrainFolders.Tag = "";
 						}
-					} catch { }
+					}
+					catch { }
 					// folders
-					try {
+					try
+					{
 						string[] Folders = System.IO.Directory.GetDirectories(Folder);
 						Array.Sort<string>(Folders);
-						for (int i = 0; i < Folders.Length; i++) {
-							try {
+						for (int i = 0; i < Folders.Length; i++)
+						{
+							try
+							{
 								System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
-								if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0) {
+								if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0)
+								{
 									string folderName = System.IO.Path.GetFileName(Folders[i]);
-									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.') {
+									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
+									{
 										string File = OpenBveApi.Path.CombineFile(Folders[i], "train.dat");
 										ListViewItem Item = listviewTrainFolders.Items.Add(folderName);
 										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
 										Item.Tag = Folders[i];
 									}
 								}
-							} catch { }
+							}
+							catch { }
 						}
-					} catch { }
+					}
+					catch { }
 				}
-			} catch { }
-			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
+			catch { }
 		}
 
 		// train folders

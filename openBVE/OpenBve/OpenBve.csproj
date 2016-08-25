@@ -114,6 +114,9 @@
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
+    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
+    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -243,7 +246,7 @@
     <Compile Include="OldParsers\ExtensionsCfgParser.cs" />
     <Compile Include="OldParsers\Panel2CfgParser.cs" />
     <Compile Include="OldParsers\CsvB3dObjectParser.cs" />
-    <Compile Include="OldParsers\CsvRwRouteParser.cs" />
+    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.cs" />
     <Compile Include="OldParsers\SoundCfgParser.cs" />
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />

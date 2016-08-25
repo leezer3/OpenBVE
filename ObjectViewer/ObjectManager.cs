@@ -1775,7 +1775,19 @@ namespace OpenBve
         // create object
         internal static void CreateObject(UnifiedObject Prototype, World.Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
         {
-            CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
+		if (Prototype != null)
+		{
+			CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
+		}
+		else
+		{
+			int a = ObjectsUsed;
+			if (a >= Objects.Length)
+			{
+				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
+			}
+			ObjectsUsed++;
+		}
         }
         internal static void CreateObject(UnifiedObject Prototype, World.Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
         {
@@ -2009,7 +2021,7 @@ namespace OpenBve
             int n = 0;
             for (int i = 0; i < ObjectsUsed; i++)
             {
-                if (!Objects[i].Dynamic)
+                if (Objects[i] != null && !Objects[i].Dynamic)
                 {
                     ObjectsSortedByStart[n] = i;
                     ObjectsSortedByEnd[n] = i;
@@ -2030,7 +2042,7 @@ namespace OpenBve
             double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
             for (int i = 0; i < ObjectsUsed; i++)
             {
-                if (!Objects[i].Dynamic)
+                if (Objects[i] != null && !Objects[i].Dynamic)
                 {
                     if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
                     {

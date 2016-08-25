@@ -8,14 +8,20 @@ namespace OpenBve {
 
 		// instruction set
 		internal enum Instructions : int {
-			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
-			StackCopy, StackSwap,
-			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, MathRandom, MathRandomInt,
+			SystemConstant, SystemConstantArray,
+			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, 
 			MathIncrement, MathDecrement, MathFusedMultiplyAdd,
 			MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
 			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
 			CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 			LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
+
+			/*
+			 * Functions after this point may not return the same result when itinerated twice
+			 */
+			SystemHalt,   SystemValue, SystemDelta,
+			StackCopy, StackSwap,
+			MathRandom, MathRandomInt,
 			TimeSecondsSinceMidnight, CameraDistance,CameraView,
 			TrainCars,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
@@ -30,7 +36,9 @@ namespace OpenBve {
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 			SafetyPluginAvailable, SafetyPluginState,
 			TimetableVisible,
-			SectionAspectNumber
+			SectionAspectNumber,
+
+			
 		}
 
 		// function script
@@ -43,9 +51,30 @@ namespace OpenBve {
 				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
 				return this.LastResult;
 			}
+			/// <summary>Checks whether the specified function will return a constant result</summary>
+			internal bool ConstantResult()
+			{
+				return CheckForConstantResult(this);
+			}
 			internal FunctionScript Clone() {
 				return (FunctionScript)this.MemberwiseClone();
 			}
+		}
+
+		private static bool CheckForConstantResult(FunctionScript Function)
+		{
+			if (Function.Instructions.Length == 1 && Function.Instructions[0] == Instructions.SystemConstant)
+			{
+				return true;
+			}
+			for (int i = 0; i < Function.Instructions.Length; i++)
+			{
+				if ((int) Function.Instructions[i] >= (int) Instructions.LogicalXor)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		// execute function script

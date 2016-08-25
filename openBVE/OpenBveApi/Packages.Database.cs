@@ -406,13 +406,6 @@ namespace OpenBveApi.Packages
 				}
 				return tempList;
 			}
-			if (TrainFiles > 2 && ImageFiles > 2 && SoundFiles > 2)
-			{
-				for (int j = 0; j < tempList.Count; j++)
-				{
-					tempList[j].relativePath = "\\Train" + tempList[j].relativePath;
-				}
-			}
 			//Can't decide, so just return the base list......
 			return tempList;
 		}

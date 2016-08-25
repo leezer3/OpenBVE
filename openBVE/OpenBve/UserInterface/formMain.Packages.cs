@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -25,6 +26,7 @@ namespace OpenBve
 		internal bool RemoveFromDatabase = true;
 		internal Package dependantPackage;
 		internal List<string> selectedDependacies = new List<string>();
+		internal bool ProblemEncountered = false;
 
 		
 
@@ -81,7 +83,7 @@ namespace OpenBve
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
-				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, false, false, false);
+				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
 				return;
 			}
 			else
@@ -226,6 +228,7 @@ namespace OpenBve
 
 		private void Extract(Package packageToReplace = null)
 		{
+			ProblemEncountered = false;
 			panelPleaseWait.Show();
 			workerThread.DoWork += delegate
 			{
@@ -244,58 +247,65 @@ namespace OpenBve
 				}
 				string PackageFiles = "";
 				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, currentDatabaseFolder, ref PackageFiles);
-				textBoxFilesInstalled.Invoke((MethodInvoker) delegate
+				if (ProblemEncountered == false)
 				{
-					textBoxFilesInstalled.Text = PackageFiles;
-				});
+					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
+					{
+						textBoxFilesInstalled.Text = PackageFiles;
+					});
+				}
 			};
 			workerThread.RunWorkerCompleted += delegate
 			{
-				switch (currentPackage.PackageType)
+				if (!ProblemEncountered)
 				{
-					case PackageType.Route:
-						if (packageToReplace != null)
-						{
-							for (int i = Database.currentDatabase.InstalledRoutes.Count; i > 0; i--)
+					
+					switch (currentPackage.PackageType)
+					{
+						case PackageType.Route:
+							if (packageToReplace != null)
 							{
-								if (Database.currentDatabase.InstalledRoutes[i - 1].GUID == currentPackage.GUID)
+								for (int i = Database.currentDatabase.InstalledRoutes.Count; i > 0; i--)
 								{
-									Database.currentDatabase.InstalledRoutes.Remove(Database.currentDatabase.InstalledRoutes[i - 1]);
+									if (Database.currentDatabase.InstalledRoutes[i - 1].GUID == currentPackage.GUID)
+									{
+										Database.currentDatabase.InstalledRoutes.Remove(Database.currentDatabase.InstalledRoutes[i - 1]);
+									}
 								}
 							}
-						}
-						Database.currentDatabase.InstalledRoutes.Add(currentPackage);
-						break;
-					case PackageType.Train:
-						if (packageToReplace != null)
-						{
-							for (int i = Database.currentDatabase.InstalledTrains.Count; i > 0; i--)
+							Database.currentDatabase.InstalledRoutes.Add(currentPackage);
+							break;
+						case PackageType.Train:
+							if (packageToReplace != null)
 							{
-								if (Database.currentDatabase.InstalledTrains[i - 1].GUID == currentPackage.GUID)
+								for (int i = Database.currentDatabase.InstalledTrains.Count; i > 0; i--)
 								{
-									Database.currentDatabase.InstalledTrains.Remove(Database.currentDatabase.InstalledTrains[i - 1]);
+									if (Database.currentDatabase.InstalledTrains[i - 1].GUID == currentPackage.GUID)
+									{
+										Database.currentDatabase.InstalledTrains.Remove(Database.currentDatabase.InstalledTrains[i - 1]);
+									}
 								}
 							}
-						}
-						Database.currentDatabase.InstalledTrains.Add(currentPackage);
-						break;
-					default:
-						if (packageToReplace != null)
-						{
-							for (int i = Database.currentDatabase.InstalledOther.Count; i > 0; i--)
+							Database.currentDatabase.InstalledTrains.Add(currentPackage);
+							break;
+						default:
+							if (packageToReplace != null)
 							{
-								if (Database.currentDatabase.InstalledOther[i - 1].GUID == currentPackage.GUID)
+								for (int i = Database.currentDatabase.InstalledOther.Count; i > 0; i--)
 								{
-									Database.currentDatabase.InstalledOther.Remove(Database.currentDatabase.InstalledOther[i - 1]);
+									if (Database.currentDatabase.InstalledOther[i - 1].GUID == currentPackage.GUID)
+									{
+										Database.currentDatabase.InstalledOther.Remove(Database.currentDatabase.InstalledOther[i - 1]);
+									}
 								}
 							}
-						}
-						Database.currentDatabase.InstalledOther.Add(currentPackage);
-						break;
+							Database.currentDatabase.InstalledOther.Add(currentPackage);
+							break;
+					}
+					labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
+					labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_success_header");
+					labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_success_files");
 				}
-				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
-				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_success_header");
-				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_install_success_files");
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
@@ -317,6 +327,38 @@ namespace OpenBve
 			//Actually change the controls text
 			labelProgressPercent.Text = e.Progress + @"%";
 			labelProgressFile.Text = e.CurrentFile;
+		}
+
+		private void OnWorkerReportsProblem(object sender, ProblemReport e)
+		{
+			//We need to invoke the control so we don't get a cross thread exception
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker)delegate
+				{
+					OnWorkerReportsProblem(sender, e);
+				});
+				return;
+			}
+			//Update the text, but don't change the tab- Do this when the worker terminates
+			ProblemEncountered = true;
+			if (creatingPackage)
+			{
+				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_failure");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_failure_header");
+			}
+			else
+			{
+				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_failure");
+				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_failure_header");
+			}
+			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_failure_error");
+			
+			buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
+			//Non-localised string as this is a specific error message
+			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" + e.CurrentFile + "at "+ e.Progress + "% completion.";
+			//Create crash dump file
+			CrashHandler.LogCrash(e.Exception.ToString());
 		}
 
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
@@ -584,7 +626,6 @@ namespace OpenBve
 
 		private void buttonReccomends_Click(object sender, EventArgs e)
 		{
-			//dependantPackage.Version = null;
 			switch (dependantPackage.PackageType)
 			{
 				case PackageType.Route:
@@ -681,28 +722,75 @@ namespace OpenBve
 
 		private void buttonCreatePackage_Click(object sender, EventArgs e)
 		{
+			var directory = Path.GetDirectoryName(currentPackage.FileName);
+			try
+			{
+				if (directory == null)
+				{
+					throw new DirectoryNotFoundException();
+				}
+				if (!Directory.Exists(directory))
+				{
+					throw new DirectoryNotFoundException(directory);
+				}
+				System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				using (FileStream fs = File.OpenWrite(currentPackage.FileName))
+				{
+					//Just attempt to open the file with to write as a test
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex is DirectoryNotFoundException)
+				{
+					//We didn't find the directory
+					//In theory this shouldn't happen, but handle it just in case
+					if (ex.Message == string.Empty)
+					{
+						//Our filename is blank
+						MessageBox.Show(Interface.GetInterfaceString("packages_filename_empty"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
+					else
+					{
+						//Directory doesn't exist
+						MessageBox.Show(Interface.GetInterfaceString("packages_directory_missing") + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					}
+
+				}
+				else if (ex is UnauthorizedAccessException)
+				{
+					//No permissions from access control
+					MessageBox.Show(Interface.GetInterfaceString("packages_directory_nowrite") + directory, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				else
+				{
+					//Generic error
+					MessageBox.Show(Interface.GetInterfaceString("packages_file_generic") + currentPackage.FileName, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				return;
+			}
 			HidePanels();
 			panelPleaseWait.Show();
+			ProblemEncountered = false;
 			workerThread.DoWork += delegate
 			{
-				Manipulation.ProgressChanged += OnWorkerProgressChanged;
 				Manipulation.CreatePackage(currentPackage, Interface.CurrentOptions.packageCompressionType, currentPackage.FileName, ImageFile, filesToPackage);
-				string text = "";
-				for (int i = 0; i < filesToPackage.Count; i++)
-				{
-					text += filesToPackage[i].relativePath + "\r\n";
-				}
-				textBoxFilesInstalled.Invoke((MethodInvoker) delegate
-				{
-					textBoxFilesInstalled.Text = text;
-				});
 			};
 
 			workerThread.RunWorkerCompleted += delegate {
-				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
-				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
-				labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
-				label1.Text = Interface.GetInterfaceString("packages_success");
+				if (ProblemEncountered == false)
+				{
+					string text = "";
+					for (int i = 0; i < filesToPackage.Count; i++)
+					{
+						text += filesToPackage[i].relativePath + "\r\n";
+					}
+					textBoxFilesInstalled.Text = text;
+					labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_creation_success");
+					labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_success_header");
+					labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_success_files");
+					buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
+				}
 				panelPleaseWait.Hide();
 				panelSuccess.Show();
 			};
@@ -1151,7 +1239,8 @@ namespace OpenBve
 		{
 			bool DialogOK = false;
 			string[] files = null;
-			string folder = "";
+			string folder = String.Empty;
+			string folderDisplay = String.Empty;
 			if (OpenTK.Configuration.RunningOnMacOS || OpenTK.Configuration.RunningOnLinux)
 			{
 				//Mono doesn't like our fancy folder selector
@@ -1172,6 +1261,7 @@ namespace OpenBve
 				{
 					DialogOK = true;
 					folder = System.IO.Directory.GetParent(dialog.FileName).ToString();
+					folderDisplay = dialog.FileName;
 					files = System.IO.Directory.GetFiles(dialog.FileName, "*.*", System.IO.SearchOption.AllDirectories);
 				}
 
@@ -1180,7 +1270,7 @@ namespace OpenBve
 			if (DialogOK && files.Length != 0)
 			{
 
-				filesToPackageBox.Text += folder;
+				filesToPackageBox.Text += folderDisplay;
 				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
@@ -1386,18 +1476,7 @@ namespace OpenBve
 			}
 			workerThread = null;
 			workerThread = new BackgroundWorker();
-		}
-
-		//This method is used to keep the progress file centered
-		private void labelProgressFile_SizeChanged(object sender, EventArgs e)
-		{
-			var Position = (this.ClientSize.Width - labelProgressFile.Size.Width) / 2;
-			if (Position < 2)
-			{
-				Position = 2;
-			}
-			labelProgressFile.Left = Position;
-		}
+		}	
 
 
 		private void buttonBack_Click(object sender, EventArgs e)
