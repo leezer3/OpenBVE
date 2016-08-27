@@ -35,7 +35,7 @@ namespace OpenBve {
 			rf = Folder;
 			
 			routeWatcher = new FileSystemWatcher();
-			routeWatcher.Path = Folder + "\\";
+			routeWatcher.Path = Folder;
 			routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 			routeWatcher.Filter = "*.*";
 			routeWatcher.Changed += onRouteFolderChanged;
@@ -288,7 +288,7 @@ namespace OpenBve {
 			tf = Folder;
 
 			trainWatcher = new FileSystemWatcher();
-			trainWatcher.Path = Folder + "\\";
+			trainWatcher.Path = Folder;
 			trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 			trainWatcher.Filter = "*.*";
 			trainWatcher.Changed += onTrainFolderChanged;

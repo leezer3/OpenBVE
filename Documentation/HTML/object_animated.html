@@ -165,6 +165,9 @@ These define the directions for the <em>TextureShiftXFunction</em> and <em>Textu
 <b>TextureShiftYFunction = <em>Formula</em></b></font></td></tr></table>
 These define the functions to shift the texture in the respective direction. The texture is shifted by the return value of <em>Formula</em> in texture coordinates. The integer part of the result is ignored, and a fractional part of 0.5 represents moving the texture half way. The SetTextureCoordinate commands in the object file define the coordinates, which are then added the outcome of these formulas.<br /><br /><table border="0">
 <tr style="height:16"><td></td></tr>
+<table border="0"><tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>TrackFollowerFunction = <em>Formula</em></b><br /></font></td></tr></table>
+This defines the function which moves an object along the path of <b>Rail 0</b>. <em>Formula</em> must return a distance in meters, for which the object is then moved, respecting the curves and height changes of <b>Rail 0</b>.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>TextureOverride = <em>Value</em></b></font></td></tr>
 </table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
