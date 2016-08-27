@@ -894,7 +894,18 @@ This command loads a background image to be later used by Track.Back.<br /><br /
 <b><em>GroundStructureIndex</em></b>: A non-negative integer indicating the ground structure index for which a cycle is to be defined.<br />
 <b><em>GroundStructureIndex<sub>i</sub></em></b>: A non-negative integer indicating a ground structure that has been previously loaded via Structure.Ground.
 </font></td></tr></table>
-When usually using Track.Ground(<em>GroundStructureIndex</em>), the same ground structure object will be repeatedly placed in every block. Via Cycle.Ground, you can override this behavior and automatically cycle through a series of different objects when using Track.Ground(<em>GroundStructureIndex</em>). The cycle repeats indefinately, where <em>GroundStructureIndex<sub>0</sub></em> starts at track position 0. Technically, the <em>i</em> in <em>GroundStructureIndex<sub>i</sub></em> chosen for a particular track position <em>p</em> is <tt>Mod[<em>p</em> / BlockLength, <em>n</em>]</tt>.<br /><br />Consider the following definition:<br /><table>
+When usually using Track.Ground(<em>GroundStructureIndex</em>), the same ground structure object will be repeatedly placed in every block. Via Cycle.Ground, you can override this behavior and automatically cycle through a series of different objects when using Track.Ground(<em>GroundStructureIndex</em>). The cycle repeats indefinately, where <em>GroundStructureIndex<sub>0</sub></em> starts at track position 0. Technically, the <em>i</em> in <em>GroundStructureIndex<sub>i</sub></em> chosen for a particular track position <em>p</em> is <tt>Mod[<em>p</em> / BlockLength, <em>n</em>]</tt>.<br /><br /><table>
+
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Cycle.Rail(<em>RailStructureIndex</em>)<font color="gray">.Params</font> <em>RailStructureIndex<sub>0</sub></em>; <em>RailStructureIndex<sub>1</sub></em>; <em>RailStructureIndex<sub>2</sub></em>; ...; <em>RailStructureIndex<sub>n-1</sub></em></b></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>RailStructureIndex</em></b>: A non-negative integer indicating the rail structure index for which a cycle is to be defined.<br />
+<b><em>RailStructureIndex<sub>i</sub></em></b>: A non-negative integer indicating a rail structure that has been previously loaded via Structure.Rail.
+</font></td></tr></table>
+When usually using Track.RailType(<em>RailStructureIndex</em>), the same rail structure object will be repeatedly placed in every block. Via Cycle.Rail, you can override this behavior and automatically cycle through a series of different objects when using Track.RailType(<em>RailStructureIndex</em>). The cycle repeats indefinately, where <em>RailStructureIndex<sub>0</sub></em> starts at track position 0. Technically, the <em>i</em> in <em>RailStructureIndex<sub>i</sub></em> chosen for a particular track position <em>p</em> is <tt>Mod[<em>p</em> / BlockLength, <em>n</em>]</tt>.<br /><br />Consider the following definition:<br /><table>
+
+
 <tr>
 <td width="16" valign="top" /><td>
 <font size="-1"><em></em></font>
@@ -1000,7 +1011,7 @@ All commands from the Track namespace need to be associated to track positions. 
 <b><em>RailIndex</em></b>: A positive integer (<b>&gt;=1</b>) indicating which rail index to use.<br />
 <b><font color="green"><em>X</em></font></b>: A floating-point number representing the horizontal distance from the player's rail, <b>by default</b> measured in <b>meters</b>. Negative values indicate left, positive ones right.<br />
 <b><font color="green"><em>Y</em></font></b>: A floating-point number representing the vertical distance from the player's rail, <b>by default</b> measured in <b>meters</b>. Negative values indicate below, positive ones above.<br />
-<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by a Structure.Rail command.
+<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by either a Structure.Rail or a Structure.Cycle command.
 </font></td></tr></table>
 This command starts a new rail represented by the index <em>RailIndex</em>. Upon the point where this command is used, a rail of the same <em>RailIndex</em> must either not have been used so far in the route, or must have been ended via a Track.RailEnd command. If a rail of the same <em>RailIndex</em> was already used in the route, the default values of <em>X</em>, <em>Y</em> and <em>RailType</em> are the values last used by that rail, otherwise 0. If the rail is to be updated, use the Track.Rail command. If it is to be ended, use the Track.RailEnd command. You can end a rail of a given <em>RailIndex</em> and start a new rail of the same <em>RailIndex</em> at the same track position provided that the old rail is first ended and the new rail started afterward. For every block, a structure, determined by <em>RailType</em>, is automatically placed.<br /><table cellspacing="0"><tr>
 <td><font color="red">⚠</font></td>
@@ -1019,7 +1030,7 @@ This command starts a new rail represented by the index <em>RailIndex</em>. Upon
 <b><em>RailIndex</em></b>: A positive integer (<b>&gt;=1</b>) indicating which rail index to use.<br />
 <b><font color="green"><em>X</em></font></b>: A floating-point number representing the horizontal distance from the player's rail, <b>by default</b> measured in <b>meters</b>. Negative values indicate left, positive ones right.<br />
 <b><font color="green"><em>Y</em></font></b>: A floating-point number representing the vertical distance from the player's rail, <b>by default</b> measured in <b>meters</b>. Negative values indicate below, positive ones above.<br />
-<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by a Structure.Rail command.
+<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by either a Structure.Rail or a Structure.Cycle command.
 </font></td></tr></table>
 This command starts a new rail or updates an existing rail. The rail is represented by the index <em>RailIndex</em>. If a rail of the same <em>RailIndex</em> was already used in the route, the default values of <em>X</em>, <em>Y</em> and <em>RailType</em> are the values last used by that rail, otherwise 0. If the rail is to be ended, use the Track.RailEnd command. You can end a rail of a given <em>RailIndex</em> and start a new rail of the same <em>RailIndex</em> at the same track position provided that the old rail is first ended and the new rail started afterward. In each block, the <em>X</em> and <em>Y</em> values are repeated if a Track.Rail command is not used for that block. As a consequence, updating the <em>X</em> or <em>Y</em> values affects the layout of the rail from the preceding block only. Changing the <em>RailType</em> will affect the rail from the point on where this command is used. If this command is used multiple times on the same track position for the same rail, then the first instance of the command takes effect, while subsequent ones are ignored.<br /><table cellspacing="0"><tr>
 <td><font color="red">⚠</font></td>
@@ -1044,7 +1055,7 @@ If you want to start a new rail, you can either use Track.RailStart or Track.Rai
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font color="#808080">
 <b><em>RailIndex</em></b>: A non-negative integer indicating which rail index to change. The player's rail can be referred to with index <b>0</b>. The default value is 0.<br />
-<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by a Structure.Rail command. The default value is 0.
+<b><em>RailType</em></b>: A non-negative integer referencing the rail type to use as defined by either a Structure.Rail or a Structure.Cycle command. The default value is 0.
 </font></td></tr></table>
 This command changes the rail type for an existing rail, represented by <em>RailIndex</em>. The rail must have been started with a Track.RailStart or Track.Rail command and must not have been ended by a Track.RailEnd command. Changing the <em>RailType</em> will affect the rail from the point on where this command is used.<br /><table cellspacing="0"><tr>
 <td><font color="red">⚠</font></td>
