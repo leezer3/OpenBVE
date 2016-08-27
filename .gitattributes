@@ -25,3 +25,4 @@
 *.pdf binary
 *.bin binary
 *.dat binary
+*.tgz binary
