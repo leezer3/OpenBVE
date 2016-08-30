@@ -33,14 +33,18 @@ namespace OpenBve {
 				populateRouteList(Folder);
 			}
 			rf = Folder;
-			
-			routeWatcher = new FileSystemWatcher();
-			routeWatcher.Path = Folder;
-			routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			routeWatcher.Filter = "*.*";
-			routeWatcher.Changed += onRouteFolderChanged;
-			routeWatcher.EnableRaisingEvents = true;
-			
+			try
+			{
+				routeWatcher = new FileSystemWatcher();
+				routeWatcher.Path = Folder;
+				routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+				routeWatcher.Filter = "*.*";
+				routeWatcher.Changed += onRouteFolderChanged;
+				routeWatcher.EnableRaisingEvents = true;
+			}
+			catch
+			{
+			}
 			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
@@ -286,14 +290,18 @@ namespace OpenBve {
 				populateTrainList(Folder);
 			}
 			tf = Folder;
-
-			trainWatcher = new FileSystemWatcher();
-			trainWatcher.Path = Folder;
-			trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-			trainWatcher.Filter = "*.*";
-			trainWatcher.Changed += onTrainFolderChanged;
-			trainWatcher.EnableRaisingEvents = true;
-
+			try
+			{
+				trainWatcher = new FileSystemWatcher();
+				trainWatcher.Path = Folder;
+				trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+				trainWatcher.Filter = "*.*";
+				trainWatcher.Changed += onTrainFolderChanged;
+				trainWatcher.EnableRaisingEvents = true;
+			}
+			catch
+			{	
+			}
 			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
