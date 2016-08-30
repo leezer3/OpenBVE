@@ -267,7 +267,7 @@ namespace OpenBve {
 				if (UpdateFunctions)
 				{
 					x = Object.TrackFollowerFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain,
-						TimeElapsed);
+						TimeElapsed, Object.CurrentState);
 				}
 				else
 				{
@@ -297,7 +297,7 @@ namespace OpenBve {
 			int i = Object.ObjectIndex;
 			// state change
 			if (Object.StateFunction != null & UpdateFunctions) {
-				double sd = Object.StateFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+				double sd = Object.StateFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				int si = (int)Math.Round(sd);
 				int sn = Object.States.Length;
 				if (si < 0 | si >= sn) si = -1;
@@ -311,7 +311,7 @@ namespace OpenBve {
 			if (Object.TranslateXFunction != null) {
 				double x;
 				if (UpdateFunctions) {
-					x = Object.TranslateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					x = Object.TranslateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else  {
 					x = Object.TranslateXFunction.LastResult;
 				}
@@ -356,7 +356,7 @@ namespace OpenBve {
 			if (Object.TranslateYFunction != null) {
 				double y;
 				if (UpdateFunctions) {
-					y = Object.TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					y = Object.TranslateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					y = Object.TranslateYFunction.LastResult;
 				}
@@ -400,7 +400,7 @@ namespace OpenBve {
 			if (Object.TranslateZFunction != null) {
 				double z;
 				if (UpdateFunctions) {
-					z = Object.TranslateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					z = Object.TranslateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					z = Object.TranslateZFunction.LastResult;
 				}
@@ -448,7 +448,7 @@ namespace OpenBve {
 			if (rotateX) {
 				double a;
 				if (UpdateFunctions) {
-					a = Object.RotateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					a = Object.RotateXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					a = Object.RotateXFunction.LastResult;
 				}
@@ -462,7 +462,7 @@ namespace OpenBve {
 			if (rotateY) {
 				double a;
 				if (UpdateFunctions) {
-					a = Object.RotateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					a = Object.RotateYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					a = Object.RotateYFunction.LastResult;
 				}
@@ -476,7 +476,7 @@ namespace OpenBve {
 			if (rotateZ) {
 				double a;
 				if (UpdateFunctions) {
-					a = Object.RotateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					a = Object.RotateZFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					a = Object.RotateZFunction.LastResult;
 				}
@@ -494,7 +494,7 @@ namespace OpenBve {
 					ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates = Object.States[s].Object.Mesh.Vertices[k].TextureCoordinates;
 				}
 				if (shiftx) {
-					double x = Object.TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					double x = Object.TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 					x -= Math.Floor(x);
 					for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++) {
 						ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(x * Object.TextureShiftXDirection.X);
@@ -502,7 +502,7 @@ namespace OpenBve {
 					}
 				}
 				if (shifty) {
-					double y = Object.TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					double y = Object.TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 					y -= Math.Floor(y);
 					for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++) {
 						ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(y * Object.TextureShiftYDirection.X);
@@ -515,7 +515,7 @@ namespace OpenBve {
 			double ledangle;
 			if (led) {
 				if (UpdateFunctions) {
-					ledangle = Object.LEDFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+					ledangle = Object.LEDFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					ledangle = Object.LEDFunction.LastResult;
 				}
