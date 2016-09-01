@@ -36,7 +36,7 @@ namespace OpenBve {
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 			SafetyPluginAvailable, SafetyPluginState,
 			TimetableVisible,
-			SectionAspectNumber,
+			SectionAspectNumber, CurrentObjectState
 
 			
 		}
@@ -47,8 +47,8 @@ namespace OpenBve {
 			internal double[] Stack;
 			internal double[] Constants;
 			internal double LastResult;
-			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
-				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
+			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				return this.LastResult;
 			}
 			/// <summary>Checks whether the specified function will return a constant result</summary>
@@ -78,7 +78,7 @@ namespace OpenBve {
 		}
 
 		// execute function script
-		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
+		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.Instructions.Length; i++) {
 				switch (Function.Instructions[i]) {
@@ -281,6 +281,9 @@ namespace OpenBve {
 					case Instructions.LogicalXor:
 						Function.Stack[s - 2] = Function.Stack[s - 2] != 0.0 ^ Function.Stack[s - 1] != 0.0 ? 1.0 : 0.0;
 						s--; break;
+					case Instructions.CurrentObjectState:
+						Function.Stack[s] = CurrentState;
+						break;
 						// time/camera
 					case Instructions.TimeSecondsSinceMidnight:
 						Function.Stack[s] = Game.SecondsSinceMidnight;
@@ -2597,6 +2600,11 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.SectionAspectNumber;
 							n++; s++; if (s >= m) m = s; break;
 							// default
+						case "currentstate":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurrentObjectState;
+							n++; s++; if (s >= m) m = s; break;
+						// default
 						default:
 							throw new System.IO.InvalidDataException("Unknown command " + Arguments[i] + " encountered in function script " + Expression);
 					}
