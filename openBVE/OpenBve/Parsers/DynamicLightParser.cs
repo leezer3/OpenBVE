@@ -1,0 +1,183 @@
+﻿using System;
+using System.Text;
+using System.Xml;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
+
+namespace OpenBve
+{
+	class DynamicLightParser
+	{
+		//Parses an XML dynamic lighting definition
+		public static bool ReadLightingXML(string fileName)
+		{
+			//Prep
+			Renderer.LightDefinitions = new Renderer.LightDefinition[0];
+			//The current XML file to load
+			XmlDocument currentXML = new XmlDocument();
+			//Load the object's XML file 
+			currentXML.Load(fileName);
+			bool defined = false;
+			//Check for null
+			if (currentXML.DocumentElement != null)
+			{
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Brightness");
+				//Check this file actually contains OpenBVE light definition nodes
+				if (DocumentNodes != null)
+				{
+					foreach (XmlNode n in DocumentNodes)
+					{
+						Renderer.LightDefinition currentLight = new Renderer.LightDefinition();
+						if (n.HasChildNodes)
+						{
+							bool tf = false, al = false, dl = false, ld = false;
+							string ts = null;
+							foreach (XmlNode c in n.ChildNodes)
+							{
+								string[] Arguments = c.InnerText.Split(',');
+								switch (c.Name.ToLowerInvariant())
+								{
+									case "time":
+										double t;
+										if (Interface.TryParseTime(Arguments[0].Trim(), out t))
+										{
+											currentLight.Time = (int)t;
+											tf = true;
+											//Keep back for error report later
+											ts = Arguments[0];
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
+										}
+										break;
+									case "ambientlight":
+										if (Arguments.Length == 3)
+										{
+											double R, G, B;
+											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out R) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out G) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											{
+												currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
+												al = true;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+										}
+										break;
+									case "directionallight":
+										if (Arguments.Length == 3)
+										{
+											double R, G, B;
+											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out R) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out G) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											{
+												currentLight.DiffuseColor = new Color24((byte)R, (byte)G, (byte)B);
+												dl = true;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+										}
+										break;
+									case "lightdirection":
+										if (Arguments.Length == 3)
+										{
+											double X, Y, Z;
+											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out X) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out Y) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out Z))
+											{
+												currentLight.LightPosition = new Vector3(X, Y, Z);
+												ld = true;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+										}
+										break;
+								}
+							}
+							//We want to be able to add a completely default light element,  but not one that's not been defined in the XML properly
+							if (tf || al || ld || dl)
+							{
+								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
+								bool Break = false;
+								int l = Renderer.LightDefinitions.Length;
+								for (int i = 0; i > l; i++)
+								{
+									if (Renderer.LightDefinitions[i].Time == currentLight.Time)
+									{
+										Break = true;
+										if (ts == null)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Multiple undefined times were encountered in file " + fileName);
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Duplicate time found: " + ts + " in file " + fileName);
+										}
+										break;
+									}
+								}
+								if (Break)
+								{
+									continue;
+								}
+								//We've got there, so now figure out where to add the new light into our list of light definitions
+								int t = 0;
+								if (l == 1)
+								{
+									t = currentLight.Time > Renderer.LightDefinitions[0].Time ? 1 : 0;
+								}
+								else if (l > 1)
+								{
+									for (int i = 1; i < l; i++)
+									{
+										t = i + 1;
+										if (currentLight.Time > Renderer.LightDefinitions[i - 1].Time && currentLight.Time < Renderer.LightDefinitions[i].Time)
+										{
+											break;
+										}
+									}
+								}
+								//Resize array
+								defined = true;
+								Array.Resize(ref Renderer.LightDefinitions, l + 1);
+								if (t == l)
+								{
+									//Straight insert at the end of the array
+									Renderer.LightDefinitions[l] = currentLight;
+								}
+								else
+								{
+									for (int u = t; u < l; u++)
+									{
+										//Otherwise, shift all elements to compensate
+										Renderer.LightDefinitions[u + 1] = Renderer.LightDefinitions[u];
+									}
+									Renderer.LightDefinitions[t] = currentLight;
+								}
+								
+							}
+						}
+					}
+				}
+			}
+			//We couldn't find any valid XML, so return false
+			return defined;
+		}
+	}
+}

@@ -110,6 +110,7 @@
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
+    <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\DynamicLightParser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
