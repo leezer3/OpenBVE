@@ -29,6 +29,17 @@ namespace OpenBveApi.Math {
 			this.Y = y;
 			this.Z = z;
 		}
+
+		/// <summary>Interpolates between two Vector3 values using a simple Cosine algorithm</summary>
+		/// <param name="Vector1">The first vector</param>
+		/// <param name="Vector2">The second vector</param>
+		/// <param name="mu">The position on the curve of the new vector</param>
+		/// <returns>The interpolated vector</returns>
+		public static Vector3 CosineInterpolate(Vector3 Vector1, Vector3 Vector2, double mu)
+		{
+			double mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
+			return new Vector3((Vector1.X * (1 - mu2) + Vector2.X * mu2), (Vector1.Y * (1 - mu2) + Vector2.Y * mu2), (Vector1.Z * (1 - mu2) + Vector2.Z * mu2));
+		}
 		
 		
 		// --- arithmetic operators ---

@@ -30,6 +30,17 @@ namespace OpenBveApi.Colors {
 			this.G = g;
 			this.B = b;
 		}
+
+		/// <summary>Interpolates between two Color24 values using a simple Cosine algorithm</summary>
+		/// <param name="Color1">The first color</param>
+		/// <param name="Color2">The second color</param>
+		/// <param name="mu">The position on the curve of the new color</param>
+		/// <returns>The interpolated color</returns>
+		public static Color24 CosineInterpolate(Color24 Color1, Color24 Color2, double mu)
+		{
+			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
+			return new Color24((byte)(Color1.R * (1 - mu2) + Color2.R * mu2), (byte)(Color1.G * (1 - mu2) + Color2.G * mu2), (byte)(Color1.B * (1 - mu2) + Color2.B * mu2));
+		}
 		// --- operators ---
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
