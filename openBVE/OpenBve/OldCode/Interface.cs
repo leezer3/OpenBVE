@@ -487,7 +487,13 @@ namespace OpenBve {
 													default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
-											int.TryParse(Value, NumberStyles.Integer, Culture, out Interface.CurrentOptions.TimeAccelerationFactor);
+											int tf;
+											int.TryParse(Value, NumberStyles.Integer, Culture, out tf);
+											if (tf <= 0)
+											{
+												tf = 5;
+											}
+											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
 									} break;
 								case "controls":
