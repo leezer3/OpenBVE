@@ -60,6 +60,11 @@ namespace OpenBve {
 			Interface.CurrentOptions.TimeTableStyle = (Interface.TimeTableMode)comboBoxTimeTableDisplayMode.SelectedIndex;
 		}
 
+
+		private void trackBarTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
+		{
+			Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
+		}
 		
 		// =======
 		// options
