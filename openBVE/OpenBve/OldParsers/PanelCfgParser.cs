@@ -758,6 +758,17 @@ namespace OpenBve {
 										int w, h;
 										Program.CurrentHost.QueryTextureDimensions(Number, out w, out h);
 										if (w > 0 & h > 0) {
+											//Generate an error message rather than crashing if the clip region is invalid
+											if (Width > w)
+											{
+												Width = w;
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Clip region width was greater than the texture width " + Section + " in " + FileName);
+											}
+											if (Height > h)
+											{
+												Height = h;
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Clip region height was greater than the texture height " + Section + " in " + FileName);
+											}
 											int n = h / Height;
 											Textures.Texture[] t = new Textures.Texture[n];
 											for (int j = 0; j < n; j++) {
