@@ -3272,9 +3272,10 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												num = -2;
 											}
-											if (num != -2 & num != 2 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6) {
+											if (num != 1 & num != -2 & num != 2 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6)
+											{
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects has an unsupported value in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												num = num == -3 | num == -6 ? -num : -4;
+												num = num == -3 | num == -6 | num == -1 ? -num : -4;
 											}
 											double x = 0.0, y = 0.0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x)) {
@@ -3300,6 +3301,7 @@ namespace OpenBve {
 											}
 											int[] aspects; int comp;
 											switch (num) {
+													case 1: aspects = new int[] { 0, 2, 3 }; comp = 4; break;
 													case 2: aspects = new int[] { 0, 2 }; comp = 0; break;
 													case -2: aspects = new int[] { 0, 4 }; comp = 1; break;
 													case 3: aspects = new int[] { 0, 2, 4 }; comp = 2; break;
