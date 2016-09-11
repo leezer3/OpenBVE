@@ -3023,6 +3023,7 @@ namespace OpenBve {
 												} else {
 													if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
 														Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+														Array.Resize(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
                                                     }
                                                     if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null)
                                                     {
