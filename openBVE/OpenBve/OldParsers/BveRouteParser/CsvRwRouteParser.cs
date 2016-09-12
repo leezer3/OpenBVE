@@ -1133,7 +1133,7 @@ namespace OpenBve {
 		// separate commands and arguments
 		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors) {
 			bool openingerror = false, closingerror = false;
-			int i;
+			int i, fcb = 0;
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {
 					bool found = false;
@@ -1167,6 +1167,7 @@ namespace OpenBve {
 								continue;
 							}
 							found = true;
+							fcb = i;
 							break;
 						}
 						i++;
@@ -1187,6 +1188,15 @@ namespace OpenBve {
 					if (i >= Expression.Text.Length - 1 || !char.IsWhiteSpace(Expression.Text[i + 1])) {
 						break;
 					}
+				}
+
+			}
+			if (fcb != 0 && fcb < Expression.Text.Length - 1)
+			{
+				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]))
+				{
+					Expression.Text = Expression.Text.Insert(fcb + 1, " ");
+					i = fcb;
 				}
 			}
 			if (i < Expression.Text.Length) {
