@@ -45,7 +45,10 @@ namespace OpenBve {
 			catch
 			{
 			}
-			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			if (listviewRouteFiles.Columns.Count > 0)
+			{
+				listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
 		}
 
 		private void onRouteFolderChanged(object sender, EventArgs e)
@@ -317,7 +320,10 @@ namespace OpenBve {
 				return;
 			}
 			populateTrainList(tf);
-			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			if (listviewTrainFolders.Columns.Count > 0)
+			{
+				listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
 		}
 
 		/// <summary>Populates the train display list from the selected folder</summary>
