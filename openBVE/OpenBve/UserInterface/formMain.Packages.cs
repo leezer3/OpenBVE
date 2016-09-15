@@ -1270,7 +1270,7 @@ namespace OpenBve
 			if (DialogOK && files.Length != 0)
 			{
 
-				filesToPackageBox.Text += folderDisplay;
+				filesToPackageBox.Text += folderDisplay + Environment.NewLine;
 				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
@@ -1281,7 +1281,10 @@ namespace OpenBve
 					};
 					tempList.Add(File);
 				}
-				filesToPackage = new List<PackageFile>();
+				if (filesToPackage == null)
+				{
+					filesToPackage = new List<PackageFile>();
+				}
 				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
 			}
 		}
@@ -1452,6 +1455,7 @@ namespace OpenBve
 			ImageFile = null;
 			RemoveFromDatabase = true;
 			selectedDependacies = new List<string>();
+			filesToPackage = null;
 			//Reset package lists
 			dataGridViewPackages2.Rows.Clear();
 			dataGridViewPackages3.Rows.Clear();
