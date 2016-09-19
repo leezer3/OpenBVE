@@ -1019,16 +1019,22 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Route;
+						currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Route
+						};
 						break;
 					case PackageType.Train:
-						currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Train;
+						currentPackage = new Package(Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Train
+						};
 						break;
 					case PackageType.Other:
-						currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Other;
+						currentPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Other
+						};
 						break;
 				}
 			}
