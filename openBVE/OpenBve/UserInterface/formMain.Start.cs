@@ -896,21 +896,38 @@ namespace OpenBve {
 			try {
 				while (true) {
 					string TrainFolder = OpenBveApi.Path.CombineDirectory(Folder, "Train");
+					var OldFolder = Folder;
 					if (System.IO.Directory.Exists(TrainFolder)) {
 						try {
 							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Game.TrainName);
 						} catch {
 							Folder = null;
 						}
-						if (Folder != null && System.IO.Directory.Exists(Folder)) {
-							string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
-							if (System.IO.File.Exists(File)) {
-								// train found
-								Result.TrainFolder = Folder;
-								ShowTrain(false);
-								return;
+						if (Folder != null) {
+							if (System.IO.Directory.Exists(Folder))
+							{
+
+								string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
+								if (System.IO.File.Exists(File))
+								{
+									// train found
+									Result.TrainFolder = Folder;
+									ShowTrain(false);
+									return;
+								}
 							}
-						} break;
+							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
+							{
+								//If we have a misplaced Train folder in either our Railway\Route
+								//or Railway folders, this can cause the train search to fail
+								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
+								Folder = OldFolder;
+							}
+							else
+							{
+								break;
+							}
+						}
 					}
 					if (Folder == null) continue;
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
