@@ -51,9 +51,21 @@ namespace OpenBve {
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelResolution)) {
+												double pr = 0.0;
+												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out pr)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
+												}
+												if (pr > 100)
+												{
+													PanelResolution = pr;
+												}
+												else
+												{
+													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
+ 													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 10px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												}
+												break;
 											case "left":
 												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelLeft)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
