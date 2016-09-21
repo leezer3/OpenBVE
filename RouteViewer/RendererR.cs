@@ -983,7 +983,23 @@ namespace OpenBve {
 					RenderKeys((double)ScreenWidth - 60.0, (double)ScreenHeight - 100.0, 16.0, Keys);
 					if (Program.JumpToPositionEnabled) {
 						RenderString(4.0, 84.0, Fonts.FontType.Small, "Jump to track position:", -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
+						double distance;
+						if (Double.TryParse(Program.JumpToPositionValue, out distance))
+						{
+							if (distance > TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100)
+							{
+								RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 0.5f, 0.5f, true);
+							}
+							else
+							{
+								RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
+							}
+						}
+						else
+						{
+							RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 0.5f, 0.5f, true);
+						}
+						//RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
 					}
 					// info
 					double x = 0.5 * (double)ScreenWidth - 256.0;
