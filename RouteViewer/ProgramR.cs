@@ -191,6 +191,31 @@ namespace OpenBve {
 			}
 		}
 
+		internal static void UpdateGraphicsSettings()
+		{
+			if (Program.CurrentRoute != null)
+			{
+				Program.CurrentlyLoading = true;
+				Renderer.RenderScene(0.0);
+				Program.currentGameWindow.SwapBuffers();
+				World.CameraAlignment a = World.CameraCurrentAlignment;
+				TextureManager.ClearTextures();
+				//Remember to reinitialise the loading screen textures after clearing everything...
+				Renderer.InitLoading();
+				if (Program.LoadRoute())
+				{
+					World.CameraCurrentAlignment = a;
+					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
+					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					ObjectManager.UpdateVisibility(a.TrackPosition, true);
+					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+				}
+				Program.CurrentlyLoading = false;
+			}
+		}
+
 	    internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 	    {
             double speedModified = (ShiftPressed ? 2.0 : 1.0) * (ControlPressed ? 4.0 : 1.0) * (AltPressed ? 8.0 : 1.0);
@@ -236,8 +261,6 @@ namespace OpenBve {
 	                {
                         Application.DoEvents();
 	                    CurrentlyLoading = true;
-	                    Renderer.RenderScene(0.0);
-	                    Program.currentGameWindow.SwapBuffers();
 	                    CurrentRoute = Dialog.FileName;
 	                    LoadRoute();
 	                    ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
@@ -246,7 +269,10 @@ namespace OpenBve {
 	                }
 	                break;
                 case Key.F8:
-	                formOptions.ShowOptions();
+			        if (formOptions.ShowOptions() == DialogResult.OK)
+			        {
+				        UpdateGraphicsSettings();
+			        }
                     Application.DoEvents();
                     break;
 	            case Key.F9:

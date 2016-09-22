@@ -6,11 +6,13 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Drawing;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
-	internal static class Renderer {
+	internal static partial class Renderer {
 
 		// screen (output window)
 		internal static int ScreenWidth = 960;
@@ -129,6 +131,7 @@ namespace OpenBve {
 		// initialize
 		internal static void Initialize() {
 			// opengl
+			
 			GL.ShadeModel(ShadingModel.Flat);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 0.0f);
@@ -926,61 +929,63 @@ namespace OpenBve {
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)ScreenWidth, 0.0, (double)ScreenHeight, -1.0, 1.0);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.PushMatrix();
 			GL.LoadIdentity();
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PushMatrix();
+			//GL.LoadIdentity();
+			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// marker
-			if (OptionInterface) {
-				double y = 128.0;
+			if (OptionInterface)
+			{
+				int y = 150;
 				for (int i = 0; i < Game.MarkerTextures.Length; i++) {
 					int t = TextureManager.UseTexture(Game.MarkerTextures[i], TextureManager.UseMode.LoadImmediately);
 					if (t >= 0) {
-						double w = (double)TextureManager.Textures[Game.MarkerTextures[i]].ClipWidth;
-						double h = (double)TextureManager.Textures[Game.MarkerTextures[i]].ClipHeight;
+						int w = TextureManager.Textures[Game.MarkerTextures[i]].ClipWidth;
+						int h = TextureManager.Textures[Game.MarkerTextures[i]].ClipHeight;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						RenderOverlayTexture(Game.MarkerTextures[i], (double)ScreenWidth - w - 8.0, y, (double)ScreenWidth - 8.0, y + h);
-						y += h + 8.0;
+						DrawRectangle(Game.MarkerTextures[i], new Point(ScreenWidth - w - 8, y), new Size(w,h), null);
+						y += h + 8;
 					}
 				}
 			}
 			// render
-			if (Program.CurrentlyLoading) {
-				RenderString(4.0, 4.0, Fonts.FontType.Small, "Loading...", -1, 1.0f, 1.0f, 1.0f, true);
-			} else {
+			if (!Program.CurrentlyLoading) {
 				if (ObjectManager.ObjectsUsed == 0) {
 					string[][] Keys = { new string[] { "F7" }, new string[] { "F8" } };
-					RenderKeys(4.0, 4.0, 24.0, Keys);
-					RenderString(32.0, 4.0, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32.0, 24.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderKeys(4, 4, 24, Keys);
+					RenderString(32, 4, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(32, 24, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
 					RenderString((double)ScreenWidth - 8.0, (double)ScreenHeight - 20.0, Fonts.FontType.Small, "v" + System.Windows.Forms.Application.ProductVersion, 1, 1.0f, 1.0f, 1.0f, true);
 				} else if (OptionInterface) {
 					// keys
 					string[][] Keys = { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
-					RenderKeys(4.0, 4.0, 24.0, Keys);
-					RenderString(32.0, 4.0, Fonts.FontType.Small, "Reload route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32.0, 24.0, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32.0, 44.0, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderKeys(4, 4, 24, Keys);
+					RenderString(32, 4, Fonts.FontType.Small, "Reload route", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(32, 24, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(32, 44, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" }};
-					RenderKeys((double)ScreenWidth - 20.0, 4.0, 16.0, Keys);
-					RenderString((double)ScreenWidth - 32.0, 4.0, Fonts.FontType.Small, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 32.0, 24.0, Fonts.FontType.Small, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 32.0, 44.0, Fonts.FontType.Small, "Events: " + (Renderer.OptionEvents ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 32.0, 64.0, Fonts.FontType.Small, "CPU: " + (Program.CpuAutomaticMode ? "auto " + (Program.CpuReducedMode ? "(low)" : "(high)") : "high"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 32.0, 84.0, Fonts.FontType.Small, "Mute: " + (SoundManager.Mute ? "yes" : "no"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 32.0, 104.0, Fonts.FontType.Small, "Hide interface", 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 38.0, 124.0, Fonts.FontType.Small, (RenderStatsOverlay ? "Hide" : "Show" ) +" renderer statistics", 1, 1.0f, 1.0f, 1.0f, true);
+					RenderKeys(ScreenWidth - 20, 4, 16, Keys);
+					RenderString(ScreenWidth - 32, 4, Fonts.FontType.Small, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 32, 24, Fonts.FontType.Small, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 32, 44, Fonts.FontType.Small, "Events: " + (Renderer.OptionEvents ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 32, 64, Fonts.FontType.Small, "CPU: " + (Program.CpuAutomaticMode ? "auto " + (Program.CpuReducedMode ? "(low)" : "(high)") : "high"), 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 32, 84, Fonts.FontType.Small, "Mute: " + (SoundManager.Mute ? "yes" : "no"), 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 32, 104, Fonts.FontType.Small, "Hide interface", 1, 1.0f, 1.0f, 1.0f, true);
+					RenderString(ScreenWidth - 38, 124, Fonts.FontType.Small, (RenderStatsOverlay ? "Hide" : "Show" ) +" renderer statistics", 1, 1.0f, 1.0f, 1.0f, true);
 					Keys = new string[][] { new string[] { "F10" } };
-					RenderKeys((double)ScreenWidth - 32.0, 124.0, 30.0, Keys);
+					RenderKeys(ScreenWidth - 32, 124, 30, Keys);
 					Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
-					RenderKeys(4.0, (double)ScreenHeight - 40.0, 16.0, Keys);
+					RenderKeys(4, ScreenHeight - 40, 16, Keys);
 					Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
-					RenderKeys(0.5 * (double)ScreenWidth - 48.0, (double)ScreenHeight - 40.0, 16.0, Keys);
+					RenderKeys(0 * ScreenWidth - 48, ScreenHeight - 40, 16, Keys);
 					Keys = new string[][] { new string[] { "P↑" }, new string[] { "P↓" } };
-					RenderKeys(0.5 * (double)ScreenWidth + 32.0, (double)ScreenHeight - 40.0, 24.0, Keys);
+					RenderKeys((int)(0.5 * ScreenWidth + 32), ScreenHeight - 40, 24, Keys);
 					Keys = new string[][] { new string[] { null, "/", "*" }, new string[] { "7", "8", "9" }, new string[] { "4", "5", "6" }, new string[] { "1", "2", "3" }, new string[] { null, "0", "." } };
-					RenderKeys((double)ScreenWidth - 60.0, (double)ScreenHeight - 100.0, 16.0, Keys);
+					RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Keys);
 					if (Program.JumpToPositionEnabled) {
 						RenderString(4.0, 84.0, Fonts.FontType.Small, "Jump to track position:", -1, 1.0f, 1.0f, 1.0f, true);
 						double distance;
@@ -1045,7 +1050,7 @@ namespace OpenBve {
 					}
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
-						RenderKeys(4.0, 72.0, 24.0, Keys);
+						RenderKeys(4, 72, 24, Keys);
 						if (Interface.Messages[0].Type != Interface.MessageType.Information)
 						{
 							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 error message recently generated.", -1, 1.0f, 0.5f, 0.5f,true);
@@ -1057,7 +1062,7 @@ namespace OpenBve {
 						}
 					} else if (Interface.MessageCount > 1) {
 						Keys = new string[][] { new string[] { "F9" } };
-						RenderKeys(4.0, 72.0, 24.0, Keys);
+						RenderKeys(4, 72, 24, Keys);
 						bool error = false;
 						for (int i = 0; i < Interface.MessageCount; i++)
 						{
@@ -1080,16 +1085,18 @@ namespace OpenBve {
 					if (RenderStatsOverlay)
 					{
 
-						RenderKeys(4.0, (double)ScreenHeight - 126.0, 116.0, new string[][] { new string[] { "Renderer Statistics" } });
-						RenderString(4.0, (double)ScreenHeight - 112.0, Fonts.FontType.Small, "Total static objects: " + ObjectManager.ObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, (double)ScreenHeight - 100.0, Fonts.FontType.Small, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, (double)ScreenHeight - 88.0, Fonts.FontType.Small, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, (double)ScreenHeight - 76.0, Fonts.FontType.Small, "Total opaque faces: "+ Game.InfoStaticOpaqueFaceCount, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, (double)ScreenHeight - 64.0, Fonts.FontType.Small, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), -1, 1.0f, 1.0f, 1.0f, true);
+						RenderKeys(4, ScreenHeight - 126, 116, new string[][] { new string[] { "Renderer Statistics" } });
+						RenderString(4, ScreenHeight - 112, Fonts.FontType.Small, "Total static objects: " + ObjectManager.ObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4, ScreenHeight - 100, Fonts.FontType.Small, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4, ScreenHeight - 88, Fonts.FontType.Small, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4, ScreenHeight - 76, Fonts.FontType.Small, "Total opaque faces: "+ Game.InfoStaticOpaqueFaceCount, -1, 1.0f, 1.0f, 1.0f, true);
+						RenderString(4, ScreenHeight - 64, Fonts.FontType.Small, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), -1, 1.0f, 1.0f, 1.0f, true);
 					}
 				}
 
 			}
+			GL.PopMatrix();
+			GL.LoadIdentity();
 			// finalize
 			GL.PopMatrix();
 			GL.MatrixMode(MatrixMode.Projection);
@@ -1129,37 +1136,20 @@ namespace OpenBve {
 		}
 
 		// render keys
-		private static void RenderKeys(double Left, double Top, double Width, string[][] Keys) {
-			double py = Top;
+		private static void RenderKeys(int Left, int Top, int Width, string[][] Keys) {
+			int py = Top;
 			for (int y = 0; y < Keys.Length; y++) {
-				double px = Left;
+				int px = Left;
 				for (int x = 0; x < Keys[y].Length; x++) {
 					if (Keys[y][x] != null) {
-						GL.Color4(0.25, 0.25, 0.25, 0.5);
-						RenderOverlaySolid(px - 1.0, py - 1.0, px + Width + 1.0, py + 17.0);
-						GL.Color4(0.75, 0.75, 0.75, 0.5);
-						RenderOverlaySolid(px - 1.0, py - 1.0, px + Width - 1.0, py + 15.0);
-						GL.Color4(0.5, 0.5, 0.5, 0.5);
-						RenderOverlaySolid(px, py, px + Width, py + 16.0);
+						DrawRectangle(-1, new Point(px -1, py -1), new Size(Width + 1, 17),  new Color128(0.25f,0.25f, 0.25f,0.5f));
+						DrawRectangle(-1, new Point(px - 1, py - 1), new Size(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
+						DrawRectangle(-1, new Point(px, py), new Size(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 						RenderString(px + 2.0, py, Fonts.FontType.Small, Keys[y][x], -1, 1.0f, 1.0f, 1.0f, true);
 					}
-					px += Width + 4.0;
+					px += Width + 4;
 				}
-				py += 20.0;
-			}
-		}
-
-		// render box
-		private static void RenderBox(double Left, double Top, double Width, double Height, string[] Lines) {
-			GL.Color4(0.8, 0.8, 0.8, 0.5);
-			RenderOverlaySolid(Left - 1.0, Top - 1.0, Left + Width + 1.0, Top + Height+1.0);
-			GL.Color4(0.4, 0.4, 0.4, 0.5);
-			RenderOverlaySolid(Left - 1.0, Top - 1.0, Left + Width - 1.0, Top + Height-1.0);
-			GL.Color4(0.8, 0.8, 0.8, 0.5);
-			RenderOverlaySolid(Left, Top, Left + Width, Top + Height);
-			for (int i = 0; i < Lines.Length; i++) {
-				double y = Top + (double)i * 16.0;
-				RenderString(Left + 2.0, y, Fonts.FontType.Small, Lines[i], -1, 1.0f, 1.0f, 1.0f, true);
+				py += 20;
 			}
 		}
 
@@ -1168,6 +1158,7 @@ namespace OpenBve {
 			RenderString(PixelLeft, PixelTop, FontType, Text, Orientation, R, G, B, 1.0f, Shadow);
 		}
 		private static void RenderString(double PixelLeft, double PixelTop, Fonts.FontType FontType, string Text, int Orientation, float R, float G, float B, float A, bool Shadow) {
+			
 			if (Text == null) return;
 			int Font = (int)FontType;
 			double c = 1;
@@ -1188,6 +1179,7 @@ namespace OpenBve {
 				x -= tw;
 			}
 			for (int i = 0; i < Text.Length; i++) {
+				//For each character in the string
 				int b = char.ConvertToUtf32(Text, i);
 				if (b >= 0x10000) {
 					i++;
@@ -1196,65 +1188,22 @@ namespace OpenBve {
 				double w = (double)TextureManager.Textures[t].ClipWidth;
 				double h = (double)TextureManager.Textures[t].ClipHeight;
 				GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
-				GL.Color3(A, A, A);
-				RenderOverlayTexture(t, x, y, x + w, y + h);
+				
 				if (Shadow) {
-					RenderOverlayTexture(t, x + c, y + c, x + w, y + h);
+
+					DrawRectangle(t, new Point((int)x + (int)c, (int)y + (int)c), new Size((int)w, (int)h), new Color128(A, A, A, 1.0f));
 				}
+				
+				GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
+				DrawRectangle(t, new Point((int)x, (int)y), new Size((int)w, (int)h), new Color128(A, A, A, 1.0f));
 				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-				GL.Color4(R, G, B, A);
-				RenderOverlayTexture(t, x, y, x + w, y + h);
+				DrawRectangle(t, new Point((int)x, (int)y), new Size((int)w, (int)h), new Color128(R, G, B, A));
+				
+			
 				x += Fonts.Characters[Font][b].Width;
 			}
+			
 			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-		}
-
-		// render overlay texture
-		private static void RenderOverlayTexture(int TextureIndex, double ax, double ay, double bx, double by) {
-			double nay = (double)ScreenHeight - ay;
-			double nby = (double)ScreenHeight - by;
-			TextureManager.UseTexture(TextureIndex, TextureManager.UseMode.LoadImmediately);
-			if (TextureIndex >= 0) {
-				int OpenGlTextureIndex = TextureManager.Textures[TextureIndex].OpenGlTextureIndex;
-				if (!TexturingEnabled) {
-					GL.Enable(EnableCap.Texture2D);
-					TexturingEnabled = true;
-				}
-				GL.BindTexture(TextureTarget.Texture2D, OpenGlTextureIndex);
-			} else if (TexturingEnabled) {
-				GL.Disable(EnableCap.Texture2D);
-				TexturingEnabled = false;
-			}
-			GL.Begin(BeginMode.Quads);
-			GL.TexCoord2(0.0, 1.0);
-			GL.Vertex2(ax, nby);
-			GL.TexCoord2(0.0, 0.0);
-			GL.Vertex2(ax, nay);
-			GL.TexCoord2(1.0, 0.0);
-			GL.Vertex2(bx, nay);
-			GL.TexCoord2(1.0, 1.0);
-			GL.Vertex2(bx, nby);
-			GL.End();
-		}
-
-		// render overlay solid
-		private static void RenderOverlaySolid(double ax, double ay, double bx, double by) {
-			double nay = (double)ScreenHeight - ay;
-			double nby = (double)ScreenHeight - by;
-			if (TexturingEnabled) {
-				GL.Disable(EnableCap.Texture2D);
-				TexturingEnabled = false;
-			}
-			GL.Begin(BeginMode.Quads);
-			GL.TexCoord2(0.0, 1.0);
-			GL.Vertex2(ax, nby);
-			GL.TexCoord2(0.0, 0.0);
-			GL.Vertex2(ax, nay);
-			GL.TexCoord2(1.0, 0.0);
-			GL.Vertex2(bx, nay);
-			GL.TexCoord2(1.0, 1.0);
-			GL.Vertex2(bx, nby);
-			GL.End();
 		}
 
 		// readd objects
