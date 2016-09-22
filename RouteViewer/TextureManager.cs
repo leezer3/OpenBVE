@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using OpenTK.Graphics.OpenGL;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
@@ -57,7 +58,7 @@ namespace OpenBve
 		internal enum UseMode { Normal, QueryDimensions, LoadImmediately }
 		internal static int UseTexture(int TextureIndex, UseMode Mode)
 		{
-			if (TextureIndex == -1) return 0;
+			if (TextureIndex > Textures.Length || Textures[TextureIndex] == null || TextureIndex == -1) return 0;
 			Textures[TextureIndex].CyclesSurvived = 0;
 			if (Textures[TextureIndex].Loaded)
 			{
@@ -149,10 +150,21 @@ namespace OpenBve
 			}
 		}
 
+		internal static void ClearTextures()
+		{
+			UnuseAllTextures();
+			Textures = new Texture[64];
+		}
+
 		// unregister texture
 		internal static void UnregisterTexture(ref int TextureIndex)
 		{
 			if (TextureIndex == -1) return;
+			if (TextureIndex > Textures.Length ||Textures[TextureIndex] == null)
+			{
+				TextureIndex = -1;
+				return;
+			}
 			if (Textures[TextureIndex].Loaded)
 			{
 				GL.DeleteTextures(1, new int[] { Textures[TextureIndex].OpenGlTextureIndex });
@@ -265,6 +277,11 @@ namespace OpenBve
 		}
 		internal static int RegisterTexture(string FileName, World.ColorRGB TransparentColor, byte TransparentColorUsed, TextureLoadMode LoadMode, TextureWrapMode WrapModeX, TextureWrapMode WrapModeY, bool DontAllowUnload, int ClipLeft, int ClipTop, int ClipWidth, int ClipHeight)
 		{
+			if (FileName == null)
+			{
+				//Need to find out why the object parser sometimes decides to pass a null filename, but this works around it
+				return -1;
+			}
 			int i = FindTexture(FileName, TransparentColor, TransparentColorUsed, LoadMode, WrapModeX, WrapModeY, ClipLeft, ClipTop, ClipWidth, ClipHeight);
 			if (i >= 0)
 			{

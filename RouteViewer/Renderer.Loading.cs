@@ -40,22 +40,17 @@ namespace OpenBve
 		{
 			customLoadScreen = false;
 			string Path = Program.FileSystem.GetDataFolder("In-game");
-			if (TextureLoadingBkg == -1)
-			{
-				int bkgNo = Game.Generator.Next(numOfLoadingBkgs);
-				TextureLoadingBkg = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png"), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-				TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
-			}
-			if (Renderer.TextureLogo == -1)
-			{
-				// choose logo size according to screen width
-				string fName;
-				if (Renderer.ScreenWidth > 2048) fName = LogoFileName[2];
-				else if (Renderer.ScreenWidth > 1024) fName = LogoFileName[1];
-				else fName = LogoFileName[0];
-				TextureLogo = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-				TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
-			}
+			int bkgNo = Game.Generator.Next(numOfLoadingBkgs);
+			TextureLoadingBkg = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png"), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+			TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+			// choose logo size according to screen width
+			string fName;
+			if (Renderer.ScreenWidth > 2048) fName = LogoFileName[2];
+			else if (Renderer.ScreenWidth > 1024) fName = LogoFileName[1];
+			else fName = LogoFileName[0];
+			TextureLogo = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+			TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
+			
 		}
 
 		//
@@ -162,8 +157,6 @@ namespace OpenBve
 			string text = "Loading route, please wait.....";
 
 			RenderString(halfWidth - 60, progressTop - fontHeight - 6, Fonts.FontType.Small, text, -1, 1.0f, 1.0f, 1.0f, false);
-
-			DrawRectangle(TextureLogo, new Point((Renderer.ScreenWidth - TextureManager.Textures[TextureLogo].Width) / 2, 700), new Size(TextureManager.Textures[TextureLogo].Width, TextureManager.Textures[TextureLogo].Height), Color128.White);
 			RenderString(halfWidth - 5, progressTop + 2, Fonts.FontType.Small, percStr, -1,0.0f, 0.0f,0.0f, false);
 
 			GL.PopMatrix();

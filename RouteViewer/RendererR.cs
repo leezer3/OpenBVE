@@ -131,7 +131,7 @@ namespace OpenBve {
 		// initialize
 		internal static void Initialize() {
 			// opengl
-			InitLoading();
+			
 			GL.ShadeModel(ShadingModel.Flat);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 0.0f);

@@ -29,6 +29,7 @@ namespace OpenBve {
 		// load
 		internal static bool Load(string RouteFile, Encoding RouteEncoding) {
 			// members
+			Renderer.InitLoading();
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
 			TrainProgressCurrentSum = 0.0;
