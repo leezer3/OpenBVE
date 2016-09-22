@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -32,7 +36,6 @@ namespace OpenBve
             //Do not do anything whilst loading
             if (currentlyLoading)
             {
-                System.Threading.Thread.Sleep(10);
                 return;
             }
             ProcessEvents();
@@ -113,5 +116,96 @@ namespace OpenBve
                 }
             }
         }
+
+	    protected override void OnClosing(CancelEventArgs e)
+	    {
+			// Minor hack:
+			// If we are currently loading, catch the first close event, and terminate the loader threads
+			// before actually closing the game-window.
+			if (Loading.Cancel == true)
+			{
+				return;
+			}
+			if (!Loading.Complete)
+			{
+				e.Cancel = true;
+				Loading.Cancel = true;
+			}
+	    }
+
+		public static void LoadingScreenLoop()
+		{
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PushMatrix();
+			GL.LoadIdentity();
+			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
+			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
+
+			while (!Loading.Complete && !Loading.Cancel)
+			{
+				CPreciseTimer.GetElapsedTime();
+				Program.currentGameWindow.ProcessEvents();
+				if (Program.currentGameWindow.IsExiting)
+					Loading.Cancel = true;
+				Renderer.DrawLoadingScreen();
+				Program.currentGameWindow.SwapBuffers();
+
+				if (Loading.JobAvailable)
+				{
+					while (jobs.Count > 0)
+					{
+						lock (jobLock)
+						{
+							var currentJob = jobs.Dequeue();
+							var locker = locks.Dequeue();
+							currentJob();
+							lock (locker)
+							{
+								Monitor.Pulse(locker);
+							}
+						}
+					}
+					Loading.JobAvailable = false;
+				}
+				double time = CPreciseTimer.GetElapsedTime();
+				double wait = 1000.0 / 60.0 - time * 1000 - 50;
+				if (wait > 0)
+					Thread.Sleep((int)(wait));
+			}
+			if (!Loading.Cancel)
+			{
+
+				GL.PopMatrix();
+				GL.MatrixMode(MatrixMode.Projection);
+			}
+			else
+			{
+				Program.currentGameWindow.Exit();
+			}
+		}
+
+		internal static readonly object LoadingLock = new object();
+		internal static bool LoadingRemakeCurrent = false;
+
+		private static readonly object jobLock = new object();
+		private static Queue<ThreadStart> jobs;
+		private static Queue<object> locks;
+
+		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
+		/// <param name="job">The OpenGL command</param>
+		internal static void RunInRenderThread(ThreadStart job)
+		{
+			object locker = new object();
+			lock (jobLock)
+			{
+				Loading.JobAvailable = true;
+				jobs.Enqueue(job);
+				locks.Enqueue(locker);
+			}
+			lock (locker)
+			{
+				Monitor.Wait(locker);
+			}
+		}
     }
 }

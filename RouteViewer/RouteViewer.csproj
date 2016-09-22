@@ -91,6 +91,8 @@
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\WaveParser.cs" />
     <Compile Include="Parsers\XObjectParser.cs" />
+    <Compile Include="Renderer.Loading.cs" />
+    <Compile Include="Renderer.Primitives.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="System\FileSystem.cs" />

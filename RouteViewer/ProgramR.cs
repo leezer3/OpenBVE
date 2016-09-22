@@ -236,8 +236,6 @@ namespace OpenBve {
 	                {
                         Application.DoEvents();
 	                    CurrentlyLoading = true;
-	                    Renderer.RenderScene(0.0);
-	                    Program.currentGameWindow.SwapBuffers();
 	                    CurrentRoute = Dialog.FileName;
 	                    LoadRoute();
 	                    ObjectManager.UpdateAnimatedWorldObjects(0.0, true);

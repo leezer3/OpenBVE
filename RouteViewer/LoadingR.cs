@@ -18,11 +18,13 @@ namespace OpenBve {
 		internal static double TrainProgress;
 		internal static bool Cancel;
 		internal static bool Complete;
-//		private static Thread Loader = null;
+		private static Thread Loader = null;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 		internal static double TrainProgressCurrentSum;
 		internal static double TrainProgressCurrentWeight;
+
+		internal static bool JobAvailable;
 
 		// load
 		internal static bool Load(string RouteFile, Encoding RouteEncoding) {
@@ -36,11 +38,9 @@ namespace OpenBve {
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
 			// thread
-//			Loader = new Thread(new ThreadStart(LoadThreaded));
-//			Loader.IsBackground = true;
-//			Loader.Start();
-//			Loader.Join();
-			LoadThreaded();
+			Loading.LoadAsynchronously(CurrentRouteFile, Encoding.UTF8);
+			RouteViewer.LoadingScreenLoop();
+
 			return true;
 		}
 
@@ -93,6 +93,24 @@ namespace OpenBve {
 			#endif
 			Complete = true;
 		}
+
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
+		{
+			// members
+			RouteProgress = 0.0;
+			TrainProgress = 0.0;
+			TrainProgressCurrentSum = 0.0;
+			TrainProgressCurrentWeight = 1.0;
+			Cancel = false;
+			Complete = false;
+			CurrentRouteFile = RouteFile;
+			CurrentRouteEncoding = RouteEncoding;
+			
+			//Set the route and train folders in the info class
+			Loader = new Thread(LoadThreaded) { IsBackground = true };
+			Loader.Start();
+		}
+
 		private static void LoadEverythingThreaded() {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
