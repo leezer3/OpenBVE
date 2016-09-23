@@ -406,6 +406,7 @@ namespace OpenBve {
 			// texture
 			int OpenGlNighttimeTextureIndex = Material.NighttimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.NighttimeTextureIndex, TextureManager.UseMode.Normal) : 0;
 			int OpenGlDaytimeTextureIndex = Material.DaytimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.DaytimeTextureIndex, TextureManager.UseMode.Normal) : 0;
+			bool nl = false;
 			if (OpenGlDaytimeTextureIndex != 0) {
 				if (!TexturingEnabled) {
 					GL.Enable(EnableCap.Texture2D);
@@ -957,25 +958,25 @@ namespace OpenBve {
 				if (ObjectManager.ObjectsUsed == 0) {
 					string[][] Keys = { new string[] { "F7" }, new string[] { "F8" } };
 					RenderKeys(4, 4, 24, Keys);
-					RenderString(32, 4, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32, 24, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString((double)ScreenWidth - 8.0, (double)ScreenHeight - 20.0, Fonts.FontType.Small, "v" + System.Windows.Forms.Application.ProductVersion, 1, 1.0f, 1.0f, 1.0f, true);
+					DrawString(Fonts.SmallFont, "Open route", new Point(32,4), TextAlignment.TopLeft, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
+					DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 8), TextAlignment.BottomRight, Color128.White);
 				} else if (OptionInterface) {
 					// keys
 					string[][] Keys = { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
 					RenderKeys(4, 4, 24, Keys);
-					RenderString(32, 4, Fonts.FontType.Small, "Reload route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32, 24, Fonts.FontType.Small, "Open route", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(32, 44, Fonts.FontType.Small, "Display the options window", -1, 1.0f, 1.0f, 1.0f, true);
+					DrawString(Fonts.SmallFont, "Reload route", new Point(32, 4), TextAlignment.TopLeft, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Open route", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 44), TextAlignment.TopLeft, Color128.White, true);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" }};
 					RenderKeys(ScreenWidth - 20, 4, 16, Keys);
-					RenderString(ScreenWidth - 32, 4, Fonts.FontType.Small, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 32, 24, Fonts.FontType.Small, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 32, 44, Fonts.FontType.Small, "Events: " + (Renderer.OptionEvents ? "on" : "off"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 32, 64, Fonts.FontType.Small, "CPU: " + (Program.CpuAutomaticMode ? "auto " + (Program.CpuReducedMode ? "(low)" : "(high)") : "high"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 32, 84, Fonts.FontType.Small, "Mute: " + (SoundManager.Mute ? "yes" : "no"), 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 32, 104, Fonts.FontType.Small, "Hide interface", 1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(ScreenWidth - 38, 124, Fonts.FontType.Small, (RenderStatsOverlay ? "Hide" : "Show" ) +" renderer statistics", 1, 1.0f, 1.0f, 1.0f, true);
+					DrawString(Fonts.SmallFont, "Wireframe:", new Point(ScreenWidth -32, 4), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Normals:", new Point(ScreenWidth - 32, 24), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Events:", new Point(ScreenWidth - 32, 44), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, "CPU:", new Point(ScreenWidth - 32, 64), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Mute:", new Point(ScreenWidth - 32, 84), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Hide interface:", new Point(ScreenWidth - 32, 104), TextAlignment.TopRight, Color128.White, true);
+					DrawString(Fonts.SmallFont, (RenderStatsOverlay ? "Hide" : "Show") + " renderer statistics", new Point(ScreenWidth - 32, 124), TextAlignment.TopRight, Color128.White, true);
 					Keys = new string[][] { new string[] { "F10" } };
 					RenderKeys(ScreenWidth - 32, 124, 30, Keys);
 					Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
@@ -987,13 +988,13 @@ namespace OpenBve {
 					Keys = new string[][] { new string[] { null, "/", "*" }, new string[] { "7", "8", "9" }, new string[] { "4", "5", "6" }, new string[] { "1", "2", "3" }, new string[] { null, "0", "." } };
 					RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Keys);
 					if (Program.JumpToPositionEnabled) {
-						RenderString(4.0, 84.0, Fonts.FontType.Small, "Jump to track position:", -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
+						DrawString(Fonts.SmallFont, "Jump to track position:", new Point(4, 84), TextAlignment.TopLeft, Color128.White, true);
+						DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, Color128.Yellow, true);
 					}
 					// info
 					double x = 0.5 * (double)ScreenWidth - 256.0;
-					RenderString(x, 4.0, Fonts.FontType.Small, "Position: " + GetLengthString(World.CameraCurrentAlignment.TrackPosition) + " (X=" + GetLengthString(World.CameraCurrentAlignment.Position.X) + ", Y=" + GetLengthString(World.CameraCurrentAlignment.Position.Y) + "), Orientation: (Yaw=" + (World.CameraCurrentAlignment.Yaw * 57.2957795130824).ToString("0.00", Culture) + "°, Pitch=" + (World.CameraCurrentAlignment.Pitch * 57.2957795130824).ToString("0.00", Culture) + "°, Roll=" + (World.CameraCurrentAlignment.Roll * 57.2957795130824).ToString("0.00", Culture) + "°)", -1, 1.0f, 1.0f, 1.0f, true);
-					RenderString(x, 20.0, Fonts.FontType.Small, "Radius: " + GetLengthString(World.CameraTrackFollower.CurveRadius) + ", Cant: " + (1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", Culture) + " mm, Adhesion=" + (100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", Culture), -1, 1.0f, 1.0f, 1.0f, true);
+					DrawString(Fonts.SmallFont, "Position: " + GetLengthString(World.CameraCurrentAlignment.TrackPosition) + " (X=" + GetLengthString(World.CameraCurrentAlignment.Position.X) + ", Y=" + GetLengthString(World.CameraCurrentAlignment.Position.Y) + "), Orientation: (Yaw=" + (World.CameraCurrentAlignment.Yaw * 57.2957795130824).ToString("0.00", Culture) + "°, Pitch=" + (World.CameraCurrentAlignment.Pitch * 57.2957795130824).ToString("0.00", Culture) + "°, Roll=" + (World.CameraCurrentAlignment.Roll * 57.2957795130824).ToString("0.00", Culture) + "°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
+					DrawString(Fonts.SmallFont, "Radius: " + GetLengthString(World.CameraTrackFollower.CurveRadius) + ", Cant: " + (1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", Culture) + " mm, Adhesion=" + (100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", Culture), new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					if (Program.CurrentStation >= 0) {
 						System.Text.StringBuilder t = new System.Text.StringBuilder();
 						t.Append(Game.Stations[Program.CurrentStation].Name);
@@ -1030,19 +1031,19 @@ namespace OpenBve {
 							t.Append(", Change ends");
 						}
 						t.Append(", Ratio=").Append((100.0 * Game.Stations[Program.CurrentStation].PassengerRatio).ToString("0", Culture)).Append("%");
-						RenderString(x, 36.0, Fonts.FontType.Small, t.ToString(), -1, 1.0f, 1.0f, 1.0f, true);
+						DrawString(Fonts.SmallFont, t.ToString(), new Point((int)x, 36), TextAlignment.TopLeft, Color128.White, true);
 					}
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
 						RenderKeys(4, 72, 24, Keys);
 						if (Interface.Messages[0].Type != Interface.MessageType.Information)
 						{
-							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 error message recently generated.", -1, 1.0f, 0.5f, 0.5f,true);
+							DrawString(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
 							//If all of our messages are information, then print the message text in grey
-							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the 1 message recently generated.", -1, 1.0f, 1.0f, 1.0f, true);
+							DrawString(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					} else if (Interface.MessageCount > 1) {
 						Keys = new string[][] { new string[] { "F9" } };
@@ -1058,23 +1059,21 @@ namespace OpenBve {
 						}
 						if (error)
 						{
-							RenderString(32.0, 72.0, Fonts.FontType.Small,"Display the " + Interface.MessageCount.ToString(Culture) + " error messages recently generated.", -1, 1.0f, 0.5f,0.5f, true);
+							DrawString(Fonts.SmallFont, "Display the " + Interface.MessageCount + " error messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
 						else
 						{
-							//If all of our messages are information, then print the message text in grey
-							RenderString(32.0, 72.0, Fonts.FontType.Small, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", -1, 1.0f, 1.0f, 1.0f, true);
+							DrawString(Fonts.SmallFont, "Display the " + Interface.MessageCount + " messages recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					}
 					if (RenderStatsOverlay)
 					{
-
 						RenderKeys(4, ScreenHeight - 126, 116, new string[][] { new string[] { "Renderer Statistics" } });
-						RenderString(4, ScreenHeight - 112, Fonts.FontType.Small, "Total static objects: " + ObjectManager.ObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4, ScreenHeight - 100, Fonts.FontType.Small, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4, ScreenHeight - 88, Fonts.FontType.Small, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4, ScreenHeight - 76, Fonts.FontType.Small, "Total opaque faces: "+ Game.InfoStaticOpaqueFaceCount, -1, 1.0f, 1.0f, 1.0f, true);
-						RenderString(4, ScreenHeight - 64, Fonts.FontType.Small, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), -1, 1.0f, 1.0f, 1.0f, true);
+						DrawString(Fonts.SmallFont, "Total static objects: " + ObjectManager.ObjectsUsed, new Point(4, ScreenHeight - 112), TextAlignment.TopLeft, Color128.White, true);
+						DrawString(Fonts.SmallFont, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, new Point(4, ScreenHeight - 100), TextAlignment.TopLeft, Color128.White, true);
+						DrawString(Fonts.SmallFont, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", new Point(4, ScreenHeight - 88), TextAlignment.TopLeft, Color128.White, true);
+						DrawString(Fonts.SmallFont, "Total opaque faces: " + Game.InfoStaticOpaqueFaceCount, new Point(4, ScreenHeight - 76), TextAlignment.TopLeft, Color128.White, true);
+						DrawString(Fonts.SmallFont, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), new Point(4, ScreenHeight - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 
@@ -1097,21 +1096,27 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			return h.ToString("00") + ":" + m.ToString("00") + ":" + s.ToString("00");
 		}
-		
-		// get length string
-		private static string GetLengthString(double Value) {
+
+		// get length string 
+		private static string GetLengthString(double Value)
+		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
-			if (Game.RouteUnitOfLength.Length == 1 && Game.RouteUnitOfLength[0] == 1.0) {
+			if (Game.RouteUnitOfLength.Length == 1 && Game.RouteUnitOfLength[0] == 1.0)
+			{
 				return Value.ToString("0.00", culture);
-			} else {
+			}
+			else
+			{
 				double[] values = new double[Game.RouteUnitOfLength.Length];
-				for (int i = 0; i < Game.RouteUnitOfLength.Length - 1; i++) {
-					values[i] = Math.Floor(Value / Game.RouteUnitOfLength[i]);
-					Value -= values[i] * Game.RouteUnitOfLength[i];
+				for (int i = 0; i < Game.RouteUnitOfLength.Length - 1; i++)
+				{
+					values[i] = Math.Floor(Value/Game.RouteUnitOfLength[i]);
+					Value -= values[i]*Game.RouteUnitOfLength[i];
 				}
-				values[Game.RouteUnitOfLength.Length - 1] = Value / Game.RouteUnitOfLength[Game.RouteUnitOfLength.Length - 1];
+				values[Game.RouteUnitOfLength.Length - 1] = Value/Game.RouteUnitOfLength[Game.RouteUnitOfLength.Length - 1];
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-				for (int i = 0; i < values.Length - 1; i++) {
+				for (int i = 0; i < values.Length - 1; i++)
+				{
 					builder.Append(values[i].ToString(culture) + ":");
 				}
 				builder.Append(values[values.Length - 1].ToString("0.00", culture));
@@ -1129,65 +1134,12 @@ namespace OpenBve {
 						DrawRectangle(-1, new Point(px -1, py -1), new Size(Width + 1, 17),  new Color128(0.25f,0.25f, 0.25f,0.5f));
 						DrawRectangle(-1, new Point(px - 1, py - 1), new Size(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
 						DrawRectangle(-1, new Point(px, py), new Size(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
-						RenderString(px + 2.0, py, Fonts.FontType.Small, Keys[y][x], -1, 1.0f, 1.0f, 1.0f, true);
+						DrawString(Fonts.SmallFont, Keys[y][x], new Point(px -1 + Width /2, py + 7), TextAlignment.CenterMiddle, Color128.White);
 					}
 					px += Width + 4;
 				}
 				py += 20;
 			}
-		}
-
-		// render string
-		private static void RenderString(double PixelLeft, double PixelTop, Fonts.FontType FontType, string Text, int Orientation, float R, float G, float B, bool Shadow) {
-			RenderString(PixelLeft, PixelTop, FontType, Text, Orientation, R, G, B, 1.0f, Shadow);
-		}
-		private static void RenderString(double PixelLeft, double PixelTop, Fonts.FontType FontType, string Text, int Orientation, float R, float G, float B, float A, bool Shadow) {
-			
-			if (Text == null) return;
-			int Font = (int)FontType;
-			double c = 1;
-			double x = PixelLeft;
-			double y = PixelTop;
-			double tw = 0.0;
-			for (int i = 0; i < Text.Length; i++) {
-				int a = char.ConvertToUtf32(Text, i);
-				if (a >= 0x10000) {
-					i++;
-				}
-				Fonts.GetTextureIndex(FontType, a);
-				tw += Fonts.Characters[Font][a].Width;
-			}
-			if (Orientation == 0) {
-				x -= 0.5 * tw;
-			} else if (Orientation == 1) {
-				x -= tw;
-			}
-			for (int i = 0; i < Text.Length; i++) {
-				//For each character in the string
-				int b = char.ConvertToUtf32(Text, i);
-				if (b >= 0x10000) {
-					i++;
-				}
-				int t = Fonts.GetTextureIndex(FontType, b);
-				double w = (double)TextureManager.Textures[t].ClipWidth;
-				double h = (double)TextureManager.Textures[t].ClipHeight;
-				GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
-				
-				if (Shadow) {
-
-					DrawRectangle(t, new Point((int)x + (int)c, (int)y + (int)c), new Size((int)w, (int)h), new Color128(A, A, A, 1.0f));
-				}
-				
-				GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
-				DrawRectangle(t, new Point((int)x, (int)y), new Size((int)w, (int)h), new Color128(A, A, A, 1.0f));
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-				DrawRectangle(t, new Point((int)x, (int)y), new Size((int)w, (int)h), new Color128(R, G, B, A));
-				
-			
-				x += Fonts.Characters[Font][b].Width;
-			}
-			
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 		}
 
 		// readd objects

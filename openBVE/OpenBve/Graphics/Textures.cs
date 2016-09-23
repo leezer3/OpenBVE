@@ -256,7 +256,7 @@ namespace OpenBve
 					{
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
 					}
-					if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor && Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear)
+					if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor || Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear)
 					{
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
 					}

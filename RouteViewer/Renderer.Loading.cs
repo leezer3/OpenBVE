@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;			// for AssemblyVersion
+using System.Reflection;
+using System.Threading;
+// for AssemblyVersion
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -50,7 +52,8 @@ namespace OpenBve
 			else fName = LogoFileName[0];
 			TextureLogo = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
 			TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
-			
+			Thread.Sleep(10);
+
 		}
 
 		//
@@ -92,7 +95,7 @@ namespace OpenBve
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
 			int bkgHeight, bkgWidth;
-			int fontHeight = (int)Fonts.SmallFontSize;
+			int fontHeight = (int) Fonts.SmallFont.FontSize;
 			int logoBottom;
 			//			int		versionTop;
 			int halfWidth = Renderer.ScreenWidth / 2;
@@ -155,10 +158,8 @@ namespace OpenBve
 			
 
 			string text = "Loading route, please wait.....";
-
-			RenderString(halfWidth - 60, progressTop - fontHeight - 6, Fonts.FontType.Small, text, -1, 1.0f, 1.0f, 1.0f, false);
-			RenderString(halfWidth - 5, progressTop + 2, Fonts.FontType.Small, percStr, -1,0.0f, 0.0f,0.0f, false);
-
+			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
+			DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
 			GL.PopMatrix();
 		}
 

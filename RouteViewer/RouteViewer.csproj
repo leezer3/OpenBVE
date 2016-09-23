@@ -93,6 +93,7 @@
     <Compile Include="Parsers\XObjectParser.cs" />
     <Compile Include="Renderer.Loading.cs" />
     <Compile Include="Renderer.Primitives.cs" />
+	<Compile Include="Renderer.Strings.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="System\FileSystem.cs" />

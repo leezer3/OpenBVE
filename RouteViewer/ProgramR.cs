@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenTK;
@@ -145,7 +146,7 @@ namespace OpenBve {
 			CurrentStation = -1;
 			Game.Reset();
 			Renderer.Initialize();
-			Fonts.Initialize();
+			Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
 			UpdateViewport();
 			bool result;
 			try {
@@ -200,8 +201,7 @@ namespace OpenBve {
 				Program.currentGameWindow.SwapBuffers();
 				World.CameraAlignment a = World.CameraCurrentAlignment;
 				TextureManager.ClearTextures();
-				//Remember to reinitialise the loading screen textures after clearing everything...
-				Renderer.InitLoading();
+				Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
 				if (Program.LoadRoute())
 				{
 					World.CameraCurrentAlignment = a;

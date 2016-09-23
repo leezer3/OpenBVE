@@ -98,7 +98,7 @@ namespace OpenBve
             Renderer.Initialize();
             Renderer.InitializeLighting();
             SoundManager.Initialize();
-            Fonts.Initialize();
+            //Fonts.Initialize();
             Program.UpdateViewport();
             if (Program.processCommandLineArgs)
             {
