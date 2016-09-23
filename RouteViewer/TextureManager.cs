@@ -519,7 +519,7 @@ namespace OpenBve
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 						break;
 				}
-				if (Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.AnisotropicFiltering && Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
 				{
 					GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 				}
@@ -843,7 +843,15 @@ namespace OpenBve
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 						break;
 				}
-				if (Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.Bilinear || Interface.CurrentOptions.Interpolation == InterpolationMode.NearestNeighbor)
+				{
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
+				}
+				else
+				{
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+				}
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.AnisotropicFiltering)
 				{
 					GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 				}
