@@ -484,9 +484,18 @@ namespace OpenBve
 			internal bool FallenOver;
 		}
 		// train
+
+		/// <summary>The available states for a train</summary>
 		internal enum TrainState
 		{
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
+			/// <summary>The train has not yet been introduced into the simulation</summary>
+			Pending = 0,
+			/// <summary>The train has been introduced into the simulation</summary>
+			Available = 1,
+			/// <summary>The train has traversed it's path, and has been disposed of by the simulation</summary>
+			Disposed = 2, 
+			/// <summary>The train is a bogus (non-visble) train created via a .PreTrain command</summary>
+			Bogus = 3
 		}
 		internal enum TrainStopState
 		{
@@ -522,6 +531,7 @@ namespace OpenBve
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
 			internal double InternalTimerTimeElapsed;
+			internal bool Derailed;
 		}
 
 		// trains

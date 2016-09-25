@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
