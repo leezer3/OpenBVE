@@ -28,8 +28,9 @@
 ↷ <a href="#needle">5. The Needle section</a><br />
 ↷ <a href="#digitalnumber">6. The DigitalNumber section</a><br />
 ↷ <a href="#digitalgauge">7. The DigitalGauge section</a><br />
-↷ <a href="#timetable">8. The Timetable section</a><br />
-↷ <a href="#subjects">9. Available subjects</a><br />
+↷ <a href="#lineargauge">8. The LinearGauge section</a><br />
+↷ <a href="#timetable">9. The Timetable section</a><br />
+↷ <a href="#subjects">10. Available subjects</a><br />
 <br /><a name="overview" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 1. Overview</font><hr />
@@ -575,9 +576,89 @@ If <em>Radius</em> is negative, it is treated as if it was positive, but the ent
 <tr><td><font color="#808080">
 <b><em>LayerIndex</em></b>: An integer which uniquely defines this element among overlapping elements. Lower numbers represent the background and higher numbers the foreground. Elements may use the same <em>LayerIndex</em> as long as they do not overlap. The default value is 0.
 </font></td></tr></table>
+<br /><a name="lineargauge" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 8. The LinearGauge section</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The LinearGauge section creates a panel layer, which uses texture shifting to create a sliding linear gauge. You can use as many of these sections as required.<br /><br />Consider a standard openBVE face:<br /><br /><img src="../Images/texturecoords.png" alt="" /><br /><br />
+As you can see, the horizontal texture-coordinates upon this face are 0 at the <b>right</b> and 1 at the <b>left</b>.
+<br />
+Thus, the value given by <em>Minimum</em> represents 0 <em>Maximum</em>, represents 1, and the current value may then be calculated as a simple percentage.<br /><br />
+Further, the direction of the texture shift may be changed from horizontal to vertical (or both) by using the <b>Direction</b> parameter.
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">[LinearGauge]</font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+This starts the section.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Subject = <em>Subject</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Subject</em></b>: One of the <a href="train_panel2_cfg.html#subjects">available subjects</a>. The default subject is <b>true</b>.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Location = <em>CenterX</em>, <em>CenterY</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>CenterX</em></b>: A floating-point number representing the x-coordinate at which the left of the image is inserted. The default value is 0.<br />
+<b><em>CenterY</em></b>: A floating-point number representing the y-coordinate at which the top of the image is inserted. The default value is 0.
+</font></td></tr></table>
+<br /><table border="0">
+
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Minimum = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: A floating-point value corresponding to the value returned by the <em>Subject</em> in use. The default value is 0.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Maximum = <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: A floating-point value corresponding to the value returned by the <em>Subject</em> in use. The default value is 1000.
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Direction = <em>XDirection</em>, <em>YDirection</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>XDirection</em></b>: <b>-1:</b> Translates from right to left <b>0:</b> No translation is performed <b>1:</b> Translates from left to right. The default value is 0.<br>
+<b><em>YDirection</em></b>: <b>-1:</b> Translates from top to bottom <b>0:</b> No translation is performed <b>1:</b> Translates from bottom to top. The default value is 0.
+</font></td></tr></table>
+
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Width = <em>NeedleWidth</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>NeedleWidth</em></b>: An integer which defines the width in pixels of the needle, from the edge of the texture- Translation of the texture will stop when this reaches this number of pixels from the end, in order to avoid wrapping around. The default value is 0.
+</font></td></tr></table>
+
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Layer = <em>LayerIndex</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>LayerIndex</em></b>: An integer which uniquely defines this element among overlapping elements. Lower numbers represent the background and higher numbers the foreground. Elements may use the same <em>LayerIndex</em> as long as they do not overlap. The default value is 0.
+</font></td></tr></table>
 <br /><a name="timetable" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
-<font size="+1" color="#0080FF">■ 8. The Timetable section</font><hr />
+<font size="+1" color="#0080FF">■ 9. The Timetable section</font><hr />
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font size="-1" color="#808080">
 
@@ -633,7 +714,7 @@ This starts the section.<br /><br /><table border="0">
 </font></td></tr></table>
 <br /><a name="subjects" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
-<font size="+1" color="#0080FF">■ 9. Available subjects</font><hr />
+<font size="+1" color="#0080FF">■ 10. Available subjects</font><hr />
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font size="-1" color="#808080">
 
