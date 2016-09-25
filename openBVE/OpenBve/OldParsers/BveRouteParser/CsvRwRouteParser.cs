@@ -1133,7 +1133,7 @@ namespace OpenBve {
 		// separate commands and arguments
 		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors) {
 			bool openingerror = false, closingerror = false;
-			int i;
+			int i, fcb = 0;
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {
 					bool found = false;
@@ -1167,6 +1167,7 @@ namespace OpenBve {
 								continue;
 							}
 							found = true;
+							fcb = i;
 							break;
 						}
 						i++;
@@ -1187,6 +1188,15 @@ namespace OpenBve {
 					if (i >= Expression.Text.Length - 1 || !char.IsWhiteSpace(Expression.Text[i + 1])) {
 						break;
 					}
+				}
+
+			}
+			if (fcb != 0 && fcb < Expression.Text.Length - 1)
+			{
+				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]) && Expression.Text[fcb + 1] != '.')
+				{
+					Expression.Text = Expression.Text.Insert(fcb + 1, " ");
+					i = fcb;
 				}
 			}
 			if (i < Expression.Text.Length) {
@@ -3001,6 +3011,7 @@ namespace OpenBve {
 												} else {
 													if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
 														Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+														Array.Resize(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
 													}
 													if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null) {
                                                         Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
@@ -3247,9 +3258,9 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												num = -2;
 											}
-											if (num != -2 & num != 2 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6) {
+											if (num != 1 & num != -2 & num != 2 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects has an unsupported value in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												num = num == -3 | num == -6 ? -num : -4;
+												num = num == -3 | num == -6 | num == -1 ? -num : -4;
 											}
 											double x = 0.0, y = 0.0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x)) {
@@ -3275,6 +3286,7 @@ namespace OpenBve {
 											}
 											int[] aspects; int comp;
 											switch (num) {
+													case 1: aspects = new int[] { 0, 2, 3 }; comp = 4; break;
 													case 2: aspects = new int[] { 0, 2 }; comp = 0; break;
 													case -2: aspects = new int[] { 0, 4 }; comp = 1; break;
 													case 3: aspects = new int[] { 0, 2, 4 }; comp = 2; break;

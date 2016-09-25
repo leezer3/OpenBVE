@@ -487,7 +487,13 @@ namespace OpenBve {
 													default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
-											int.TryParse(Value, NumberStyles.Integer, Culture, out Interface.CurrentOptions.TimeAccelerationFactor);
+											int tf;
+											int.TryParse(Value, NumberStyles.Integer, Culture, out tf);
+											if (tf <= 0)
+											{
+												tf = 5;
+											}
+											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
 									} break;
 								case "controls":
@@ -2363,7 +2369,12 @@ namespace OpenBve {
 								Value = 3600.0 * (double)h + 60.0 * (double)m;
 								return true;
 							}
-						} else if (n == 3 | n == 4) {
+						} else if (n >= 3) {
+							if (n > 4)
+							{
+								Interface.AddMessage(Interface.MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
+								n = 4;
+							}
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
 								uint s; if (uint.TryParse(Expression.Substring(i + 3, n - 2), NumberStyles.None, Culture, out s)) {
 									Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;

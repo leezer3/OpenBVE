@@ -456,17 +456,19 @@ namespace OpenBve {
 	                            direction = 0;
 	                        }
 	                        double value;
-	                        if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,
-	                            out value))
+	                        if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,out value))
 	                        {
-	                            if (direction != 0)
-	                            {
-	                                value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
-	                            }
-	                            TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
-	                            World.CameraCurrentAlignment.TrackPosition = value;
-	                            World.UpdateAbsoluteCamera(0.0);
-	                            World.UpdateViewingDistances();
+		                        if (value < TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100)
+		                        {
+			                        if (direction != 0)
+			                        {
+				                        value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
+			                        }
+			                        TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
+			                        World.CameraCurrentAlignment.TrackPosition = value;
+			                        World.UpdateAbsoluteCamera(0.0);
+			                        World.UpdateViewingDistances();
+		                        }
 	                        }
 	                    }
 	                    JumpToPositionEnabled = false;

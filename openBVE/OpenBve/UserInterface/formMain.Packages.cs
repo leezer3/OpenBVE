@@ -1019,16 +1019,22 @@ namespace OpenBve
 				switch (newPackageType)
 				{
 					case PackageType.Route:
-						currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Route;
+						currentPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Route
+						};
 						break;
 					case PackageType.Train:
-						currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Train;
+						currentPackage = new Package(Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Train
+						};
 						break;
 					case PackageType.Other:
-						currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
-						currentPackage.PackageType = PackageType.Other;
+						currentPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), false)
+						{
+							PackageType = PackageType.Other
+						};
 						break;
 				}
 			}
@@ -1270,7 +1276,7 @@ namespace OpenBve
 			if (DialogOK && files.Length != 0)
 			{
 
-				filesToPackageBox.Text += folderDisplay;
+				filesToPackageBox.Text += folderDisplay + Environment.NewLine;
 				var tempList = new List<PackageFile>();
 				for (int i = 0; i < files.Length; i++)
 				{
@@ -1281,7 +1287,10 @@ namespace OpenBve
 					};
 					tempList.Add(File);
 				}
-				filesToPackage = new List<PackageFile>();
+				if (filesToPackage == null)
+				{
+					filesToPackage = new List<PackageFile>();
+				}
 				filesToPackage.AddRange(DatabaseFunctions.FindFileLocations(tempList));
 			}
 		}
@@ -1452,6 +1461,7 @@ namespace OpenBve
 			ImageFile = null;
 			RemoveFromDatabase = true;
 			selectedDependacies = new List<string>();
+			filesToPackage = null;
 			//Reset package lists
 			dataGridViewPackages2.Rows.Clear();
 			dataGridViewPackages3.Rows.Clear();
