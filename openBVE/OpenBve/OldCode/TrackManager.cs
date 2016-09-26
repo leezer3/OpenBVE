@@ -587,7 +587,7 @@ namespace OpenBve {
 				if (TriggerType == EventTriggerType.RearCarRearAxle & Train != TrainManager.PlayerTrain) {
 					TrainManager.DisposeTrain(Train);
 				} else if (Train == TrainManager.PlayerTrain) {
-					Train.Cars[CarIndex].Derailed = true;
+					Train.Derail(CarIndex, 0.0);
 				}
 			}
 		}

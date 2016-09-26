@@ -556,6 +556,9 @@ namespace OpenBve {
 										case "showerrormessages":
 											Interface.CurrentOptions.ShowErrorMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
+										case "debuglog":
+											Program.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "folders":
 									switch (Key) {
@@ -742,6 +745,7 @@ namespace OpenBve {
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));
 			Builder.AppendLine("showErrorMessages = " + (CurrentOptions.ShowErrorMessages ? "true" : "false"));
+			Builder.AppendLine("debugLog = " + (Program.GenerateDebugLogging ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[controls]");
 			Builder.AppendLine("useJoysticks = " + (CurrentOptions.UseJoysticks ? "true" : "false"));
