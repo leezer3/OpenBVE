@@ -702,13 +702,16 @@ namespace OpenBve
 			object locker = new object();
 			lock (jobLock)
 			{
-				Loading.JobAvailable = true;
 				jobs.Enqueue(job);
 				locks.Enqueue(locker);
+				//Don't set the job to available until after it's been loaded into the queue
+				Loading.JobAvailable = true;
 			}
 			lock (locker)
 			{
-				Monitor.Wait(locker);
+				//Failsafe: If our job has taken more than a second, terminate it
+				//A missing texture is probably better than an infinite loadscreen
+				Monitor.Wait(locker, 1000);
 			}
 		}
 	}

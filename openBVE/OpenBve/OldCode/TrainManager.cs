@@ -575,6 +575,7 @@ namespace OpenBve
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
 			if (System.IO.File.Exists(File))
 			{
+				Program.AppendToLogFile("Loading train panel: " + File);
 				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
 				try
 				{
@@ -602,6 +603,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
 					if (System.IO.File.Exists(File))
 					{
+						Program.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
 						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
 						World.CameraRestriction = World.CameraRestrictionMode.On;
@@ -611,6 +613,7 @@ namespace OpenBve
 						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 						if (System.IO.File.Exists(File))
 						{
+							Program.AppendToLogFile("Loading train panel: " + File);
 							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 							World.CameraRestriction = World.CameraRestrictionMode.On;
 						}

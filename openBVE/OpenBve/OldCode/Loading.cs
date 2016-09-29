@@ -261,6 +261,7 @@ namespace OpenBve {
 					TrainManager.ParsePanelConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Program.AppendToLogFile("Train panel loaded sucessfully.");
 				}
 				// add exterior section
 				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus) {
