@@ -85,7 +85,7 @@ namespace OpenBve {
 			}
 
 			//Platform specific startup checks
-			if (CurrentlyRunningOnMono)
+			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
 			{
 				// --- Check if we're running as root, and prompt not to ---
 				if (getuid() == 0)
