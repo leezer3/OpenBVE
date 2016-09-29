@@ -41,6 +41,9 @@ namespace OpenBve {
 				Dialog.Result = initial;
 				Dialog.ShowDialog();
 				MainDialogResult result = Dialog.Result;
+				//Dispose of the worker thread when closing the form
+				//If it's still running, it attempts to update a non-existant form and crashes nastily
+				Dialog.routeWorkerThread.Dispose();
 				Dialog.Dispose();
 				return result;
 			}
