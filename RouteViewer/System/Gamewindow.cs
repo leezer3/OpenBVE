@@ -135,6 +135,7 @@ namespace OpenBve
 
 		public static void LoadingScreenLoop()
 		{
+			GL.Disable(EnableCap.DepthTest);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();

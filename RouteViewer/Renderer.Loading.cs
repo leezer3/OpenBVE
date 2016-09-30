@@ -146,10 +146,9 @@ namespace OpenBve
 			int progressTop = Renderer.ScreenHeight - blankHeight;
 			int progressWidth = Renderer.ScreenWidth - progrMargin * 2;
 			double routeProgress = Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
-			double trainProgress = Math.Max(0.0, Math.Min(1.0, Loading.TrainProgress));
 			// draw progress message right above the second division
 
-			double percent = 50.0 * (routeProgress + trainProgress);
+			double percent = 100.0 * routeProgress;
 			string percStr = percent.ToString("0") + "%";
 			// progress frame
 			DrawRectangle(-1, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
