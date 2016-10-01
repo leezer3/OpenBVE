@@ -307,6 +307,7 @@ namespace OpenBve {
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 									double Minimum = 0.0, Maximum = 1000.0;
 									double NaturalFrequency = -1.0, DampingRatio = -1.0;
+									bool Backstop = false;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0) {
@@ -423,6 +424,12 @@ namespace OpenBve {
 													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Layer)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
+												case "backstop":
+													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
+													{
+														Backstop = true;
+													}
+													break;
 											}
 										} i++;
 									} i--;
@@ -447,7 +454,7 @@ namespace OpenBve {
 										{
 											Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
 										});
-									double w = (double)tday.Width;
+										double w = (double)tday.Width;
 										double h = (double)tday.Height;
 										if (!OriginDefined) {
 											OriginX = 0.5 * w;
@@ -477,6 +484,7 @@ namespace OpenBve {
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 												break;
 										}
+										//Convert angles from degrees to radians
 										InitialAngle *= 0.0174532925199433;
 										LastAngle *= 0.0174532925199433;
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
@@ -486,6 +494,11 @@ namespace OpenBve {
 											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new ObjectManager.Damping(NaturalFrequency, DampingRatio);
 										}
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
+										if (Backstop)
+										{
+											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
+											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction.Maximum = LastAngle;
+										}
 									}
 								} break;
 							case "lineargauge":
