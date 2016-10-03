@@ -739,6 +739,12 @@ namespace OpenBve {
 							comboboxRouteEncoding.Items[0] = "(UTF-32 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(12001);
 							break;
+						case Interface.Encoding.Shift_JIS:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
+							break;
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();

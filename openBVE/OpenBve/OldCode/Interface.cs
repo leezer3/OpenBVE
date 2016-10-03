@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Packages;
 using OpenBveApi.Runtime;
+using Mozilla.NUniversalCharDet;
 using OpenTK.Input;
 
 namespace OpenBve {
@@ -1347,6 +1348,8 @@ namespace OpenBve {
 			Utf32Le = 5,
 			/// <summary>UTF-32BE</summary>
 			Utf32Be = 6,
+			/// <summary>SHIFT_JIS</summary>
+			Shift_JIS = 7,
 		}
 		/// <summary>Gets the character endcoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
@@ -1366,6 +1369,16 @@ namespace OpenBve {
 					if (Data[0] == 0x00 & Data[1] == 0x00 & Data[2] == 0xFE & Data[3] == 0xFF) return Encoding.Utf32Be;
 					if (Data[0] == 0xFF & Data[1] == 0xFE & Data[2] == 0x00 & Data[3] == 0x00) return Encoding.Utf32Le;
 				}
+
+				UniversalDetector Det = new UniversalDetector(null);
+				Det.HandleData(Data, 0, Data.Length);
+				Det.DataEnd();
+				switch (Det.GetDetectedCharset())
+				{
+					case "SHIFT_JIS":
+						return Encoding.Shift_JIS;
+				}
+				Det.Reset();
 				return Encoding.Unknown;
 			} catch {
 				return Encoding.Unknown;
