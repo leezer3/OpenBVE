@@ -1193,7 +1193,7 @@ namespace OpenBve {
 			}
 			if (fcb != 0 && fcb < Expression.Text.Length - 1)
 			{
-				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]) && Expression.Text[fcb + 1] != '.')
+				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]) && Expression.Text[fcb + 1] != '.' && Expression.Text[fcb + 1] != ';')
 				{
 					Expression.Text = Expression.Text.Insert(fcb + 1, " ");
 					i = fcb;
