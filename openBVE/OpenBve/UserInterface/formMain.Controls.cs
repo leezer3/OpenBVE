@@ -268,7 +268,8 @@ namespace OpenBve {
 				int j = comboboxKeyboardKey.SelectedIndex;
 
 				Interface.KeyInfo k = comboboxKeyboardKey.Items[j] is Interface.KeyInfo ? (Interface.KeyInfo) comboboxKeyboardKey.Items[j] : new Interface.KeyInfo();
-				MessageBox.Show(k.Key.ToString());
+				Interface.CurrentControls[i].Key = k.Key;
+				UpdateControlListElement(listviewControls.Items[i], i, true); 
 			}
 		}
 
@@ -315,6 +316,15 @@ namespace OpenBve {
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 			panelJoystick.Enabled = radiobuttonJoystick.Checked;
+			if (radiobuttonJoystick.Checked)
+			{
+				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
+			}
+			else
+			{
+				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");		
+			}
+
 		}
 
 		// details
@@ -400,8 +410,19 @@ namespace OpenBve {
 			}
 		}
 
+		private bool KeyGrab = false;
+
 		// joystick grab
 		private void textboxJoystickGrab_Enter(object sender, EventArgs e) {
+			if (!radiobuttonJoystick.Checked)
+			{
+				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grabbing");
+				textboxJoystickGrab.BackColor = Color.Crimson;
+				textboxJoystickGrab.ForeColor = Color.White;
+				KeyGrab = true;
+				return;
+
+			}
 			bool FullAxis = false;
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int j = listviewControls.SelectedIndices[0];
@@ -417,10 +438,34 @@ namespace OpenBve {
 			textboxJoystickGrab.BackColor = Color.Crimson;
 			textboxJoystickGrab.ForeColor = Color.White;
 		}
+
+		private void textboxJoystickGrab_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (KeyGrab == false)
+			{
+				return;
+			}
+			KeyboardState state = OpenTK.Input.Keyboard.GetState();
+			for (int j = 0; j < Interface.TranslatedKeys.Length; j++)
+			{
+				if (state.IsKeyDown(Interface.TranslatedKeys[j].Key))
+				{
+					int i = listviewControls.SelectedIndices[0];
+					Interface.CurrentControls[i].Key = Interface.TranslatedKeys[j].Key;
+					UpdateControlListElement(listviewControls.Items[i], i, true);
+					comboboxKeyboardKey.SelectedIndex = j;
+				}
+			}
+			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");
+			textboxJoystickGrab.BackColor = panelControls.BackColor;
+			textboxJoystickGrab.ForeColor = Color.Black;
+			comboboxKeyboardKey.Focus();
+		}
 		private void textboxJoystickGrab_Leave(object sender, EventArgs e) {
 			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
 			textboxJoystickGrab.BackColor = panelControls.BackColor;
 			textboxJoystickGrab.ForeColor = Color.Black;
+			KeyGrab = false;
 		}
 
 		

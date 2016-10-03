@@ -685,7 +685,7 @@ namespace OpenBve {
 			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");
-			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
+			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");
 			groupboxJoysticks.Text = Interface.GetInterfaceString("controls_attached");
 			{
 				listviewControls.Items.Clear();
