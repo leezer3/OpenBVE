@@ -456,6 +456,7 @@ namespace OpenBve {
 				{
 					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
 					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
+					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
 					break;
 				}
 			}
@@ -694,9 +695,9 @@ namespace OpenBve {
 					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
-				foreach (string currentKey in Enum.GetNames(typeof(Key)))
+				for (int i = 0; i < Interface.TranslatedKeys.Length; i++)
 				{
-					comboboxKeyboardKey.Items.Add(currentKey);
+					comboboxKeyboardKey.Items.Add(Interface.TranslatedKeys[i]);
 				}
 
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];

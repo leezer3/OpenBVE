@@ -89,14 +89,15 @@ namespace OpenBve {
                                         } break;
                                     case "keys":
                                         {
-                                            for (int k = 0; k < Keys.Length; k++)
+                                            for (int k = 0; k < TranslatedKeys.Length; k++)
                                             {
-                                                if (string.Compare(Keys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                if (string.Compare(TranslatedKeys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
                                                 {
-                                                    Keys[k].Description = b;
+                                                    TranslatedKeys[k].Description = b;
                                                     break;
                                                 }
                                             }
+
                                         } break;
                                     default:
                                         AddInterfaceString(Section + "_" + a, b);
@@ -135,8 +136,10 @@ namespace OpenBve {
                 string Section = "";
                 InterfaceString[] LoadedStrings = new InterfaceString[16];
                 CommandInfo[] LoadedCommands = new CommandInfo[Interface.CommandInfos.Length];
-                InterfaceQuickReference QuickReference = new InterfaceQuickReference();
+				KeyInfo[] LoadedKeys = new KeyInfo[Interface.TranslatedKeys.Length];
+				InterfaceQuickReference QuickReference = new InterfaceQuickReference();
                 Array.Copy(Interface.CommandInfos, LoadedCommands, Interface.CommandInfos.Length);
+				Array.Copy(Interface.TranslatedKeys, LoadedKeys, Interface.TranslatedKeys.Length);
                 var LoadedStringCount = 0;
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -196,11 +199,11 @@ namespace OpenBve {
                                         } break;
                                     case "keys":
                                         {
-                                            for (int k = 0; k < Keys.Length; k++)
+                                            for (int k = 0; k < LoadedKeys.Length; k++)
                                             {
-                                                if (string.Compare(Keys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                if (string.Compare(LoadedKeys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
                                                 {
-                                                    Keys[k].Description = b;
+                                                    LoadedKeys[k].Description = b;
                                                     break;
                                                 }
                                             }
@@ -234,6 +237,7 @@ namespace OpenBve {
                 }
                 newLanguage.InterfaceStrings = LoadedStrings;
                 newLanguage.CommandInfos = LoadedCommands;
+	            newLanguage.KeyInfos = LoadedKeys;
                 newLanguage.InterfaceStringCount = LoadedStringCount;
                 newLanguage.QuickReferences = QuickReference;
                 //We should always fall-back to en-US as the last-resort before failing to load a string
@@ -254,6 +258,8 @@ namespace OpenBve {
 	        internal InterfaceString[] InterfaceStrings;
             /// <summary>The command information strings for this language</summary>
 	        internal CommandInfo[] CommandInfos;
+			/// <summary>The key information strings for this language</summary>
+			internal KeyInfo[] KeyInfos;
             /// <summary>The quick-reference strings for this language</summary>
 	        internal InterfaceQuickReference QuickReferences;
 

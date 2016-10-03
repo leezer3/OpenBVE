@@ -266,13 +266,9 @@ namespace OpenBve {
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxKeyboardKey.SelectedIndex;
-				
-				Key k;
-				if (Enum.TryParse(comboboxKeyboardKey.Items[j].ToString(), true, out k))
-				{
-					Interface.CurrentControls[i].Key = k;
-					UpdateControlListElement(listviewControls.Items[i], i, true);
-				}
+
+				Interface.KeyInfo k = comboboxKeyboardKey.Items[j] is Interface.KeyInfo ? (Interface.KeyInfo) comboboxKeyboardKey.Items[j] : new Interface.KeyInfo();
+				MessageBox.Show(k.Key.ToString());
 			}
 		}
 

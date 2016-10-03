@@ -127,7 +127,9 @@
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Options.cs" />
     <Compile Include="System\Translations\InterfaceStrings.cs" />
+    <Compile Include="System\Translations\KeyInfo.cs" />
     <Compile Include="System\Translations\LanguageFile.cs" />
     <Compile Include="UserInterface\formBugReport.cs">
       <SubType>Form</SubType>
