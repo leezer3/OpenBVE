@@ -893,6 +893,7 @@ namespace OpenBve {
 			} catch {
 				Folder = null;
 			}
+			bool recursionTest = false;
 			try {
 				while (true) {
 					string TrainFolder = OpenBveApi.Path.CombineDirectory(Folder, "Train");
@@ -915,12 +916,18 @@ namespace OpenBve {
 									ShowTrain(false);
 									return;
 								}
+								if (recursionTest)
+								{
+									break;
+								}
+								
 							}
 							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail
 								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
+								recursionTest = true;
 								Folder = OldFolder;
 							}
 							else
