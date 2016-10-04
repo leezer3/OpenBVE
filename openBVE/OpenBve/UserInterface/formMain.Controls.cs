@@ -39,7 +39,14 @@ namespace OpenBve {
 					panelKeyboard.Enabled = radiobuttonKeyboard.Checked;
 					if (radiobuttonKeyboard.Checked)
 					{
-						comboboxKeyboardKey.SelectedIndex = comboboxKeyboardKey.FindStringExact(Interface.CurrentControls[i].Key.ToString());
+						for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+						{
+							if (Interface.CurrentControls[i].Key == Interface.TranslatedKeys[k].Key)
+							{
+								comboboxKeyboardKey.SelectedIndex = k;
+								break;
+							}
+						}
 						checkboxKeyboardShift.Checked = (Interface.CurrentControls[i].Modifier & Interface.KeyboardModifier.Shift) != 0;
 						checkboxKeyboardCtrl.Checked = (Interface.CurrentControls[i].Modifier & Interface.KeyboardModifier.Ctrl) != 0;
 						checkboxKeyboardAlt.Checked = (Interface.CurrentControls[i].Modifier & Interface.KeyboardModifier.Alt) != 0;
