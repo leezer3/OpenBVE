@@ -4825,6 +4825,7 @@ namespace OpenBve
 		// jump train
 		internal static void JumpTrain(Train train, int stationIndex)
 		{
+			train.StationState = TrainStopState.Pending;
 			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
 			if (stopIndex >= 0)
 			{
