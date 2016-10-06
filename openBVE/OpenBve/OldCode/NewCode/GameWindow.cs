@@ -162,12 +162,6 @@ namespace OpenBve
 				Interface.SaveLogs();
 			}
 			catch { }
-			try
-			{
-				Interface.SaveOptions();
-			}
-			catch { }
-
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
