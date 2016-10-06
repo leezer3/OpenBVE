@@ -358,7 +358,7 @@ namespace OpenBve
 			//Non-localised string as this is a specific error message
 			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" + e.CurrentFile + "at "+ e.Progress + "% completion.";
 			//Create crash dump file
-			CrashHandler.LogCrash(e.Exception.ToString());
+			CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
 		}
 
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
