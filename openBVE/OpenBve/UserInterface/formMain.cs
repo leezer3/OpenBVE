@@ -987,6 +987,9 @@ namespace OpenBve {
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();
+			routeWatcher.Dispose();
+			routeWorkerThread.Dispose();
+			workerThread.Dispose();
 			// finish
 #if !DEBUG
 			try
