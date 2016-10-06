@@ -121,6 +121,7 @@ namespace OpenBve {
 			Complete = true;
 		}
 		private static void LoadEverythingThreaded() {
+			Program.AppendToLogFile("Loading route file: " + CurrentRouteFile);
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
@@ -133,6 +134,7 @@ namespace OpenBve {
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
+			Program.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
 			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
@@ -156,6 +158,7 @@ namespace OpenBve {
 					}
 				}
 			}
+			Program.AppendToLogFile("Route file loaded successfully.");
 			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -185,6 +188,7 @@ namespace OpenBve {
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 				} else {
 					// real train
+					Program.AppendToLogFile("Loading player train: " + CurrentTrainFolder);
 					TrainProgressCurrentWeight = 0.1 / TrainProgressMaximum;
 					TrainDatParser.ParseTrainData(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
