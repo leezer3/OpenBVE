@@ -131,6 +131,8 @@
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Logging\BlackBox.cs" />
+    <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Translations\InterfaceStrings.cs" />
     <Compile Include="System\Translations\KeyInfo.cs" />
