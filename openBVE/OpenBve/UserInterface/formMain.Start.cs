@@ -63,7 +63,11 @@ namespace OpenBve {
 				return;
 			}
 			populateRouteList(rf);
-			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			//If this method is triggered whilst the form is disposing, bad things happen...
+			if (listviewRouteFiles.Columns.Count > 0)
+			{
+				listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
 		}
 
 		/// <summary>Populates the route display list from the selected folder</summary>
