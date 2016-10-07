@@ -75,7 +75,8 @@ namespace OpenBve
         /// <summary>This function logs an unhandled crash to disk</summary>
         internal static void LogCrash(string ExceptionText)
         {
-            using (StreamWriter outputFile = new StreamWriter(CrashLog))
+			Program.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
                 outputFile.WriteLine(DateTime.Now);
@@ -148,7 +149,8 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
-            using (StreamWriter outputFile = new StreamWriter(CrashLog))
+			Program.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
                 outputFile.WriteLine(DateTime.Now);
