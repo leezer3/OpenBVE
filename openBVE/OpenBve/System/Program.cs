@@ -263,7 +263,7 @@ namespace OpenBve {
 						if (!found)
 						{
 							MessageBox.Show("The route and train loader encountered the following critical error: " + Environment.NewLine + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-							CrashHandler.LoadingCrash(ex.Message, false);
+							CrashHandler.LoadingCrash(ex.ToString(), false);
 							RestartArguments = "";
 						}
 					}

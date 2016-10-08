@@ -417,6 +417,11 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
 		internal bool ProcessMouseMove(int x, int y)
 		{
+			//
+			if (CurrMenu < 0)
+			{
+				return false;
+			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Game.CurrentInterface != Game.InterfaceType.Menu ||
 				isCustomisingControl ||
@@ -460,6 +465,11 @@ namespace OpenBve
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
 		internal void ProcessCommand(Interface.Command cmd, double timeElapsed)
 		{
+			
+			if (CurrMenu < 0)
+			{
+				return;
+			}
 			// MenuBack is managed independently from single menu data
 			if (cmd == Interface.Command.MenuBack)
 			{
