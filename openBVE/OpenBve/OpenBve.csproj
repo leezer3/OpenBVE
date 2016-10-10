@@ -316,9 +316,15 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
   </PropertyGroup>
   <PropertyGroup>
   <!-- Copy in dependancies and child projects -->
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll*" /Y /I /C xcopy "$(ProjectDir)..\OpenBveAts\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C xcopy "$(ProjectDir)..\Sound.Flac\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C xcopy "$(ProjectDir)..\Sound.RiffWave\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C xcopy "$(ProjectDir)..\Texture.Ace\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C xcopy "$(ProjectDir)..\Texture.BmpGifJpegPngTiff\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
-</PostBuildEvent>
+	<PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C 
+		xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll" /Y /I /C
+		xcopy "$(ProjectDir)..\OpenBveAts\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Sound.Flac\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Sound.RiffWave\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Texture.Ace\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Texture.BmpGifJpegPngTiff\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+	</PostBuildEvent>
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
 	<PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(ProjectDir)../OpenBveAts/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.Flac/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.RiffWave/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.Ace/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.BmpGifJpegPngTiff/bin/$(Configuration)/Data" "$(TargetDir)"
