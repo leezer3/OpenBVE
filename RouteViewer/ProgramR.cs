@@ -35,6 +35,8 @@ namespace OpenBve {
 		internal static bool processCommandLineArgs;
 		internal static string[] commandLineArguments;
 		internal static bool[] SkipArgs;
+
+		internal static int ReloadTexture = -1;
 		
 		// keys
 		private static bool ShiftPressed = false;
@@ -237,8 +239,49 @@ namespace OpenBve {
 					if (CurrentRoute != null)
 					{
 						CurrentlyLoading = true;
-						Renderer.RenderScene(0.0);
-						currentGameWindow.SwapBuffers();
+						Renderer.OptionInterface = false;
+						if (!Interface.CurrentOptions.LoadingBackground)
+						{
+							Renderer.RenderScene(0.0);
+							currentGameWindow.SwapBuffers();
+							int Texture = GL.GenTexture();
+							GL.BindTexture(TextureTarget.Texture2D, Texture);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.ClampToEdge);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)OpenTK.Graphics.OpenGL.TextureWrapMode.ClampToEdge);
+							switch (Interface.CurrentOptions.Interpolation)
+							{
+								case TextureManager.InterpolationMode.NearestNeighbor:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+									break;
+								case TextureManager.InterpolationMode.Bilinear:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+									break;
+								case TextureManager.InterpolationMode.NearestNeighborMipmapped:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+									break;
+								case TextureManager.InterpolationMode.BilinearMipmapped:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+									break;
+								case TextureManager.InterpolationMode.TrilinearMipmapped:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+									break;
+								default:
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+									GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+									break;
+							}
+							if (Interface.CurrentOptions.Interpolation == TextureManager.InterpolationMode.AnisotropicFiltering && Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
+							{
+								GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
+							}
+							GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, 0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight, 0);
+							ReloadTexture = Texture;
+						}
 						World.CameraAlignment a = World.CameraCurrentAlignment;
 						if (LoadRoute())
 						{
@@ -250,7 +293,9 @@ namespace OpenBve {
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
+						ReloadTexture = -1;
 						CurrentlyLoading = false;
+						Renderer.OptionInterface = true;
 					}
 					break;
 				case Key.F7:

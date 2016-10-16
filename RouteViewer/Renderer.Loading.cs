@@ -43,8 +43,23 @@ namespace OpenBve
 			customLoadScreen = false;
 			string Path = Program.FileSystem.GetDataFolder("In-game");
 			int bkgNo = Game.Generator.Next(numOfLoadingBkgs);
-			TextureLoadingBkg = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png"), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-			TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+			if (Program.ReloadTexture != -1)
+			{
+				int tl = TextureManager.Textures.Length;
+				Array.Resize(ref TextureManager.Textures, tl + 1);
+				TextureManager.Textures[tl] = new TextureManager.Texture();
+				TextureManager.Textures[tl].OpenGlTextureIndex = Program.ReloadTexture;
+				TextureManager.Textures[tl].Width = Renderer.ScreenWidth;
+				TextureManager.Textures[tl].Height = Renderer.ScreenHeight;
+				TextureManager.Textures[tl].VFlip = true;
+				TextureLoadingBkg = tl;
+			}
+			else
+			{
+				TextureLoadingBkg = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png"), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+				TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+			}
+			
 			// choose logo size according to screen width
 			string fName;
 			if (Renderer.ScreenWidth > 2048) fName = LogoFileName[2];
@@ -116,7 +131,7 @@ namespace OpenBve
 			DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth) / 2, 0),new Size(bkgWidth, bkgHeight), Color128.White);
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
-			if (!customLoadScreen)
+			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo)
 			{
 				// place the centre of the logo at from the screen top
 				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureManager.Textures[TextureLogo].Height / 2.0);
@@ -141,24 +156,25 @@ namespace OpenBve
 			//				new Point(halfWidth, versionTop + fontHeight+2),
 			//				TextAlignment.TopMiddle, Color128.White);
 
-			// PROGRESS MESSAGE AND BAR
 			// place progress bar right below the second division
 			int progressTop = Renderer.ScreenHeight - blankHeight;
 			int progressWidth = Renderer.ScreenWidth - progrMargin * 2;
 			double routeProgress = Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
-			// draw progress message right above the second division
+			if (Interface.CurrentOptions.LoadingProgressBar)
+			{
+				// PROGRESS MESSAGE AND BAR
+				double percent = 100.0 * routeProgress;
+				string percStr = percent.ToString("0") + "%";
+				// progress frame
+				DrawRectangle(-1, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
+				// progress bar
+				DrawRectangle(-1, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
 
-			double percent = 100.0 * routeProgress;
-			string percStr = percent.ToString("0") + "%";
-			// progress frame
-			DrawRectangle(-1, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
-			// progress bar
-			DrawRectangle(-1, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
-			
+				DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
+			}
 
 			string text = "Loading route, please wait.....";
 			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
-			DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
 			GL.PopMatrix();
 		}
 
