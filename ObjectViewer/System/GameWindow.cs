@@ -21,6 +21,11 @@ namespace OpenBve
             }
         }
 
+		internal void DragFile()
+		{
+
+		}
+
         internal string[] commandLineArgs;
         
         private static double ReducedModeEnteringTime = 0;
@@ -298,6 +303,7 @@ namespace OpenBve
             KeyUp += Program.KeyUp;
             MouseDown += Program.MouseEvent;
             MouseUp += Program.MouseEvent;
+			MouseWheel += Program.MouseWheelEvent;
             Program.ResetCamera();
             Renderer.Initialize();
             Renderer.InitializeLighting();
