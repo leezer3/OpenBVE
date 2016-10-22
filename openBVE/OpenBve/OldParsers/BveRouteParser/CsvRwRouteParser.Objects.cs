@@ -63,9 +63,11 @@
 			return Result;
 		}
 
-		/// <summary>Creates a transformed copy of the prototype object</summary>
+		/// <summary>Creates a transformed copy of the provided prototype object (e.g. Platform top, roof etc.)</summary>
 		/// <param name="Prototype">The prototype</param>
-		/// <returns>Thetransformed copy</returns>
+		/// /// <param name="NearDistance">The object's width at the start of the block</param>
+		/// /// <param name="FarDistance">The object's width at the end of the block</param>
+		/// <returns>The transformed copy</returns>
 		private static ObjectManager.StaticObject GetTransformedStaticObject(ObjectManager.StaticObject Prototype, double NearDistance, double FarDistance)
 		{
 			ObjectManager.StaticObject Result = ObjectManager.CloneObject(Prototype);

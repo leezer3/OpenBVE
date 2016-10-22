@@ -179,6 +179,7 @@ namespace OpenBve
 			internal string ProxyUserName;
 			/// <summary>The proxy password to use when retrieving content from the internet</summary>
 			internal string ProxyPassword;
+			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
 				this.LanguageCode = "en-US";

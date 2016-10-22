@@ -106,7 +106,12 @@ namespace Flac {
 					if (reserved1 != 0) {
 						throw new InvalidDataException();
 					}
+					//Blocking strategy: Determines whether this is a fixed or variable blockstream size
 					uint blockingStrategy = reader.ReadBit();
+					if(blockingStrategy < 0 || blockingStrategy > 1)
+					{
+						throw new InvalidDataException();
+					}
 					int blockNumberOfSamples = (int)reader.ReadBits(4);
 					if (blockNumberOfSamples == 0) {
 						throw new InvalidDataException();
@@ -166,6 +171,14 @@ namespace Flac {
 					if (reserved2 != 0) {
 						throw new InvalidDataException();
 					}
+					/*
+					 * The "blocking strategy" bit determines how to calculate the sample number of the first sample in the frame. 
+					 * If the bit is 0 (fixed-blocksize), the frame header encodes the frame number as above, and the frame's starting 
+					 * sample number will be the frame number times the blocksize. If it is 1 (variable-blocksize), the frame header 
+					 * encodes the frame's starting sample number itself. (In the case of a fixed-blocksize stream, only the last 
+					 * block may be shorter than the stream blocksize; its starting sample number will be calculated as the frame number 
+					 * times the previous frame's blocksize, or zero if it is the first frame). 
+					 */
 					ulong sampleOrFrameNumber = (ulong)reader.ReadUTF8EncodedInteger();
 					if (blockNumberOfSamples == 6) {
 						blockNumberOfSamples = (int)reader.ReadByte() + 1;
@@ -408,7 +421,7 @@ namespace Flac {
 				if (md5Set) {
 					if (bitsPerSample == 8) {
 						/* For 8 bits per sample */
-						bytes = new byte[numberOfChannels * samplesUsed];
+					bytes = new byte[numberOfChannels * samplesUsed];
 						int pos = 0;
 						for (int i = 0; i < samplesUsed; i++) {
 							for (int j = 0; j < numberOfChannels; j++) {
