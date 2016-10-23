@@ -30,13 +30,27 @@ namespace OpenBve
 						Renderer.LightDefinition currentLight = new Renderer.LightDefinition();
 						if (n.HasChildNodes)
 						{
-							bool tf = false, al = false, dl = false, ld = false;
+							bool tf = false, al = false, dl = false, ld = false, cb = false;
 							string ts = null;
 							foreach (XmlNode c in n.ChildNodes)
 							{
 								string[] Arguments = c.InnerText.Split(',');
 								switch (c.Name.ToLowerInvariant())
 								{
+									case "cablighting":
+										double b;
+										if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out b))
+										{
+											cb = true;
+										}
+										if (b > 255 || b < 0)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
+											currentLight.CabBrightness = 255;
+											break;
+										}
+										currentLight.CabBrightness = b;
+										break;
 									case "time":
 										double t;
 										if (Interface.TryParseTime(Arguments[0].Trim(), out t))
@@ -111,7 +125,7 @@ namespace OpenBve
 								}
 							}
 							//We want to be able to add a completely default light element,  but not one that's not been defined in the XML properly
-							if (tf || al || ld || dl)
+							if (tf || al || ld || dl || cb)
 							{
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;

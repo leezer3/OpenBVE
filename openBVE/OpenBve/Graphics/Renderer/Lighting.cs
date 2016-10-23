@@ -38,16 +38,22 @@ namespace OpenBve
 			/// <summary>The time in seconds since midnight</summary>
 			internal int Time;
 
-			public LightDefinition(Color24 ambientColor, Color24 diffuseColor, Vector3 lightPosition, int time)
+			internal double CabBrightness;
+
+			public LightDefinition(Color24 ambientColor, Color24 diffuseColor, Vector3 lightPosition, int time, double cab)
 			{
 				AmbientColor = ambientColor;
 				DiffuseColor = diffuseColor;
 				LightPosition = lightPosition;
 				Time = time;
+				CabBrightness = cab;
 			}
 		}
-
+		/// <summary>Whether dynamic lighting is currently enabled</summary>
 		internal static bool DynamicLighting = false;
+		/// <summary>The current dynamic cab brightness</summary>
+		internal static double DynamicCabBrightness = 255;
+		/// <summary>The list of dynamic light definitions</summary>
 		internal static LightDefinition[] LightDefinitions;
 
 		/// <summary>Updates the lighting model on a per frame basis</summary>
@@ -87,6 +93,7 @@ namespace OpenBve
 				k = 0;
 			}
 			int t1 = LightDefinitions[j].Time, t2 = LightDefinitions[k].Time;
+			double cb1 = LightDefinitions[j].CabBrightness, cb2 = LightDefinitions[k].Time;
 			//Calculate, inverting if necessary
 
 			//Ensure we're not about to divide by zero
@@ -100,10 +107,15 @@ namespace OpenBve
 			}
 			//Calculate the percentage
 			var mu = (Time - t1)/(t2 - t1);
+			
 			//Calculate the final colors and positions
 			OptionDiffuseColor = Color24.CosineInterpolate(LightDefinitions[j].DiffuseColor, LightDefinitions[k].DiffuseColor, mu);
 			OptionAmbientColor = Color24.CosineInterpolate(LightDefinitions[j].AmbientColor, LightDefinitions[k].AmbientColor, mu);
 			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition,LightDefinitions[k].LightPosition, mu);
+
+			//Interpolate the cab brightness value
+			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
+			DynamicCabBrightness = (cb1 * (1 - mu2) + cb2 * mu2);
 			//Reinitialize the lighting model with the new information
 			InitializeLighting();
 			//NOTE: This does not refresh the display lists
