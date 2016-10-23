@@ -1752,6 +1752,11 @@ namespace OpenBve {
 									} break;
 								case "route.ambientlight":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
+											break;
+										}
 										int r = 255, g = 255, b = 255;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseIntVb6(Arguments[0], out r)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1775,6 +1780,11 @@ namespace OpenBve {
 									} break;
 								case "route.directionallight":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
+											break;
+										}
 										int r = 255, g = 255, b = 255;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseIntVb6(Arguments[0], out r)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1799,6 +1809,11 @@ namespace OpenBve {
 									break;
 								case "route.lightdirection":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
+											break;
+										}
 										double theta = 60.0, phi = -26.565051177078;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[0], out theta)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Theta is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1813,6 +1828,25 @@ namespace OpenBve {
 										double dz = Math.Cos(theta) * Math.Cos(phi);
 										Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
 									} break;
+								case "route.dynamiclight":
+									//Read the lighting XML file
+									string path = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+									if (System.IO.File.Exists(path))
+									{
+										if (DynamicLightParser.ReadLightingXML(path))
+										{
+											Renderer.DynamicLighting = true;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The file " + path + " is not a valid dynamic lighting XML file, at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+									}
+									else
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									break;
 									// train
 								case "train.folder":
 								case "train.file":

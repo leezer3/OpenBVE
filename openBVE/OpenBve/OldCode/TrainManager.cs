@@ -1595,10 +1595,14 @@ namespace OpenBve
 			double dist = cdx * cdx + cdy * cdy + cdz * cdz;
 			double bid = Interface.CurrentOptions.ViewingDistance + Train.Cars[c].Length;
 			Train.Cars[c].CurrentlyVisible = dist < bid * bid;
-			// brightness
+			// Updates the brightness value
 			byte dnb;
 			{
 				float Brightness = (float)(Train.Cars[c].Brightness.NextTrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition);
+
+				//1.0f represents a route brightness value of 255
+				//0.0f represents a route brightness value of 0
+
 				if (Brightness != 0.0f)
 				{
 					Brightness = (float)(Train.Cars[c].FrontAxle.Follower.TrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition) / Brightness;
@@ -1610,7 +1614,10 @@ namespace OpenBve
 				{
 					Brightness = Train.Cars[c].Brightness.PreviousBrightness;
 				}
-				dnb = (byte)Math.Round(255.0 * (double)(1.0 - Brightness));
+				//Calculate the cab brightness
+				double ccb = Math.Round(255.0 * (double)(1.0 - Brightness));
+				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
+				dnb = (byte) Math.Min(Renderer.DynamicCabBrightness, ccb);
 			}
 			// update current section
 			int s = Train.Cars[c].CurrentCarSection;
