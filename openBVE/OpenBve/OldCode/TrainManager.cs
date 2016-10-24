@@ -6,7 +6,7 @@ using OpenBveApi.Math;
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static class TrainManager
+	public static partial class TrainManager
 	{
 		// axle
 		internal struct Axle
@@ -30,17 +30,7 @@ namespace OpenBve
 		}
 
 		// cars
-		internal struct Door
-		{
-			/// <summary>A value of -1 (left) or 1 (right).</summary>
-			internal int Direction;
-			/// <summary>A value between 0 (closed) and 1 (opened).</summary>
-			internal double State;
-			/// <summary>The value of the state at which a door lock simulation is scheduled.</summary>
-			internal double DoorLockState;
-			/// <summary>The duration of the scheduled door lock simulation.</summary>
-			internal double DoorLockDuration;
-		}
+		
 		internal struct AccelerationCurve
 		{
 			internal double StageZeroAcceleration;
@@ -271,9 +261,13 @@ namespace OpenBve
 			internal bool CpLoopStarted;
 			internal CarSound CpStart;
 			internal double CpStartTimeStarted;
+			/// <summary>Played once when the left doors close</summary>
 			internal CarSound DoorCloseL;
+			/// <summary>Played once when the right doors close</summary>
 			internal CarSound DoorCloseR;
+			/// <summary>Played once when the left doors open</summary>
 			internal CarSound DoorOpenL;
+			/// <summary>Played once when the right doors open</summary>
 			internal CarSound DoorOpenR;
 			internal CarSound EmrBrake;
 			internal CarSound[] Flange;
@@ -285,7 +279,9 @@ namespace OpenBve
 			internal CarSound MasterControllerDown;
 			internal CarSound MasterControllerMin;
 			internal CarSound MasterControllerMax;
+			/// <summary>Played once when all doors are closed</summary>
 			internal CarSound PilotLampOn;
+			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
 			internal CarSound PointFrontAxle;
 			internal CarSound PointRearAxle;
@@ -475,14 +471,8 @@ namespace OpenBve
 			internal DoorMode DoorOpenMode;
 			internal DoorMode DoorCloseMode;
 		}
-		// passengers
-		internal struct TrainPassengers
-		{
-			internal double PassengerRatio;
-			internal double CurrentAcceleration;
-			internal double CurrentSpeedDifference;
-			internal bool FallenOver;
-		}
+
+		
 		// train
 
 		/// <summary>The available states for a train</summary>
@@ -497,10 +487,7 @@ namespace OpenBve
 			/// <summary>The train is a bogus (non-visble) train created via a .PreTrain command</summary>
 			Bogus = 3
 		}
-		internal enum TrainStopState
-		{
-			Pending = 0, Boarding = 1, Completed = 2
-		}
+
 
 		/// <summary>The root class for a train within the simulation</summary>
 		public class Train
@@ -2524,600 +2511,7 @@ namespace OpenBve
 			}
 		}
 
-		// update train station
-		private static void UpdateTrainStation(Train Train, double TimeElapsed)
-		{
-			if (Train.Station >= 0)
-			{
-				int i = Train.Station;
-				int n = Game.GetStopIndex(Train.Station, Train.Cars.Length);
-				double tf, tb;
-				if (n >= 0)
-				{
-					double p0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition + 0.5 * Train.Cars[0].Length;
-					double p1 = Game.Stations[i].Stops[n].TrackPosition;
-					tf = Game.Stations[i].Stops[n].ForwardTolerance;
-					tb = Game.Stations[i].Stops[n].BackwardTolerance;
-					Train.StationDistanceToStopPoint = p1 - p0;
-				}
-				else
-				{
-					Train.StationDistanceToStopPoint = 0.0;
-					tf = 5.0;
-					tb = 5.0;
-				}
-				if (Train.StationState == TrainStopState.Pending)
-				{
-					Train.StationDepartureSoundPlayed = false;
-					if (Game.StopsAtStation(i, Train))
-					{
-						Train.StationDepartureSoundPlayed = false;
-						// automatically open doors
-						if (Train.Specs.DoorOpenMode != DoorMode.Manual)
-						{
-							if ((GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
-							{
-								if (Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.1 / 3.6 & Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
-								{
-									if (Train.StationDistanceToStopPoint < tb & -Train.StationDistanceToStopPoint < tf)
-									{
-										OpenTrainDoors(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors);
-									}
-								}
-							}
-						}
-						// detect arrival
-						if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
-						{
-							bool left, right;
-							if (Game.Stations[i].OpenLeftDoors)
-							{
-								left = false;
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
-									{
-										left = true; break;
-									}
-								}
-							}
-							else
-							{
-								left = true;
-							}
-							if (Game.Stations[i].OpenRightDoors)
-							{
-								right = false;
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
-									{
-										right = true; break;
-									}
-								}
-							}
-							else
-							{
-								right = true;
-							}
-							if (left & right)
-							{
-								// arrival
-								Train.StationState = TrainStopState.Boarding;
-								Train.StationAdjust = false;
-								Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
-								Sounds.SoundBuffer buffer = Game.Stations[i].ArrivalSoundBuffer;
-								if (buffer != null)
-								{
-									OpenBveApi.Math.Vector3 pos = Game.Stations[i].SoundOrigin;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
-								}
-								Train.StationArrivalTime = Game.SecondsSinceMidnight;
-								Train.StationDepartureTime = Game.Stations[i].DepartureTime - Train.TimetableDelta;
-								if (Train.StationDepartureTime - Game.SecondsSinceMidnight < Game.Stations[i].StopTime)
-								{
-									Train.StationDepartureTime = Game.SecondsSinceMidnight + Game.Stations[i].StopTime;
-								}
-								Train.Passengers.PassengerRatio = Game.Stations[i].PassengerRatio;
-								UpdateTrainMassFromPassengerRatio(Train);
-								if (Train == PlayerTrain)
-								{
-									double early = 0.0;
-									if (Game.Stations[i].ArrivalTime >= 0.0)
-									{
-										early = (Game.Stations[i].ArrivalTime - Train.TimetableDelta) - Train.StationArrivalTime;
-									}
-									string s;
-									if (early < -1.0)
-									{
-										s = Interface.GetInterfaceString("message_station_arrival_late");
-									}
-									else if (early > 1.0)
-									{
-										s = Interface.GetInterfaceString("message_station_arrival_early");
-									}
-									else
-									{
-										s = Interface.GetInterfaceString("message_station_arrival");
-									}
-									System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-									TimeSpan a = TimeSpan.FromSeconds(Math.Abs(early));
-									string b = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
-									if (Train.StationDistanceToStopPoint < -0.1)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_overrun");
-									}
-									else if (Train.StationDistanceToStopPoint > 0.1)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_underrun");
-									}
-									double d = Math.Abs(Train.StationDistanceToStopPoint);
-									string c = d.ToString("0.0", Culture);
-									if (Game.Stations[i].StationType == Game.StationType.Terminal)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_terminal");
-									}
-									s = s.Replace("[name]", Game.Stations[i].Name);
-									s = s.Replace("[time]", b);
-									s = s.Replace("[difference]", c);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 10.0);
-									if (Game.Stations[i].StationType == Game.StationType.Normal)
-									{
-										s = Interface.GetInterfaceString("message_station_deadline");
-										Game.AddMessage(s, Game.MessageDependency.Station, Interface.GameMode.Normal, MessageColor.Blue, double.PositiveInfinity);
-									}
-									Timetable.UpdateCustomTimetable(Game.Stations[i].TimetableDaytimeTexture, Game.Stations[i].TimetableNighttimeTexture);
-								}
-								// schedule door locks (passengers stuck between the doors)
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-									{
-										Train.Cars[j].Specs.Doors[k].DoorLockDuration = 0.0;
-										if (Game.Stations[i].OpenLeftDoors & Train.Cars[j].Specs.Doors[k].Direction == -1 | Game.Stations[i].OpenRightDoors & Train.Cars[j].Specs.Doors[k].Direction == 1)
-										{
-											double p = 0.005 * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio;
-											if (Program.RandomNumberGenerator.NextDouble() < p)
-											{
-												/*
-												 * -- door lock at state --
-												 * minimum: 0.2 (nearly closed)
-												 * maximum: 0.8 (nearly opened)
-												 * */
-												Train.Cars[j].Specs.Doors[k].DoorLockState = 0.2 + 0.6 * Program.RandomNumberGenerator.NextDouble();
-												/* -- waiting time --
-												 * minimum: 2.9 s
-												 * maximum: 40.0 s
-												 * average: 7.6 s
-												 * */
-												p = Program.RandomNumberGenerator.NextDouble();
-												Train.Cars[j].Specs.Doors[k].DoorLockDuration = (50.0 - 10.0 * p) / (17.0 - 16.0 * p);
-											}
-										}
-									}
-								}
-							}
-							else if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
-							{
-								// correct stop position
-								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
-								{
-									Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
-									if (buffer != null)
-									{
-										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-									}
-									if (Train == TrainManager.PlayerTrain)
-									{
-										Game.AddMessage(Interface.GetInterfaceString("message_station_correct"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0);
-									}
-									Train.StationAdjust = true;
-								}
-							}
-							else
-							{
-								Train.StationAdjust = false;
-							}
-						}
-					}
-				}
-				else if (Train.StationState == TrainStopState.Boarding)
-				{
-					// automatically close doors
-					if (Train.Specs.DoorCloseMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal)
-					{
-						if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
-						{
-							if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
-							{
-								CloseTrainDoors(Train, true, true);
-							}
-						}
-					}
-					// detect departure
-					bool left, right;
-					if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors)
-					{
-						left = true;
-						right = true;
-					}
-					else
-					{
-						if (Game.Stations[i].OpenLeftDoors)
-						{
-							left = false;
-							for (int j = 0; j < Train.Cars.Length; j++)
-							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
-									{
-										left = true; break;
-									}
-								} if (left) break;
-							}
-						}
-						else
-						{
-							left = false;
-						}
-						if (Game.Stations[i].OpenRightDoors)
-						{
-							right = false;
-							for (int j = 0; j < Train.Cars.Length; j++)
-							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
-									{
-										right = true; break;
-									}
-								} if (right) break;
-							}
-						}
-						else
-						{
-							right = false;
-						}
-					}
-					if (left | right)
-					{
-						// departure message
-						if (Game.SecondsSinceMidnight > Train.StationDepartureTime)
-						{
-							Train.StationState = TrainStopState.Completed;
-							if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
-							{
-								if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-								}
-								else
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-								}
-							}
-							else if (Game.Stations[i].StationType == Game.StationType.ChangeEnds)
-							{
-								//Game.AddMessage("CHANGE ENDS", Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
-								JumpTrain(Train, i + 1);
-							}
-						}
-						// passengers boarding
-						for (int j = 0; j < Train.Cars.Length; j++)
-						{
-							double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-							if (r >= Program.RandomNumberGenerator.NextDouble())
-							{
-								int d = (int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Specs.Doors.Length);
-								if (Train.Cars[j].Specs.Doors[d].State == 1.0)
-								{
-									Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Specs.Doors[d].Direction;
-								}
-							}
-						}
-					}
-					else
-					{
-						Train.StationState = TrainStopState.Completed;
-						if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
-						{
-							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-						}
-					}
-					// departure sound
-					if (!Train.StationDepartureSoundPlayed)
-					{
-						Sounds.SoundBuffer buffer = Game.Stations[i].DepartureSoundBuffer;
-						if (buffer != null)
-						{
-							double dur = Sounds.GetDuration(buffer);
-							if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
-							{
-								Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
-								Train.StationDepartureSoundPlayed = true;
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				Train.StationState = TrainStopState.Pending;
-			}
-			// automatically close doors
-			if (Train.Specs.DoorCloseMode == DoorMode.Automatic)
-			{
-				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
-				{
-					if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
-					{
-						CloseTrainDoors(Train, true, true);
-					}
-				}
-			}
-		}
-
-		// update train doors
-		private static void UpdateTrainDoors(Train Train, double TimeElapsed)
-		{
-			OpenBveApi.Runtime.DoorStates oldState = OpenBveApi.Runtime.DoorStates.None;
-			OpenBveApi.Runtime.DoorStates newState = OpenBveApi.Runtime.DoorStates.None;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				bool ld = Train.Cars[i].Specs.AnticipatedLeftDoorsOpened;
-				bool rd = Train.Cars[i].Specs.AnticipatedRightDoorsOpened;
-				double os = Train.Cars[i].Specs.DoorOpenFrequency;
-				double cs = Train.Cars[i].Specs.DoorCloseFrequency;
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-				{
-					if (Train.Cars[i].Specs.Doors[j].Direction == -1 | Train.Cars[i].Specs.Doors[j].Direction == 1)
-					{
-						bool shouldBeOpen = Train.Cars[i].Specs.Doors[j].Direction == -1 ? ld : rd;
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
-						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-							{
-								oldState |= OpenBveApi.Runtime.DoorStates.Left;
-							}
-							else
-							{
-								oldState |= OpenBveApi.Runtime.DoorStates.Right;
-							}
-						}
-						if (shouldBeOpen)
-						{
-							// open
-							Train.Cars[i].Specs.Doors[j].State += os * TimeElapsed;
-							if (Train.Cars[i].Specs.Doors[j].State > 1.0)
-							{
-								Train.Cars[i].Specs.Doors[j].State = 1.0;
-							}
-						}
-						else
-						{
-							// close
-							if (Train.Cars[i].Specs.Doors[j].DoorLockDuration > 0.0)
-							{
-								if (Train.Cars[i].Specs.Doors[j].State > Train.Cars[i].Specs.Doors[j].DoorLockState)
-								{
-									Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
-								}
-								if (Train.Cars[i].Specs.Doors[j].State < Train.Cars[i].Specs.Doors[j].DoorLockState)
-								{
-									Train.Cars[i].Specs.Doors[j].State = Train.Cars[i].Specs.Doors[j].DoorLockState;
-								}
-								Train.Cars[i].Specs.Doors[j].DoorLockDuration -= TimeElapsed;
-								if (Train.Cars[i].Specs.Doors[j].DoorLockDuration < 0.0)
-								{
-									Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-								}
-							}
-							else
-							{
-								Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
-							}
-							if (Train.Cars[i].Specs.Doors[j].State < 0.0)
-							{
-								Train.Cars[i].Specs.Doors[j].State = 0.0;
-							}
-						}
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
-						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-							{
-								newState |= OpenBveApi.Runtime.DoorStates.Left;
-							}
-							else
-							{
-								newState |= OpenBveApi.Runtime.DoorStates.Right;
-							}
-						}
-					}
-				}
-			}
-			// door changed
-			if (oldState != OpenBveApi.Runtime.DoorStates.None & newState == OpenBveApi.Runtime.DoorStates.None)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-			}
-			else if (oldState == OpenBveApi.Runtime.DoorStates.None & newState != OpenBveApi.Runtime.DoorStates.None)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-			}
-			if (oldState != newState)
-			{
-				if (Train.Plugin != null)
-				{
-					Train.Plugin.DoorChange(oldState, newState);
-				}
-			}
-		}
-
-		// train doors
-		internal static void OpenTrainDoors(Train Train, bool Left, bool Right)
-		{
-			bool sl = false, sr = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				if (Left & !Train.Cars[i].Specs.AnticipatedLeftDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedLeftDoorsOpened = true;
-					sl = true;
-				}
-				if (Right & !Train.Cars[i].Specs.AnticipatedRightDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedRightDoorsOpened = true;
-					sr = true;
-				}
-			}
-			if (sl)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorOpenL.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenL.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
-					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-						}
-					}
-				}
-			}
-			if (sr)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorOpenR.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenR.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == 1)
-						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-						}
-					}
-				}
-			}
-		}
-		internal static void CloseTrainDoors(Train Train, bool Left, bool Right)
-		{
-			bool sl = false, sr = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				if (Left & Train.Cars[i].Specs.AnticipatedLeftDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedLeftDoorsOpened = false;
-					sl = true;
-				}
-				if (Right & Train.Cars[i].Specs.AnticipatedRightDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedRightDoorsOpened = false;
-					sr = true;
-				}
-			}
-			if (sl)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorCloseL.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorCloseL.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-				}
-			}
-			if (sr)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorCloseR.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorCloseR.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-				}
-			}
-		}
-		/// <summary>Specifies enumerated constants that can be combined to represent doors states.</summary>
-		[Flags]
-		internal enum TrainDoorState
-		{
-			None = 0,
-			/// <summary>Fully closed doors are present in the train.</summary>
-			Closed = 1,
-			/// <summary>Fully opened doors are present in the train.</summary>
-			Opened = 2,
-			/// <summary>Doors are present in the train which are neither fully closed nor fully opened.</summary>
-			Mixed = 4,
-			/// <summary>All doors in the train are fully closed.</summary>
-			AllClosed = 8,
-			/// <summary>All doors in the train are fully opened.</summary>
-			AllOpened = 16,
-			/// <summary>All doors in the train are neither fully closed nor fully opened.</summary>
-			AllMixed = 32
-		}
-		/// <summary>Returns the combination of door states encountered in a train.</summary>
-		/// <param name="Train">The train to consider.</param>
-		/// <param name="Left">Whether to include left doors.</param>
-		/// <param name="Right">Whether to include right doors.</param>
-		/// <returns>A bit mask combining encountered door states.</returns>
-		internal static TrainDoorState GetDoorsState(Train Train, bool Left, bool Right)
-		{
-			bool opened = false, closed = false, mixed = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-				{
-					if (Left & Train.Cars[i].Specs.Doors[j].Direction == -1 | Right & Train.Cars[i].Specs.Doors[j].Direction == 1)
-					{
-						if (Train.Cars[i].Specs.Doors[j].State == 0.0)
-						{
-							closed = true;
-						}
-						else if (Train.Cars[i].Specs.Doors[j].State == 1.0)
-						{
-							opened = true;
-						}
-						else
-						{
-							mixed = true;
-						}
-					}
-				}
-			}
-			TrainDoorState Result = TrainDoorState.None;
-			if (opened) Result |= TrainDoorState.Opened;
-			if (closed) Result |= TrainDoorState.Closed;
-			if (mixed) Result |= TrainDoorState.Mixed;
-			if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
-			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
-			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
-			return Result;
-		}
+		
 
 		// update safety system
 		private static void UpdateSafetySystem(Train Train)
@@ -4187,49 +3581,7 @@ namespace OpenBve
 		}
 
 		// update train passengers
-		private static void UpdateTrainPassengers(Train Train, double TimeElapsed)
-		{
-			double accelerationDifference = Train.Specs.CurrentAverageAcceleration - Train.Passengers.CurrentAcceleration;
-			double jerk = 0.25 + 0.10 * Math.Abs(accelerationDifference);
-			double accelerationQuanta = jerk * TimeElapsed;
-			if (Math.Abs(accelerationDifference) < accelerationQuanta)
-			{
-				Train.Passengers.CurrentAcceleration = Train.Specs.CurrentAverageAcceleration;
-				accelerationDifference = 0.0;
-			}
-			else
-			{
-				Train.Passengers.CurrentAcceleration += (double)Math.Sign(accelerationDifference) * accelerationQuanta;
-				accelerationDifference = Train.Specs.CurrentAverageAcceleration - Train.Passengers.CurrentAcceleration;
-			}
-			Train.Passengers.CurrentSpeedDifference += accelerationDifference * TimeElapsed;
-			double acceleration = 0.10 + 0.35 * Math.Abs(Train.Passengers.CurrentSpeedDifference);
-			double speedQuanta = acceleration * TimeElapsed;
-			if (Math.Abs(Train.Passengers.CurrentSpeedDifference) < speedQuanta)
-			{
-				Train.Passengers.CurrentSpeedDifference = 0.0;
-			}
-			else
-			{
-				Train.Passengers.CurrentSpeedDifference -= (double)Math.Sign(Train.Passengers.CurrentSpeedDifference) * speedQuanta;
-			}
-			if (Train.Passengers.PassengerRatio > 0.0)
-			{
-				double threshold = 1.0 / Train.Passengers.PassengerRatio;
-				if (Math.Abs(Train.Passengers.CurrentSpeedDifference) > threshold)
-				{
-					Train.Passengers.FallenOver = true;
-				}
-				else
-				{
-					Train.Passengers.FallenOver = false;
-				}
-			}
-			else
-			{
-				Train.Passengers.FallenOver = false;
-			}
-		}
+		
 
 		// update speeds
 		private static void UpdateSpeeds(Train Train, double TimeElapsed)
@@ -4794,20 +4146,6 @@ namespace OpenBve
 			Train.Specs.CurrentAverageAcceleration *= invcarlen;
 		}
 
-		// update train mass
-		private static void UpdateTrainMassFromPassengerRatio(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				double area = Train.Cars[i].Width * Train.Cars[i].Length;
-				const double passengersPerArea = 1.0;
-				double randomFactor = 0.9 + 0.2 * Program.RandomNumberGenerator.NextDouble();
-				double passengers = Math.Round(randomFactor * Train.Passengers.PassengerRatio * passengersPerArea * area);
-				const double massPerPassenger = 70.0;
-				double passengerMass = passengers * massPerPassenger;
-				Train.Cars[i].Specs.MassCurrent = Train.Cars[i].Specs.MassEmpty + passengerMass;
-			}
-		}
 
 		// un-derail train
 		internal static void UnderailTrains()
