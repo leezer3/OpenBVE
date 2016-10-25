@@ -81,6 +81,14 @@ namespace OpenBve
 										}
 										else
 										{
+											if (Arguments.Length == 1)
+											{
+												if (Interface.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												{
+													al = true;
+													break;
+												}
+											}
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
@@ -100,9 +108,18 @@ namespace OpenBve
 										}
 										else
 										{
+											if (Arguments.Length == 1)
+											{
+												if (Interface.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												{
+													dl = true;
+													break;
+												}
+											}
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
+									case "cartesianlightdirection":
 									case "lightdirection":
 										if (Arguments.Length == 3)
 										{
@@ -120,6 +137,25 @@ namespace OpenBve
 										else
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+										}
+										break;
+									case "sphericallightdirection":
+										if (Arguments.Length == 2)
+										{
+											double theta, phi;
+											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out theta) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out phi))
+											{
+												currentLight.LightPosition = new Vector3(Math.Cos(theta) * Math.Sin(phi), -Math.Sin(theta), Math.Cos(theta) * Math.Cos(phi));
+												ld = true;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
 										}
 										break;
 								}
