@@ -1104,11 +1104,11 @@ namespace OpenBve {
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			for (int i = 0; i < Builder.Vertices.Length; i++) {
-				World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+				World.Rotate(ref Builder.Vertices[i].Coordinates, x, y, z, cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++) {
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++) {
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal, x, y, z, cosa, sina);
 				}
 			}
 		}
@@ -1116,11 +1116,11 @@ namespace OpenBve {
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, x, y, z, cosa, sina);
+				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
 			}
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal.X, ref Object.Mesh.Faces[j].Vertices[k].Normal.Y, ref Object.Mesh.Faces[j].Vertices[k].Normal.Z, x, y, z, cosa, sina);
+					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
 				}
 			}
 		}

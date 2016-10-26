@@ -867,7 +867,7 @@ namespace OpenBve
 												}
 												double cosX = Math.Cos(RotateX);
 												double sinX = Math.Sin(RotateX);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosX, sinX);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosX, sinX);
 												Result.Objects[ObjectCount].RotateXFunction = null;
 											}
 											if (StaticYRotation)
@@ -892,7 +892,7 @@ namespace OpenBve
 												}
 												double cosY = Math.Cos(RotateY);
 												double sinY = Math.Sin(RotateY);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosY, sinY);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosY, sinY);
 												Result.Objects[ObjectCount].RotateYFunction = null;
 											}
 											if (StaticZRotation)
@@ -917,7 +917,7 @@ namespace OpenBve
 												}
 												double cosZ = Math.Cos(RotateZ);
 												double sinZ = Math.Sin(RotateZ);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.X, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Y, ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates.Z, x, y, z, cosZ, sinZ);
+												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosZ, sinZ);
 												Result.Objects[ObjectCount].RotateZFunction = null;
 											}
 

@@ -814,12 +814,8 @@ namespace OpenBve
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.X -= cx;
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Y -= cy;
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Z -= cz;
-					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.X += cx;
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Y += cy;
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Z += cz;
@@ -916,12 +912,8 @@ namespace OpenBve
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.X -= cx;
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Y -= cy;
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Z -= cz;
-					World.Rotate(ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-					World.Rotate(ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.X += cx;
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Y += cy;
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Z += cz;
@@ -1222,8 +1214,8 @@ namespace OpenBve
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X -= cx;
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y -= cy;
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z -= cz;
-				World.Rotate(ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X, ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y, ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-				World.Rotate(ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X, ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y, ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+				World.Rotate(ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+				World.Rotate(ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X += cx;
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y += cy;
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z += cz;
