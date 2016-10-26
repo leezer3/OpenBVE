@@ -10,9 +10,15 @@ namespace OpenBve
 		/* --------------------------------------------------------------
 		 * This file contains the drawing routines for the background texture
 		 * -------------------------------------------------------------- */
-		internal static bool DisplayListAvailable;
+
+		/// <summary>Whether an openGL display list is available for the current background</summary>
+		internal static bool BackgroundDisplayListAvailable;
+		/// <summary>The index to the openGL display list</summary>
 		internal static int BackgroundDisplayList;
-		private static void RenderBackground(double TimeElapsed)
+
+		/// <summary>Updates the currently displayed background</summary>
+		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
+		private static void UpdateBackground(double TimeElapsed)
 		{
 			const float scale = 0.5f;
 			// fog
@@ -39,41 +45,55 @@ namespace OpenBve
 			{
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
-			if (World.TargetBackgroundCountdown >= 0.0)
+			if (BackgroundManager.CurrentBackground is BackgroundManager.StaticBackground)
 			{
-				//Run the fade-in counter
-				World.TargetBackgroundCountdown -= TimeElapsed;
-				if (World.TargetBackgroundCountdown < 0.0)
+				if (BackgroundManager.TargetBackgroundCountdown >= 0.0)
 				{
-					//Our target background has fully faded in, so set it to be the current
-					World.CurrentBackground = World.TargetBackground;
-					//Reset countdown
-					World.TargetBackgroundCountdown = -1.0;
-					//Render the background with 100 % opacity
-					RenderBackground(World.CurrentBackground, 1.0f, scale);
+					//Run the fade-in counter
+					BackgroundManager.TargetBackgroundCountdown -= TimeElapsed;
+					if (BackgroundManager.TargetBackgroundCountdown < 0.0)
+					{
+						//Our target background has fully faded in, so set it to be the current
+						BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
+						//Reset countdown
+						BackgroundManager.TargetBackgroundCountdown = -1.0;
+						//Render the background with 100 % opacity
+						BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
+
+					}
+					else
+					{
+						//Render the old background with 100 % opacity
+						BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
+						SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
+						//Calculate the alpha level of the NEW background
+						float Alpha = (float)(1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
+						//Render
+						BackgroundManager.TargetBackground.SetBackground(Alpha, scale);
+					}
 				}
 				else
 				{
-					//Render the old background with 100 % opacity
-					RenderBackground(World.CurrentBackground, 1.0f, scale);
-					SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
-					//Calculate the alpha level of the NEW background
-					float Alpha = (float)(1.0 - World.TargetBackgroundCountdown / World.TargetBackgroundDefaultCountdown);
-					//Render
-					RenderBackground(World.TargetBackground, Alpha, scale);
+					//No target background, so just render the current background with 100 % opacity
+					BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
 				}
+			}
+			else if (BackgroundManager.CurrentBackground is BackgroundManager.DynamicBackground)
+			{
+				
 			}
 			else
 			{
-				//No target background, so just render the current background with 100 % opacity
-				RenderBackground(World.CurrentBackground, 1.0f, scale);
+				//Object backgrounds not yet implemented
+				throw new NotImplementedException();
 			}
 		}
-		/// <summary>Renders a background</summary>
-		/// <param name="Data">The background data</param>
-		/// <param name="Alpha">The alpha</param>
-		/// <param name="scale">The scale of the background (NOTE: Constant 0.5f at present)</param>
-		private static void RenderBackground(World.Background Data, float Alpha, float scale)
+
+		/// <summary>Renders a static frustrum based back</summary>
+		/// <param name="Data">The background to render</param>
+		/// <param name="Alpha">The alpha level</param>
+		/// <param name="scale">The scale</param>
+		internal static void RenderBackground(BackgroundManager.StaticBackground Data, float Alpha, float scale)
 		{
 			if (Data.Texture != null && Textures.LoadTexture(Data.Texture, Textures.OpenGlTextureWrapMode.RepeatClamp))
 			{
@@ -103,7 +123,7 @@ namespace OpenBve
 				GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.RepeatClamp].Name);
 				GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
 
-				if (!DisplayListAvailable)
+				if (!BackgroundDisplayListAvailable)
 				{
 					BackgroundDisplayList = GL.GenLists(1);
 					GL.NewList(BackgroundDisplayList, ListMode.Compile);
@@ -112,21 +132,21 @@ namespace OpenBve
 					{
 						int tw = Data.Texture.Width;
 						int th = Data.Texture.Height;
-						double hh = Math.PI*World.BackgroundImageDistance*(double) th/
-									((double) tw*(double) Data.Repetition);
-						y0 = (float) (-0.5*hh);
-						y1 = (float) (1.5*hh);
+						double hh = Math.PI * World.BackgroundImageDistance * (double)th /
+									((double)tw * (double)Data.Repetition);
+						y0 = (float)(-0.5 * hh);
+						y1 = (float)(1.5 * hh);
 					}
 					else
 					{
-						y0 = (float) (-0.125*World.BackgroundImageDistance);
-						y1 = (float) (0.375*World.BackgroundImageDistance);
+						y0 = (float)(-0.125 * World.BackgroundImageDistance);
+						y1 = (float)(0.375 * World.BackgroundImageDistance);
 					}
 					const int n = 32;
 					Vector3[] bottom = new Vector3[n];
 					Vector3[] top = new Vector3[n];
-					double angleValue = 2.61799387799149 - 3.14159265358979/(double) n;
-					const double angleIncrement = 6.28318530717958/(double) n;
+					double angleValue = 2.61799387799149 - 3.14159265358979 / (double)n;
+					const double angleIncrement = 6.28318530717958 / (double)n;
 					/*
 				 * To ensure that the whole background cylinder is rendered inside the viewing frustum,
 				 * the background is rendered before the scene with z-buffer writes disabled. Then,
@@ -134,18 +154,18 @@ namespace OpenBve
 				 * */
 					for (int i = 0; i < n; i++)
 					{
-						float x = (float) (World.BackgroundImageDistance*Math.Cos(angleValue));
-						float z = (float) (World.BackgroundImageDistance*Math.Sin(angleValue));
-						bottom[i] = new Vector3(scale*x, scale*y0, scale*z);
-						top[i] = new Vector3(scale*x, scale*y1, scale*z);
+						float x = (float)(World.BackgroundImageDistance * Math.Cos(angleValue));
+						float z = (float)(World.BackgroundImageDistance * Math.Sin(angleValue));
+						bottom[i] = new Vector3(scale * x, scale * y0, scale * z);
+						top[i] = new Vector3(scale * x, scale * y1, scale * z);
 						angleValue += angleIncrement;
 					}
-					float textureStart = 0.5f*(float) Data.Repetition/(float) n;
-					float textureIncrement = -(float) Data.Repetition/(float) n;
+					float textureStart = 0.5f * (float)Data.Repetition / (float)n;
+					float textureIncrement = -(float)Data.Repetition / (float)n;
 					double textureX = textureStart;
 					for (int i = 0; i < n; i++)
 					{
-						int j = (i + 1)%n;
+						int j = (i + 1) % n;
 						// side wall
 						GL.Begin(PrimitiveType.Quads);
 						GL.TexCoord2(textureX, 0.005f);
@@ -163,10 +183,10 @@ namespace OpenBve
 						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
 						GL.TexCoord2(textureX + textureIncrement, 0.005f);
 						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
-						GL.TexCoord2(textureX + 0.5*textureIncrement, 0.1f);
+						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.1f);
 						GL.Vertex3(0.0f, top[i].Y, 0.0f);
 						// bottom cap
-						GL.TexCoord2(textureX + 0.5*textureIncrement, 0.9f);
+						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.9f);
 						GL.Vertex3(0.0f, bottom[i].Y, 0.0f);
 						GL.TexCoord2(textureX + textureIncrement, 0.995f);
 						GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
@@ -185,8 +205,8 @@ namespace OpenBve
 						GL.Enable(EnableCap.Blend);
 						BlendEnabled = true;
 					}
-					
-					DisplayListAvailable = true;
+
+					BackgroundDisplayListAvailable = true;
 				}
 				else
 				{
@@ -201,5 +221,6 @@ namespace OpenBve
 				}
 			}
 		}
+		
 	}
 }

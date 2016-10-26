@@ -56,7 +56,7 @@ namespace OpenBve {
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal Textures.Texture[] TimetableDaytime;
 			internal Textures.Texture[] TimetableNighttime;
-			internal World.Background[] Backgrounds;
+			internal BackgroundManager.StaticBackground[] Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
@@ -161,7 +161,7 @@ namespace OpenBve {
 				Data.Structure.RailCycle = new int[][] { };
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
-				Data.Backgrounds = new World.Background[] {};
+				Data.Backgrounds = new BackgroundManager.StaticBackground[] {};
 				Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
 				// signals
@@ -2549,9 +2549,9 @@ namespace OpenBve {
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
 														int a = Data.Backgrounds.Length;
-														Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+														Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
 														for (int k = a; k <= CommandIndex1; k++) {
-															Data.Backgrounds[k] = new World.Background(null, 6, false);
+															Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 														}
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
@@ -2575,9 +2575,9 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
 												}
 												int x;
@@ -2602,9 +2602,9 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
 												}
 												int aspect;
@@ -4824,11 +4824,11 @@ namespace OpenBve {
 			// background
 			if (!PreviewOnly) {
 				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Length) {
-					World.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					BackgroundManager.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				} else {
-					World.CurrentBackground = new World.Background(null, 6, false);
+					BackgroundManager.CurrentBackground = new BackgroundManager.StaticBackground(null, 6, false);
 				}
-				World.TargetBackground = World.CurrentBackground;
+				BackgroundManager.TargetBackground = BackgroundManager.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;
