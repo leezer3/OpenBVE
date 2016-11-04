@@ -2569,7 +2569,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + CommandIndex1 + " is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
@@ -2582,7 +2582,7 @@ namespace OpenBve {
 												}
 												int x;
 												if (!Interface.TryParseIntVb6(Arguments[0], out x)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else if (x == 0) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
@@ -2596,7 +2596,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + CommandIndex1 + " is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
@@ -2609,7 +2609,7 @@ namespace OpenBve {
 												}
 												int aspect;
 												if (!Interface.TryParseIntVb6(Arguments[0], out aspect)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
