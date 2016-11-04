@@ -56,7 +56,7 @@ namespace OpenBve {
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal Textures.Texture[] TimetableDaytime;
 			internal Textures.Texture[] TimetableNighttime;
-			internal BackgroundManager.StaticBackground[] Backgrounds;
+			internal BackgroundManager.BackgroundHandle[] Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
@@ -2549,7 +2549,7 @@ namespace OpenBve {
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
 														int a = Data.Backgrounds.Length;
-														Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
+														Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 														for (int k = a; k <= CommandIndex1; k++) {
 															Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 														}
@@ -2558,7 +2558,15 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Textures.RegisterTexture(f, out Data.Backgrounds[CommandIndex1].Texture);
+														if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+														{
+															BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+															if(b!= null)
+															{
+																Textures.RegisterTexture(f, out b.Texture);
+															}
+															
+														}
 													}
 												}
 											}
@@ -2575,7 +2583,7 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
 														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
@@ -2586,7 +2594,11 @@ namespace OpenBve {
 												} else if (x == 0) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].Repetition = x;
+													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													if (b != null)
+													{
+														b.Repetition = x;
+													}
 												}
 											}
 										}
@@ -2602,7 +2614,7 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<BackgroundManager.StaticBackground>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
 														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
@@ -2613,7 +2625,12 @@ namespace OpenBve {
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].KeepAspectRatio = aspect == 1;
+													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													if (b != null)
+													{
+														b.KeepAspectRatio = aspect == 1;
+													}
+													
 												}
 											}
 										}
@@ -4475,10 +4492,18 @@ namespace OpenBve {
 											}
 											if (typ < 0 | typ >= Data.Backgrounds.Length) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " references a texture not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Data.Backgrounds[typ].Texture == null) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											} else if (Data.Backgrounds[typ] is BackgroundManager.StaticBackground) {
+												BackgroundManager.StaticBackground b = Data.Backgrounds[typ] as BackgroundManager.StaticBackground;
+												if (b.Texture == null)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												}
+												else
+												{
+													Data.Blocks[BlockIndex].Background = typ;
+												}
 											} else {
-												Data.Blocks[BlockIndex].Background = typ;
+												throw new NotImplementedException();
 											}
 										}
 									} break;

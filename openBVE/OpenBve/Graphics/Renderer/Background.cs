@@ -45,51 +45,77 @@ namespace OpenBve
 			{
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
-			if (BackgroundManager.CurrentBackground is BackgroundManager.StaticBackground)
-			{
-				if (BackgroundManager.TargetBackgroundCountdown >= 0.0)
-				{
-					//Run the fade-in counter
-					BackgroundManager.TargetBackgroundCountdown -= TimeElapsed;
-					if (BackgroundManager.TargetBackgroundCountdown < 0.0)
-					{
-						//Our target background has fully faded in, so set it to be the current
-						BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
-						//Reset countdown
-						BackgroundManager.TargetBackgroundCountdown = -1.0;
-						//Render the background with 100 % opacity
-						BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
 
-					}
-					else
-					{
-						//Render the old background with 100 % opacity
-						BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
-						SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
-						//Calculate the alpha level of the NEW background
-						float Alpha = (float)(1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
-						//Render
-						BackgroundManager.TargetBackground.SetBackground(Alpha, scale);
-					}
+
+			if (BackgroundManager.TargetBackground == null)
+			{
+				//No NEW background
+				var Static = BackgroundManager.CurrentBackground as BackgroundManager.StaticBackground;
+				if (Static != null)
+				{
+					RenderBackground(Static, 1.0f, scale);
+					return;
+				}
+				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
+				if (Dynamic != null)
+				{
+					BackgroundManager.CurrentBackground.UpdateBackground(TimeElapsed);
+					RenderBackground(Dynamic, scale);
+				}
+				return;
+			}
+			//We have a new background, so need to separate out the two static backgrounds
+			var Current = BackgroundManager.CurrentBackground as BackgroundManager.StaticBackground;
+			if (Current == null)
+			{
+				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
+				if (Dynamic != null)
+				{
+					Current = Dynamic.Backgrounds[Dynamic.CurrentBackgroundIndex];
 				}
 				else
 				{
-					//No target background, so just render the current background with 100 % opacity
-					BackgroundManager.CurrentBackground.SetBackground(1.0f, scale);
+					throw new NotImplementedException();
 				}
 			}
-			else if (BackgroundManager.CurrentBackground is BackgroundManager.DynamicBackground)
+			var Target = BackgroundManager.TargetBackground as BackgroundManager.StaticBackground;
+			if (Target == null)
 			{
-				
+				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
+				if (Dynamic != null)
+				{
+					Target = Dynamic.Backgrounds[Dynamic.CurrentBackgroundIndex];
+				}
+			}
+			//Run the fade-in counter
+			BackgroundManager.TargetBackgroundCountdown -= TimeElapsed;
+			if (BackgroundManager.TargetBackgroundCountdown < 0.0)
+			{
+				//Our target background has fully faded in, so set it to be the current
+				BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
+				BackgroundManager.TargetBackground = null;
+				//Reset countdown
+				BackgroundManager.TargetBackgroundCountdown = -1.0;
+				//Render the background with 100 % opacity
+				RenderBackground(Current, 1.0f, scale);
+
 			}
 			else
 			{
-				//Object backgrounds not yet implemented
-				throw new NotImplementedException();
+				//Render the old background with 100 % opacity
+				RenderBackground(Current, 1.0f, scale);
+				SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
+				//Calculate the alpha level of the NEW background
+				float Alpha = (float) (1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
+				//Render
+				RenderBackground(Target, Alpha, scale);
 			}
+
+
+
 		}
 
-		/// <summary>Renders a static frustrum based back</summary>
+		/// <summary>Renders a static frustrum based background</summary>
 		/// <param name="Data">The background to render</param>
 		/// <param name="Alpha">The alpha level</param>
 		/// <param name="scale">The scale</param>
@@ -219,6 +245,30 @@ namespace OpenBve
 						BlendEnabled = true;
 					}
 				}
+			}
+		}
+
+		/// <summary>Renders a dynamic frustrum based background</summary>
+		/// <param name="Data">The background to render</param>
+		/// <param name="scale">The scale</param>
+		internal static void RenderBackground(BackgroundManager.DynamicBackground Data, float scale)
+		{
+			if (Data.PreviousBackgroundIndex == Data.CurrentBackgroundIndex)
+			{
+				RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
+				return;
+			}
+			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			switch (Data.Backgrounds[Data.CurrentBackgroundIndex].Mode)
+			{
+				case BackgroundManager.BackgroundTransitionMode.FadeIn:
+					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], 1.0f, scale);
+					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], Data.Alpha, scale);
+					break;
+				case BackgroundManager.BackgroundTransitionMode.FadeOut:
+					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
+					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], Data.Alpha, scale);
+					break;
 			}
 		}
 		

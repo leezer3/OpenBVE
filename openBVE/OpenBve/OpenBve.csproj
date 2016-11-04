@@ -123,6 +123,7 @@
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\DynamicLightParser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

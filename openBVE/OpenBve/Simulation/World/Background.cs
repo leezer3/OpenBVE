@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
 {
@@ -10,28 +8,31 @@ namespace OpenBve
 		/// <summary>Represents a handle to an abstract background.</summary>
 		internal abstract class BackgroundHandle
 		{
-			internal abstract void SetBackground(float Alpha, float Scale);
+			internal abstract void UpdateBackground(double ElapsedTime);
+
 		}
 
 		/// <summary>Represents a static background, using the default viewing frustrum</summary>
 		internal class StaticBackground : BackgroundHandle
 		{
 			internal Textures.Texture Texture;
-			internal int Repetition;
+			internal double Repetition;
 			internal bool KeepAspectRatio;
 			internal double FadeInTime;
-			internal int DisplayTime;
+			internal double Time;
+			internal double Countdown;
+			internal BackgroundTransitionMode Mode;
 			/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
-			internal StaticBackground(Textures.Texture Texture, int Repetition, bool KeepAspectRatio)
+			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
 				this.FadeInTime = 0.8;
-				this.DisplayTime = -1;
+				this.Time = -1;
 			}
 
 			/// <summary>Creates a new static background</summary>
@@ -39,21 +40,36 @@ namespace OpenBve
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
 			/// <param name="FadeInTime">The time taken in seconds for the fade-in transition to occur</param>
-			internal StaticBackground(Textures.Texture Texture, int Repetition, bool KeepAspectRatio, double FadeInTime)
+			/// <param name="Mode">The transition mode</param>
+			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double FadeInTime, BackgroundTransitionMode Mode)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
 				this.FadeInTime = FadeInTime;
-				this.DisplayTime = -1;
+				this.Time = -1;
+				this.Mode = Mode;
 			}
 
-			/// <summary>Renders a background</summary>
-			/// <param name="Alpha">The alpha</param>
-			/// <param name="scale">The scale of the background (NOTE: Constant 0.5f at present)</param>
-			internal override void SetBackground(float Alpha, float scale)
+			/// <summary>Creates a new static background</summary>
+			/// <param name="Texture">The texture to apply</param>
+			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
+			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
+			/// <param name="FadeInTime">The time taken in seconds for the fade-in transition to occur</param>
+			/// <param name="Mode">The transition mode</param>
+			/// <param name="Time">The time at which this background is to be displayed, expressed as the number of seconds since midnight</param>
+			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double FadeInTime, BackgroundTransitionMode Mode, double Time)
 			{
-				Renderer.RenderBackground(this, Alpha, scale);
+				this.Texture = Texture;
+				this.Repetition = Repetition;
+				this.KeepAspectRatio = KeepAspectRatio;
+				this.FadeInTime = FadeInTime;
+				this.Mode = Mode;
+				this.Time = Time;
+			}
+
+			internal override void UpdateBackground(double ElapsedTime)
+			{
 			}
 		}
 
@@ -64,6 +80,10 @@ namespace OpenBve
 			internal StaticBackground[] Backgrounds;
 			/// <summary>The current background in use</summary>
 			internal int CurrentBackgroundIndex = 0;
+
+			internal int PreviousBackgroundIndex = 0;
+
+			internal float Alpha = 0.0f;
 			/// <summary>Creates a new dynamic background</summary>
 			/// <param name="Backgrounds">The list of static backgrounds which make up the dynamic background</param>
 			internal DynamicBackground(StaticBackground[] Backgrounds)
@@ -71,14 +91,58 @@ namespace OpenBve
 				this.Backgrounds = Backgrounds;
 			}
 
-			/// <summary>Renders a background</summary>
-			/// <param name="Alpha">The alpha</param>
-			/// <param name="scale">The scale of the background (NOTE: Constant 0.5f at present)</param>
-			internal override void SetBackground(float Alpha, float scale)
+
+			internal override void UpdateBackground(double ElapsedTime)
 			{
-				//Extract background to variable for quick access
-				var Data = Backgrounds[CurrentBackgroundIndex];
-				Renderer.RenderBackground(Data, Alpha, scale);
+				if (Backgrounds.Length < 2)
+				{
+					CurrentBackgroundIndex = 0;
+					Renderer.RenderBackground(Backgrounds[CurrentBackgroundIndex], 1.0f, 0.5f);
+					return;
+				}
+				var Time = Game.SecondsSinceMidnight;
+				//Convert to absolute time of day
+				//Use a while loop as it's possible to run through two days
+				while (Time > 86400)
+				{
+					Time -= 86400;
+				}
+				//Run through the array
+				for (int i = 0; i < Backgrounds.Length; i++)
+				{
+
+					if (Time > Backgrounds[i].Time)
+					{
+						break;
+					}
+					CurrentBackgroundIndex = i;
+				}
+				if (CurrentBackgroundIndex != PreviousBackgroundIndex)
+				{
+					//Run the timer
+					Backgrounds[CurrentBackgroundIndex].Countdown -= ElapsedTime;
+					if (Backgrounds[CurrentBackgroundIndex].Countdown < 0)
+					{
+						//Countdown has expired
+						PreviousBackgroundIndex = CurrentBackgroundIndex;
+					}
+					else
+					{
+						switch (Backgrounds[CurrentBackgroundIndex].Mode)
+						{
+							case BackgroundTransitionMode.None:
+								//No fade in or out, so just switch
+								PreviousBackgroundIndex = CurrentBackgroundIndex;
+								break;
+							case BackgroundTransitionMode.FadeIn:
+								Alpha = (float)(Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].FadeInTime);
+								break;
+							case BackgroundTransitionMode.FadeOut:
+								Alpha = (float)(1.0 - Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].FadeInTime);
+								break;
+						}
+					}
+				}				
 			}
 		}
 
@@ -95,11 +159,18 @@ namespace OpenBve
 				this.ObjectBackground = Object;
 			}
 
-			internal override void SetBackground(float Alpha, float Scale)
+			internal override void UpdateBackground(double TimeElapsed)
 			{
 				//Not yet implemented!
 				throw new NotImplementedException();
 			}
+		}
+
+		internal enum BackgroundTransitionMode
+		{
+			None = 0,
+			FadeIn = 1,
+			FadeOut = 2
 		}
 
 		/// <summary>The currently displayed background texture</summary>
