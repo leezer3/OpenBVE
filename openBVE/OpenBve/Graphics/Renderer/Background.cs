@@ -45,89 +45,38 @@ namespace OpenBve
 			{
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
-
-
-			if (BackgroundManager.TargetBackground == null)
+			//Update the currently displayed background
+			BackgroundManager.CurrentBackground.UpdateBackground(TimeElapsed, false);
+			if (BackgroundManager.TargetBackground == null || BackgroundManager.TargetBackground == BackgroundManager.CurrentBackground)
 			{
-				//No NEW background
-				var Static = BackgroundManager.CurrentBackground as BackgroundManager.StaticBackground;
-				if (Static != null)
-				{
-					RenderBackground(Static, 1.0f, scale);
-					return;
-				}
-				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
-				if (Dynamic != null)
-				{
-					BackgroundManager.CurrentBackground.UpdateBackground(TimeElapsed);
-					RenderBackground(Dynamic, scale);
-				}
+				//No target background, so call the render function
+				BackgroundManager.CurrentBackground.RenderBackground(scale);
 				return;
 			}
-			//We have a new background, so need to separate out the two static backgrounds
-			var Current = BackgroundManager.CurrentBackground as BackgroundManager.StaticBackground;
-			if (Current == null)
+			//Update the target background
+			BackgroundManager.TargetBackground.UpdateBackground(TimeElapsed, true);
+			switch (BackgroundManager.TargetBackground.Mode)
 			{
-				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
-				if (Dynamic != null)
-				{
-					Current = Dynamic.Backgrounds[Dynamic.CurrentBackgroundIndex];
-				}
-				else
-				{
-					throw new NotImplementedException();
-				}
+				//Render, switching on the transition mode
+				case BackgroundManager.BackgroundTransitionMode.FadeIn:
+					BackgroundManager.CurrentBackground.RenderBackground(1.0f, scale);
+					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.Alpha, scale);
+					break;
+				case BackgroundManager.BackgroundTransitionMode.FadeOut:
+					BackgroundManager.TargetBackground.RenderBackground(1.0f, scale);
+					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.Alpha, scale);
+					break;
 			}
-			float Alpha = (float)(1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
-			var Target = BackgroundManager.TargetBackground as BackgroundManager.StaticBackground;
-			if (Target == null)
+			//If our target alpha is greater than or equal to 1.0f, the background is fully displayed
+			if (BackgroundManager.TargetBackground.Alpha >= 1.0f)
 			{
-				var Dynamic = BackgroundManager.CurrentBackground as BackgroundManager.DynamicBackground;
-				if (Dynamic != null)
-				{
-					Target = Dynamic.Backgrounds[Dynamic.CurrentBackgroundIndex];
-					Alpha = Dynamic.Alpha;
-				}
-			}
-			//Run the counter
-			BackgroundManager.TargetBackgroundCountdown -= TimeElapsed;
-			if (BackgroundManager.TargetBackgroundCountdown < 0.0)
-			{
-				//Our target background has fully faded in, so set it to be the current
+				//Set the current background to the target & reset target to null
 				BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
 				BackgroundManager.TargetBackground = null;
-				//Reset countdown
-				BackgroundManager.TargetBackgroundCountdown = -1.0;
-				//Render the background with 100 % opacity
-				RenderBackground(Current, 1.0f, scale);
 			}
-			else
-			{
-				//Render the old background with 100 % opacity
-				switch (Target.Mode)
-				{
-					case BackgroundManager.BackgroundTransitionMode.None:
-						//No transition effects
-						BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
-						BackgroundManager.TargetBackground = null;
-						//Reset countdown
-						BackgroundManager.TargetBackgroundCountdown = -1.0;
-						//Render the background with 100 % opacity
-						RenderBackground(Current, 1.0f, scale);
-						break;
-					case BackgroundManager.BackgroundTransitionMode.FadeIn:
-						RenderBackground(Current, 1.0f, scale);
-						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-						RenderBackground(Target, Alpha, scale);
-						break;
-					case BackgroundManager.BackgroundTransitionMode.FadeOut:
-						RenderBackground(Target, 1.0f, scale);
-						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-						RenderBackground(Current, Alpha, scale);
-						break;
-					
-				}
-			}
+			
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>
@@ -285,6 +234,11 @@ namespace OpenBve
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], Data.Alpha, scale);
 					break;
 			}
+		}
+
+		internal static void RenderBackgroundObject(BackgroundManager.BackgroundObject Object)
+		{
+			
 		}
 		
 	}

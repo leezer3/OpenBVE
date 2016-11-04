@@ -39,10 +39,8 @@ namespace OpenBve {
 				if (TriggerType == EventTriggerType.Camera) {
 					if (Direction < 0) {
 						BackgroundManager.TargetBackground = this.PreviousBackground;
-						BackgroundManager.TargetBackgroundCountdown = BackgroundManager.TargetBackgroundDefaultCountdown;
 					} else if (Direction > 0) {
 						BackgroundManager.TargetBackground = this.NextBackground;
-						BackgroundManager.TargetBackgroundCountdown = BackgroundManager.TargetBackgroundDefaultCountdown;
 					}
 				}
 			}

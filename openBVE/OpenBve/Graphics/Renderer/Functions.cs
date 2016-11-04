@@ -31,7 +31,7 @@ namespace OpenBve
         /// </summary>
         /// <param name="Comparison">The comparison to use</param>
         /// <param name="Value">The value to compare</param>
-        private static void SetAlphaFunc(AlphaFunction Comparison, float Value)
+        internal static void SetAlphaFunc(AlphaFunction Comparison, float Value)
         {
             AlphaTestEnabled = true;
             AlphaFuncComparison = Comparison;
