@@ -2558,14 +2558,29 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+														if (f.ToLowerInvariant().EndsWith(".xml"))
 														{
-															BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
-															if(b!= null)
+															try
 															{
-																Textures.RegisterTexture(f, out b.Texture);
+																BackgroundManager.BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
+																Data.Backgrounds[CommandIndex1] = h;
 															}
-															
+															catch
+															{
+																Interface.AddMessage(Interface.MessageType.Error, true, f + " is not a valid background XML in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															}
+														}
+														else
+														{
+															if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+															{
+																BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+																if (b != null)
+																{
+																	Textures.RegisterTexture(f, out b.Texture);
+																}
+
+															}
 														}
 													}
 												}
@@ -4496,13 +4511,21 @@ namespace OpenBve {
 												BackgroundManager.StaticBackground b = Data.Backgrounds[typ] as BackgroundManager.StaticBackground;
 												if (b.Texture == null)
 												{
+													//There's a possibility that this was loaded via a default BVE command rather than XML
+													//Thus check for the existance of the file and chuck out error if appropriate
 													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												}
 												else
 												{
 													Data.Blocks[BlockIndex].Background = typ;
 												}
-											} else {
+											} else if (Data.Backgrounds[typ] is BackgroundManager.DynamicBackground)
+											{
+												//File existance checks should already have been made when loading the XML
+												Data.Blocks[BlockIndex].Background = typ;
+											}
+											else {
+												//Object based backgrounds not yet implemented
 												throw new NotImplementedException();
 											}
 										}

@@ -78,6 +78,7 @@ namespace OpenBve
 					throw new NotImplementedException();
 				}
 			}
+			float Alpha = (float)(1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
 			var Target = BackgroundManager.TargetBackground as BackgroundManager.StaticBackground;
 			if (Target == null)
 			{
@@ -85,9 +86,10 @@ namespace OpenBve
 				if (Dynamic != null)
 				{
 					Target = Dynamic.Backgrounds[Dynamic.CurrentBackgroundIndex];
+					Alpha = Dynamic.Alpha;
 				}
 			}
-			//Run the fade-in counter
+			//Run the counter
 			BackgroundManager.TargetBackgroundCountdown -= TimeElapsed;
 			if (BackgroundManager.TargetBackgroundCountdown < 0.0)
 			{
@@ -98,21 +100,34 @@ namespace OpenBve
 				BackgroundManager.TargetBackgroundCountdown = -1.0;
 				//Render the background with 100 % opacity
 				RenderBackground(Current, 1.0f, scale);
-
 			}
 			else
 			{
 				//Render the old background with 100 % opacity
-				RenderBackground(Current, 1.0f, scale);
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f); // ###
-				//Calculate the alpha level of the NEW background
-				float Alpha = (float) (1.0 - BackgroundManager.TargetBackgroundCountdown / BackgroundManager.TargetBackgroundDefaultCountdown);
-				//Render
-				RenderBackground(Target, Alpha, scale);
+				switch (Target.Mode)
+				{
+					case BackgroundManager.BackgroundTransitionMode.None:
+						//No transition effects
+						BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
+						BackgroundManager.TargetBackground = null;
+						//Reset countdown
+						BackgroundManager.TargetBackgroundCountdown = -1.0;
+						//Render the background with 100 % opacity
+						RenderBackground(Current, 1.0f, scale);
+						break;
+					case BackgroundManager.BackgroundTransitionMode.FadeIn:
+						RenderBackground(Current, 1.0f, scale);
+						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+						RenderBackground(Target, Alpha, scale);
+						break;
+					case BackgroundManager.BackgroundTransitionMode.FadeOut:
+						RenderBackground(Target, 1.0f, scale);
+						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+						RenderBackground(Current, Alpha, scale);
+						break;
+					
+				}
 			}
-
-
-
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>

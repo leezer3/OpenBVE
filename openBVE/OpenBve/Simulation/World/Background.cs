@@ -18,7 +18,7 @@ namespace OpenBve
 			internal Textures.Texture Texture;
 			internal double Repetition;
 			internal bool KeepAspectRatio;
-			internal double FadeInTime;
+			internal double TransitionTime;
 			internal double Time;
 			internal double Countdown;
 			internal BackgroundTransitionMode Mode;
@@ -31,7 +31,7 @@ namespace OpenBve
 				this.Texture = Texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
-				this.FadeInTime = 0.8;
+				this.TransitionTime = 0.8;
 				this.Time = -1;
 			}
 
@@ -39,14 +39,14 @@ namespace OpenBve
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
-			/// <param name="FadeInTime">The time taken in seconds for the fade-in transition to occur</param>
+			/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 			/// <param name="Mode">The transition mode</param>
-			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double FadeInTime, BackgroundTransitionMode Mode)
+			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
-				this.FadeInTime = FadeInTime;
+				this.TransitionTime = transitionTime;
 				this.Time = -1;
 				this.Mode = Mode;
 			}
@@ -55,15 +55,15 @@ namespace OpenBve
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
-			/// <param name="FadeInTime">The time taken in seconds for the fade-in transition to occur</param>
+			/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 			/// <param name="Mode">The transition mode</param>
 			/// <param name="Time">The time at which this background is to be displayed, expressed as the number of seconds since midnight</param>
-			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double FadeInTime, BackgroundTransitionMode Mode, double Time)
+			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode, double Time)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
-				this.FadeInTime = FadeInTime;
+				this.TransitionTime = transitionTime;
 				this.Mode = Mode;
 				this.Time = Time;
 			}
@@ -111,7 +111,7 @@ namespace OpenBve
 				for (int i = 0; i < Backgrounds.Length; i++)
 				{
 
-					if (Time > Backgrounds[i].Time)
+					if (Time < Backgrounds[i].Time)
 					{
 						break;
 					}
@@ -119,6 +119,10 @@ namespace OpenBve
 				}
 				if (CurrentBackgroundIndex != PreviousBackgroundIndex)
 				{
+					if (Backgrounds[CurrentBackgroundIndex].Countdown <= 0)
+					{
+						Backgrounds[CurrentBackgroundIndex].Countdown = Backgrounds[CurrentBackgroundIndex].TransitionTime;
+					}
 					//Run the timer
 					Backgrounds[CurrentBackgroundIndex].Countdown -= ElapsedTime;
 					if (Backgrounds[CurrentBackgroundIndex].Countdown < 0)
@@ -135,10 +139,10 @@ namespace OpenBve
 								PreviousBackgroundIndex = CurrentBackgroundIndex;
 								break;
 							case BackgroundTransitionMode.FadeIn:
-								Alpha = (float)(Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].FadeInTime);
+								Alpha = (float)(1.0 - Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
 								break;
 							case BackgroundTransitionMode.FadeOut:
-								Alpha = (float)(1.0 - Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].FadeInTime);
+								Alpha = (float)(Backgrounds[CurrentBackgroundIndex].Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
 								break;
 						}
 					}

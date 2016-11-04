@@ -15,6 +15,7 @@ namespace OpenBve
 			//Load the object's XML file 
 			currentXML.Load(fileName);
 			string Path = System.IO.Path.GetDirectoryName(fileName);
+			double[] UnitOfLength = { 1.0 };
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
@@ -61,7 +62,7 @@ namespace OpenBve
 										o = new ObjectManager.StaticObject();
 										break;
 									case "repetitions":
-										if (!Interface.TryParseDoubleVb6(Arguments[0], null, out repetitions))
+										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + "does not parse to a valid number of repetitions in " + fileName);
 										}
@@ -85,30 +86,32 @@ namespace OpenBve
 										}
 										break;
 									case "transitiontime":
-										if (!Interface.TryParseDoubleVb6(Arguments[0], null, out TransitionTime))
+										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + "does not parse to a valid number of repetitions in " + fileName);
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + "is not a valid background transition time in " + fileName);
 										}
 										break;
 								}
-								//Create background if texture is not null
-								if (t != null && o == null)
-								{
-									Backgrounds.Add(new BackgroundManager.StaticBackground(t, repetitions,false, TransitionTime, mode, DisplayTime));
-								}
-								if (t == null && o != null)
-								{
-									//All other parameters are ignored if an object has been defined
-									//TODO: Error message stating they have been ignored
-									return new BackgroundManager.BackgroundObject(o);
-								}
-
-
+							}
+							//Create background if texture is not null
+							if (t != null && o == null)
+							{
+								Backgrounds.Add(new BackgroundManager.StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
+							}
+							if (t == null && o != null)
+							{
+								//All other parameters are ignored if an object has been defined
+								//TODO: Error message stating they have been ignored
+								return new BackgroundManager.BackgroundObject(o);
 							}
 							
 						}
 					}
-					if (Backgrounds.Count > 2)
+					if (Backgrounds.Count == 1)
+					{
+						return Backgrounds[0];
+					}
+					if (Backgrounds.Count > 1)
 					{
 						//If more than 2 backgrounds, convert to array and return a new dynamic background
 						return new BackgroundManager.DynamicBackground(Backgrounds.ToArray());
