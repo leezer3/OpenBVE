@@ -59,7 +59,16 @@ namespace OpenBve
 										}
 										break;
 									case "object":
-										o = new ObjectManager.StaticObject();
+										string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), c.InnerText);
+										if (!System.IO.File.Exists(f))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
+										}
+										else
+										{
+											ObjectManager.UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+											o = (ObjectManager.StaticObject) b;
+										}
 										break;
 									case "repetitions":
 										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))

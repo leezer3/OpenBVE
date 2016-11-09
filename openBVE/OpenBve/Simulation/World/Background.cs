@@ -250,18 +250,17 @@ namespace OpenBve
 
 			internal override void UpdateBackground(double TimeElapsed, bool Target)
 			{
-				//Not yet implemented!
-				throw new NotImplementedException();
+				//No updates required
 			}
 
 			internal override void RenderBackground(float Alpha, float Scale)
 			{
-				throw new NotImplementedException();
+				Renderer.RenderBackground(this);
 			}
 
 			internal override void RenderBackground(float Scale)
 			{
-				throw new NotImplementedException();
+				Renderer.RenderBackground(this);
 			}
 		}
 

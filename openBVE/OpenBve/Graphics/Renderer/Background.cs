@@ -236,9 +236,65 @@ namespace OpenBve
 			}
 		}
 
-		internal static void RenderBackgroundObject(BackgroundManager.BackgroundObject Object)
+		internal static void RenderBackground(BackgroundManager.BackgroundObject Object)
 		{
-			
+			if (!TexturingEnabled)
+			{
+				GL.Enable(EnableCap.Texture2D);
+				TexturingEnabled = true;
+			}
+			int Mat = -1;
+			for (int i = 0; i < Object.ObjectBackground.Mesh.Faces.Length; i++)
+			{
+				int m = Object.ObjectBackground.Mesh.Faces[i].Material;
+				if (m != Mat)
+				{
+					Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+					for (int v = 0; v < Object.ObjectBackground.Mesh.Vertices.Length; v++)
+					{
+						if (Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.X < 0.0f | Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+						{
+							wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+						}
+						if (Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f | Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+						{
+							wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+						}
+					}
+
+					if (Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture != null)
+					{
+						Textures.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
+						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int) wrap].Name);
+					}
+				}
+				int FaceType = Object.ObjectBackground.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
+				switch (FaceType)
+				{
+					case World.MeshFace.FaceTypeTriangles:
+						GL.Begin(PrimitiveType.Triangles);
+						break;
+					case World.MeshFace.FaceTypeTriangleStrip:
+						GL.Begin(PrimitiveType.TriangleStrip);
+						break;
+					case World.MeshFace.FaceTypeQuads:
+						GL.Begin(PrimitiveType.Quads);
+						break;
+					case World.MeshFace.FaceTypeQuadStrip:
+						GL.Begin(PrimitiveType.QuadStrip);
+						break;
+					default:
+						GL.Begin(PrimitiveType.Polygon);
+						break;
+				}
+				for (int j = 0; j < Object.ObjectBackground.Mesh.Faces[i].Vertices.Length; j++)
+				{
+					World.Vertex v = Object.ObjectBackground.Mesh.Vertices[Object.ObjectBackground.Mesh.Faces[i].Vertices[j].Index];
+					GL.TexCoord2(v.TextureCoordinates.X, v.TextureCoordinates.Y);
+					GL.Vertex3(v.Coordinates.X, v.Coordinates.Y, v.Coordinates.Z);
+				}
+				GL.End();
+			}
 		}
 		
 	}

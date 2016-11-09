@@ -4526,7 +4526,7 @@ namespace OpenBve {
 											}
 											else {
 												//Object based backgrounds not yet implemented
-												throw new NotImplementedException();
+												Data.Blocks[BlockIndex].Background = typ;
 											}
 										}
 									} break;
