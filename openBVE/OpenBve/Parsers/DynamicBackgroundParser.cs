@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace OpenBve
@@ -73,14 +74,14 @@ namespace OpenBve
 									case "repetitions":
 										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + "does not parse to a valid number of repetitions in " + fileName);
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
 										}
 										break;
 									case "texture":
 										var file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
 										if (!System.IO.File.Exists(file))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The background file " + c.InnerText + "does not exist in " + fileName);
+											Interface.AddMessage(Interface.MessageType.Error, false, "The background file " + c.InnerText + " does not exist in " + fileName);
 										}
 										else
 										{
@@ -97,7 +98,7 @@ namespace OpenBve
 									case "transitiontime":
 										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + "is not a valid background transition time in " + fileName);
+											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
 										}
 										break;
 								}
@@ -122,6 +123,8 @@ namespace OpenBve
 					}
 					if (Backgrounds.Count > 1)
 					{
+						//Sort list- Not worried about when they start or end, so use simple LINQ
+						Backgrounds = Backgrounds.OrderBy(o => o.Time).ToList();
 						//If more than 2 backgrounds, convert to array and return a new dynamic background
 						return new BackgroundManager.DynamicBackground(Backgrounds.ToArray());
 					}

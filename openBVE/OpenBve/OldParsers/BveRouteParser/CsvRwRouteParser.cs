@@ -2882,6 +2882,7 @@ namespace OpenBve {
 								case "route.elevation":
 								case "route.temperature":
 								case "route.pressure":
+								case "route.dynamiclight":
 								case "route.ambientlight":
 								case "route.directionallight":
 								case "route.lightdirection":
