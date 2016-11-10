@@ -40,6 +40,16 @@ namespace OpenBveApi.Math {
 			double mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
 			return new Vector3((Vector1.X * (1 - mu2) + Vector2.X * mu2), (Vector1.Y * (1 - mu2) + Vector2.Y * mu2), (Vector1.Z * (1 - mu2) + Vector2.Z * mu2));
 		}
+
+		/// <summary>Linearly interpolates between two vectors</summary>
+		/// <param name="Vector1">The first vector</param>
+		/// <param name="Vector2">The second vector</param>
+		/// <param name="mu">The position on the interpolation curve of the new vector</param>
+		/// <returns>The interpolated vector</returns>
+		public static Vector3 LinearInterpolate(Vector3 Vector1, Vector3 Vector2, double mu)
+		{
+			return new Vector3(Vector1.X + ((Vector2.X - Vector1.X) * mu), Vector1.Y + ((Vector2.Y - Vector1.Y) * mu), Vector1.Z + ((Vector2.Z - Vector1.Z) * mu));
+		}
 		
 		
 		// --- arithmetic operators ---
