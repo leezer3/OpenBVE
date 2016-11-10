@@ -27,9 +27,9 @@ namespace OpenBve {
 		}
 		// background change
 		internal class BackgroundChangeEvent : GeneralEvent {
-			internal World.Background PreviousBackground;
-			internal World.Background NextBackground;
-			internal BackgroundChangeEvent(double TrackPositionDelta, World.Background PreviousBackground, World.Background NextBackground) {
+			internal BackgroundManager.BackgroundHandle PreviousBackground;
+			internal BackgroundManager.BackgroundHandle NextBackground;
+			internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundManager.BackgroundHandle PreviousBackground, BackgroundManager.BackgroundHandle NextBackground) {
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 				this.PreviousBackground = PreviousBackground;
@@ -38,11 +38,9 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.Camera) {
 					if (Direction < 0) {
-						World.TargetBackground = this.PreviousBackground;
-						World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
+						BackgroundManager.TargetBackground = this.PreviousBackground;
 					} else if (Direction > 0) {
-						World.TargetBackground = this.NextBackground;
-						World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
+						BackgroundManager.TargetBackground = this.NextBackground;
 					}
 				}
 			}

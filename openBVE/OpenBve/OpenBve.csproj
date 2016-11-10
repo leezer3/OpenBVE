@@ -123,6 +123,7 @@
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\DynamicLightParser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -137,7 +138,7 @@
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
-    <Compile Include="Simulation\World\Background.cs" />
+    <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
