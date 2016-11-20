@@ -158,6 +158,11 @@ namespace OpenBve {
 					}
 				}
 			}
+			if (Game.Stations.Length == 1)
+			{
+				//Log the fact that only a single station is present, as this is probably not right
+				Program.AppendToLogFile("The processed route file only contains a single station.");
+			}
 			Program.AppendToLogFile("Route file loaded successfully.");
 			RouteProgress = 1.0;
 			// initialize trains
