@@ -467,7 +467,7 @@ namespace OpenBve {
 										SizeF s = g.MeasureString(t.Substring(k, 1), f, 65536, StringFormat.GenericTypographic);
 										ty += s.Height;
 									}
-									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].actNameBrdr,
+									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, ty + 4.0f), new PointF((float)x, (float)y));
 								} else
 								{
@@ -483,7 +483,7 @@ namespace OpenBve {
 										new PointF(0.0f, -5.0f), m);
 									g.ResetTransform();
 									SizeF s = g.MeasureString(Game.Stations[e.StationIndex].Name, f);
-									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].actNameBrdr,
+									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, (float)(oy + s.Width + 4)), new PointF((float)x, (float)y));
 								}
 							}
