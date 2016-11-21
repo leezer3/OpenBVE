@@ -30,7 +30,7 @@ namespace OpenBve
                     Environment.Exit(0);
                 }
                 MessageBox.Show("Unhandled exception:\n\n" + ex.Message);
-                LogCrash(ex.ToString());
+                LogCrash(ex + Environment.StackTrace);
 
             }
             catch (Exception exc)
@@ -39,7 +39,7 @@ namespace OpenBve
                 {
                     MessageBox.Show("A fatal exception occured inside the UnhandledExceptionHandler: \n\n"
                         + exc.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        LogCrash(exc.ToString());
+                        LogCrash(exc + Environment.StackTrace);
                 }
                 finally
                 {
@@ -54,7 +54,7 @@ namespace OpenBve
             try
             {
                 MessageBox.Show("Unhandled Windows Forms Exception");
-                LogCrash(t.ToString());
+                LogCrash(t + Environment.StackTrace);
             }
             catch (Exception exc)
             {
@@ -62,7 +62,7 @@ namespace OpenBve
                 {
                     MessageBox.Show("A fatal exception occured inside the UIThreadException handler",
                         "Fatal Windows Forms Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop);
-                        LogCrash(exc.ToString());
+                        LogCrash(exc + Environment.StackTrace);
                 }
                 finally
                 {
@@ -75,7 +75,8 @@ namespace OpenBve
         /// <summary>This function logs an unhandled crash to disk</summary>
         internal static void LogCrash(string ExceptionText)
         {
-            using (StreamWriter outputFile = new StreamWriter(CrashLog))
+			Program.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
                 outputFile.WriteLine(DateTime.Now);
@@ -148,7 +149,8 @@ namespace OpenBve
         /// <summary>This function logs an exception caught whilst loading a route/ train to disk</summary>
         internal static void LoadingCrash(string ExceptionText, bool Train)
         {
-            using (StreamWriter outputFile = new StreamWriter(CrashLog))
+			Program.AppendToLogFile("WARNING: Program crashing. Creating CrashLog file: " + CrashLog);
+			using (StreamWriter outputFile = new StreamWriter(CrashLog))
             {
                 //Basic information
                 outputFile.WriteLine(DateTime.Now);

@@ -41,6 +41,11 @@ namespace OpenBve {
 				Dialog.Result = initial;
 				Dialog.ShowDialog();
 				MainDialogResult result = Dialog.Result;
+				//Dispose of the worker thread when closing the form
+				//If it's still running, it attempts to update a non-existant form and crashes nastily
+				Dialog.routeWorkerThread.Dispose();
+				Dialog.trainWatcher.Dispose();
+				Dialog.routeWatcher.Dispose();
 				Dialog.Dispose();
 				return result;
 			}
@@ -453,6 +458,7 @@ namespace OpenBve {
 				{
 					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
 					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
+					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
 					break;
 				}
 			}
@@ -681,7 +687,7 @@ namespace OpenBve {
 			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");
-			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
+			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");
 			groupboxJoysticks.Text = Interface.GetInterfaceString("controls_attached");
 			{
 				listviewControls.Items.Clear();
@@ -691,9 +697,9 @@ namespace OpenBve {
 					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
-				foreach (string currentKey in Enum.GetNames(typeof(Key)))
+				for (int i = 0; i < Interface.TranslatedKeys.Length; i++)
 				{
-					comboboxKeyboardKey.Items.Add(currentKey);
+					comboboxKeyboardKey.Items.Add(Interface.TranslatedKeys[i]);
 				}
 
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
@@ -983,6 +989,9 @@ namespace OpenBve {
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();
+			routeWatcher.Dispose();
+			routeWorkerThread.Dispose();
+			workerThread.Dispose();
 			// finish
 #if !DEBUG
 			try

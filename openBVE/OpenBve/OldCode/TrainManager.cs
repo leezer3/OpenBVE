@@ -6,7 +6,7 @@ using OpenBveApi.Math;
 namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
-	public static class TrainManager
+	public static partial class TrainManager
 	{
 		// axle
 		internal struct Axle
@@ -30,17 +30,7 @@ namespace OpenBve
 		}
 
 		// cars
-		internal struct Door
-		{
-			/// <summary>A value of -1 (left) or 1 (right).</summary>
-			internal int Direction;
-			/// <summary>A value between 0 (closed) and 1 (opened).</summary>
-			internal double State;
-			/// <summary>The value of the state at which a door lock simulation is scheduled.</summary>
-			internal double DoorLockState;
-			/// <summary>The duration of the scheduled door lock simulation.</summary>
-			internal double DoorLockDuration;
-		}
+		
 		internal struct AccelerationCurve
 		{
 			internal double StageZeroAcceleration;
@@ -61,21 +51,7 @@ namespace OpenBve
 			ClosingElectromagneticValve = 1,
 			DelayFillingControl = 2
 		}
-		internal enum AirBrakeHandleState
-		{
-			Invalid = -1,
-			Release = 0,
-			Lap = 1,
-			Service = 2,
-		}
-		internal struct AirBrakeHandle
-		{
-			internal AirBrakeHandleState Driver;
-			internal AirBrakeHandleState Safety;
-			internal AirBrakeHandleState Actual;
-			internal AirBrakeHandleState DelayedValue;
-			internal double DelayedTime;
-		}
+
 		internal enum AirBrakeType { Main, Auxillary }
 		internal struct CarAirBrake
 		{
@@ -90,6 +66,7 @@ namespace OpenBve
 			internal double EqualizingReservoirCurrentPressure;
 			internal double EqualizingReservoirNormalPressure;
 			internal double EqualizingReservoirServiceRate;
+
 			internal double EqualizingReservoirEmergencyRate;
 			internal double EqualizingReservoirChargeRate;
 			internal double BrakePipeCurrentPressure;
@@ -271,9 +248,13 @@ namespace OpenBve
 			internal bool CpLoopStarted;
 			internal CarSound CpStart;
 			internal double CpStartTimeStarted;
+			/// <summary>Played once when the left doors close</summary>
 			internal CarSound DoorCloseL;
+			/// <summary>Played once when the right doors close</summary>
 			internal CarSound DoorCloseR;
+			/// <summary>Played once when the left doors open</summary>
 			internal CarSound DoorOpenL;
+			/// <summary>Played once when the right doors open</summary>
 			internal CarSound DoorOpenR;
 			internal CarSound EmrBrake;
 			internal CarSound[] Flange;
@@ -285,7 +266,9 @@ namespace OpenBve
 			internal CarSound MasterControllerDown;
 			internal CarSound MasterControllerMin;
 			internal CarSound MasterControllerMax;
+			/// <summary>Played once when all doors are closed</summary>
 			internal CarSound PilotLampOn;
+			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
 			internal CarSound PointFrontAxle;
 			internal CarSound PointRearAxle;
@@ -331,7 +314,7 @@ namespace OpenBve
 			internal bool Topples;
 			internal CarBrightness Brightness;
 			internal double BeaconReceiverPosition;
-			internal TrackManager.TrackFollower BeaconReceiver;
+			internal TrackManager.TrackFollower BeaconReceiver;	
 		}
 		//Using a much cut-down version of the car struct for bogies
 		internal struct Bogie {
@@ -349,74 +332,7 @@ namespace OpenBve
 		}
 
 		// train
-		internal struct HandleChange
-		{
-			internal int Value;
-			internal double Time;
-		}
-		internal struct PowerHandle
-		{
-			internal int Driver;
-			internal int Safety;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-			internal void AddChange(Train Train, int Value, double Delay)
-			{
-				int n = DelayedChanges.Length;
-				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
-				DelayedChanges[n].Value = Value;
-				DelayedChanges[n].Time = Game.SecondsSinceMidnight + Delay;
-			}
-			internal void RemoveChanges(int Count)
-			{
-				int n = DelayedChanges.Length;
-				for (int i = 0; i < n - Count; i++)
-				{
-					DelayedChanges[i] = DelayedChanges[i + Count];
-				}
-				Array.Resize<HandleChange>(ref DelayedChanges, n - Count);
-			}
-		}
-		internal struct BrakeHandle
-		{
-			internal int Driver;
-			internal int Safety;
-			internal int Actual;
-			internal HandleChange[] DelayedChanges;
-			internal void AddChange(Train Train, int Value, double Delay)
-			{
-				int n = DelayedChanges.Length;
-				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
-				DelayedChanges[n].Value = Value;
-				DelayedChanges[n].Time = Game.SecondsSinceMidnight + Delay;
-			}
-			internal void RemoveChanges(int Count)
-			{
-				int n = DelayedChanges.Length;
-				for (int i = 0; i < n - Count; i++)
-				{
-					DelayedChanges[i] = DelayedChanges[i + Count];
-				}
-				Array.Resize<HandleChange>(ref DelayedChanges, n - Count);
-			}
-		}
-		internal struct EmergencyHandle
-		{
-			internal bool Driver;
-			internal bool Safety;
-			internal bool Actual;
-			internal double ApplicationTime;
-		}
-		internal struct ReverserHandle
-		{
-			internal int Driver;
-			internal int Actual;
-		}
-		internal struct HoldBrakeHandle
-		{
-			internal bool Driver;
-			internal bool Actual;
-		}
+		
 		// train specs
 		internal enum PassAlarmType
 		{
@@ -475,23 +391,23 @@ namespace OpenBve
 			internal DoorMode DoorOpenMode;
 			internal DoorMode DoorCloseMode;
 		}
-		// passengers
-		internal struct TrainPassengers
-		{
-			internal double PassengerRatio;
-			internal double CurrentAcceleration;
-			internal double CurrentSpeedDifference;
-			internal bool FallenOver;
-		}
+
+		
 		// train
+
+		/// <summary>The available states for a train</summary>
 		internal enum TrainState
 		{
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
+			/// <summary>The train has not yet been introduced into the simulation</summary>
+			Pending = 0,
+			/// <summary>The train has been introduced into the simulation</summary>
+			Available = 1,
+			/// <summary>The train has traversed it's path, and has been disposed of by the simulation</summary>
+			Disposed = 2, 
+			/// <summary>The train is a bogus (non-visble) train created via a .PreTrain command</summary>
+			Bogus = 3
 		}
-		internal enum TrainStopState
-		{
-			Pending = 0, Boarding = 1, Completed = 2
-		}
+
 
 		/// <summary>The root class for a train within the simulation</summary>
 		public class Train
@@ -522,6 +438,31 @@ namespace OpenBve
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
 			internal double InternalTimerTimeElapsed;
+			internal bool Derailed;
+
+			/// <summary>Call this method to derail a car</summary>
+			/// <param name="CarIndex">The car index to derail</param>
+			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
+			internal void Derail(int CarIndex, double ElapsedTime)
+			{
+				this.Cars[CarIndex].Derailed = true;
+				if (Program.GenerateDebugLogging)
+				{
+					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				}
+			}
+
+			/// <summary>Call this method to topple a car</summary>
+			/// <param name="CarIndex">The car index to derail</param>
+			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
+			internal void Topple(int CarIndex, double ElapsedTime)
+			{
+				this.Cars[CarIndex].Topples = true;
+				if (Program.GenerateDebugLogging)
+				{
+					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				}
+			}
 		}
 
 		// trains
@@ -541,6 +482,7 @@ namespace OpenBve
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
 			if (System.IO.File.Exists(File))
 			{
+				Program.AppendToLogFile("Loading train panel: " + File);
 				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
 				try
 				{
@@ -568,6 +510,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
 					if (System.IO.File.Exists(File))
 					{
+						Program.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
 						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
 						World.CameraRestriction = World.CameraRestrictionMode.On;
@@ -577,6 +520,7 @@ namespace OpenBve
 						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 						if (System.IO.File.Exists(File))
 						{
+							Program.AppendToLogFile("Loading train panel: " + File);
 							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 							World.CameraRestriction = World.CameraRestrictionMode.On;
 						}
@@ -790,12 +734,8 @@ namespace OpenBve
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.X -= cx;
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Y -= cy;
 					Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Z -= cz;
-					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.X += cx;
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Y += cy;
 					Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.WorldPosition.Z += cz;
@@ -892,12 +832,8 @@ namespace OpenBve
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.X -= cx;
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Y -= cy;
 					Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Z -= cz;
-					World.Rotate(ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-					World.Rotate(ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.X,
-						ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Y,
-						ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+					World.Rotate(ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.X += cx;
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Y += cy;
 					Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.WorldPosition.Z += cz;
@@ -1088,7 +1024,7 @@ namespace OpenBve
 				double tc = Train.Cars[CarIndex].Specs.CriticalTopplingAngle;
 				if (a * sa > tc)
 				{
-					Train.Cars[CarIndex].Derailed = true;
+					Train.Derail(CarIndex, TimeElapsed);
 				}
 			}
 			// toppling roll
@@ -1115,7 +1051,7 @@ namespace OpenBve
 							double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * Game.RouteRailGauge / (2.0 * h));
 							const double fac = 0.25; // arbitrary coefficient
 							ta = -fac * (s - s0) * rs;
-							Train.Cars[CarIndex].Topples = true;
+							Train.Topple(CarIndex, TimeElapsed);
 						}
 						else
 						{
@@ -1198,8 +1134,8 @@ namespace OpenBve
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X -= cx;
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y -= cy;
 				Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z -= cz;
-				World.Rotate(ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X, ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y, ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
-				World.Rotate(ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.X, ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Y, ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition.Z, sx, sy, sz, cosa, sina);
+				World.Rotate(ref Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+				World.Rotate(ref Train.Cars[CarIndex].RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.X += cx;
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Y += cy;
 				Train.Cars[CarIndex].FrontAxle.Follower.WorldPosition.Z += cz;
@@ -1558,10 +1494,14 @@ namespace OpenBve
 			double dist = cdx * cdx + cdy * cdy + cdz * cdz;
 			double bid = Interface.CurrentOptions.ViewingDistance + Train.Cars[c].Length;
 			Train.Cars[c].CurrentlyVisible = dist < bid * bid;
-			// brightness
+			// Updates the brightness value
 			byte dnb;
 			{
 				float Brightness = (float)(Train.Cars[c].Brightness.NextTrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition);
+
+				//1.0f represents a route brightness value of 255
+				//0.0f represents a route brightness value of 0
+
 				if (Brightness != 0.0f)
 				{
 					Brightness = (float)(Train.Cars[c].FrontAxle.Follower.TrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition) / Brightness;
@@ -1573,7 +1513,10 @@ namespace OpenBve
 				{
 					Brightness = Train.Cars[c].Brightness.PreviousBrightness;
 				}
-				dnb = (byte)Math.Round(255.0 * (double)(1.0 - Brightness));
+				//Calculate the cab brightness
+				double ccb = Math.Round(255.0 * (double)(1.0 - Brightness));
+				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
+				dnb = (byte) Math.Min(Renderer.DynamicCabBrightness, ccb);
 			}
 			// update current section
 			int s = Train.Cars[c].CurrentCarSection;
@@ -2150,9 +2093,9 @@ namespace OpenBve
 												double vi = v*fi;
 												double vj = v*fj;
 												if (vi > Game.CriticalCollisionSpeedDifference)
-													Trains[i].Cars[k].Derailed = true;
+													Trains[i].Derail(k, TimeElapsed);
 												if (vj > Game.CriticalCollisionSpeedDifference)
-													Trains[j].Cars[i].Derailed = true;
+													Trains[j].Derail(i, TimeElapsed);
 											}
 											// adjust cars for train i
 											for (int h = Trains[i].Cars.Length - 2; h >= 0; h--)
@@ -2177,9 +2120,9 @@ namespace OpenBve
 														double vi = v*fi;
 														double vj = v*fj;
 														if (vi > Game.CriticalCollisionSpeedDifference)
-															Trains[i].Cars[h + 1].Derailed = true;
+															Trains[i].Derail(h + 1, TimeElapsed);
 														if (vj > Game.CriticalCollisionSpeedDifference)
-															Trains[i].Cars[h].Derailed = true;
+															Trains[i].Derail(h, TimeElapsed);
 													}
 													Trains[i].Cars[h].Specs.CurrentSpeed =
 														Trains[i].Cars[h + 1].Specs.CurrentSpeed;
@@ -2208,9 +2151,9 @@ namespace OpenBve
 														double vi = v*fi;
 														double vj = v*fj;
 														if (vi > Game.CriticalCollisionSpeedDifference)
-															Trains[j].Cars[h - 1].Derailed = true;
+															Trains[j].Derail(h -1, TimeElapsed);
 														if (vj > Game.CriticalCollisionSpeedDifference)
-															Trains[j].Cars[h].Derailed = true;
+															Trains[j].Derail(h, TimeElapsed);
 													}
 													Trains[j].Cars[h].Specs.CurrentSpeed =
 														Trains[j].Cars[h - 1].Specs.CurrentSpeed;
@@ -2246,9 +2189,9 @@ namespace OpenBve
 												double vi = v*fi;
 												double vj = v*fj;
 												if (vi > Game.CriticalCollisionSpeedDifference)
-													Trains[i].Cars[0].Derailed = true;
+													Trains[i].Derail(0, TimeElapsed);
 												if (vj > Game.CriticalCollisionSpeedDifference)
-													Trains[j].Cars[k].Derailed = true;
+													Trains[j].Derail(k, TimeElapsed);
 											}
 											// adjust cars for train i
 											for (int h = 1; h < Trains[i].Cars.Length; h++)
@@ -2273,9 +2216,9 @@ namespace OpenBve
 														double vi = v*fi;
 														double vj = v*fj;
 														if (vi > Game.CriticalCollisionSpeedDifference)
-															Trains[i].Cars[h - 1].Derailed = true;
+															Trains[i].Derail(h -1, TimeElapsed);
 														if (vj > Game.CriticalCollisionSpeedDifference)
-															Trains[i].Cars[h].Derailed = true;
+															Trains[i].Derail(h, TimeElapsed);
 													}
 													Trains[i].Cars[h].Specs.CurrentSpeed =
 														Trains[i].Cars[h - 1].Specs.CurrentSpeed;
@@ -2304,9 +2247,9 @@ namespace OpenBve
 														double vi = v*fi;
 														double vj = v*fj;
 														if (vi > Game.CriticalCollisionSpeedDifference)
-															Trains[j].Cars[h + 1].Derailed = true;
+															Trains[j].Derail(h + 1, TimeElapsed);
 														if (vj > Game.CriticalCollisionSpeedDifference)
-															Trains[j].Cars[h].Derailed = true;
+															Trains[j].Derail(h, TimeElapsed);
 													}
 													Trains[j].Cars[h].Specs.CurrentSpeed =
 														Trains[j].Cars[h + 1].Specs.CurrentSpeed;
@@ -2341,7 +2284,7 @@ namespace OpenBve
 									if (Interface.CurrentOptions.Derailments &&
 										Math.Abs(Trains[i].Cars[0].Specs.CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
 									{
-										Trains[i].Cars[0].Derailed = true;
+										Trains[i].Derail(0, TimeElapsed);
 									}
 									Trains[i].Cars[0].Specs.CurrentSpeed = 0.0;
 									for (int h = 1; h < Trains[i].Cars.Length; h++)
@@ -2359,7 +2302,7 @@ namespace OpenBve
 												Math.Abs(Trains[i].Cars[h].Specs.CurrentSpeed) >
 												Game.CriticalCollisionSpeedDifference)
 											{
-												Trains[i].Cars[h].Derailed = true;
+												Trains[i].Derail(h, TimeElapsed);
 											}
 											Trains[i].Cars[h].Specs.CurrentSpeed = 0.0;
 										}
@@ -2373,7 +2316,7 @@ namespace OpenBve
 									if (Interface.CurrentOptions.Derailments &&
 										Math.Abs(Trains[i].Cars[c].Specs.CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
 									{
-										Trains[i].Cars[c].Derailed = true;
+										Trains[i].Derail(c, TimeElapsed);
 									}
 									Trains[i].Cars[c].Specs.CurrentSpeed = 0.0;
 									for (int h = Trains[i].Cars.Length - 2; h >= 0; h--)
@@ -2391,7 +2334,7 @@ namespace OpenBve
 												Math.Abs(Trains[i].Cars[h].Specs.CurrentSpeed) >
 												Game.CriticalCollisionSpeedDifference)
 											{
-												Trains[i].Cars[h].Derailed = true;
+												Trains[i].Derail(h, TimeElapsed);
 											}
 											Trains[i].Cars[h].Specs.CurrentSpeed = 0.0;
 										}
@@ -2480,600 +2423,7 @@ namespace OpenBve
 			}
 		}
 
-		// update train station
-		private static void UpdateTrainStation(Train Train, double TimeElapsed)
-		{
-			if (Train.Station >= 0)
-			{
-				int i = Train.Station;
-				int n = Game.GetStopIndex(Train.Station, Train.Cars.Length);
-				double tf, tb;
-				if (n >= 0)
-				{
-					double p0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition + 0.5 * Train.Cars[0].Length;
-					double p1 = Game.Stations[i].Stops[n].TrackPosition;
-					tf = Game.Stations[i].Stops[n].ForwardTolerance;
-					tb = Game.Stations[i].Stops[n].BackwardTolerance;
-					Train.StationDistanceToStopPoint = p1 - p0;
-				}
-				else
-				{
-					Train.StationDistanceToStopPoint = 0.0;
-					tf = 5.0;
-					tb = 5.0;
-				}
-				if (Train.StationState == TrainStopState.Pending)
-				{
-					Train.StationDepartureSoundPlayed = false;
-					if (Game.StopsAtStation(i, Train))
-					{
-						Train.StationDepartureSoundPlayed = false;
-						// automatically open doors
-						if (Train.Specs.DoorOpenMode != DoorMode.Manual)
-						{
-							if ((GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
-							{
-								if (Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.1 / 3.6 & Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
-								{
-									if (Train.StationDistanceToStopPoint < tb & -Train.StationDistanceToStopPoint < tf)
-									{
-										OpenTrainDoors(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors);
-									}
-								}
-							}
-						}
-						// detect arrival
-						if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
-						{
-							bool left, right;
-							if (Game.Stations[i].OpenLeftDoors)
-							{
-								left = false;
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
-									{
-										left = true; break;
-									}
-								}
-							}
-							else
-							{
-								left = true;
-							}
-							if (Game.Stations[i].OpenRightDoors)
-							{
-								right = false;
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
-									{
-										right = true; break;
-									}
-								}
-							}
-							else
-							{
-								right = true;
-							}
-							if (left & right)
-							{
-								// arrival
-								Train.StationState = TrainStopState.Boarding;
-								Train.StationAdjust = false;
-								Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
-								Sounds.SoundBuffer buffer = Game.Stations[i].ArrivalSoundBuffer;
-								if (buffer != null)
-								{
-									OpenBveApi.Math.Vector3 pos = Game.Stations[i].SoundOrigin;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
-								}
-								Train.StationArrivalTime = Game.SecondsSinceMidnight;
-								Train.StationDepartureTime = Game.Stations[i].DepartureTime - Train.TimetableDelta;
-								if (Train.StationDepartureTime - Game.SecondsSinceMidnight < Game.Stations[i].StopTime)
-								{
-									Train.StationDepartureTime = Game.SecondsSinceMidnight + Game.Stations[i].StopTime;
-								}
-								Train.Passengers.PassengerRatio = Game.Stations[i].PassengerRatio;
-								UpdateTrainMassFromPassengerRatio(Train);
-								if (Train == PlayerTrain)
-								{
-									double early = 0.0;
-									if (Game.Stations[i].ArrivalTime >= 0.0)
-									{
-										early = (Game.Stations[i].ArrivalTime - Train.TimetableDelta) - Train.StationArrivalTime;
-									}
-									string s;
-									if (early < -1.0)
-									{
-										s = Interface.GetInterfaceString("message_station_arrival_late");
-									}
-									else if (early > 1.0)
-									{
-										s = Interface.GetInterfaceString("message_station_arrival_early");
-									}
-									else
-									{
-										s = Interface.GetInterfaceString("message_station_arrival");
-									}
-									System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-									TimeSpan a = TimeSpan.FromSeconds(Math.Abs(early));
-									string b = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
-									if (Train.StationDistanceToStopPoint < -0.1)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_overrun");
-									}
-									else if (Train.StationDistanceToStopPoint > 0.1)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_underrun");
-									}
-									double d = Math.Abs(Train.StationDistanceToStopPoint);
-									string c = d.ToString("0.0", Culture);
-									if (Game.Stations[i].StationType == Game.StationType.Terminal)
-									{
-										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_terminal");
-									}
-									s = s.Replace("[name]", Game.Stations[i].Name);
-									s = s.Replace("[time]", b);
-									s = s.Replace("[difference]", c);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 10.0);
-									if (Game.Stations[i].StationType == Game.StationType.Normal)
-									{
-										s = Interface.GetInterfaceString("message_station_deadline");
-										Game.AddMessage(s, Game.MessageDependency.Station, Interface.GameMode.Normal, MessageColor.Blue, double.PositiveInfinity);
-									}
-									Timetable.UpdateCustomTimetable(Game.Stations[i].TimetableDaytimeTexture, Game.Stations[i].TimetableNighttimeTexture);
-								}
-								// schedule door locks (passengers stuck between the doors)
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-									{
-										Train.Cars[j].Specs.Doors[k].DoorLockDuration = 0.0;
-										if (Game.Stations[i].OpenLeftDoors & Train.Cars[j].Specs.Doors[k].Direction == -1 | Game.Stations[i].OpenRightDoors & Train.Cars[j].Specs.Doors[k].Direction == 1)
-										{
-											double p = 0.005 * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio;
-											if (Program.RandomNumberGenerator.NextDouble() < p)
-											{
-												/*
-												 * -- door lock at state --
-												 * minimum: 0.2 (nearly closed)
-												 * maximum: 0.8 (nearly opened)
-												 * */
-												Train.Cars[j].Specs.Doors[k].DoorLockState = 0.2 + 0.6 * Program.RandomNumberGenerator.NextDouble();
-												/* -- waiting time --
-												 * minimum: 2.9 s
-												 * maximum: 40.0 s
-												 * average: 7.6 s
-												 * */
-												p = Program.RandomNumberGenerator.NextDouble();
-												Train.Cars[j].Specs.Doors[k].DoorLockDuration = (50.0 - 10.0 * p) / (17.0 - 16.0 * p);
-											}
-										}
-									}
-								}
-							}
-							else if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
-							{
-								// correct stop position
-								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
-								{
-									Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
-									if (buffer != null)
-									{
-										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-									}
-									if (Train == TrainManager.PlayerTrain)
-									{
-										Game.AddMessage(Interface.GetInterfaceString("message_station_correct"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0);
-									}
-									Train.StationAdjust = true;
-								}
-							}
-							else
-							{
-								Train.StationAdjust = false;
-							}
-						}
-					}
-				}
-				else if (Train.StationState == TrainStopState.Boarding)
-				{
-					// automatically close doors
-					if (Train.Specs.DoorCloseMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal)
-					{
-						if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
-						{
-							if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
-							{
-								CloseTrainDoors(Train, true, true);
-							}
-						}
-					}
-					// detect departure
-					bool left, right;
-					if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors)
-					{
-						left = true;
-						right = true;
-					}
-					else
-					{
-						if (Game.Stations[i].OpenLeftDoors)
-						{
-							left = false;
-							for (int j = 0; j < Train.Cars.Length; j++)
-							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
-									{
-										left = true; break;
-									}
-								} if (left) break;
-							}
-						}
-						else
-						{
-							left = false;
-						}
-						if (Game.Stations[i].OpenRightDoors)
-						{
-							right = false;
-							for (int j = 0; j < Train.Cars.Length; j++)
-							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
-								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
-									{
-										right = true; break;
-									}
-								} if (right) break;
-							}
-						}
-						else
-						{
-							right = false;
-						}
-					}
-					if (left | right)
-					{
-						// departure message
-						if (Game.SecondsSinceMidnight > Train.StationDepartureTime)
-						{
-							Train.StationState = TrainStopState.Completed;
-							if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
-							{
-								if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-								}
-								else
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-								}
-							}
-							else if (Game.Stations[i].StationType == Game.StationType.ChangeEnds)
-							{
-								//Game.AddMessage("CHANGE ENDS", Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
-								JumpTrain(Train, i + 1);
-							}
-						}
-						// passengers boarding
-						for (int j = 0; j < Train.Cars.Length; j++)
-						{
-							double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-							if (r >= Program.RandomNumberGenerator.NextDouble())
-							{
-								int d = (int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Specs.Doors.Length);
-								if (Train.Cars[j].Specs.Doors[d].State == 1.0)
-								{
-									Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Specs.Doors[d].Direction;
-								}
-							}
-						}
-					}
-					else
-					{
-						Train.StationState = TrainStopState.Completed;
-						if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
-						{
-							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
-						}
-					}
-					// departure sound
-					if (!Train.StationDepartureSoundPlayed)
-					{
-						Sounds.SoundBuffer buffer = Game.Stations[i].DepartureSoundBuffer;
-						if (buffer != null)
-						{
-							double dur = Sounds.GetDuration(buffer);
-							if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
-							{
-								Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
-								Train.StationDepartureSoundPlayed = true;
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				Train.StationState = TrainStopState.Pending;
-			}
-			// automatically close doors
-			if (Train.Specs.DoorCloseMode == DoorMode.Automatic)
-			{
-				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
-				{
-					if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
-					{
-						CloseTrainDoors(Train, true, true);
-					}
-				}
-			}
-		}
-
-		// update train doors
-		private static void UpdateTrainDoors(Train Train, double TimeElapsed)
-		{
-			OpenBveApi.Runtime.DoorStates oldState = OpenBveApi.Runtime.DoorStates.None;
-			OpenBveApi.Runtime.DoorStates newState = OpenBveApi.Runtime.DoorStates.None;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				bool ld = Train.Cars[i].Specs.AnticipatedLeftDoorsOpened;
-				bool rd = Train.Cars[i].Specs.AnticipatedRightDoorsOpened;
-				double os = Train.Cars[i].Specs.DoorOpenFrequency;
-				double cs = Train.Cars[i].Specs.DoorCloseFrequency;
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-				{
-					if (Train.Cars[i].Specs.Doors[j].Direction == -1 | Train.Cars[i].Specs.Doors[j].Direction == 1)
-					{
-						bool shouldBeOpen = Train.Cars[i].Specs.Doors[j].Direction == -1 ? ld : rd;
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
-						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-							{
-								oldState |= OpenBveApi.Runtime.DoorStates.Left;
-							}
-							else
-							{
-								oldState |= OpenBveApi.Runtime.DoorStates.Right;
-							}
-						}
-						if (shouldBeOpen)
-						{
-							// open
-							Train.Cars[i].Specs.Doors[j].State += os * TimeElapsed;
-							if (Train.Cars[i].Specs.Doors[j].State > 1.0)
-							{
-								Train.Cars[i].Specs.Doors[j].State = 1.0;
-							}
-						}
-						else
-						{
-							// close
-							if (Train.Cars[i].Specs.Doors[j].DoorLockDuration > 0.0)
-							{
-								if (Train.Cars[i].Specs.Doors[j].State > Train.Cars[i].Specs.Doors[j].DoorLockState)
-								{
-									Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
-								}
-								if (Train.Cars[i].Specs.Doors[j].State < Train.Cars[i].Specs.Doors[j].DoorLockState)
-								{
-									Train.Cars[i].Specs.Doors[j].State = Train.Cars[i].Specs.Doors[j].DoorLockState;
-								}
-								Train.Cars[i].Specs.Doors[j].DoorLockDuration -= TimeElapsed;
-								if (Train.Cars[i].Specs.Doors[j].DoorLockDuration < 0.0)
-								{
-									Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-								}
-							}
-							else
-							{
-								Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
-							}
-							if (Train.Cars[i].Specs.Doors[j].State < 0.0)
-							{
-								Train.Cars[i].Specs.Doors[j].State = 0.0;
-							}
-						}
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
-						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-							{
-								newState |= OpenBveApi.Runtime.DoorStates.Left;
-							}
-							else
-							{
-								newState |= OpenBveApi.Runtime.DoorStates.Right;
-							}
-						}
-					}
-				}
-			}
-			// door changed
-			if (oldState != OpenBveApi.Runtime.DoorStates.None & newState == OpenBveApi.Runtime.DoorStates.None)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-			}
-			else if (oldState == OpenBveApi.Runtime.DoorStates.None & newState != OpenBveApi.Runtime.DoorStates.None)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-			}
-			if (oldState != newState)
-			{
-				if (Train.Plugin != null)
-				{
-					Train.Plugin.DoorChange(oldState, newState);
-				}
-			}
-		}
-
-		// train doors
-		internal static void OpenTrainDoors(Train Train, bool Left, bool Right)
-		{
-			bool sl = false, sr = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				if (Left & !Train.Cars[i].Specs.AnticipatedLeftDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedLeftDoorsOpened = true;
-					sl = true;
-				}
-				if (Right & !Train.Cars[i].Specs.AnticipatedRightDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedRightDoorsOpened = true;
-					sr = true;
-				}
-			}
-			if (sl)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorOpenL.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenL.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
-					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == -1)
-						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-						}
-					}
-				}
-			}
-			if (sr)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorOpenR.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenR.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == 1)
-						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
-						}
-					}
-				}
-			}
-		}
-		internal static void CloseTrainDoors(Train Train, bool Left, bool Right)
-		{
-			bool sl = false, sr = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				if (Left & Train.Cars[i].Specs.AnticipatedLeftDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedLeftDoorsOpened = false;
-					sl = true;
-				}
-				if (Right & Train.Cars[i].Specs.AnticipatedRightDoorsOpened)
-				{
-					Train.Cars[i].Specs.AnticipatedRightDoorsOpened = false;
-					sr = true;
-				}
-			}
-			if (sl)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorCloseL.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorCloseL.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-				}
-			}
-			if (sr)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.DoorCloseR.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorCloseR.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
-					}
-				}
-			}
-		}
-		/// <summary>Specifies enumerated constants that can be combined to represent doors states.</summary>
-		[Flags]
-		internal enum TrainDoorState
-		{
-			None = 0,
-			/// <summary>Fully closed doors are present in the train.</summary>
-			Closed = 1,
-			/// <summary>Fully opened doors are present in the train.</summary>
-			Opened = 2,
-			/// <summary>Doors are present in the train which are neither fully closed nor fully opened.</summary>
-			Mixed = 4,
-			/// <summary>All doors in the train are fully closed.</summary>
-			AllClosed = 8,
-			/// <summary>All doors in the train are fully opened.</summary>
-			AllOpened = 16,
-			/// <summary>All doors in the train are neither fully closed nor fully opened.</summary>
-			AllMixed = 32
-		}
-		/// <summary>Returns the combination of door states encountered in a train.</summary>
-		/// <param name="Train">The train to consider.</param>
-		/// <param name="Left">Whether to include left doors.</param>
-		/// <param name="Right">Whether to include right doors.</param>
-		/// <returns>A bit mask combining encountered door states.</returns>
-		internal static TrainDoorState GetDoorsState(Train Train, bool Left, bool Right)
-		{
-			bool opened = false, closed = false, mixed = false;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
-				{
-					if (Left & Train.Cars[i].Specs.Doors[j].Direction == -1 | Right & Train.Cars[i].Specs.Doors[j].Direction == 1)
-					{
-						if (Train.Cars[i].Specs.Doors[j].State == 0.0)
-						{
-							closed = true;
-						}
-						else if (Train.Cars[i].Specs.Doors[j].State == 1.0)
-						{
-							opened = true;
-						}
-						else
-						{
-							mixed = true;
-						}
-					}
-				}
-			}
-			TrainDoorState Result = TrainDoorState.None;
-			if (opened) Result |= TrainDoorState.Opened;
-			if (closed) Result |= TrainDoorState.Closed;
-			if (mixed) Result |= TrainDoorState.Mixed;
-			if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
-			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
-			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
-			return Result;
-		}
+		
 
 		// update safety system
 		private static void UpdateSafetySystem(Train Train)
@@ -3083,842 +2433,6 @@ namespace OpenBve
 			{
 				Train.Plugin.LastSection = Train.CurrentSectionIndex;
 				Train.Plugin.UpdatePlugin();
-			}
-		}
-
-		// update brake system
-		private static void UpdateBrakeSystem(Train Train, double TimeElapsed, out double[] DecelerationDueToBrake, out double[] DecelerationDueToMotor)
-		{
-			// individual brake systems
-			DecelerationDueToBrake = new double[Train.Cars.Length];
-			DecelerationDueToMotor = new double[Train.Cars.Length];
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				UpdateBrakeSystem(Train, i, TimeElapsed, out DecelerationDueToBrake[i], out DecelerationDueToMotor[i]);
-			}
-			// brake pipe pressure distribution dummy (just averages)
-			double TotalPressure = 0.0;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				if (i > 0)
-				{
-					if (Train.Cars[i - 1].Derailed | Train.Cars[i].Derailed)
-					{
-						Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
-					}
-				}
-				if (i < Train.Cars.Length - 1)
-				{
-					if (Train.Cars[i].Derailed | Train.Cars[i + 1].Derailed)
-					{
-						Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
-					}
-				}
-				TotalPressure += Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure;
-			}
-			double AveragePressure = TotalPressure / (double)Train.Cars.Length;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = AveragePressure;
-			}
-		}
-		private static void UpdateBrakeSystem(Train Train, int CarIndex, double TimeElapsed, out double DecelerationDueToBrake, out double DecelerationDueToMotor)
-		{
-			// air compressor
-			if (Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				if (Train.Cars[CarIndex].Specs.AirBrake.AirCompressorEnabled)
-				{
-					if (Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.AirCompressorMaximumPressure)
-					{
-						Train.Cars[CarIndex].Specs.AirBrake.AirCompressorEnabled = false;
-						Train.Cars[CarIndex].Sounds.CpLoopStarted = false;
-						Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpEnd.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpEnd.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-						}
-						buffer = Train.Cars[CarIndex].Sounds.CpLoop.Buffer;
-						if (buffer != null)
-						{
-							Sounds.StopSound(Train.Cars[CarIndex].Sounds.CpLoop.Source);
-						}
-					}
-					else
-					{
-						Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure += Train.Cars[CarIndex].Specs.AirBrake.AirCompressorRate * TimeElapsed;
-						if (!Train.Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Train.Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
-						{
-							Train.Cars[CarIndex].Sounds.CpLoopStarted = true;
-							Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpLoop.Buffer;
-							if (buffer != null)
-							{
-								OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpLoop.Position;
-								Train.Cars[CarIndex].Sounds.CpLoop.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, true);
-							}
-						}
-					}
-				}
-				else
-				{
-					if (Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.AirCompressorMinimumPressure)
-					{
-						Train.Cars[CarIndex].Specs.AirBrake.AirCompressorEnabled = true;
-						Train.Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
-						Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpStart.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpStart.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-						}
-					}
-				}
-			}
-			// initialize
-			const double Tolerance = 5000.0;
-			int airsound = -1;
-			// equalizing reservoir
-			if (Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					double r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirEmergencyRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-					Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure -= r;
-				}
-				else
-				{
-					if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
-					{
-						// automatic air brake
-						if (Train.Specs.AirBrake.Handle.Actual == AirBrakeHandleState.Service)
-						{
-							double r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirServiceRate;
-							double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-							double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-							r = GetRate(d / m, r * TimeElapsed);
-							if (r > Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-							Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure -= r;
-						}
-						else if (Train.Specs.AirBrake.Handle.Actual == AirBrakeHandleState.Release)
-						{
-							double r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirChargeRate;
-							double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure - Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-							double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-							r = GetRate(d / m, r * TimeElapsed);
-							if (r > d) r = d;
-							d = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-							if (r > d) r = d;
-							double f = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirEqualizingReservoirCoefficient;
-							double s = r * f * TimeElapsed;
-							if (s > Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure)
-							{
-								r *= Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure / s;
-								s = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
-							}
-							Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure += 0.5 * r;
-							Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure -= 0.5 * s;
-						}
-					}
-					else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake)
-					{
-						// electromagnetic straight air brake
-						double r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirChargeRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure - Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-						r = GetRate(d / m, r * TimeElapsed);
-						if (r > d) r = d;
-						d = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-						if (r > d) r = d;
-						double f = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirEqualizingReservoirCoefficient;
-						double s = r * f * TimeElapsed;
-						if (s > Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure)
-						{
-							r *= Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure / s;
-							s = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure += 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure -= 0.5 * s;
-					}
-				}
-			}
-			// brake pipe (main reservoir)
-			if ((Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake | Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake) & Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure + Tolerance)
-				{
-					// brake pipe exhaust valve
-					double r = Train.Specs.CurrentEmergencyBrake.Actual ? Train.Cars[CarIndex].Specs.AirBrake.BrakePipeEmergencyRate : Train.Cars[CarIndex].Specs.AirBrake.BrakePipeServiceRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-					r = (0.5 + 1.5 * d / m) * r * TimeElapsed;
-					if (r > d) r = d;
-					Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure -= r;
-				}
-				else if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure)
-				{
-					// fill brake pipe from main reservoir
-					double r = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeChargeRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure;
-					r = (0.5 + 1.5 * d / m) * r * TimeElapsed;
-					if (r > d) r = d;
-					d = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeNormalPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					if (r > d) r = d;
-					double f = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirBrakePipeCoefficient;
-					double s = r * f;
-					if (s > Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure)
-					{
-						r *= Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure / s;
-						s = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
-					}
-					Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure += 0.5 * r;
-					Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure -= 0.5 * s;
-				}
-			}
-			// triple valve (auxillary reservoir, brake pipe, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
-			{
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-				{
-					if (Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure)
-					{
-						// back-flow from brake cylinder to auxillary reservoir
-						double u = (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Tolerance) / Tolerance;
-						if (u > 1.0) u = 1.0;
-						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate * f;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure + r > m)
-						{
-							r = m - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						if (s > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure)
-						{
-							r *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure / s;
-							s = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure += 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= 0.5 * s;
-					}
-					else if (Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance)
-					{
-						// refill brake cylinder from auxillary reservoir
-						double u = (Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - Tolerance) / Tolerance;
-						if (u > 1.0) u = 1.0;
-						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate * f;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-						{
-							r = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure -= 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure += 0.5 * s;
-					}
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure + Tolerance)
-				{
-					double u = (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Tolerance) / Tolerance;
-					if (u > 1.0) u = 1.0;
-					{ // refill auxillary reservoir from brake pipe
-						double r = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirChargeRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-						{
-							r = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-						}
-						if (r > d) r = d;
-						d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						if (r > d) r = d;
-						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient;
-						double s = r / f;
-						if (s > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-						{
-							r *= Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure / s;
-							s = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-						}
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure += 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure -= 0.5 * s;
-					}
-					{ // brake cylinder release
-						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-						r = GetRate(d * u / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
-						// air sound
-						if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
-						{
-							double p = 0.8 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - 0.2 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-							if (p < 0.0) p = 0.0;
-							Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-							airsound = p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1;
-						}
-					}
-				}
-				else
-				{
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-			}
-			// solenoid valve for electromagnetic straight air brake (auxillary reservoir, electric command, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake)
-			{
-				// refill auxillary reservoir from brake pipe
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure + Tolerance)
-				{
-					double r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirChargeRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					}
-					if (r > d) r = d;
-					d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-					if (r > d) r = d;
-					double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient;
-					double s = r / f;
-					if (s > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-					{
-						r *= Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure / s;
-						s = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					}
-					if (s > d)
-					{
-						r *= d / s;
-						s = d;
-					}
-					Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure += 0.5 * r;
-					Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure -= 0.5 * s;
-				}
-				{ // electric command
-					bool emergency;
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-					{
-						emergency = true;
-					}
-					else
-					{
-						emergency = Train.Specs.CurrentEmergencyBrake.Actual;
-					}
-					double p; if (emergency)
-					{
-						p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-					else
-					{
-						p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-						p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-					}
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
-					{
-						// brake control system
-						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
-						{
-							if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
-							{
-								// closing electromagnetic valve (lock-out valve)
-								p = 0.0;
-							}
-							else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
-							{
-								// delay-filling control
-								//Variable f is never used, so don't calculate it
-								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-								double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-								double d = b - a;
-								if (d > 0.0)
-								{
-									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-									if (p > 1.0) p = 1.0;
-									p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								}
-								else
-								{
-									p = 0.0;
-								}
-							}
-						}
-					}
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance)
-					{
-						// brake cylinder release
-						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - p;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-						r = GetRate(d / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						if (r > d) r = d;
-						// air sound
-						if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
-						{
-							Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-							airsound = p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1;
-						}
-						// pressure change
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
-					}
-					else if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < p)
-					{
-						// refill brake cylinder from auxillary reservoir
-						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-						double r;
-						if (emergency)
-						{
-							r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyChargeRate * f;
-						}
-						else
-						{
-							r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate * f;
-						}
-						double d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-						r = GetRate(d / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-						{
-							r = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure -= 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure += 0.5 * s;
-						// air sound
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-					else
-					{
-						// air sound
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-				}
-			}
-			// valves for electric command brake (main reservoir, electric command, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				if (!Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
-				{
-					// brake control system
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
-					{
-						if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
-						{
-							// closing electromagnetic valve (lock-out valve)
-							p = 0.0;
-						}
-						else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
-						{
-							// delay-filling control
-							// Variable f is never used, so don't calculate it
-							//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-							double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-							double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-							double d = b - a;
-							if (d > 0.0)
-							{
-								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-								if (p > 1.0) p = 1.0;
-								p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							}
-							else
-							{
-								p = 0.0;
-							}
-						}
-					}
-				}
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance | p == 0.0)
-				{
-					// brake cylinder exhaust valve
-					double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					// air sound
-					if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
-					{
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-						airsound = p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1;
-					}
-					// pressure change
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
-				}
-				else if ((Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < p | p == Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure) & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure)
-				{
-					// fill brake cylinder from main reservoir
-					double r;
-					if (Train.Specs.CurrentEmergencyBrake.Actual)
-					{
-						r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyChargeRate;
-					}
-					else
-					{
-						r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate;
-					}
-					double pm = p < Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure ? p : Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
-					double d = pm - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					double f1 = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-					double f2 = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirBrakePipeCoefficient;
-					double f3 = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient;
-					double f = f1 * f2 / f3; // MainReservoirBrakeCylinderCoefficient
-					double s = r * f;
-					if (s > Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure)
-					{
-						r *= Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure / s;
-						s = Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
-					}
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure += 0.5 * r;
-					Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure -= 0.5 * s;
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-			}
-			// straight air pipe (for compatibility needle only)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake & Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = 0.0;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				if (p + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure)
-				{
-					double r;
-					if (Train.Specs.CurrentEmergencyBrake.Actual)
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeEmergencyRate;
-					}
-					else
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeReleaseRate;
-					}
-					double d = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure - p;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure -= r;
-				}
-				else if (p > Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure + Tolerance)
-				{
-					double r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeServiceRate;
-					double d = p - Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure += r;
-				}
-			}
-			else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure = p;
-			}
-			// air sound
-			if (airsound == 0)
-			{
-				// air zero
-				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.AirZero.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.AirZero.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-				}
-			}
-			else if (airsound == 1)
-			{
-				// air
-				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.Air.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.Air.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-				}
-			}
-			else if (airsound == 2)
-			{
-				// air high
-				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.AirHigh.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.AirHigh.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-				}
-			}
-			// deceleration provided by brake
-			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-			// deceleration provided by motor
-			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.Specs.CurrentEmergencyBrake.Actual)
-			{
-				double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-				double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-				DecelerationDueToMotor = f * a;
-			}
-			else
-			{
-				DecelerationDueToMotor = 0.0;
-			}
-			// hold brake
-			if (Train.Specs.CurrentHoldBrake.Actual & DecelerationDueToMotor == 0.0)
-			{
-				if (Game.SecondsSinceMidnight >= Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime)
-				{
-					Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime = Game.SecondsSinceMidnight + Train.Cars[CarIndex].Specs.HoldBrake.UpdateInterval;
-					Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput += 0.8 * Train.Cars[CarIndex].Specs.CurrentAcceleration * (double)Math.Sign(Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed);
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput < 0.0) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
-					double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput > a) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = a;
-				}
-				DecelerationDueToMotor = Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput;
-			}
-			else
-			{
-				Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
-			}
-			{ // rub sound
-				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.Rub.Buffer;
-				if (buffer != null)
-				{
-					double spd = Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed);
-					double pitch = 1.0 / (spd + 1.0) + 1.0;
-					double gain = Train.Cars[CarIndex].Derailed ? 0.0 : pressureratio;
-					if (spd < 1.38888888888889)
-					{
-						double t = spd * spd;
-						gain *= 1.5552 * t - 0.746496 * spd * t;
-					}
-					else if (spd > 12.5)
-					{
-						double t = spd - 12.5;
-						const double fadefactor = 0.1;
-						gain *= 1.0 / (fadefactor * t * t + 1.0);
-					}
-					if (Sounds.IsPlaying(Train.Cars[CarIndex].Sounds.Rub.Source))
-					{
-						if (pitch > 0.01 & gain > 0.001)
-						{
-							Train.Cars[CarIndex].Sounds.Rub.Source.Pitch = pitch;
-							Train.Cars[CarIndex].Sounds.Rub.Source.Volume = gain;
-						}
-						else
-						{
-							Sounds.StopSound(Train.Cars[CarIndex].Sounds.Rub.Source);
-						}
-					}
-					else if (pitch > 0.02 & gain > 0.01)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.Rub.Position;
-						Train.Cars[CarIndex].Sounds.Rub.Source = Sounds.PlaySound(buffer, pitch, gain, pos, Train, CarIndex, true);
-					}
-				}
-			}
-		}
-		private static double GetRate(double Ratio, double Factor)
-		{
-			Ratio = Ratio < 0.0 ? 0.0 : Ratio > 1.0 ? 1.0 : Ratio;
-			Ratio = 1.0 - Ratio;
-			return 1.5 * Factor * (1.01 - Ratio * Ratio);
-		}
-
-		// apply emergency brake
-		internal static void ApplyEmergencyBrake(Train Train)
-		{
-			// sound
-			if (!Train.Specs.CurrentEmergencyBrake.Driver)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMax.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMax.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					//Don't assign buffer twice
-					//buffer = Train.Cars[i].Sounds.EmrBrake.Buffer;
-					buffer = Train.Cars[Train.DriverCar].Sounds.EmrBrake.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.EmrBrake.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-					}
-				}
-			}
-			// apply
-			if (Train.Specs.SingleHandle)
-			{
-				ApplyNotch(Train, 0, false, Train.Specs.MaximumBrakeNotch, true);
-			}
-			else
-			{
-				ApplyNotch(Train, 0, true, Train.Specs.MaximumBrakeNotch, true);
-			}
-			ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
-			Train.Specs.CurrentEmergencyBrake.Driver = true;
-			Train.Specs.CurrentHoldBrake.Driver = false;
-			Train.Specs.CurrentConstSpeed = false;
-			// plugin
-			if (Train.Plugin == null) return;
-			Train.Plugin.UpdatePower();
-			Train.Plugin.UpdateBrake();
-		}
-
-		// unapply emergency brake
-		internal static void UnapplyEmergencyBrake(Train Train)
-		{
-			if (Train.Specs.CurrentEmergencyBrake.Driver)
-			{
-				// sound
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-				// apply
-				if (Train.Specs.SingleHandle)
-				{
-					ApplyNotch(Train, 0, false, Train.Specs.MaximumBrakeNotch, true);
-				}
-				else
-				{
-					ApplyNotch(Train, 0, true, Train.Specs.MaximumBrakeNotch, true);
-				}
-				ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
-				Train.Specs.CurrentEmergencyBrake.Driver = false;
-				// plugin
-				if (Train.Plugin == null) return;
-				Train.Plugin.UpdatePower();
-				Train.Plugin.UpdateBrake();
-			}
-		}
-
-		// apply hold brake
-		internal static void ApplyHoldBrake(Train Train, bool Value)
-		{
-			Train.Specs.CurrentHoldBrake.Driver = Value;
-			if (Train.Plugin == null) return;
-			Train.Plugin.UpdatePower();
-			Train.Plugin.UpdateBrake();
-		}
-
-		// apply reverser
-		internal static void ApplyReverser(Train Train, int Value, bool Relative)
-		{
-			int a = Train.Specs.CurrentReverser.Driver;
-			int r = Relative ? a + Value : Value;
-			if (r < -1) r = -1;
-			if (r > 1) r = 1;
-			if (a != r)
-			{
-				Train.Specs.CurrentReverser.Driver = r;
-				if (Train.Plugin != null)
-				{
-					Train.Plugin.UpdateReverser();
-				}
-				Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
-				// sound
-				if (a == 0 & r != 0)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.ReverserOn.Buffer;
-					if (buffer == null) return;
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOn.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-				else if (a != 0 & r == 0)
-				{
-					Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.ReverserOff.Buffer;
-					if (buffer == null) return;
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.ReverserOff.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
 			}
 		}
 
@@ -4046,146 +2560,10 @@ namespace OpenBve
 				Train.Plugin.UpdatePower();
 				Train.Plugin.UpdateBrake();
 			}
-		}
-
-		// apply air brake handle
-		internal static void ApplyAirBrakeHandle(Train Train, int RelativeDirection)
-		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
-			{
-				if (RelativeDirection == -1)
-				{
-					if (Train.Specs.AirBrake.Handle.Driver == AirBrakeHandleState.Service)
-					{
-						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Lap);
-					}
-					else
-					{
-						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Release);
-					}
-				}
-				else if (RelativeDirection == 1)
-				{
-					if (Train.Specs.AirBrake.Handle.Driver == AirBrakeHandleState.Release)
-					{
-						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Lap);
-					}
-					else
-					{
-						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
-					}
-				}
-				Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
-			}
-		}
-		internal static void ApplyAirBrakeHandle(Train Train, AirBrakeHandleState State)
-		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
-			{
-				if (State != Train.Specs.AirBrake.Handle.Driver)
-				{
-					// sound when moved to service
-					if (State == AirBrakeHandleState.Service)
-					{
-						Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Brake.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Brake.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-						}
-					}
-					// sound
-					if ((int)State < (int)Train.Specs.AirBrake.Handle.Driver)
-					{
-						// brake release
-						if ((int)State > 0)
-						{
-							// brake release (not min)
-							Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Buffer;
-							if (buffer != null)
-							{
-								OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-							}
-						}
-						else
-						{
-							// brake min
-							Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMin.Buffer;
-							if (buffer != null)
-							{
-								OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMin.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-							}
-						}
-					}
-					else if ((int)State > (int)Train.Specs.AirBrake.Handle.Driver)
-					{
-						// brake
-						Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleApply.Buffer;
-						if (buffer != null)
-						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleApply.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-						}
-					}
-					// apply
-					Train.Specs.AirBrake.Handle.Driver = State;
-					Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
-					// plugin
-					if (Train.Plugin != null)
-					{
-						Train.Plugin.UpdatePower();
-						Train.Plugin.UpdateBrake();
-					}
-				}
-			}
-		}
+		}	
 
 		// update train passengers
-		private static void UpdateTrainPassengers(Train Train, double TimeElapsed)
-		{
-			double accelerationDifference = Train.Specs.CurrentAverageAcceleration - Train.Passengers.CurrentAcceleration;
-			double jerk = 0.25 + 0.10 * Math.Abs(accelerationDifference);
-			double accelerationQuanta = jerk * TimeElapsed;
-			if (Math.Abs(accelerationDifference) < accelerationQuanta)
-			{
-				Train.Passengers.CurrentAcceleration = Train.Specs.CurrentAverageAcceleration;
-				accelerationDifference = 0.0;
-			}
-			else
-			{
-				Train.Passengers.CurrentAcceleration += (double)Math.Sign(accelerationDifference) * accelerationQuanta;
-				accelerationDifference = Train.Specs.CurrentAverageAcceleration - Train.Passengers.CurrentAcceleration;
-			}
-			Train.Passengers.CurrentSpeedDifference += accelerationDifference * TimeElapsed;
-			double acceleration = 0.10 + 0.35 * Math.Abs(Train.Passengers.CurrentSpeedDifference);
-			double speedQuanta = acceleration * TimeElapsed;
-			if (Math.Abs(Train.Passengers.CurrentSpeedDifference) < speedQuanta)
-			{
-				Train.Passengers.CurrentSpeedDifference = 0.0;
-			}
-			else
-			{
-				Train.Passengers.CurrentSpeedDifference -= (double)Math.Sign(Train.Passengers.CurrentSpeedDifference) * speedQuanta;
-			}
-			if (Train.Passengers.PassengerRatio > 0.0)
-			{
-				double threshold = 1.0 / Train.Passengers.PassengerRatio;
-				if (Math.Abs(Train.Passengers.CurrentSpeedDifference) > threshold)
-				{
-					Train.Passengers.FallenOver = true;
-				}
-				else
-				{
-					Train.Passengers.FallenOver = false;
-				}
-			}
-			else
-			{
-				Train.Passengers.FallenOver = false;
-			}
-		}
+		
 
 		// update speeds
 		private static void UpdateSpeeds(Train Train, double TimeElapsed)
@@ -4725,7 +3103,7 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * Game.CriticalCollisionSpeedDifference)
 							{
-								Train.Cars[k].Derailed = true;
+								Train.Derail(k, TimeElapsed);
 							}
 							NewSpeeds[k] = v;
 						}
@@ -4750,145 +3128,6 @@ namespace OpenBve
 			Train.Specs.CurrentAverageAcceleration *= invcarlen;
 		}
 
-		// update train mass
-		private static void UpdateTrainMassFromPassengerRatio(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				double area = Train.Cars[i].Width * Train.Cars[i].Length;
-				const double passengersPerArea = 1.0;
-				double randomFactor = 0.9 + 0.2 * Program.RandomNumberGenerator.NextDouble();
-				double passengers = Math.Round(randomFactor * Train.Passengers.PassengerRatio * passengersPerArea * area);
-				const double massPerPassenger = 70.0;
-				double passengerMass = passengers * massPerPassenger;
-				Train.Cars[i].Specs.MassCurrent = Train.Cars[i].Specs.MassEmpty + passengerMass;
-			}
-		}
-
-		// un-derail train
-		internal static void UnderailTrains()
-		{
-			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
-			{
-				UnderailTrain(Trains[i]);
-			});
-			//for (int i = 0; i < Trains.Length; i++) {
-			//	UnderailTrain(Trains[i]);
-			//}
-		}
-		internal static void UnderailTrain(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				Train.Cars[i].Specs.CurrentRollDueToTopplingAngle = 0.0;
-				Train.Cars[i].Derailed = false;
-			}
-		}
-
-		// jump train
-		internal static void JumpTrain(Train train, int stationIndex)
-		{
-			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
-			if (stopIndex >= 0)
-			{
-				if (train == PlayerTrain)
-				{
-					if (train.Plugin != null)
-					{
-						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Game.TrainStart);
-					}
-				}
-				for (int h = 0; h < train.Cars.Length; h++)
-				{
-					train.Cars[h].Specs.CurrentSpeed = 0.0;
-				}
-				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxlePosition - 0.5 * train.Cars[0].Length;
-				if (train == PlayerTrain)
-				{
-					TrackManager.SuppressSoundEvents = true;
-				}
-				while (d != 0.0)
-				{
-					double x;
-					if (Math.Abs(d) > 1.0)
-					{
-						x = (double)Math.Sign(d);
-					}
-					else
-					{
-						x = d;
-					}
-					for (int h = 0; h < train.Cars.Length; h++)
-					{
-						TrainManager.MoveCar(train, h, x, 0.0);
-					}
-					if (Math.Abs(d) >= 1.0)
-					{
-						d -= x;
-					}
-					else
-					{
-						break;
-					}
-				}
-				if (train == PlayerTrain)
-				{
-					TrainManager.UnderailTrains();
-					TrackManager.SuppressSoundEvents = false;
-				}
-				if (train.Specs.CurrentEmergencyBrake.Driver)
-				{
-					TrainManager.ApplyNotch(train, 0, false, 0, true);
-				}
-				else
-				{
-					TrainManager.ApplyNotch(train, 0, false, train.Specs.MaximumBrakeNotch, false);
-					TrainManager.ApplyAirBrakeHandle(train, TrainManager.AirBrakeHandleState.Service);
-				}
-				if (Game.Sections.Length > 0)
-				{
-					Game.UpdateSection(Game.Sections.Length - 1);
-				}
-				if (train == PlayerTrain)
-				{
-					if (Game.CurrentScore.ArrivalStation <= stationIndex)
-					{
-						Game.CurrentScore.ArrivalStation = stationIndex + 1;
-					}
-				}
-				if (train == PlayerTrain)
-				{
-					if (Game.Stations[stationIndex].ArrivalTime >= 0.0)
-					{
-						Game.SecondsSinceMidnight = Game.Stations[stationIndex].ArrivalTime;
-					}
-					else if (Game.Stations[stationIndex].DepartureTime >= 0.0)
-					{
-						Game.SecondsSinceMidnight = Game.Stations[stationIndex].DepartureTime - Game.Stations[stationIndex].StopTime;
-					}
-				}
-				for (int i = 0; i < train.Cars.Length; i++)
-				{
-					train.Cars[i].Specs.AnticipatedLeftDoorsOpened = Game.Stations[stationIndex].OpenLeftDoors;
-					train.Cars[i].Specs.AnticipatedRightDoorsOpened = Game.Stations[stationIndex].OpenRightDoors;
-				}
-				if (train == PlayerTrain)
-				{
-					Game.CurrentScore.DepartureStation = stationIndex;
-					Game.CurrentInterface = Game.InterfaceType.Normal;
-					Game.Messages = new Game.Message[] { };
-				}
-				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-				TrainManager.UpdateTrainObjects(0.0, true);
-				if (train == PlayerTrain)
-				{
-					if (train.Plugin != null)
-					{
-						train.Plugin.EndJump();
-					}
-				}
-			}
-		}
 
 		// update train physics and controls
 		private static void UpdateTrainPhysicsAndControls(Train Train, double TimeElapsed)

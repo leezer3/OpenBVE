@@ -27,8 +27,9 @@ namespace OpenBve
 		internal Package dependantPackage;
 		internal List<string> selectedDependacies = new List<string>();
 		internal bool ProblemEncountered = false;
+		internal bool listPopulating;
 
-		
+
 
 
 		internal void RefreshPackages()
@@ -151,7 +152,8 @@ namespace OpenBve
 					labelNewVersionNumber.Text = currentPackage.PackageVersion.ToString();
 					if (currentPackage.Dependancies.Count != 0)
 					{
-						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage, Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
+						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage,
+							Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
 						if (brokenDependancies != null)
 						{
 							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
@@ -182,7 +184,7 @@ namespace OpenBve
 					{
 						linkLabelPackageWebsite.Links.Clear();
 						linkLabelPackageWebsite.Text = currentPackage.Website;
-						LinkLabel.Link link = new LinkLabel.Link { LinkData = currentPackage.Website };
+						LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
 						linkLabelPackageWebsite.Links.Add(link);
 					}
 					else
@@ -216,7 +218,9 @@ namespace OpenBve
 			ResetInstallerPanels();
 		}
 
-		internal static readonly string currentDatabaseFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
+		internal static readonly string currentDatabaseFolder =
+			OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "PackageDatabase");
+
 		private static readonly string currentDatabaseFile = OpenBveApi.Path.CombineFile(currentDatabaseFolder, "packages.xml");
 
 		private void buttonProceedAnyway_Click(object sender, EventArgs e)
@@ -259,7 +263,7 @@ namespace OpenBve
 			{
 				if (!ProblemEncountered)
 				{
-					
+
 					switch (currentPackage.PackageType)
 					{
 						case PackageType.Route:
@@ -317,7 +321,7 @@ namespace OpenBve
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker)delegate
+				this.BeginInvoke((MethodInvoker) delegate
 				{
 					OnWorkerProgressChanged(sender, e);
 				});
@@ -334,7 +338,7 @@ namespace OpenBve
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker)delegate
+				this.BeginInvoke((MethodInvoker) delegate
 				{
 					OnWorkerReportsProblem(sender, e);
 				});
@@ -353,12 +357,13 @@ namespace OpenBve
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_failure_header");
 			}
 			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_failure_error");
-			
+
 			buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
 			//Non-localised string as this is a specific error message
-			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" + e.CurrentFile + "at "+ e.Progress + "% completion.";
+			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
+			                             e.CurrentFile + "at " + e.Progress + "% completion.";
 			//Create crash dump file
-			CrashHandler.LogCrash(e.Exception.ToString());
+			CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
 		}
 
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
@@ -367,8 +372,18 @@ namespace OpenBve
 		/// <param name="simpleList">Whether this is a simple list or a dependancy list</param>
 		/// <param name="isDependancy">Whether this is a package needed by another or not</param>
 		/// <param name="isRecommendation">Whether this is a package recommended by another or not</param>
-		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid, bool simpleList, bool isDependancy, bool isRecommendation)
+		internal void PopulatePackageList(List<Package> packageList, DataGridView dataGrid, bool simpleList, bool isDependancy,
+			bool isRecommendation)
 		{
+			listPopulating = true;
+			if (this.InvokeRequired)
+			{
+				this.BeginInvoke((MethodInvoker) delegate
+				{
+					PopulatePackageList(packageList, dataGrid, simpleList, isDependancy, isRecommendation);
+				});
+				return;
+			}
 			//Clear the package list
 			// HACK: If we are working with recommendations, do not clear the list to show them together with dependancies
 			if (!isRecommendation) dataGrid.Rows.Clear();
@@ -389,7 +404,8 @@ namespace OpenBve
 					{
 						packageToAdd = new object[]
 						{
-							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].PackageType.ToString(),
+							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion,
+							packageList[i].PackageType.ToString(),
 							Interface.GetInterfaceString("packages_dependancy"), packageList[i].GUID
 						};
 					}
@@ -397,7 +413,8 @@ namespace OpenBve
 					{
 						packageToAdd = new object[]
 						{
-							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].PackageType.ToString(),
+							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion,
+							packageList[i].PackageType.ToString(),
 							Interface.GetInterfaceString("packages_recommendation"), packageList[i].GUID
 						};
 					}
@@ -405,8 +422,8 @@ namespace OpenBve
 					{
 						packageToAdd = new object[]
 						{
-						packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].Author,
-						packageList[i].Website, packageList[i].GUID
+							packageList[i].Name, packageList[i].MinimumVersion, packageList[i].MaximumVersion, packageList[i].Author,
+							packageList[i].Website, packageList[i].GUID
 						};
 					}
 				}
@@ -417,19 +434,28 @@ namespace OpenBve
 						packageList[i].Name, packageList[i].Version, packageList[i].Author, packageList[i].Website, packageList[i].GUID
 					};
 				}
+
 				//Add to the datagrid view if not selected as dependancy or recommendation
 				if (!selectedDependacies.Contains(packageList[i].GUID) || isDependancy || isRecommendation)
 				{
-					dataGrid.Rows.Add(packageToAdd);
+					try
+					{
+						dataGrid.Rows.Add(packageToAdd);
+					}
+					catch (Exception ex)
+					{
+						CrashHandler.LogCrash(ex.ToString());
+					}
 				}
 			}
 			dataGrid.ClearSelection();
+			listPopulating = false;
 		}
 
 		/// <summary>This method should be called to uninstall a package</summary>
 		internal void UninstallPackage(Package packageToUninstall, ref List<Package> Packages)
 		{
-			
+
 			string uninstallResults = "";
 			List<Package> brokenDependancies = Database.CheckUninstallDependancies(packageToUninstall.Dependancies);
 			if (brokenDependancies.Count != 0)
@@ -439,7 +465,7 @@ namespace OpenBve
 				HidePanels();
 				panelDependancyError.Show();
 			}
-			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder ,ref uninstallResults))
+			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, ref uninstallResults))
 			{
 				Packages.Remove(packageToUninstall);
 				switch (packageToUninstall.PackageType)
@@ -484,7 +510,8 @@ namespace OpenBve
 
 
 
-		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList, bool recommendsOnly)
+		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList,
+			bool recommendsOnly)
 		{
 			var row = dataGridViewPackages2.SelectedRows[0].Index;
 			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
@@ -497,8 +524,10 @@ namespace OpenBve
 			packageToAdd.PackageVersion = null;
 			DependsReccomendsList.Add(packageToAdd);
 			dataGridViewPackages2.ClearSelection();
-			if (currentPackage.Dependancies != null) PopulatePackageList(currentPackage.Dependancies, dataGridViewPackages3, false, true, false);
-			if (currentPackage.Reccomendations != null) PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
+			if (currentPackage.Dependancies != null)
+				PopulatePackageList(currentPackage.Dependancies, dataGridViewPackages3, false, true, false);
+			if (currentPackage.Reccomendations != null)
+				PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
 		}
 
 
@@ -506,7 +535,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages.SelectedRows.Count == 0)
+			if (dataGridViewPackages.SelectedRows.Count == 0 || listPopulating == true)
 			{
 				currentPackage = null;
 				return;
@@ -654,7 +683,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages2_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages2.SelectedRows.Count == 0)
+			if (dataGridViewPackages2.SelectedRows.Count == 0 || listPopulating == true)
 			{
 				buttonDepends.Enabled = false;
 				buttonReccomends.Enabled = false;
@@ -681,7 +710,7 @@ namespace OpenBve
 
 		private void dataGridViewPackages3_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewPackages3.SelectedRows.Count == 0)
+			if (dataGridViewPackages3.SelectedRows.Count == 0 || listPopulating == true)
 			{
 				buttonRemove.Enabled = false;
 				return;
@@ -1011,7 +1040,7 @@ namespace OpenBve
 
 		private void dataGridViewReplacePackage_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewReplacePackage.SelectedRows.Count > 0)
+			if (dataGridViewReplacePackage.SelectedRows.Count > 0 || listPopulating == true)
 			{
 				replacePackageButton.Enabled = true;
 				var row = dataGridViewReplacePackage.SelectedRows[0].Index;

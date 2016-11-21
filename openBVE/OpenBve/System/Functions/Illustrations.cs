@@ -354,6 +354,13 @@ namespace OpenBve {
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		internal static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
+			if (TrackManager.CurrentTrack.Elements.Length > 36 && Game.Stations.Length == 0)
+			{
+				// If we have track elements, but no stations, show a specific error message, rather
+				// than the more generic one thrown later
+				// NOTE: Will throw the generic error message on routes shorter than 900m with no stations
+				throw new Exception(Interface.GetInterfaceString("errors_route_corrupt_nostations"));
+			}
 			// Track elements are assumed to be all of the same length, and this length
 			// is used as measure unit, rather than computing the incremental track length
 			// in any 'real world' unit (like m).
@@ -460,7 +467,7 @@ namespace OpenBve {
 										SizeF s = g.MeasureString(t.Substring(k, 1), f, 65536, StringFormat.GenericTypographic);
 										ty += s.Height;
 									}
-									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].actNameBrdr,
+									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, ty + 4.0f), new PointF((float)x, (float)y));
 								} else
 								{
@@ -476,7 +483,7 @@ namespace OpenBve {
 										new PointF(0.0f, -5.0f), m);
 									g.ResetTransform();
 									SizeF s = g.MeasureString(Game.Stations[e.StationIndex].Name, f);
-									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].actNameBrdr,
+									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, (float)(oy + s.Width + 4)), new PointF((float)x, (float)y));
 								}
 							}

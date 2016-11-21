@@ -574,6 +574,10 @@ namespace OpenBve {
 				Train.Cars[i].Specs.AirBrake.MainReservoirBrakePipeCoefficient = (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake ? 0.25 : 0.075) / Cars;
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure = 1.005 * OperatingPressure;
+				/*
+				 * These values are all constants, and are expressed in pascals per second
+				 * Presumably, Michelle intended for them to be editable in v2.0
+				 */
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirServiceRate = 50000.0;
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirEmergencyRate = 250000.0;
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirChargeRate = 200000.0;

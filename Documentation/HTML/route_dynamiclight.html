@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Applying Dynamic Lighting to Your Route</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Applying Dynamic Lighting to Your Route</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />This page describes the principles and implementation of the dynamic lighting system..<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Lighting System: Basic Principles</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+First, please consider these fundamental points:<br><br>
+<table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>openBVE currently supports two distinct lights for the scene. These are the <b>Dynamic Light</b> and the <b>Ambient Light</b>. 
+<br>
+</td>
+</tr></table>
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>In addition to this, you must consider the <b>Cab Brightness</b> value, which determines the blend between the daytime and nighttime cab textures.</td>
+</tr></table>
+
+<br /><table cellspacing="0"><tr>
+<td valign="top">●</td>
+<td>&nbsp;</td>
+<td>The current implementation of openBVE produces incorrect illumination on the back face of faces created by <i>Face2</i> (B3D) or <i>AddFace2</i> (CSV) commands. <p>
+<b>NOTE:</b> This behavior is subject to change in future versions of openBVE, so that both sides are correctly illuminated.</td>
+</tr></table>
+In order to setup the lighting system, a custom Dynamic Lighting XML file must be used. This file must contain a time-delineated series of light definitions, a basic example of which is shown below:
+<br>
+<textarea rows="17" cols="110" style="border:2;">
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Brightness>
+        <Time>00.00</Time>
+        <AmbientLight>0,0,0</AmbientLight>
+        <DirectionalLight>0,0,0</DirectionalLight>
+        <LightDirection>0.223606797749979, 0.86602540378444, -0.447213595499958</LightDirection>
+        <CabLighting>80</CabLighting>
+  </Brightness>
+  <Brightness>
+        <Time>12.00</Time>
+        <AmbientLight>160,160,160</AmbientLight>
+        <DirectionalLight>160,160,160</DirectionalLight>
+        <LightDirection>0.223606797749979, 0.86602540378444, -0.447213595499958</LightDirection>
+        <CabLighting>255</CabLighting>
+  </Brightness>
+</openBVE>
+</textarea>
+<br>
+As you can see, each <b>&lt;Brightness&gt;</b> section contains a series of parameters, defining the lighting at the point in time specified by <i>Time</i>.<br>
+When you are between two defined times, a simple cosine based interpolation curve is used.
+
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Ambient Light</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;AmbientLight&gt;</b> <em>RedValue</em>; <em>GreenValue</em>; <em>BlueValue</em> <b>&lt;&#47;AmbientLight&gt;</b></font></td></tr>
+</table><br>
+The ambient light describes the <b>R,G,B</b> color, which is used to illuminate the whole scene.<br>
+All polygons in the scene are illuminated evenly.<br>
+<br>
+
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The Directional Light</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;DirectionalLight&gt;</b> <em>RedValue</em>; <em>GreenValue</em>; <em>BlueValue</em> <b>&lt;&#47;DirectionalLight&gt;</b></font></td></tr>
+</table><br>
+The directional light describes the <b>R,G,B</b> color, which is used to illuminate the whole scene from a specified direction.<br>
+The polygons in the scene are only fully illuminated by the directional light if the light direction points at the front faces. If pointing at back faces, no light is contributed.<br>
+The <i>LightDirection</i> attribute should be used to set the direction the light shines from.<br>
+<br>
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The LightDirection Attribute</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;LightDirection&gt;</b> <em>RedValue</em>; <em>GreenValue</em>; <em>BlueValue</em> <b>&lt;&#47;LightDirection&gt;</b></font></td></tr>
+</table><br>
+The LightDirection attribute sets the direction from which the directional light shines, by default in cartesian co-ordinates. There are three possible overloads for this as follows:<br><br>
+<b><i>LightDirection</b></i> : Sets the light direction in cartesian co-ordinates.<br>
+<b><i>CartesianLightDirection</b></i> : Sets the light direction in cartesian co-ordinates.<br>
+<b><i>SphericalLightDirection</b></i> : Sets the light direction in spherical co-ordinates.<br>
+<br>
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The CabLighting Attribute</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;CabLighting&gt;</b> <em>CabLightingValue</em> <b>&lt;&#47;CabLighting&gt;</b></font></td></tr>
+</table><br>
+The CabLighting attribute controls the maximum brightness of the cab, which in turn is used to determine the blend between the daytime and nighttime images.<br>
+This must be a number between <i>0</i> (Completely dark) and <i>255</i> (Completely light).<br>
+The minimum of this value, and the current <b><i>Track.Brightness</b></i> value is then used to determine the cab brightness displayed in-game.
+<br>
+
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/object_information.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:30:47 GMT -->
+</html>

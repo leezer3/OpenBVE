@@ -115,13 +115,10 @@ namespace OpenBve
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			if (RegisteredTextures.Length == RegisteredTexturesCount)
-			{
-				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
-			}
-			RegisteredTextures[RegisteredTexturesCount] = new Texture(path, parameters);
+			int idx = GetNextFreeTexture();
+			RegisteredTextures[idx] = new Texture(path, parameters);
 			RegisteredTexturesCount++;
-			handle = RegisteredTextures[RegisteredTexturesCount - 1];
+			handle = RegisteredTextures[idx];
 			return true;
 		}
 
@@ -133,16 +130,13 @@ namespace OpenBve
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			if (RegisteredTextures.Length == RegisteredTexturesCount)
-			{
-				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
-			}
-			RegisteredTextures[RegisteredTexturesCount] = new Texture(texture);
+			int idx = GetNextFreeTexture();
+			RegisteredTextures[idx] = new Texture(texture);
 			RegisteredTexturesCount++;
-			return RegisteredTextures[RegisteredTexturesCount - 1];
+			return RegisteredTextures[idx];
 		}
 
-		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="bitmap">The bitmap that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <returns>The handle to the texture.</returns>
@@ -152,13 +146,10 @@ namespace OpenBve
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			if (RegisteredTextures.Length == RegisteredTexturesCount)
-			{
-				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
-			}
-			RegisteredTextures[RegisteredTexturesCount] = new Texture(bitmap, parameters);
+			int idx = GetNextFreeTexture();
+			RegisteredTextures[idx] = new Texture(bitmap, parameters);
 			RegisteredTexturesCount++;
-			return RegisteredTextures[RegisteredTexturesCount - 1];
+			return RegisteredTextures[idx];
 		}
 
 		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
@@ -170,13 +161,10 @@ namespace OpenBve
 			/*
 			 * Register the texture and return the newly created handle.
 			 * */
-			if (RegisteredTextures.Length == RegisteredTexturesCount)
-			{
-				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
-			}
-			RegisteredTextures[RegisteredTexturesCount] = new Texture(bitmap);
+			int idx = GetNextFreeTexture();
+			RegisteredTextures[idx] = new Texture(bitmap);
 			RegisteredTexturesCount++;
-			return RegisteredTextures[RegisteredTexturesCount - 1];
+			return RegisteredTextures[idx];
 		}
 
 
@@ -489,6 +477,27 @@ namespace OpenBve
 				}
 			}
 			return count;
+		}
+
+
+		/// <summary>Gets the next free texture, resizing the base textures array if appropriate</summary>
+		/// <returns>The index of the next free texture</returns>
+		internal static int GetNextFreeTexture()
+		{
+			if (RegisteredTextures.Length == RegisteredTexturesCount)
+			{
+				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
+			}
+			else if (RegisteredTexturesCount > RegisteredTextures.Length)
+			{
+				/* BUG:
+				 * The registered textures count very occasional becomes greater than the array length (Texture loader crashes possibly?)
+				 * This then crashes when we attempt to itinerate the array, so reset it...
+				 */
+				RegisteredTexturesCount = RegisteredTextures.Length;
+				Array.Resize<Texture>(ref RegisteredTextures, RegisteredTextures.Length << 1);
+			}
+			return RegisteredTexturesCount;
 		}
 
 

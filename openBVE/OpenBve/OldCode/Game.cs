@@ -11,14 +11,23 @@ namespace OpenBve {
 		internal static double SecondsSinceMidnight = 0.0;
         /// <summary>The time at which the current game started, expressed as the number of seconds since midnight on the first day</summary>
 		internal static double StartupTime = 0.0;
+		/// <summary>Whether the game is in minimal simulation mode: 
+		/// This is used when the game is fast-forwarding on start or station jump.
+		/// Train & time movements are processed, but no graphical processing is done
+		/// </summary>
 		internal static bool MinimalisticSimulation = false;
 
-		// fog
+		/// <summary>Defines a region of fog</summary>
 		internal struct Fog {
+			/// <summary>The offset at which the fog starts</summary>
 			internal float Start;
+			/// <summary>The offset at which the fog ends</summary>
 			internal float End;
+			/// <summary>The color of the fog</summary>
 			internal Color24 Color;
+			/// <summary>The track position at which the fog is placed</summary>
 			internal double TrackPosition;
+			/// <summary>Creates a new region of fog</summary>
 			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
 				this.Start = Start;
 				this.End = End;
@@ -577,16 +586,25 @@ namespace OpenBve {
 
 		// ================================
 
-		// stations
+		/// <summary>Defines a station stop point</summary>
 		internal struct StationStop {
+			/// <summary>The track position of the stop point</summary>
 			internal double TrackPosition;
+			/// <summary>The forward stop tolerance in meters (Default: 5)</summary>
 			internal double ForwardTolerance;
+			/// <summary>The backwards stop tolerance in meters (Default: 5)</summary>
 			internal double BackwardTolerance;
+			/// <summary>The number of cars this stop point applies to, or 0 for all</summary>
 			internal int Cars;
 		}
+
+		/// <summary>Defines the possible safety system to be used (Only currently applies to the default JA safety systems)</summary>
 		internal enum SafetySystem {
+			/// <summary>Any available safety system should be used (Either that from the previous station if defined or NONE)</summary>
 			Any = -1,
+			/// <summary>ATS should be used- The track is NOT fitted with ATC</summary>
 			Ats = 0,
+			/// <summary>ATC should be used</summary>
 			Atc = 1
 		}
 		internal enum StationStopMode {
@@ -595,28 +613,48 @@ namespace OpenBve {
 			PlayerStop = 2,
 			PlayerPass = 3
 		}
+
+		/// <summary>Defines the available station types</summary>
 		internal enum StationType {
 			Normal = 0,
 			ChangeEnds = 1,
 			Terminal = 2
 		}
+
+		/// <summary>Defines a station</summary>
 		internal struct Station {
+			/// <summary>The textual name of the station displayed in-game</summary>
 			internal string Name;
+			/// <summary>The expected arrival time at this station, expressed in seconds after midnight on the first day</summary>
 			internal double ArrivalTime;
+			/// <summary>The sound buffer to be played when the train arrives at this station</summary>
 			internal Sounds.SoundBuffer ArrivalSoundBuffer;
+			/// <summary>The expected departure time from this station, expressed in seconds after midnight on the first day</summary>
 			internal double DepartureTime;
+			/// <summary>The sound buffer to be played before the doors close pre-departure</summary>
 			internal Sounds.SoundBuffer DepartureSoundBuffer;
+			/// <summary>The minimum time in seconds trains must stop for at this station</summary>
 			internal double StopTime;
 			internal Vector3 SoundOrigin;
+			/// <summary>Defines which trains will stop at this station</summary>
 			internal StationStopMode StopMode;
+			/// <summary>The type of this station</summary>
 			internal StationType StationType;
+			/// <summary>Whether the signal associated with this station is held at red until the scheduled departure time</summary>
 			internal bool ForceStopSignal;
+			/// <summary>Whether the left doors should open</summary>
 			internal bool OpenLeftDoors;
+			/// <summary>Whether the right doors should open</summary>
 			internal bool OpenRightDoors;
+			/// <summary>The safety system in use from this station onwards</summary>
 			internal SafetySystem SafetySystem;
+			/// <summary>The available stop points for this station</summary>
 			internal StationStop[] Stops;
+			/// <summary>The ratio of passengers at this station (100 is a standard, fully loaded train)</summary>
 			internal double PassengerRatio;
+			/// <summary>The timetable to be shown from this point onwards (Daytime)</summary>
 			internal Textures.Texture TimetableDaytimeTexture;
+			/// <summary>The timetable to be shown from this point onwards (Nighttime)</summary>
 			internal Textures.Texture TimetableNighttimeTexture;
 			internal double DefaultTrackPosition;
 		}
@@ -953,138 +991,6 @@ namespace OpenBve {
 
 		// ================================
 
-
-		internal enum MessageDependency {
-			None = 0,
-			RouteLimit = 1,
-			SectionLimit = 2,
-			Station = 3
-		}
-		internal struct Message {
-			internal string InternalText;
-			internal string DisplayText;
-			internal MessageDependency Depencency;
-			internal double Timeout;
-			internal MessageColor Color;
-			internal Vector2 RendererPosition;
-			internal double RendererAlpha;
-		}
-		internal static Message[] Messages = new Message[] { };
-		internal static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
-        /// <summary>Adds a message to the in-game interface render queue</summary>
-        /// <param name="Text">The text of the message</param>
-        /// <param name="Depencency"></param>
-        /// <param name="Mode"></param>
-        /// <param name="Color">The color of the message text</param>
-        /// <param name="Timeout">The time this message will display for</param>
-		internal static void AddMessage(string Text, MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout) {
-			if (Interface.CurrentOptions.GameMode <= Mode) {
-				if (Depencency == MessageDependency.RouteLimit | Depencency == MessageDependency.SectionLimit) {
-					for (int i = 0; i < Messages.Length; i++) {
-						if (Messages[i].Depencency == Depencency) return;
-					}
-				}
-				int n = Messages.Length;
-				Array.Resize<Message>(ref Messages, n + 1);
-				Messages[n].InternalText = Text;
-				Messages[n].DisplayText = "";
-				Messages[n].Depencency = Depencency;
-				Messages[n].Timeout = Timeout;
-				Messages[n].Color = Color;
-				Messages[n].RendererPosition = new Vector2(0.0, 0.0);
-				Messages[n].RendererAlpha = 0.0;
-			}
-		}
-		internal static void AddDebugMessage(string text, double duration) {
-			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
-		}
-
-	    internal static double SpeedConversionFactor = 0.0;
-	    internal static string UnitOfSpeed = "km/h";
-
-		internal static void UpdateMessages() {
-			for (int i = 0; i < Messages.Length; i++) {
-				bool remove = SecondsSinceMidnight >= Messages[i].Timeout;
-				switch (Messages[i].Depencency) {
-					case MessageDependency.RouteLimit:
-						{
-							double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
-							double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
-                            //Get the speed and limit in km/h
-							spd = Math.Round(spd * 3.6);
-							lim = Math.Round(lim * 3.6);
-							remove = spd <= lim;
-							string s = Messages[i].InternalText, t;
-                            if (SpeedConversionFactor != 0.0)
-                            {
-                                spd = Math.Round(spd * SpeedConversionFactor);
-                                lim = Math.Round(lim * SpeedConversionFactor);
-                            }
-							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-							s = s.Replace("[speed]", t);
-							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-							s = s.Replace("[limit]", t);
-                            s = s.Replace("[unit]", UnitOfSpeed);
-							Messages[i].DisplayText = s;
-						} break;
-					case MessageDependency.SectionLimit:
-						{
-							double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
-							double lim = TrainManager.PlayerTrain.CurrentSectionLimit;
-							spd = Math.Round(spd * 3.6);
-							lim = Math.Round(lim * 3.6);
-							remove = spd <= lim;
-							string s = Messages[i].InternalText, t;
-                            if (SpeedConversionFactor != 0.0)
-                            {
-                                spd = Math.Round(spd * SpeedConversionFactor);
-                                lim = Math.Round(lim * SpeedConversionFactor);
-                            }
-							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-							s = s.Replace("[speed]", t);
-							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-							s = s.Replace("[limit]", t);
-                            s = s.Replace("[unit]", UnitOfSpeed);
-							Messages[i].DisplayText = s;
-						} break;
-					case MessageDependency.Station:
-						{
-							int j = TrainManager.PlayerTrain.Station;
-							if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed) {
-								double d = TrainManager.PlayerTrain.StationDepartureTime - SecondsSinceMidnight + 1.0;
-								if (d < 0.0) d = 0.0;
-								string s = Messages[i].InternalText;
-								TimeSpan a = TimeSpan.FromSeconds(d);
-								System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-								string t = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
-								s = s.Replace("[time]", t);
-								s = s.Replace("[name]", Stations[j].Name);
-								Messages[i].DisplayText = s;
-								if (d > 0.0) remove = false;
-							} else {
-								remove = true;
-							}
-						} break;
-					default:
-						Messages[i].DisplayText = Messages[i].InternalText;
-						break;
-				}
-				if (remove) {
-					if (Messages[i].Timeout == double.PositiveInfinity) {
-						Messages[i].Timeout = SecondsSinceMidnight - 1.0;
-					}
-					if (SecondsSinceMidnight >= Messages[i].Timeout & Messages[i].RendererAlpha == 0.0) {
-						for (int j = i; j < Messages.Length - 1; j++) {
-							Messages[j] = Messages[j + 1];
-						}
-						i--;
-						Array.Resize<Message>(ref Messages, Messages.Length - 1);
-					}
-				}
-			}
-		}
-
-		// ================================
 
 		// marker
 		internal static Textures.Texture[] MarkerTextures = new Textures.Texture[] { };

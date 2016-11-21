@@ -47,7 +47,7 @@ namespace OpenBve
         private static bool CullEnabled = true;
         internal static bool LightingEnabled = false;
         internal static bool FogEnabled = false;
-        private static bool TexturingEnabled = false;
+	    internal static bool TexturingEnabled = false;
         private static bool EmissiveEnabled = false;
 
         // options
@@ -85,10 +85,7 @@ namespace OpenBve
             // initialize
             ResetOpenGlState();
             int OpenGlTextureIndex = 0;
-            if (World.CurrentBackground.Texture != null)
-            {
-                //Textures.LoadTexture(World.CurrentBackground.Texture, Textures.OpenGlTextureWrapMode.RepeatClamp); // TODO
-            }
+            
             if (OptionWireframe | OpenGlTextureIndex == 0)
             {
                 if (Game.CurrentFog.Start < Game.CurrentFog.End)
@@ -152,7 +149,7 @@ namespace OpenBve
                 GL.Disable(EnableCap.Fog); FogEnabled = false;
             }
             GL.Disable(EnableCap.DepthTest);
-            RenderBackground(TimeElapsed);
+            UpdateBackground(TimeElapsed);
             // fog
             float aa = Game.CurrentFog.Start;
             float bb = Game.CurrentFog.End;

@@ -67,6 +67,7 @@ Michelle intended for this program to be placed in the public domain. This means
 
 **Third-Pary Libraries**
 
-- OpenBVE uses the **OpenTK** library for windowing and input handling. This is licenced under the _Open Toolkit Library Licence_, which may be found in `OpenTKLicence.txt`.
-- OpenBVE uses the **CS Script Library** for animation scripting. This is licened under the _MIT Licence_, which may be found in `CSScriptLicence.txt`.
-- OpenBVE uses **SharpCompress** for archive handling. This is licenced under the _MIT Licence_, which may be found in `SharpCompressLicence.txt`.
+- openBVE uses the **OpenTK** library for windowing and input handling. This is licenced under the _Open Toolkit Library Licence_, which may be found in `OpenTKLicence.txt`.
+- openBVE uses the **CS Script Library** for animation scripting. This is licened under the _MIT Licence_, which may be found in `CSScriptLicence.txt`.
+- openBVE uses **SharpCompress** for archive handling. This is licenced under the _MIT Licence_, which may be found in `SharpCompressLicence.txt`.
+- openBVE uses **NUinversalCharDetect** for character set detection. This is tri-licenced under the _Mozilla Public Licence v1.1_, _GPL 2.0_ and _LGPL 2.0_

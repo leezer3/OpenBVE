@@ -623,6 +623,20 @@ This command creates one or more preceding or following trains. These other trai
 <hr />
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.DynamicLight</b> <em>Dynamic.XML</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Dynamic.XML</em></b>: A path to a Dynamic Lighting definition XML file.<br />
+</font></td></tr></table>
+This command may be used as an alternative to the <i>Route.AmbientLight</i> , <i>Route.DirectionalLight</i> and <i>Route.LightDirection</i> commands.<br>
+It allows the lighting to be varied using a time-based model, and is described fully on the following page:<br>
+<p style="margin-left: 10px"><a href="route_dynamiclight.html" target="main">Dynamic Lighting</a>
+
+<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.AmbientLight</b> <em>RedValue</em>; <em>GreenValue</em>; <em>BlueValue</em></font></td></tr>
 </table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
@@ -844,7 +858,10 @@ Generally, supported objects are B3D, CSV, X and ANIMATED. However, the FormCL, 
 
 </font></td></tr></table>
 Commands from this namespace define which background images to use and how they are aligned.<br /><br /><img src="../Images/illustration_background.png" alt="" />
-<br />The background image is displayed as a cylindric wall around the camera whose start (viewed from above) is 60 degrees to the left of the initial forward direction (at the 10 o'clock position). From there, the background image wraps clock-wise around the cylinder with a repetition count specified via Texture.Background(<em>BackgroundTextureIndex</em>).X, which by default creats 6 repetitions in a full circle.<br /><br />The upper 3/4 of the image is displayed above the horizon, while the lower 1/4 is displayed below the horizon. Via Texture.Background(<em>BackgroundTextureIndex</em>).Aspect, you can choose whether to have a fixed cylinder height or to preserve the aspect ratio of the texture. If the image should have a fixed height, the cylinder has a height of 1/2 its radius, which corresponds to about 20 degree inclination to the top of the image, and about -7 degrees to the bottom of the image. If the aspect ratio of the image is preserved, this takes not only the width and height of the image into account, but also the repetition count.<br /><br />Regardless of the repetition count you chose, you should make sure that the left and right edges of the textures fit seamlessly together. Please also take into account that top and bottom caps are created which sample from the top and bottom 10% of the image. You should avoid mountain peaks and similar extremes in the top 10% of the image in order for such extremes to not leak into the top cap.<br /><br />The image loaded into Texture.Background(0) is displayed at the beginning of the route, unless a Track.Back command at the beginning of the route requests a different image.<br /><br /><hr />
+<br />The background image is displayed as a cylindric wall around the camera whose start (viewed from above) is 60 degrees to the left of the initial forward direction (at the 10 o'clock position). From there, the background image wraps clock-wise around the cylinder with a repetition count specified via Texture.Background(<em>BackgroundTextureIndex</em>).X, which by default creats 6 repetitions in a full circle.<br /><br />The upper 3/4 of the image is displayed above the horizon, while the lower 1/4 is displayed below the horizon. Via Texture.Background(<em>BackgroundTextureIndex</em>).Aspect, you can choose whether to have a fixed cylinder height or to preserve the aspect ratio of the texture. If the image should have a fixed height, the cylinder has a height of 1/2 its radius, which corresponds to about 20 degree inclination to the top of the image, and about -7 degrees to the bottom of the image. If the aspect ratio of the image is preserved, this takes not only the width and height of the image into account, but also the repetition count.<br /><br />Regardless of the repetition count you chose, you should make sure that the left and right edges of the textures fit seamlessly together. Please also take into account that top and bottom caps are created which sample from the top and bottom 10% of the image. You should avoid mountain peaks and similar extremes in the top 10% of the image in order for such extremes to not leak into the top cap.<br /><br />The image loaded into Texture.Background(0) is displayed at the beginning of the route, unless a Track.Back command at the beginning of the route requests a different image.<br /><br />
+As an alternative <b><em>Dynamic or Object</em></b> based backgrounds may be used. The implementation of these is described upon this page:<br>
+<a href="route_dynamicbackground.html" target="main">Dynamic & Object Based Backgrounds</a></p><hr />
+
 <table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Texture.Background(<em>BackgroundTextureIndex</em>)</b><font color="gray">.Load</font> <em>FileName</em></font></td></tr>
@@ -853,7 +870,9 @@ Commands from this namespace define which background images to use and how they 
 <tr><td><font color="#808080">
 <b><em>FileName</em></b>: The texture file to load, relative to the <b>Object</b> folder.
 </font></td></tr></table>
-This command loads a background image to be later used by Track.Back.<br /><br /><hr />
+This command loads a background image to be later used by Track.Back.<br />
+<br><b>NOTE:</b> If a dynamic or object based background is to be used, this must instead point to the appropriate XML file.<br><br />
+<hr />
 <table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Texture.Background(<em>BackgroundTextureIndex</em>).X</b> <em>RepetitionCount</em></font></td></tr>
@@ -862,6 +881,7 @@ This command loads a background image to be later used by Track.Back.<br /><br /
 <tr><td><font color="#808080">
 <b><em>RepetitionCount</em></b>: The number of times the background image is repeated in a full circle. The default value is 6.
 </font></td></tr></table>
+<br><b>NOTE:</b> Ignored if using a dynamic or object based background.<br>
 <hr />
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
@@ -878,6 +898,7 @@ This command loads a background image to be later used by Track.Back.<br /><br /
 <b>0</b>: Use a fixed height for the cylinder.<br />
 <b>1</b>: Preserve the aspect ratio of the image.
 </font></td></tr></table>
+<br><b>NOTE:</b> Ignored if using a dynamic or object based background.<br>
 <br /><a name="cycle" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 9. The Cycle namespace</font><hr />

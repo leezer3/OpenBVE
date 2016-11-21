@@ -3207,6 +3207,7 @@
 			this.groupboxControl.Controls.Add(this.panelKeyboard);
 			this.groupboxControl.Controls.Add(this.comboboxCommand);
 			this.groupboxControl.Controls.Add(this.labelCommand);
+			this.groupboxControl.Controls.Add(this.textboxJoystickGrab);
 			this.groupboxControl.Controls.Add(this.panelJoystick);
 			this.groupboxControl.Controls.Add(this.radiobuttonJoystick);
 			this.groupboxControl.Controls.Add(this.radiobuttonKeyboard);
@@ -3325,12 +3326,11 @@
 			this.panelJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelJoystick.Controls.Add(this.labelJoystickAssignmentCaption);
-			this.panelJoystick.Controls.Add(this.textboxJoystickGrab);
 			this.panelJoystick.Controls.Add(this.labelJoystickAssignmentValue);
 			this.panelJoystick.Enabled = false;
 			this.panelJoystick.Location = new System.Drawing.Point(264, 72);
 			this.panelJoystick.Name = "panelJoystick";
-			this.panelJoystick.Size = new System.Drawing.Size(371, 48);
+			this.panelJoystick.Size = new System.Drawing.Size(195, 48);
 			this.panelJoystick.TabIndex = 4;
 			// 
 			// labelJoystickAssignmentCaption
@@ -3347,7 +3347,8 @@
 			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxJoystickGrab.Location = new System.Drawing.Point(192, 0);
+	        this.textboxJoystickGrab.PreviewKeyDown += textboxJoystickGrab_PreviewKeyDown;
+			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
 			this.textboxJoystickGrab.Multiline = true;
 			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
 			this.textboxJoystickGrab.ReadOnly = true;
@@ -5173,6 +5174,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(819, 606);
+			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.labelVerticalSeparator);
 			this.Controls.Add(this.panelInfo);
@@ -5185,7 +5187,6 @@
 			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
-			this.Controls.Add(this.panelControls);
 			this.KeyPreview = true;
 			this.Name = "formMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -5284,7 +5285,6 @@
 			this.panelKeyboard.ResumeLayout(false);
 			this.panelKeyboard.PerformLayout();
 			this.panelJoystick.ResumeLayout(false);
-			this.panelJoystick.PerformLayout();
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
 			this.panelPackages.PerformLayout();

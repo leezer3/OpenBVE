@@ -86,6 +86,10 @@
     <Reference Include="CSScriptLibrary">
       <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\NUniversalCharDet.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
@@ -102,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
@@ -110,6 +115,7 @@
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
+    <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
@@ -117,16 +123,32 @@
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\DynamicBackgroundParser.cs" />
+    <Compile Include="Parsers\DynamicLightParser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Simulation\TrainManager\Doors.cs" />
+    <Compile Include="Simulation\TrainManager\Functions.cs" />
+    <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
+    <Compile Include="Simulation\TrainManager\Passengers.cs" />
+    <Compile Include="Simulation\TrainManager\Station.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
+    <Compile Include="Simulation\World\BackgroundManager.cs" />
+    <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Logging\BlackBox.cs" />
+    <Compile Include="System\Logging\Score.cs" />
+    <Compile Include="System\Options.cs" />
     <Compile Include="System\Translations\InterfaceStrings.cs" />
+    <Compile Include="System\Translations\KeyInfo.cs" />
     <Compile Include="System\Translations\LanguageFile.cs" />
     <Compile Include="UserInterface\formBugReport.cs">
       <SubType>Form</SubType>
@@ -306,10 +328,20 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">$(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C
-xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll*" /Y /I /C</PostBuildEvent>
-    <!-- Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(TargetDir)"</PostBuildEvent>
+    <!-- Copy in dependancies and child projects -->
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C 
+		xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll" /Y /I /C
+		xcopy "$(ProjectDir)..\OpenBveAts\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Sound.Flac\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Sound.RiffWave\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Texture.Ace\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+		xcopy "$(ProjectDir)..\Texture.BmpGifJpegPngTiff\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
+	</PostBuildEvent>
+    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(ProjectDir)../OpenBveAts/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.Flac/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.RiffWave/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.Ace/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.BmpGifJpegPngTiff/bin/$(Configuration)/Data" "$(TargetDir)"
+	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,8 +40,11 @@ namespace OpenBve {
 			if (TextureLoadingBkg == null)
 			{
 				int bkgNo = Program.RandomNumberGenerator.Next (numOfLoadingBkgs);
-				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_"+bkgNo+".png"),
-					out TextureLoadingBkg);
+				string backgroundFile = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
+				if (System.IO.File.Exists(backgroundFile))
+				{
+					Textures.RegisterTexture(backgroundFile, out TextureLoadingBkg);
+				}
 			}
 			if (Renderer.TextureLogo == null)
 			{
@@ -50,7 +53,11 @@ namespace OpenBve {
 				if (Screen.Width > 2048)		fName	= LogoFileName[2];
 				else if (Screen.Width > 1024)	fName	= LogoFileName[1];
 				else							fName	= LogoFileName[0];
-				Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), out TextureLogo);
+				string logoFile = OpenBveApi.Path.CombineFile(Path, fName);
+				if (System.IO.File.Exists(logoFile))
+				{
+					Textures.RegisterTexture(logoFile, out TextureLogo);
+				}
 			}
 		}
 
@@ -93,40 +100,40 @@ namespace OpenBve {
 			int		logoBottom;
 //			int		versionTop;
 			int		halfWidth	= Screen.Width/2;
-			bool	bkgLoaded	= TextureLoadingBkg.Height > 0;
-			// stretch the background image to fit at least one screen dimension
-			double	ratio	= bkgLoaded ? (double)TextureLoadingBkg.Width / (double)TextureLoadingBkg.Height : 1.0;
-			if (Screen.Width / ratio > Screen.Height)		// if screen ratio is shorter than bkg...
+			if (TextureLoadingBkg != null)
 			{
-				bkgHeight	= Screen.Height;				// set height to screen height
-				bkgWidth	= (int)(Screen.Height * ratio);	// and scale width proprtionally
+				// stretch the background image to fit at least one screen dimension
+				double ratio = (double) TextureLoadingBkg.Width/(double) TextureLoadingBkg.Height;
+				if (Screen.Width/ratio > Screen.Height) // if screen ratio is shorter than bkg...
+				{
+					bkgHeight = Screen.Height; // set height to screen height
+					bkgWidth = (int) (Screen.Height*ratio); // and scale width proprtionally
+				}
+				else // if screen ratio is wider than bkg...
+				{
+					bkgWidth = Screen.Width; // set width to screen width
+					bkgHeight = (int) (Screen.Width/ratio); // and scale height accordingly
+				}
+				// draw the background image down from the top screen edge
+				DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight),Color128.White);
 			}
-			else											// if screen ratio is wider than bkg...
-			{
-				bkgWidth	= Screen.Width;					// set width to screen width
-				bkgHeight	= (int)(Screen.Width / ratio);	// and scale height accordingly
-			}
-			// draw the background image down from the top screen edge
-			DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth) / 2, 0),
-				new Size(bkgWidth, bkgHeight), Color128.White);
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
 			if (!customLoadScreen)
 			{
-				// place the centre of the logo at from the screen top
-				int logoTop	= (int)(Screen.Height * logoCentreYFactor - TextureLogo.Height / 2);
-				logoBottom	= logoTop + TextureLogo.Height;
-				DrawRectangle(TextureLogo,
-					new Point((Screen.Width - TextureLogo.Width) / 2, logoTop),
-					new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+				if (TextureLogo != null)
+				{
+					// place the centre of the logo at from the screen top
+					int logoTop = (int) (Screen.Height*logoCentreYFactor - TextureLogo.Height/2);
+					logoBottom = logoTop + TextureLogo.Height;
+					DrawRectangle(TextureLogo, new Point((Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+				}
 			}
 			else
 			{
 					// if custom route image, no logo and leave a conventional black area below the potential logo
 			}
 				logoBottom	= Screen.Height / 2;
-			if (!bkgLoaded)				// if the background texture not yet loaded, do nothing else
-				return;
 			// take the height remaining below the logo and divide in 3 horiz. parts
 			int	blankHeight	= (Screen.Height - logoBottom) / 3;
 

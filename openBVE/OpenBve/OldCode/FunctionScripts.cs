@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Channels;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -47,8 +48,20 @@ namespace OpenBve {
 			internal double[] Stack;
 			internal double[] Constants;
 			internal double LastResult;
+			internal double Maximum = Double.NaN;
+			internal double Minimum = Double.NaN;
 			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+
+				//Allows us to pin the result, but keep the underlying figure
+				if (this.Minimum != Double.NaN & this.LastResult < Minimum)
+				{
+					return Minimum;
+				}
+				if (this.Maximum != Double.NaN & this.LastResult > Maximum)
+				{
+					return Maximum;
+				}
 				return this.LastResult;
 			}
 			/// <summary>Checks whether the specified function will return a constant result</summary>

@@ -60,6 +60,7 @@ namespace OpenBve
 				{
 					System.Threading.Thread.Sleep(10);
 				}
+				Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
 				if (MainLoop.Quit)
@@ -124,7 +125,7 @@ namespace OpenBve
 			{
 				Program.currentGameWindow.Exit();
 			}
-			
+				Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 				Program.currentGameWindow.SwapBuffers();
@@ -162,12 +163,6 @@ namespace OpenBve
 				Interface.SaveLogs();
 			}
 			catch { }
-			try
-			{
-				Interface.SaveOptions();
-			}
-			catch { }
-
 		}
 
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -702,13 +697,16 @@ namespace OpenBve
 			object locker = new object();
 			lock (jobLock)
 			{
-				Loading.JobAvailable = true;
 				jobs.Enqueue(job);
 				locks.Enqueue(locker);
+				//Don't set the job to available until after it's been loaded into the queue
+				Loading.JobAvailable = true;
 			}
 			lock (locker)
 			{
-				Monitor.Wait(locker);
+				//Failsafe: If our job has taken more than a second, terminate it
+				//A missing texture is probably better than an infinite loadscreen
+				Monitor.Wait(locker, 1000);
 			}
 		}
 	}

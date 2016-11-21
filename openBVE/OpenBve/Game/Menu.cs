@@ -44,7 +44,22 @@ namespace OpenBve
 			Control };
 
 		/// <summary>The list of possible sub-menu types</summary>
-		public enum MenuType	{ None, Top, JumpToStation, ExitToMainMenu, Controls, Control, Quit };
+		public enum MenuType	{
+			/// <summary>Not a sub menu</summary>
+			None,
+			/// <summary>Returns to the menu level above</summary>
+			Top,
+			/// <summary>The station jump menu</summary>
+			JumpToStation,
+			/// <summary>Returns to the main menu</summary>
+			ExitToMainMenu,
+			/// <summary>Provides a list of controls and allows customisation whilst in-game</summary>
+			Controls,
+			/// <summary>Customises the specified control</summary>
+			Control,
+			/// <summary>Quits the game</summary>
+			Quit
+		};
 
 		// components of the semi-transparent screen overlay
 		private const float					ovlR			= 0.00f;
@@ -298,6 +313,8 @@ namespace OpenBve
 		internal	int					LineHeight				{ get { return lineHeight; } }
 		internal	Fonts.OpenGlFont	MenuFont 				{ get { return menuFont; } }
 
+		internal OpenTK.Input.Key		MenuBackKey;
+
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
@@ -305,6 +322,8 @@ namespace OpenBve
 		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
 		static Menu()	{ }
 		private Menu()	{ }
+
+		/// <summary>Returns the current menu instance (If applicable)</summary>
 		public static Menu Instance	{ get { return instance; } }
 
 		/********************
@@ -326,6 +345,15 @@ namespace OpenBve
 			else 							menuFont	= Fonts.EvenLargerFont;
 			em				= (int)menuFont.FontSize;
 			lineHeight		= (int)(em * LineSpacing);
+			for(int i= 0; i < Interface.CurrentControls.Length; i++)
+			{
+				//Find the current menu back key- It's unlikely that we want to set a new key to this
+				if(Interface.CurrentControls[i].Command == Interface.Command.MenuBack)
+				{
+					MenuBackKey = Interface.CurrentControls[i].Key;
+					break;
+				}
+			}
 			isInitialized	= true;
 		}
 
@@ -342,6 +370,10 @@ namespace OpenBve
 		//
 		// PUSH ANOTHER MENU
 		//
+
+		/// <summary>Pushes a menu into the menu stack</summary>
+		/// <param name= "type">The type of menu to push</param>
+		/// <param name= "data">The index of the menu in the menu stack (If pushing an existing higher level menu)</param>
 		public void PushMenu(MenuType type, int data = 0)
 		{
 			if (!isInitialized)
@@ -357,6 +389,7 @@ namespace OpenBve
 		//
 		// POP LAST MENU
 		//
+		/// <summary>Pops the previous menu in the menu stack</summary>
 		public void PopMenu()
 		{
 			if (CurrMenu > 0)			// if more than one menu remaining...
@@ -374,6 +407,8 @@ namespace OpenBve
 		//
 		// IS CUSTOMIZING CONTROL?
 		//
+		/// <summary>Whether we are currently customising a control (Used for key/ joystick capture)</summary>
+		/// <returns>True if currently capturing a control, false otherwise</returns>
 		public bool IsCustomizingControl()
 		{
 			return isCustomisingControl;
@@ -384,19 +419,21 @@ namespace OpenBve
 		//
 		internal void SetControlKbdCustomData(Key key, Interface.KeyboardModifier keybMod)
 		{
-			if (isCustomisingControl)
+			//Check that we are customising a key, and that our key is NOT the menu back key
+			if (isCustomisingControl && key != MenuBackKey && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				Interface.CurrentControls[CustomControlIdx].Method		= Interface.ControlMethod.Keyboard;
-				Interface.CurrentControls[CustomControlIdx].Key			= key;
-				Interface.CurrentControls[CustomControlIdx].Modifier	= keybMod;
+				Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Keyboard;
+				Interface.CurrentControls[CustomControlIdx].Key = key;
+				Interface.CurrentControls[CustomControlIdx].Modifier = keybMod;
 				Interface.SaveControls(null);
-				PopMenu();
-				isCustomisingControl	= false;
 			}
+			PopMenu();
+			isCustomisingControl	= false;
+			
 		}
 		internal void SetControlJoyCustomData(int device, Interface.JoystickComponent component, int element, int dir)
 		{
-			if (isCustomisingControl)
+			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
 				Interface.CurrentControls[CustomControlIdx].Method		= Interface.ControlMethod.Joystick;
 				Interface.CurrentControls[CustomControlIdx].Device		= device;
@@ -417,6 +454,11 @@ namespace OpenBve
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
 		internal bool ProcessMouseMove(int x, int y)
 		{
+			//
+			if (CurrMenu < 0)
+			{
+				return false;
+			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Game.CurrentInterface != Game.InterfaceType.Menu ||
 				isCustomisingControl ||
@@ -460,6 +502,11 @@ namespace OpenBve
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
 		internal void ProcessCommand(Interface.Command cmd, double timeElapsed)
 		{
+			
+			if (CurrMenu < 0)
+			{
+				return;
+			}
 			// MenuBack is managed independently from single menu data
 			if (cmd == Interface.Command.MenuBack)
 			{

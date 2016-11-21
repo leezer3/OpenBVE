@@ -40,6 +40,9 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static Random RandomNumberGenerator = new Random();
 
+		/// <summary>Whether the program will generate a considerably more verbose debug log (WIP)</summary>
+		internal static bool GenerateDebugLogging = false;
+
 		public static GameWindow currentGameWindow;
 		
 		// --- functions ---
@@ -82,7 +85,7 @@ namespace OpenBve {
 			}
 
 			//Platform specific startup checks
-			if (CurrentlyRunningOnMono)
+			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
 			{
 				// --- Check if we're running as root, and prompt not to ---
 				if (getuid() == 0)
@@ -260,7 +263,7 @@ namespace OpenBve {
 						if (!found)
 						{
 							MessageBox.Show("The route and train loader encountered the following critical error: " + Environment.NewLine + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-							CrashHandler.LoadingCrash(ex.Message, false);
+							CrashHandler.LoadingCrash(ex.ToString(), false);
 							RestartArguments = "";
 						}
 					}
@@ -338,7 +341,7 @@ namespace OpenBve {
 		internal static void AppendToLogFile(string text) {
 			try {
 				string file = System.IO.Path.Combine(Program.FileSystem.SettingsFolder, "log.txt");
-				System.IO.File.AppendAllText(file, text + "\n", new System.Text.UTF8Encoding(false));
+				System.IO.File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new System.Text.UTF8Encoding(false));
 			} catch { }
 		}
 

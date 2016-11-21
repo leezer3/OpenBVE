@@ -56,7 +56,7 @@ namespace OpenBve {
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal Textures.Texture[] TimetableDaytime;
 			internal Textures.Texture[] TimetableNighttime;
-			internal World.Background[] Backgrounds;
+			internal BackgroundManager.BackgroundHandle[] Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
@@ -161,7 +161,7 @@ namespace OpenBve {
 				Data.Structure.RailCycle = new int[][] { };
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
-				Data.Backgrounds = new World.Background[] {};
+				Data.Backgrounds = new BackgroundManager.StaticBackground[] {};
 				Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
 				// signals
@@ -1193,7 +1193,7 @@ namespace OpenBve {
 			}
 			if (fcb != 0 && fcb < Expression.Text.Length - 1)
 			{
-				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]) && Expression.Text[fcb + 1] != '.')
+				if (!Char.IsWhiteSpace(Expression.Text[fcb + 1]) && Expression.Text[fcb + 1] != '.' && Expression.Text[fcb + 1] != ';')
 				{
 					Expression.Text = Expression.Text.Insert(fcb + 1, " ");
 					i = fcb;
@@ -1752,6 +1752,11 @@ namespace OpenBve {
 									} break;
 								case "route.ambientlight":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
+											break;
+										}
 										int r = 255, g = 255, b = 255;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseIntVb6(Arguments[0], out r)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1775,6 +1780,11 @@ namespace OpenBve {
 									} break;
 								case "route.directionallight":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
+											break;
+										}
 										int r = 255, g = 255, b = 255;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseIntVb6(Arguments[0], out r)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RedValue is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1799,6 +1809,11 @@ namespace OpenBve {
 									break;
 								case "route.lightdirection":
 									{
+										if (Renderer.DynamicLighting == true)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
+											break;
+										}
 										double theta = 60.0, phi = -26.565051177078;
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !Interface.TryParseDoubleVb6(Arguments[0], out theta)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "Theta is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1813,6 +1828,25 @@ namespace OpenBve {
 										double dz = Math.Cos(theta) * Math.Cos(phi);
 										Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
 									} break;
+								case "route.dynamiclight":
+									//Read the lighting XML file
+									string path = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+									if (System.IO.File.Exists(path))
+									{
+										if (DynamicLightParser.ReadLightingXML(path))
+										{
+											Renderer.DynamicLighting = true;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The file " + path + " is not a valid dynamic lighting XML file, at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+									}
+									else
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									break;
 									// train
 								case "train.folder":
 								case "train.file":
@@ -2515,16 +2549,39 @@ namespace OpenBve {
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
 														int a = Data.Backgrounds.Length;
-														Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+														Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 														for (int k = a; k <= CommandIndex1; k++) {
-															Data.Backgrounds[k] = new World.Background(null, 6, false);
+															Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 														}
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Textures.RegisterTexture(f, out Data.Backgrounds[CommandIndex1].Texture);
+														if (f.ToLowerInvariant().EndsWith(".xml"))
+														{
+															try
+															{
+																BackgroundManager.BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
+																Data.Backgrounds[CommandIndex1] = h;
+															}
+															catch
+															{
+																Interface.AddMessage(Interface.MessageType.Error, true, f + " is not a valid background XML in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															}
+														}
+														else
+														{
+															if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+															{
+																BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+																if (b != null)
+																{
+																	Textures.RegisterTexture(f, out b.Texture);
+																}
+
+															}
+														}
 													}
 												}
 											}
@@ -2535,24 +2592,28 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + CommandIndex1 + " is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
 												}
 												int x;
 												if (!Interface.TryParseIntVb6(Arguments[0], out x)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else if (x == 0) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].Repetition = x;
+													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													if (b != null)
+													{
+														b.Repetition = x;
+													}
 												}
 											}
 										}
@@ -2562,24 +2623,29 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + CommandIndex1 + " is expected to be non-negative at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
 												}
 												int aspect;
 												if (!Interface.TryParseIntVb6(Arguments[0], out aspect)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + Arguments[0] + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].KeepAspectRatio = aspect == 1;
+													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													if (b != null)
+													{
+														b.KeepAspectRatio = aspect == 1;
+													}
+													
 												}
 											}
 										}
@@ -2816,6 +2882,7 @@ namespace OpenBve {
 								case "route.elevation":
 								case "route.temperature":
 								case "route.pressure":
+								case "route.dynamiclight":
 								case "route.ambientlight":
 								case "route.directionallight":
 								case "route.lightdirection":
@@ -4441,9 +4508,25 @@ namespace OpenBve {
 											}
 											if (typ < 0 | typ >= Data.Backgrounds.Length) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " references a texture not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Data.Backgrounds[typ].Texture == null) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else {
+											} else if (Data.Backgrounds[typ] is BackgroundManager.StaticBackground) {
+												BackgroundManager.StaticBackground b = Data.Backgrounds[typ] as BackgroundManager.StaticBackground;
+												if (b.Texture == null)
+												{
+													//There's a possibility that this was loaded via a default BVE command rather than XML
+													//Thus check for the existance of the file and chuck out error if appropriate
+													Interface.AddMessage(Interface.MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												}
+												else
+												{
+													Data.Blocks[BlockIndex].Background = typ;
+												}
+											} else if (Data.Backgrounds[typ] is BackgroundManager.DynamicBackground)
+											{
+												//File existance checks should already have been made when loading the XML
+												Data.Blocks[BlockIndex].Background = typ;
+											}
+											else {
+												//Object based backgrounds not yet implemented
 												Data.Blocks[BlockIndex].Background = typ;
 											}
 										}
@@ -4790,11 +4873,11 @@ namespace OpenBve {
 			// background
 			if (!PreviewOnly) {
 				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Length) {
-					World.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					BackgroundManager.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				} else {
-					World.CurrentBackground = new World.Background(null, 6, false);
+					BackgroundManager.CurrentBackground = new BackgroundManager.StaticBackground(null, 6, false);
 				}
-				World.TargetBackground = World.CurrentBackground;
+				BackgroundManager.TargetBackground = BackgroundManager.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;
@@ -4856,7 +4939,7 @@ namespace OpenBve {
 				TrackManager.CurrentTrack.Elements[n].WorldPosition = Position;
 				TrackManager.CurrentTrack.Elements[n].WorldDirection = Vector3.GetVector3(Direction, Data.Blocks[i].Pitch);
 				TrackManager.CurrentTrack.Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
-				World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection.X, TrackManager.CurrentTrack.Elements[n].WorldDirection.Y, TrackManager.CurrentTrack.Elements[n].WorldDirection.Z, TrackManager.CurrentTrack.Elements[n].WorldSide.X, TrackManager.CurrentTrack.Elements[n].WorldSide.Y, TrackManager.CurrentTrack.Elements[n].WorldSide.Z, out TrackManager.CurrentTrack.Elements[n].WorldUp.X, out TrackManager.CurrentTrack.Elements[n].WorldUp.Y, out TrackManager.CurrentTrack.Elements[n].WorldUp.Z);
+				World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide, out TrackManager.CurrentTrack.Elements[n].WorldUp);
 				TrackManager.CurrentTrack.Elements[n].StartingTrackPosition = StartingDistance;
 				TrackManager.CurrentTrack.Elements[n].Events = new TrackManager.GeneralEvent[] { };
 				TrackManager.CurrentTrack.Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
@@ -5067,7 +5150,7 @@ namespace OpenBve {
 					World.Rotate(ref Direction, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
-					World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection.X, TrackManager.CurrentTrack.Elements[n].WorldDirection.Y, TrackManager.CurrentTrack.Elements[n].WorldDirection.Z, TrackManager.CurrentTrack.Elements[n].WorldSide.X, TrackManager.CurrentTrack.Elements[n].WorldSide.Y, TrackManager.CurrentTrack.Elements[n].WorldSide.Z, out TrackManager.CurrentTrack.Elements[n].WorldUp.X, out TrackManager.CurrentTrack.Elements[n].WorldUp.Y, out TrackManager.CurrentTrack.Elements[n].WorldUp.Z);
+					World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide, out TrackManager.CurrentTrack.Elements[n].WorldUp);
 				}
 				//Pitch
 				if (Data.Blocks[i].Pitch != 0.0)
@@ -6227,9 +6310,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(g);
 									double sing = Math.Sin(g);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide.X, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Y, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Z, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide, 0.0, 1.0, 0.0, cosg, sing);
 									p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
 									TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
 									TrackManager.UpdateTrackFollower(ref follower, p, true, false);
@@ -6245,9 +6328,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(newAngle);
 									double sing = Math.Sin(newAngle);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide.X, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Y, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Z, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, 0.0, 1.0, 0.0, cosg, sing);
+									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide, 0.0, 1.0, 0.0, cosg, sing);
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
@@ -6287,8 +6370,8 @@ namespace OpenBve {
 							if (b * b > 0.00000001) {
 								double cosa = Math.Cos(b);
 								double sina = Math.Sin(b);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, TrackManager.CurrentTrack.Elements[i].WorldSide.X, TrackManager.CurrentTrack.Elements[i].WorldSide.Y, TrackManager.CurrentTrack.Elements[i].WorldSide.Z, cosa, sina);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, TrackManager.CurrentTrack.Elements[i].WorldSide.X, TrackManager.CurrentTrack.Elements[i].WorldSide.Y, TrackManager.CurrentTrack.Elements[i].WorldSide.Z, cosa, sina);
+								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
+								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
 							}
 						}
 					}

@@ -63,7 +63,11 @@ namespace OpenBve {
 				return;
 			}
 			populateRouteList(rf);
-			listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			//If this method is triggered whilst the form is disposing, bad things happen...
+			if (listviewRouteFiles.Columns.Count > 0)
+			{
+				listviewRouteFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
 		}
 
 		/// <summary>Populates the route display list from the selected folder</summary>
@@ -739,6 +743,12 @@ namespace OpenBve {
 							comboboxRouteEncoding.Items[0] = "(UTF-32 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(12001);
 							break;
+						case Interface.Encoding.Shift_JIS:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
+							break;
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();
@@ -893,6 +903,7 @@ namespace OpenBve {
 			} catch {
 				Folder = null;
 			}
+			bool recursionTest = false;
 			try {
 				while (true) {
 					string TrainFolder = OpenBveApi.Path.CombineDirectory(Folder, "Train");
@@ -915,12 +926,18 @@ namespace OpenBve {
 									ShowTrain(false);
 									return;
 								}
+								if (recursionTest)
+								{
+									break;
+								}
+								
 							}
 							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail
 								//Detect the presence of a railway folder and carry on traversing upwards if this is the case
+								recursionTest = true;
 								Folder = OldFolder;
 							}
 							else
