@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -416,7 +415,7 @@ namespace OpenBve {
 #endif
 						string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
 						Interface.LoadLanguage(File);
-						ApplyLanguage(Interface.CurrentLanguageCode);
+						ApplyLanguage();
 #if !DEBUG
 					}
 					catch (Exception ex)
@@ -450,22 +449,12 @@ namespace OpenBve {
 			
 		}
 
-		/// <summary>This function is called to change the display language of the program</summary>
-		private void ApplyLanguage(string Language)
-		{
-			//Set command infos to the translated strings
-			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
-			{
-				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (Interface.AvailableLangauges[i].LanguageCode == Language)
-				{
-					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
-					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
-					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
-					break;
-				}
-			}
+		
 
+		/// <summary>This function is called to change the display language of the program</summary>
+		private void ApplyLanguage()
+		{
+			Interface.SetInGameLanguage(Interface.CurrentLanguageCode);
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -1656,5 +1645,5 @@ namespace OpenBve {
 			var bugReportForm = new formBugReport();
 			bugReportForm.ShowDialog();
 		}
-    }
+	}
 }

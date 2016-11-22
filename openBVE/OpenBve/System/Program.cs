@@ -250,6 +250,8 @@ namespace OpenBve {
 				result = formMain.ShowMainDialog(result);
 			} else {
 				result.Start = true;
+				//Apply translations
+				Interface.SetInGameLanguage(Interface.CurrentLanguageCode);
 			}
 			// --- start the actual program ---
 			if (result.Start) {

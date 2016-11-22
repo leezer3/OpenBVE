@@ -42,7 +42,7 @@ namespace OpenBve {
 					#if !DEBUG
 				} catch { }
 				#endif
-				ApplyLanguage(Interface.CurrentLanguageCode);
+				ApplyLanguage();
 			}
 		}
 
