@@ -87,8 +87,10 @@ namespace OpenBve
 		}
 		internal static Station[] Stations = new Station[] { };
 
+		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
 		internal static string InitialStationName;
-
+		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
+		internal static double InitialStationTime = -1;
 
 		/// <summary>Gets the index of the stop corresponding to the train's number of cars</summary>
 		/// <param name="StationIndex">The index of the station in the stations array</param>

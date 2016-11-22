@@ -184,6 +184,15 @@ namespace OpenBve {
 					}
 				} else if (args[i].StartsWith("/station=", StringComparison.OrdinalIgnoreCase)) {
 					result.InitialStation = args[i].Substring(9);
+				} else if (args[i].StartsWith("/time=", StringComparison.OrdinalIgnoreCase)) {
+					var t = args[i].Substring(6);
+					Interface.TryParseTime(t, out result.StartTime);
+				}
+				else if (args[i].StartsWith("/ai=", StringComparison.OrdinalIgnoreCase)) {
+					var t = args[i].Substring(4);
+					if (t.ToLowerInvariant() == "true" || t == "1") {
+						result.AIDriver = true;
+					}
 				}
 			}
 			// --- check whether route and train exist ---

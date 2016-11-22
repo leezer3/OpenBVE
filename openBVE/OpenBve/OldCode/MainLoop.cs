@@ -39,10 +39,19 @@ namespace OpenBve {
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Sounds.Initialize();
+			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
 			{
 				//We have supplied a station name or index to the loader
 				Game.InitialStationName = result.InitialStation;
+			}
+			if (result.StartTime != default(double))
+			{
+				Game.InitialStationTime = result.StartTime;
+			}
+			if (result.AIDriver == true)
+			{
+				Game.InitialAIDriver = true;
 			}
 			currentResult = result;
 			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,

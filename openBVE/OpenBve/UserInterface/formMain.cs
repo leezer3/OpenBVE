@@ -34,6 +34,8 @@ namespace OpenBve {
 			internal string TrainFolder;
 			internal System.Text.Encoding TrainEncoding;
 			internal string InitialStation;
+			internal double StartTime;
+			internal bool AIDriver;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
 		{
