@@ -39,6 +39,11 @@ namespace OpenBve {
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Sounds.Initialize();
+			if (result.InitialStation != null)
+			{
+				//We have supplied a station name or index to the loader
+				Game.InitialStationName = result.InitialStation;
+			}
 			currentResult = result;
 			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,
 				Interface.CurrentOptions.AntiAliasingLevel);

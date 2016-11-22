@@ -163,7 +163,8 @@ namespace OpenBve {
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
 			for (int i = 0; i < args.Length; i++) {
-				if (args[i].StartsWith("/route=", StringComparison.OrdinalIgnoreCase)) {
+				if (args[i].StartsWith("/route=", StringComparison.OrdinalIgnoreCase))
+				{
 					result.RouteFile = args[i].Substring(7);
 					result.RouteEncoding = System.Text.Encoding.UTF8;
 					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
@@ -181,11 +182,14 @@ namespace OpenBve {
 							break;
 						}
 					}
+				} else if (args[i].StartsWith("/station=", StringComparison.OrdinalIgnoreCase)) {
+					result.InitialStation = args[i].Substring(9);
 				}
 			}
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
-				if (!System.IO.File.Exists(result.RouteFile)) {
+				if (!System.IO.File.Exists(result.RouteFile))
+				{
 					result.RouteFile = null;
 				}
 			}

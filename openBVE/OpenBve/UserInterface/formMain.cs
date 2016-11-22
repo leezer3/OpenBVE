@@ -33,6 +33,7 @@ namespace OpenBve {
 			internal System.Text.Encoding RouteEncoding;
 			internal string TrainFolder;
 			internal System.Text.Encoding TrainEncoding;
+			internal string InitialStation;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
 		{
