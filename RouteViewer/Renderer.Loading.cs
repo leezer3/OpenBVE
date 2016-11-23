@@ -30,7 +30,7 @@ namespace OpenBve
 		private const int numOfLoadingBkgs = 7;
 
 		private static bool customLoadScreen = false;
-		private static int TextureLoadingBkg = -1;
+		internal static int TextureLoadingBkg = -1;
 		private static int TextureLogo = -1;
 		private static string[] LogoFileName = { "logo_256.png", "logo_512.png", "logo_1024.png" };
 
@@ -43,21 +43,14 @@ namespace OpenBve
 			customLoadScreen = false;
 			string Path = Program.FileSystem.GetDataFolder("In-game");
 			int bkgNo = Game.Generator.Next(numOfLoadingBkgs);
-			if (Program.ReloadTexture != -1)
+			if(TextureLoadingBkg == -1)
 			{
-				int tl = TextureManager.Textures.Length;
-				Array.Resize(ref TextureManager.Textures, tl + 1);
-				TextureManager.Textures[tl] = new TextureManager.Texture();
-				TextureManager.Textures[tl].OpenGlTextureIndex = Program.ReloadTexture;
-				TextureManager.Textures[tl].Width = Renderer.ScreenWidth;
-				TextureManager.Textures[tl].Height = Renderer.ScreenHeight;
-				TextureManager.Textures[tl].VFlip = true;
-				TextureLoadingBkg = tl;
-			}
-			else
-			{
-				TextureLoadingBkg = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png"), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-				TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+				string file = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
+				if (System.IO.File.Exists(file))
+				{
+					TextureLoadingBkg = TextureManager.RegisterTexture(file, TextureManager.TextureWrapMode.ClampToEdge,TextureManager.TextureWrapMode.ClampToEdge, false);
+					TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+				}
 			}
 			
 			// choose logo size according to screen width
@@ -65,9 +58,12 @@ namespace OpenBve
 			if (Renderer.ScreenWidth > 2048) fName = LogoFileName[2];
 			else if (Renderer.ScreenWidth > 1024) fName = LogoFileName[1];
 			else fName = LogoFileName[0];
-			TextureLogo = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Path, fName), TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-			TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
-			Thread.Sleep(10);
+			fName = OpenBveApi.Path.CombineFile(Path, fName);
+			if (System.IO.File.Exists(fName))
+			{
+				TextureLogo = TextureManager.RegisterTexture(fName, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+				TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
+			}
 
 		}
 
@@ -115,23 +111,26 @@ namespace OpenBve
 			//			int		versionTop;
 			int halfWidth = Renderer.ScreenWidth / 2;
 			bool bkgLoaded = TextureLoadingBkg != -1;
-			// stretch the background image to fit at least one screen dimension
-			double ratio = bkgLoaded ? (double)TextureManager.Textures[TextureLoadingBkg].Width / (double)TextureManager.Textures[TextureLoadingBkg].Height : 1.0;
-			if (Renderer.ScreenWidth / ratio > Renderer.ScreenHeight)		// if screen ratio is shorter than bkg...
+			if (TextureLoadingBkg != -1)
 			{
-				bkgHeight = Renderer.ScreenHeight;				// set height to screen height
-				bkgWidth = (int)(Renderer.ScreenHeight * ratio);	// and scale width proprtionally
+				// stretch the background image to fit at least one screen dimension
+				double ratio = (double) TextureManager.Textures[TextureLoadingBkg].Width/ (double) TextureManager.Textures[TextureLoadingBkg].Height;
+				if ((double) Renderer.ScreenWidth/ratio > Renderer.ScreenHeight) // if screen ratio is shorter than bkg...
+				{
+					bkgHeight = Renderer.ScreenHeight; // set height to screen height
+					bkgWidth = (int) (Renderer.ScreenWidth*ratio); // and scale width proprtionally
+				}
+				else // if screen ratio is wider than bkg...
+				{
+					bkgWidth = Renderer.ScreenWidth; // set width to screen width
+					bkgHeight = (int) (Renderer.ScreenHeight/ratio); // and scale height accordingly
+				}
+				// draw the background image down from the top screen edge
+				DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
 			}
-			else											// if screen ratio is wider than bkg...
-			{
-				bkgWidth = Renderer.ScreenWidth;					// set width to screen width
-				bkgHeight = (int)(Renderer.ScreenWidth / ratio);	// and scale height accordingly
-			}
-			// draw the background image down from the top screen edge
-			DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth) / 2, 0),new Size(bkgWidth, bkgHeight), Color128.White);
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
-			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo)
+			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo && TextureLogo != -1)
 			{
 				// place the centre of the logo at from the screen top
 				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureManager.Textures[TextureLogo].Height / 2.0);

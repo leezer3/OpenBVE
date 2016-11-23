@@ -26,7 +26,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
@@ -93,7 +93,7 @@
     <Compile Include="Parsers\XObjectParser.cs" />
     <Compile Include="Renderer.Loading.cs" />
     <Compile Include="Renderer.Primitives.cs" />
-	<Compile Include="Renderer.Strings.cs" />
+    <Compile Include="Renderer.Strings.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="System\FileSystem.cs" />

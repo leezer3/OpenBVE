@@ -356,6 +356,8 @@ namespace OpenBve
 				TransparentColorUsed = 0,
 				FileName = null,
 				Loaded = true,
+				Width = Bitmap.Width,
+				Height = Bitmap.Height,
 				DontAllowUnload = true
 			};
 			if (Alpha)
@@ -385,6 +387,8 @@ namespace OpenBve
 				TransparentColorUsed = 1,
 				FileName = null,
 				Loaded = true,
+				Width =  Bitmap.Width,
+				Height = Bitmap.Height,
 				DontAllowUnload = true
 			};
 			LoadTextureRGBAforData(Bitmap, Textures[i].TransparentColor, Textures[i].TransparentColorUsed, i);
