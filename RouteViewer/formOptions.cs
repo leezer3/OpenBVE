@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using OpenTK.Graphics;
 
@@ -15,6 +16,9 @@ namespace OpenBve
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
+			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
+			checkBoxBackgrounds.Checked = Interface.CurrentOptions.LoadingBackground;
+			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
         }
 
         internal static DialogResult ShowOptions()
@@ -29,11 +33,16 @@ namespace OpenBve
             button1.Focus();
         }
 
+	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
+	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
+	    readonly TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+	    readonly bool PreviousSort = Renderer.TransparentColorDepthSorting;
+	    private bool GraphicsModeChanged = false;
+
         private void button1_Click(object sender, EventArgs e)
         {
-            TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-            int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
-            int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
+            
+            
 
             //Interpolation mode
             switch (InterpolationMode.SelectedIndex)
@@ -64,6 +73,7 @@ namespace OpenBve
             if (Interface.CurrentOptions.AntialiasingLevel != previousAntialasingLevel)
             {
                 Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
+	            GraphicsModeChanged = true;
             }
             //Transparency quality
             switch (TransparencyQuality.SelectedIndex)
@@ -75,40 +85,36 @@ namespace OpenBve
                     Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
                     break;
             }
-            //Set width and height
-            if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
-            {
-                Renderer.ScreenWidth = (int) width.Value;
-                Renderer.ScreenHeight = (int) height.Value;
-                Program.currentGameWindow.Width = (int) width.Value;
-                Program.currentGameWindow.Height = (int) height.Value;
-                Program.UpdateViewport();
-            }
-            //Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-            if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
-            {
-                if (Program.CurrentRoute != null)
-                {
-                    Program.CurrentlyLoading = true;
-                    Renderer.RenderScene(0.0);
-                    Program.currentGameWindow.SwapBuffers();
-                    World.CameraAlignment a = World.CameraCurrentAlignment;
-                    if (Program.LoadRoute())
-                    {
-                        World.CameraCurrentAlignment = a;
-                        TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-                        TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
-                        World.CameraAlignmentDirection = new World.CameraAlignment();
-                        World.CameraAlignmentSpeed = new World.CameraAlignment();
-                        ObjectManager.UpdateVisibility(a.TrackPosition, true);
-                        ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
-                    }
-                    Program.CurrentlyLoading = false;
-                }
-            }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
-            Options.SaveOptions();
-            this.Dispose();
+			//Set width and height
+			if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+			{
+				Renderer.ScreenWidth = (int)width.Value;
+				Renderer.ScreenHeight = (int)height.Value;
+				Program.currentGameWindow.Width = (int)width.Value;
+				Program.currentGameWindow.Height = (int)height.Value;
+				Program.UpdateViewport();
+			}
+			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
+			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
+			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
+			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
+			Options.SaveOptions();
+			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || PreviousSort != Renderer.TransparentColorDepthSorting || GraphicsModeChanged)
+			{
+				this.DialogResult = DialogResult.OK;
+			}
+			else
+			{
+				this.DialogResult = DialogResult.Abort;
+			}
+
+
         }
+
+	    protected override void OnClosing(CancelEventArgs cancelEventArgs)
+	    {
+			
+	    }
     }
 }
