@@ -33,6 +33,7 @@ namespace OpenBve {
 		internal static int CurrentStation = -1;
 		internal static bool JumpToPositionEnabled = false;
 		internal static string JumpToPositionValue = "";
+		internal static double MinimumJumpToPositionValue =  0;
 		internal static bool processCommandLineArgs;
 		internal static string[] commandLineArguments;
 		internal static bool[] SkipArgs;
@@ -506,7 +507,7 @@ namespace OpenBve {
 							double value;
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,
 								out value))
-		                        if (value < TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100)
+								if (value < TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
 							{
 								if (direction != 0)
 								{
@@ -521,7 +522,6 @@ namespace OpenBve {
 						}
 						JumpToPositionEnabled = false;
 						CpuReducedMode = false;
-					}
 					break;
 				case Key.Escape:
 					JumpToPositionEnabled = false;

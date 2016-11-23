@@ -988,24 +988,21 @@ namespace OpenBve {
 					Keys = new string[][] { new string[] { null, "/", "*" }, new string[] { "7", "8", "9" }, new string[] { "4", "5", "6" }, new string[] { "1", "2", "3" }, new string[] { null, "0", "." } };
 					RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Keys);
 					if (Program.JumpToPositionEnabled) {
-						RenderString(4.0, 84.0, Fonts.FontType.Small, "Jump to track position:", -1, 1.0f, 1.0f, 1.0f, true);
+						DrawString(Fonts.SmallFont, "Jump to track position:", new Point(4, 80),TextAlignment.TopLeft, Color128.White, true);
 						double distance;
 						if (Double.TryParse(Program.JumpToPositionValue, out distance))
 						{
-							if (distance > TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100)
+							if (distance < Program.MinimumJumpToPositionValue - 100)
 							{
-								RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 0.5f, 0.5f, true);
+								DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, Color128.Red, true);
 							}
 							else
 							{
-								RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
+								DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, distance > TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100
+								? Color128.Red : Color128.Yellow, true);
 							}
+							
 						}
-						else
-						{
-							RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 0.5f, 0.5f, true);
-						}
-						//RenderString(4.0, 100.0, Fonts.FontType.Small, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), -1, 1.0f, 1.0f, 0.0f, true);
 					}
 					// info
 					double x = 0.5 * (double)ScreenWidth - 256.0;
