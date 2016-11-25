@@ -35,6 +35,9 @@ namespace OpenBve {
 			internal string InitialStation;
 			internal double StartTime;
 			internal bool AIDriver;
+			internal bool FullScreen;
+			internal int Width;
+			internal int Height;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
 		{
@@ -953,7 +956,7 @@ namespace OpenBve {
 			// remove non-existing route encoding mappings
 			{
 				int n = 0;
-				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
+				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
 				{
 					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
@@ -962,13 +965,13 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<Interface.EncodingValue>(ref a, n);
+				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.RouteEncodings = a;
 			}
 			// remove non-existing train encoding mappings
 			{
 				int n = 0;
-				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
+				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++)
 				{
 					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
@@ -977,7 +980,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<Interface.EncodingValue>(ref a, n);
+				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();

@@ -162,39 +162,7 @@ namespace OpenBve {
 			
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
-			for (int i = 0; i < args.Length; i++) {
-				if (args[i].StartsWith("/route=", StringComparison.OrdinalIgnoreCase))
-				{
-					result.RouteFile = args[i].Substring(7);
-					result.RouteEncoding = System.Text.Encoding.UTF8;
-					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-						if (string.Compare(Interface.CurrentOptions.RouteEncodings[j].Value, result.RouteFile, StringComparison.InvariantCultureIgnoreCase) == 0) {
-							result.RouteEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.RouteEncodings[j].Codepage);
-							break;
-						}
-					}
-				} else if (args[i].StartsWith("/train=", StringComparison.OrdinalIgnoreCase)) {
-					result.TrainFolder = args[i].Substring(7);
-					result.TrainEncoding = System.Text.Encoding.UTF8;
-					for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
-						if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-							result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
-							break;
-						}
-					}
-				} else if (args[i].StartsWith("/station=", StringComparison.OrdinalIgnoreCase)) {
-					result.InitialStation = args[i].Substring(9);
-				} else if (args[i].StartsWith("/time=", StringComparison.OrdinalIgnoreCase)) {
-					var t = args[i].Substring(6);
-					Interface.TryParseTime(t, out result.StartTime);
-				}
-				else if (args[i].StartsWith("/ai=", StringComparison.OrdinalIgnoreCase)) {
-					var t = args[i].Substring(4);
-					if (t.ToLowerInvariant() == "true" || t == "1") {
-						result.AIDriver = true;
-					}
-				}
-			}
+			CommandLine.ParseArguments(args, ref result);
 			// --- check whether route and train exist ---
 			if (result.RouteFile != null) {
 				if (!System.IO.File.Exists(result.RouteFile))
@@ -310,11 +278,6 @@ namespace OpenBve {
 				return false;
 			}
 			
-			if (!Screen.Initialize()) {
-				MessageBox.Show("SDL failed to initialize the video subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				return false;
-			}
-			
 			Joysticks.RefreshJoysticks();
 			// begin HACK //
 			
@@ -336,7 +299,6 @@ namespace OpenBve {
 		private static void Deinitialize() {
 			Plugins.UnloadPlugins();
 			Sounds.Deinitialize();
-			Screen.Deinitialize();
 			if (currentGameWindow != null)
 			{
 				currentGameWindow.Dispose();

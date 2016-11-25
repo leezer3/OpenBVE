@@ -53,6 +53,25 @@ namespace OpenBve {
 			{
 				Game.InitialAIDriver = true;
 			}
+			if (result.FullScreen == true)
+			{
+				Interface.CurrentOptions.FullscreenMode = true;
+			}
+			if (result.Width != default(double) && result.Height != default(double))
+			{
+				if (Interface.CurrentOptions.FullscreenMode == true)
+				{
+					Interface.CurrentOptions.FullscreenWidth = result.Width;
+					Interface.CurrentOptions.FullscreenHeight = result.Height;
+					
+				}
+				else
+				{
+					Interface.CurrentOptions.WindowWidth = result.Width;
+					Interface.CurrentOptions.WindowHeight = result.Height;
+				}
+			}
+			Screen.Initialize();
 			currentResult = result;
 			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,
 				Interface.CurrentOptions.AntiAliasingLevel);
