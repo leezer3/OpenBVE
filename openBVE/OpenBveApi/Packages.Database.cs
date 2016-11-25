@@ -110,7 +110,7 @@ namespace OpenBveApi.Packages
 		/// <summary>Checks a list of dependancies or reccomendations to see if they are installed</summary>
 		public static List<Package> checkDependsReccomends(List<Package> currentList)
 		{
-			foreach (Package currentDependancy in currentList)
+			foreach (Package currentDependancy in currentList.ToList())
 			{
 				switch (currentDependancy.PackageType)
 				{
