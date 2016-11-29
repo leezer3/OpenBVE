@@ -762,7 +762,11 @@ namespace OpenBve
 				{
 					throw new DirectoryNotFoundException(directory);
 				}
-				System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				if (!Program.CurrentlyRunningOnMono)
+				{
+					//Mono doesn't support System.Security.AccessControl, so this doesn't work....
+					System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				}
 				using (FileStream fs = File.OpenWrite(currentPackage.FileName))
 				{
 					//Just attempt to open the file with to write as a test
@@ -1283,8 +1287,9 @@ namespace OpenBve
 				var MonoDialog = new FolderBrowserDialog();
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					folder = MonoDialog.SelectedPath;
-					files = System.IO.Directory.GetFiles(folder, "*.*", System.IO.SearchOption.AllDirectories);
+					folder = System.IO.Directory.GetParent(MonoDialog.SelectedPath).ToString();
+					folderDisplay = MonoDialog.SelectedPath;
+					files = System.IO.Directory.GetFiles(folderDisplay, "*.*", System.IO.SearchOption.AllDirectories);
 					DialogOK = true;
 				}
 			}
