@@ -28,10 +28,17 @@ namespace OpenBve {
 		// show main dialog
 		internal struct MainDialogResult
 		{
+			/// <summary>Whether to start the simulation</summary>
 			internal bool Start;
+			/// <summary>The absolute on-disk path of the route file to start the simulation with</summary>
 			internal string RouteFile;
+			/// <summary>The last file an error was encountered on (Used for changing character encodings)</summary>
+			internal string ErrorFile;
+			/// <summary>The text encoding of the selected route file</summary>
 			internal System.Text.Encoding RouteEncoding;
+			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
 			internal string TrainFolder;
+			/// <summary>The text encoding of the selected train</summary>
 			internal System.Text.Encoding TrainEncoding;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
@@ -433,10 +440,6 @@ namespace OpenBve {
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			// result
 			Result.Start = false;
-			//			Result.RouteFile = null;
-			//			Result.RouteEncoding = System.Text.Encoding.UTF8;
-			//			Result.TrainFolder = null;
-			//			Result.TrainEncoding = System.Text.Encoding.UTF8;
 
 			routeWorkerThread = new BackgroundWorker();
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
