@@ -926,6 +926,7 @@ namespace OpenBve {
 							Folder = null;
 						}
 						if (Folder != null) {
+							char c = System.IO.Path.DirectorySeparatorChar;
 							if (System.IO.Directory.Exists(Folder))
 							{
 
@@ -943,7 +944,7 @@ namespace OpenBve {
 								}
 								
 							}
-							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
+							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail
