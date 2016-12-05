@@ -1044,7 +1044,7 @@ namespace OpenBve
 
 		private void dataGridViewReplacePackage_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewReplacePackage.SelectedRows.Count > 0 || listPopulating == true)
+			if (dataGridViewReplacePackage.SelectedRows.Count > 0 || listPopulating != true)
 			{
 				replacePackageButton.Enabled = true;
 				var row = dataGridViewReplacePackage.SelectedRows[0].Index;
