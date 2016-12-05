@@ -199,7 +199,7 @@ namespace OpenBve
 					handle.Width = texture.Width;
 					handle.Height = texture.Height;
 					handle.Transparency = texture.GetTransparencyType();
-					texture = UpsizeToPowerOfTwo(texture);
+					texture = ResizeToPowerOfTwo(texture);
 
 					switch (Interface.CurrentOptions.Interpolation)
 					{
@@ -346,14 +346,24 @@ namespace OpenBve
 
 		// --- upsize texture ---
 
-		/// <summary>Upsizes the specified texture to a power of two size and returns the result.</summary>
+		/// <summary>Resizes the specified texture to a power of two size and returns the result.</summary>
 		/// <param name="texture">The texture.</param>
 		/// <returns>The upsized texture, or the original if already a power of two size.</returns>
 		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
-		internal static OpenBveApi.Textures.Texture UpsizeToPowerOfTwo(OpenBveApi.Textures.Texture texture)
+		internal static OpenBveApi.Textures.Texture ResizeToPowerOfTwo(OpenBveApi.Textures.Texture texture)
 		{
 			int width = RoundUpToPowerOfTwo(texture.Width);
 			int height = RoundUpToPowerOfTwo(texture.Height);
+			//HACK: Some routes use non-power of two textures which upscale to stupid numbers
+			//At least round down if we're over 1024 px....
+			if (width != texture.Width && width > 1024)
+			{
+				width /= 2;
+			}
+			if (height != texture.Height && height > 1024)
+			{
+				height /= 2;
+			}
 			return Resize(texture, width, height);
 		}
 
