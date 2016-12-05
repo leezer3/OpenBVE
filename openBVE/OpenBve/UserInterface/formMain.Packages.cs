@@ -1106,7 +1106,7 @@ namespace OpenBve
 			}
 		}
 
-
+		/// <summary>Shows a popup text input box to add a website link</summary>
 		private static DialogResult ShowInputDialog(ref string input)
 		{
 			System.Drawing.Size size = new System.Drawing.Size(200, 70);
@@ -1132,7 +1132,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.OK,
 				Name = "okButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&OK",
+				Text = Interface.GetInterfaceString("packages_button_ok"),
 				Location = new System.Drawing.Point(size.Width - 80 - 80, 39)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1142,7 +1142,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&Cancel",
+				Text = Interface.GetInterfaceString("packages_button_cancel"),
 				Location = new System.Drawing.Point(size.Width - 80, 39)
 			};
 			inputBox.Controls.Add(cancelButton);
@@ -1204,7 +1204,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.OK,
 				Name = "okButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&OK",
+				Text = Interface.GetInterfaceString("packages_button_ok"),
 				Location = new System.Drawing.Point(size.Width - 80 - 80, 49)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1214,7 +1214,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&Cancel",
+				Text = Interface.GetInterfaceString("packages_button_cancel"),
 				Location = new System.Drawing.Point(size.Width - 80, 49)
 			};
 			inputBox.Controls.Add(cancelButton);
