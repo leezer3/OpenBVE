@@ -11,7 +11,7 @@ namespace OpenBve {
 		private abstract class SignalData { }
 
 
-		///---SIGNAL TYPES---
+		// ---SIGNAL TYPES---
 
 		/// <summary>Defines a BVE 4 standard signal:
 		/// A signal has a face based mesh and glow

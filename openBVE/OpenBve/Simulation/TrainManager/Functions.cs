@@ -16,6 +16,7 @@ namespace OpenBve
 		/// <param name="Train">The train</param>
 		internal static void UnderailTrain(Train Train)
 		{
+			Train.Derailed = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
 				Train.Cars[i].Specs.CurrentRollDueToTopplingAngle = 0.0;
