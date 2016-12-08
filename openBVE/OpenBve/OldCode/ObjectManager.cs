@@ -877,6 +877,13 @@ namespace OpenBve {
 				free[i] = Prototypes[i].IsFreeOfFunctions();
 				if (free[i]) anyfree = true;
 			}
+			if (!AuxTransformation.X.IsNullVector() || !AuxTransformation.Y.IsNullVector() || !AuxTransformation.Z.IsNullVector())
+			{
+				//HACK:
+				//An animated object containing a mix of functions and non-functions and using yaw, pitch or roll must not be converted into a mix
+				//of animated and static objects, as this causes rounding differences....
+				anyfree = false;
+			}
 			if (anyfree) {
 				for (int i = 0; i < Prototypes.Length; i++) {
 					if (Prototypes[i].States.Length != 0) {
