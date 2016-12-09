@@ -446,6 +446,7 @@ namespace OpenBve
 			internal void Derail(int CarIndex, double ElapsedTime)
 			{
 				this.Cars[CarIndex].Derailed = true;
+				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
 					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);

@@ -9,7 +9,31 @@ namespace OpenBve
         /* --------------------------------------------------------------
 		 * This file contains the drawing routines for screen overlays
 		 * -------------------------------------------------------------- */
+		
+		
+		/// <summary>Renders an overlay texture</summary>
+		/// <param name="texture">The texture</param>
+		/// <param name="left">The left co-ordinate</param>
+		/// <param name="top">The top co-ordinate</param>
+		/// <param name="right">The right co-ordinate</param>
+		/// <param name="bottom">The bottom co-ordinate</param>
+		internal static void RenderOverlayTexture(Textures.Texture texture, double left, double top, double right, double bottom)
+		{
+			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
+		}
 
+		/// <summary>Renders a solid color rectangular overlay</summary>
+		/// <param name="left">The left co-ordinate</param>
+		/// <param name="top">The top co-ordinate</param>
+		/// <param name="right">The right co-ordinate</param>
+		/// <param name="bottom">The bottom co-ordinate</param>
+		internal static void RenderOverlaySolid(double left, double top, double right, double bottom)
+		{
+			DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
+		}
+
+		/// <summary>Is called once by the main renderer loop, in order to render all overlays shown on the screen</summary>
+		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
         private static void RenderOverlays(double TimeElapsed)
         {
             // initialize

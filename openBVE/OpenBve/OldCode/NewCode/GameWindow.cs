@@ -125,7 +125,7 @@ namespace OpenBve
 			{
 				Program.currentGameWindow.Exit();
 			}
-				Renderer.UpdateLighting();
+				//Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 				Program.currentGameWindow.SwapBuffers();

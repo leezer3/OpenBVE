@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
@@ -47,6 +49,9 @@ namespace OpenBve
 			internal int CyclesSurvived;
 			internal bool DontAllowUnload;
 			internal bool LoadImmediately;
+			//Grabbing the framebuffer directly as a texture is vertically flipped due to the way openGL works...
+			//Nasty hacky workaround tells the renderer to use vertically flipped texture coords
+			internal bool VFlip;
 		}
 		internal static Texture[] Textures = new Texture[16];
 		private const int MaxCyclesUntilUnload = 4;
@@ -57,7 +62,10 @@ namespace OpenBve
 		internal enum UseMode { Normal, QueryDimensions, LoadImmediately }
 		internal static int UseTexture(int TextureIndex, UseMode Mode)
 		{
-			if (TextureIndex == -1) return 0;
+			if (TextureIndex > Textures.Length || Textures[TextureIndex] == null || TextureIndex == -1)
+			{
+				return 0;
+			}
 			Textures[TextureIndex].CyclesSurvived = 0;
 			if (Textures[TextureIndex].Loaded)
 			{
@@ -149,10 +157,21 @@ namespace OpenBve
 			}
 		}
 
+		internal static void ClearTextures()
+		{
+			UnuseAllTextures();
+			//Textures = new Texture[1];
+		}
+
 		// unregister texture
 		internal static void UnregisterTexture(ref int TextureIndex)
 		{
 			if (TextureIndex == -1) return;
+			if (TextureIndex > Textures.Length ||Textures[TextureIndex] == null)
+			{
+				TextureIndex = -1;
+				return;
+			}
 			if (Textures[TextureIndex].Loaded)
 			{
 				GL.DeleteTextures(1, new int[] { Textures[TextureIndex].OpenGlTextureIndex });
@@ -231,6 +250,7 @@ namespace OpenBve
 				CycleTime = 0.0;
 				for (int i = 0; i < Textures.Length; i++)
 				{
+					bool ul = false;
 					if (Textures[i] != null)
 					{
 						if (Textures[i].Loaded & !Textures[i].DontAllowUnload)
@@ -265,6 +285,12 @@ namespace OpenBve
 		}
 		internal static int RegisterTexture(string FileName, World.ColorRGB TransparentColor, byte TransparentColorUsed, TextureLoadMode LoadMode, TextureWrapMode WrapModeX, TextureWrapMode WrapModeY, bool DontAllowUnload, int ClipLeft, int ClipTop, int ClipWidth, int ClipHeight)
 		{
+			if (FileName == null)
+			{
+				//Need to find out why the object parser sometimes decides to pass a null filename, but this works around it
+				return -1;
+			}
+			
 			int i = FindTexture(FileName, TransparentColor, TransparentColorUsed, LoadMode, WrapModeX, WrapModeY, ClipLeft, ClipTop, ClipWidth, ClipHeight);
 			if (i >= 0)
 			{
@@ -273,22 +299,24 @@ namespace OpenBve
 			else
 			{
 				i = GetFreeTexture();
-				Textures[i] = new Texture();
-				Textures[i].Queried = false;
-				Textures[i].Loaded = false;
-				Textures[i].FileName = FileName;
-				Textures[i].TransparentColor = TransparentColor;
-				Textures[i].TransparentColorUsed = TransparentColorUsed;
-				Textures[i].LoadMode = LoadMode;
-				Textures[i].WrapModeX = WrapModeX;
-				Textures[i].WrapModeY = WrapModeY;
-				Textures[i].ClipLeft = ClipLeft;
-				Textures[i].ClipTop = ClipTop;
-				Textures[i].ClipWidth = ClipWidth;
-				Textures[i].ClipHeight = ClipHeight;
-				Textures[i].DontAllowUnload = DontAllowUnload;
-				Textures[i].LoadImmediately = false;
-				Textures[i].OpenGlTextureIndex = 0;
+				Textures[i] = new Texture
+				{
+					Queried = false,
+					Loaded = false,
+					FileName = FileName,
+					TransparentColor = TransparentColor,
+					TransparentColorUsed = TransparentColorUsed,
+					LoadMode = LoadMode,
+					WrapModeX = WrapModeX,
+					WrapModeY = WrapModeY,
+					ClipLeft = ClipLeft,
+					ClipTop = ClipTop,
+					ClipWidth = ClipWidth,
+					ClipHeight = ClipHeight,
+					DontAllowUnload = DontAllowUnload,
+					LoadImmediately = false,
+					OpenGlTextureIndex = 0
+				};
 				bool alpha = false;
 				switch (System.IO.Path.GetExtension(Textures[i].FileName).ToLowerInvariant())
 				{
@@ -319,15 +347,19 @@ namespace OpenBve
 			int i = GetFreeTexture();
 			int[] a = new int[1];
 			GL.GenTextures(1, a);
-			Textures[i] = new Texture();
-			Textures[i].Queried = false;
-			Textures[i].OpenGlTextureIndex = a[0];
-			Textures[i].Transparency = TextureTransparencyMode.None;
-			Textures[i].TransparentColor = new World.ColorRGB(0, 0, 0);
-			Textures[i].TransparentColorUsed = 0;
-			Textures[i].FileName = null;
-			Textures[i].Loaded = true;
-			Textures[i].DontAllowUnload = true;
+			Textures[i] = new Texture
+			{
+				Queried = false,
+				OpenGlTextureIndex = a[0],
+				Transparency = TextureTransparencyMode.None,
+				TransparentColor = new World.ColorRGB(0, 0, 0),
+				TransparentColorUsed = 0,
+				FileName = null,
+				Loaded = true,
+				Width = Bitmap.Width,
+				Height = Bitmap.Height,
+				DontAllowUnload = true
+			};
 			if (Alpha)
 			{
 				LoadTextureRGBAforData(Bitmap, new World.ColorRGB(0, 0, 0), 0, i);
@@ -346,15 +378,19 @@ namespace OpenBve
 			int i = GetFreeTexture();
 			int[] a = new int[1];
 			GL.GenTextures(1, a);
-			Textures[i] = new Texture();
-			Textures[i].Queried = false;
-			Textures[i].OpenGlTextureIndex = a[0];
-			Textures[i].Transparency = TextureTransparencyMode.TransparentColor;
-			Textures[i].TransparentColor = TransparentColor;
-			Textures[i].TransparentColorUsed = 1;
-			Textures[i].FileName = null;
-			Textures[i].Loaded = true;
-			Textures[i].DontAllowUnload = true;
+			Textures[i] = new Texture
+			{
+				Queried = false,
+				OpenGlTextureIndex = a[0],
+				Transparency = TextureTransparencyMode.TransparentColor,
+				TransparentColor = TransparentColor,
+				TransparentColorUsed = 1,
+				FileName = null,
+				Loaded = true,
+				Width =  Bitmap.Width,
+				Height = Bitmap.Height,
+				DontAllowUnload = true
+			};
 			LoadTextureRGBAforData(Bitmap, Textures[i].TransparentColor, Textures[i].TransparentColorUsed, i);
 			LoadTextureRGBAforOpenGl(i);
 			return i;
@@ -502,7 +538,7 @@ namespace OpenBve
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 						break;
 				}
-				if (Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.AnisotropicFiltering && Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
 				{
 					GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 				}
@@ -826,7 +862,15 @@ namespace OpenBve
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 						break;
 				}
-				if (Interface.CurrentOptions.AnisotropicFilteringLevel > 0)
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.Bilinear || Interface.CurrentOptions.Interpolation == InterpolationMode.NearestNeighbor)
+				{
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
+				}
+				else
+				{
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+				}
+				if (Interface.CurrentOptions.Interpolation == InterpolationMode.AnisotropicFiltering)
 				{
 					GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 				}

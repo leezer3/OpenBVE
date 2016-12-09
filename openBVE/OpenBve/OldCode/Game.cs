@@ -13,7 +13,7 @@ namespace OpenBve {
 		internal static double StartupTime = 0.0;
 		/// <summary>Whether the game is in minimal simulation mode: 
 		/// This is used when the game is fast-forwarding on start or station jump.
-		/// Train & time movements are processed, but no graphical processing is done
+		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
 

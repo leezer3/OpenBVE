@@ -46,8 +46,6 @@ namespace OpenBve
 			internal double TransitionTime;
 			/// <summary> The time at which this background should be displayed (Expressed as the number of seconds since midnight)</summary>
 			internal double Time;
-			/// <summary>The transition mode for this background</summary>
-			internal BackgroundTransitionMode Mode;
 			/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>

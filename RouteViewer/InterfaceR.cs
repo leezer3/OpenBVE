@@ -53,6 +53,9 @@ namespace OpenBve {
 			internal int ObjectOptimizationFullThreshold;
 			internal int SmoothenOutTurns;
 		    internal bool VerticalSynchronization;
+			internal bool LoadingProgressBar;
+			internal bool LoadingLogo;
+			internal bool LoadingBackground;
 		}
 		internal static Options CurrentOptions;
 

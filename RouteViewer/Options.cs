@@ -112,7 +112,43 @@ namespace OpenBve
 													}
 											} break;
 									} break;
-                            }
+								case "loading":
+									switch(Key)
+									{
+										case "showlogo":
+											if(Value.Trim().ToLowerInvariant() == "true")
+											{
+												Interface.CurrentOptions.LoadingLogo = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.LoadingLogo = false;
+											}
+											break;
+										case "showprogressbar":
+											if (Value.Trim().ToLowerInvariant() == "true")
+											{
+												Interface.CurrentOptions.LoadingProgressBar = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.LoadingProgressBar = false;
+											}
+											break;
+										case "showbackground":
+											if (Value.Trim().ToLowerInvariant() == "true")
+											{
+												Interface.CurrentOptions.LoadingBackground = true;
+											}
+											else
+											{
+												Interface.CurrentOptions.LoadingBackground = false;
+											}
+											break;
+
+									}
+									break;
+							}
                         }
                     }
                 }
@@ -152,7 +188,11 @@ namespace OpenBve
                     sw.WriteLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
                     sw.WriteLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
                     sw.WriteLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
-                }
+					sw.WriteLine("[loading]");
+					sw.WriteLine("showlogo = " + Interface.CurrentOptions.LoadingLogo.ToString());
+					sw.WriteLine("showprogressbar = " + Interface.CurrentOptions.LoadingProgressBar.ToString());
+					sw.WriteLine("showbackground = " + Interface.CurrentOptions.LoadingBackground.ToString());
+				}
             }
             catch
             {

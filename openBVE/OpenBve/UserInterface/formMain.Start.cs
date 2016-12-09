@@ -218,8 +218,15 @@ namespace OpenBve {
 
 		// route encoding
 		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e) {
+			int i = comboboxRouteEncoding.SelectedIndex;
+
+			if (Result.RouteFile == null && Result.ErrorFile != null)
+			{
+				//Workaround for the route worker thread
+				Result.RouteFile = Result.ErrorFile;
+			}
 			if (comboboxRouteEncoding.Tag == null) {
-				int i = comboboxRouteEncoding.SelectedIndex;
+				
 				if (!(i >= 0 & i < EncodingCodepages.Length)) return;
 				Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
 				if (i == 0) {
@@ -243,7 +250,7 @@ namespace OpenBve {
 						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
-				}
+				}			
 				ShowRoute(true);
 			}
 		}
@@ -594,6 +601,7 @@ namespace OpenBve {
 				textboxRouteEncodingPreview.Text = "";
 				pictureboxRouteMap.Image = null;
 				pictureboxRouteGradient.Image = null;
+				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				return;
@@ -661,6 +669,7 @@ namespace OpenBve {
 				{
 					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				}
+				Result.ErrorFile = null;
 			}
 			catch (Exception ex)
 			{
@@ -669,6 +678,7 @@ namespace OpenBve {
 				textboxRouteEncodingPreview.Text = "";
 				pictureboxRouteMap.Image = null;
 				pictureboxRouteGradient.Image = null;
+				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 			}
@@ -682,6 +692,7 @@ namespace OpenBve {
 			this.Cursor = Cursors.Default;
 			//Deliberately select the tab when the process is complete
 			//This hopefully fixes another instance of the 'grey tabs' bug
+			
 			tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
 
 			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
@@ -915,6 +926,7 @@ namespace OpenBve {
 							Folder = null;
 						}
 						if (Folder != null) {
+							char c = System.IO.Path.DirectorySeparatorChar;
 							if (System.IO.Directory.Exists(Folder))
 							{
 
@@ -932,7 +944,7 @@ namespace OpenBve {
 								}
 								
 							}
-							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
+							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail

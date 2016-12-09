@@ -110,7 +110,7 @@ namespace OpenBveApi.Packages
 		/// <summary>Checks a list of dependancies or reccomendations to see if they are installed</summary>
 		public static List<Package> checkDependsReccomends(List<Package> currentList)
 		{
-			foreach (Package currentDependancy in currentList)
+			foreach (Package currentDependancy in currentList.ToList())
 			{
 				switch (currentDependancy.PackageType)
 				{
@@ -221,18 +221,23 @@ namespace OpenBveApi.Packages
 
 	}
 
+	
+
 	/// <summary>Contains the database functions</summary>
 	public class DatabaseFunctions
 	{
+		/// <summary>Stores the directory separator character for the current platform</summary>
+		private static readonly char c = System.IO.Path.DirectorySeparatorChar;
 		/// <summary>This function takes a list of files, and returns the files with corrected relative paths for compression or extraction</summary>
 		/// <param name="tempList">The file list</param>
 		/// <returns>The file list with corrected relative paths</returns>
 		public static List<PackageFile> FindFileLocations(List<PackageFile> tempList)
 		{
+			
 			//Now determine whether this is part of a recognised folder structure
 			for (int i = 0; i < tempList.Count; i++)
 			{
-				if (tempList[i].relativePath.StartsWith("\\Railway\\", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith(c + "Railway" + c, StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
@@ -241,7 +246,7 @@ namespace OpenBveApi.Packages
 					}
 					return tempList;
 				}
-				if (tempList[i].relativePath.StartsWith("\\Train\\", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith(c + "Train" + c, StringComparison.OrdinalIgnoreCase))
 				{
 					//Extraction path is the root train folder
 					for (int j = 0; j < tempList.Count; j++)
@@ -250,17 +255,17 @@ namespace OpenBveApi.Packages
 					}
 					return tempList;
 				}
-				if (tempList[i].relativePath.StartsWith("\\Route", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith(c + "Route", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					return tempList;
 				}
-				if (tempList[i].relativePath.StartsWith("\\Object", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith(c + "Object", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					return tempList;
 				}
-				if (tempList[i].relativePath.StartsWith("\\Sound", StringComparison.OrdinalIgnoreCase))
+				if (tempList[i].relativePath.StartsWith(c + "Sound", StringComparison.OrdinalIgnoreCase))
 				{
 					//Needs to be extracted to the root railway folder
 					return tempList;
@@ -286,7 +291,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Route" + tempList[j].relativePath;
+						tempList[j].relativePath = c + "Route" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -295,7 +300,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Object" + tempList[j].relativePath;
+						tempList[j].relativePath = c + "Object" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -304,7 +309,7 @@ namespace OpenBveApi.Packages
 					//Needs to be extracted to the root railway folder
 					for (int j = 0; j < tempList.Count; j++)
 					{
-						tempList[j].relativePath = "\\Sound" + tempList[j].relativePath;
+						tempList[j].relativePath = c + "Sound" + tempList[j].relativePath;
 					}
 					return tempList;
 				}
@@ -378,7 +383,7 @@ namespace OpenBveApi.Packages
 				//This would appear to be a subfolder of the SOUND folder
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Sound" + tempList[j].relativePath;
+					tempList[j].relativePath = c + "Sound" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
@@ -388,7 +393,7 @@ namespace OpenBveApi.Packages
 				//there should be less than 20 images
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Route" + tempList[j].relativePath;
+					tempList[j].relativePath = c + "Route" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
@@ -402,7 +407,7 @@ namespace OpenBveApi.Packages
 				//NWM.....
 				for (int j = 0; j < tempList.Count; j++)
 				{
-					tempList[j].relativePath = "\\Object" + tempList[j].relativePath;
+					tempList[j].relativePath = c + "Object" + tempList[j].relativePath;
 				}
 				return tempList;
 			}
