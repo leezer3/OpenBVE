@@ -20,6 +20,11 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
 		private static void UpdateBackground(double TimeElapsed)
 		{
+			if (Game.CurrentInterface != Game.InterfaceType.Normal)
+			{
+				//Don't update the transition whilst paused
+				TimeElapsed = 0.0;
+			}
 			const float scale = 0.5f;
 			// fog
 			const float fogdistance = 600.0f;
