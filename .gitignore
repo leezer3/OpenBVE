@@ -6,9 +6,6 @@
 *.suo
 .vs/
 
-# Versioning data
-AssemblyInfo.cs
-
 # Build results
 [Bb]in/
 [Oo]bj/
