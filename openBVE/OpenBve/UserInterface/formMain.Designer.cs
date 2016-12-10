@@ -251,9 +251,9 @@
 			this.labelKeyboardModifier = new System.Windows.Forms.Label();
 			this.comboboxCommand = new System.Windows.Forms.ComboBox();
 			this.labelCommand = new System.Windows.Forms.Label();
+			this.textboxJoystickGrab = new System.Windows.Forms.TextBox();
 			this.panelJoystick = new System.Windows.Forms.Panel();
 			this.labelJoystickAssignmentCaption = new System.Windows.Forms.Label();
-			this.textboxJoystickGrab = new System.Windows.Forms.TextBox();
 			this.labelJoystickAssignmentValue = new System.Windows.Forms.Label();
 			this.radiobuttonJoystick = new System.Windows.Forms.RadioButton();
 			this.radiobuttonKeyboard = new System.Windows.Forms.RadioButton();
@@ -3321,6 +3321,21 @@
 			this.labelCommand.Text = "Command:";
 			this.labelCommand.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
+			// textboxJoystickGrab
+			// 
+			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
+			this.textboxJoystickGrab.Multiline = true;
+			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
+			this.textboxJoystickGrab.ReadOnly = true;
+			this.textboxJoystickGrab.Size = new System.Drawing.Size(179, 48);
+			this.textboxJoystickGrab.TabIndex = 10;
+			this.textboxJoystickGrab.Text = "Joystick grab";
+			this.textboxJoystickGrab.Enter += new System.EventHandler(this.textboxJoystickGrab_Enter);
+			this.textboxJoystickGrab.Leave += new System.EventHandler(this.textboxJoystickGrab_Leave);
+			// 
 			// panelJoystick
 			// 
 			this.panelJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -3341,22 +3356,6 @@
 			this.labelJoystickAssignmentCaption.Size = new System.Drawing.Size(192, 16);
 			this.labelJoystickAssignmentCaption.TabIndex = 0;
 			this.labelJoystickAssignmentCaption.Text = "Assignment:";
-			// 
-			// textboxJoystickGrab
-			// 
-			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-	        this.textboxJoystickGrab.PreviewKeyDown += textboxJoystickGrab_PreviewKeyDown;
-			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
-			this.textboxJoystickGrab.Multiline = true;
-			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
-			this.textboxJoystickGrab.ReadOnly = true;
-			this.textboxJoystickGrab.Size = new System.Drawing.Size(179, 48);
-			this.textboxJoystickGrab.TabIndex = 10;
-			this.textboxJoystickGrab.Text = "Joystick grab";
-			this.textboxJoystickGrab.Enter += new System.EventHandler(this.textboxJoystickGrab_Enter);
-			this.textboxJoystickGrab.Leave += new System.EventHandler(this.textboxJoystickGrab_Leave);
 			// 
 			// labelJoystickAssignmentValue
 			// 

@@ -6,12 +6,6 @@ namespace OpenBve
 {
 	internal partial class Interface
 	{
-		internal struct EncodingValue
-		{
-			internal int Codepage;
-			internal string Value;
-		}
-
 		/// <summary>Defines the levels of motion blur</summary>
 		internal enum MotionBlurMode
 		{
@@ -141,9 +135,9 @@ namespace OpenBve
 			/// <summary>The maximum number of recently used routes/ trains to display</summary>
 			internal int RecentlyUsedLimit;
 			/// <summary>The list of recently used route character encodings</summary>
-			internal EncodingValue[] RouteEncodings;
+			internal TextEncoding.EncodingValue[] RouteEncodings;
 			/// <summary>The list of recently used train character encodings</summary>
-			internal EncodingValue[] TrainEncodings;
+			internal TextEncoding.EncodingValue[] TrainEncodings;
 			/// <summary>The game mode- Affects how the score is calculated</summary>
 			internal GameMode GameMode;
 			/// <summary>The width of the main menu window</summary>
@@ -219,8 +213,8 @@ namespace OpenBve
 				this.RecentlyUsedRoutes = new string[] { };
 				this.RecentlyUsedTrains = new string[] { };
 				this.RecentlyUsedLimit = 10;
-				this.RouteEncodings = new EncodingValue[] { };
-				this.TrainEncodings = new EncodingValue[] { };
+				this.RouteEncodings = new TextEncoding.EncodingValue[] { };
+				this.TrainEncodings = new TextEncoding.EncodingValue[] { };
 				this.MainMenuWidth = 0;
 				this.MainMenuHeight = 0;
 				this.DisableDisplayLists = false;
@@ -629,7 +623,7 @@ namespace OpenBve
 										int a = System.Text.Encoding.UTF8.CodePage;
 										int.TryParse(Key, NumberStyles.Integer, Culture, out a);
 										int n = Interface.CurrentOptions.RouteEncodings.Length;
-										Array.Resize<EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, n + 1);
+										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, n + 1);
 										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
 										Interface.CurrentOptions.RouteEncodings[n].Value = Value;
 									} break;
@@ -638,7 +632,7 @@ namespace OpenBve
 										int a = System.Text.Encoding.UTF8.CodePage;
 										int.TryParse(Key, NumberStyles.Integer, Culture, out a);
 										int n = Interface.CurrentOptions.TrainEncodings.Length;
-										Array.Resize<EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, n + 1);
+										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, n + 1);
 										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
 										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
 									} break;
