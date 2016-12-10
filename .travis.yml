@@ -1,5 +1,5 @@
 language: csharp
-solution: openBVE/OpenBve.sln
+solution: OpenBve.sln
 
 os:
   - linux
