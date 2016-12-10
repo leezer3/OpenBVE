@@ -8,7 +8,7 @@ mono:
  - latest
  
 script:
-  - LC_ALL=C xbuild /t:Build /p:Configuration=Release openBVE/OpenBve.sln
+  - LC_ALL=C xbuild /t:Build /p:Configuration=Release OpenBve.sln
 after_success:
 #Export SSH password for whichever platform we are building on
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
