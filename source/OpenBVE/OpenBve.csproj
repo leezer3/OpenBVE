@@ -345,6 +345,12 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
 		cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(ProjectDir)../OpenBveAts/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.Flac/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.RiffWave/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.Ace/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.BmpGifJpegPngTiff/bin/$(Configuration)/Data" "$(TargetDir)"
 	</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="AfterBuild">
