@@ -20,6 +20,7 @@ obj/
 *.opendb
 
 *.resources
+source/*.xml
 
 #InnoSetup Output Folder
 [Oo]utput/
