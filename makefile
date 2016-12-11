@@ -56,15 +56,22 @@ release: ARGS := $(RELEASE_ARGS)
 release: OUTPUT_DIR := $(RELEASE_DIR)
 release: all
 
+CP_UPDATE_FLAG = -u
+CP_RECURSE = -r
+ifeq ($(shell uname -s),Darwin) 
+    CP_UPDATE_FLAG = 
+    CP_RECURSE = -R
+endif 
+
 prep_dirs: 
 	@echo Prepping $(OUTPUT_DIR)...
 	@mkdir -p $(OUTPUT_DIR)
 	@echo Making plugin folder
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
 	@echo Copying dependencies
-	@cp -u dependencies/* $(OUTPUT_DIR)
+	@cp $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
 	@echo Copying data
-	@cp -ru $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
+	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
 
 clean: 
 	# Executables
