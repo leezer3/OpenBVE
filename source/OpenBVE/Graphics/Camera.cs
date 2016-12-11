@@ -1,5 +1,7 @@
 ﻿using System;
+using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
 	internal class Camera {
@@ -50,7 +52,12 @@ namespace OpenBve {
 			// TODO //
 			// The old renderer assumes a negative aspect ratio. Once the new renderer
 			// is implemented, change the aspect ratio in the following line to positive.
-			Glu.Perspective(this.VerticalViewingAngle * inverseDegrees, -aspectRatio, 1.0, this.ViewingDistance);
+			// ref (float) (this.VerticalViewingAngle * inverseDegrees), (float) (-aspectRatio), 1.0f, (float) (this.ViewingDistance))
+			float radViewingAngle = (float) (this.VerticalViewingAngle * inverseDegrees);
+			float negAspect = (float) -aspectRatio;
+			float viewing = (float) this.ViewingDistance;
+			Matrix4 val = Matrix4.CreatePerspectiveFieldOfView(radViewingAngle, negAspect, 1.0f, viewing);
+			GL.LoadMatrix(ref val);
 			GL.MatrixMode(MatrixMode.Modelview);
 		}
 		

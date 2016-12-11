@@ -49,7 +49,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
+		public virtual bool LoadTexture(string path, TextureParameters parameters, out Textures.Texture texture) {
 			texture = null;
 			return false;
 		}
@@ -78,7 +78,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="sound">Receives the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public virtual bool LoadSound(string path, out Sound sound) {
+		public virtual bool LoadSound(string path, out Sounds.Sound sound) {
 			sound = null;
 			return false;
 		}

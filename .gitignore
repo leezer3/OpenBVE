@@ -19,5 +19,7 @@ obj/
 *.sdf
 *.opendb
 
+*.resources
+
 #InnoSetup Output Folder
 [Oo]utput/

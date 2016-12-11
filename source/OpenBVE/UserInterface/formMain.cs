@@ -85,7 +85,7 @@ namespace OpenBve {
 				this.Size = new Size(Interface.CurrentOptions.MainMenuWidth, Interface.CurrentOptions.MainMenuHeight);
 				this.CenterToScreen();
 			}
-			labelVersion.Text = @"v" + Application.ProductVersion + Program.VersionSuffix;
+			labelVersion.Text = @"v" + Application.ProductVersion + OpenBve.Program.VersionSuffix;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// form icon
 			try
