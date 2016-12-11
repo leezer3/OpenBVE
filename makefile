@@ -31,10 +31,12 @@ COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
 
 .PHONY: all 
+.PHONY: debug
 .PHONY: release 
-.PHONY: everything 
-.PHONY: everything-release 
+.PHONY: debug-everything
+.PHONY: release-everything
 .PHONY: clean
+.PHONY: clean-all
 
 debug: all
 
