@@ -52,18 +52,20 @@ release: ARGS := $(RELEASE_ARGS)
 release: OUTPUT_DIR := $(RELEASE_DIR)
 release: all
 
-debug-everything: prep_dirs
-debug-everything: $(OUTPUT_DIR)/OpenBve.exe
-debug-everything: $(OUTPUT_DIR)/ObjectBender.exe
-debug-everything: $(OUTPUT_DIR)/ObjectViewer.exe
-debug-everything: $(OUTPUT_DIR)/RouteViewer.exe
-debug-everything: $(OUTPUT_DIR)/TrainEditor.exe
-debug-everything: $(OUTPUT_DIR)/OpenBveApi.dll
-debug-everything: $(OUTPUT_DIR)/OpenBveAts.dll
-debug-everything: $(OUTPUT_DIR)/Sound.Flac.dll
-debug-everything: $(OUTPUT_DIR)/Sound.RiffWave.dll
-debug-everything: $(OUTPUT_DIR)/Texture.Ace.dll
-debug-everything: $(OUTPUT_DIR)/Texture.BmpGifJpegPngTiff.dll
+everything: prep_dirs
+everything: $(OUTPUT_DIR)/OpenBve.exe
+everything: $(OUTPUT_DIR)/ObjectBender.exe
+everything: $(OUTPUT_DIR)/ObjectViewer.exe
+everything: $(OUTPUT_DIR)/RouteViewer.exe
+everything: $(OUTPUT_DIR)/TrainEditor.exe
+everything: $(OUTPUT_DIR)/OpenBveApi.dll
+everything: $(OUTPUT_DIR)/OpenBveAts.dll
+everything: $(OUTPUT_DIR)/Sound.Flac.dll
+everything: $(OUTPUT_DIR)/Sound.RiffWave.dll
+everything: $(OUTPUT_DIR)/Texture.Ace.dll
+everything: $(OUTPUT_DIR)/Texture.BmpGifJpegPngTiff.dll
+
+debug-everything: everything
 
 release-everything: ARGS := $(RELEASE_ARGS)
 release-everything: OUTPUT_DIR := $(RELEASE_DIR)
