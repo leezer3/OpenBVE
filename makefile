@@ -36,7 +36,27 @@ COLOR_END     := "\033[0m"
 .PHONY: clean
 .PHONY: clean-all
 
-debug: all
+openbve: prep_dirs
+openbve: $(OUTPUT_DIR)/OpenBve.exe
+openbve: $(OUTPUT_DIR)/OpenBveApi.dll
+openbve: $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
+openbve: $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
+openbve: $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
+openbve: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
+openbve: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
+openbve: copy_depends
+
+debug: openbve-debug
+
+release: openbve-release
+
+openbve-debug: openbve
+
+openbve-release: ARGS := $(RELEASE_ARGS)
+openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
+openbve-release: openbve
+
+all-debug: all
 
 all: prep_dirs
 all: $(OUTPUT_DIR)/OpenBve.exe
@@ -52,10 +72,10 @@ all: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
 all: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 all: copy_depends
 
-release: prep_dirs
-release: ARGS := $(RELEASE_ARGS)
-release: OUTPUT_DIR := $(RELEASE_DIR)
-release: all
+all-release: prep_dirs
+all-release: ARGS := $(RELEASE_ARGS)
+all-release: OUTPUT_DIR := $(RELEASE_DIR)
+all-release: all
 
 CP_UPDATE_FLAG = -u
 CP_RECURSE = -r
