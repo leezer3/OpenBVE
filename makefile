@@ -33,8 +33,6 @@ COLOR_END     := "\033[0m"
 .PHONY: all 
 .PHONY: debug
 .PHONY: release 
-.PHONY: debug-everything
-.PHONY: release-everything
 .PHONY: clean
 .PHONY: clean-all
 
