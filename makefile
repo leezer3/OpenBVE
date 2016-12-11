@@ -50,6 +50,7 @@ all: $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
 all: $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
 all: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
 all: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
+all: copy_depends
 
 release: prep_dirs
 release: ARGS := $(RELEASE_ARGS)
@@ -64,13 +65,15 @@ ifeq ($(shell uname -s),Darwin)
 endif 
 
 prep_dirs: 
-	@echo Prepping $(OUTPUT_DIR)...
+	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...
 	@mkdir -p $(OUTPUT_DIR)
 	@echo Making plugin folder
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
-	@echo Copying dependencies
+	@echo Copying dependencies$(COLOR_END)
 	@cp $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
-	@echo Copying data
+
+copy_depends:
+	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
 
 clean: 
