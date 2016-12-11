@@ -10,6 +10,8 @@ namespace OpenBve
             internal abstract void Trigger(TrainManager.Train Train, double TimeElapsed);
         }
 
+	    internal static bool InitialAIDriver;
+
         /// <summary>This class forms an AI representation of a simple human driver</summary>
         internal class SimpleHumanDriverAI : GeneralAI
         {

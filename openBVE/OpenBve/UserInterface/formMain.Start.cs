@@ -234,7 +234,7 @@ namespace OpenBve {
 					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
 						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
 							Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
+							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
 							break;
 						}
 					}
@@ -246,7 +246,7 @@ namespace OpenBve {
 							break;
 						}
 					} if (j == Interface.CurrentOptions.RouteEncodings.Length) {
-						Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
+						Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
 						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
@@ -508,7 +508,7 @@ namespace OpenBve {
 						for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 							if (Interface.CurrentOptions.TrainEncodings[j].Value == Result.TrainFolder) {
 								Interface.CurrentOptions.TrainEncodings[j] = Interface.CurrentOptions.TrainEncodings[Interface.CurrentOptions.TrainEncodings.Length - 1];
-								Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
+								Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
 								break;
 							}
 						}
@@ -520,7 +520,7 @@ namespace OpenBve {
 								break;
 							}
 						} if (j == Interface.CurrentOptions.TrainEncodings.Length) {
-							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, j + 1);
+							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, j + 1);
 							Interface.CurrentOptions.TrainEncodings[j].Codepage = EncodingCodepages[i];
 							Interface.CurrentOptions.TrainEncodings[j].Value = Result.TrainFolder;
 						}
@@ -717,44 +717,44 @@ namespace OpenBve {
 					comboboxRouteEncoding.Items[0] = "(UTF-8)";
 					comboboxRouteEncoding.Tag = null;
 					Result.RouteEncoding = System.Text.Encoding.UTF8;
-					switch (Interface.GetEncodingFromFile(Result.RouteFile)) {
-						case Interface.Encoding.Utf7:
+					switch (TextEncoding.GetEncodingFromFile(Result.RouteFile)) {
+						case TextEncoding.Encoding.Utf7:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-7)";
 							Result.RouteEncoding = System.Text.Encoding.UTF7;
 							break;
-						case Interface.Encoding.Utf8:
+						case TextEncoding.Encoding.Utf8:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-8)";
 							Result.RouteEncoding = System.Text.Encoding.UTF8;
 							break;
-						case Interface.Encoding.Utf16Le:
+						case TextEncoding.Encoding.Utf16Le:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-16 little endian)";
 							Result.RouteEncoding = System.Text.Encoding.Unicode;
 							break;
-						case Interface.Encoding.Utf16Be:
+						case TextEncoding.Encoding.Utf16Be:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-16 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.BigEndianUnicode;
 							break;
-						case Interface.Encoding.Utf32Le:
+						case TextEncoding.Encoding.Utf32Le:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-32 little endian)";
 							Result.RouteEncoding = System.Text.Encoding.UTF32;
 							break;
-						case Interface.Encoding.Utf32Be:
+						case TextEncoding.Encoding.Utf32Be:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-32 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(12001);
 							break;
-						case Interface.Encoding.Shift_JIS:
+						case TextEncoding.Encoding.Shift_JIS:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
@@ -796,31 +796,36 @@ namespace OpenBve {
 				comboboxTrainEncoding.Items[0] = "(UTF-8)";
 				comboboxTrainEncoding.Tag = null;
 				Result.TrainEncoding = System.Text.Encoding.UTF8;
-				switch (Interface.GetEncodingFromFile(Result.TrainFolder, "train.txt")) {
-					case Interface.Encoding.Utf8:
+				switch (TextEncoding.GetEncodingFromFile(Result.TrainFolder, "train.txt")) {
+					case TextEncoding.Encoding.Utf8:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-8)";
 						Result.TrainEncoding = System.Text.Encoding.UTF8;
 						break;
-					case Interface.Encoding.Utf16Le:
+					case TextEncoding.Encoding.Utf16Le:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-16 little endian)";
 						Result.TrainEncoding = System.Text.Encoding.Unicode;
 						break;
-					case Interface.Encoding.Utf16Be:
+					case TextEncoding.Encoding.Utf16Be:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-16 big endian)";
 						Result.TrainEncoding = System.Text.Encoding.BigEndianUnicode;
 						break;
-					case Interface.Encoding.Utf32Le:
+					case TextEncoding.Encoding.Utf32Le:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-32 little endian)";
 						Result.TrainEncoding = System.Text.Encoding.UTF32;
 						break;
-					case Interface.Encoding.Utf32Be:
+					case TextEncoding.Encoding.Utf32Be:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-32 big endian)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(12001);
+						break;
+					case TextEncoding.Encoding.Shift_JIS:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
 						break;
 				}
 				int i;

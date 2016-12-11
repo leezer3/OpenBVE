@@ -321,69 +321,97 @@ namespace OpenBve
 			Game.StartupTime = 0.0;
 			int PlayerFirstStationIndex = -1;
 			double PlayerFirstStationPosition = 0.0;
+			int os = -1;
+			bool f = false;
 			for (int i = 0; i < Game.Stations.Length; i++)
 			{
+				if (!String.IsNullOrEmpty(Game.InitialStationName))
+				{
+					if (Game.InitialStationName.ToLowerInvariant() == Game.Stations[i].Name.ToLowerInvariant())
+					{
+						PlayerFirstStationIndex = i;
+					}
+				}
 				if (Game.Stations[i].StopMode == Game.StationStopMode.AllStop | Game.Stations[i].StopMode == Game.StationStopMode.PlayerStop & Game.Stations[i].Stops.Length != 0)
 				{
-					PlayerFirstStationIndex = i;
-					int s = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
-					if (s >= 0)
+					if (f == false)
 					{
-						PlayerFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;
+						os = i;
+						f = true;
+					}
+				}
+			}
+			if (PlayerFirstStationIndex == -1)
+			{
+				PlayerFirstStationIndex = os;
+			}
+			{
+				int s = Game.GetStopIndex(PlayerFirstStationIndex, TrainManager.PlayerTrain.Cars.Length);
+				if (s >= 0)
+				{
+					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
 
-						double TrainLength = 0.0;
-						for (int c = 0; c < TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars.Length; c++)
+					double TrainLength = 0.0;
+					for (int c = 0; c < TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars.Length; c++)
+					{
+						TrainLength += TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars[c].Length;
+					}
+
+					for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
+					{
+						if (PlayerFirstStationPosition > Game.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Game.BufferTrackPositions[j])
 						{
-							TrainLength += TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars[c].Length;
-						}
-						
-						for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
-						{
-							if (PlayerFirstStationPosition > Game.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Game.BufferTrackPositions[j])
+							/*
+							 * HACK: The initial start position for the player train is stuck on a set of buffers
+							 * This means we have to make some one the fly adjustments to the first station stop position
+							 */
+
+							//Set the start position to be the buffer position plus the train length plus 1m
+							PlayerFirstStationPosition = Game.BufferTrackPositions[j] + TrainLength + 1;
+							//Update the station stop location
+							if (s >= 0)
 							{
-								/*
-								 * HACK: The initial start position for the player train is stuck on a set of buffers
-								 * This means we have to make some one the fly adjustments to the first station stop position
-								 */
-
-								//Set the start position to be the buffer position plus the train length plus 1m
-								PlayerFirstStationPosition = Game.BufferTrackPositions[j] + TrainLength + 1;							
-								//Update the station stop location
-								if (s >= 0)
-								{
-									Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
-								}
-								else
-								{
-									Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
-								}
-								break;
+								Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							}
+							else
+							{
+								Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
+							}
+							break;
 						}
 					}
-					else
+				}
+				else
+				{
+					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition;
+				}
+				if (Game.InitialStationTime != -1)
+				{
+					Game.SecondsSinceMidnight = Game.InitialStationTime;
+					Game.StartupTime = Game.InitialStationTime;
+				}
+				else
+				{
+					if (Game.Stations[PlayerFirstStationIndex].ArrivalTime < 0.0)
 					{
-						PlayerFirstStationPosition = Game.Stations[i].DefaultTrackPosition;
-					}
-					if (Game.Stations[i].ArrivalTime < 0.0)
-					{
-						if (Game.Stations[i].DepartureTime < 0.0)
+						if (Game.Stations[PlayerFirstStationIndex].DepartureTime < 0.0)
 						{
 							Game.SecondsSinceMidnight = 0.0;
 							Game.StartupTime = 0.0;
 						}
 						else
 						{
-							Game.SecondsSinceMidnight = Game.Stations[i].DepartureTime - Game.Stations[i].StopTime;
-							Game.StartupTime = Game.Stations[i].DepartureTime - Game.Stations[i].StopTime;
+							Game.SecondsSinceMidnight = Game.Stations[PlayerFirstStationIndex].DepartureTime -
+							                            Game.Stations[PlayerFirstStationIndex].StopTime;
+							Game.StartupTime = Game.Stations[PlayerFirstStationIndex].DepartureTime -
+							                   Game.Stations[PlayerFirstStationIndex].StopTime;
 						}
 					}
 					else
 					{
-						Game.SecondsSinceMidnight = Game.Stations[i].ArrivalTime;
-						Game.StartupTime = Game.Stations[i].ArrivalTime;
+						Game.SecondsSinceMidnight = Game.Stations[PlayerFirstStationIndex].ArrivalTime;
+						Game.StartupTime = Game.Stations[PlayerFirstStationIndex].ArrivalTime;
 					}
-					break;
 				}
 			}
 			int OtherFirstStationIndex = -1;
@@ -571,6 +599,16 @@ namespace OpenBve
 				if (Timetable.CustomObjectsUsed != 0 & Timetable.CustomTimetableAvailable && Interface.CurrentOptions.TimeTableStyle != Interface.TimeTableMode.AutoGenerated && Interface.CurrentOptions.TimeTableStyle != Interface.TimeTableMode.None)
 				{
 					Timetable.CurrentTimetable = Timetable.TimetableState.Custom;
+				}
+			}
+			//Create AI driver for the player train if specified via the commmand line
+			if (Game.InitialAIDriver == true)
+			{
+				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
+				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+				{
+					Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"),Game.MessageDependency.None, Interface.GameMode.Expert,
+						OpenBveApi.Colors.MessageColor.Blue, Game.SecondsSinceMidnight + 10.0);
 				}
 			}
 			
