@@ -65,11 +65,11 @@ ifeq ($(shell uname -s),Darwin)
 endif 
 
 prep_dirs: 
-	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...
+	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
-	@echo Making plugin folder
+	@echo $(COLOR_BLUE)Making plugin folder$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
-	@echo Copying dependencies$(COLOR_END)
+	@echo $(COLOR_BLUE)Copying dependencies$(COLOR_END)
 	@cp $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
 
 copy_depends:
@@ -96,9 +96,15 @@ clean:
 	# Resource Files
 	rm -f `find . | grep .resources | tr '\n' ' '`
 
+	# Assembly
+	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
+
 clean-all:
 	rm -rf bin*/
 	rm -f `find . | grep .resources | tr '\n' ' '`
+	
+	# Assembly
+	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
 
 # Utility target generator that allows easier generation of resource files
 
@@ -128,11 +134,16 @@ OPEN_BVE_RESX     := $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.r
 OPEN_BVE_RESOURCE := $(addprefix $(OPEN_BVE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OPEN_BVE_ROOT))%.resx, %.resources, $(OPEN_BVE_RESX)))))
 OPEN_BVE_OUT       = $(OUTPUT_DIR)/OpenBve.exe
 
+$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.sh
+	@echo $(COLOR_WHITE)Creating assembly file $(COLOR_CYAN)$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs$(COLOR_END)
+	@bash $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.sh
+
 $(call create_resource, $(OPEN_BVE_RESOURCE), $(OPEN_BVE_RESX))
 
-$(OPEN_BVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
+$(OPEN_BVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
+	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll \
 	/reference:System.Core.dll /reference:System.dll \
