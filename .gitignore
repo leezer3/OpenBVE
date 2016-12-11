@@ -6,18 +6,21 @@
 *.suo
 .vs/
 
-# Versioning data
-AssemblyInfo.cs
-
 # Build results
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+bin_debug/
+bin_release/
+obj/
 
 # Misc. Visual Studio files
 *.sdf
 *.opendb
+
+*.resources
+source/*.xml
 
 #InnoSetup Output Folder
 [Oo]utput/
