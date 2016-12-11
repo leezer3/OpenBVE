@@ -46,35 +46,23 @@ all: $(OUTPUT_DIR)/ObjectBender.exe
 all: $(OUTPUT_DIR)/ObjectViewer.exe
 all: $(OUTPUT_DIR)/RouteViewer.exe
 all: $(OUTPUT_DIR)/TrainEditor.exe
+all: $(OUTPUT_DIR)/OpenBveApi.dll
+all: $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
+all: $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
+all: $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
+all: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
+all: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 
 release: prep_dirs
 release: ARGS := $(RELEASE_ARGS)
 release: OUTPUT_DIR := $(RELEASE_DIR)
 release: all
 
-everything: prep_dirs
-everything: $(OUTPUT_DIR)/OpenBve.exe
-everything: $(OUTPUT_DIR)/ObjectBender.exe
-everything: $(OUTPUT_DIR)/ObjectViewer.exe
-everything: $(OUTPUT_DIR)/RouteViewer.exe
-everything: $(OUTPUT_DIR)/TrainEditor.exe
-everything: $(OUTPUT_DIR)/OpenBveApi.dll
-everything: $(OUTPUT_DIR)/OpenBveAts.dll
-everything: $(OUTPUT_DIR)/Sound.Flac.dll
-everything: $(OUTPUT_DIR)/Sound.RiffWave.dll
-everything: $(OUTPUT_DIR)/Texture.Ace.dll
-everything: $(OUTPUT_DIR)/Texture.BmpGifJpegPngTiff.dll
-
-debug-everything: everything
-
-release-everything: ARGS := $(RELEASE_ARGS)
-release-everything: OUTPUT_DIR := $(RELEASE_DIR)
-release-everything: everything
-
-
 prep_dirs: 
 	@echo Prepping $(OUTPUT_DIR)...
 	@mkdir -p $(OUTPUT_DIR)
+	@echo Making plugin folder
+	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
 	@echo Copying dependencies
 	@cp -u dependencies/* $(OUTPUT_DIR)
 	@echo Copying data
@@ -91,11 +79,11 @@ clean:
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
-	rm -f bin*/OpenBveAts.dll* bin*/OpenBveAts.pdb
-	rm -f bin*/Sound.Flac.dll* bin*/Sound.Flac.pdb
-	rm -f bin*/Sound.RiffWave.dll* bin*/Sound.RiffWave.pdb
-	rm -f bin*/Texture.Ace.dll* bin*/Teture.Ace.pdb
-	rm -f bin*/Texture.BmpGifJpegPngTiff.dll* bin*/Texture.BmpGifJpegPngTiff.pdb
+	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
+	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
+	rm -f bin*/Data/Plugins/Sound.RiffWave.dll* bin*/Data/Plugins/Sound.RiffWave.pdb
+	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
+	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 
 	# Resource Files
 	rm -f `find . | grep .resources | tr '\n' ' '`
@@ -176,7 +164,7 @@ OPEN_BVE_ATS_SRC      := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(s
 OPEN_BVE_ATS_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_ATS_RESX     := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.resx))
 OPEN_BVE_ATS_RESOURCE := $(addprefix $(OPEN_BVE_ATS_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(OPEN_BVE_ATS_RESX)))))
-OPEN_BVE_ATS_OUT       = $(OUTPUT_DIR)/OpenBveAts.dll
+OPEN_BVE_ATS_OUT       = $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
 
 $(call create_resource, $(OPEN_BVE_ATS_RESOURCE), $(OPEN_BVE_ATS_RESX))
 
@@ -196,7 +184,7 @@ SOUND_FLAC_SRC      := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)
 SOUND_FLAC_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_FLAC_RESX     := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.resx))
 SOUND_FLAC_RESOURCE := $(addprefix $(SOUND_FLAC_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(SOUND_FLAC_RESX)))))
-SOUND_FLAC_OUT       = $(OUTPUT_DIR)/Sound.Flac.dll
+SOUND_FLAC_OUT       = $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
 
 $(call create_resource, $(SOUND_FLAC_RESOURCE), $(SOUND_FLAC_RESX))
 
@@ -216,7 +204,7 @@ SOUND_RIFFWAVE_SRC      := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard
 SOUND_RIFFWAVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_RIFFWAVE_RESX     := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.resx))
 SOUND_RIFFWAVE_RESOURCE := $(addprefix $(SOUND_RIFFWAVE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(SOUND_RIFFWAVE_RESX)))))
-SOUND_RIFFWAVE_OUT       = $(OUTPUT_DIR)/Sound.RiffWave.dll
+SOUND_RIFFWAVE_OUT       = $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
 
 $(call create_resource, $(SOUND_RIFFWAVE_RESOURCE), $(SOUND_RIFFWAVE_RESX))
 
@@ -236,7 +224,7 @@ TEXTURE_ACE_SRC      := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdi
 TEXTURE_ACE_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_ACE_RESX     := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.resx))
 TEXTURE_ACE_RESOURCE := $(addprefix $(TEXTURE_ACE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(TEXTURE_ACE_RESX)))))
-TEXTURE_ACE_OUT       = $(OUTPUT_DIR)/Texture.Ace.dll
+TEXTURE_ACE_OUT       = $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
 
 $(call create_resource, $(TEXTURE_ACE_RESOURCE), $(TEXTURE_ACE_RESX))
 
@@ -256,7 +244,7 @@ TEXTURE_BGJPT_SRC      := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $
 TEXTURE_BGJPT_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_BGJPT_RESX     := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.resx))
 TEXTURE_BGJPT_RESOURCE := $(addprefix $(TEXTURE_BGJPT_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(TEXTURE_BGJPT_RESX)))))
-TEXTURE_BGJPT_OUT       = $(OUTPUT_DIR)/Texture.BmpGifJpegPngTiff.dll
+TEXTURE_BGJPT_OUT       = $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 
 $(call create_resource, $(TEXTURE_BGJPT_RESOURCE), $(TEXTURE_BGJPT_RESX))
 
