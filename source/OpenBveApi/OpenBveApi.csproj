@@ -93,6 +93,8 @@
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>echo Resoloving dependencies
-xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"</PreBuildEvent>
+
+xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
+</PreBuildEvent>
   </PropertyGroup>
 </Project>
