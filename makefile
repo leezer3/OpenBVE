@@ -90,6 +90,7 @@ clean:
 
 clean-all:
 	rm -rf bin*/
+	rm -f `find . | grep .resources | tr '\n' ' '`
 
 # Utility target generator that allows easier generation of resource files
 
