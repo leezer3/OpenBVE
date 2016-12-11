@@ -13,7 +13,7 @@ after_success:
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
 #Linux Build
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && mkdir build 
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && mv openBVE/OpenBve/bin/Release/* build
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && mv bin_release/* build
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && cd build
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" *
@@ -26,7 +26,7 @@ after_success:
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && brew install hudochenkov/sshpass/sshpass
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mkdir Mac
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependencies/MacBundle.tgz
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mv openBVE/OpenBve/bin/Release/* Mac/OpenBVE.app/Contents/Resources/
+ - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mv bin_release/* Mac/OpenBVE.app/Contents/Resources/
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && cd Mac
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create OpenBVE-$(date '+%F').dmg -volname "OpenBVE" -fs HFS+ -srcfolder "OpenBVE.app"
