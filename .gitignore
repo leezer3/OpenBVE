@@ -3,6 +3,7 @@
 # User specific settings
 *.userprefs
 *.DotSettings.user
+*.user
 *.suo
 .vs/
 

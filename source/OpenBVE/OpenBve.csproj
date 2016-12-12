@@ -325,12 +325,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo1.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -344,23 +338,11 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
     <!-- Copy in dependancies and child projects -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C 
-		xcopy "$(ProjectDir)..\..\Dependencies\AtsPluginProxy.dll" "$(TargetDir)AtsPluginProxy.dll" /Y /I /C
-		xcopy "$(ProjectDir)..\OpenBveAts\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
-		xcopy "$(ProjectDir)..\Sound.Flac\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
-		xcopy "$(ProjectDir)..\Sound.RiffWave\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
-		xcopy "$(ProjectDir)..\Texture.Ace\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
-		xcopy "$(ProjectDir)..\Texture.BmpGifJpegPngTiff\bin\$(Configuration)\*.*" "$(TargetDir)" /Y /I /E /C
 	</PostBuildEvent>
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		cp -rf "$(ProjectDir)Data" "$(ProjectDir)../../Dependencies/OpenTK.dll.config" "$(ProjectDir)../../Dependencies/AtsPluginProxy.dll" "$(ProjectDir)../OpenBveAts/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.Flac/bin/$(Configuration)/Data" "$(ProjectDir)../Sound.RiffWave/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.Ace/bin/$(Configuration)/Data" "$(ProjectDir)../Texture.BmpGifJpegPngTiff/bin/$(Configuration)/Data" "$(TargetDir)"
+		cp -rf "$(ProjectDir)Data" "$(TargetDir)"
 	</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent />
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>xcopy /E /Y "$(ProjectDir)Data" "$(TargetDir)Data\"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
