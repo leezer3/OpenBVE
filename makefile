@@ -1,5 +1,14 @@
 # C-Sharp Compiler
+HASGMCS := $(shell command -v gmcs 2> /dev/null)
+
+# This is so hacky it's not even funny
+# Should work though. That's the scary part
+ifdef HASGMCS
 CSC := gmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+endif
+ifndef HASGMCS
+CSC := mcs
+endif
 
 # Resource file creator
 RESGEN := resgen
