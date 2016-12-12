@@ -4,15 +4,20 @@ matrix:
   include:
     - os: linux
       dist: precise
+      mono: latest
     - os: linux
       dist: trusty
+      mono: latest
     - os: osx
-
-mono:
-  - latest
-  - 3.2.8
-  - 2.10.8
-
+      mono: latest
+    - os: linux
+      dist: precise
+      mono: 3.2.8
+    - os: linux
+      dist: trusty
+      mono: 3.2.8
+    - os: osx
+      mono: 3.2.8
  
 script:
   - make all-release
