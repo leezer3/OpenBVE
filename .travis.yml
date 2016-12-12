@@ -10,6 +10,16 @@ matrix:
       mono: latest
     - os: osx
       mono: latest
+
+    - os: linux
+      dist: precise
+      mono: 3.12.1
+    - os: linux
+      dist: trusty
+      mono: 3.12.1
+    - os: osx
+      mono: 3.12.1
+
     - os: linux
       dist: precise
       mono: 3.2.8
