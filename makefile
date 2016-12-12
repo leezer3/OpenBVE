@@ -1,5 +1,5 @@
 # C-Sharp Compiler
-CSC := mcs
+CSC := mcs -pkg:dotnet -lib:/usr/lib/mono/4.0
 
 # Resource file creator
 RESGEN := resgen
