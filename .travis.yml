@@ -15,6 +15,9 @@ matrix:
     sudo: false
   - os: osx
     sudo: false
+  - mono: latest
+  - mono: 3.2.8
+  - mono: 2.10.8
  
 script:
   - make all-release
