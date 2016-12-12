@@ -1,10 +1,20 @@
 language: csharp
 
-os:
-  - linux
-  - osx
 mono:
- - latest
+  - latest
+  - 3.2.8
+  - 2.10.8
+
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: false
+  - os: linux
+    dist: precise
+    sudo: false
+  - os: osx
+    sudo: false
  
 script:
   - make all-release
@@ -38,8 +48,6 @@ addons:
   apt:
     packages:
       - sshpass
-      - mono-complete
-      - mono-devel
 env:
   global:
     - secure: "NquGr/vI8CyhAV5itzUxV5gXCtWFn3kqOnAeEz5Niw4fJfrBH5G/TBGyQpyzkpeY+Tox8z8m+a/UdSYutVxI9OYbAuFH8vo75pL3oydFtNOnuO45v4BFaz9KLGB0AEAvNzX7YTUM7qEE4QlX2/jzPXSoJqxC9RWMdENxwjzCvE0CLhBPQvqCSxB6nJ86rRM7xpLkT34t+C66XjdHSLKDcu94dC50o8MxnIchgWAfEV4+d9kv6XZV+rZvz75e8qYzCJKU6wl3GPMpL8JajG3TIkHAiNWPlcH8WbCqd62znZYtFUMvVkFDKOAjnq1sMqMYfFiu3x+AJPYF52Se2g5qDrkOCZhKL2MSofEugvSjlNekkfQzg/SqHJXlToZvvWQWvuZaTcjYwoiFg+O0eFgvN1bjX2Z7Y9Pb85o+DgKn0WFkBkCohbygFw1Iir1tT5+3bnt3uAZWPKH8k7r5+Tbm2KxJ3O0/ietbMW97S9EaU24Gwh6YbPRVskEgp3ym/2It0sgMfEb64GnhbvGG6lPk3uU6AEmmxHsBgxv+E2ZdRVOqEsWVeBs8IDmVwXeG8T1FCL+GtV5hTwmIMH+z+OTuAHEzKR81DohF+z3vXzYOLxzSCx9IBKkTfIiVKpuFl6+l17olIgaGwomN23b6p0Eky0ZRrWupjkoetIJF6A9Ux8M="
