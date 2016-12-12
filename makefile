@@ -5,9 +5,11 @@ HASGMCS := $(shell command -v gmcs 2> /dev/null)
 # Should work though. That's the scary part
 ifdef HASGMCS
 CSC := gmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+CSC_NAME :=gmcs
 endif
 ifndef HASGMCS
 CSC := mcs
+CSC_NAME :=mcs
 endif
 
 # Resource file creator
@@ -94,6 +96,7 @@ ifeq ($(shell uname -s),Darwin)
 endif 
 
 prep_dirs: 
+	@echo $(COLOR_RED)Using $(CSC_NAME)$(COLOR_END)
 	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
 	@echo $(COLOR_BLUE)Making plugin folder$(COLOR_END)
