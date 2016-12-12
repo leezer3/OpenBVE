@@ -1,19 +1,18 @@
 language: csharp
 
-os:
-  - linux
-  - osx
-
-dist:
-  - precise
-  - trusty
+matrix:
+  include:
+    - os: linux
+      dist: precise
+    - os: linux
+      dist: trusty
+    - os: osx
 
 mono:
   - latest
   - 3.2.8
   - 2.10.8
 
-sudo: false
  
 script:
   - make all-release
