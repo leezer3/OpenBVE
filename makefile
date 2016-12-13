@@ -1,15 +1,24 @@
 # C-Sharp Compiler
-HASGMCS := $(shell command -v gmcs 2> /dev/null)
+HAS_GMCS := $(shell command -v gmcs 2> /dev/null)
+HASS_SMCS := $(shell command -v smcs 2> /dev/null)
 
 # This is so hacky it's not even funny
 # Should work though. That's the scary part
-ifdef HASGMCS
+ifdef HAS_GMCS
 CSC := gmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
 CSC_NAME :=gmcs
 endif
-ifndef HASGMCS
+ifndef HAS_GMCS
+ifdef HASS_SMCS
+CSC := smcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+CSC_NAME :=smcs
+endif
+endif
+ifndef HAS_GMCS
+ifndef HASS_SMCS
 CSC := mcs
 CSC_NAME :=mcs
+endif
 endif
 
 # Resource file creator
