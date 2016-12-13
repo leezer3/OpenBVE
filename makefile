@@ -170,7 +170,7 @@ $(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
 
 copy_depends:
 	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
-	@cp $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
+	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
 
 clean: 
 	# Executables
@@ -210,8 +210,8 @@ endif
 
 $(MAC_BUILD_RESULT): all-release
 	@mkdir mac
-	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)dependencies/MacBundle.tgz$(COLOR_END)
-	@tar -C mac -xzf dependencies/MacBundle.tgz
+	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
+	@tar -C mac -xzf macinstaller/MacBundle.tgz
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
