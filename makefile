@@ -53,52 +53,92 @@ COLOR_CYAN    := "\033[1;36m"
 COLOR_WHITE   := "\033[1;37m"
 COLOR_END     := "\033[0m"
 
+#######################
+# Project Information #
+#######################
+
+# This has to be forward declaired for it to work right
+OPEN_BVE_ROOT         :=source/OpenBVE
+OPEN_BVE_FILE         :=OpenBve.exe
+
+OPEN_BVE_API_ROOT     :=source/OpenBveApi
+OPEN_BVE_API_FILE     :=OpenBveApi.dll
+
+OPEN_BVE_ATS_ROOT     :=source/OpenBveAts
+OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
+
+SOUND_FLAC_ROOT       :=source/Sound.Flac
+SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
+
+SOUND_RIFFWAVE_ROOT   :=source/Sound.RiffWave
+SOUND_RIFFWAVE_FILE   :=Data/Plugins/Sound.RiffWave.dll
+
+TEXTURE_ACE_ROOT      :=source/Texture.Ace
+TEXTURE_ACE_FILE      :=Data/Plugins/Texture.Ace.dll
+
+TEXTURE_BGJPT_ROOT    :=source/Texture.BmpGifJpegPngTiff
+TEXTURE_BGJPT_FILE    :=Data/Plugins/Texture.BmpGifJpegPngTiff.dll
+
+ROUTE_VIEWER_ROOT     :=source/RouteViewer
+ROUTE_VIEWER_FILE     :=RouteViewer.exe
+
+OBJECT_BENDER_ROOT    :=source/ObjectBender
+OBJECT_BENDER_FILE    :=ObjectBender.exe
+
+OBJECT_VIEWER_ROOT    :=source/ObjectViewer
+OBJECT_VIEWER_FILE    :=ObjectViewer.exe
+
+TRAIN_EDITOR_ROOT     :=source/TrainEditor
+TRAIN_EDITOR_FILE     :=TrainEditor.exe
+
 .PHONY: all 
 .PHONY: debug
 .PHONY: release 
 .PHONY: clean
 .PHONY: clean-all
-
-openbve: prep_dirs
-openbve: $(OUTPUT_DIR)/OpenBve.exe
-openbve: $(OUTPUT_DIR)/OpenBveApi.dll
-openbve: $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
-openbve: $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
-openbve: $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
-openbve: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
-openbve: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
-openbve: copy_depends
+.PHONY: openbve
+.PHONY: openbve-debug
+.PHONY: openbve-release
+.PHONY: all
+.PHONY: all-debug
+.PHONY: all-release
+.PHONY: prep_dirs
+.PHONY: copy_depends
 
 debug: openbve-debug
-
 release: openbve-release
+openbve: openbve-debug
 
-openbve-debug: openbve
+openbve-debug: prep_dirs
+openbve-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
+openbve-debug: copy_depends
 
 openbve-release: ARGS := $(RELEASE_ARGS)
 openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
-openbve-release: openbve
+openbve-release: prep_release_dirs
+openbve-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
+openbve-release: copy_depends
 
-all-debug: all
+all: all-debug
 
-all: prep_dirs
-all: $(OUTPUT_DIR)/OpenBve.exe
-all: $(OUTPUT_DIR)/ObjectBender.exe
-all: $(OUTPUT_DIR)/ObjectViewer.exe
-all: $(OUTPUT_DIR)/RouteViewer.exe
-all: $(OUTPUT_DIR)/TrainEditor.exe
-all: $(OUTPUT_DIR)/OpenBveApi.dll
-all: $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
-all: $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
-all: $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
-all: $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
-all: $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
-all: copy_depends
+all-debug: prep_dirs
+all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
+all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
+all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
+all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
+all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
+all-debug: copy_depends
 
 all-release: prep_dirs
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
-all-release: all
+all-release: prep_release_dirs
+all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
+all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
+all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
+all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
+all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
+all-release: copy_depends
 
 CP_UPDATE_FLAG = -u
 CP_RECURSE = -r
@@ -107,7 +147,7 @@ ifeq ($(shell uname -s),Darwin)
     CP_RECURSE = -R
 endif 
 
-prep_dirs: 
+prep_dirs prep_release_dirs: 
 	@echo $(COLOR_RED)Using $(CSC_NAME)$(COLOR_END)
 	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
@@ -169,14 +209,13 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_ROOT     := source/OpenBVE
 OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
 OPEN_BVE_SRC      := $(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs)))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_RESX     := $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.resx))
 OPEN_BVE_RESOURCE := $(addprefix $(OPEN_BVE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OPEN_BVE_ROOT))%.resx, %.resources, $(OPEN_BVE_RESX)))))
-OPEN_BVE_OUT       = $(OUTPUT_DIR)/OpenBve.exe
+OPEN_BVE_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_FILE)
 
 $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.sh
 	@echo $(COLOR_WHITE)Creating assembly file $(COLOR_CYAN)$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs$(COLOR_END)
@@ -184,7 +223,21 @@ $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/Assembl
 
 $(call create_resource, $(OPEN_BVE_RESOURCE), $(OPEN_BVE_RESX))
 
-$(OPEN_BVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
+
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
+
+$(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
@@ -198,18 +251,17 @@ $(OPEN_BVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OPEN_BVE_ROOT)/Properties/Assemb
 # OpenBveApi #
 ##############
 
-OPEN_BVE_API_ROOT     := source/OpenBveApi
 OPEN_BVE_API_FOLDERS  := . Properties
 OPEN_BVE_API_FOLDERS  := $(addprefix $(OPEN_BVE_API_ROOT)/, $(OPEN_BVE_API_FOLDERS))
 OPEN_BVE_API_SRC      := $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.cs))
 OPEN_BVE_API_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_API_RESX     := $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.resx))
 OPEN_BVE_API_RESOURCE := $(addprefix $(OPEN_BVE_API_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(OPEN_BVE_API_RESX)))))
-OPEN_BVE_API_OUT       = $(OUTPUT_DIR)/OpenBveApi.dll
+OPEN_BVE_API_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_API_FILE)
 
 $(call create_resource, $(OPEN_BVE_API_RESOURCE), $(OPEN_BVE_API_RESX))
 
-$(OPEN_BVE_API_OUT): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
+$(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_API_OUT) /target:library $(OPEN_BVE_API_SRC) $(ARGS) $(OPEN_BVE_API_DOC) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll \
@@ -221,18 +273,20 @@ $(OPEN_BVE_API_OUT): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 # OpenBveAts #
 ##############
 
-OPEN_BVE_ATS_ROOT     := source/OpenBveAts
 OPEN_BVE_ATS_FOLDERS  := . Properties
 OPEN_BVE_ATS_FOLDERS  := $(addprefix $(OPEN_BVE_ATS_ROOT)/, $(OPEN_BVE_ATS_FOLDERS))
 OPEN_BVE_ATS_SRC      := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.cs))
 OPEN_BVE_ATS_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_ATS_RESX     := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.resx))
 OPEN_BVE_ATS_RESOURCE := $(addprefix $(OPEN_BVE_ATS_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(OPEN_BVE_ATS_RESX)))))
-OPEN_BVE_ATS_OUT       = $(OUTPUT_DIR)/Data/Plugins/OpenBveAts.dll
+OPEN_BVE_ATS_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_ATS_FILE)
 
 $(call create_resource, $(OPEN_BVE_ATS_RESOURCE), $(OPEN_BVE_ATS_RESX))
 
-$(OPEN_BVE_ATS_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OPEN_BVE_ATS_SRC) $(OPEN_BVE_ATS_RESOURCE)
+$(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE): $(OPEN_BVE_ATS_SRC) $(OPEN_BVE_ATS_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_ATS_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_ATS_OUT) /target:library $(OPEN_BVE_ATS_SRC) $(ARGS) $(OPEN_BVE_ATS_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(OPEN_BVE_ATS_RESOURCE))
@@ -241,18 +295,20 @@ $(OPEN_BVE_ATS_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OPEN_BVE_ATS_SRC) $(OPEN_BVE
 # Sound.Flac #
 ##############
 
-SOUND_FLAC_ROOT     := source/Sound.Flac
 SOUND_FLAC_FOLDERS  := . Properties
 SOUND_FLAC_FOLDERS  := $(addprefix $(SOUND_FLAC_ROOT)/, $(SOUND_FLAC_FOLDERS))
 SOUND_FLAC_SRC      := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.cs))
 SOUND_FLAC_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_FLAC_RESX     := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.resx))
 SOUND_FLAC_RESOURCE := $(addprefix $(SOUND_FLAC_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(SOUND_FLAC_RESX)))))
-SOUND_FLAC_OUT       = $(OUTPUT_DIR)/Data/Plugins/Sound.Flac.dll
+SOUND_FLAC_OUT       =$(OUTPUT_DIR)/$(SOUND_FLAC_FILE)
 
 $(call create_resource, $(SOUND_FLAC_RESOURCE), $(SOUND_FLAC_RESX))
 
-$(SOUND_FLAC_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(SOUND_FLAC_SRC) $(SOUND_FLAC_RESOURCE)
+$(DEBUG_DIR)/$(SOUND_FLAC_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUND_FLAC_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(SOUND_FLAC_FILE) $(RELEASE_DIR)/$(SOUND_FLAC_FILE): $(SOUND_FLAC_SRC) $(SOUND_FLAC_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_FLAC_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_FLAC_OUT) /target:library $(SOUND_FLAC_SRC) $(ARGS) $(SOUND_FLAC_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SOUND_FLAC_RESOURCE))
@@ -261,18 +317,20 @@ $(SOUND_FLAC_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(SOUND_FLAC_SRC) $(SOUND_FLAC_R
 # Sound.RiffWave #
 ##################
 
-SOUND_RIFFWAVE_ROOT     := source/Sound.RiffWave
 SOUND_RIFFWAVE_FOLDERS  := . Properties
 SOUND_RIFFWAVE_FOLDERS  := $(addprefix $(SOUND_RIFFWAVE_ROOT)/, $(SOUND_RIFFWAVE_FOLDERS))
 SOUND_RIFFWAVE_SRC      := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.cs))
 SOUND_RIFFWAVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_RIFFWAVE_RESX     := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.resx))
 SOUND_RIFFWAVE_RESOURCE := $(addprefix $(SOUND_RIFFWAVE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(SOUND_RIFFWAVE_RESX)))))
-SOUND_RIFFWAVE_OUT       = $(OUTPUT_DIR)/Data/Plugins/Sound.RiffWave.dll
+SOUND_RIFFWAVE_OUT       =$(OUTPUT_DIR)/$(SOUND_RIFFWAVE_FILE)
 
 $(call create_resource, $(SOUND_RIFFWAVE_RESOURCE), $(SOUND_RIFFWAVE_RESX))
 
-$(SOUND_RIFFWAVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
+$(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_RIFFWAVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_RIFFWAVE_OUT) /target:library $(SOUND_RIFFWAVE_SRC) $(ARGS) $(SOUND_RIFFWAVE_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
@@ -281,18 +339,20 @@ $(SOUND_RIFFWAVE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(SOUND_RIFFWAVE_SRC) $(SOUN
 # Texture.Ace #
 ###############
 
-TEXTURE_ACE_ROOT     := source/Texture.Ace
 TEXTURE_ACE_FOLDERS  := . Properties
 TEXTURE_ACE_FOLDERS  := $(addprefix $(TEXTURE_ACE_ROOT)/, $(TEXTURE_ACE_FOLDERS))
 TEXTURE_ACE_SRC      := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.cs))
 TEXTURE_ACE_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_ACE_RESX     := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.resx))
 TEXTURE_ACE_RESOURCE := $(addprefix $(TEXTURE_ACE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(TEXTURE_ACE_RESX)))))
-TEXTURE_ACE_OUT       = $(OUTPUT_DIR)/Data/Plugins/Texture.Ace.dll
+TEXTURE_ACE_OUT       =$(OUTPUT_DIR)/$(TEXTURE_ACE_FILE)
 
 $(call create_resource, $(TEXTURE_ACE_RESOURCE), $(TEXTURE_ACE_RESX))
 
-$(TEXTURE_ACE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(TEXTURE_ACE_SRC) $(TEXTURE_ACE_RESOURCE)
+$(DEBUG_DIR)/$(TEXTURE_ACE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(TEXTURE_ACE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(TEXTURE_ACE_FILE) $(RELEASE_DIR)/$(TEXTURE_ACE_FILE): $(TEXTURE_ACE_SRC) $(TEXTURE_ACE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_ACE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TEXTURE_ACE_OUT) /target:library $(TEXTURE_ACE_SRC) $(ARGS) $(TEXTURE_ACE_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(TEXTURE_ACE_RESOURCE))
@@ -301,18 +361,20 @@ $(TEXTURE_ACE_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(TEXTURE_ACE_SRC) $(TEXTURE_AC
 # Texture.BmpGifJpegPngTiff #
 #############################
 
-TEXTURE_BGJPT_ROOT     := source/Texture.BmpGifJpegPngTiff
 TEXTURE_BGJPT_FOLDERS  := . Properties
 TEXTURE_BGJPT_FOLDERS  := $(addprefix $(TEXTURE_BGJPT_ROOT)/, $(TEXTURE_BGJPT_FOLDERS))
 TEXTURE_BGJPT_SRC      := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.cs))
 TEXTURE_BGJPT_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_BGJPT_RESX     := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.resx))
 TEXTURE_BGJPT_RESOURCE := $(addprefix $(TEXTURE_BGJPT_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(TEXTURE_BGJPT_RESX)))))
-TEXTURE_BGJPT_OUT       = $(OUTPUT_DIR)/Data/Plugins/Texture.BmpGifJpegPngTiff.dll
+TEXTURE_BGJPT_OUT       =$(OUTPUT_DIR)/$(TEXTURE_BGJPT_FILE)
 
 $(call create_resource, $(TEXTURE_BGJPT_RESOURCE), $(TEXTURE_BGJPT_RESX))
 
-$(TEXTURE_BGJPT_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(TEXTURE_BGJPT_SRC) $(TEXTURE_BGJPT_RESOURCE)
+$(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE) $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE): $(TEXTURE_BGJPT_SRC) $(TEXTURE_BGJPT_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_BGJPT_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TEXTURE_BGJPT_OUT) /target:library $(TEXTURE_BGJPT_SRC) $(ARGS) $(TEXTURE_BGJPT_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(TEXTURE_BGJPT_RESOURCE))
@@ -322,18 +384,20 @@ $(TEXTURE_BGJPT_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(TEXTURE_BGJPT_SRC) $(TEXTUR
 # RouteViewer #
 ###############
 
-ROUTE_VIEWER_ROOT     := source/RouteViewer
 ROUTE_VIEWER_FOLDERS  := . Parsers Properties System
 ROUTE_VIEWER_FOLDERS  := $(addprefix $(ROUTE_VIEWER_ROOT)/, $(ROUTE_VIEWER_FOLDERS))
 ROUTE_VIEWER_SRC      := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 ROUTE_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 ROUTE_VIEWER_RESX     := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.resx))
 ROUTE_VIEWER_RESOURCE := $(addprefix $(ROUTE_VIEWER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(ROUTE_VIEWER_RESX)))))
-ROUTE_VIEWER_OUT       = $(OUTPUT_DIR)/RouteViewer.exe
+ROUTE_VIEWER_OUT       =$(OUTPUT_DIR)/$(ROUTE_VIEWER_FILE)
 
 $(call create_resource, $(ROUTE_VIEWER_RESOURCE), $(ROUTE_VIEWER_RESX))
 
-$(ROUTE_VIEWER_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(ROUTE_VIEWER_SRC) $(ROUTE_VIEWER_RESOURCE)
+$(DEBUG_DIR)/$(ROUTE_VIEWER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_VIEWER_SRC) $(ROUTE_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
@@ -343,18 +407,17 @@ $(ROUTE_VIEWER_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(ROUTE_VIEWER_SRC) $(ROUTE_VI
 # ObjectBender #
 ################
 
-OBJECT_BENDER_ROOT     := source/ObjectBender
 OBJECT_BENDER_FOLDERS  := . Properties
 OBJECT_BENDER_FOLDERS  := $(addprefix $(OBJECT_BENDER_ROOT)/, $(OBJECT_BENDER_FOLDERS))
 OBJECT_BENDER_SRC      := $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.cs))
 OBJECT_BENDER_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OBJECT_BENDER_RESX     := $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.resx))
 OBJECT_BENDER_RESOURCE := $(addprefix $(OBJECT_BENDER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(OBJECT_BENDER_RESX)))))
-OBJECT_BENDER_OUT       = $(OUTPUT_DIR)/ObjectBender.exe
+OBJECT_BENDER_OUT       =$(OUTPUT_DIR)/$(OBJECT_BENDER_FILE)
 
 $(call create_resource, $(OBJECT_BENDER_RESOURCE), $(OBJECT_BENDER_RESX))
 
-$(OBJECT_BENDER_OUT): $(OBJECT_BENDER_SRC) $(OBJECT_BENDER_RESOURCE)
+$(DEBUG_DIR)/$(OBJECT_BENDER_FILE) $(RELEASE_DIR)/$(OBJECT_BENDER_FILE): $(OBJECT_BENDER_SRC) $(OBJECT_BENDER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_BENDER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_BENDER_OUT) /target:winexe /main:ObjectBender.Program $(OBJECT_BENDER_SRC) $(ARGS) $(OBJECT_BENDER_DOC) \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_BENDER_RESOURCE))
@@ -363,18 +426,20 @@ $(OBJECT_BENDER_OUT): $(OBJECT_BENDER_SRC) $(OBJECT_BENDER_RESOURCE)
 # ObjectViewer #
 ################
 
-OBJECT_VIEWER_ROOT     := source/ObjectViewer
 OBJECT_VIEWER_FOLDERS  := . Parsers Properties System
 OBJECT_VIEWER_FOLDERS  := $(addprefix $(OBJECT_VIEWER_ROOT)/, $(OBJECT_VIEWER_FOLDERS))
 OBJECT_VIEWER_SRC      := $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 OBJECT_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OBJECT_VIEWER_RESX     := $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.resx))
 OBJECT_VIEWER_RESOURCE := $(addprefix $(OBJECT_VIEWER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(OBJECT_VIEWER_RESX)))))
-OBJECT_VIEWER_OUT       = $(OUTPUT_DIR)/ObjectViewer.exe
+OBJECT_VIEWER_OUT       =$(OUTPUT_DIR)/$(OBJECT_VIEWER_FILE)
 
 $(call create_resource, $(OBJECT_VIEWER_RESOURCE), $(OBJECT_VIEWER_RESX))
 
-$(OBJECT_VIEWER_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
+$(DEBUG_DIR)/$(OBJECT_VIEWER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll \
@@ -384,18 +449,17 @@ $(OBJECT_VIEWER_OUT): $(OUTPUT_DIR)/OpenBveApi.dll $(OBJECT_VIEWER_SRC) $(OBJECT
 # TrainEditor #
 ###############
 
-TRAIN_EDITOR_ROOT     := source/TrainEditor
 TRAIN_EDITOR_FOLDERS  := . CsvB3dDecoder Properties TrainsimApi/Codecs TrainsimApi/Geometry TrainsimApi/Platform TrainsimApi/Vectors
 TRAIN_EDITOR_FOLDERS  := $(addprefix $(TRAIN_EDITOR_ROOT)/, $(TRAIN_EDITOR_FOLDERS))
 TRAIN_EDITOR_SRC      := $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.cs))
 TRAIN_EDITOR_DOC      := $(addprefix /doc:, $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TRAIN_EDITOR_RESX     := $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.resx))
 TRAIN_EDITOR_RESOURCE := $(addprefix $(TRAIN_EDITOR_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst source/%.resx, %.resources, $(TRAIN_EDITOR_RESX)))))
-TRAIN_EDITOR_OUT       = $(OUTPUT_DIR)/TrainEditor.exe
+TRAIN_EDITOR_OUT       =$(OUTPUT_DIR)/$(TRAIN_EDITOR_FILE)
 
 $(call create_resource, $(TRAIN_EDITOR_RESOURCE), $(TRAIN_EDITOR_RESX))
 
-$(TRAIN_EDITOR_OUT): $(TRAIN_EDITOR_SRC) $(TRAIN_EDITOR_RESOURCE)
+$(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_EDITOR_SRC) $(TRAIN_EDITOR_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TRAIN_EDITOR_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
