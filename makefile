@@ -27,7 +27,7 @@ endif
 # Resource file creator
 RESGEN := resgen
 
-# Standard Arugments
+# Standard Arguments
 DEBUG_ARGS   := /noconfig /debug:Full /debug+ /optimize- /warnaserror- /unsafe+ /define:"DEBUG;TRACE" /platform:x86 /warn:4 /pkg:dotnet
 RELEASE_ARGS := /noconfig /debug- /optimize+ /unsafe+ /checked- /define:"TRACE" /platform:x86 /warn:4 /pkg:dotnet
 
@@ -61,7 +61,7 @@ COLOR_END     := "\033[0m"
 # Project Information #
 #######################
 
-# This has to be forward declaired for it to work right
+# This has to be forward declared for it to work right
 OPEN_BVE_ROOT         :=source/OpenBVE
 OPEN_BVE_FILE         :=OpenBve.exe
 
@@ -205,12 +205,13 @@ publish: $(LINUX_BUILD_RESULT)
 endif
 
 $(MAC_BUILD_RESULT): all-release
-	@mkdir mac
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
-	
-        @tar -C mac -xzf macinstaller/MacBundle.tgz
+	@mkdir mac
+	@tar -C mac -xzf macinstaller/MacBundle.tgz
+
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
 	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
 
