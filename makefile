@@ -211,9 +211,10 @@ endif
 $(MAC_BUILD_RESULT): all-release
 	@mkdir mac
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
-	@tar -C mac -xzf macinstaller/MacBundle.tgz
+	
+        @tar -C mac -xzf macinstaller/MacBundle.tgz
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
-	@cp $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
 	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
 
