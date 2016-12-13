@@ -15,6 +15,9 @@
 bin_debug/
 bin_release/
 obj/
+*.tar.gz
+*.dmg
+mac/
 
 # Misc. Visual Studio files
 *.sdf

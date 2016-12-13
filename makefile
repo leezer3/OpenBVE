@@ -36,6 +36,10 @@ DEBUG_DIR   := bin_debug
 RELEASE_DIR := bin_release
 OUTPUT_DIR  := $(DEBUG_DIR)
 
+# Final output names
+MAC_BUILD_RESULT = macbuild.dmg
+LINUX_BUILD_RESULT = linuxbuild.tar.gz
+
 # Current Args
 ARGS := $(DEBUG_ARGS)
 
@@ -105,6 +109,7 @@ TRAIN_EDITOR_FILE     :=TrainEditor.exe
 .PHONY: prep_dirs
 .PHONY: prep_release_dirs
 .PHONY: copy_depends
+.PHONY: publish
 
 debug: openbve-debug
 release: openbve-release
@@ -165,7 +170,7 @@ $(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
 
 copy_depends:
 	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
-	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
+	@cp $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
 
 clean: 
 	# Executables
@@ -196,6 +201,27 @@ clean-all:
 	
 	# Assembly
 	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
+
+ifeq ($(shell uname -s),Darwin) 
+publish: $(MAC_BUILD_RESULT)
+else
+publish: $(LINUX_BUILD_RESULT)
+endif
+
+$(MAC_BUILD_RESULT): all-release
+	@mkdir mac
+	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)dependencies/MacBundle.tgz$(COLOR_END)
+	@tar -C mac -xzf dependencies/MacBundle.tgz
+	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
+	@cp $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
+	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
+
+
+$(LINUX_BUILD_RESULT): all-release
+	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
+	@cd $(RELEASE_DIR); tar -zcf ../$(LINUX_BUILD_RESULT) *
+
 
 # Utility target generator that allows easier generation of resource files
 
