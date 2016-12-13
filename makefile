@@ -154,7 +154,7 @@ prep_release_dirs: $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins/
 prep_dirs prep_release_dirs:
 	@echo $(COLOR_RED)Using $(CSC_NAME)$(COLOR_END)
 	@echo $(COLOR_BLUE)Copying dependencies$(COLOR_END)
-	@cp $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
+	@cp -r $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
 
 $(DEBUG_DIR) $(RELEASE_DIR): 
 	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
@@ -166,7 +166,7 @@ $(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
 
 copy_depends:
 	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
-	@cp $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
+	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
 
 clean: 
 	# Executables
@@ -211,7 +211,7 @@ $(MAC_BUILD_RESULT): all-release
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
-	
+
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
 	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
 
