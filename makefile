@@ -103,6 +103,7 @@ TRAIN_EDITOR_FILE     :=TrainEditor.exe
 .PHONY: all-debug
 .PHONY: all-release
 .PHONY: prep_dirs
+.PHONY: prep_release_dirs
 .PHONY: copy_depends
 
 debug: openbve-debug
@@ -146,14 +147,21 @@ ifeq ($(shell uname -s),Darwin)
     CP_RECURSE = -R
 endif 
 
-prep_dirs prep_release_dirs: 
+prep_dirs: $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins/
+prep_release_dirs: $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins/
+
+prep_dirs prep_release_dirs:
 	@echo $(COLOR_RED)Using $(CSC_NAME)$(COLOR_END)
-	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
-	@mkdir -p $(OUTPUT_DIR)
-	@echo $(COLOR_BLUE)Making plugin folder$(COLOR_END)
-	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
 	@echo $(COLOR_BLUE)Copying dependencies$(COLOR_END)
 	@cp $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
+
+$(DEBUG_DIR) $(RELEASE_DIR): 
+	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)
+
+$(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
+	@echo $(COLOR_BLUE)Making plugin folder$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
 
 copy_depends:
 	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
@@ -210,7 +218,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 
 OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
-OPEN_BVE_SRC      := $(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs)))
+OPEN_BVE_SRC      := $(filter-out $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs,$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_RESX     := $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.resx))
 OPEN_BVE_RESOURCE := $(addprefix $(OPEN_BVE_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OPEN_BVE_ROOT))%.resx, %.resources, $(OPEN_BVE_RESX)))))
