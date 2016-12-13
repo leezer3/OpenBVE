@@ -27,7 +27,7 @@ endif
 # Resource file creator
 RESGEN := resgen
 
-# Standard Arugments
+# Standard Arguments
 DEBUG_ARGS   := /noconfig /debug:Full /debug+ /optimize- /warnaserror- /unsafe+ /define:"DEBUG;TRACE" /platform:x86 /warn:4 /pkg:dotnet
 RELEASE_ARGS := /noconfig /debug- /optimize+ /unsafe+ /checked- /define:"TRACE" /platform:x86 /warn:4 /pkg:dotnet
 
@@ -61,7 +61,7 @@ COLOR_END     := "\033[0m"
 # Project Information #
 #######################
 
-# This has to be forward declaired for it to work right
+# This has to be forward declared for it to work right
 OPEN_BVE_ROOT         :=source/OpenBVE
 OPEN_BVE_FILE         :=OpenBve.exe
 
@@ -115,19 +115,16 @@ debug: openbve-debug
 release: openbve-release
 openbve: openbve-debug
 
-openbve-debug: prep_dirs
 openbve-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 openbve-debug: copy_depends
 
 openbve-release: ARGS := $(RELEASE_ARGS)
 openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
-openbve-release: prep_release_dirs
 openbve-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 openbve-release: copy_depends
 
 all: all-debug
 
-all-debug: prep_dirs
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
@@ -137,7 +134,6 @@ all-debug: copy_depends
 
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
-all-release: prep_release_dirs
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
@@ -209,11 +205,13 @@ publish: $(LINUX_BUILD_RESULT)
 endif
 
 $(MAC_BUILD_RESULT): all-release
+	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
 	@mkdir mac
-	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)dependencies/MacBundle.tgz$(COLOR_END)
-	@tar -C mac -xzf dependencies/MacBundle.tgz
+	@tar -C mac -xzf macinstaller/MacBundle.tgz
+
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
-	@cp $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/
+	
 	@echo $(COLOR_RED)Creating $(COLOR_CYAN)$(MAC_BUILD_RESULT)$(COLOR_END)
 	@hdiutil create $(MAC_BUILD_RESULT) -volname "OpenBVE" -fs HFS+ -srcfolder "mac/OpenBVE.app"
 
@@ -293,6 +291,9 @@ OPEN_BVE_API_RESOURCE := $(addprefix $(OPEN_BVE_API_ROOT)/, $(subst /,., $(subst
 OPEN_BVE_API_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_API_FILE)
 
 $(call create_resource, $(OPEN_BVE_API_RESOURCE), $(OPEN_BVE_API_RESX))
+
+$(DEBUG_DIR)/$(OPEN_BVE_API_FILE): prep_dirs
+$(RELEASE_DIR)/$(OPEN_BVE_API_FILE): prep_release_dirs
 
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
