@@ -1,24 +1,43 @@
 # C-Sharp Compiler
 HAS_GMCS := $(shell command -v gmcs 2> /dev/null)
-HASS_SMCS := $(shell command -v smcs 2> /dev/null)
+HAS_SMCS := $(shell command -v smcs 2> /dev/null)
+HAS_DMCS := $(shell command -v dmcs 2> /dev/null)
 
 # This is so hacky it's not even funny
-# Should work though. That's the scary part
+# Should work though. That's the scary part.
+# This horrifies me.
 ifdef HAS_GMCS
-CSC := gmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
-CSC_NAME :=gmcs
+	CSC := gmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+	CSC_NAME :=gmcs
 endif
+
 ifndef HAS_GMCS
-ifdef HASS_SMCS
-CSC := smcs -pkg:dotnet -lib:/usr/lib/mono/4.0
-CSC_NAME :=smcs
+	ifdef HAS_SMCS
+		CSC := smcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+		CSC_NAME :=smcs
+	endif
 endif
-endif
+
 ifndef HAS_GMCS
-ifndef HASS_SMCS
-CSC := mcs
-CSC_NAME :=mcs
+	ifndef HAS_SMCS
+		ifdef HAS_DMCS
+			ifeq ($(shell uname -s),Darwin)
+				CSC := dmcs -pkg:dotnet -lib:/usr/lib/mono/4.0
+				CSC_NAME :=dmcs
+			endif
+		endif
+	endif
 endif
+
+ifndef HAS_GMCS
+	ifndef HAS_SMCS
+		ifdef HAS_DMCS
+			ifneq ($(shell uname -s),Darwin)
+				CSC := mcs
+				CSC_NAME :=mcs
+			endif
+		endif
+	endif
 endif
 
 # Resource file creator
