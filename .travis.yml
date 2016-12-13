@@ -14,8 +14,6 @@ matrix:
     - os: linux
       dist: precise
       mono: 3.2.8
-    - os: osx
-      mono: 3.2.8
  
 script:
   - make all-release
