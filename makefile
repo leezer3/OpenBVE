@@ -115,9 +115,11 @@ debug: openbve-debug
 release: openbve-release
 openbve: openbve-debug
 
+openbve-debug: prep_dirs
 openbve-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 openbve-debug: copy_depends
 
+openbve-release: prep_release_dirs
 openbve-release: ARGS := $(RELEASE_ARGS)
 openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
 openbve-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
@@ -125,6 +127,7 @@ openbve-release: copy_depends
 
 all: all-debug
 
+all-debug: prep_dirs
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
@@ -132,6 +135,7 @@ all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
 all-debug: copy_depends
 
+all-release: prep_release_dirs
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
@@ -291,9 +295,6 @@ OPEN_BVE_API_RESOURCE := $(addprefix $(OPEN_BVE_API_ROOT)/, $(subst /,., $(subst
 OPEN_BVE_API_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_API_FILE)
 
 $(call create_resource, $(OPEN_BVE_API_RESOURCE), $(OPEN_BVE_API_RESX))
-
-$(DEBUG_DIR)/$(OPEN_BVE_API_FILE): prep_dirs
-$(RELEASE_DIR)/$(OPEN_BVE_API_FILE): prep_release_dirs
 
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
