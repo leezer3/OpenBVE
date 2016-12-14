@@ -1,39 +1,39 @@
 language: csharp
-solution: openBVE/OpenBve.sln
 
-os:
-  - linux
-  - osx
-mono:
- - latest
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      mono: latest
+    - os: linux
+      dist: trusty
+      mono: latest
+    - os: osx
+      mono: latest
+      before_install: brew install hudochenkov/sshpass/sshpass
+
+    - os: linux
+      dist: precise
+      mono: 3.2.8
  
 script:
-  - LC_ALL=C xbuild /t:Build /p:Configuration=Release openBVE/OpenBve.sln
+  - make publish
 after_success:
 #Export SSH password for whichever platform we are building on
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
-#Linux Build
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && mkdir build 
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && mv openBVE/OpenBve/bin/Release/* build
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "linux" && cd build
 #Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "OpenBVE-$(date '+%F').tar.gz" *
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "OpenBVE-$(date '+%F').tar.gz"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 #Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && tar -zcvf "openBVE-$TRAVIS_TAG.tar.gz" *
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "openBVE-$TRAVIS_TAG.tar.gz"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
  #OSX Build
  #Install sshpass (Possibly we need to create a local brew script, but not at the minute...)
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && brew install hudochenkov/sshpass/sshpass
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mkdir Mac
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && tar -C Mac -xvzf Dependencies/MacBundle.tgz
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && mv openBVE/OpenBve/bin/Release/* Mac/OpenBVE.app/Contents/Resources/
- - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && test "$TRAVIS_OS_NAME" == "osx" && cd Mac
 #Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create OpenBVE-$(date '+%F').dmg -volname "OpenBVE" -fs HFS+ -srcfolder "OpenBVE.app"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 #Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && hdiutil create openBVE-$TRAVIS_TAG.dmg -volname "openBVE" -fs HFS+ -srcfolder "OpenBVE.app"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "openBVE-$TRAVIS_TAG.dmg"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.dmg" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 addons:
   apt:
