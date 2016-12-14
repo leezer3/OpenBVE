@@ -15,8 +15,8 @@
 bin_debug/
 bin_release/
 obj/
-*.tar.gz
-*.dmg
+linuxbuild.tar.gz
+macbuild.dmg
 mac/
 
 # Misc. Visual Studio files

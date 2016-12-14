@@ -337,11 +337,11 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		xcopy "$(ProjectDir)Data\*.*" "$(TargetDir)Data" /Y /I /E /C 
+		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C 
 	</PostBuildEvent>
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		cp -rf "$(ProjectDir)Data" "$(TargetDir)"
+		cp -rf "$(SolutionDir)assets/*" "$(TargetDir)Data"
 	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

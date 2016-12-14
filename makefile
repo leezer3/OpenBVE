@@ -166,7 +166,7 @@ $(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
 
 copy_depends:
 	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
-	@cp -r $(CP_UPDATE_FLAG) $(OPEN_BVE_ROOT)/Data $(OUTPUT_DIR)
+	@cp -r $(CP_UPDATE_FLAG) assets/* $(OUTPUT_DIR)/Data
 
 clean: 
 	# Executables
