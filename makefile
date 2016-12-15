@@ -40,6 +40,13 @@ OUTPUT_DIR  := $(DEBUG_DIR)
 MAC_BUILD_RESULT = macbuild.dmg
 LINUX_BUILD_RESULT = linuxbuild.tar.gz
 
+# Used output name
+ifeq ($(shell uname -s),Darwin) 
+BUILD_RESULT = $(MAC_BUILD_RESULT)
+else
+BUILD_RESULT = $(LINUX_BUILD_RESULT)
+endif
+
 # Current Args
 ARGS := $(DEBUG_ARGS)
 
@@ -95,6 +102,12 @@ OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 TRAIN_EDITOR_ROOT     :=source/TrainEditor
 TRAIN_EDITOR_FILE     :=TrainEditor.exe
 
+# Dependences 
+DEBUG_DEPEND := $(patsubst dependencies/%,$(DEBUG_DIR)/%,$(wildcard dependencies/*))
+RELEASE_DEPEND := $(patsubst dependencies/%,$(RELEASE_DIR)/%,$(wildcard dependencies/*))
+DEBUG_ASSETS := $(patsubst assets/%,$(DEBUG_DIR)/Data/%,$(wildcard assets/*))
+RELEASE_ASSETS := $(patsubst assets/%,$(DEBUG_DIR)/Data/%,$(wildcard assets/*))
+
 .PHONY: all 
 .PHONY: debug
 .PHONY: release 
@@ -109,17 +122,19 @@ TRAIN_EDITOR_FILE     :=TrainEditor.exe
 .PHONY: prep_dirs
 .PHONY: prep_release_dirs
 .PHONY: copy_depends
+.PHONY: copy_release_depends
 .PHONY: publish
+.PHONY: print_csc_type
 
 debug: openbve-debug
 release: openbve-release
 openbve: openbve-debug
 
-openbve-debug: prep_dirs
+openbve-debug: print_csc_type
 openbve-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 openbve-debug: copy_depends
 
-openbve-release: prep_release_dirs
+openbve-release: print_csc_type
 openbve-release: ARGS := $(RELEASE_ARGS)
 openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
 openbve-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
@@ -127,7 +142,7 @@ openbve-release: copy_depends
 
 all: all-debug
 
-all-debug: prep_dirs
+all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
@@ -135,7 +150,7 @@ all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
 all-debug: copy_depends
 
-all-release: prep_release_dirs
+all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
@@ -152,24 +167,33 @@ ifeq ($(shell uname -s),Darwin)
     CP_RECURSE = -R
 endif 
 
-prep_dirs: $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins/
-prep_release_dirs: $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins/
+print_csc_type:
+	@echo $(COLOR_RED)Using $(CSC_NAME) as c\# compiler$(COLOR_END)
 
-prep_dirs prep_release_dirs:
-	@echo $(COLOR_RED)Using $(CSC_NAME)$(COLOR_END)
-	@echo $(COLOR_BLUE)Copying dependencies$(COLOR_END)
-	@cp -r $(CP_UPDATE_FLAG) dependencies/* $(OUTPUT_DIR)
+$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins
+$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins
+
+$(DEBUG_DEPEND) $(RELEASE_DEPEND):
+	@echo $(COLOR_BLUE)Copying dependency $(COLOR_CYAN)$@$(COLOR_END)
+	@cp -r $(CP_UPDATE_FLAG) $(patsubst $(OUTPUT_DIR)/%,dependencies/%,$@) $(OUTPUT_DIR)/
 
 $(DEBUG_DIR) $(RELEASE_DIR): 
 	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
 
-$(DEBUG_DIR)/Data/Plugins/ $(RELEASE_DIR)/Data/Plugins/:
-	@echo $(COLOR_BLUE)Making plugin folder$(COLOR_END)
+$(DEBUG_DIR)/Data $(RELEASE_DIR)/Data:
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)/Data/
+
+$(DEBUG_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Plugins:
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/Plugins$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
 
-copy_depends:
-	@echo $(COLOR_BLUE)Copying data$(COLOR_END)
+copy_depends: $(DEBUG_DIR)/Data
+copy_release_depends: $(RELEASE_DIR)/Data
+
+copy_depends copy_release_depends:
+	@echo $(COLOR_BLUE)Copying $(COLOR_CYAN)assets/*$(COLOR_BLUE) to $(COLOR_CYAN)$(OUTPUT_DIR)/Data/*$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) assets/* $(OUTPUT_DIR)/Data
 
 clean: 
@@ -189,18 +213,18 @@ clean:
 	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 
+	# Release Files
+	rm -f $(MAC_BUILD_RESULT) $(LINUX_BUILD_RESULT)
+
 	# Resource Files
 	rm -f `find . | grep .resources | tr '\n' ' '`
 
 	# Assembly
 	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
 
-clean-all:
+clean-all: clean
+	# Everything else
 	rm -rf bin*/
-	rm -f `find . | grep .resources | tr '\n' ' '`
-	
-	# Assembly
-	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
 
 ifeq ($(shell uname -s),Darwin) 
 publish: $(MAC_BUILD_RESULT)
@@ -295,6 +319,9 @@ OPEN_BVE_API_RESOURCE := $(addprefix $(OPEN_BVE_API_ROOT)/, $(subst /,., $(subst
 OPEN_BVE_API_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_API_FILE)
 
 $(call create_resource, $(OPEN_BVE_API_RESOURCE), $(OPEN_BVE_API_RESX))
+
+$(DEBUG_DIR)/$(OPEN_BVE_API_FILE): $(DEBUG_DEPEND)
+$(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(RELEASE_DEPEND)
 
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
