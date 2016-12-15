@@ -7,11 +7,6 @@ using OpenTK.Graphics.OpenGL;
 namespace OpenBve {
 	internal static class Screen {
 		
-		// --- members ---
-		
-		/// <summary>Whether the screen is initialized.</summary>
-		private static bool Initialized = false;
-		
 		/// <summary>Stores the current width of the screen.</summary>
 		internal static int Width = 0;
 		
@@ -25,24 +20,14 @@ namespace OpenBve {
 		// --- functions ---
 		
 		/// <summary>Initializes the default values of the screen.</summary>
-		/// <returns>True (To be removed).</returns>
-		internal static bool Initialize()
+		internal static void Initialize()
 		{
-                // --- video mode ---
+            // --- video mode ---
             Width = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth;
             Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
             Fullscreen = Interface.CurrentOptions.FullscreenMode;
-		    return true;
-
 		}
 		
-		/// <summary>Deinitializes the screen.</summary>
-		internal static void Deinitialize() {
-			if (Initialized) {
-				Initialized = false;
-			}
-		}
-
         /// <summary>Resizes the OpenGL viewport if the window is resized</summary>
 	    internal static void WindowResize(int newWidth, int newHeight)
         {

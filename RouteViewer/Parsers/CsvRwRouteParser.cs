@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows.Forms;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -1162,6 +1163,7 @@ namespace OpenBve {
 			a = -1.0;
 			Expression[] e = new Expression[Expressions.Length];
 			int m = 0;
+			bool fpf = false;
 			for (int i = 0; i < n; i++) {
 				if (p[i].TrackPosition != a) {
 					a = p[i].TrackPosition;
@@ -1173,7 +1175,32 @@ namespace OpenBve {
 				}
 				e[m] = p[i].Expression;
 				m++;
+				//Finds the first non-default track position
+				if(p[i].TrackPosition != -1 && fpf == false)
+				{
+					//We know that the withTrack section starts with the first NON -1 element
+					//**APPEARS TO ALWAYS BE ZERO**
+					//Subsequent declarations in the same block add 1 to this index
+					//Thus, the first 'actual' user set track position is somewhere ~5 elements ahead
+					//Of course the route can also start at zero, which means it could be a little further on!
+					int j = i;
+					while (j < p.Length)
+					{
+						j++;
+						if (p[j].TrackPosition != p[i].TrackPosition)
+						{
+							//First track position found!
+							Program.MinimumJumpToPositionValue = p[j].TrackPosition;
+							fpf = true;
+							//Break out the while loop
+							break;
+						}
+					}
+					
+					
+				}
 			}
+			
 			Array.Resize<Expression>(ref e, m);
 			Expressions = e;
 		}

@@ -218,8 +218,15 @@ namespace OpenBve {
 
 		// route encoding
 		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e) {
+			int i = comboboxRouteEncoding.SelectedIndex;
+
+			if (Result.RouteFile == null && Result.ErrorFile != null)
+			{
+				//Workaround for the route worker thread
+				Result.RouteFile = Result.ErrorFile;
+			}
 			if (comboboxRouteEncoding.Tag == null) {
-				int i = comboboxRouteEncoding.SelectedIndex;
+				
 				if (!(i >= 0 & i < EncodingCodepages.Length)) return;
 				Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
 				if (i == 0) {
@@ -227,7 +234,7 @@ namespace OpenBve {
 					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
 						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
 							Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
+							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
 							break;
 						}
 					}
@@ -239,11 +246,11 @@ namespace OpenBve {
 							break;
 						}
 					} if (j == Interface.CurrentOptions.RouteEncodings.Length) {
-						Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
+						Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
 						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
-				}
+				}			
 				ShowRoute(true);
 			}
 		}
@@ -501,7 +508,7 @@ namespace OpenBve {
 						for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
 							if (Interface.CurrentOptions.TrainEncodings[j].Value == Result.TrainFolder) {
 								Interface.CurrentOptions.TrainEncodings[j] = Interface.CurrentOptions.TrainEncodings[Interface.CurrentOptions.TrainEncodings.Length - 1];
-								Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
+								Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, Interface.CurrentOptions.TrainEncodings.Length - 1);
 								break;
 							}
 						}
@@ -513,7 +520,7 @@ namespace OpenBve {
 								break;
 							}
 						} if (j == Interface.CurrentOptions.TrainEncodings.Length) {
-							Array.Resize<Interface.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, j + 1);
+							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, j + 1);
 							Interface.CurrentOptions.TrainEncodings[j].Codepage = EncodingCodepages[i];
 							Interface.CurrentOptions.TrainEncodings[j].Value = Result.TrainFolder;
 						}
@@ -594,6 +601,7 @@ namespace OpenBve {
 				textboxRouteEncodingPreview.Text = "";
 				pictureboxRouteMap.Image = null;
 				pictureboxRouteGradient.Image = null;
+				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				return;
@@ -661,6 +669,7 @@ namespace OpenBve {
 				{
 					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				}
+				Result.ErrorFile = null;
 			}
 			catch (Exception ex)
 			{
@@ -669,6 +678,7 @@ namespace OpenBve {
 				textboxRouteEncodingPreview.Text = "";
 				pictureboxRouteMap.Image = null;
 				pictureboxRouteGradient.Image = null;
+				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 			}
@@ -682,6 +692,7 @@ namespace OpenBve {
 			this.Cursor = Cursors.Default;
 			//Deliberately select the tab when the process is complete
 			//This hopefully fixes another instance of the 'grey tabs' bug
+			
 			tabcontrolRouteDetails.SelectedTab = tabpageRouteDescription;
 
 			buttonStart.Enabled = Result.RouteFile != null & Result.TrainFolder != null;
@@ -706,44 +717,44 @@ namespace OpenBve {
 					comboboxRouteEncoding.Items[0] = "(UTF-8)";
 					comboboxRouteEncoding.Tag = null;
 					Result.RouteEncoding = System.Text.Encoding.UTF8;
-					switch (Interface.GetEncodingFromFile(Result.RouteFile)) {
-						case Interface.Encoding.Utf7:
+					switch (TextEncoding.GetEncodingFromFile(Result.RouteFile)) {
+						case TextEncoding.Encoding.Utf7:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-7)";
 							Result.RouteEncoding = System.Text.Encoding.UTF7;
 							break;
-						case Interface.Encoding.Utf8:
+						case TextEncoding.Encoding.Utf8:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-8)";
 							Result.RouteEncoding = System.Text.Encoding.UTF8;
 							break;
-						case Interface.Encoding.Utf16Le:
+						case TextEncoding.Encoding.Utf16Le:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-16 little endian)";
 							Result.RouteEncoding = System.Text.Encoding.Unicode;
 							break;
-						case Interface.Encoding.Utf16Be:
+						case TextEncoding.Encoding.Utf16Be:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-16 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.BigEndianUnicode;
 							break;
-						case Interface.Encoding.Utf32Le:
+						case TextEncoding.Encoding.Utf32Le:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-32 little endian)";
 							Result.RouteEncoding = System.Text.Encoding.UTF32;
 							break;
-						case Interface.Encoding.Utf32Be:
+						case TextEncoding.Encoding.Utf32Be:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(UTF-32 big endian)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(12001);
 							break;
-						case Interface.Encoding.Shift_JIS:
+						case TextEncoding.Encoding.Shift_JIS:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
@@ -785,31 +796,36 @@ namespace OpenBve {
 				comboboxTrainEncoding.Items[0] = "(UTF-8)";
 				comboboxTrainEncoding.Tag = null;
 				Result.TrainEncoding = System.Text.Encoding.UTF8;
-				switch (Interface.GetEncodingFromFile(Result.TrainFolder, "train.txt")) {
-					case Interface.Encoding.Utf8:
+				switch (TextEncoding.GetEncodingFromFile(Result.TrainFolder, "train.txt")) {
+					case TextEncoding.Encoding.Utf8:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-8)";
 						Result.TrainEncoding = System.Text.Encoding.UTF8;
 						break;
-					case Interface.Encoding.Utf16Le:
+					case TextEncoding.Encoding.Utf16Le:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-16 little endian)";
 						Result.TrainEncoding = System.Text.Encoding.Unicode;
 						break;
-					case Interface.Encoding.Utf16Be:
+					case TextEncoding.Encoding.Utf16Be:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-16 big endian)";
 						Result.TrainEncoding = System.Text.Encoding.BigEndianUnicode;
 						break;
-					case Interface.Encoding.Utf32Le:
+					case TextEncoding.Encoding.Utf32Le:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-32 little endian)";
 						Result.TrainEncoding = System.Text.Encoding.UTF32;
 						break;
-					case Interface.Encoding.Utf32Be:
+					case TextEncoding.Encoding.Utf32Be:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(UTF-32 big endian)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(12001);
+						break;
+					case TextEncoding.Encoding.Shift_JIS:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
 						break;
 				}
 				int i;
@@ -915,6 +931,7 @@ namespace OpenBve {
 							Folder = null;
 						}
 						if (Folder != null) {
+							char c = System.IO.Path.DirectorySeparatorChar;
 							if (System.IO.Directory.Exists(Folder))
 							{
 
@@ -932,7 +949,7 @@ namespace OpenBve {
 								}
 								
 							}
-							else if (Folder.ToLowerInvariant().Contains("\\railway\\"))
+							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
 								//If we have a misplaced Train folder in either our Railway\Route
 								//or Railway folders, this can cause the train search to fail

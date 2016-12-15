@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenBveApi.Colors;
-using OpenBveApi.Runtime;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -10,14 +9,7 @@ namespace OpenBve
     internal static partial class Renderer
     {
 
-        internal static void RenderOverlayTexture(Textures.Texture texture, double left, double top, double right, double bottom)
-        {
-            DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
-        }
-        internal static void RenderOverlaySolid(double left, double top, double right, double bottom)
-        {
-            DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
-        }
+        
 
         internal static OutputMode CurrentOutputMode = OutputMode.Default;
         //Set LoadTextureImmediatelyMode to NotYet for the first frame
@@ -753,99 +745,6 @@ namespace OpenBve
             }
         }
 
-        // render fullscreen motion blur
-
-
-        // get color
-        private static void CreateBackColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
-        {
-            if (Original.R == 0 & Original.G == 0 & Original.B == 0)
-            {
-                switch (SystemColor)
-                {
-                    case MessageColor.Black:
-                        R = 0.0f; G = 0.0f; B = 0.0f;
-                        break;
-                    case MessageColor.Gray:
-                        R = 0.4f; G = 0.4f; B = 0.4f;
-                        break;
-                    case MessageColor.White:
-                        R = 1.0f; G = 1.0f; B = 1.0f;
-                        break;
-                    case MessageColor.Red:
-                        R = 1.0f; G = 0.0f; B = 0.0f;
-                        break;
-                    case MessageColor.Orange:
-                        R = 0.9f; G = 0.7f; B = 0.0f;
-                        break;
-                    case MessageColor.Green:
-                        R = 0.2f; G = 0.8f; B = 0.0f;
-                        break;
-                    case MessageColor.Blue:
-                        R = 0.0f; G = 0.7f; B = 1.0f;
-                        break;
-                    case MessageColor.Magenta:
-                        R = 1.0f; G = 0.0f; B = 0.7f;
-                        break;
-                    default:
-                        R = 1.0f; G = 1.0f; B = 1.0f;
-                        break;
-                }
-            }
-            else
-            {
-                R = inv255 * (float)Original.R;
-                G = inv255 * (float)Original.G;
-                B = inv255 * (float)Original.B;
-            }
-            A = inv255 * (float)Original.A;
-        }
-        private static void CreateTextColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
-        {
-            if (Original.R == 0 & Original.G == 0 & Original.B == 0)
-            {
-                switch (SystemColor)
-                {
-                    case MessageColor.Black:
-                        R = 0.0f; G = 0.0f; B = 0.0f;
-                        break;
-                    case MessageColor.Gray:
-                        R = 0.4f; G = 0.4f; B = 0.4f;
-                        break;
-                    case MessageColor.White:
-                        R = 1.0f; G = 1.0f; B = 1.0f;
-                        break;
-                    case MessageColor.Red:
-                        R = 1.0f; G = 0.0f; B = 0.0f;
-                        break;
-                    case MessageColor.Orange:
-                        R = 0.9f; G = 0.7f; B = 0.0f;
-                        break;
-                    case MessageColor.Green:
-                        R = 0.3f; G = 1.0f; B = 0.0f;
-                        break;
-                    case MessageColor.Blue:
-                        R = 1.0f; G = 1.0f; B = 1.0f;
-                        break;
-                    case MessageColor.Magenta:
-                        R = 1.0f; G = 0.0f; B = 0.7f;
-                        break;
-                    default:
-                        R = 1.0f; G = 1.0f; B = 1.0f;
-                        break;
-                }
-            }
-            else
-            {
-                R = inv255 * (float)Original.R;
-                G = inv255 * (float)Original.G;
-                B = inv255 * (float)Original.B;
-            }
-            A = inv255 * (float)Original.A;
-        }
-
-
-
         // sort polygons
         private static void SortPolygons(ObjectList List)
         {
@@ -896,39 +795,6 @@ namespace OpenBve
             for (int i = 0; i < List.FaceCount; i++)
             {
                 Objects[List.Faces[i].ObjectListIndex].FaceListReferences[List.Faces[i].FaceIndex].Index = i;
-            }
-        }
-
-        // get distance factor
-        private static double GetDistanceFactor(World.Vertex[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
-        {
-            if (Face.Vertices.Length == 0)
-            {
-                return 1.0;
-            }
-            World.GlowAttenuationMode mode;
-            double halfdistance;
-            World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
-            int i = (int)Face.Vertices[0].Index;
-            double dx = Vertices[i].Coordinates.X - CameraX;
-            double dy = Vertices[i].Coordinates.Y - CameraY;
-            double dz = Vertices[i].Coordinates.Z - CameraZ;
-            switch (mode)
-            {
-                case World.GlowAttenuationMode.DivisionExponent2:
-                    {
-                        double t = dx * dx + dy * dy + dz * dz;
-                        return t / (t + halfdistance * halfdistance);
-                    }
-                case World.GlowAttenuationMode.DivisionExponent4:
-                    {
-                        double t = dx * dx + dy * dy + dz * dz;
-                        t *= t;
-                        halfdistance *= halfdistance;
-                        return t / (t + halfdistance * halfdistance);
-                    }
-                default:
-                    return 1.0;
             }
         }
     }

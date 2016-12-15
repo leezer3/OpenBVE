@@ -159,6 +159,18 @@ namespace OpenBve {
             GL.LoadIdentity();
 		}
 
+		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
+		{	
+			if(e.Delta != 0)
+			{
+				double dx = -0.025 * e.Delta;
+				World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraDirection.X;
+				World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraDirection.Y;
+				World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraDirection.Z;
+				ReducedMode = false;
+			}
+		}
+
 	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
             MouseCameraPosition = World.AbsoluteCameraPosition;

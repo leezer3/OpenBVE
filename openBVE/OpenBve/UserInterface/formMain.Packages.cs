@@ -762,7 +762,11 @@ namespace OpenBve
 				{
 					throw new DirectoryNotFoundException(directory);
 				}
-				System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				if (!Program.CurrentlyRunningOnMono)
+				{
+					//Mono doesn't support System.Security.AccessControl, so this doesn't work....
+					System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+				}
 				using (FileStream fs = File.OpenWrite(currentPackage.FileName))
 				{
 					//Just attempt to open the file with to write as a test
@@ -1040,7 +1044,7 @@ namespace OpenBve
 
 		private void dataGridViewReplacePackage_SelectionChanged(object sender, EventArgs e)
 		{
-			if (dataGridViewReplacePackage.SelectedRows.Count > 0 || listPopulating == true)
+			if (dataGridViewReplacePackage.SelectedRows.Count > 0 || listPopulating != true)
 			{
 				replacePackageButton.Enabled = true;
 				var row = dataGridViewReplacePackage.SelectedRows[0].Index;
@@ -1102,7 +1106,7 @@ namespace OpenBve
 			}
 		}
 
-
+		/// <summary>Shows a popup text input box to add a website link</summary>
 		private static DialogResult ShowInputDialog(ref string input)
 		{
 			System.Drawing.Size size = new System.Drawing.Size(200, 70);
@@ -1128,7 +1132,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.OK,
 				Name = "okButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&OK",
+				Text = Interface.GetInterfaceString("packages_button_ok"),
 				Location = new System.Drawing.Point(size.Width - 80 - 80, 39)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1138,7 +1142,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&Cancel",
+				Text = Interface.GetInterfaceString("packages_button_cancel"),
 				Location = new System.Drawing.Point(size.Width - 80, 39)
 			};
 			inputBox.Controls.Add(cancelButton);
@@ -1200,7 +1204,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.OK,
 				Name = "okButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&OK",
+				Text = Interface.GetInterfaceString("packages_button_ok"),
 				Location = new System.Drawing.Point(size.Width - 80 - 80, 49)
 			};
 			inputBox.Controls.Add(okButton);
@@ -1210,7 +1214,7 @@ namespace OpenBve
 				DialogResult = System.Windows.Forms.DialogResult.Cancel,
 				Name = "cancelButton",
 				Size = new System.Drawing.Size(75, 23),
-				Text = "&Cancel",
+				Text = Interface.GetInterfaceString("packages_button_cancel"),
 				Location = new System.Drawing.Point(size.Width - 80, 49)
 			};
 			inputBox.Controls.Add(cancelButton);
@@ -1283,8 +1287,9 @@ namespace OpenBve
 				var MonoDialog = new FolderBrowserDialog();
 				if (MonoDialog.ShowDialog() == DialogResult.OK)
 				{
-					folder = MonoDialog.SelectedPath;
-					files = System.IO.Directory.GetFiles(folder, "*.*", System.IO.SearchOption.AllDirectories);
+					folder = System.IO.Directory.GetParent(MonoDialog.SelectedPath).ToString();
+					folderDisplay = MonoDialog.SelectedPath;
+					files = System.IO.Directory.GetFiles(folderDisplay, "*.*", System.IO.SearchOption.AllDirectories);
 					DialogOK = true;
 				}
 			}

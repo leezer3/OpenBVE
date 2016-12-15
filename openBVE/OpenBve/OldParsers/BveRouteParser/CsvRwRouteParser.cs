@@ -11,7 +11,7 @@ namespace OpenBve {
 		private abstract class SignalData { }
 
 
-		///---SIGNAL TYPES---
+		// ---SIGNAL TYPES---
 
 		/// <summary>Defines a BVE 4 standard signal:
 		/// A signal has a face based mesh and glow
@@ -1627,14 +1627,26 @@ namespace OpenBve {
 								case "train.interval":
 									{
 										if (!PreviewOnly) {
-											double[] intervals = new double[Arguments.Length];
-											for (int k = 0; k < Arguments.Length; k++) {
-												if (!Interface.TryParseDoubleVb6(Arguments[k], out intervals[k])) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Interval" + k.ToString(Culture) + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											List<double> intervals = new List<double>();
+											for (int k = 0; k < Arguments.Length; k++)
+											{
+												double o;
+												if (!Interface.TryParseDoubleVb6(Arguments[k], out o)) {
+													Interface.AddMessage(Interface.MessageType.Error, false, "Interval " + k.ToString(Culture) + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													continue;
 												}
+												if (o == 0)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Interval " + k.ToString(Culture) + " must be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													continue;
+												}
+												intervals.Add(o);
 											}
-											Array.Sort<double>(intervals);
-											Game.PrecedingTrainTimeDeltas = intervals;
+											intervals.Sort();
+											if (intervals.Count > 0)
+											{
+												Game.PrecedingTrainTimeDeltas = intervals.ToArray();
+											}
 										}
 									} break;
 								case "train.velocity":

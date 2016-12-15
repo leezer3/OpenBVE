@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -28,11 +27,24 @@ namespace OpenBve {
 		// show main dialog
 		internal struct MainDialogResult
 		{
+			/// <summary>Whether to start the simulation</summary>
 			internal bool Start;
+			/// <summary>The absolute on-disk path of the route file to start the simulation with</summary>
 			internal string RouteFile;
+			/// <summary>The last file an error was encountered on (Used for changing character encodings)</summary>
+			internal string ErrorFile;
+			/// <summary>The text encoding of the selected route file</summary>
 			internal System.Text.Encoding RouteEncoding;
+			/// <summary>The absolute on-disk path of the train folder to start the simulation with</summary>
 			internal string TrainFolder;
+			/// <summary>The text encoding of the selected train</summary>
 			internal System.Text.Encoding TrainEncoding;
+			internal string InitialStation;
+			internal double StartTime;
+			internal bool AIDriver;
+			internal bool FullScreen;
+			internal int Width;
+			internal int Height;
 		}
 		internal static MainDialogResult ShowMainDialog(MainDialogResult initial)
 		{
@@ -413,7 +425,7 @@ namespace OpenBve {
 #endif
 						string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
 						Interface.LoadLanguage(File);
-						ApplyLanguage(Interface.CurrentLanguageCode);
+						ApplyLanguage();
 #if !DEBUG
 					}
 					catch (Exception ex)
@@ -433,10 +445,6 @@ namespace OpenBve {
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			// result
 			Result.Start = false;
-			//			Result.RouteFile = null;
-			//			Result.RouteEncoding = System.Text.Encoding.UTF8;
-			//			Result.TrainFolder = null;
-			//			Result.TrainEncoding = System.Text.Encoding.UTF8;
 
 			routeWorkerThread = new BackgroundWorker();
 			routeWorkerThread.DoWork += routeWorkerThread_doWork;
@@ -447,22 +455,12 @@ namespace OpenBve {
 			
 		}
 
-		/// <summary>This function is called to change the display language of the program</summary>
-		private void ApplyLanguage(string Language)
-		{
-			//Set command infos to the translated strings
-			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
-			{
-				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (Interface.AvailableLangauges[i].LanguageCode == Language)
-				{
-					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
-					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
-					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
-					break;
-				}
-			}
+		
 
+		/// <summary>This function is called to change the display language of the program</summary>
+		private void ApplyLanguage()
+		{
+			Interface.SetInGameLanguage(Interface.CurrentLanguageCode);
 			/*
 			 * Localisation for strings in main panel
 			 */
@@ -961,7 +959,7 @@ namespace OpenBve {
 			// remove non-existing route encoding mappings
 			{
 				int n = 0;
-				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
+				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.RouteEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.RouteEncodings.Length; i++)
 				{
 					if (System.IO.File.Exists(Interface.CurrentOptions.RouteEncodings[i].Value))
@@ -970,13 +968,13 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<Interface.EncodingValue>(ref a, n);
+				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.RouteEncodings = a;
 			}
 			// remove non-existing train encoding mappings
 			{
 				int n = 0;
-				Interface.EncodingValue[] a = new Interface.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
+				TextEncoding.EncodingValue[] a = new TextEncoding.EncodingValue[Interface.CurrentOptions.TrainEncodings.Length];
 				for (int i = 0; i < Interface.CurrentOptions.TrainEncodings.Length; i++)
 				{
 					if (System.IO.Directory.Exists(Interface.CurrentOptions.TrainEncodings[i].Value))
@@ -985,7 +983,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<Interface.EncodingValue>(ref a, n);
+				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();
@@ -1653,5 +1651,5 @@ namespace OpenBve {
 			var bugReportForm = new formBugReport();
 			bugReportForm.ShowDialog();
 		}
-    }
+	}
 }
