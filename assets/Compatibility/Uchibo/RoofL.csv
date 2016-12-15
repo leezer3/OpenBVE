@@ -1,0 +1,39 @@
+CreateMeshBuilder
+AddVertex,-2.7, 4.7, 0
+AddVertex,-2.7, 4.705, 25.3
+AddVertex,-1.505, 4.705, 25.3
+AddVertex,-1.5, 4.7, 0
+AddVertex,-1.5, 4.4, 0
+AddVertex,-1.505, 4.4, 25.3
+AddFace,3,2,1,0
+SetColor,128,128,128
+AddFace2,2,3,4,5
+AddFace,0,1,2,3
+
+LoadTexture,Roof.png
+SetTextureCoordinates,0, 0, 0
+SetTextureCoordinates,1, 0, 12
+SetTextureCoordinates,2, 1, 12
+SetTextureCoordinates,3, 1, 0
+SetTextureCoordinates,4, 0, 0
+SetTextureCoordinates,5, 0, 12
+
+CreateMeshBuilder
+Cube,0.1,0.1,12.55
+Translate,-3.15,4.6,12.55
+SetColor,192,192,176
+
+CreateMeshBuilder
+Cube,0.1,1.8,0.1
+Translate,-3.15,2.890,0.1
+SetColor,192,192,176
+
+CreateMeshBuilder
+Cube,0.1,1.8,0.1
+Translate,-3.15,2.9,12.55
+SetColor,192,192,176
+
+CreateMeshBuilder
+Cube,0.1,1.8,0.1
+Translate,-3.15,2.9,25
+SetColor,192,192,176,

@@ -1,0 +1,13 @@
+CreateMeshBuilder
+AddVertex,-3.8,-0.3,0
+AddVertex,-3.8,-0.305,25.3
+AddVertex,-1.9,-0.305,25.3
+AddVertex,-1.9,-0.3,0
+AddFace,0,1,2,3
+
+
+LoadTexture,Grass2.png
+SetTextureCoordinates,0,1,0
+SetTextureCoordinates,1,0,0
+SetTextureCoordinates,2,0,1
+SetTextureCoordinates,3,1,1
