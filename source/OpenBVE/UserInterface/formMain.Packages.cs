@@ -765,7 +765,7 @@ namespace OpenBve
 				if (!Program.CurrentlyRunningOnMono)
 				{
 					//Mono doesn't support System.Security.AccessControl, so this doesn't work....
-					System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
+					// System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(directory);
 				}
 				using (FileStream fs = File.OpenWrite(currentPackage.FileName))
 				{

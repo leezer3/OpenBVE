@@ -324,7 +324,7 @@ namespace OpenBve {
 			int d = Sections[SectionIndex].StationIndex;
 			if (d >= 0) {
 				// look for train in previous blocks
-				int l = Sections[SectionIndex].PreviousSection;
+				//int l = Sections[SectionIndex].PreviousSection;
 				if (Stations[d].StationType != StationType.Normal) {
 					settored = true;
 				}

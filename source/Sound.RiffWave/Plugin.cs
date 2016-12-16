@@ -9,7 +9,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The host that loaded the plugin.</summary>
-		private HostInterface CurrentHost = null;
+		// private HostInterface CurrentHost = null;
 		
 		
 		// --- functions ---
@@ -17,7 +17,7 @@ namespace Plugin {
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
 		public override void Load(HostInterface host) {
-			CurrentHost = host;
+			// CurrentHost = host;
 		}
 		
 		/// <summary>Checks whether the plugin can load the specified sound.</summary>
@@ -36,7 +36,7 @@ namespace Plugin {
 						} else {
 							return false;
 						}
-						uint headerCkSize = ReadUInt32(reader, endianness);
+						ReadUInt32(reader, endianness); // uint headerCkSize = 
 						uint formType = ReadUInt32(reader, endianness);
 						if (formType != 0x45564157) {
 							return false;

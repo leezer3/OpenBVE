@@ -5266,31 +5266,32 @@ namespace OpenBve {
 									World.Rotate(ref Direction2, cosag, sinag);
 								}
 								double a2 = 0.0;
-								double c2 = Data.BlockInterval;
-								double h2 = 0.0;
+								// double c2 = Data.BlockInterval;
+								// double h2 = 0.0;
 								if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0 & Data.Blocks[i + 1].Pitch != 0.0) {
 									double d2 = Data.BlockInterval;
 									double p2 = Data.Blocks[i + 1].Pitch;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double s2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = s2 * p2;
+									// h2 = s2 * p2;
 									double b2 = s2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0) {
 									double d2 = Data.BlockInterval;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double b2 = d2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
-								} else if (Data.Blocks[i + 1].Pitch != 0.0) {
-									double p2 = Data.Blocks[i + 1].Pitch;
-									double d2 = Data.BlockInterval;
-									c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = c2 * p2;
 								}
+								// else if (Data.Blocks[i + 1].Pitch != 0.0) {
+									// double p2 = Data.Blocks[i + 1].Pitch;
+									// double d2 = Data.BlockInterval;
+									// c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
+									// h2 = c2 * p2;
+								// }
 								
 								//These generate a compiler warning, as secondary tracks do not generate yaw, as they have no
 								//concept of a curve, but rather are a straight line between two points

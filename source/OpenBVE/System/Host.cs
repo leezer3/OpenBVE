@@ -179,8 +179,8 @@ namespace OpenBve {
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
-				Sounds.SoundBuffer data;
-				data = Sounds.RegisterBuffer(path, 0.0); // TODO
+				// Sounds.SoundBuffer data;
+				// data = Sounds.RegisterBuffer(path, 0.0); // TODO
 			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path.ToString());
 			}

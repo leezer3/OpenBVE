@@ -158,6 +158,7 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
+	#pragma warning disable 0219
 			string[] flags = new string[] { };
 			try
 			{
@@ -166,6 +167,7 @@ namespace OpenBve {
 			catch (Exception)
 			{
 			}
+	#pragma warning restore 0219
 			// route selection
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);

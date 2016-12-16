@@ -5382,35 +5382,35 @@ namespace OpenBve {
 									World.Rotate(ref Direction2, cosag, sinag);
 								}
 								double a2 = 0.0;
-								double c2 = Data.BlockInterval;
-								double h2 = 0.0;
+								// double c2 = Data.BlockInterval;
+								// double h2 = 0.0;
 								if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0 & Data.Blocks[i + 1].Pitch != 0.0) {
 									double d2 = Data.BlockInterval;
 									double p2 = Data.Blocks[i + 1].Pitch;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double s2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = s2 * p2;
+									// h2 = s2 * p2;
 									double b2 = s2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0) {
 									double d2 = Data.BlockInterval;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double b2 = d2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].Pitch != 0.0) {
-									double p2 = Data.Blocks[i + 1].Pitch;
-									double d2 = Data.BlockInterval;
-									c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = c2 * p2;
+									// double p2 = Data.Blocks[i + 1].Pitch;
+									// double d2 = Data.BlockInterval;
+									// c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
+									// h2 = c2 * p2;
 								}
-								double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
-								double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
-								World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
-								World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
+								// double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
+								// double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
+								// World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
+								// World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								World.Vector3D offset2 = new World.Vector3D(Direction2.Y * x2, y2, -Direction2.X * x2);

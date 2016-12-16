@@ -297,7 +297,7 @@ namespace ObjectBender {
 							{
 								double dx = cells[i].Length >= 2 ? double.Parse(cells[i][1], culture) : 0.0;
 								double dy = cells[i].Length >= 3 ? double.Parse(cells[i][2], culture) : 0.0;
-								double dz = cells[i].Length >= 4 ? double.Parse(cells[i][3], culture) : 0.0;
+								// double dz = cells[i].Length >= 4 ? double.Parse(cells[i][3], culture) : 0.0;
 								double sx = cells[i].Length >= 5 ? double.Parse(cells[i][4], culture) : 0.0;
 								double sy = cells[i].Length >= 6 ? double.Parse(cells[i][5], culture) : 0.0;
 								double sz = cells[i].Length >= 7 ? double.Parse(cells[i][6], culture) : 0.0;

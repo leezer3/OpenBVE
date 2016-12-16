@@ -334,7 +334,7 @@ namespace OpenBve {
 			double ledangle;
 			if (led) {
 				if (UpdateFunctions) {
-					double lastangle = Object.LEDFunction.LastResult;
+					// double lastangle = Object.LEDFunction.LastResult;
 					ledangle = Object.LEDFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 				} else {
 					ledangle = Object.LEDFunction.LastResult;
@@ -1429,7 +1429,7 @@ namespace OpenBve {
 			Object = new StaticObject();
 			Object.StartingDistance = float.MaxValue;
 			Object.EndingDistance = float.MinValue;
-			bool brightnesschange = Brightness != 1.0;
+			// bool brightnesschange = Brightness != 1.0;
 			// vertices
 			Object.Mesh.Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length];
 			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {

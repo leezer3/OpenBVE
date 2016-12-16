@@ -179,7 +179,7 @@ namespace Flac {
 					 * block may be shorter than the stream blocksize; its starting sample number will be calculated as the frame number 
 					 * times the previous frame's blocksize, or zero if it is the first frame). 
 					 */
-					ulong sampleOrFrameNumber = (ulong)reader.ReadUTF8EncodedInteger();
+					reader.ReadUTF8EncodedInteger(); // ulong sampleOrFrameNumber = (ulong)
 					if (blockNumberOfSamples == 6) {
 						blockNumberOfSamples = (int)reader.ReadByte() + 1;
 					} else if (blockNumberOfSamples == 7) {
@@ -292,9 +292,6 @@ namespace Flac {
 							int[] blockSamples = new int[blockNumberOfSamples];
 							for (int j = 0; j < predictorOrder; j++) {
 								blockSamples[j] = FromTwosComplement(reader.ReadBits((int)subframeBitsPerSample), (uint)1 << subframeBitsPerSample);
-								if (blockSamples[j] != 0) {
-									int asdgfefe = blockSamples[j];
-								}
 							}
 							int coefficientPrecision = (int)reader.ReadBits(4) + 1;
 							if (coefficientPrecision == 16) {

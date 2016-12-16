@@ -122,7 +122,7 @@ namespace OpenBve {
 					} else {
 						throw new InvalidDataException("Invalid chunk ID in " + fileTitle);
 					}
-					uint headerCkSize = ReadUInt32(reader, endianness);
+					ReadUInt32(reader, endianness); //uint headerCkSize
 					uint formType = ReadUInt32(reader, endianness);
 					if (formType != 0x45564157) {
 						throw new InvalidDataException("Unsupported format in " + fileTitle);
@@ -145,7 +145,7 @@ namespace OpenBve {
 							if (dwSamplesPerSec >= 0x80000000) {
 								throw new InvalidDataException("Unsupported dwSamplesPerSec in " + fileTitle);
 							}
-							uint dwAvgBytesPerSec = ReadUInt32(reader, endianness);
+							ReadUInt32(reader, endianness); // uint dwAvgBytesPerSec = 
 							ushort wBlockAlign = ReadUInt16(reader, endianness);
 							if (wFormatTag == 1) {
 								// PCM
@@ -175,7 +175,7 @@ namespace OpenBve {
 								if (wBitsPerSample != 4) {
 									throw new InvalidDataException("Unsupported wBitsPerSample in " + fileTitle);
 								}
-								ushort cbSize = ReadUInt16(reader, endianness);
+								ReadUInt16(reader, endianness); // ushort cbSize = 
 								MicrosoftAdPcmData adpcmData = new MicrosoftAdPcmData();
 								adpcmData.SamplesPerBlock = ReadUInt16(reader, endianness);
 								if (adpcmData.SamplesPerBlock == 0 | adpcmData.SamplesPerBlock > 2 * ((int)wBlockAlign - 6)) {
