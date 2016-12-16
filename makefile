@@ -138,7 +138,7 @@ openbve-release: print_csc_type
 openbve-release: ARGS := $(RELEASE_ARGS)
 openbve-release: OUTPUT_DIR := $(RELEASE_DIR)
 openbve-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
-openbve-release: copy_depends
+openbve-release: copy_release_depends
 
 all: all-debug
 
@@ -158,7 +158,7 @@ all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
-all-release: copy_depends
+all-release: copy_release_depends
 
 CP_UPDATE_FLAG = -u
 CP_RECURSE = -r
