@@ -179,6 +179,11 @@ namespace Flac {
 					 * block may be shorter than the stream blocksize; its starting sample number will be calculated as the frame number 
 					 * times the previous frame's blocksize, or zero if it is the first frame). 
 					 */
+
+					/*
+					 * TODO:
+					 * Throw if the there are variable frame lengths as they are unsupported
+					 */
 					reader.ReadUTF8EncodedInteger(); // ulong sampleOrFrameNumber = (ulong)
 					if (blockNumberOfSamples == 6) {
 						blockNumberOfSamples = (int)reader.ReadByte() + 1;

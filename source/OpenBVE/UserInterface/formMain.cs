@@ -158,6 +158,9 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
+			/* 
+			 * TODO: Integrate into packages
+			 */
 	#pragma warning disable 0219
 			string[] flags = new string[] { };
 			try
