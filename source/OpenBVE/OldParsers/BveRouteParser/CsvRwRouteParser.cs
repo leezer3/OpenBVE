@@ -75,7 +75,7 @@ namespace OpenBve {
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
-				CompatabilityObjects.LoadCompatabilityObjects(OpenBveApi.Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
+				CompatibilityObjects.LoadCompatibilityObjects(OpenBveApi.Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
 			}
 			RouteData Data = new RouteData
 			{
@@ -4830,6 +4830,7 @@ namespace OpenBve {
 
 		// apply route data
 		private static void ApplyRouteData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
+			Interface.AddMessage(Interface.MessageType.Warning, false, "Warning: " + CompatibilityObjectsUsed + " compatibility objects were used.");
 			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;
 			ObjectManager.StaticObject SignalPost, LimitPostStraight, LimitPostLeft, LimitPostRight, LimitPostInfinite;
 			ObjectManager.StaticObject LimitOneDigit, LimitTwoDigits, LimitThreeDigits, StopPost;

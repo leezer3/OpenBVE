@@ -10,21 +10,30 @@ namespace OpenBve
 		/// <param name="objectPath">The path to the objects directory for this route</param>
 		internal static bool LocateObject(ref string fileName, string objectPath)
 		{
-			var n = OpenBveApi.Path.CombineFile(objectPath, fileName);
+			string n;
+			try
+			{
+				//Catch completely malformed path references
+				n = OpenBveApi.Path.CombineFile(objectPath, fileName);
+			}
+			catch
+			{
+				return false;
+			}
 			if (System.IO.File.Exists(n))
 			{
 				fileName = n;
 				//The object exists, and does not require a compatibility object
 				return true;
 			}
-			for (int i = 0; i < CompatabilityObjects.AvailableReplacements.Length; i++)
+			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)
 			{
-				if (CompatabilityObjects.AvailableReplacements[i].ObjectName.ToLowerInvariant() == fileName.ToLowerInvariant())
+				if (CompatibilityObjects.AvailableReplacements[i].ObjectName.ToLowerInvariant() == fileName.ToLowerInvariant())
 				{
-					fileName = CompatabilityObjects.AvailableReplacements[i].ReplacementPath;
-					if (!string.IsNullOrEmpty(CompatabilityObjects.AvailableReplacements[i].Message))
+					fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
+					if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
 					{
-						Interface.AddMessage(Interface.MessageType.Warning, false, CompatabilityObjects.AvailableReplacements[i].Message);
+						Interface.AddMessage(Interface.MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
 					}
 					CompatibilityObjectsUsed++;
 					return true;
@@ -36,7 +45,7 @@ namespace OpenBve
 		internal static int CompatibilityObjectsUsed = 0;
 	}
 
-	internal class CompatabilityObjects
+	internal class CompatibilityObjects
 	{
 		internal class ReplacementObject
 		{
@@ -58,7 +67,7 @@ namespace OpenBve
 
 		internal static ReplacementObject[] AvailableReplacements;
 
-		internal static void LoadCompatabilityObjects(string fileName)
+		internal static void LoadCompatibilityObjects(string fileName)
 		{
 			string d = System.IO.Path.GetDirectoryName(fileName);
 			AvailableReplacements = new ReplacementObject[0];
