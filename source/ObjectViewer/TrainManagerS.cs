@@ -10,6 +10,9 @@ using System;
 namespace OpenBve {
 	internal static class TrainManager {
 
+// Silence the absurd amount of unused variable warnings
+#pragma warning disable 0649
+
 		// structures
 		internal struct Axle {
 			internal TrackManager.TrackFollower Follower;
@@ -401,6 +404,8 @@ namespace OpenBve {
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
 		}
+
+#pragma warning restore 0649
 
 		// trains
 		internal static Train[] Trains = new Train[] { };

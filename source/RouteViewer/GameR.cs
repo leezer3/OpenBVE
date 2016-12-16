@@ -260,7 +260,7 @@ namespace OpenBve {
 			internal int PreviousSection;
 			internal int NextSection;
 			internal TrainManager.Train[] Trains;
-			internal bool TrainReachedStopPoint;
+			internal const bool TrainReachedStopPoint = false;
 			internal int StationIndex;
 			internal bool Invisible;
 			internal int[] SignalIndices;

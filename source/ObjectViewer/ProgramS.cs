@@ -26,7 +26,7 @@ namespace OpenBve {
 		internal const ProgramType CurrentProgramType = ProgramType.ObjectViewer;
 
 		// members
-		private static bool Quit = false;
+		private const bool Quit = false;
 	    internal static string[] Files = new string[] { };
 	    internal static bool[] SkipArgs;
 

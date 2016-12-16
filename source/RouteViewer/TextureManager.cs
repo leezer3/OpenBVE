@@ -51,7 +51,7 @@ namespace OpenBve
 			internal bool LoadImmediately;
 			//Grabbing the framebuffer directly as a texture is vertically flipped due to the way openGL works...
 			//Nasty hacky workaround tells the renderer to use vertically flipped texture coords
-			internal bool VFlip;
+			internal const bool VFlip = true;
 		}
 		internal static Texture[] Textures = new Texture[16];
 		private const int MaxCyclesUntilUnload = 4;
@@ -250,7 +250,6 @@ namespace OpenBve
 				CycleTime = 0.0;
 				for (int i = 0; i < Textures.Length; i++)
 				{
-					bool ul = false;
 					if (Textures[i] != null)
 					{
 						if (Textures[i].Loaded & !Textures[i].DontAllowUnload)
