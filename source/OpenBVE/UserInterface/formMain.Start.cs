@@ -6,8 +6,10 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace OpenBve {
-	internal partial class formMain : Form {
+namespace OpenBve
+{
+	internal partial class formMain : Form
+	{
 		// ===============
 		// route selection
 		// ===============
@@ -17,7 +19,8 @@ namespace OpenBve {
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
 
-		private void textboxRouteFolder_TextChanged(object sender, EventArgs e) {
+		private void textboxRouteFolder_TextChanged(object sender, EventArgs e)
+		{
 			if (listviewRouteFiles.Columns.Count == 0)
 			{
 				return;
@@ -27,7 +30,7 @@ namespace OpenBve {
 			{
 				Folder = Directory.GetParent(Folder).ToString();
 			}
-			
+
 			if (rf != Folder)
 			{
 				populateRouteList(Folder);
@@ -56,7 +59,7 @@ namespace OpenBve {
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker)delegate
+				this.BeginInvoke((MethodInvoker) delegate
 				{
 					onRouteFolderChanged(this, e);
 				});
@@ -74,74 +77,111 @@ namespace OpenBve {
 		/// <param name="Folder">The folder containing route files</param>
 		private void populateRouteList(string Folder)
 		{
-			try {
-				if (Folder.Length == 0) {
+			try
+			{
+				if (Folder.Length == 0)
+				{
 					// drives
 					listviewRouteFiles.Items.Clear();
-					try { // MoMA says that GetDrives is flagged with [MonoTodo]
+					try
+					{
+						// MoMA says that GetDrives is flagged with [MonoTodo]
 						System.IO.DriveInfo[] driveInfos = System.IO.DriveInfo.GetDrives();
-						for (int i = 0; i < driveInfos.Length; i++) {
+						for (int i = 0; i < driveInfos.Length; i++)
+						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
 							Item.ImageKey = "folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewRouteFiles.Tag = null;
 						}
-					} catch { }
-				} else if (System.IO.Directory.Exists(Folder)) {
+					}
+					catch
+					{
+					}
+				}
+				else if (System.IO.Directory.Exists(Folder))
+				{
 					listviewRouteFiles.Items.Clear();
 					// parent
-					try {
+					try
+					{
 						System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-						if (Info != null) {
+						if (Info != null)
+						{
 							ListViewItem Item = listviewRouteFiles.Items.Add("..");
 							Item.ImageKey = "parent";
 							Item.Tag = Info.FullName;
 							listviewRouteFiles.Tag = Info.FullName;
-						} else {
+						}
+						else
+						{
 							ListViewItem Item = listviewRouteFiles.Items.Add("..");
 							Item.ImageKey = "parent";
 							Item.Tag = "";
 							listviewRouteFiles.Tag = "";
 						}
-					} catch { }
+					}
+					catch
+					{
+					}
 					// folders
-					try {
+					try
+					{
 						string[] Folders = System.IO.Directory.GetDirectories(Folder);
 						Array.Sort<string>(Folders);
-						for (int i = 0; i < Folders.Length; i++) {
+						for (int i = 0; i < Folders.Length; i++)
+						{
 							System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(Folders[i]);
-							if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0) {
+							if ((info.Attributes & System.IO.FileAttributes.Hidden) == 0)
+							{
 								string folderName = System.IO.Path.GetFileName(Folders[i]);
-								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.') {
+								if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
+								{
 									ListViewItem Item = listviewRouteFiles.Items.Add(folderName);
 									Item.ImageKey = @"folder";
 									Item.Tag = Folders[i];
 								}
 							}
 						}
-					} catch { }
+					}
+					catch
+					{
+					}
 					// files
-					try {
+					try
+					{
 						string[] Files = System.IO.Directory.GetFiles(Folder);
 						Array.Sort<string>(Files);
 						for (int i = 0; i < Files.Length; i++)
 						{
 							if (Files[i] == null) return;
 							string Extension = System.IO.Path.GetExtension(Files[i]).ToLowerInvariant();
-							switch (Extension) {
+							switch (Extension)
+							{
 								case ".rw":
 								case ".csv":
 									string fileName = System.IO.Path.GetFileName(Files[i]);
-									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.') {
+									if (!string.IsNullOrEmpty(fileName) && fileName[0] != '.')
+									{
 										ListViewItem Item = listviewRouteFiles.Items.Add(fileName);
-										if (Extension == ".csv") {
-											try {
+										if (Extension == ".csv")
+										{
+											try
+											{
 												string text = System.IO.File.ReadAllText(Files[i], Encoding.UTF8);
-												if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 | text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 | text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0) {
+												if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
+												    text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
+												    text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
+												{
 													Item.ImageKey = "route";
 												}
-											} catch { }
-										} else {
+											}
+											catch
+											{
+											}
+										}
+										else
+										{
 											Item.ImageKey = "route";
 										}
 										Item.Tag = Files[i];
@@ -149,54 +189,84 @@ namespace OpenBve {
 									break;
 							}
 						}
-					} catch { }
+					}
+					catch
+					{
+					}
 				}
-			} catch { }
+			}
+			catch
+			{
+			}
 		}
 
 		// route files
-		private void listviewRouteFiles_SelectedIndexChanged(object sender, EventArgs e) {
-			if (listviewRouteFiles.SelectedItems.Count == 1) {
-				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
-				
+		private void listviewRouteFiles_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listviewRouteFiles.SelectedItems.Count == 1)
+			{
+				string t;
+				try
+				{
+					t = listviewRouteFiles.SelectedItems[0].Tag as string;
+				}
+				catch
+				{
+
+					return;
+				}
 				if (t != null)
 				{
-					
-					if (System.IO.File.Exists(t)) {
+
+					if (System.IO.File.Exists(t))
+					{
 						Result.RouteFile = t;
 						ShowRoute(false);
 					}
 				}
 			}
 		}
-		private void listviewRouteFiles_DoubleClick(object sender, EventArgs e) {
-			if (listviewRouteFiles.SelectedItems.Count == 1) {
+
+		private void listviewRouteFiles_DoubleClick(object sender, EventArgs e)
+		{
+			if (listviewRouteFiles.SelectedItems.Count == 1)
+			{
 				string t = listviewRouteFiles.SelectedItems[0].Tag as string;
-				if (t != null) {
-					if (t.Length == 0 || System.IO.Directory.Exists(t)) {
+				if (t != null)
+				{
+					if (t.Length == 0 || System.IO.Directory.Exists(t))
+					{
 						textboxRouteFolder.Text = t;
 					}
 				}
 			}
 		}
-		private void listviewRouteFiles_KeyDown(object sender, KeyEventArgs e) {
-			switch (e.KeyCode) {
+
+		private void listviewRouteFiles_KeyDown(object sender, KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
 				case Keys.Return:
 					listviewRouteFiles_DoubleClick(null, null);
 					break;
 				case Keys.Back:
 					string t = listviewRouteFiles.Tag as string;
-					if (t != null) {
-						if (t.Length == 0 || System.IO.Directory.Exists(t)) {
+					if (t != null)
+					{
+						if (t.Length == 0 || System.IO.Directory.Exists(t))
+						{
 							textboxRouteFolder.Text = t;
 						}
-					} break;
+					}
+					break;
 			}
 		}
 
 		// route recently
-		private void listviewRouteRecently_SelectedIndexChanged(object sender, EventArgs e) {
-			if (listviewRouteRecently.SelectedItems.Count == 1) {
+		private void listviewRouteRecently_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listviewRouteRecently.SelectedItems.Count == 1)
+			{
 				string t = listviewRouteRecently.SelectedItems[0].Tag as string;
 				if (t == null) return;
 				if (!System.IO.File.Exists(t)) return;
@@ -210,14 +280,17 @@ namespace OpenBve {
 		// =============
 
 		// route image
-		private void pictureboxRouteImage_Click(object sender, EventArgs e) {
-			if (pictureboxRouteImage.Image != null) {
+		private void pictureboxRouteImage_Click(object sender, EventArgs e)
+		{
+			if (pictureboxRouteImage.Image != null)
+			{
 				formImage.ShowImageDialog(pictureboxRouteImage.Image);
 			}
 		}
 
 		// route encoding
-		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e) {
+		private void comboboxRouteEncoding_SelectedIndexChanged(object sender, EventArgs e)
+		{
 			int i = comboboxRouteEncoding.SelectedIndex;
 
 			if (Result.RouteFile == null && Result.ErrorFile != null)
@@ -225,56 +298,81 @@ namespace OpenBve {
 				//Workaround for the route worker thread
 				Result.RouteFile = Result.ErrorFile;
 			}
-			if (comboboxRouteEncoding.Tag == null) {
-				
+			if (comboboxRouteEncoding.Tag == null)
+			{
+
 				if (!(i >= 0 & i < EncodingCodepages.Length)) return;
 				Result.RouteEncoding = System.Text.Encoding.GetEncoding(EncodingCodepages[i]);
-				if (i == 0) {
+				if (i == 0)
+				{
 					// remove from cache
-					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
-							Interface.CurrentOptions.RouteEncodings[j] = Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
-							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, Interface.CurrentOptions.RouteEncodings.Length - 1);
+					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++)
+					{
+						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile)
+						{
+							Interface.CurrentOptions.RouteEncodings[j] =
+								Interface.CurrentOptions.RouteEncodings[Interface.CurrentOptions.RouteEncodings.Length - 1];
+							Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings,
+								Interface.CurrentOptions.RouteEncodings.Length - 1);
 							break;
 						}
 					}
-				} else {
+				}
+				else
+				{
 					// add to cache
-					int j; for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile) {
+					int j;
+					for (j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++)
+					{
+						if (Interface.CurrentOptions.RouteEncodings[j].Value == Result.RouteFile)
+						{
 							Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 							break;
 						}
-					} if (j == Interface.CurrentOptions.RouteEncodings.Length) {
+					}
+					if (j == Interface.CurrentOptions.RouteEncodings.Length)
+					{
 						Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, j + 1);
 						Interface.CurrentOptions.RouteEncodings[j].Codepage = EncodingCodepages[i];
 						Interface.CurrentOptions.RouteEncodings[j].Value = Result.RouteFile;
 					}
-				}			
+				}
 				ShowRoute(true);
 			}
 		}
-		private void buttonRouteEncodingLatin1_Click(object sender, EventArgs e) {
-			for (int i = 1; i < EncodingCodepages.Length; i++) {
-				if (EncodingCodepages[i] == 1252) {
+
+		private void buttonRouteEncodingLatin1_Click(object sender, EventArgs e)
+		{
+			for (int i = 1; i < EncodingCodepages.Length; i++)
+			{
+				if (EncodingCodepages[i] == 1252)
+				{
 					comboboxRouteEncoding.SelectedIndex = i;
 					return;
 				}
 			}
 			System.Media.SystemSounds.Hand.Play();
 		}
-		private void buttonRouteEncodingShiftJis_Click(object sender, EventArgs e) {
-			for (int i = 1; i < EncodingCodepages.Length; i++) {
-				if (EncodingCodepages[i] == 932) {
+
+		private void buttonRouteEncodingShiftJis_Click(object sender, EventArgs e)
+		{
+			for (int i = 1; i < EncodingCodepages.Length; i++)
+			{
+				if (EncodingCodepages[i] == 932)
+				{
 					comboboxRouteEncoding.SelectedIndex = i;
 					return;
 				}
 			}
 			System.Media.SystemSounds.Hand.Play();
 		}
-		private void buttonRouteEncodingBig5_Click(object sender, EventArgs e) {
-			for (int i = 1; i < EncodingCodepages.Length; i++) {
-				if (EncodingCodepages[i] == 950) {
+
+		private void buttonRouteEncodingBig5_Click(object sender, EventArgs e)
+		{
+			for (int i = 1; i < EncodingCodepages.Length; i++)
+			{
+				if (EncodingCodepages[i] == 950)
+				{
 					comboboxRouteEncoding.SelectedIndex = i;
 					return;
 				}
@@ -289,7 +387,9 @@ namespace OpenBve {
 		// train folder
 
 		private string tf;
-		private void textboxTrainFolder_TextChanged(object sender, EventArgs e) {
+
+		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
+		{
 			if (listviewTrainFolders.Columns.Count == 0)
 			{
 				return;
@@ -314,7 +414,7 @@ namespace OpenBve {
 				trainWatcher.EnableRaisingEvents = true;
 			}
 			catch
-			{	
+			{
 			}
 			listviewTrainFolders.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
@@ -324,7 +424,7 @@ namespace OpenBve {
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker)delegate
+				this.BeginInvoke((MethodInvoker) delegate
 				{
 					onTrainFolderChanged(this, e);
 				});
@@ -348,7 +448,8 @@ namespace OpenBve {
 					// drives
 					listviewTrainFolders.Items.Clear();
 					try
-					{ // MoMA says that GetDrives is flagged with [MonoTodo]
+					{
+						// MoMA says that GetDrives is flagged with [MonoTodo]
 						System.IO.DriveInfo[] driveInfos = System.IO.DriveInfo.GetDrives();
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
@@ -358,7 +459,9 @@ namespace OpenBve {
 							listviewTrainFolders.Tag = null;
 						}
 					}
-					catch { }
+					catch
+					{
+					}
 				}
 				else if (System.IO.Directory.Exists(Folder))
 				{
@@ -382,7 +485,9 @@ namespace OpenBve {
 							listviewTrainFolders.Tag = "";
 						}
 					}
-					catch { }
+					catch
+					{
+					}
 					// folders
 					try
 					{
@@ -405,19 +510,35 @@ namespace OpenBve {
 									}
 								}
 							}
-							catch { }
+							catch
+							{
+							}
 						}
 					}
-					catch { }
+					catch
+					{
+					}
 				}
 			}
-			catch { }
+			catch
+			{
+			}
 		}
 
 		// train folders
-		private void listviewTrainFolders_SelectedIndexChanged(object sender, EventArgs e) {
-			if (listviewTrainFolders.SelectedItems.Count == 1) {
-				string t = listviewTrainFolders.SelectedItems[0].Tag as string;
+		private void listviewTrainFolders_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (listviewTrainFolders.SelectedItems.Count == 1)
+			{
+				string t;
+				try
+				{
+					t = listviewTrainFolders.SelectedItems[0].Tag as string;
+				}
+				catch (Exception)
+				{
+					return;
+				}
 				if (t != null) {
 					if (System.IO.Directory.Exists(t)) {
 						string File = OpenBveApi.Path.CombineFile(t, "train.dat");
@@ -586,6 +707,10 @@ namespace OpenBve {
 
 		private void routeWorkerThread_doWork(object sender, DoWorkEventArgs e)
 		{
+			if (string.IsNullOrEmpty(Result.RouteFile))
+			{
+				return;
+			}
 			Game.Reset(false);
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
@@ -701,7 +826,10 @@ namespace OpenBve {
 
 		// show route
 		private void ShowRoute(bool UserSelectedEncoding) {
-
+			if (routeWorkerThread == null)
+			{
+				return;
+			}
 			if (Result.RouteFile != null && !routeWorkerThread.IsBusy)
 			{
 				
