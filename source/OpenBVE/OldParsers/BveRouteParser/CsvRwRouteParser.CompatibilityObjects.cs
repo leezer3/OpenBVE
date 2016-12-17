@@ -65,12 +65,15 @@ namespace OpenBve
 			}
 		}
 
-		internal static ReplacementObject[] AvailableReplacements;
+		internal static ReplacementObject[] AvailableReplacements = new ReplacementObject[0];
 
 		internal static void LoadCompatibilityObjects(string fileName)
 		{
+			if (!System.IO.File.Exists(fileName))
+			{
+				return;
+			}
 			string d = System.IO.Path.GetDirectoryName(fileName);
-			AvailableReplacements = new ReplacementObject[0];
 			XmlDocument currentXML = new XmlDocument();
 			currentXML.Load(fileName);
 			//Check for null
@@ -102,6 +105,9 @@ namespace OpenBve
 									case "message":
 										o.Message = c.InnerText.Trim();
 										break;
+									default:
+										Interface.AddMessage(Interface.MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
+										break;
 								}
 							}
 							if (o.ObjectName != string.Empty && o.ReplacementPath != string.Empty)
@@ -109,6 +115,41 @@ namespace OpenBve
 								int i = AvailableReplacements.Length;
 								Array.Resize(ref AvailableReplacements, i +1);
 								AvailableReplacements[i] = o;
+							}
+						}
+					}
+					//Now try and load any object list XML files this references
+					DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/ObjectList");
+					
+					if (DocumentNodes != null)
+					{
+						foreach (XmlNode n in DocumentNodes)
+						{
+							if (n.HasChildNodes)
+							{
+								ReplacementObject o = new ReplacementObject();
+								foreach (XmlNode c in n.ChildNodes)
+								{
+									switch (c.Name.ToLowerInvariant())
+									{
+										case "filename":
+											var f = c.InnerText.Trim();
+											if (!System.IO.File.Exists(f))
+											{
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(d, f);
+												}
+												catch
+												{ }
+											}
+											LoadCompatibilityObjects(f);
+											break;
+										default:
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
+											break;
+									}
+								}
 							}
 						}
 					}
