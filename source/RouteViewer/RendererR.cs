@@ -406,7 +406,6 @@ namespace OpenBve {
 			// texture
 			int OpenGlNighttimeTextureIndex = Material.NighttimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.NighttimeTextureIndex, TextureManager.UseMode.Normal) : 0;
 			int OpenGlDaytimeTextureIndex = Material.DaytimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.DaytimeTextureIndex, TextureManager.UseMode.Normal) : 0;
-			bool nl = false;
 			if (OpenGlDaytimeTextureIndex != 0) {
 				if (!TexturingEnabled) {
 					GL.Enable(EnableCap.Texture2D);
@@ -467,19 +466,19 @@ namespace OpenBve {
 			int FaceType = Face.Flags & World.MeshFace.FaceTypeMask;
 			switch (FaceType) {
 				case World.MeshFace.FaceTypeTriangles:
-					GL.Begin(BeginMode.Triangles);
+					GL.Begin(PrimitiveType.Triangles);
 					break;
 				case World.MeshFace.FaceTypeTriangleStrip:
-					GL.Begin(BeginMode.TriangleStrip);
+					GL.Begin(PrimitiveType.TriangleStrip);
 					break;
 				case World.MeshFace.FaceTypeQuads:
-					GL.Begin(BeginMode.Quads);
+					GL.Begin(PrimitiveType.Quads);
 					break;
 				case World.MeshFace.FaceTypeQuadStrip:
-					GL.Begin(BeginMode.QuadStrip);
+					GL.Begin(PrimitiveType.QuadStrip);
 					break;
 				default:
-					GL.Begin(BeginMode.Polygon);
+					GL.Begin(PrimitiveType.Polygon);
 					break;
 			}
 			if (Material.GlowAttenuationData != 0) {
@@ -535,19 +534,19 @@ namespace OpenBve {
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				switch (FaceType) {
 					case World.MeshFace.FaceTypeTriangles:
-						GL.Begin(BeginMode.Triangles);
+						GL.Begin(PrimitiveType.Triangles);
 						break;
 					case World.MeshFace.FaceTypeTriangleStrip:
-						GL.Begin(BeginMode.TriangleStrip);
+						GL.Begin(PrimitiveType.TriangleStrip);
 						break;
 					case World.MeshFace.FaceTypeQuads:
-						GL.Begin(BeginMode.Quads);
+						GL.Begin(PrimitiveType.Quads);
 						break;
 					case World.MeshFace.FaceTypeQuadStrip:
-						GL.Begin(BeginMode.QuadStrip);
+						GL.Begin(PrimitiveType.QuadStrip);
 						break;
 					default:
-						GL.Begin(BeginMode.Polygon);
+						GL.Begin(PrimitiveType.Polygon);
 						break;
 				}
 				float alphafactor;
@@ -591,7 +590,7 @@ namespace OpenBve {
 					AlphaTestEnabled = false;
 				}
 				for (int j = 0; j < Face.Vertices.Length; j++) {
-					GL.Begin(BeginMode.Lines);
+					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
 					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
 					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - CameraZ));
@@ -699,7 +698,7 @@ namespace OpenBve {
 					for (int i = 0; i < n; i++) {
 						int j = (i + 1) % n;
 						// side wall
-						GL.Begin(BeginMode.Quads);
+						GL.Begin(PrimitiveType.Quads);
 						GL.TexCoord2(textureX, 0.005f);
 						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
 						GL.TexCoord2(textureX, 0.995f);
@@ -710,7 +709,7 @@ namespace OpenBve {
 						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
 						GL.End();
 						// top cap
-						GL.Begin(BeginMode.Triangles);
+						GL.Begin(PrimitiveType.Triangles);
 						GL.TexCoord2(textureX, 0.005f);
 						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
 						GL.TexCoord2(textureX + textureIncrement, 0.005f);
@@ -902,7 +901,7 @@ namespace OpenBve {
 				t[4] = new World.Vector2D[] { new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0) };
 				t[5] = new World.Vector2D[] { new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0) };
 				for (int i = 0; i < 6; i++) {
-					GL.Begin(BeginMode.Quads);
+					GL.Begin(PrimitiveType.Quads);
 					GL.Color3(1.0, 1.0, 1.0);
 					for (int j = 0; j < 4; j++) {
 						GL.TexCoord2(t[i][j].X, t[i][j].Y);
@@ -912,7 +911,7 @@ namespace OpenBve {
 				}
 			} else {
 				for (int i = 0; i < 6; i++) {
-					GL.Begin(BeginMode.Quads);
+					GL.Begin(PrimitiveType.Quads);
 					GL.Color3(1.0, 1.0, 1.0);
 					for (int j = 0; j < 4; j++) {
 						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);

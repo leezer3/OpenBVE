@@ -189,8 +189,10 @@ namespace OpenBve
 		internal static bool LoadingRemakeCurrent = false;
 
 		private static readonly object jobLock = new object();
+#pragma warning disable 0649
 		private static Queue<ThreadStart> jobs;
 		private static Queue<object> locks;
+#pragma warning restore 0649
 
 		/// <summary>This method is used during loading to run commands requiring an OpenGL context in the main render loop</summary>
 		/// <param name="job">The OpenGL command</param>

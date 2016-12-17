@@ -26,7 +26,7 @@ namespace OpenBve
 
 		}
 
-        internal string[] commandLineArgs;
+        internal const string[] commandLineArgs = null;
         
         private static double ReducedModeEnteringTime = 0;
         
@@ -311,29 +311,29 @@ namespace OpenBve
             Fonts.Initialize();
             Program.UpdateViewport();
             // command line arguments
-            if (commandLineArgs != null)
-            {
-                for (int i = 0; i < commandLineArgs.Length; i++)
-                {
-                    if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
-                    {
-                        try
-                        {
-                            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
-                                System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false,0,0,0);
-                            ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
-                                new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true,
-                                0.0, 0.0, 25.0, 0.0);
-                        }
-                        catch (Exception ex)
-                        {
-                            Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
-                        }
-                        Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
-                        Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
-                    }
-                }
-            }
+            // if (commandLineArgs != null)
+            // {
+            //     for (int i = 0; i < commandLineArgs.Length; i++)
+            //     {
+            //         if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
+            //         {
+            //             try
+            //             {
+            //                 ObjectManager.UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
+            //                     System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false,0,0,0);
+            //                 ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+            //                     new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true,
+            //                     0.0, 0.0, 25.0, 0.0);
+            //             }
+            //             catch (Exception ex)
+            //             {
+            //                 Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
+            //             }
+            //             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
+            //             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
+            //         }
+            //     }
+            // }
             ObjectManager.InitializeVisibility();
             ObjectManager.FinishCreatingObjects();
             ObjectManager.UpdateVisibility(0.0, true);

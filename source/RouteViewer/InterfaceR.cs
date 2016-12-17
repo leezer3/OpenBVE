@@ -40,6 +40,7 @@ namespace OpenBve {
 			Medium = 1,
 			High = 2
 		}
+#pragma warning disable 0649
 		internal struct Options {
 			internal TextureManager.InterpolationMode Interpolation;
 			internal int AnisotropicFilteringLevel;
@@ -58,6 +59,7 @@ namespace OpenBve {
 			internal bool LoadingBackground;
 		}
 		internal static Options CurrentOptions;
+#pragma warning restore 0649
 
 		// messages
 		internal enum MessageType {

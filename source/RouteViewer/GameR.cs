@@ -260,7 +260,7 @@ namespace OpenBve {
 			internal int PreviousSection;
 			internal int NextSection;
 			internal TrainManager.Train[] Trains;
-			internal bool TrainReachedStopPoint;
+			internal const bool TrainReachedStopPoint = false;
 			internal int StationIndex;
 			internal bool Invisible;
 			internal int[] SignalIndices;
@@ -324,7 +324,7 @@ namespace OpenBve {
 			int d = Sections[SectionIndex].StationIndex;
 			if (d >= 0) {
 				// look for train in previous blocks
-				int l = Sections[SectionIndex].PreviousSection;
+				//int l = Sections[SectionIndex].PreviousSection;
 				if (Stations[d].StationType != StationType.Normal) {
 					settored = true;
 				}

@@ -358,7 +358,7 @@ namespace OpenBve {
 		internal static Background CurrentBackground = new Background(-1, 6, false);
 		internal static Background TargetBackground = new Background(-1, 6, false);
 		internal const double TargetBackgroundDefaultCountdown = 0.8;
-		internal static double TargetBackgroundCountdown;
+		internal const double TargetBackgroundCountdown = 0.0; // static
 
 		// relative camera
 		internal struct CameraAlignment {
@@ -377,6 +377,7 @@ namespace OpenBve {
 				this.Zoom = Zoom;
 			}
 		}
+#pragma warning disable 0649
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 		internal static CameraAlignment CameraCurrentAlignment;
 		internal static CameraAlignment CameraAlignmentDirection;
@@ -389,6 +390,7 @@ namespace OpenBve {
 		internal const double CameraZoomTopSpeed = 2.0;
 		internal enum CameraViewMode { Interior, Exterior, Track, FlyBy, FlyByZooming }
 		internal static CameraViewMode CameraMode;
+#pragma warning restore 0649
 
 		// camera restriction
 		internal enum CameraRestrictionMode {

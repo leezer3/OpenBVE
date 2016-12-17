@@ -27,7 +27,9 @@ namespace OpenBve {
 			internal static int[] Panel = new int[] { };
 		}
 	}
-	
+
+#pragma warning disable 0649
+
 	// --- Game.cs ---
 	internal static class Game {
 		internal static double SecondsSinceMidnight = 0.0;
@@ -130,6 +132,8 @@ namespace OpenBve {
 		internal static Options CurrentOptions;
 
 		// ================================
+
+#pragma warning restore 0649
 
 		// try parse vb6
 		internal static bool TryParseDoubleVb6(string Expression, out double Value) {

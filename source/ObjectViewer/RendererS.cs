@@ -47,7 +47,7 @@ namespace OpenBve
         {
             internal int ObjectListIndex;
             internal int ObjectIndex;
-            internal int MeshIndex;
+            internal const int MeshIndex = 0;
             internal int FaceIndex;
         }
         // opaque
@@ -499,19 +499,19 @@ namespace OpenBve
             switch (FaceType)
             {
                 case World.MeshFace.FaceTypeTriangles:
-                    GL.Begin(BeginMode.Triangles);
+                    GL.Begin(PrimitiveType.Triangles);
                     break;
                 case World.MeshFace.FaceTypeTriangleStrip:
-                    GL.Begin(BeginMode.TriangleStrip);
+                    GL.Begin(PrimitiveType.TriangleStrip);
                     break;
                 case World.MeshFace.FaceTypeQuads:
-                    GL.Begin(BeginMode.Quads);
+                    GL.Begin(PrimitiveType.Quads);
                     break;
                 case World.MeshFace.FaceTypeQuadStrip:
-                    GL.Begin(BeginMode.QuadStrip);
+                    GL.Begin(PrimitiveType.QuadStrip);
                     break;
                 default:
-                    GL.Begin(BeginMode.Polygon);
+                    GL.Begin(PrimitiveType.Polygon);
                     break;
             }
             if (Material.GlowAttenuationData != 0)
@@ -590,19 +590,19 @@ namespace OpenBve
                 switch (FaceType)
                 {
                     case World.MeshFace.FaceTypeTriangles:
-                        GL.Begin(BeginMode.Triangles);
+                        GL.Begin(PrimitiveType.Triangles);
                         break;
                     case World.MeshFace.FaceTypeTriangleStrip:
-                        GL.Begin(BeginMode.TriangleStrip);
+                        GL.Begin(PrimitiveType.TriangleStrip);
                         break;
                     case World.MeshFace.FaceTypeQuads:
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         break;
                     case World.MeshFace.FaceTypeQuadStrip:
-                        GL.Begin(BeginMode.QuadStrip);
+                        GL.Begin(PrimitiveType.QuadStrip);
                         break;
                     default:
-                        GL.Begin(BeginMode.Polygon);
+                        GL.Begin(PrimitiveType.Polygon);
                         break;
                 }
                 float alphafactor;
@@ -659,7 +659,7 @@ namespace OpenBve
                 }
                 for (int j = 0; j < Face.Vertices.Length; j++)
                 {
-                    GL.Begin(BeginMode.Lines);
+                    GL.Begin(PrimitiveType.Lines);
                     GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
                     GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
                     GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - CameraZ));

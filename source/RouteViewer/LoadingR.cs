@@ -116,7 +116,7 @@ namespace OpenBve {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
-			string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
+			// string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
 			// reset
 			Game.Reset();
 			Game.MinimalisticSimulation = true;
@@ -150,11 +150,11 @@ namespace OpenBve {
 			}
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			int FirstStationIndex = -1;
+			// int FirstStationIndex = -1;
 			double FirstStationPosition = 0.0;
 			for (int i = 0; i < Game.Stations.Length; i++) {
 				if (Game.Stations[i].Stops.Length != 0) {
-					FirstStationIndex = i;
+					// FirstStationIndex = i;
 					FirstStationPosition = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
 					if (Game.Stations[i].ArrivalTime < 0.0) {
 						if (Game.Stations[i].DepartureTime < 0.0) {

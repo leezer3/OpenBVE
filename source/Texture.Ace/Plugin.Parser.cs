@@ -422,7 +422,7 @@ namespace Plugin {
 						throw new InvalidDataException();
 					}
 					byte flg = reader.ReadByte();
-					int fcheck = flg & 31;
+					// int fcheck = flg & 31;
 					if ((256 * cmf + flg) % 31 != 0) {
 						throw new InvalidDataException();
 					}

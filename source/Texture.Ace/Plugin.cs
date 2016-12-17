@@ -9,7 +9,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The host that loaded the plugin.</summary>
-		private HostInterface CurrentHost = null;
+		// private HostInterface CurrentHost = null;
 		
 		
 		// --- functions ---
@@ -17,7 +17,7 @@ namespace Plugin {
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
 		public override void Load(HostInterface host) {
-			CurrentHost = host;
+			// CurrentHost = host;
 		}
 		
 		/// <summary>Queries the dimensions of a texture.</summary>

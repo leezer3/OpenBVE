@@ -1914,27 +1914,29 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else {
-													while (CommandIndex1 >= Data.TimetableDaytime.Length) {
-														int n = Data.TimetableDaytime.Length;
-														Array.Resize<int>(ref Data.TimetableDaytime, n << 1);
-														for (int i = n; i < Data.TimetableDaytime.Length; i++) {
-															Data.TimetableDaytime[i] = -1;
-														}
-													}
-													string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-													if (!System.IO.File.Exists(f)) {
-														f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-													}
-													if (System.IO.File.Exists(f)) {
-														Data.TimetableDaytime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, true);
-														TextureManager.UseTexture(Data.TimetableDaytime[CommandIndex1], TextureManager.UseMode.Normal);
-													}
-												}
-											}
+											} 
+											// Code was always unreachable because this is routeviewer //
+											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
+											// 	if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											// 	} else {
+											// 		while (CommandIndex1 >= Data.TimetableDaytime.Length) {
+											// 			int n = Data.TimetableDaytime.Length;
+											// 			Array.Resize<int>(ref Data.TimetableDaytime, n << 1);
+											// 			for (int i = n; i < Data.TimetableDaytime.Length; i++) {
+											// 				Data.TimetableDaytime[i] = -1;
+											// 			}
+											// 		}
+											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+											// 		if (!System.IO.File.Exists(f)) {
+											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+											// 		}
+											// 		if (System.IO.File.Exists(f)) {
+											// 			Data.TimetableDaytime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, true);
+											// 			TextureManager.UseTexture(Data.TimetableDaytime[CommandIndex1], TextureManager.UseMode.Normal);
+											// 		}
+											// 	}
+											// }
 										}
 									} break;
 								case "train.timetable.night":
@@ -1944,27 +1946,29 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex is expected to be non-negativ in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else {
-													while (CommandIndex1 >= Data.TimetableNighttime.Length) {
-														int n = Data.TimetableNighttime.Length;
-														Array.Resize<int>(ref Data.TimetableNighttime, n << 1);
-														for (int i = n; i < Data.TimetableNighttime.Length; i++) {
-															Data.TimetableNighttime[i] = -1;
-														}
-													}
-													string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-													if (!System.IO.File.Exists(f)) {
-														f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-													}
-													if (System.IO.File.Exists(f)) {
-														Data.TimetableNighttime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-														TextureManager.UseTexture(Data.TimetableNighttime[CommandIndex1], TextureManager.UseMode.Normal);
-													}
-												}
-											}
+											} 
+											// Code was always unreachable because this is routeviewer //
+											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
+											// 	if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											// 	} else {
+											// 		while (CommandIndex1 >= Data.TimetableNighttime.Length) {
+											// 			int n = Data.TimetableNighttime.Length;
+											// 			Array.Resize<int>(ref Data.TimetableNighttime, n << 1);
+											// 			for (int i = n; i < Data.TimetableNighttime.Length; i++) {
+											// 				Data.TimetableNighttime[i] = -1;
+											// 			}
+											// 		}
+											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+											// 		if (!System.IO.File.Exists(f)) {
+											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+											// 		}
+											// 		if (System.IO.File.Exists(f)) {
+											// 			Data.TimetableNighttime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+											// 			TextureManager.UseTexture(Data.TimetableNighttime[CommandIndex1], TextureManager.UseMode.Normal);
+											// 		}
+											// 	}
+											// }
 										}
 									} break;
 									// structure
@@ -3847,14 +3851,14 @@ namespace OpenBve {
 													ttidx = -1;
 												} else {
 													if (ttidx < 0) {
-														if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														}
+														// if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
+														// 	Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+														// }
 														ttidx = -1;
 													} else if (ttidx >= Data.TimetableDaytime.Length & ttidx >= Data.TimetableNighttime.Length) {
-														if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														}
+														// if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
+														// 	Interface.AddMessage(Interface.MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+														// }
 														ttidx = -1;
 													}
 													tdt = ttidx >= 0 & ttidx < Data.TimetableDaytime.Length ? Data.TimetableDaytime[ttidx] : -1;
@@ -5378,35 +5382,35 @@ namespace OpenBve {
 									World.Rotate(ref Direction2, cosag, sinag);
 								}
 								double a2 = 0.0;
-								double c2 = Data.BlockInterval;
-								double h2 = 0.0;
+								// double c2 = Data.BlockInterval;
+								// double h2 = 0.0;
 								if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0 & Data.Blocks[i + 1].Pitch != 0.0) {
 									double d2 = Data.BlockInterval;
 									double p2 = Data.Blocks[i + 1].Pitch;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double s2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = s2 * p2;
+									// h2 = s2 * p2;
 									double b2 = s2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0) {
 									double d2 = Data.BlockInterval;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double b2 = d2 / Math.Abs(r2);
-									c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
+									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
 									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].Pitch != 0.0) {
-									double p2 = Data.Blocks[i + 1].Pitch;
-									double d2 = Data.BlockInterval;
-									c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
-									h2 = c2 * p2;
+									// double p2 = Data.Blocks[i + 1].Pitch;
+									// double d2 = Data.BlockInterval;
+									// c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
+									// h2 = c2 * p2;
 								}
-								double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
-								double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
-								World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
-								World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
+								// double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
+								// double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
+								// World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
+								// World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								World.Vector3D offset2 = new World.Vector3D(Direction2.Y * x2, y2, -Direction2.X * x2);

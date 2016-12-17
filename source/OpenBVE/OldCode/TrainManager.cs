@@ -318,9 +318,11 @@ namespace OpenBve
 		}
 		//Using a much cut-down version of the car struct for bogies
 		internal struct Bogie {
+#pragma warning disable 0649
 			internal double Width;
 			internal double Height;
 			internal double Length;
+#pragma warning restore 0649
 			internal Axle FrontAxle;
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
