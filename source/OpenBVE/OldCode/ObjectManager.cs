@@ -1334,7 +1334,8 @@ namespace OpenBve {
 				}
 			}
 			// structure optimization
-			if (!PreserveVertices & f < Interface.CurrentOptions.ObjectOptimizationFullThreshold) {
+			if (true) {
+			//if (!PreserveVertices & f < Interface.CurrentOptions.ObjectOptimizationFullThreshold) {
 				// create TRIANGLES and QUADS from POLYGON
 				for (int i = 0; i < f; i++) {
 					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
@@ -1401,7 +1402,7 @@ namespace OpenBve {
 				}
 				// optimize for TRIANGLE_STRIP
 				int index = -1;
-				while (true) {
+				while (false) {
 					// add TRIANGLES to TRIANGLE_STRIP
 					for (int i = 0; i < f; i++) {
 						if (index == i | index == -1) {
@@ -1495,7 +1496,7 @@ namespace OpenBve {
 				}
 				// optimize for QUAD_STRIP
 				index = -1;
-				while (true) {
+				while (false) {
 					// add QUADS to QUAD_STRIP
 					for (int i = 0; i < f; i++) {
 						if (index == i | index == -1) {
