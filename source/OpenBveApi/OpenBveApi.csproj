@@ -46,17 +46,12 @@
     <OutputPath>..\..\bin_debug\</OutputPath>
     <DocumentationFile>..\..\bin_debug\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;_MSVC;_WIN32</DefineConstants>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_release\</OutputPath>
     <DocumentationFile>..\..\bin_release\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;_MSVC;_WIN32</DefineConstants>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>

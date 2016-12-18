@@ -28,8 +28,8 @@ endif
 RESGEN := resgen
 
 # Standard Arguments
-DEBUG_ARGS   := /noconfig /debug:Full /debug+ /optimize- /warnaserror- /unsafe+ /define:"DEBUG;TRACE" /platform:x86 /warn:4 /pkg:dotnet /define:_MONO
-RELEASE_ARGS := /noconfig /debug- /optimize+ /unsafe+ /checked- /define:"TRACE" /platform:x86 /warn:4 /pkg:dotnet /define:_MONO
+DEBUG_ARGS   := /noconfig /debug:Full /debug+ /optimize- /warnaserror- /unsafe+ /define:"DEBUG;TRACE" /platform:x86 /warn:4 /pkg:dotnet
+RELEASE_ARGS := /noconfig /debug- /optimize+ /unsafe+ /checked- /define:"TRACE" /platform:x86 /warn:4 /pkg:dotnet
 
 # Directories
 DEBUG_DIR   := bin_debug
@@ -49,12 +49,6 @@ endif
 
 # Current Args
 ARGS := $(DEBUG_ARGS)
-
-ifeq ($(shell uname -s),Darwin)
-ARGS += /define:_OSX
-else
-ARGS += /define:_LINUX
-endif
 
 # Thumbnail
 ICON := source/icon.ico

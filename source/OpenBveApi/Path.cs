@@ -93,12 +93,8 @@ namespace OpenBveApi {
 						 * */
 					    if (absolute != null)
 					    {
-#if _WIN32
-							string directory = (absolute + '\\') + parts[i];
-#else
-							string directory = (absolute + '/') + parts[i];
-#endif
-							if (System.IO.Directory.Exists(directory)) {
+					        string directory = System.IO.Path.Combine(absolute, parts[i]);
+					        if (System.IO.Directory.Exists(directory)) {
 					            absolute = directory;
 					        } else {
 					            /*
@@ -143,19 +139,11 @@ namespace OpenBveApi {
 		public static string CombineFile(string absolute, string relative) {
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
-#if _WIN32
-				string file = (absolute + '\\') + relative.Substring(0, index).TrimEnd();
-#else
-				string file = (absolute + '/') + relative.Substring(0, index).TrimEnd();
-#endif
+				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
 				if (System.IO.File.Exists(file)) {
 					return file;
 				} else {
-#if _WIN32
-					return (absolute + '\\') + relative.Substring(index + 2).TrimStart();
-#else
-					return (absolute + '/') + relative.Substring(index + 2).TrimStart();
-#endif
+					return CombineFile(absolute, relative.Substring(index + 2).TrimStart());
 				}
 			}
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
@@ -191,12 +179,8 @@ namespace OpenBveApi {
 						 * The last part references a file.
 						 * */
 					    if (absolute == null) continue;
-#if _WIN32
-						string file = (absolute + '\\') + parts[i];
-#else
-						string file = (absolute + '/') + parts[i];
-#endif
-						if (System.IO.File.Exists(file)) {
+					    string file = System.IO.Path.Combine(absolute, parts[i]);
+					    if (System.IO.File.Exists(file)) {
 					        return file;
 					    }
 					        /*
@@ -218,12 +202,8 @@ namespace OpenBveApi {
 						 * This part references a directory.
 						 * */
 					    if (absolute == null) continue;
-#if _WIN32
-						string directory = absolute + "\\" + parts[i];
-#else
-						string directory = (absolute + '/') + parts[i];
-#endif
-						if (System.IO.Directory.Exists(directory)) {
+					    string directory = System.IO.Path.Combine(absolute, parts[i]);
+					    if (System.IO.Directory.Exists(directory)) {
 					        absolute = directory;
 					    } else {
 					        /*
