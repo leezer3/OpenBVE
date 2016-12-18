@@ -75,19 +75,19 @@ OPEN_BVE_FILE         :=OpenBve.exe
 OPEN_BVE_API_ROOT     :=source/OpenBveApi
 OPEN_BVE_API_FILE     :=OpenBveApi.dll
 
-OPEN_BVE_ATS_ROOT     :=source/OpenBveAts
+OPEN_BVE_ATS_ROOT     :=source/Plugins/OpenBveAts
 OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
 
-SOUND_FLAC_ROOT       :=source/Sound.Flac
+SOUND_FLAC_ROOT       :=source/Plugins/Sound.Flac
 SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
 
-SOUND_RIFFWAVE_ROOT   :=source/Sound.RiffWave
+SOUND_RIFFWAVE_ROOT   :=source/Plugins/Sound.RiffWave
 SOUND_RIFFWAVE_FILE   :=Data/Plugins/Sound.RiffWave.dll
 
-TEXTURE_ACE_ROOT      :=source/Texture.Ace
+TEXTURE_ACE_ROOT      :=source/Plugins/Texture.Ace
 TEXTURE_ACE_FILE      :=Data/Plugins/Texture.Ace.dll
 
-TEXTURE_BGJPT_ROOT    :=source/Texture.BmpGifJpegPngTiff
+TEXTURE_BGJPT_ROOT    :=source/Plugins/Texture.BmpGifJpegPngTiff
 TEXTURE_BGJPT_FILE    :=Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 
 ROUTE_VIEWER_ROOT     :=source/RouteViewer

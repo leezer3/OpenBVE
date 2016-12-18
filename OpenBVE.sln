@@ -5,15 +5,15 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.Flac", "source\Sound.Flac\Sound.Flac.csproj", "{081F5739-33DA-421A-B177-7B548D96646F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.Flac", "source\Plugins\Sound.Flac\Sound.Flac.csproj", "{081F5739-33DA-421A-B177-7B548D96646F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.RiffWave", "source\Sound.RiffWave\Sound.RiffWave.csproj", "{67418D38-1E2E-4944-A1B0-09E00FC2D055}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.RiffWave", "source\Plugins\Sound.RiffWave\Sound.RiffWave.csproj", "{67418D38-1E2E-4944-A1B0-09E00FC2D055}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.BmpGifJpegPngTiff", "source\Texture.BmpGifJpegPngTiff\Texture.BmpGifJpegPngTiff.csproj", "{4B775819-3574-443E-95AD-B40BC6EA6469}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.BmpGifJpegPngTiff", "source\Plugins\Texture.BmpGifJpegPngTiff\Texture.BmpGifJpegPngTiff.csproj", "{4B775819-3574-443E-95AD-B40BC6EA6469}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBveAts", "source\OpenBveAts\OpenBveAts.csproj", "{15142E7B-35F5-4E81-AA18-79C4D60B4C26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBveAts", "source\Plugins\OpenBveAts\OpenBveAts.csproj", "{15142E7B-35F5-4E81-AA18-79C4D60B4C26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Ace", "source\Texture.Ace\Texture.Ace.csproj", "{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Ace", "source\Plugins\Texture.Ace\Texture.Ace.csproj", "{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBve", "source\OpenBve\OpenBve.csproj", "{34743421-2EB8-4F68-9600-AEAE79AECFA5}"
 	ProjectSection(ProjectDependencies) = postProject
