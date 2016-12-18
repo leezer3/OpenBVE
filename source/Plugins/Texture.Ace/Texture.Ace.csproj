@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{67418D38-1E2E-4944-A1B0-09E00FC2D055}</ProjectGuid>
+    <ProjectGuid>{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>Plugin</RootNamespace>
-    <AssemblyName>Sound.RiffWave</AssemblyName>
+    <RootNamespace>Texture.Ace</RootNamespace>
+    <AssemblyName>Texture.Ace</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug\Data\Plugins\</OutputPath>
-    <DebugSymbols>True</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>Full</DebugType>
     <Optimize>False</Optimize>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
@@ -34,18 +34,18 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\Data\Plugins\</OutputPath>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>False</DebugSymbols>
     <DebugType>None</DebugType>
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <OutputPath>..\..\bin_debug\Data\Plugins\</OutputPath>
+    <OutputPath>..\..\..\bin_debug\Data\Plugins\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\..\bin_release\Data\Plugins\</OutputPath>
+    <OutputPath>..\..\..\bin_release\Data\Plugins\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
@@ -53,14 +53,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Plugin.cs" />
     <Compile Include="Plugin.Parser.cs">
       <DependentUpon>Plugin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+    <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
       <Private>False</Private>
