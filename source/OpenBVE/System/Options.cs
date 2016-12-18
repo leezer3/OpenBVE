@@ -98,6 +98,8 @@ namespace OpenBve
 			internal int ObjectOptimizationBasicThreshold;
 			/// <summary>The minimum number of verticies for full optimisation to be performed on an object</summary>
 			internal int ObjectOptimizationFullThreshold;
+			/// <summary>Whether duplicate verticies are culled during loading</summary>
+			internal bool ObjectOptimizationVertexCulling;
 			/// <summary>Whether toppling is enabled</summary>
 			internal bool Toppling;
 			/// <summary>Whether collisions between trains are enabled</summary>
@@ -208,6 +210,7 @@ namespace OpenBve
 				this.ShowErrorMessages = true;
 				this.ObjectOptimizationBasicThreshold = 10000;
 				this.ObjectOptimizationFullThreshold = 1000;
+				this.ObjectOptimizationVertexCulling = false;
 				this.RouteFolder = "";
 				this.TrainFolder = "";
 				this.RecentlyUsedRoutes = new string[] { };
@@ -461,6 +464,10 @@ namespace OpenBve
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
 												Interface.CurrentOptions.ObjectOptimizationFullThreshold = a;
+											} break;
+										case "vertexCulling":
+											{
+												Interface.CurrentOptions.ObjectOptimizationVertexCulling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											} break;
 									} break;
 								case "simulation":
@@ -747,6 +754,7 @@ namespace OpenBve
 			Builder.AppendLine("[objectOptimization]");
 			Builder.AppendLine("basicThreshold = " + CurrentOptions.ObjectOptimizationBasicThreshold.ToString(Culture));
 			Builder.AppendLine("fullThreshold = " + CurrentOptions.ObjectOptimizationFullThreshold.ToString(Culture));
+			Builder.AppendLine("vertexCulling = " + CurrentOptions.ObjectOptimizationVertexCulling.ToString(Culture));
 			Builder.AppendLine();
 			Builder.AppendLine("[simulation]");
 			Builder.AppendLine("toppling = " + (CurrentOptions.Toppling ? "true" : "false"));

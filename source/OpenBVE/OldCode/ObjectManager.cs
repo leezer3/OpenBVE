@@ -1339,7 +1339,81 @@ namespace OpenBve {
 					}
 				}
 			}
-
+			// Cull vertices based on hidden option.
+			// This is disabled by default because it adds a lot of time to the loading process.
+			if (!PreserveVertices && Interface.CurrentOptions.ObjectOptimizationVertexCulling)
+			{
+				// eliminate unused vertices
+				for (int i = 0; i < v; i++)
+				{
+					bool keep = false;
+					for (int j = 0; j < f; j++)
+					{
+						for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
+						{
+							if (Prototype.Mesh.Faces[j].Vertices[k].Index == i)
+							{
+								keep = true;
+								break;
+							}
+						}
+						if (keep)
+						{
+							break;
+						}
+					}
+					if (!keep)
+					{
+						for (int j = 0; j < f; j++)
+						{
+							for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
+							{
+								if (Prototype.Mesh.Faces[j].Vertices[k].Index > i)
+								{
+									Prototype.Mesh.Faces[j].Vertices[k].Index--;
+								}
+							}
+						}
+						for (int j = i; j < v - 1; j++)
+						{
+							Prototype.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j + 1];
+						}
+						v--;
+						i--;
+					}
+				}
+				
+				// eliminate duplicate vertices
+				for (int i = 0; i < v - 1; i++)
+				{
+					for (int j = i + 1; j < v; j++)
+					{
+						if (Prototype.Mesh.Vertices[i] == Prototype.Mesh.Vertices[j])
+						{
+							for (int k = 0; k < f; k++)
+							{
+								for (int h = 0; h < Prototype.Mesh.Faces[k].Vertices.Length; h++)
+								{
+									if (Prototype.Mesh.Faces[k].Vertices[h].Index == j)
+									{
+										Prototype.Mesh.Faces[k].Vertices[h].Index = (ushort)i;
+									}
+									else if (Prototype.Mesh.Faces[k].Vertices[h].Index > j)
+									{
+										Prototype.Mesh.Faces[k].Vertices[h].Index--;
+									}
+								}
+							}
+							for (int k = j; k < v - 1; k++)
+							{
+								Prototype.Mesh.Vertices[k] = Prototype.Mesh.Vertices[k + 1];
+							}
+							v--;
+							j--;
+						}
+					}
+				}
+			}
 			// structure optimization
 			// Trangularize all polygons and quads into triangles
 			for (int i = 0; i < f; ++i)
