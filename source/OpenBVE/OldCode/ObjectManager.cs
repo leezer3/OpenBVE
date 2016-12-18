@@ -1339,6 +1339,9 @@ namespace OpenBve {
 					}
 				}
 			}
+			/* TODO:
+			 * Use a hash based technique
+			 */ 
 			// Cull vertices based on hidden option.
 			// This is disabled by default because it adds a lot of time to the loading process.
 			if (!PreserveVertices && Interface.CurrentOptions.ObjectOptimizationVertexCulling)
