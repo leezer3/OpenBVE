@@ -1250,7 +1250,10 @@ namespace OpenBve {
 			}
 		}
 		internal static void OptimizeObject(StaticObject Prototype, bool PreserveVertices) {
-			if (Prototype == null) return;
+			if (Prototype == null)
+			{
+				return;
+			}
 			int v = Prototype.Mesh.Vertices.Length;
 			int m = Prototype.Mesh.Materials.Length;
 			int f = Prototype.Mesh.Faces.Length;
@@ -1336,6 +1339,7 @@ namespace OpenBve {
 					}
 				}
 			}
+
 			// structure optimization
 			// Trangularize all polygons and quads into triangles
 			for (int i = 0; i < f; ++i)
@@ -1344,8 +1348,8 @@ namespace OpenBve {
 				// Only transform quads and polygons
 				if (type == World.MeshFace.FaceTypeQuads || type == World.MeshFace.FaceTypePolygon)
 				{
-
 					int staring_vertex_count = Prototype.Mesh.Faces[i].Vertices.Length;
+
 					// One triange for the first three points, then one for each vertex
 					// Wind order is maintained.
 					// Ex: 0, 1, 2; 0, 2, 3; 0, 3, 4; 0, 4, 5; 
@@ -1385,6 +1389,7 @@ namespace OpenBve {
 					}
 				}
 			}
+
 			// decomposit TRIANGLES and QUADS
 			for (int i = 0; i < f; i++)
 			{
@@ -1430,29 +1435,73 @@ namespace OpenBve {
 					}
 				}
 			}
-			// join TRIANGLES, join QUADS
-			for (int i = 0; i < f - 1; i++) {
-				int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-				if (type == World.MeshFace.FaceTypeTriangles | type == World.MeshFace.FaceTypeQuads) {
+
+			// Squish faces that have the same material.
+			{
+				bool[] can_merge = new bool[f];
+				for (int i = 0; i < f - 1; ++i)
+				{
+					int merge_vertices = 0;
+
+					// Type of current face
+					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
 					int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-					for (int j = i + 1; j < f; j++) {
+
+					// Find faces that can be merged
+					for (int j = i + 1; j < f; ++j)
+					{
 						int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
 						int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-						if (type == type2 & face == face2) {
-							if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-								int n = Prototype.Mesh.Faces[i].Vertices.Length;
-								Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + Prototype.Mesh.Faces[j].Vertices.Length);
-								for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-									Prototype.Mesh.Faces[i].Vertices[n + k] = Prototype.Mesh.Faces[j].Vertices[k];
-								}
-								for (int k = j; k < f - 1; k++) {
-									Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-								}
-								f--;
-								j--;
-							}
+
+						// Conditions for face merger
+						bool mergeable = (type == World.MeshFace.FaceTypeTriangles) &&
+										 (type == type2) &&
+										 (face == face2) &&
+										 (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material);
+
+						can_merge[j] = mergeable;
+						merge_vertices += mergeable ? Prototype.Mesh.Faces[j].Vertices.Length : 0;
+					}
+
+					if (merge_vertices == 0)
+					{
+						continue;
+					}
+
+					// Current end of array index
+					int last_vertex_it = Prototype.Mesh.Faces[i].Vertices.Length;
+
+					// Resize current face's vertices to have enough room
+					Array.Resize(ref Prototype.Mesh.Faces[i].Vertices, last_vertex_it + merge_vertices);
+
+					// Merge faces
+					for (int j = i + 1; j < f; ++j)
+					{
+						if (can_merge[j])
+						{
+							// Copy vertices
+							Prototype.Mesh.Faces[j].Vertices.CopyTo(Prototype.Mesh.Faces[i].Vertices, last_vertex_it);
+
+							// Adjust index
+							last_vertex_it += Prototype.Mesh.Faces[j].Vertices.Length;
 						}
 					}
+
+					// Remove now unused faces
+					int jump = 0;
+					for (int j = i + 1; j < f; ++j)
+					{
+						if (can_merge[j])
+						{
+							jump += 1;
+						}
+						else if (jump > 0)
+						{
+							Prototype.Mesh.Faces[j - jump] = Prototype.Mesh.Faces[j];
+						}
+					}
+					// Remove faces removed from face count
+					f -= jump;
 				}
 			}
 			// finalize arrays
