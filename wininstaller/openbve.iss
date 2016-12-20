@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.5.0.2"
+#define MyAppVersion "1.5.0.9"
 #define MyAppPublisher "Christopher Lees"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
@@ -37,6 +37,7 @@ Source: "C:\Program Files (x86)\openBVE\OpenBve.exe"; DestDir: "{app}"; Flags: i
 Source: "C:\Program Files (x86)\openBVE\AtsPluginProxy.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\CSScriptLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\Mono.CSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files (x86)\openBVE\NUniversalCharDet.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\OpenBve.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\OpenBve.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Program Files (x86)\openBVE\OpenBve.exe.mdb"; DestDir: "{app}"; Flags: ignoreversion
@@ -55,4 +56,3 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
