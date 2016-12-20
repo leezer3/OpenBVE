@@ -96,7 +96,7 @@
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
     </PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cp -r "$(SolutionDir)dependencies" "$(TargetDir)"
+      cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
     </PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -332,7 +332,7 @@
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">$(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
@@ -341,7 +341,7 @@ if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVer
 	</PostBuildEvent>
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		cp -rf "$(SolutionDir)assets/*" "$(TargetDir)Data"
+		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
 	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

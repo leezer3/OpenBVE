@@ -5,19 +5,39 @@ matrix:
     - os: linux
       dist: precise
       mono: latest
+      script: make publish
     - os: linux
       dist: trusty
       mono: latest
+      script: make all-release
     - os: osx
       mono: latest
       before_install: brew install hudochenkov/sshpass/sshpass
+      script: make all-release
 
     - os: linux
       dist: precise
       mono: 3.2.8
+      script: make all-release
+
+    - os: linux
+      dist: precise
+      mono: latest
+      solution: OpenBVE.sln
+    - os: linux
+      dist: trusty
+      mono: latest
+      solution: OpenBVE.sln
+    - os: osx
+      mono: latest
+      before_install: brew install hudochenkov/sshpass/sshpass
+      solution: OpenBVE.sln
+
+    - os: linux
+      dist: precise
+      mono: 3.2.8
+      solution: OpenBVE.sln
  
-script:
-  - make publish
 after_success:
 #Export SSH password for whichever platform we are building on
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
