@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Packages;
+using System.Text;
 
 namespace OpenBve
 {
@@ -78,9 +79,28 @@ namespace OpenBve
 				}
 				//Only set properties after making the checks
 
-				currentPackage.Name = textBoxPackageName.Text;
-				currentPackage.Author = textBoxPackageAuthor.Text;
-				currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n");
+				
+				if (Program.CurrentlyRunningOnMono)
+				{
+					//HACK: Mono's WinForms implementation appears to be setting the encoding for a textbox to be Encoding.Default
+					//as opposed to UTF-8 under Microsoft .Net 
+					//Convert the string to a byte array first, then get the UTF-8 string from the arrays to make odd characters work
+					byte[] byteArray = Encoding.Default.GetBytes(textBoxPackageName.Text);
+					string s = Encoding.UTF8.GetString(byteArray);
+					currentPackage.Name = s;
+					byteArray = Encoding.Default.GetBytes(textBoxPackageAuthor.Text);
+					s = Encoding.UTF8.GetString(byteArray);
+					currentPackage.Author = s;
+					byteArray = System.Text.Encoding.Default.GetBytes(textBoxPackageDescription.Text);
+					s = System.Text.Encoding.UTF8.GetString(byteArray);
+					currentPackage.Description = s.Replace("\r\n", "\\r\\n");
+				}
+				else
+				{
+					currentPackage.Name = textBoxPackageDescription.Text;
+					currentPackage.Author = textBoxPackageAuthor.Text;
+					currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n");
+				}
 				HidePanels();
 				comboBoxDependancyType.SelectedIndex = 0;
 				panelPackageDependsAdd.Show();
