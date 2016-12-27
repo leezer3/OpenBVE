@@ -28,15 +28,22 @@ namespace OpenBve
 			}
 			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)
 			{
-				if (CompatibilityObjects.AvailableReplacements[i].ObjectName.ToLowerInvariant() == fileName.ToLowerInvariant())
+				if (CompatibilityObjects.AvailableReplacements[i].ObjectNames.Length == 0)
 				{
-					fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
-					if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
+					continue;
+				}
+				for (int j = 0; j < CompatibilityObjects.AvailableReplacements[i].ObjectNames.Length; j++)
+				{
+					if (CompatibilityObjects.AvailableReplacements[i].ObjectNames[j].ToLowerInvariant() == fileName.ToLowerInvariant())
 					{
-						Interface.AddMessage(Interface.MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
+						fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
+						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
+						}
+						CompatibilityObjectsUsed++;
+						return true;
 					}
-					CompatibilityObjectsUsed++;
-					return true;
 				}
 			}
 			return false;
@@ -50,7 +57,7 @@ namespace OpenBve
 		internal class ReplacementObject
 		{
 			/// <summary>The filename of the original object to be replaced</summary>
-			internal string ObjectName;
+			internal string[] ObjectNames;
 
 			/// <summary>The absolute on-disk path of the replacement object</summary>
 			internal string ReplacementPath;
@@ -60,7 +67,7 @@ namespace OpenBve
 			/// <summary>Creates a new replacement object</summary>
 			internal ReplacementObject()
 			{
-				ObjectName = string.Empty;
+				ObjectNames = new string[0];
 				ReplacementPath = string.Empty;
 			}
 		}
@@ -88,12 +95,23 @@ namespace OpenBve
 						if (n.HasChildNodes)
 						{
 							ReplacementObject o = new ReplacementObject();
+							string[] names = null;
 							foreach (XmlNode c in n.ChildNodes)
 							{
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "name":
-										o.ObjectName = c.InnerText.Trim();
+										if (c.InnerText.IndexOf(';') == -1)
+										{
+											names = new string[]
+											{
+												c.InnerText
+											};
+										}
+										else
+										{
+											names = c.InnerText.Split(';');
+										}
 										break;
 									case "path":
 											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
@@ -110,11 +128,15 @@ namespace OpenBve
 										break;
 								}
 							}
-							if (o.ObjectName != string.Empty && o.ReplacementPath != string.Empty)
+							if (names != null)
 							{
-								int i = AvailableReplacements.Length;
-								Array.Resize(ref AvailableReplacements, i +1);
-								AvailableReplacements[i] = o;
+								o.ObjectNames = names;
+								if (o.ReplacementPath != string.Empty)
+								{
+									int i = AvailableReplacements.Length;
+									Array.Resize(ref AvailableReplacements, i + 1);
+									AvailableReplacements[i] = o;
+								}
 							}
 						}
 					}
@@ -127,7 +149,6 @@ namespace OpenBve
 						{
 							if (n.HasChildNodes)
 							{
-								ReplacementObject o = new ReplacementObject();
 								foreach (XmlNode c in n.ChildNodes)
 								{
 									switch (c.Name.ToLowerInvariant())
