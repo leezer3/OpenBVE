@@ -40,7 +40,7 @@ namespace OpenBve {
 		private static double DeltaTime = 0;
 		private const int MinWait = 0;
 
-		/// <summary>Gets the elapsed time in milliseconds since the last call to GetElapsedTime</summary>
+		/// <summary>Gets the elapsed time in seconds since the last call to GetElapsedTime</summary>
 		public static double GetElapsedTime()
 		{
 			if (UseEnvTicks)
