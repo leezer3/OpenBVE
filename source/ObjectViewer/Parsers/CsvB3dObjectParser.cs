@@ -638,10 +638,12 @@ namespace OpenBve {
 									Builder.Materials[j].TransparentColorUsed = true;
 								}
 							} break;
+						case "setblendingmode":
 						case "setblendmode":
 						case "blendmode":
 							{
-								if (cmd == "setblendmode" & IsB3D) {
+								if ((cmd == "setblendmode" || cmd == "setblendingmode") & IsB3D)
+								{
 									Interface.AddMessage(Interface.MessageType.Warning, false, "SetBlendMode is not a supported command - did you mean BlendMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "blendmode" & !IsB3D) {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "BlendMode is not a supported command - did you mean SetBlendMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -656,6 +658,7 @@ namespace OpenBve {
 											blendmode = World.MeshMaterialBlendMode.Normal;
 											break;
 										case "additive":
+										case "glow":
 											blendmode = World.MeshMaterialBlendMode.Additive;
 											break;
 										default:
