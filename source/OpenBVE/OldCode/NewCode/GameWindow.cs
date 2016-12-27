@@ -60,7 +60,7 @@ namespace OpenBve
 				{
 					System.Threading.Thread.Sleep(10);
 				}
-				Renderer.UpdateLighting();
+				//Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
 				if (MainLoop.Quit)
@@ -125,7 +125,7 @@ namespace OpenBve
 			{
 				Program.currentGameWindow.Exit();
 			}
-				//Renderer.UpdateLighting();
+				Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 				Program.currentGameWindow.SwapBuffers();
