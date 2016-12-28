@@ -49,9 +49,6 @@ namespace OpenBve
 			internal int CyclesSurvived;
 			internal bool DontAllowUnload;
 			internal bool LoadImmediately;
-			//Grabbing the framebuffer directly as a texture is vertically flipped due to the way openGL works...
-			//Nasty hacky workaround tells the renderer to use vertically flipped texture coords
-			internal const bool VFlip = true;
 		}
 		internal static Texture[] Textures = new Texture[16];
 		private const int MaxCyclesUntilUnload = 4;

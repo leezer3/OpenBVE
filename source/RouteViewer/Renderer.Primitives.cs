@@ -40,30 +40,16 @@ namespace OpenBve
 					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
 				}
 				GL.Begin(PrimitiveType.Quads);
-				if(TextureManager.Texture.VFlip == true)
-				{
-					GL.TexCoord2(0.0f, 1.0f);
-					GL.Vertex2(point.X, point.Y);
-					GL.TexCoord2(1.0f, 1.0f);
-					GL.Vertex2(point.X + size.Width, point.Y);
-					GL.TexCoord2(1.0f, 0.0f);
-					GL.Vertex2(point.X + size.Width, point.Y + size.Height);
-					GL.TexCoord2(0.0f, 0.0f);
-					GL.Vertex2(point.X, point.Y + size.Height);
-					GL.End();
-				}
-				// else
-				// {
-				// 	GL.TexCoord2(0.0f, 0.0f);
-				// 	GL.Vertex2(point.X, point.Y);
-				// 	GL.TexCoord2(1.0f, 0.0f);
-				// 	GL.Vertex2(point.X + size.Width, point.Y);
-				// 	GL.TexCoord2(1.0f, 1.0f);
-				// 	GL.Vertex2(point.X + size.Width, point.Y + size.Height);
-				// 	GL.TexCoord2(0.0f, 1.0f);
-				// 	GL.Vertex2(point.X, point.Y + size.Height);
-				// 	GL.End();
-				// }
+				GL.TexCoord2(0.0f, 0.0f);
+				GL.Vertex2(point.X, point.Y);
+				GL.TexCoord2(1.0f, 0.0f);
+				GL.Vertex2(point.X + size.Width, point.Y);
+				GL.TexCoord2(1.0f, 1.0f);
+				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.TexCoord2(0.0f, 1.0f);
+				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.End();
+				
 				
 			}
 			GL.Disable(EnableCap.Blend);
