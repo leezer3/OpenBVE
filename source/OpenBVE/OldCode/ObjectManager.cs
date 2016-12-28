@@ -1250,11 +1250,17 @@ namespace OpenBve {
 			}
 		}
 		internal static void OptimizeObject(StaticObject Prototype, bool PreserveVertices) {
-			if (Prototype == null) return;
+			if (Prototype == null)
+			{
+				return;
+			}
 			int v = Prototype.Mesh.Vertices.Length;
 			int m = Prototype.Mesh.Materials.Length;
 			int f = Prototype.Mesh.Faces.Length;
-			if (f >= Interface.CurrentOptions.ObjectOptimizationBasicThreshold) return;
+			if (f >= Interface.CurrentOptions.ObjectOptimizationBasicThreshold)
+			{
+				return;
+			}
 			// eliminate invalid faces and reduce incomplete faces
 			for (int i = 0; i < f; i++) {
 				int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
@@ -1292,60 +1298,6 @@ namespace OpenBve {
 					}
 					f--;
 					i--;
-				}
-			}
-			// eliminate unused vertices
-			if (!PreserveVertices) {
-				for (int i = 0; i < v; i++) {
-					bool keep = false;
-					for (int j = 0; j < f; j++) {
-						for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-							if (Prototype.Mesh.Faces[j].Vertices[k].Index == i) {
-								keep = true;
-								break;
-							}
-						}
-						if (keep) {
-							break;
-						}
-					}
-					if (!keep) {
-						for (int j = 0; j < f; j++) {
-							for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-								if (Prototype.Mesh.Faces[j].Vertices[k].Index > i) {
-									Prototype.Mesh.Faces[j].Vertices[k].Index--;
-								}
-							}
-						}
-						for (int j = i; j < v - 1; j++) {
-							Prototype.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j + 1];
-						}
-						v--;
-						i--;
-					}
-				}
-			}
-			// eliminate duplicate vertices
-			if (!PreserveVertices) {
-				for (int i = 0; i < v - 1; i++) {
-					for (int j = i + 1; j < v; j++) {
-						if (Prototype.Mesh.Vertices[i] == Prototype.Mesh.Vertices[j]) {
-							for (int k = 0; k < f; k++) {
-								for (int h = 0; h < Prototype.Mesh.Faces[k].Vertices.Length; h++) {
-									if (Prototype.Mesh.Faces[k].Vertices[h].Index == j) {
-										Prototype.Mesh.Faces[k].Vertices[h].Index = (ushort)i;
-									} else if (Prototype.Mesh.Faces[k].Vertices[h].Index > j) {
-										Prototype.Mesh.Faces[k].Vertices[h].Index--;
-									}
-								}
-							}
-							for (int k = j; k < v - 1; k++) {
-								Prototype.Mesh.Vertices[k] = Prototype.Mesh.Vertices[k + 1];
-							}
-							v--;
-							j--;
-						}
-					}
 				}
 			}
 			// eliminate unused materials
@@ -1387,288 +1339,246 @@ namespace OpenBve {
 					}
 				}
 			}
+			/* TODO:
+			 * Use a hash based technique
+			 */ 
+			// Cull vertices based on hidden option.
+			// This is disabled by default because it adds a lot of time to the loading process.
+			if (!PreserveVertices && Interface.CurrentOptions.ObjectOptimizationVertexCulling)
+			{
+				// eliminate unused vertices
+				for (int i = 0; i < v; i++)
+				{
+					bool keep = false;
+					for (int j = 0; j < f; j++)
+					{
+						for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
+						{
+							if (Prototype.Mesh.Faces[j].Vertices[k].Index == i)
+							{
+								keep = true;
+								break;
+							}
+						}
+						if (keep)
+						{
+							break;
+						}
+					}
+					if (!keep)
+					{
+						for (int j = 0; j < f; j++)
+						{
+							for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
+							{
+								if (Prototype.Mesh.Faces[j].Vertices[k].Index > i)
+								{
+									Prototype.Mesh.Faces[j].Vertices[k].Index--;
+								}
+							}
+						}
+						for (int j = i; j < v - 1; j++)
+						{
+							Prototype.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j + 1];
+						}
+						v--;
+						i--;
+					}
+				}
+				
+				// eliminate duplicate vertices
+				for (int i = 0; i < v - 1; i++)
+				{
+					for (int j = i + 1; j < v; j++)
+					{
+						if (Prototype.Mesh.Vertices[i] == Prototype.Mesh.Vertices[j])
+						{
+							for (int k = 0; k < f; k++)
+							{
+								for (int h = 0; h < Prototype.Mesh.Faces[k].Vertices.Length; h++)
+								{
+									if (Prototype.Mesh.Faces[k].Vertices[h].Index == j)
+									{
+										Prototype.Mesh.Faces[k].Vertices[h].Index = (ushort)i;
+									}
+									else if (Prototype.Mesh.Faces[k].Vertices[h].Index > j)
+									{
+										Prototype.Mesh.Faces[k].Vertices[h].Index--;
+									}
+								}
+							}
+							for (int k = j; k < v - 1; k++)
+							{
+								Prototype.Mesh.Vertices[k] = Prototype.Mesh.Vertices[k + 1];
+							}
+							v--;
+							j--;
+						}
+					}
+				}
+			}
 			// structure optimization
-			if (!PreserveVertices & f < Interface.CurrentOptions.ObjectOptimizationFullThreshold) {
-				// create TRIANGLES and QUADS from POLYGON
-				for (int i = 0; i < f; i++) {
-					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-					if (type == World.MeshFace.FaceTypePolygon) {
-						if (Prototype.Mesh.Faces[i].Vertices.Length == 3) {
-							unchecked {
+			// Trangularize all polygons and quads into triangles
+			for (int i = 0; i < f; ++i)
+			{
+				byte type = (byte) (Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask);
+				// Only transform quads and polygons
+				if (type == World.MeshFace.FaceTypeQuads || type == World.MeshFace.FaceTypePolygon)
+				{
+					int staring_vertex_count = Prototype.Mesh.Faces[i].Vertices.Length;
+
+					// One triange for the first three points, then one for each vertex
+					// Wind order is maintained.
+					// Ex: 0, 1, 2; 0, 2, 3; 0, 3, 4; 0, 4, 5; 
+					int tri_count = (staring_vertex_count - 2);
+					int vertex_count = tri_count * 3;
+
+					// Copy old array for use as we work
+					World.MeshFaceVertex[] original_poly = (World.MeshFaceVertex[]) Prototype.Mesh.Faces[i].Vertices.Clone();
+
+					// Resize new array
+					Array.Resize(ref Prototype.Mesh.Faces[i].Vertices, vertex_count);
+
+					// Reference to output vertices
+					World.MeshFaceVertex[] out_verts = Prototype.Mesh.Faces[i].Vertices;
+
+					// Triangularize
+					for (int tri_index = 0, vert_index = 0, old_vert = 2; tri_index < tri_count; ++tri_index, ++old_vert)
+					{
+						// First vertex is always the 0th
+						out_verts[vert_index] = original_poly[0];
+						vert_index += 1;
+
+						// Second vertex is one behind the current working vertex
+						out_verts[vert_index] = original_poly[old_vert - 1];
+						vert_index += 1;
+
+						// Third vertex is current working vertex
+						out_verts[vert_index] = original_poly[old_vert];
+						vert_index += 1;
+					}
+
+					// Mark as triangle
+					unchecked
+					{
+						Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
+						Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeTriangles;
+					}
+				}
+			}
+
+			// decomposit TRIANGLES and QUADS
+			for (int i = 0; i < f; i++)
+			{
+				int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
+				int face_count = 0;
+				byte face_bit = 0;
+				if (type == World.MeshFace.FaceTypeTriangles)
+				{
+					face_count = 3;
+					face_bit = World.MeshFace.FaceTypeTriangles;
+				}
+				else if (type == World.MeshFace.FaceTypeQuads)
+				{
+					face_count = 4;
+					face_bit = World.MeshFace.FaceTypeQuads;
+				}
+				if (face_count == 3 || face_count == 4)
+				{
+					if (Prototype.Mesh.Faces[i].Vertices.Length > face_count)
+					{
+						int n = (Prototype.Mesh.Faces[i].Vertices.Length - face_count) / face_count;
+						while (f + n > Prototype.Mesh.Faces.Length)
+						{
+							Array.Resize<World.MeshFace>(ref Prototype.Mesh.Faces, Prototype.Mesh.Faces.Length << 1);
+						}
+						for (int j = 0; j < n; j++)
+						{
+							Prototype.Mesh.Faces[f + j].Vertices = new World.MeshFaceVertex[face_count];
+							for (int k = 0; k < face_count; k++)
+							{
+								Prototype.Mesh.Faces[f + j].Vertices[k] = Prototype.Mesh.Faces[i].Vertices[face_count + face_count * j + k];
+							}
+							Prototype.Mesh.Faces[f + j].Material = Prototype.Mesh.Faces[i].Material;
+							Prototype.Mesh.Faces[f + j].Flags = Prototype.Mesh.Faces[i].Flags;
+							unchecked
+							{
 								Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-								Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeTriangles;
-							}
-						} else if (Prototype.Mesh.Faces[i].Vertices.Length == 4) {
-							unchecked {
-								Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-								Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeQuads;
+								Prototype.Mesh.Faces[i].Flags |= face_bit;
 							}
 						}
+						Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, face_count);
+						f += n;
 					}
 				}
-				// decomposit TRIANGLES and QUADS
-				for (int i = 0; i < f; i++) {
+			}
+
+			// Squish faces that have the same material.
+			{
+				bool[] can_merge = new bool[f];
+				for (int i = 0; i < f - 1; ++i)
+				{
+					int merge_vertices = 0;
+
+					// Type of current face
 					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-					if (type == World.MeshFace.FaceTypeTriangles) {
-						if (Prototype.Mesh.Faces[i].Vertices.Length > 3) {
-							int n = (Prototype.Mesh.Faces[i].Vertices.Length - 3) / 3;
-							while (f + n > Prototype.Mesh.Faces.Length) {
-								Array.Resize<World.MeshFace>(ref Prototype.Mesh.Faces, Prototype.Mesh.Faces.Length << 1);
-							}
-							for (int j = 0; j < n; j++) {
-								Prototype.Mesh.Faces[f + j].Vertices = new World.MeshFaceVertex[3];
-								for (int k = 0; k < 3; k++) {
-									Prototype.Mesh.Faces[f + j].Vertices[k] = Prototype.Mesh.Faces[i].Vertices[3 + 3 * j + k];
-								}
-								Prototype.Mesh.Faces[f + j].Material = Prototype.Mesh.Faces[i].Material;
-								Prototype.Mesh.Faces[f + j].Flags = Prototype.Mesh.Faces[i].Flags;
-								unchecked {
-									Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-									Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeTriangles;
-								}
-							}
-							Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, 3);
-							f += n;
-						}
-					} else if (type == World.MeshFace.FaceTypeQuads) {
-						if (Prototype.Mesh.Faces[i].Vertices.Length > 4) {
-							int n = (Prototype.Mesh.Faces[i].Vertices.Length - 4) >> 2;
-							while (f + n > Prototype.Mesh.Faces.Length) {
-								Array.Resize<World.MeshFace>(ref Prototype.Mesh.Faces, Prototype.Mesh.Faces.Length << 1);
-							}
-							for (int j = 0; j < n; j++) {
-								Prototype.Mesh.Faces[f + j].Vertices = new World.MeshFaceVertex[4];
-								for (int k = 0; k < 4; k++) {
-									Prototype.Mesh.Faces[f + j].Vertices[k] = Prototype.Mesh.Faces[i].Vertices[4 + 4 * j + k];
-								}
-								Prototype.Mesh.Faces[f + j].Material = Prototype.Mesh.Faces[i].Material;
-								Prototype.Mesh.Faces[f + j].Flags = Prototype.Mesh.Faces[i].Flags;
-								unchecked {
-									Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-									Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeQuads;
-								}
-							}
-							Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, 4);
-							f += n;
+					int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
+
+					// Find faces that can be merged
+					for (int j = i + 1; j < f; ++j)
+					{
+						int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
+						int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
+
+						// Conditions for face merger
+						bool mergeable = (type == World.MeshFace.FaceTypeTriangles) &&
+										 (type == type2) &&
+										 (face == face2) &&
+										 (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material);
+
+						can_merge[j] = mergeable;
+						merge_vertices += mergeable ? Prototype.Mesh.Faces[j].Vertices.Length : 0;
+					}
+
+					if (merge_vertices == 0)
+					{
+						continue;
+					}
+
+					// Current end of array index
+					int last_vertex_it = Prototype.Mesh.Faces[i].Vertices.Length;
+
+					// Resize current face's vertices to have enough room
+					Array.Resize(ref Prototype.Mesh.Faces[i].Vertices, last_vertex_it + merge_vertices);
+
+					// Merge faces
+					for (int j = i + 1; j < f; ++j)
+					{
+						if (can_merge[j])
+						{
+							// Copy vertices
+							Prototype.Mesh.Faces[j].Vertices.CopyTo(Prototype.Mesh.Faces[i].Vertices, last_vertex_it);
+
+							// Adjust index
+							last_vertex_it += Prototype.Mesh.Faces[j].Vertices.Length;
 						}
 					}
-				}
-				// optimize for TRIANGLE_STRIP
-				int index = -1;
-				while (true) {
-					// add TRIANGLES to TRIANGLE_STRIP
-					for (int i = 0; i < f; i++) {
-						if (index == i | index == -1) {
-							int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-							if (type == World.MeshFace.FaceTypeTriangleStrip) {
-								int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-								for (int j = 0; j < f; j++) {
-									int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
-									int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-									if (type2 == World.MeshFace.FaceTypeTriangles & face == face2) {
-										if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-											bool keep = true;
-											for (int k = 0; k < 3; k++) {
-												int l = (k + 1) % 3;
-												int n = Prototype.Mesh.Faces[i].Vertices.Length;
-												if (Prototype.Mesh.Faces[i].Vertices[0] == Prototype.Mesh.Faces[j].Vertices[k] & Prototype.Mesh.Faces[i].Vertices[1] == Prototype.Mesh.Faces[j].Vertices[l]) {
-													Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + 1);
-													for (int h = n; h >= 1; h--) {
-														Prototype.Mesh.Faces[i].Vertices[h] = Prototype.Mesh.Faces[i].Vertices[h - 1];
-													}
-													Prototype.Mesh.Faces[i].Vertices[0] = Prototype.Mesh.Faces[j].Vertices[(k + 2) % 3];
-													keep = false;
-												} else if (Prototype.Mesh.Faces[i].Vertices[n - 1] == Prototype.Mesh.Faces[j].Vertices[l] & Prototype.Mesh.Faces[i].Vertices[n - 2] == Prototype.Mesh.Faces[j].Vertices[k]) {
-													Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + 1);
-													Prototype.Mesh.Faces[i].Vertices[n] = Prototype.Mesh.Faces[j].Vertices[(k + 2) % 3];
-													keep = false;
-												}
-												if (!keep) {
-													break;
-												}
-											}
-											if (!keep) {
-												for (int k = j; k < f - 1; k++) {
-													Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-												}
-												if (j < i) {
-													i--;
-												}
-												f--;
-												j--;
-											}
-										}
-									}
-								}
-							}
+
+					// Remove now unused faces
+					int jump = 0;
+					for (int j = i + 1; j < f; ++j)
+					{
+						if (can_merge[j])
+						{
+							jump += 1;
+						}
+						else if (jump > 0)
+						{
+							Prototype.Mesh.Faces[j - jump] = Prototype.Mesh.Faces[j];
 						}
 					}
-					// join TRIANGLES into new TRIANGLE_STRIP
-					index = -1;
-					for (int i = 0; i < f - 1; i++) {
-						int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-						if (type == World.MeshFace.FaceTypeTriangles) {
-							int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-							for (int j = i + 1; j < f; j++) {
-								int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
-								int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-								if (type2 == World.MeshFace.FaceTypeTriangles & face == face2) {
-									if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-										for (int ik = 0; ik < 3; ik++) {
-											int il = (ik + 1) % 3;
-											for (int jk = 0; jk < 3; jk++) {
-												int jl = (jk + 1) % 3;
-												if (Prototype.Mesh.Faces[i].Vertices[ik] == Prototype.Mesh.Faces[j].Vertices[jl] & Prototype.Mesh.Faces[i].Vertices[il] == Prototype.Mesh.Faces[j].Vertices[jk]) {
-													unchecked {
-														Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-														Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeTriangleStrip;
-													}
-													Prototype.Mesh.Faces[i].Vertices = new World.MeshFaceVertex[] {
-														Prototype.Mesh.Faces[i].Vertices[(ik + 2) % 3],
-														Prototype.Mesh.Faces[i].Vertices[ik],
-														Prototype.Mesh.Faces[i].Vertices[il],
-														Prototype.Mesh.Faces[j].Vertices[(jk + 2) % 3]
-													};
-													for (int k = j; k < f - 1; k++) {
-														Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-													}
-													f--;
-													index = i;
-													break;
-												}
-											}
-											if (index >= 0) break;
-										}
-									}
-								}
-								if (index >= 0) break;
-							}
-						}
-					}
-					if (index == -1) break;
-				}
-				// optimize for QUAD_STRIP
-				index = -1;
-				while (true) {
-					// add QUADS to QUAD_STRIP
-					for (int i = 0; i < f; i++) {
-						if (index == i | index == -1) {
-							int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-							if (type == World.MeshFace.FaceTypeQuadStrip) {
-								int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-								for (int j = 0; j < f; j++) {
-									int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
-									int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-									if (type2 == World.MeshFace.FaceTypeQuads & face == face2) {
-										if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-											bool keep = true;
-											for (int k = 0; k < 4; k++) {
-												int l = (k + 1) & 3;
-												int n = Prototype.Mesh.Faces[i].Vertices.Length;
-												if (Prototype.Mesh.Faces[i].Vertices[0] == Prototype.Mesh.Faces[j].Vertices[l] & Prototype.Mesh.Faces[i].Vertices[1] == Prototype.Mesh.Faces[j].Vertices[k]) {
-													Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + 2);
-													for (int h = n + 1; h >= 2; h--) {
-														Prototype.Mesh.Faces[i].Vertices[h] = Prototype.Mesh.Faces[i].Vertices[h - 2];
-													}
-													Prototype.Mesh.Faces[i].Vertices[0] = Prototype.Mesh.Faces[j].Vertices[(k + 2) & 3];
-													Prototype.Mesh.Faces[i].Vertices[1] = Prototype.Mesh.Faces[j].Vertices[(k + 3) & 3];
-													keep = false;
-												} else if (Prototype.Mesh.Faces[i].Vertices[n - 1] == Prototype.Mesh.Faces[j].Vertices[l] & Prototype.Mesh.Faces[i].Vertices[n - 2] == Prototype.Mesh.Faces[j].Vertices[k]) {
-													Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + 2);
-													Prototype.Mesh.Faces[i].Vertices[n] = Prototype.Mesh.Faces[j].Vertices[(k + 3) & 3];
-													Prototype.Mesh.Faces[i].Vertices[n + 1] = Prototype.Mesh.Faces[j].Vertices[(k + 2) & 3];
-													keep = false;
-												}
-												if (!keep) {
-													break;
-												}
-											}
-											if (!keep) {
-												for (int k = j; k < f - 1; k++) {
-													Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-												}
-												if (j < i) {
-													i--;
-												}
-												f--;
-												j--;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					// join QUADS into new QUAD_STRIP
-					index = -1;
-					for (int i = 0; i < f - 1; i++) {
-						int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-						if (type == World.MeshFace.FaceTypeQuads) {
-							int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-							for (int j = i + 1; j < f; j++) {
-								int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
-								int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-								if (type2 == World.MeshFace.FaceTypeQuads & face == face2) {
-									if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-										for (int ik = 0; ik < 4; ik++) {
-											int il = (ik + 1) & 3;
-											for (int jk = 0; jk < 4; jk++) {
-												int jl = (jk + 1) & 3;
-												if (Prototype.Mesh.Faces[i].Vertices[ik] == Prototype.Mesh.Faces[j].Vertices[jl] & Prototype.Mesh.Faces[i].Vertices[il] == Prototype.Mesh.Faces[j].Vertices[jk]) {
-													unchecked {
-														Prototype.Mesh.Faces[i].Flags &= (byte)~World.MeshFace.FaceTypeMask;
-														Prototype.Mesh.Faces[i].Flags |= World.MeshFace.FaceTypeQuadStrip;
-													}
-													Prototype.Mesh.Faces[i].Vertices = new World.MeshFaceVertex[] {
-														Prototype.Mesh.Faces[i].Vertices[(ik + 2) & 3],
-														Prototype.Mesh.Faces[i].Vertices[(ik + 3) & 3],
-														Prototype.Mesh.Faces[i].Vertices[il],
-														Prototype.Mesh.Faces[i].Vertices[ik],
-														Prototype.Mesh.Faces[j].Vertices[(jk + 3) & 3],
-														Prototype.Mesh.Faces[j].Vertices[(jk + 2) & 3]
-													};
-													for (int k = j; k < f - 1; k++) {
-														Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-													}
-													f--;
-													index = i;
-													break;
-												}
-											}
-											if (index >= 0) break;
-										}
-									}
-								}
-								if (index >= 0) break;
-							}
-						}
-					}
-					if (index == -1) break;
-				}
-				// join TRIANGLES, join QUADS
-				for (int i = 0; i < f - 1; i++) {
-					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
-					if (type == World.MeshFace.FaceTypeTriangles | type == World.MeshFace.FaceTypeQuads) {
-						int face = Prototype.Mesh.Faces[i].Flags & World.MeshFace.Face2Mask;
-						for (int j = i + 1; j < f; j++) {
-							int type2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.FaceTypeMask;
-							int face2 = Prototype.Mesh.Faces[j].Flags & World.MeshFace.Face2Mask;
-							if (type == type2 & face == face2) {
-								if (Prototype.Mesh.Faces[i].Material == Prototype.Mesh.Faces[j].Material) {
-									int n = Prototype.Mesh.Faces[i].Vertices.Length;
-									Array.Resize<World.MeshFaceVertex>(ref Prototype.Mesh.Faces[i].Vertices, n + Prototype.Mesh.Faces[j].Vertices.Length);
-									for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-										Prototype.Mesh.Faces[i].Vertices[n + k] = Prototype.Mesh.Faces[j].Vertices[k];
-									}
-									for (int k = j; k < f - 1; k++) {
-										Prototype.Mesh.Faces[k] = Prototype.Mesh.Faces[k + 1];
-									}
-									f--;
-									j--;
-								}
-							}
-						}
-					}
+					// Remove faces removed from face count
+					f -= jump;
 				}
 			}
 			// finalize arrays

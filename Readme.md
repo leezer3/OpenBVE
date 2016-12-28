@@ -42,6 +42,7 @@ Joystick hat support does not function correctly in the current release build of
 - Christopher Lees
 - Jakub Vanek
 - Maurizo M. Gavioli
+- Connor Fitzgerald
 
 ### Links
 

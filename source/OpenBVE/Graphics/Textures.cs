@@ -199,7 +199,7 @@ namespace OpenBve
 					handle.Width = texture.Width;
 					handle.Height = texture.Height;
 					handle.Transparency = texture.GetTransparencyType();
-					texture = ResizeToPowerOfTwo(texture);
+					//texture = ResizeToPowerOfTwo(texture);
 
 					switch (Interface.CurrentOptions.Interpolation)
 					{
