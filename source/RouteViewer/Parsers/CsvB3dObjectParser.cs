@@ -2,6 +2,7 @@
 using System.Drawing;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
+using OpenBveApi;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -701,7 +702,7 @@ namespace OpenBve {
 								}
 								string tday = null, tnight = null;
 								if (Arguments.Length >= 1 && Arguments[0].Length != 0) {
-									if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+									if (Path.ContainsInvalidChars(Arguments[0])) {
 										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
 										tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
@@ -715,7 +716,7 @@ namespace OpenBve {
 									if (Arguments[0].Length == 0) {
 										Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture is required to be specified in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
-										if (Interface.ContainsInvalidPathChars(Arguments[1])) {
+										if (Path.ContainsInvalidChars(Arguments[1])) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "NighttimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										} else {
 											tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);

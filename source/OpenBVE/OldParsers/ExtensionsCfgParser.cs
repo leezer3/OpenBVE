@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 
 namespace OpenBve {
 	internal static class ExtensionsCfgParser {
@@ -41,7 +42,7 @@ namespace OpenBve {
 											int n;
 											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n)) {
 												if (n >= 0 & n < Train.Cars.Length) {
-													if (Interface.ContainsInvalidPathChars(b)) {
+													if (Path.ContainsInvalidChars(b)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} else {
 														string File = OpenBveApi.Path.CombineFile(TrainPath, b);
@@ -88,7 +89,7 @@ namespace OpenBve {
 														string b = Lines[i].Substring(j + 1).TrimStart();
 														switch (a.ToLowerInvariant()) {
 															case "object":
-																if (Interface.ContainsInvalidPathChars(b)) {
+																if (Path.ContainsInvalidChars(b)) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																} else {
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
@@ -243,7 +244,7 @@ namespace OpenBve {
 														switch (a.ToLowerInvariant())
 														{
 															case "object":
-																if (Interface.ContainsInvalidPathChars(b))
+																if (Path.ContainsInvalidChars(b))
 																{
 																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}

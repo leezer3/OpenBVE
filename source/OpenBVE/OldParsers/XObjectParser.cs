@@ -4,6 +4,7 @@ using System.IO.Compression;
 
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve {
 	internal static class XObjectParser {
@@ -1394,7 +1395,7 @@ namespace OpenBve {
 																		return false;
 																	}
 																	string filename = (string)e.Data[0];
-																	if (Interface.ContainsInvalidPathChars(filename)) {
+																	if (Path.ContainsInvalidChars(filename)) {
 																		Interface.AddMessage(Interface.MessageType.Error, false, "filename contains illegal characters in TextureFilename in Material in MeshMaterialList in Mesh in x object file " + FileName);
 																	} else {
 																		string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);

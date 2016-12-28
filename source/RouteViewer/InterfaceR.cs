@@ -418,27 +418,6 @@ namespace OpenBve {
 					i++;
 				}
 			} return Builder.ToString();
-		}
-
-		// ================================
-		
-			// contains invalid path characters
-		internal static bool ContainsInvalidPathChars(string Expression) {
-			char[] a = System.IO.Path.GetInvalidFileNameChars();
-			char[] b = System.IO.Path.GetInvalidPathChars();
-			for (int i = 0; i < Expression.Length; i++) {
-				for (int j = 0; j < a.Length; j++) {
-					if (Expression[i] == a[j]) {
-						for (int k = 0; k < b.Length; k++) {
-							if (Expression[i] == b[k]) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-			return false;
-		}
-
+		}	
 	}
 }

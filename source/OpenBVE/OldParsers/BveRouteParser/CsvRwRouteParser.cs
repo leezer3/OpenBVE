@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -1867,7 +1867,7 @@ namespace OpenBve {
 											if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FolderName contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													Game.TrainName = Arguments[0];
@@ -1928,7 +1928,7 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													while (CommandIndex1 >= Data.TimetableDaytime.Length) {
@@ -1957,7 +1957,7 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													while (CommandIndex1 >= Data.TimetableNighttime.Length) {
@@ -1987,7 +1987,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.Rail.Length) {
@@ -2011,7 +2011,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.Beacon.Length) {
@@ -2037,7 +2037,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.Poles.Length) {
@@ -2066,7 +2066,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.Ground.Length) {
@@ -2090,7 +2090,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.WallL.Length) {
@@ -2114,7 +2114,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.WallR.Length) {
@@ -2138,7 +2138,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.DikeL.Length) {
@@ -2162,7 +2162,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.DikeR.Length) {
@@ -2186,7 +2186,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.FormL.Length) {
@@ -2210,7 +2210,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.FormR.Length) {
@@ -2234,7 +2234,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.FormCL.Length) {
@@ -2258,7 +2258,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.FormCR.Length) {
@@ -2282,7 +2282,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 == 0) {
@@ -2314,7 +2314,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 == 0) {
@@ -2346,7 +2346,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 == 0) {
@@ -2378,7 +2378,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 == 0) {
@@ -2410,7 +2410,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.CrackL.Length) {
@@ -2434,7 +2434,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.CrackR.Length) {
@@ -2458,7 +2458,7 @@ namespace OpenBve {
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Structure.FreeObj.Length) {
@@ -2485,7 +2485,7 @@ namespace OpenBve {
 													Array.Resize<SignalData>(ref Data.SignalData, CommandIndex1 + 1);
 												}
 												if (Arguments[0].EndsWith(".animated", StringComparison.OrdinalIgnoreCase)) {
-													if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+													if (Path.ContainsInvalidChars(Arguments[0])) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "AnimatedObjectFile contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														if (Arguments.Length > 1) {
@@ -2506,7 +2506,7 @@ namespace OpenBve {
 														}
 													}
 												} else {
-													if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+													if (Path.ContainsInvalidChars(Arguments[0])) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														if (Arguments.Length > 2) {
@@ -2525,7 +2525,7 @@ namespace OpenBve {
 															Signal.SignalTextures = LoadAllTextures(f, false);
 															Signal.GlowTextures = new Textures.Texture[] { };
 															if (Arguments.Length >= 2 && Arguments[1].Length != 0) {
-																if (Interface.ContainsInvalidPathChars(Arguments[1])) {
+																if (Path.ContainsInvalidChars(Arguments[1])) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																} else {
 																	f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[1]);
@@ -2556,7 +2556,7 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
@@ -3825,7 +3825,7 @@ namespace OpenBve {
 										Sounds.SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 8 && Arguments[7].Length > 0) {
-												if (Interface.ContainsInvalidPathChars(Arguments[7])) {
+												if (Path.ContainsInvalidChars(Arguments[7])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalSound contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[7]);
@@ -3857,7 +3857,7 @@ namespace OpenBve {
 										}
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 11 && Arguments[10].Length > 0) {
-												if (Interface.ContainsInvalidPathChars(Arguments[10])) {
+												if (Path.ContainsInvalidChars(Arguments[10])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[10]);
@@ -4005,7 +4005,7 @@ namespace OpenBve {
 										Sounds.SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 6 && Arguments[5].Length != 0) {
-												if (Interface.ContainsInvalidPathChars(Arguments[5])) {
+												if (Path.ContainsInvalidChars(Arguments[5])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureSound contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[5]);
@@ -4327,7 +4327,7 @@ namespace OpenBve {
 										if (!PreviewOnly) {
 											if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Track.Marker is expected to have at least one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+											} else if (Path.ContainsInvalidChars(Arguments[0])) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
@@ -4549,7 +4549,7 @@ namespace OpenBve {
 											if (Arguments.Length == 0) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[0]);
@@ -4579,7 +4579,7 @@ namespace OpenBve {
 											if (Arguments.Length == 0) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have between 1 and 3 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (Interface.ContainsInvalidPathChars(Arguments[0])) {
+												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[0]);

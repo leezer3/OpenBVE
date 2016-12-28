@@ -1,4 +1,5 @@
 using System;
+using OpenBveApi;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -71,7 +72,7 @@ namespace OpenBve {
 											}
 										} else {
 											string Folder = System.IO.Path.GetDirectoryName(FileName);
-											if (Interface.ContainsInvalidPathChars(Lines[i])) {
+											if (Path.ContainsInvalidChars(Lines[i])) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
@@ -185,7 +186,7 @@ namespace OpenBve {
 																if (s[k].Length == 0) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	StateFiles[k] = null;
-																} else if (Interface.ContainsInvalidPathChars(s[k])) {
+																} else if (Path.ContainsInvalidChars(s[k])) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	StateFiles[k] = null;
 																} else {

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -84,7 +85,7 @@ namespace OpenBve {
 												} break;
 											case "daytimeimage":
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Interface.ContainsInvalidPathChars(Value)) {
+												if (Path.ContainsInvalidChars(Value)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
 													PanelDaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -96,7 +97,7 @@ namespace OpenBve {
 												break;
 											case "nighttimeimage":
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Interface.ContainsInvalidPathChars(Value)) {
+												if (Path.ContainsInvalidChars(Value)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
 													PanelNighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -238,7 +239,7 @@ namespace OpenBve {
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -250,7 +251,7 @@ namespace OpenBve {
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -342,7 +343,7 @@ namespace OpenBve {
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -354,7 +355,7 @@ namespace OpenBve {
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -577,7 +578,7 @@ namespace OpenBve {
 													break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -589,7 +590,7 @@ namespace OpenBve {
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -674,7 +675,7 @@ namespace OpenBve {
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -686,7 +687,7 @@ namespace OpenBve {
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);

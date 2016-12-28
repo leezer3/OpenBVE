@@ -1,6 +1,8 @@
 ﻿#pragma warning disable 0659, 0661
 
 using System;
+using System.IO;
+using System.Security;
 
 namespace OpenBveApi {
 
@@ -48,7 +50,7 @@ namespace OpenBveApi {
 				SetPackageLookupDirectoriesAuthentication = new object();
 				return SetPackageLookupDirectoriesAuthentication;
 			} else {
-				throw new System.Security.SecurityException();
+				throw new SecurityException();
 			}
 		}
 
@@ -61,7 +63,7 @@ namespace OpenBveApi {
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string directory = CombineDirectory(absolute, relative.Substring(0, index).TrimEnd());
-				if (System.IO.Directory.Exists(directory)) {
+				if (Directory.Exists(directory)) {
 					return directory;
 				} else {
 					return CombineDirectory(absolute, relative.Substring(index + 2).TrimStart());
@@ -94,17 +96,17 @@ namespace OpenBveApi {
 					    if (absolute != null)
 					    {
 					        string directory = System.IO.Path.Combine(absolute, parts[i]);
-					        if (System.IO.Directory.Exists(directory)) {
+					        if (Directory.Exists(directory)) {
 					            absolute = directory;
 					        } else {
 					            /*
 							 * Try to find the directory case-insensitively.
 							 * */
 					            bool found = false;
-					            if (System.IO.Directory.Exists(absolute)) {
+					            if (Directory.Exists(absolute)) {
 						            try
 						            {
-							            string[] directories = System.IO.Directory.GetDirectories(absolute);
+							            string[] directories = Directory.GetDirectories(absolute);
 							            for (int j = 0; j < directories.Length; j++)
 							            {
 								            string name = System.IO.Path.GetFileName(directories[j]);
@@ -140,7 +142,7 @@ namespace OpenBveApi {
             int index = relative.IndexOf("??", StringComparison.Ordinal);
 			if (index >= 0) {
 				string file = CombineFile(absolute, relative.Substring(0, index).TrimEnd());
-				if (System.IO.File.Exists(file)) {
+				if (File.Exists(file)) {
 					return file;
 				} else {
 					return CombineFile(absolute, relative.Substring(index + 2).TrimStart());
@@ -180,14 +182,14 @@ namespace OpenBveApi {
 						 * */
 					    if (absolute == null) continue;
 					    string file = System.IO.Path.Combine(absolute, parts[i]);
-					    if (System.IO.File.Exists(file)) {
+					    if (File.Exists(file)) {
 					        return file;
 					    }
 					        /*
 							 * Try to find the file case-insensitively.
 							 * */
-					        if (System.IO.Directory.Exists(absolute)) {
-					            string[] files = System.IO.Directory.GetFiles(absolute);
+					        if (Directory.Exists(absolute)) {
+					            string[] files = Directory.GetFiles(absolute);
 					            for (int j = 0; j < files.Length; j++) {
 					                string name = System.IO.Path.GetFileName(files[j]);
 					                if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase)) {
@@ -203,15 +205,15 @@ namespace OpenBveApi {
 						 * */
 					    if (absolute == null) continue;
 					    string directory = System.IO.Path.Combine(absolute, parts[i]);
-					    if (System.IO.Directory.Exists(directory)) {
+					    if (Directory.Exists(directory)) {
 					        absolute = directory;
 					    } else {
 					        /*
 							 * Try to find the directory case-insensitively.
 							 * */
 					        bool found = false;
-					        if (System.IO.Directory.Exists(absolute)) {
-					            string[] directories = System.IO.Directory.GetDirectories(absolute);
+					        if (Directory.Exists(absolute)) {
+					            string[] directories = Directory.GetDirectories(absolute);
 					            for (int j = 0; j < directories.Length; j++) {
 					                string name = System.IO.Path.GetFileName(directories[j]);
 					                if (name != null && name.Equals(parts[i], StringComparison.OrdinalIgnoreCase)) {
@@ -230,8 +232,34 @@ namespace OpenBveApi {
 			}
 			throw new ArgumentException("The reference to the file is malformed.");
 		}
-		
-		
+
+		/// <summary>Tests whether a string contains characters invalid for use in a file name or path</summary>
+		/// <param name="Expression">The string to test</param>
+		/// <returns>True if this string contains invalid characters, false otherwise</returns>
+		public static bool ContainsInvalidChars(string Expression)
+		{
+			char[] a = System.IO.Path.GetInvalidFileNameChars();
+			char[] b = System.IO.Path.GetInvalidPathChars();
+			for (int i = 0; i < Expression.Length; i++)
+			{
+				for (int j = 0; j < a.Length; j++)
+				{
+					if (Expression[i] == a[j])
+					{
+						for (int k = 0; k < b.Length; k++)
+						{
+							if (Expression[i] == b[k])
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+
 		// --- private functions ---
 		
 		/// <summary>Checks whether the specified string consists only of periods.</summary>
@@ -262,10 +290,9 @@ namespace OpenBveApi {
 							return;
 						}
 					}
-					throw new System.IO.DirectoryNotFoundException("The package " + package + " could not be found.");
+					throw new DirectoryNotFoundException("The package " + package + " could not be found.");
 				}
 			}
 		}
-		
 	}
 }

@@ -1390,7 +1390,7 @@ namespace OpenBve {
 																		return false;
 																	}
 																	string filename = (string)e.Data[0];
-																	if (Interface.ContainsInvalidPathChars(filename)) {
+																	if (OpenBveApi.Path.ContainsInvalidChars(filename)) {
 																		Interface.AddMessage(Interface.MessageType.Error, false, "filename contains illegal characters in TextureFilename in Material in MeshMaterialList in Mesh in x object file " + FileName);
 																	} else {
 																		string File = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), filename);

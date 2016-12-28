@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -58,7 +59,7 @@ namespace OpenBve {
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant()) {
 											case "background":
-												if (Interface.ContainsInvalidPathChars(Value)) {
+												if (Path.ContainsInvalidChars(Value)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
@@ -244,7 +245,7 @@ namespace OpenBve {
 												case "background":
 												case "背景":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -257,7 +258,7 @@ namespace OpenBve {
 												case "cover":
 												case "ふた":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Cover = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -452,7 +453,7 @@ namespace OpenBve {
 												case "background":
 												case "背景":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -691,7 +692,7 @@ namespace OpenBve {
 											switch (Key.ToLowerInvariant()) {
 												case "number":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Number = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -826,7 +827,7 @@ namespace OpenBve {
 												case "turnon":
 												case "点灯":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														TurnOn = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -839,7 +840,7 @@ namespace OpenBve {
 												case "turnoff":
 												case "消灯":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														TurnOff = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -895,7 +896,7 @@ namespace OpenBve {
 												case "background":
 												case "背景":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Background = OpenBveApi.Path.CombineFile(TrainPath, Value);
@@ -1029,7 +1030,7 @@ namespace OpenBve {
 											switch (Key.ToLowerInvariant()) {
 												case "image":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
+													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														Image = OpenBveApi.Path.CombineFile(TrainPath, Value);
