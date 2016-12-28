@@ -2,10 +2,18 @@ language: csharp
 
 matrix:
   include:
+#Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
     - os: linux
       dist: precise
-      mono: latest
+      mono: 3.2.8
       script: make publish
+    - os: osx
+      mono: latest
+      before_install: brew install hudochenkov/sshpass/sshpass
+      script: make publish
+
+#Test builds
+##Use makefile##
     - os: linux
       dist: trusty
       mono: latest
@@ -14,12 +22,11 @@ matrix:
       mono: latest
       before_install: brew install hudochenkov/sshpass/sshpass
       script: make all-release
-
     - os: linux
       dist: precise
       mono: 3.2.8
       script: make all-release
-
+##Use .sln file##
     - os: linux
       dist: precise
       mono: latest
@@ -32,7 +39,6 @@ matrix:
       mono: latest
       before_install: brew install hudochenkov/sshpass/sshpass
       solution: OpenBVE.sln
-
     - os: linux
       dist: precise
       mono: 3.2.8
@@ -47,8 +53,7 @@ after_success:
 #Release build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "openBVE-$TRAVIS_TAG.tar.gz"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
- #OSX Build
- #Install sshpass (Possibly we need to create a local brew script, but not at the minute...)
+##OSX Builds##
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').dmg" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
