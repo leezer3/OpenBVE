@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class TrainDatParser {
@@ -110,7 +111,7 @@ namespace OpenBve {
 								if (j == -1) break;
 								string s = t.Substring(0, j).Trim();
 								t = t.Substring(j + 1);
-								double a; if (Interface.TryParseDoubleVb6(s, out a)) {
+								double a; if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
 										case 0:
 											if (a < 0.0) {
@@ -169,7 +170,7 @@ namespace OpenBve {
 					case "#performance":
 					case "#deceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a < 0.0) {
@@ -200,7 +201,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#delay":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.DelayPowerUp = a; break;
 										case 1: Train.Specs.DelayPowerDown = a; break;
@@ -211,7 +212,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#move":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: JerkPowerUp = 0.01 * a; break;
 										case 1: JerkPowerDown = 0.01 * a; break;
@@ -224,7 +225,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#brake":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										{
@@ -252,7 +253,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#pressure":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
@@ -289,7 +290,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#handle":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							int a; if (Interface.TryParseIntVb6(Lines[i], out a)) {
+							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.SingleHandle = a == 1; break;
 										case 1: Train.Specs.MaximumPowerNotch = a; break;
@@ -301,7 +302,7 @@ namespace OpenBve {
 					case "#cockpit":
 					case "#cab":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: DriverX = 0.001 * a; break;
 										case 1: DriverY = 0.001 * a; break;
@@ -312,7 +313,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#car":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
@@ -375,7 +376,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#device":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a == 0.0) {
@@ -460,7 +461,7 @@ namespace OpenBve {
 									string s = t.Substring(0, j).Trim();
 									t = t.Substring(j + 1);
 									double a;
-									if (Interface.TryParseDoubleVb6(s, out a)) {
+									if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 										switch (m) {
 											case 0:
 												Tables[msi].Entries[n].SoundIndex = (int)Math.Round(a);

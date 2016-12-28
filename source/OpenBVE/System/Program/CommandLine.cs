@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -99,10 +100,10 @@ namespace OpenBve
 							}
 							break;
 						case "/width":
-							Interface.TryParseIntVb6(value, out Result.Width);
+							NumberFormats.TryParseIntVb6(value, out Result.Width);
 							break;
 						case "/height":
-							Interface.TryParseIntVb6(value, out Result.Height);
+							NumberFormats.TryParseIntVb6(value, out Result.Height);
 							break;
 					}
 				}

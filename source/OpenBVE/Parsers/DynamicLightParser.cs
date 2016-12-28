@@ -38,7 +38,7 @@ namespace OpenBve
 								{
 									case "cablighting":
 										double b;
-										if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out b))
+										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out b))
 										{
 											cb = true;
 										}
@@ -68,7 +68,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double R, G, B;
-											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out R) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out G) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out B))
 											{
 												currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
 												al = true;
@@ -82,7 +82,7 @@ namespace OpenBve
 										{
 											if (Arguments.Length == 1)
 											{
-												if (Interface.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
 												{
 													al = true;
 													break;
@@ -95,7 +95,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double R, G, B;
-											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out R) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out G) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out B))
 											{
 												currentLight.DiffuseColor = new Color24((byte)R, (byte)G, (byte)B);
 												dl = true;
@@ -109,7 +109,7 @@ namespace OpenBve
 										{
 											if (Arguments.Length == 1)
 											{
-												if (Interface.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
+												if (Color24.TryParseHexColor(Arguments[0], out currentLight.DiffuseColor))
 												{
 													dl = true;
 													break;
@@ -123,7 +123,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double X, Y, Z;
-											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out X) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out Y) && Interface.TryParseDoubleVb6(Arguments[2].Trim(), out Z))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out Z))
 											{
 												currentLight.LightPosition = new Vector3(X, Y, Z);
 												ld = true;
@@ -142,7 +142,7 @@ namespace OpenBve
 										if (Arguments.Length == 2)
 										{
 											double theta, phi;
-											if (Interface.TryParseDoubleVb6(Arguments[0].Trim(), out theta) && Interface.TryParseDoubleVb6(Arguments[1].Trim(), out phi))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out theta) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out phi))
 											{
 												currentLight.LightPosition = new Vector3(Math.Cos(theta) * Math.Sin(phi), -Math.Sin(theta), Math.Cos(theta) * Math.Cos(phi));
 												ld = true;

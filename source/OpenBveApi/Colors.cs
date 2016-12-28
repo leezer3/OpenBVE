@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0660, 0661
 
 using System;
+using System.Globalization;
 
 namespace OpenBveApi.Colors {
 	
@@ -73,6 +74,44 @@ namespace OpenBveApi.Colors {
 		public static readonly Color24 Yellow = new Color24(255, 255, 0);
 		/// <summary>Represents a white color.</summary>
 		public static readonly Color24 White = new Color24(255, 255, 255);
+
+		/// <summary>Parses a hexadecimal string into a Color24</summary>
+		/// <param name="Expression">The color in hexadecimal format</param>
+		/// <param name="Color">The Color24, updated via 'out'</param>
+		/// <returns>True if the parse succeds, false if it does not</returns>
+		public static bool TryParseHexColor(string Expression, out Color24 Color)
+		{
+			if (Expression.StartsWith("#"))
+			{
+				string a = Expression.Substring(1).TrimStart();
+				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				{
+					int r = (x >> 16) & 0xFF;
+					int g = (x >> 8) & 0xFF;
+					int b = x & 0xFF;
+					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
+					{
+						Color = new Color24((byte)r, (byte)g, (byte)b);
+						return true;
+					}
+					else
+					{
+						Color = new Color24(0, 0, 255);
+						return false;
+					}
+				}
+				else
+				{
+					Color = new Color24(0, 0, 255);
+					return false;
+				}
+			}
+			else
+			{
+				Color = new Color24(0, 0, 255);
+				return false;
+			}
+		}
 	}
 	
 	
@@ -176,6 +215,44 @@ namespace OpenBveApi.Colors {
 		/// <returns>The Color24 value.</returns>
 		public static explicit operator Color24(Color32 value) {
 			return new Color24(value.R, value.G, value.B);
+		}
+
+		/// <summary>Parses a hexadecimal string into a Color32</summary>
+		/// <param name="Expression">The color in hexadecimal format</param>
+		/// <param name="Color">The Color32, updated via 'out'</param>
+		/// <returns>True if the parse succeds, false if it does not</returns>
+		public static bool TryParseHexColor(string Expression, out Color32 Color)
+		{
+			if (Expression.StartsWith("#"))
+			{
+				string a = Expression.Substring(1).TrimStart();
+				int x; if (Int32.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
+				{
+					int r = (x >> 16) & 0xFF;
+					int g = (x >> 8) & 0xFF;
+					int b = x & 0xFF;
+					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255)
+					{
+						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
+						return true;
+					}
+					else
+					{
+						Color = new Color32(0, 0, 255, 255);
+						return false;
+					}
+				}
+				else
+				{
+					Color = new Color32(0, 0, 255, 255);
+					return false;
+				}
+			}
+			else
+			{
+				Color = new Color32(0, 0, 255, 255);
+				return false;
+			}
 		}
 	}
 	

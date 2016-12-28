@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -72,7 +73,7 @@ namespace OpenBve
 										}
 										break;
 									case "repetitions":
-										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
 										}
@@ -96,7 +97,7 @@ namespace OpenBve
 										}
 										break;
 									case "transitiontime":
-										if (!Interface.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
 										}

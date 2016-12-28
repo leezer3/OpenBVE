@@ -135,64 +135,7 @@ namespace OpenBve {
 
 #pragma warning restore 0649
 
-		// try parse vb6
-		internal static bool TryParseDoubleVb6(string Expression, out double Value) {
-			Expression = TrimInside(Expression);
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			for (int n = Expression.Length; n > 0; n--) {
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), System.Globalization.NumberStyles.Float, Culture, out a)) {
-					Value = a;
-					return true;
-				}
-			}
-			Value = 0.0;
-			return false;
-		}
-		internal static bool TryParseFloatVb6(string Expression, out float Value) {
-			Expression = TrimInside(Expression);
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			for (int n = Expression.Length; n > 0; n--) {
-				float a;
-				if (float.TryParse(Expression.Substring(0, n), System.Globalization.NumberStyles.Float, Culture, out a)) {
-					Value = a;
-					return true;
-				}
-			}
-			Value = 0.0f;
-			return false;
-		}
-		internal static bool TryParseIntVb6(string Expression, out int Value) {
-			Expression = TrimInside(Expression);
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			for (int n = Expression.Length; n > 0; n--) {
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), System.Globalization.NumberStyles.Float, Culture, out a)) {
-					if (a >= -2147483648.0 & a <= 2147483647.0) {
-						Value = (int)Math.Round(a);
-						return true;
-					} else break;
-				}
-			}
-			Value = 0;
-			return false;
-		}
-		internal static bool TryParseByteVb6(string Expression, out byte Value) {
-			Expression = TrimInside(Expression);
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			for (int n = Expression.Length; n > 0; n--) {
-				double a;
-				if (double.TryParse(Expression.Substring(0, n), System.Globalization.NumberStyles.Float, Culture, out a)) {
-					if (a >= 0.0 & a <= 255.0) {
-						Value = (byte)Math.Round(a);
-						return true;
-					} else break;
-				}
-			}
-			Value = 0;
-			return false;
-		}
-
+		
 		// try parse time
 		internal static bool TryParseTime(string Expression, out double Value) {
 			Expression = TrimInside(Expression);
@@ -275,42 +218,7 @@ namespace OpenBve {
 			}
 		}
 
-		// try parse vb6 (with unit factors)
-		internal static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value) {
-			double a; if (double.TryParse(Expression, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out a)) {
-				Value = a;
-				return true;
-			} else {
-				int j = 0, n = 0; Value = 0;
-				for (int i = 0; i < Expression.Length; i++) {
-					if (Expression[i] == ':') {
-						string t = Expression.Substring(j, i - j);
-						if (TryParseDoubleVb6(t, out a)) {
-							if (n < UnitFactors.Length) {
-								Value += a * UnitFactors[n];
-							} else {
-								return n > 0;
-							}
-						} else {
-							return n > 0;
-						} j = i + 1; n++;
-					}
-				}
-				{
-					string t = Expression.Substring(j);
-					if (TryParseDoubleVb6(t, out a)) {
-						if (n < UnitFactors.Length) {
-							Value += a * UnitFactors[n];
-							return true;
-						} else {
-							return n > 0;
-						}
-					} else {
-						return n > 0;
-					}
-				}
-			}
-		}
+
 
 		// trim inside
 		private static string TrimInside(string Expression) {
