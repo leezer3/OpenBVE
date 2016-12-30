@@ -951,6 +951,9 @@ namespace OpenBve {
 				AnimatedWorldObjects[a].RearAxleFollower.TrackPosition = TrackPosition + Prototype.RearAxlePosition;
 				AnimatedWorldObjects[a].FrontAxlePosition = Prototype.FrontAxlePosition;
 				AnimatedWorldObjects[a].RearAxlePosition = Prototype.RearAxlePosition;
+				AnimatedWorldObjects[a].FrontAxleFollower.UpdateWorldCoordinates(false);
+				AnimatedWorldObjects[a].RearAxleFollower.UpdateWorldCoordinates(false);
+				
 			}
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				if (AnimatedWorldObjects[a].Object.States[i].Object == null) {
@@ -1020,18 +1023,23 @@ namespace OpenBve {
 						}
 						if (AnimatedWorldObjects[i].FollowsTrack)
 						{
-							//Calculate the distance travelled
-							double delta = UpdateTrackFollowerScript(ref AnimatedWorldObjects[i].Object, false, train,train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition,
-								AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up,AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
-							
-							//Update the front and rear axle track followers
-							TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].FrontAxleFollower,(AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
-							TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].RearAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
-							//Update the base object position
-							UpdateTrackFollowingObject(ref AnimatedWorldObjects[i]);
+							if (AnimatedWorldObjects[i].Visible)
+							{
+								//Calculate the distance travelled
+								double delta = UpdateTrackFollowerScript(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+
+								//Update the front and rear axle track followers
+								TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].FrontAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
+								TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].RearAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
+								//Update the base object position
+								AnimatedWorldObjects[i].FrontAxleFollower.UpdateWorldCoordinates(false);
+								AnimatedWorldObjects[i].RearAxleFollower.UpdateWorldCoordinates(false);
+								UpdateTrackFollowingObject(ref AnimatedWorldObjects[i]);
+								
+							}
 							//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition - AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition,
-								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+							
 						}
 						else
 						{
