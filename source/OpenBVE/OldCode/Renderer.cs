@@ -315,7 +315,9 @@ namespace OpenBve
                         if (additive)
                         {
                             SetAlphaFunc(AlphaFunction.Less, 1.0f);
-                            additive = false;
+							//HACK: Reset mesh material after using additive blending (Shouldn't be necessary, but there's a bug somewhere)
+							GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+							additive = false;
                         }
                         RenderFace(ref DynamicAlpha.Faces[i], cx, cy, cz);
                     }
