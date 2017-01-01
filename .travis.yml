@@ -48,11 +48,11 @@ after_success:
 #Export SSH password for whichever platform we are building on
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
 #Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "OpenBVE-$(date '+%F').tar.gz"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$(date '+%F').zip"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').zip" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 #Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "openBVE-$TRAVIS_TAG.tar.gz"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "openBVE-$TRAVIS_TAG.zip"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.zip" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 ##OSX Builds##
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"

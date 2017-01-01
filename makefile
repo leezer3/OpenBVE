@@ -38,7 +38,7 @@ OUTPUT_DIR  := $(DEBUG_DIR)
 
 # Final output names
 MAC_BUILD_RESULT = macbuild.dmg
-LINUX_BUILD_RESULT = linuxbuild.tar.gz
+LINUX_BUILD_RESULT = linuxbuild.zip
 
 # Used output name
 ifeq ($(shell uname -s),Darwin) 
@@ -246,7 +246,7 @@ $(MAC_BUILD_RESULT): all-release
 
 $(LINUX_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
-	@cd $(RELEASE_DIR); tar -zcf ../$(LINUX_BUILD_RESULT) *
+	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
 
 
 # Utility target generator that allows easier generation of resource files
