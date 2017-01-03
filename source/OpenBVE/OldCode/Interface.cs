@@ -881,6 +881,10 @@ namespace OpenBve {
 			if (Expression.Length != 0) {
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				int i = Expression.IndexOf('.');
+				if (i == -1)
+				{
+					i = Expression.IndexOf(':');
+				}
 				if (i >= 1) {
 					int h; if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out h)) {
 						int n = Expression.Length - i - 1;

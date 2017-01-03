@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Channels;
 using OpenBveApi.Math;
-using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -1310,7 +1307,7 @@ namespace OpenBve {
 						return Expression;
 					} else {
 						for (int j = 0; j < Expression.Length; j++) {
-							if (!char.IsLetterOrDigit(Expression[j])) {
+							if (!char.IsLetterOrDigit(Expression[j]) && Expression[j] != ':') {
 								throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
 							}
 						}
@@ -2110,7 +2107,20 @@ namespace OpenBve {
 					if (c >= Result.Constants.Length) Array.Resize<double>(ref Result.Constants, Result.Constants.Length << 1);
 					Result.Constants[c] = d;
 					n++; c++; s++; if (s >= m) m = s;
-				} else {
+				} else if (Interface.TryParseTime(Arguments[i], out d) && Result.Instructions[n -1] == Instructions.TimeSecondsSinceMidnight) {
+					if (c >= Result.Constants.Length) Array.Resize<double>(ref Result.Constants, Result.Constants.Length << 1);
+					Result.Constants[c] = d;
+					n++;
+					c++;
+					s++;
+					if (s >= m) m = s;
+				}
+				else {
+					if (Arguments[i].IndexOf(':') != -1)
+					{
+						//The colon is required for formatting times, so exclude it from the initial character check, & do it here instead
+						throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
+					}
 					switch (Arguments[i].ToLowerInvariant()) {
 							// system
 						case "halt":
