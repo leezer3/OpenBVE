@@ -48,11 +48,11 @@ after_success:
 #Export SSH password for whichever platform we are building on
  - test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_TAG) && export SSHPASS=$DEPLOY_PASS
 #Nightly build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "OpenBVE-$(date '+%F').tar.gz"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "OpenBVE-$(date '+%F').zip"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "OpenBVE-$(date '+%F').zip" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 #Release build
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.tar.gz" "openBVE-$TRAVIS_TAG.tar.gz"
- - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.tar.gz" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "openBVE-$TRAVIS_TAG.zip"
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.zip" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 ##OSX Builds##
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
@@ -64,6 +64,7 @@ addons:
   apt:
     packages:
       - sshpass
+      - p7zip-full
 env:
   global:
     - secure: "NquGr/vI8CyhAV5itzUxV5gXCtWFn3kqOnAeEz5Niw4fJfrBH5G/TBGyQpyzkpeY+Tox8z8m+a/UdSYutVxI9OYbAuFH8vo75pL3oydFtNOnuO45v4BFaz9KLGB0AEAvNzX7YTUM7qEE4QlX2/jzPXSoJqxC9RWMdENxwjzCvE0CLhBPQvqCSxB6nJ86rRM7xpLkT34t+C66XjdHSLKDcu94dC50o8MxnIchgWAfEV4+d9kv6XZV+rZvz75e8qYzCJKU6wl3GPMpL8JajG3TIkHAiNWPlcH8WbCqd62znZYtFUMvVkFDKOAjnq1sMqMYfFiu3x+AJPYF52Se2g5qDrkOCZhKL2MSofEugvSjlNekkfQzg/SqHJXlToZvvWQWvuZaTcjYwoiFg+O0eFgvN1bjX2Z7Y9Pb85o+DgKn0WFkBkCohbygFw1Iir1tT5+3bnt3uAZWPKH8k7r5+Tbm2KxJ3O0/ietbMW97S9EaU24Gwh6YbPRVskEgp3ym/2It0sgMfEb64GnhbvGG6lPk3uU6AEmmxHsBgxv+E2ZdRVOqEsWVeBs8IDmVwXeG8T1FCL+GtV5hTwmIMH+z+OTuAHEzKR81DohF+z3vXzYOLxzSCx9IBKkTfIiVKpuFl6+l17olIgaGwomN23b6p0Eky0ZRrWupjkoetIJF6A9Ux8M="
