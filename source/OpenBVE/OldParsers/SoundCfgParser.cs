@@ -702,7 +702,12 @@ namespace OpenBve {
 		}
 		private static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			TrainManager.CarSound[] Sounds = new TrainManager.CarSound[] { };
+			TrainManager.CarSound[] Sounds = { };
+			if (!System.IO.Directory.Exists(Folder))
+			{
+				//Detect whether the given folder exists before attempting to load from it
+				return Sounds;
+			}
 			string[] Files = System.IO.Directory.GetFiles(Folder);
 			for (int i = 0; i < Files.Length; i++) {
 				string a = System.IO.Path.GetFileName(Files[i]);
