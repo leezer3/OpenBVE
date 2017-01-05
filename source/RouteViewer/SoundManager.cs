@@ -296,7 +296,7 @@ namespace OpenBve {
 										throw new InvalidOperationException("A bug in the sound manager. (7625)");
 									}
 									int j = SoundSources[i].OpenAlSourceIndex.Index;
-									AL.Source(j, ALSourceb.Looping, SoundSources[i].Looped ? true : false);
+									AL.Source(j, ALSourceb.Looping, SoundSources[i].Looped);
 									AL.Source(j, ALSourcef.ReferenceDistance, SoundBuffers[SoundSources[i].SoundBufferIndex].Radius);
 									AL.SourcePlay(j);
 								}

@@ -1264,12 +1264,12 @@ namespace OpenBve {
 			}
 			{
 				int[] j = new int[6];
-				j[0] = Expression.LastIndexOf("==");
-				j[1] = Expression.LastIndexOf("!=");
-				j[2] = Expression.LastIndexOf("<=");
-				j[3] = Expression.LastIndexOf(">=");
-				j[4] = Expression.LastIndexOf("<");
-				j[5] = Expression.LastIndexOf(">");
+				j[0] = Expression.LastIndexOf("==", StringComparison.Ordinal);
+				j[1] = Expression.LastIndexOf("!=", StringComparison.Ordinal);
+				j[2] = Expression.LastIndexOf("<=", StringComparison.Ordinal);
+				j[3] = Expression.LastIndexOf(">=", StringComparison.Ordinal);
+				j[4] = Expression.LastIndexOf("<", StringComparison.Ordinal);
+				j[5] = Expression.LastIndexOf(">", StringComparison.Ordinal);
 				int k = -1;
 				for (int i = 0; i < j.Length; i++) {
 					if (j[i] >= 0) {
@@ -2658,14 +2658,14 @@ namespace OpenBve {
 		// mathematical functions
 		private static double Log(double X) {
 			if (X <= 0.0) {
-				return 0.0; /// ComplexInfinity or NonReal
+				return 0.0; // ComplexInfinity or NonReal
 			} else {
 				return Math.Log(X);
 			}
 		}
 		private static double Sqrt(double X) {
 			if (X < 0.0) {
-				return 0.0; /// NonReal
+				return 0.0; // NonReal
 			} else {
 				return Math.Sqrt(X);
 			}
@@ -2675,7 +2675,7 @@ namespace OpenBve {
 			double d = c - Math.Floor(c) - 0.5;
 			double e = Math.Floor(X >= 0.0 ? X : -X) * 1.38462643383279E-16;
 			if (d >= -e & d <= e) {
-				return 0.0; /// ComplexInfinity
+				return 0.0; // ComplexInfinity
 			} else {
 				return Math.Tan(X);
 			}
