@@ -1571,7 +1571,7 @@ namespace OpenBve {
 							}
 						}
 						// process command
-						if (!Command.IsNullOrEmpty) {
+						if (!String.IsNullOrEmpty(Command)) {
 							switch (Command.ToLowerInvariant()) {
 									// options
 								case "options.blocklength":
@@ -2831,7 +2831,7 @@ namespace OpenBve {
 							}
 						}
 						// process command
-						if (!Command.IsNullOrEmpty) {
+						if (!String.IsNullOrEmpty(Command)) {
 							switch (Command.ToLowerInvariant()) {
 									// non-track
 								case "options.blocklength":
