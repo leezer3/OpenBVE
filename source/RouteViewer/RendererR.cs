@@ -1183,7 +1183,7 @@ namespace OpenBve {
 				ObjectList[ObjectListCount].FaceListIndices = new int[f];
 				for (int i = 0; i < f; i++) {
 					if (Overlay) {
-						/// overlay
+						// overlay
 						if (OverlayListCount >= OverlayList.Length) {
 							Array.Resize(ref OverlayList, OverlayList.Length << 1);
 							Array.Resize(ref OverlayListDistance, OverlayList.Length);
@@ -1223,7 +1223,7 @@ namespace OpenBve {
 							}
 						}
 						if (alpha) {
-							/// alpha
+							// alpha
 							if (AlphaListCount >= AlphaList.Length) {
 								Array.Resize(ref AlphaList, AlphaList.Length << 1);
 								Array.Resize(ref AlphaListDistance, AlphaList.Length);
@@ -1235,7 +1235,7 @@ namespace OpenBve {
 							AlphaListCount++;
 							//Game.
 						} else if (transparentcolor) {
-							/// transparent color
+							// transparent color
 							if (TransparentColorListCount >= TransparentColorList.Length) {
 								Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
 								Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
@@ -1246,7 +1246,7 @@ namespace OpenBve {
 							ObjectList[ObjectListCount].FaceListIndices[i] = (TransparentColorListCount << 2) + 1;
 							TransparentColorListCount++;
 						} else {
-							/// opaque
+							// opaque
 							if (OpaqueListCount >= OpaqueList.Length) {
 								Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
 							}
@@ -1275,26 +1275,26 @@ namespace OpenBve {
 					int hi = h >> 2;
 					switch (h & 3) {
 						case 0:
-							/// opaque
+							// opaque
 							OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
 							OpaqueListCount--;
 							Game.InfoStaticOpaqueFaceCount--;
 							ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
 							break;
 						case 1:
-							/// transparent color
+							// transparent color
 							TransparentColorList[hi] = TransparentColorList[TransparentColorListCount - 1];
 							TransparentColorListCount--;
 							ObjectList[TransparentColorList[hi].ObjectListIndex].FaceListIndices[TransparentColorList[hi].FaceIndex] = h;
 							break;
 						case 2:
-							/// alpha
+							// alpha
 							AlphaList[hi] = AlphaList[AlphaListCount - 1];
 							AlphaListCount--;
 							ObjectList[AlphaList[hi].ObjectListIndex].FaceListIndices[AlphaList[hi].FaceIndex] = h;
 							break;
 						case 3:
-							/// overlay
+							// overlay
 							OverlayList[hi] = OverlayList[OverlayListCount - 1];
 							OverlayListCount--;
 							ObjectList[OverlayList[hi].ObjectListIndex].FaceListIndices[OverlayList[hi].FaceIndex] = h;
