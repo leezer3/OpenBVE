@@ -5,7 +5,7 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		/// <summary>Locates the absolute on-disk path of the object to be loaded</summary>
+		/// <summary>Locates the absolute on-disk path of the object to be loaded, or an available compatible replacement if not found</summary>
 		/// <param name="fileName">The object's file-name</param>
 		/// <param name="objectPath">The path to the objects directory for this route</param>
 		internal static bool LocateObject(ref string fileName, string objectPath)
@@ -26,6 +26,7 @@ namespace OpenBve
 				//The object exists, and does not require a compatibility object
 				return true;
 			}
+			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)
 			{
 				if (CompatibilityObjects.AvailableReplacements[i].ObjectNames.Length == 0)
@@ -36,6 +37,7 @@ namespace OpenBve
 				{
 					if (CompatibilityObjects.AvailableReplacements[i].ObjectNames[j].ToLowerInvariant() == fileName.ToLowerInvariant())
 					{
+						//Available replacement found
 						fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
 						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
 						{
@@ -49,21 +51,21 @@ namespace OpenBve
 			return false;
 		}
 
-		internal static int CompatibilityObjectsUsed = 0;
+		/// <summary>The total number of compatability objects used by the current route</summary>
+		internal static int CompatibilityObjectsUsed;
 	}
 
 	internal class CompatibilityObjects
 	{
+		/// <summary>Defines a replacement compatibility object</summary>
 		internal class ReplacementObject
 		{
 			/// <summary>The filename of the original object to be replaced</summary>
 			internal string[] ObjectNames;
-
 			/// <summary>The absolute on-disk path of the replacement object</summary>
 			internal string ReplacementPath;
-
+			/// <summary>The message to be added to the log if this object is used</summary>
 			internal string Message;
-
 			/// <summary>Creates a new replacement object</summary>
 			internal ReplacementObject()
 			{
@@ -72,8 +74,11 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>The array containing the paths to all available replacement objects</summary>
 		internal static ReplacementObject[] AvailableReplacements = new ReplacementObject[0];
 
+		/// <summary>Loads the available compatibility object database</summary>
+		/// <param name="fileName">The database file</param>
 		internal static void LoadCompatibilityObjects(string fileName)
 		{
 			if (!System.IO.File.Exists(fileName))
