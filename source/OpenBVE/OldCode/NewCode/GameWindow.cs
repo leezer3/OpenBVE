@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
 using GL = OpenTK.Graphics.OpenGL.GL;
@@ -665,10 +666,14 @@ namespace OpenBve
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
 				//Print the plugin error encountered (If any) for 10s
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
-				if (Loading.PluginError != null)
+				if (Loading.PluginMessage != null)
 				{
-					Game.AddMessage(Loading.PluginError, Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
-					Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
+					Game.AddMessage(Loading.PluginMessage, Game.MessageDependency.None, Interface.GameMode.Expert, Loading.PluginMessageColor, Game.SecondsSinceMidnight + 5.0);
+					if (Loading.PluginMessageColor == MessageColor.Red)
+					{
+						//Nasty little hack checking the message color, but there we go....
+						Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
+					}
 				}
 			}
 			loadComplete = true;

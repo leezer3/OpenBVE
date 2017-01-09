@@ -605,7 +605,7 @@ namespace OpenBve
 
             if (success == false)
             {
-                Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+                Loading.PluginMessage = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
             }
             else
             {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Xml;
+using OpenBveApi.Colors;
 
 namespace OpenBve
 {
@@ -40,20 +41,22 @@ namespace OpenBve
 			{
 				return false;
 			}
+
 			for (int i = 0; i < AvailableReplacementPlugins.Count; i++)
 			{
 				if (AvailableReplacementPlugins[i].Train == null || AvailableReplacementPlugins[i].Train == f)
 				{
 					if (CheckBlackList(AvailableReplacementPlugins[i].OriginalPlugin))
 					{
-						//If original plugin is in the blacklist
+						//The original plugin is contained within the blacklist
 						Interface.AddMessage(Interface.MessageType.Warning, true, "The blacklisted train plugin " + fl + " has been replaced with the following compatible alternative: " + 
 						AvailableReplacementPlugins[i].PluginName);
+						Loading.PluginMessage = "The blacklisted train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+						Loading.PluginMessageColor = MessageColor.Green;
 						PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, AvailableReplacementPlugins[i].PluginPath);
 						if (!String.IsNullOrEmpty(AvailableReplacementPlugins[i].Message))
 						{
-							MessageBox.Show(AvailableReplacementPlugins[i].Message, Application.ProductName, MessageBoxButtons.OK,
-								MessageBoxIcon.Information);
+							MessageBox.Show(AvailableReplacementPlugins[i].Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 						}
 						return true;
 					}
@@ -73,11 +76,12 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, true, "The train plugin " + fl + " has been replaced with the following compatible alternative: " +
 							AvailableReplacementPlugins[i].PluginName);
+							Loading.PluginMessage = "The train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+							Loading.PluginMessageColor = MessageColor.Green;
 							PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, AvailableReplacementPlugins[i].PluginPath);
 							if (!String.IsNullOrEmpty(AvailableReplacementPlugins[i].Message))
 							{
-								MessageBox.Show(AvailableReplacementPlugins[i].Message, Application.ProductName, MessageBoxButtons.OK,
-									MessageBoxIcon.Information);
+								MessageBox.Show(AvailableReplacementPlugins[i].Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 							}
 							return true;
 						}
