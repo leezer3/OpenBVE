@@ -156,6 +156,8 @@ namespace OpenBve
 			internal bool AllowAxisEB;
 			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
 			internal bool PreferNativeBackend = true;
+			/// <summary>Whether to use compatible plugins on non Win32 systems</summary>
+			internal bool UseCompatiblePlugins;
 
 			internal TimeTableMode TimeTableStyle;
 
@@ -229,6 +231,7 @@ namespace OpenBve
 				this.ProxyPassword = string.Empty;
 				this.TimeAccelerationFactor = 5;
 				this.AllowAxisEB = true;
+				this.UseCompatiblePlugins = true;
 				this.TimeTableStyle = TimeTableMode.Default;
 				this.packageCompressionType = CompressionType.Zip;
 			}
@@ -502,6 +505,9 @@ namespace OpenBve
 											}
 											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
+										case "usecompatibleplugins":
+											Interface.CurrentOptions.UseCompatiblePlugins = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "controls":
 									switch (Key)
@@ -770,6 +776,7 @@ namespace OpenBve
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.Append("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
+			Builder.AppendLine("usecompatibleplugins = " + (CurrentOptions.UseCompatiblePlugins ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));
