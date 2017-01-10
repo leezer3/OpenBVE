@@ -32,15 +32,18 @@ namespace OpenBve
 				{
 					return;
 				}
-				RouteMap		= Illustrations.CreateRouteMap(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
-				RouteMinX			= Illustrations.LastRouteMinX;
-				RouteMaxX			= Illustrations.LastRouteMaxX;
-				RouteMinZ			= Illustrations.LastRouteMinZ;
-				RouteMaxZ			= Illustrations.LastRouteMaxZ;
-				GradientProfile	= Illustrations.CreateRouteGradientProfile(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
-				GradientMinTrack	= Illustrations.LastGradientMinTrack;
-				GradientMaxTrack	= Illustrations.LastGradientMaxTrack;
-            }
+				lock (Illustrations.Locker)
+				{
+					RouteMap = Illustrations.CreateRouteMap(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
+					RouteMinX = Illustrations.LastRouteMinX;
+					RouteMaxX = Illustrations.LastRouteMaxX;
+					RouteMinZ = Illustrations.LastRouteMinZ;
+					RouteMaxZ = Illustrations.LastRouteMaxZ;
+					GradientProfile = Illustrations.CreateRouteGradientProfile(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
+					GradientMinTrack = Illustrations.LastGradientMinTrack;
+					GradientMaxTrack = Illustrations.LastGradientMaxTrack;
+				}
+			}
         }
     }
 }
