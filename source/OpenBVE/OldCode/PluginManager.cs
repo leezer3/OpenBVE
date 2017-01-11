@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 
 namespace OpenBve
@@ -605,7 +606,7 @@ namespace OpenBve
 
             if (success == false)
             {
-                Loading.PluginMessage = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+                Loading.MessageQueue.Add(new Game.Message((Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file)), Game.MessageDependency.None, MessageColor.Red, 5.0));
             }
             else
             {

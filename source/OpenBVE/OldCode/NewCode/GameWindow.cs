@@ -666,13 +666,11 @@ namespace OpenBve
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
 				//Print the plugin error encountered (If any) for 10s
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
-				if (Loading.PluginMessage != null)
+				if (Loading.MessageQueue.Count > 0)
 				{
-					Game.AddMessage(Loading.PluginMessage, Game.MessageDependency.None, Interface.GameMode.Expert, Loading.PluginMessageColor, Game.SecondsSinceMidnight + 5.0);
-					if (Loading.PluginMessageColor == MessageColor.Red)
+					foreach (var message in Loading.MessageQueue)
 					{
-						//Nasty little hack checking the message color, but there we go....
-						Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0);
+						Game.AddMessage(message);
 					}
 				}
 			}

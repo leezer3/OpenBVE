@@ -51,7 +51,8 @@ namespace OpenBve
 						//The original plugin is contained within the blacklist
 						Interface.AddMessage(Interface.MessageType.Warning, true, "The blacklisted train plugin " + fl + " has been replaced with the following compatible alternative: " + 
 						AvailableReplacementPlugins[i].PluginName);
-						Loading.PluginMessage = "The blacklisted train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+						string s = "The blacklisted train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+						Loading.MessageQueue.Add(new Game.Message(s, Game.MessageDependency.None, MessageColor.Green, 10.0));
 						Loading.PluginMessageColor = MessageColor.Green;
 						PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, AvailableReplacementPlugins[i].PluginPath);
 						if (!String.IsNullOrEmpty(AvailableReplacementPlugins[i].Message))
@@ -76,7 +77,8 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, true, "The train plugin " + fl + " has been replaced with the following compatible alternative: " +
 							AvailableReplacementPlugins[i].PluginName);
-							Loading.PluginMessage = "The train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+							string t = "The train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
+							Loading.MessageQueue.Add(new Game.Message(t, Game.MessageDependency.None, MessageColor.Green, 10.0));
 							Loading.PluginMessageColor = MessageColor.Green;
 							PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, AvailableReplacementPlugins[i].PluginPath);
 							if (!String.IsNullOrEmpty(AvailableReplacementPlugins[i].Message))
