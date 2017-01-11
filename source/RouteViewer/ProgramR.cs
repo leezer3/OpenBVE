@@ -285,6 +285,16 @@ namespace OpenBve {
 						CurrentlyLoading = false;
 						UpdateCaption();
 					}
+					else
+					{
+						if (Program.CurrentlyRunOnMono)
+						{
+							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
+							//Avoid calling Application.DoEvents() unless absolutely necessary though!
+							Application.DoEvents();
+						}
+					}
+					Dialog.Dispose();
 					break;
 				case Key.F8:
 					if (Program.CurrentlyLoading == true)
