@@ -75,7 +75,15 @@ namespace OpenBve {
 		internal static bool LoadPlugins() {
 			UnloadPlugins();
 			string folder = Program.FileSystem.GetDataFolder("Plugins");
-			string[] files = Directory.GetFiles(folder);
+			string[] files = {};
+			try
+			{
+				files = Directory.GetFiles(folder);
+			}
+			catch
+			{
+				
+			}
 			List<Plugin> list = new List<Plugin>();
 			StringBuilder builder = new StringBuilder();
 			foreach (string file in files) {
@@ -126,6 +134,12 @@ namespace OpenBve {
 				}
 			}
 			LoadedPlugins = list.ToArray();
+			if (LoadedPlugins.Length == 0)
+			{
+				MessageBox.Show("No available texture & sound loader plugins were found." + Environment.NewLine +
+				                " Please re-download openBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				return false;
+			}
 			string message = builder.ToString().Trim();
 			if (message.Length != 0) {
 				return MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) == DialogResult.OK;
