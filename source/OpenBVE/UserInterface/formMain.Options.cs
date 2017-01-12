@@ -74,8 +74,6 @@ namespace OpenBve {
 		private void checkboxJoysticksUsed_CheckedChanged(object sender, EventArgs e) {
 			groupboxJoysticks.Enabled = checkboxJoysticksUsed.Checked;
 		}
-
-		
 		
 	}
 }

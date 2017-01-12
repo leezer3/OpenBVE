@@ -125,7 +125,14 @@ namespace OpenBve
 			BlackListedPlugins = new List<BlackListEntry>();
 			XmlDocument currentXML = new XmlDocument();
 			//Load the XML file 
-			currentXML.Load(databasePath);
+			try
+			{
+				currentXML.Load(databasePath);
+			}
+			catch
+			{
+				return;
+			}
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/TrainPlugins/Blacklist");

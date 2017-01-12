@@ -408,6 +408,8 @@
 			this.buttonCreatePackage = new System.Windows.Forms.Button();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.groupBoxCompatability = new System.Windows.Forms.GroupBox();
+			this.checkBoxCompatiblePlugins = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -504,6 +506,7 @@
 			this.splitContainerDependancies.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages3)).BeginInit();
+			this.groupBoxCompatability.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// labelFillerOne
@@ -1341,6 +1344,7 @@
 			this.panelOptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(243)))));
 			this.panelOptions.Controls.Add(this.buttonOptionsPrevious);
 			this.panelOptions.Controls.Add(this.buttonOptionsNext);
+			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Controls.Add(this.panelOptionsRight);
 			this.panelOptions.Controls.Add(this.panelOptionsLeft);
 			this.panelOptions.Controls.Add(this.pictureboxLanguage);
@@ -1348,7 +1352,6 @@
 			this.panelOptions.Controls.Add(this.labelOptionsTitleSeparator);
 			this.panelOptions.Controls.Add(this.labelOptionsTitle);
 			this.panelOptions.Controls.Add(this.labelOptionsTitleBackground);
-			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Location = new System.Drawing.Point(160, 0);
 			this.panelOptions.Name = "panelOptions";
 			this.panelOptions.Size = new System.Drawing.Size(659, 606);
@@ -2269,6 +2272,7 @@
 			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptionsPage2.Controls.Add(this.groupBoxCompatability);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
 			this.panelOptionsPage2.Location = new System.Drawing.Point(8, 72);
 			this.panelOptionsPage2.Name = "panelOptionsPage2";
@@ -5167,14 +5171,36 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
+			// groupBoxCompatability
+			// 
+			this.groupBoxCompatability.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxCompatability.Controls.Add(this.checkBoxCompatiblePlugins);
+			this.groupBoxCompatability.Location = new System.Drawing.Point(0, 158);
+			this.groupBoxCompatability.Name = "groupBoxCompatability";
+			this.groupBoxCompatability.Size = new System.Drawing.Size(640, 100);
+			this.groupBoxCompatability.TabIndex = 20;
+			this.groupBoxCompatability.TabStop = false;
+			this.groupBoxCompatability.Text = "Compatablilty";
+			// 
+			// checkBoxCompatiblePlugins
+			// 
+			this.checkBoxCompatiblePlugins.AutoSize = true;
+			this.checkBoxCompatiblePlugins.Location = new System.Drawing.Point(12, 19);
+			this.checkBoxCompatiblePlugins.Name = "checkBoxCompatiblePlugins";
+			this.checkBoxCompatiblePlugins.Size = new System.Drawing.Size(344, 17);
+			this.checkBoxCompatiblePlugins.TabIndex = 0;
+			this.checkBoxCompatiblePlugins.Text = "Use compatible plugins on non-Windows systems (Where available)";
+			this.checkBoxCompatiblePlugins.UseVisualStyleBackColor = true;
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(819, 606);
-			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelOptions);
+			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.labelVerticalSeparator);
 			this.Controls.Add(this.panelInfo);
 			this.Controls.Add(this.panelPanels);
@@ -5326,6 +5352,8 @@
 			this.splitContainerDependancies.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPackages3)).EndInit();
+			this.groupBoxCompatability.ResumeLayout(false);
+			this.groupBoxCompatability.PerformLayout();
 			this.ResumeLayout(false);
 
         }
@@ -5716,5 +5744,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonCancel2;
         private System.Windows.Forms.Button buttonAbort;
+		private System.Windows.Forms.GroupBox groupBoxCompatability;
+		private System.Windows.Forms.CheckBox checkBoxCompatiblePlugins;
     }
 }
