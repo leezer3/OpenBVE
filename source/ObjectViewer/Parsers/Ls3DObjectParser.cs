@@ -91,7 +91,15 @@ namespace OpenBve
             int TextureHeight = 0;
             if (File.Exists(FileName))
             {
-                currentXML.Load(FileName);
+	            try
+	            {
+					currentXML.Load(FileName);
+	            }
+	            catch
+	            {
+		            return null;
+	            }
+                
             }
             else
             {

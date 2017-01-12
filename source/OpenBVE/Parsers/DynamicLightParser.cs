@@ -15,7 +15,15 @@ namespace OpenBve
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
-			currentXML.Load(fileName);
+			try
+			{
+				currentXML.Load(fileName);
+			}
+			catch
+			{
+				return false;
+			}
+			
 			bool defined = false;
 			//Check for null
 			if (currentXML.DocumentElement != null)

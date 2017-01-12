@@ -87,7 +87,15 @@ namespace OpenBve
 			}
 			string d = System.IO.Path.GetDirectoryName(fileName);
 			XmlDocument currentXML = new XmlDocument();
-			currentXML.Load(fileName);
+			try
+			{
+				currentXML.Load(fileName);
+			}
+			catch
+			{
+				return;
+			}
+			
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
