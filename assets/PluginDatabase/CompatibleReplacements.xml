@@ -34,5 +34,32 @@
 		<Name>BVE Cornwall ATS</Name>
 		<Path>Plugins\Train\BVEC_ATS.dll</Path>		
 	</Replacements>
+	<!-- Original TSC Trains & variants, mostly UKSpt -->
+	<Replacements>
+		<!-- Class 158 -->
+		<Plugin>
+			<FileName>UKSpt.dll</FileName>
+			<FileLength>98304</FileLength>
+			<MD5>0eee59507021d1952ae95b038aef9b43</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>UKTrainSys</Name>
+		<Path>Plugins\Train\UKTrainSys.dll</Path>
+		<Train>Cl158;Cl158_openbve</Train>
+		<Configuration>Configurations\UKTrainSys\Cl158_openbve.cfg</Configuration>
+	</Replacements>
+	<Replacements>
+		<!-- Class 153 -->
+		<Plugin>
+			<FileName>UKSpt.dll</FileName>
+			<FileLength>98304</FileLength>
+			<MD5>0eee59507021d1952ae95b038aef9b43</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>UKTrainSys</Name>
+		<Path>Plugins\Train\UKTrainSys.dll</Path>
+		<Train>Cl153;Cl153_openbve</Train>
+		<Configuration>Configurations\UKTrainSys\Cl153_openbve.cfg</Configuration>
+	</Replacements>
 	</TrainPlugins>
 </openBVE>

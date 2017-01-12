@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Xml;
@@ -19,10 +20,13 @@ namespace OpenBve
 			/// <summary>The path of the compatible plugin to use</summary>
 			internal string PluginPath;
 			/// <summary>The train-name if this replacement is to be used for only one train, or null for all</summary>
-			internal string Train;
+			internal string[] Trains;
 			/// <summary>The message displayed to the user when the compatible plugin is used for the first time</summary>
 			/// eg. Control changes
 			internal string Message;
+			/// <summary>The required configuration file</summary>
+			/// If applicable
+			internal string ConfigurationFile;
 		}
 
 		/// <summary>Holds the list of available replacement plugins</summary>
@@ -44,7 +48,7 @@ namespace OpenBve
 
 			for (int i = 0; i < AvailableReplacementPlugins.Count; i++)
 			{
-				if (AvailableReplacementPlugins[i].Train == null || AvailableReplacementPlugins[i].Train == f)
+				if (AvailableReplacementPlugins[i].Trains == null || AvailableReplacementPlugins[i].Trains.Contains(f.Split(Path.DirectorySeparatorChar).Last()))
 				{
 					if (CheckBlackList(AvailableReplacementPlugins[i].OriginalPlugin))
 					{
@@ -75,12 +79,33 @@ namespace OpenBve
 						string s = BitConverter.ToString(md5.Hash).Replace("-", String.Empty).ToUpper();
 						if (s.ToLowerInvariant() == AvailableReplacementPlugins[i].OriginalPlugin.MD5.ToLowerInvariant())
 						{
+							if (AvailableReplacementPlugins[i].ConfigurationFile != null)
+							{
+								try
+								{
+									switch (AvailableReplacementPlugins[i].PluginName.ToLowerInvariant())
+									{
+										case "uktrainsys":
+											//Exact case of configuration file required on Linux
+											//TODO: Fix UKTrainsys to use API path resolution
+											System.IO.File.Copy(AvailableReplacementPlugins[i].ConfigurationFile, OpenBveApi.Path.CombineFile(f, "UkTrainSys.cfg"));
+											break;
+									}
+									
+								}
+								catch
+								{
+									Interface.AddMessage(Interface.MessageType.Error, true, "A compatible alternative for train plugin " + fl + " was found, but an error occured whilst attempting to copy a required configuration file.");
+									return false;
+								}
+							}
 							Interface.AddMessage(Interface.MessageType.Warning, true, "The train plugin " + fl + " has been replaced with the following compatible alternative: " +
 							AvailableReplacementPlugins[i].PluginName);
 							string t = "The train plugin " + fl + " has been replaced with the following compatible alternative: " + AvailableReplacementPlugins[i].PluginName;
 							Loading.MessageQueue.Add(new Game.Message(t, Game.MessageDependency.None, MessageColor.Green, 10.0));
 							Loading.PluginMessageColor = MessageColor.Green;
 							PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, AvailableReplacementPlugins[i].PluginPath);
+							
 							if (!String.IsNullOrEmpty(AvailableReplacementPlugins[i].Message))
 							{
 								MessageBox.Show(AvailableReplacementPlugins[i].Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -176,8 +201,15 @@ namespace OpenBve
 										ch1 = true;
 										break;
 									case "train":
-										r.Train = c.InnerText;
+										r.Trains = c.InnerText.Split(';');
 										ch1 = true;
+										break;
+									case "configuration":
+										string configFile = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(databasePath), c.InnerText);
+										if (System.IO.File.Exists(configFile))
+										{
+											r.ConfigurationFile = configFile;
+										}
 										break;
 									case "message":
 										r.Message = c.InnerText;
