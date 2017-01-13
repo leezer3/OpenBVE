@@ -142,9 +142,9 @@
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
-	<Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
-	<Compile Include="Simulation\TrainPlugins\Blacklist.cs" />
-	<Compile Include="Simulation\TrainPlugins\CompatibleReplacement.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
+    <Compile Include="Simulation\TrainPlugins\Blacklist.cs" />
+    <Compile Include="Simulation\TrainPlugins\CompatibleReplacement.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
@@ -256,17 +256,17 @@
     <Compile Include="OldCode\Game.cs" />
     <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
-    <Compile Include="OldCode\LegacyPlugin.cs">
+    <Compile Include="Simulation\TrainPlugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="OldCode\Loading.cs" />
     <Compile Include="OldCode\MainLoop.cs" />
-    <Compile Include="OldCode\NetPlugin.cs">
+    <Compile Include="Simulation\TrainPlugins\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="OldCode\NewCode\GameWindow.cs" />
     <Compile Include="OldCode\ObjectManager.cs" />
-    <Compile Include="OldCode\PluginManager.cs" />
+    <Compile Include="Simulation\TrainPlugins\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="OldCode\Timetable.cs" />
