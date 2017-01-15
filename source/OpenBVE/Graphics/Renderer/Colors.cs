@@ -7,6 +7,10 @@ namespace OpenBve
 		/// <summary>Creates the background color for anti-aliasing text</summary>
 		/// <param name="Original">The original background color</param>
 		/// <param name="SystemColor">The color of the message text</param>
+		/// <param name="R">Receives the value of the red component of SystemColor.</param>
+		/// <param name="G">Receives the value of the green component of SystemColor.</param>
+		/// <param name="B">Receives the value of the blue component of SystemColor.</param>
+		/// <param name="A">Receives the value of the alpha component of SystemColor.</param>
 		private static void CreateBackColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
 		{
 			if (Original.R == 0 & Original.G == 0 & Original.B == 0)
@@ -54,6 +58,10 @@ namespace OpenBve
 		/// <summary>Creates the foreground color for anti-aliasing text</summary>
 		/// <param name="Original">The original background color</param>
 		/// <param name="SystemColor">The color of the message text</param>
+		/// <param name="R">Receives the value of the red component of SystemColor.</param>
+		/// <param name="G">Receives the value of the green component of SystemColor.</param>
+		/// <param name="B">Receives the value of the blue component of SystemColor.</param>
+		/// <param name="A">Receives the value of the alpha component of SystemColor.</param>
 		private static void CreateTextColor(Color32 Original, MessageColor SystemColor, out float R, out float G, out float B, out float A)
 		{
 			if (Original.R == 0 & Original.G == 0 & Original.B == 0)
