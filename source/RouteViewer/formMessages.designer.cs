@@ -1,5 +1,7 @@
-﻿namespace OpenBve {
-    partial class formMessages {
+﻿namespace OpenBve
+{
+    partial class formMessages
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -9,8 +11,10 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -22,13 +26,14 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
         	this.buttonClose = new System.Windows.Forms.Button();
         	this.listviewMessages = new System.Windows.Forms.ListView();
         	this.columnheaderType = new System.Windows.Forms.ColumnHeader();
         	this.columnheaderDescription = new System.Windows.Forms.ColumnHeader();
         	this.buttonSave = new System.Windows.Forms.Button();
-        	this.buttonClipboard = new System.Windows.Forms.Button();
+            this.buttonClipboard = new System.Windows.Forms.Button();
         	this.SuspendLayout();
         	// 
         	// buttonClose
@@ -45,12 +50,12 @@
         	// 
         	// listviewMessages
         	// 
-        	this.listviewMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+            this.listviewMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
         	this.listviewMessages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-			this.columnheaderType,
-			this.columnheaderDescription});
+            this.columnheaderType,
+            this.columnheaderDescription});
         	this.listviewMessages.FullRowSelect = true;
         	this.listviewMessages.GridLines = true;
         	this.listviewMessages.Location = new System.Drawing.Point(8, 8);
@@ -77,21 +82,21 @@
         	this.buttonSave.Name = "buttonSave";
         	this.buttonSave.Size = new System.Drawing.Size(96, 24);
         	this.buttonSave.TabIndex = 1;
-        	this.buttonSave.Text = "Save Report...";
+            this.buttonSave.Text = "Save Report...";
         	this.buttonSave.UseVisualStyleBackColor = true;
         	this.buttonSave.Click += new System.EventHandler(this.ButtonSaveClick);
         	// 
-        	// buttonClipboard
-        	// 
-        	this.buttonClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-        	this.buttonClipboard.Location = new System.Drawing.Point(110, 224);
-        	this.buttonClipboard.Name = "buttonClipboard";
-        	this.buttonClipboard.Size = new System.Drawing.Size(112, 24);
-        	this.buttonClipboard.TabIndex = 2;
-        	this.buttonClipboard.Text = "Copy To Clipboard";
-        	this.buttonClipboard.UseVisualStyleBackColor = true;
-        	this.buttonClipboard.Click += new System.EventHandler(this.ButtonClipboardClick);
-        	// 
+            // buttonClipboard
+            // 
+            this.buttonClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonClipboard.Location = new System.Drawing.Point(110, 224);
+            this.buttonClipboard.Name = "buttonClipboard";
+            this.buttonClipboard.Size = new System.Drawing.Size(112, 24);
+            this.buttonClipboard.TabIndex = 2;
+            this.buttonClipboard.Text = "Copy To Clipboard";
+            this.buttonClipboard.UseVisualStyleBackColor = true;
+            this.buttonClipboard.Click += new System.EventHandler(this.buttonClipboardClick);
+            // 
         	// formMessages
         	// 
         	this.AcceptButton = this.buttonClose;
@@ -100,7 +105,7 @@
         	this.CancelButton = this.buttonClose;
         	this.ClientSize = new System.Drawing.Size(592, 256);
         	this.Controls.Add(this.buttonSave);
-        	this.Controls.Add(this.buttonClipboard);
+            this.Controls.Add(this.buttonClipboard);
         	this.Controls.Add(this.listviewMessages);
         	this.Controls.Add(this.buttonClose);
         	this.MinimizeBox = false;

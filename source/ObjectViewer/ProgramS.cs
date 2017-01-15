@@ -296,46 +296,59 @@ namespace OpenBve {
 	                Dialog.CheckFileExists = true;
 	                Dialog.Multiselect = true;
 	                Dialog.Filter = "CSV/B3D/X/ANIMATED files|*.csv;*.b3d;*.x;*.animated;*.l3dobj;*.l3dgrp|All files|*";
-	                if (Dialog.ShowDialog() == DialogResult.OK)
-	                {
-                        Application.DoEvents();
-	                    string[] f = Dialog.FileNames;
-	                    int n = Files.Length;
-	                    Array.Resize<string>(ref Files, n + f.Length);
-	                    for (int i = 0; i < f.Length; i++)
-	                    {
-	                        Files[n + i] = f[i];
-	                    }
-	                    // reset
-	                    ReducedMode = false;
-	                    LightingRelative = -1.0;
-	                    Game.Reset();
-	                    TextureManager.UnuseAllTextures();
-	                    Fonts.Initialize();
-	                    Interface.ClearMessages();
-	                    for (int i = 0; i < Files.Length; i++)
-	                    {
+		            if (Dialog.ShowDialog() == DialogResult.OK)
+		            {
+			            Application.DoEvents();
+			            string[] f = Dialog.FileNames;
+			            int n = Files.Length;
+			            Array.Resize<string>(ref Files, n + f.Length);
+			            for (int i = 0; i < f.Length; i++)
+			            {
+				            Files[n + i] = f[i];
+			            }
+			            // reset
+			            ReducedMode = false;
+			            LightingRelative = -1.0;
+			            Game.Reset();
+			            TextureManager.UnuseAllTextures();
+			            Fonts.Initialize();
+			            Interface.ClearMessages();
+			            for (int i = 0; i < Files.Length; i++)
+			            {
 #if !DEBUG
-	                        try
-	                        {
+				            try
+				            {
 #endif
-	                            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i],System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false,0,0,0);
-	                            ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true,0.0,0.0, 25.0, 0.0);
+					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
+						            ObjectManager.ObjectLoadMode.Normal, false, false, false, 0, 0, 0);
+					            ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+						            new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+						            0.0);
 #if !DEBUG
-	                        }
-	                        catch (Exception ex)
-	                        {
-	                            Interface.AddMessage(Interface.MessageType.Critical, false,
-	                                "Unhandled error (" + ex.Message + ") encountered while processing the file " +
-	                                Files[i] + ".");
-	                        }
+				            }
+				            catch (Exception ex)
+				            {
+					            Interface.AddMessage(Interface.MessageType.Critical, false,
+						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
+						            Files[i] + ".");
+				            }
 #endif
-	                    }
-	                    ObjectManager.InitializeVisibility();
-	                    ObjectManager.FinishCreatingObjects();
-	                    ObjectManager.UpdateVisibility(0.0, true);
-	                    ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-	                }
+			            }
+			            ObjectManager.InitializeVisibility();
+			            ObjectManager.FinishCreatingObjects();
+			            ObjectManager.UpdateVisibility(0.0, true);
+			            ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+		            }
+		            else
+		            {
+			            if (Program.CurrentlyRunOnMono)
+			            {
+							//HACK: Dialog doesn't close properly when pressing the ESC key under Mono
+							//Avoid calling Application.DoEvents() unless absolutely necessary though!
+				            Application.DoEvents();
+			            }
+		            }
+					Dialog.Dispose();
 	            }
 	                break;
 	            case Key.F9:

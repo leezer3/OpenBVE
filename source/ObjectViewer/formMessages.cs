@@ -2,16 +2,22 @@
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace OpenBve {
-	public partial class formMessages : Form {
-		public formMessages() {
+namespace OpenBve
+{
+    public partial class formMessages : Form
+    {
+        public formMessages()
+        {
 			InitializeComponent();
 		}
 
 		// show messages
-		internal static DialogResult ShowMessages() {
+        internal static DialogResult ShowMessages()
+        {
 			formMessages Dialog = new formMessages();
 			Dialog.listviewMessages.Items.Clear();
+			for (int i = 0; i < Interface.MessageCount; i++)
+			{
 	        // Imagelist, from RouteViewer
 			Dialog.listviewMessages.SmallImageList = new ImageList();
 			string Folder = Program.FileSystem.GetDataFolder("Menu");
@@ -30,7 +36,8 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.MessageCount; i++) {
 				string t = "Unknown";
 				string g = "information";
-				switch (Interface.Messages[i].Type) {
+                switch (Interface.Messages[i].Type)
+                {
 					case Interface.MessageType.Information:
 						t = "Information";
 						g = "information";
@@ -69,47 +76,64 @@ namespace OpenBve {
 		}
 
 		// shown
-		private void formMessages_Shown(object sender, EventArgs e) {
+        private void formMessages_Shown(object sender, EventArgs e)
+        {
 			buttonClose.Focus();
 		}
 
 		// ignore
-		private void buttonIgnore_Click(object sender, EventArgs e) {
+        private void buttonIgnore_Click(object sender, EventArgs e)
+        {
 			this.DialogResult = DialogResult.Ignore;
 		}
 
 		// cancel
-		private void buttonCancel_Click(object sender, EventArgs e) {
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
 			this.DialogResult = DialogResult.Cancel;
 		}
 
 		// save
-		private void ButtonSaveClick(object sender, EventArgs e) {
+        private void ButtonSaveClick(object sender, EventArgs e)
+        {
 			// prepare
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-			for (int i = 0; i < Interface.MessageCount; i++) {
+
+            for (int i = 0; i < Interface.MessageCount; i++)
+            {
 				Builder.AppendLine(Interface.Messages[i].Text);
 			}
 			// save
 			SaveFileDialog Dialog = new SaveFileDialog();
 			Dialog.Filter = "Text files|*.txt|All files|*";
-			if (Dialog.ShowDialog() == DialogResult.OK) {
-				try {
+            if (Dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
 					System.IO.File.WriteAllText(Dialog.FileName, Builder.ToString(), System.Text.Encoding.UTF8);
-				} catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
 			}
 		}
-		
+
+        // Copy to clipboard
+        private void buttonClipboardClick(object sender, EventArgs e)
+        {
+            string line = "";
+
+            for (int i = 0; i < listviewMessages.Items.Count; i++)
+            {
+                line += listviewMessages.Items[i].SubItems[0].Text + "\t\t" + listviewMessages.Items[i].SubItems[1].Text + Environment.NewLine;
         // Copy to clipboard
         private void ButtonClipboardClick(object sender, EventArgs e) {
        		string line = "";
         	for (int i = 0;i <  listviewMessages.Items.Count;i++ ) {
         		line += listviewMessages.Items[i].SubItems[0].Text + "\t\t" + listviewMessages.Items[i].SubItems[1].Text + "\n";
-        	}
-       		Clipboard.SetDataObject(line, true);
+            }
+            Clipboard.SetDataObject(line, true);
         }
-		
-	}
+    }
 }

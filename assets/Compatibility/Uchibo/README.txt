@@ -8,6 +8,15 @@ Version 1.0 (December 2016)
 ---------------------------
 * Initial release
 
+Missing Files
+-------------
+
+PeopleL.csv
+PeopleL2.csv
+PeopleL3.csv
+PeopleR.csv
+PeopleR2.csv
+PeopleR3.csv
  
 File List
 ---------

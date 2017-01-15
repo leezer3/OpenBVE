@@ -246,7 +246,7 @@ $(MAC_BUILD_RESULT): all-release
 
 $(LINUX_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
-	@cd $(RELEASE_DIR); 7z a -y -tzip -mm=lzma -mx=9 ../$(LINUX_BUILD_RESULT) * > /dev/null
+	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
 
 
 # Utility target generator that allows easier generation of resource files

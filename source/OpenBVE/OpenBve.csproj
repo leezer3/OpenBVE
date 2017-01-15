@@ -123,6 +123,7 @@
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />

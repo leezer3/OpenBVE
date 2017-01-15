@@ -97,7 +97,7 @@ namespace OpenBve
 				}
 				else
 				{
-					currentPackage.Name = textBoxPackageDescription.Text;
+					currentPackage.Name = textBoxPackageName.Text;
 					currentPackage.Author = textBoxPackageAuthor.Text;
 					currentPackage.Description = textBoxPackageDescription.Text.Replace("\r\n", "\\r\\n");
 				}
@@ -1111,7 +1111,8 @@ namespace OpenBve
 				if (currentPackage != null && currentPackage.Website != null)
 				{
 					string launchLink = null;
-					if (!currentPackage.Website.ToLowerInvariant().StartsWith("http://"))
+					string link = currentPackage.Website.ToLowerInvariant();
+					if (!link.StartsWith("http://") && !link.StartsWith("https://"))
 					{
 						launchLink += "http://";
 					}

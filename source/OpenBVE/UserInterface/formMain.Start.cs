@@ -733,9 +733,12 @@ namespace OpenBve
 			}
 			try
 			{
-				pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
-				pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
-					pictureboxRouteGradient.Height, false);
+				lock (Illustrations.Locker)
+				{
+					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
+					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,
+						pictureboxRouteGradient.Height, false);
+				}
 				// image
 				if (Game.RouteImage.Length != 0)
 				{
