@@ -51,7 +51,7 @@ endif
 ARGS := $(DEBUG_ARGS)
 
 # Thumbnail
-ICON := source/icon.ico
+ICON := assets/icon.ico
 
 # Colors
 COLOR_BLACK   := "\033[1;30m"
