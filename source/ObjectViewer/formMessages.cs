@@ -16,8 +16,6 @@ namespace OpenBve
         {
 			formMessages Dialog = new formMessages();
 			Dialog.listviewMessages.Items.Clear();
-			for (int i = 0; i < Interface.MessageCount; i++)
-			{
 	        // Imagelist, from RouteViewer
 			Dialog.listviewMessages.SmallImageList = new ImageList();
 			string Folder = Program.FileSystem.GetDataFolder("Menu");
@@ -127,11 +125,6 @@ namespace OpenBve
             for (int i = 0; i < listviewMessages.Items.Count; i++)
             {
                 line += listviewMessages.Items[i].SubItems[0].Text + "\t\t" + listviewMessages.Items[i].SubItems[1].Text + Environment.NewLine;
-        // Copy to clipboard
-        private void ButtonClipboardClick(object sender, EventArgs e) {
-       		string line = "";
-        	for (int i = 0;i <  listviewMessages.Items.Count;i++ ) {
-        		line += listviewMessages.Items[i].SubItems[0].Text + "\t\t" + listviewMessages.Items[i].SubItems[1].Text + "\n";
             }
             Clipboard.SetDataObject(line, true);
         }
