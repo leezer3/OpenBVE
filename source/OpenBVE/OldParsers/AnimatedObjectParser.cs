@@ -819,111 +819,47 @@ namespace OpenBve
 										{
 											continue;
 										}
-										for (int l = 0; l < Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices.Length; l++)
+										//Apply position
+										Result.Objects[ObjectCount].States[j].Position = Position;
+										//Test whether the object contains non static rotation functions
+										//If so, the results may be off so don't optimise
+										if (!StaticXRotation)
 										{
-											//Apply position
-											Result.Objects[ObjectCount].States[j].Position = Position;
-											//Test whether the object contains non static rotation functions
-											//If so, the results may be off so don't optimise
-											if (!StaticXRotation)
+											if (Result.Objects[ObjectCount].RotateXFunction != null)
 											{
-												if (Result.Objects[ObjectCount].RotateXFunction != null)
-												{
-													break;
-												}
+												break;
 											}
-											if (!StaticYRotation)
-											{
-												if (Result.Objects[ObjectCount].RotateYFunction != null)
-												{
-													break;
-												}
-											}
-											if (!StaticZRotation)
-											{
-												if (Result.Objects[ObjectCount].RotateZFunction != null)
-												{
-													break;
-												}
-											}
-											if (StaticXRotation)
-											{
-												double x = Result.Objects[ObjectCount].RotateXDirection.X;
-												double y = Result.Objects[ObjectCount].RotateXDirection.Y;
-												double z = Result.Objects[ObjectCount].RotateXDirection.Z;
-												double t = x * x + y * y + z * z;
-												if (t == 0.0)
-												{
-													x = 1.0;
-													y = 0.0;
-													z = 0.0;
-													t = 1.0;
-												}
-												if (RotateX != 0.0)
-												{
-													t = 1.0 / Math.Sqrt(t);
-													x *= t;
-													y *= t;
-													z *= t;
-												}
-												double cosX = Math.Cos(RotateX);
-												double sinX = Math.Sin(RotateX);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosX, sinX);
-												Result.Objects[ObjectCount].RotateXFunction = null;
-											}
-											if (StaticYRotation)
-											{
-												double x = Result.Objects[ObjectCount].RotateYDirection.X;
-												double y = Result.Objects[ObjectCount].RotateYDirection.Y;
-												double z = Result.Objects[ObjectCount].RotateYDirection.Z;
-												double t = x * x + y * y + z * z;
-												if (t == 0.0)
-												{
-													x = 1.0;
-													y = 0.0;
-													z = 0.0;
-													t = 1.0;
-												}
-												if (RotateY != 0.0)
-												{
-													t = 1.0 / Math.Sqrt(t);
-													x *= t;
-													y *= t;
-													z *= t;
-												}
-												double cosY = Math.Cos(RotateY);
-												double sinY = Math.Sin(RotateY);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosY, sinY);
-												Result.Objects[ObjectCount].RotateYFunction = null;
-											}
-											if (StaticZRotation)
-											{
-												double x = Result.Objects[ObjectCount].RotateZDirection.X;
-												double y = Result.Objects[ObjectCount].RotateZDirection.Y;
-												double z = Result.Objects[ObjectCount].RotateZDirection.Z;
-												double t = x * x + y * y + z * z;
-												if (t == 0.0)
-												{
-													x = 1.0;
-													y = 0.0;
-													z = 0.0;
-													t = 1.0;
-												}
-												if (RotateZ != 0.0)
-												{
-													t = 1.0 / Math.Sqrt(t);
-													x *= t;
-													y *= t;
-													z *= t;
-												}
-												double cosZ = Math.Cos(RotateZ);
-												double sinZ = Math.Sin(RotateZ);
-												World.Rotate(ref Result.Objects[ObjectCount].States[j].Object.Mesh.Vertices[l].Coordinates, x, y, z, cosZ, sinZ);
-												Result.Objects[ObjectCount].RotateZFunction = null;
-											}
-
-											
 										}
+										if (!StaticYRotation)
+										{
+											if (Result.Objects[ObjectCount].RotateYFunction != null)
+											{
+												break;
+											}
+										}
+										if (!StaticZRotation)
+										{
+											if (Result.Objects[ObjectCount].RotateZFunction != null)
+											{
+												break;
+											}
+										}
+										if (StaticXRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
+											Result.Objects[ObjectCount].RotateXFunction = null;
+										}
+										if (StaticYRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
+											Result.Objects[ObjectCount].RotateYFunction = null;
+										}
+										if (StaticZRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
+											Result.Objects[ObjectCount].RotateZFunction = null;
+										}
+										
 									}
 								}
 								else
@@ -941,6 +877,24 @@ namespace OpenBve
 			}
 			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
 			return Result;
+		}
+
+		private static void ApplyStaticRotation(ref World.Mesh Mesh, Vector3 RotationDirection, double Angle)
+		{
+			//Update co-ords
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				World.Rotate(ref Mesh.Vertices[i].Coordinates, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+			}
+			//Update normals
+			for (int i = 0; i < Mesh.Faces.Length; i++)
+			{
+				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
+					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
+					{
+						World.Rotate(ref Mesh.Faces[i].Vertices[j].Normal, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+					}
+			}
 		}
 	}
 }
