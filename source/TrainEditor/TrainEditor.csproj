@@ -14,7 +14,7 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

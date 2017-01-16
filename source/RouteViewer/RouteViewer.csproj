@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RouteViewer</RootNamespace>
     <AssemblyName>RouteViewer</AssemblyName>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>

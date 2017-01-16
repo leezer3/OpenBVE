@@ -12,7 +12,7 @@
     <AssemblyName>ObjectViewer</AssemblyName>
     <StartupObject>
     </StartupObject>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
@@ -108,9 +108,6 @@
       <DependentUpon>formOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">

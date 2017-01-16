@@ -20,7 +20,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
-    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
