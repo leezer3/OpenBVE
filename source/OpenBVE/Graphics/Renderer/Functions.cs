@@ -161,8 +161,13 @@ namespace OpenBve
                 if (string.Compare(Extensions[i], "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     float n; GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out n);
-                    Interface.CurrentOptions.AnisotropicFilteringMaximum = (int)Math.Round((double)n);
-                    break;
+	                int MaxAF = (int) Math.Round(n);
+	                if (MaxAF != Interface.CurrentOptions.AnisotropicFilteringMaximum)
+	                {
+		                Interface.CurrentOptions.AnisotropicFilteringMaximum = (int) Math.Round((double) n);
+						Interface.SaveOptions();
+	                }
+	                break;
                 }
             }
             if (Interface.CurrentOptions.AnisotropicFilteringMaximum <= 0)
