@@ -4,6 +4,7 @@
 using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenTK.Graphics.ES10;
 using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve {
@@ -51,6 +52,7 @@ namespace OpenBve {
 			internal ushort GlowAttenuationData;
 			internal const int EmissiveColorMask = 1;
 			internal const int TransparentColorMask = 2;
+			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			// operators
 			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
 				if (A.Flags != B.Flags) return false;
@@ -61,6 +63,7 @@ namespace OpenBve {
 				if (A.NighttimeTexture != B.NighttimeTexture) return false;
 				if (A.BlendMode != B.BlendMode) return false;
 				if (A.GlowAttenuationData != B.GlowAttenuationData) return false;
+				if (A.WrapMode != B.WrapMode) return false;
 				return true;
 			}
 			public static bool operator !=(MeshMaterial A, MeshMaterial B) {
@@ -72,6 +75,7 @@ namespace OpenBve {
 				if (A.NighttimeTexture != B.NighttimeTexture) return true;
 				if (A.BlendMode != B.BlendMode) return true;
 				if (A.GlowAttenuationData != B.GlowAttenuationData) return true;
+				if (A.WrapMode != B.WrapMode) return true;
 				return false;
 			}
 		}

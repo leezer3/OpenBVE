@@ -20,7 +20,8 @@ namespace OpenBve {
 			RepeatClamp = 2,
 			/// <summary>The texture repeats on both axes.</summary>
 			/// <remarks>The numerical value is 3.</remarks>
-			RepeatRepeat = 3
+			RepeatRepeat = 3,
+			
 		}
 		
 		/// <summary>Represents an OpenGL texture.</summary>

@@ -688,6 +688,10 @@ namespace OpenBve {
 									Builder.Materials[j].GlowAttenuationData = World.GetGlowAttenuationData(glowhalfdistance, glowmode);
 								}
 							} break;
+						case "setwrapmode":
+						case "wrapmode":
+							Interface.AddMessage(Interface.MessageType.Information, false, "The Command " + Command + " is only supported in the main openBVE program at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							break;
 						case "loadtexture":
 						case "load":
 							{

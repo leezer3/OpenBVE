@@ -732,6 +732,10 @@ namespace OpenBve {
 									Builder.Materials[j].NighttimeTexture = tnight;
 								}
 							} break;
+						case "setwrapmode":
+						case "wrapmode":
+							Interface.AddMessage(Interface.MessageType.Information, false, "The Command " + Command + " is only supported in the main openBVE program at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							break;
 						case "settext":
 						case "text":
 							{

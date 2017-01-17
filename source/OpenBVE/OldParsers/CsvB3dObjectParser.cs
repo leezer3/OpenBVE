@@ -18,6 +18,7 @@ namespace OpenBve {
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
+			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
 			internal string Text;
 			internal Color TextColor;
@@ -38,6 +39,7 @@ namespace OpenBve {
 				this.BackgroundColor = System.Drawing.Color.White;
 				this.TextPadding = new Vector2(0, 0);
 				this.Font = "Arial";
+				this.WrapMode = null;
 			}
 			internal Material(Material Prototype) {
 				this.Color = Prototype.Color;
@@ -53,6 +55,7 @@ namespace OpenBve {
 				this.BackgroundColor = Prototype.BackgroundColor;
 				this.TextPadding = Prototype.TextPadding;
 				this.Font = Prototype.Font;
+				this.WrapMode = Prototype.WrapMode;
 			}
 		}
 		private class MeshBuilder {
@@ -555,7 +558,8 @@ namespace OpenBve {
 										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
 										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
 										TransparentColor = Builder.Materials[0].TransparentColor,
-										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed
+										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
+										WrapMode = Builder.Materials[0].WrapMode
 									};
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
@@ -607,6 +611,7 @@ namespace OpenBve {
 									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;
@@ -696,6 +701,49 @@ namespace OpenBve {
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].BlendMode = blendmode;
 									Builder.Materials[j].GlowAttenuationData = World.GetGlowAttenuationData(glowhalfdistance, glowmode);
+								}
+							} break;
+						case "setwrapmode":
+						case "wrapmode":
+							{
+								if (cmd == "setwrapmode" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "SetWrapMode is not a supported command - did you mean WrapMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "wrapmode" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "WrapMode is not a supported command - did you mean SetWrapMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 3)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								Textures.OpenGlTextureWrapMode? wrapmode = null;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+								{
+									switch (Arguments[0].ToLowerInvariant())
+									{
+										case "clampclamp":
+											wrapmode = Textures.OpenGlTextureWrapMode.ClampClamp;
+											break;
+										case "clamprepeat":
+											wrapmode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+											break;
+										case "repeatclamp":
+											wrapmode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+											break;
+										case "repeatrepeat":
+											wrapmode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+											break;
+										default:
+											Interface.AddMessage(Interface.MessageType.Error, false, "The given WrapMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											wrapmode = null;
+											break;
+									}
+								}
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].WrapMode = wrapmode;
 								}
 							} break;
 						case "loadtexture":
@@ -1253,6 +1301,7 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[mm + i].WrapMode = Builder.Materials[i].WrapMode;
 				}
 			}
 		}
