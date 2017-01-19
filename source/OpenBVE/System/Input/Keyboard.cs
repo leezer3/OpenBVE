@@ -41,6 +41,14 @@ namespace OpenBve
                         //Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
                         if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == Interface.Command.MenuUp || Interface.CurrentControls[i].Command == Interface.Command.MenuDown)
                         {
+	                        if (Interface.CurrentControls[i].Command == Interface.Command.CameraInterior |
+	                            Interface.CurrentControls[i].Command == Interface.Command.CameraExterior |
+	                            Interface.CurrentControls[i].Command == Interface.Command.CameraFlyBy |
+	                            Interface.CurrentControls[i].Command == Interface.Command.CameraTrack)
+	                        {
+								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
+		                        continue;
+	                        }
                             AddControlRepeat(i);
                         }
                     }
