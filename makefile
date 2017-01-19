@@ -39,6 +39,7 @@ OUTPUT_DIR  := $(DEBUG_DIR)
 # Final output names
 MAC_BUILD_RESULT = macbuild.dmg
 LINUX_BUILD_RESULT = linuxbuild.zip
+DEBIAN_BUILD_RESULT = debianbuild.deb
 
 # Used output name
 ifeq ($(shell uname -s),Darwin) 
@@ -124,6 +125,7 @@ RELEASE_ASSETS := $(patsubst assets/%,$(DEBUG_DIR)/Data/%,$(wildcard assets/*))
 .PHONY: copy_depends
 .PHONY: copy_release_depends
 .PHONY: publish
+.PHONY: debian
 .PHONY: print_csc_type
 
 debug: openbve-debug
@@ -232,6 +234,8 @@ else
 publish: $(LINUX_BUILD_RESULT)
 endif
 
+debian: $(DEBIAN_BUILD_RESULT)
+
 $(MAC_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
 	@mkdir mac
@@ -248,6 +252,12 @@ $(LINUX_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
 	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
 
+$(DEBIAN_BUILD_RESULT): all-release
+	@echo $(COLOR_RED)Copying build into place....$(COLOR_END)
+	@mkdir -p installers/debian/usr/lib/openbve
+	@cp -r -f $(CP_UPDATE_FLAG) $(RELEASE_DIR)/* installers/debian/usr/lib/openbve
+	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(DEBIAN_BUILD_RESULT)$(COLOR_END)
+	@fakeroot dpkg-deb --build installers/debian
 
 # Utility target generator that allows easier generation of resource files
 
