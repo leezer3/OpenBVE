@@ -61,7 +61,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "desktopicon2"; Description: "Create a desktop shortcut to the openBVE Addons folder"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-;Open BVE Main Folder.Source: "..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs
+;Open BVE Main Folder.Source: "..\..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs
 ;Custom Config FileSource: "InstallerData\filesystem.cfg"; DestDir: "{app}\UserData\Settings\";
 ;MS .NET 4.0 Full Web Installer.
 Source: "InstallerData\dotNetFx40_Full_setup.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')

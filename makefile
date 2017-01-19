@@ -237,9 +237,9 @@ endif
 debian: $(DEBIAN_BUILD_RESULT)
 
 $(MAC_BUILD_RESULT): all-release
-	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)macinstaller/MacBundle.tgz$(COLOR_END)
+	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
 	@mkdir mac
-	@tar -C mac -xzf macinstaller/MacBundle.tgz
+	@tar -C mac -xzf installers/mac/MacBundle.tgz
 
 	@echo $(COLOR_RED)Copying build data into $(COLOR_CYAN)OpenBVE.app$(COLOR_END)
 	@cp -r $(RELEASE_DIR)/* mac/OpenBVE.app/Contents/Resources/

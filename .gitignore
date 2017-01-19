@@ -17,7 +17,7 @@ bin_release/
 obj/
 linuxbuild.*
 macbuild.*
-mac/
+/mac/
 installers/debian.deb
 
 #Debian Build directory
