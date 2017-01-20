@@ -1051,6 +1051,7 @@ namespace OpenBve
 				Folder = null;
 			}
 			bool recursionTest = false;
+			string lastFolder = null;
 			try {
 				while (true) {
 					string TrainFolder = OpenBveApi.Path.CombineDirectory(Folder, "Train");
@@ -1074,11 +1075,11 @@ namespace OpenBve
 									ShowTrain(false);
 									return;
 								}
-								if (recursionTest)
+								if (lastFolder == Folder || recursionTest)
 								{
 									break;
 								}
-								
+								lastFolder = Folder;						
 							}
 							else if (Folder.ToLowerInvariant().Contains(c + "railway" + c))
 							{
