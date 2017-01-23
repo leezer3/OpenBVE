@@ -876,6 +876,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
 			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
+			Interface.CurrentOptions.UseCompatiblePlugins = checkBoxCompatiblePlugins.Checked;
 			if (Result.Start)
 			{
 				// recently used routes

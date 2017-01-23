@@ -36,6 +36,17 @@ namespace OpenBve
 			internal Vector2 RendererPosition;
 			/// <summary>The level of alpha used by the renderer whilst fading out the message</summary>
 			internal double RendererAlpha;
+
+			internal Message(string Text, MessageDependency Depencency, MessageColor Color, double Timeout)
+			{
+				this.InternalText = Text;
+				this.Depencency = Depencency;
+				this.Color = Color;
+				this.Timeout = Timeout;
+				DisplayText = "";
+				RendererPosition = new Vector2(0.0, 0.0);
+				RendererAlpha = 0.0;
+			}
 		}
 
 		/// <summary>The current in-game messages</summary>
@@ -71,10 +82,21 @@ namespace OpenBve
 				Messages[n].RendererAlpha = 0.0;
 			}
 		}
+
+		internal static void AddMessage(Message Message)
+		{
+			int n = Messages.Length;
+			Array.Resize<Message>(ref Messages, n + 1);
+			Messages[n] = Message;
+			Messages[n].Timeout += Game.SecondsSinceMidnight;
+		}
+
 		internal static void AddDebugMessage(string text, double duration)
 		{
 			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
 		}
+
+
 
 		/// <summary>The number 1km/h must be multiplied by to produce your desired speed units, or 0.0 to disable this</summary>
 		internal static double SpeedConversionFactor = 0.0;

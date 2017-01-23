@@ -3135,6 +3135,15 @@ namespace OpenBve
 		// update train physics and controls
 		private static void UpdateTrainPhysicsAndControls(Train Train, double TimeElapsed)
 		{
+			if (Train.Plugin == null)
+			{
+				//If the safety system has crashed, set it's handles to be that of the driver
+				Train.Specs.CurrentReverser.Actual = Train.Specs.CurrentReverser.Driver;
+				Train.Specs.CurrentEmergencyBrake.Safety = Train.Specs.CurrentEmergencyBrake.Driver;
+				Train.Specs.CurrentBrakeNotch.Safety = Train.Specs.CurrentBrakeNotch.Driver;
+				Train.Specs.AirBrake.Handle.Safety = Train.Specs.AirBrake.Handle.Driver;
+				Train.Specs.CurrentPowerNotch.Safety = Train.Specs.CurrentPowerNotch.Driver;
+			}
 			if (TimeElapsed == 0.0)
 			{
 				return;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<TrainPlugins>
+	<!-- Sample plugin blacklist entry:
+		<Blacklist>
+		The name of the file
+			<FileName>OdakyufanAts.dll</FileName>
+		The file length in bytes
+			<FileLength>77824</FileLength>
+		The MD5 sum of the file
+			<MD5>303fcfb0bd50cd5285c6823e12d8e96e</MD5>
+		A brief textual reason as to why this plugin is blacklisted
+			<Reason>Blacklist example!</Reason>
+		</Blacklist>
+	-->		
+	</TrainPlugins>
+</openBVE>

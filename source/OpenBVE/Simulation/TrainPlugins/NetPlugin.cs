@@ -58,7 +58,7 @@ namespace OpenBve {
 		// --- functions ---
 		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
 			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.AddInterfaceMessage);
-			bool success;
+			bool success = false;
 			#if !DEBUG
 			try {
 				#endif
@@ -66,8 +66,7 @@ namespace OpenBve {
 				base.SupportsAI = properties.AISupport == AISupport.Basic;
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 			if (success) {
@@ -79,8 +78,7 @@ namespace OpenBve {
 					Api.Initialize(mode);
 					#if !DEBUG
 				} catch (Exception ex) {
-					base.LastException = ex;
-					throw;
+					Crash(ex);
 				}
 				#endif
 				UpdatePower();
@@ -101,9 +99,8 @@ namespace OpenBve {
 				#endif
 				this.Api.Unload();
 				#if !DEBUG
-			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+			} catch {
+				//Not too worried about exceptions raised when unloading the plugin really...
 			}
 			#endif
 		}
@@ -114,8 +111,7 @@ namespace OpenBve {
 				this.Api.Initialize(mode);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -126,6 +122,10 @@ namespace OpenBve {
 				#endif
 				this.Api.Elapse(data);
 				for (int i = 0; i < this.SoundHandlesCount; i++) {
+					if (this.SoundHandles[i] == null)
+					{
+						continue;
+					}
 					if (this.SoundHandles[i].Stopped | this.SoundHandles[i].Source.State == Sounds.SoundSourceState.Stopped) {
 						this.SoundHandles[i].Stop();
 						this.SoundHandles[i].Source.Stop();
@@ -139,8 +139,7 @@ namespace OpenBve {
 				}
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -151,8 +150,7 @@ namespace OpenBve {
 				this.Api.SetReverser(reverser);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -163,8 +161,7 @@ namespace OpenBve {
 				this.Api.SetPower(powerNotch);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -175,8 +172,7 @@ namespace OpenBve {
 				this.Api.SetBrake(brakeNotch);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -187,8 +183,7 @@ namespace OpenBve {
 				this.Api.KeyDown(key);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -199,8 +194,7 @@ namespace OpenBve {
 				this.Api.KeyUp(key);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -211,8 +205,7 @@ namespace OpenBve {
 				this.Api.HornBlow(type);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -223,8 +216,7 @@ namespace OpenBve {
 				this.Api.DoorChange(oldState, newState);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -232,31 +224,21 @@ namespace OpenBve {
 			#if !DEBUG
 			try {
 				#endif
-//				if (this.Train == TrainManager.PlayerTrain) {
-//					for (int i = 0; i < signal.Length; i++) {
-//						Game.AddDebugMessage(i.ToString() + " - " + signal[i].Aspect.ToString(), 3.0);
-//					}
-//				}
 				this.Api.SetSignal(signal);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
 		internal override void SetBeacon(BeaconData beacon) {
-//			if (this.Train == TrainManager.PlayerTrain) {
-//				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
-//			}
 			#if !DEBUG
 			try {
 				#endif
 				this.Api.SetBeacon(beacon);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
 		}
@@ -267,10 +249,31 @@ namespace OpenBve {
 				this.Api.PerformAI(data);
 				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				Crash(ex);
 			}
 			#endif
+		}
+
+		/// <summary>Is called when a .Net based plugin crashes during the game</summary>
+		/// <param name="ex">The exception raised</param>
+		internal void Crash(Exception ex)
+		{
+			try
+			{
+				base.LastException = ex;
+				CrashHandler.PluginCrash(ex.ToString());
+				Unload();
+				for (int i = 0; i < TrainManager.Trains.Length; i++)
+				{
+					if (TrainManager.Trains[i].Plugin.PluginTitle == base.PluginTitle)
+					{
+						TrainManager.Trains[i].Plugin = null;
+					}
+				}
+			}
+			catch
+			{
+			}
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a message to the in-game display</summary>

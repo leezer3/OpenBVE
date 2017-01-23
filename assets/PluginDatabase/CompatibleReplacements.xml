@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<TrainPlugins>
+	<Replacements>
+		<Plugin>
+		<!-- OS_ATS v1.3.0.240, last 'official' version-->
+			<FileName>OS_ATS1.dll</FileName>
+			<FileLength>131070</FileLength>
+			<MD5>8fbed07473004fdfcc7bff190085cfdf</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>BVE Cornwall ATS</Name>
+		<Path>Plugins\Train\BVEC_ATS.dll</Path>		
+	</Replacements>
+	<Replacements>
+		<Plugin>
+		<!-- OS_ATS (Version unknown, probably 1.2 series) -->
+			<FileName>OS_ATS1.dll</FileName>
+			<FileLength>86724</FileLength>
+			<MD5>1aff01c84171f1d57e8657c2dc949c57</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>BVE Cornwall ATS</Name>
+		<Path>Plugins\Train\BVEC_ATS.dll</Path>		
+	</Replacements>
+	<Replacements>
+		<Plugin>
+		<!-- OS_ATS (Version unknown, probably 1.2 series) -->
+			<FileName>OS_ATS1.dll</FileName>
+			<FileLength>85904</FileLength>
+			<MD5>26e3766567facd89fd5b431394bd181c</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>BVE Cornwall ATS</Name>
+		<Path>Plugins\Train\BVEC_ATS.dll</Path>		
+	</Replacements>
+	<!-- Original TSC Trains & variants, mostly UKSpt -->
+	<Replacements>
+		<!-- Class 158 -->
+		<Plugin>
+			<FileName>UKSpt.dll</FileName>
+			<FileLength>98304</FileLength>
+			<MD5>0eee59507021d1952ae95b038aef9b43</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>UKTrainSys</Name>
+		<Path>Plugins\Train\UKTrainSys.dll</Path>
+		<Train>Cl158;Cl158_openbve</Train>
+		<Configuration>Configurations\UKTrainSys\Cl158_openbve.cfg</Configuration>
+	</Replacements>
+	<Replacements>
+		<!-- Class 153 -->
+		<Plugin>
+			<FileName>UKSpt.dll</FileName>
+			<FileLength>98304</FileLength>
+			<MD5>0eee59507021d1952ae95b038aef9b43</MD5>
+			<Reason>Cross platform compatibility</Reason>
+		</Plugin>
+		<Name>UKTrainSys</Name>
+		<Path>Plugins\Train\UKTrainSys.dll</Path>
+		<Train>Cl153;Cl153_openbve</Train>
+		<Configuration>Configurations\UKTrainSys\Cl153_openbve.cfg</Configuration>
+	</Replacements>
+	</TrainPlugins>
+</openBVE>
