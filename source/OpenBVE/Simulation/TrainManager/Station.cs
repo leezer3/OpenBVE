@@ -298,16 +298,20 @@ namespace OpenBve
 								JumpTrain(Train, i + 1);
 							}
 						}
-						// passengers boarding
-						for (int j = 0; j < Train.Cars.Length; j++)
+						if (Interface.CurrentOptions.LoadingSway)
 						{
-							double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-							if (r >= Program.RandomNumberGenerator.NextDouble())
+							// passengers boarding
+							for (int j = 0; j < Train.Cars.Length; j++)
 							{
-								int d = (int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Specs.Doors.Length);
-								if (Train.Cars[j].Specs.Doors[d].State == 1.0)
+								double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
+								if (r >= Program.RandomNumberGenerator.NextDouble())
 								{
-									Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Specs.Doors[d].Direction;
+									int d =
+										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Specs.Doors.Length);
+									if (Train.Cars[j].Specs.Doors[d].State == 1.0)
+									{
+										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Specs.Doors[d].Direction;
+									}
 								}
 							}
 						}

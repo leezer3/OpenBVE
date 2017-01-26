@@ -396,6 +396,7 @@ namespace OpenBve {
 			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
 			checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
+			checkBoxLoadingSway.Checked = Interface.CurrentOptions.LoadingSway;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
 			checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
@@ -529,6 +530,7 @@ namespace OpenBve {
 			checkboxCollisions.Text = Interface.GetInterfaceString("options_misc_simulation_collisions");
 			checkboxDerailments.Text = Interface.GetInterfaceString("options_misc_simulation_derailments");
 			checkboxBlackBox.Text = Interface.GetInterfaceString("options_misc_simulation_blackbox");
+			checkBoxLoadingSway.Text = Interface.GetInterfaceString("options_misc_simulation_loadingsway");
 			//Controls
 			groupboxControls.Text = Interface.GetInterfaceString("options_misc_controls");
 			checkboxJoysticksUsed.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
@@ -866,6 +868,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
+			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
 			Interface.CurrentOptions.AllowAxisEB = checkBoxEBAxis.Checked;
 			Interface.CurrentOptions.JoystickAxisThreshold = ((double)trackbarJoystickAxisThreshold.Value - (double)trackbarJoystickAxisThreshold.Minimum) / (double)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);

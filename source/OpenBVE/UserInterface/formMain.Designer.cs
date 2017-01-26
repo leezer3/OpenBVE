@@ -408,6 +408,7 @@
 			this.buttonCreatePackage = new System.Windows.Forms.Button();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.checkBoxLoadingSway = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -1664,6 +1665,7 @@
 			// 
 			this.groupboxSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxSimulation.Controls.Add(this.checkBoxLoadingSway);
 			this.groupboxSimulation.Controls.Add(this.checkboxBlackBox);
 			this.groupboxSimulation.Controls.Add(this.checkboxDerailments);
 			this.groupboxSimulation.Controls.Add(this.checkboxCollisions);
@@ -1683,7 +1685,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.checkboxBlackBox.AutoSize = true;
 			this.checkboxBlackBox.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 24);
+			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 41);
 			this.checkboxBlackBox.Name = "checkboxBlackBox";
 			this.checkboxBlackBox.Size = new System.Drawing.Size(108, 17);
 			this.checkboxBlackBox.TabIndex = 3;
@@ -5167,14 +5169,29 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
+			// checkBoxLoadingSway
+			// 
+			this.checkBoxLoadingSway.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBoxLoadingSway.AutoSize = true;
+			this.checkBoxLoadingSway.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.checkBoxLoadingSway.Location = new System.Drawing.Point(176, 24);
+			this.checkBoxLoadingSway.Name = "checkBoxLoadingSway";
+			this.checkBoxLoadingSway.Size = new System.Drawing.Size(123, 17);
+			this.checkBoxLoadingSway.TabIndex = 4;
+			this.checkBoxLoadingSway.Text = "Enable loading sway";
+			this.checkBoxLoadingSway.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.checkBoxLoadingSway.UseVisualStyleBackColor = true;
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(819, 606);
-			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.panelOptions);
+			this.Controls.Add(this.panelControls);
 			this.Controls.Add(this.labelVerticalSeparator);
 			this.Controls.Add(this.panelInfo);
 			this.Controls.Add(this.panelPanels);
@@ -5716,5 +5733,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonCancel2;
         private System.Windows.Forms.Button buttonAbort;
+		private System.Windows.Forms.CheckBox checkBoxLoadingSway;
     }
 }
