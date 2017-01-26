@@ -238,9 +238,19 @@ namespace OpenBve
 		/// <summary>Loads the options file from disk</summary>
 		internal static void LoadOptions()
 		{
+			string OptionsDir = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			if (!System.IO.Directory.Exists(OptionsDir))
+			{
+				System.IO.Directory.CreateDirectory(OptionsDir);
+			}
 			CurrentOptions = new Options();
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+			if (!System.IO.File.Exists(File))
+			{
+				//Attempt to load and upgrade a prior configuration file
+				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+			}
 			if (System.IO.File.Exists(File))
 			{
 				// load options
@@ -842,7 +852,7 @@ namespace OpenBve
 			{
 				Builder.AppendLine(CurrentOptions.TrainEncodings[i].Codepage.ToString(Culture) + " = " + CurrentOptions.TrainEncodings[i].Value);
 			}
-			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 	}

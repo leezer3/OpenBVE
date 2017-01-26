@@ -228,7 +228,7 @@ namespace OpenBve {
 			}
 			string File;
 			if (FileOrNull == null) {
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
+				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 			} else {
 				File = FileOrNull;
 			}
@@ -245,7 +245,11 @@ namespace OpenBve {
 		{
 			string File;
 			if (FileOrNull == null) {
-				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
+				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
+				if (!System.IO.File.Exists(File))
+				{
+					File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
+				}
 				if (!System.IO.File.Exists(File)) {
 					//Load the default key assignments if the user settings don't exist
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
