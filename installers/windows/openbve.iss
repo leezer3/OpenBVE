@@ -88,12 +88,11 @@ var
   use_OpenAL: Cardinal;
   ResultCode_Net4: Integer;
   ResultCode_OpenAL: Integer;
-  
+
 procedure InitializeWizard;
 begin
   { Create the pages }
-
-  UsagePage := CreateInputOptionPage(wpWelcome,
+  UsagePage := CreateInputOptionPage(wpInstalling,
     'Select Destination Location', 'Where should openBVE Addons be installed?',
     'Please specify the installation location for openBVE Addons.'#13#10 +
     'NOTE: This may be changed at a later date using the Options dialog.',
@@ -103,7 +102,7 @@ begin
   UsagePage.Add('Program  - Use the UserData folder in the openBVE installation directory');
   UsagePage.Add('Custom   - Select a custom folder');
 
-  DataDirPage := CreateInputDirPage(wpSelectDir,
+  DataDirPage := CreateInputDirPage(wpInfoAfter,
     'Select openBVE Addons Directory', 'Where should openBVE Addons be installed?',
     'Please select the folders in which you wish to install openBVE Addons, and then click Next.',
     False, '');
@@ -121,25 +120,9 @@ begin
   else
     UsagePage.SelectedValueIndex := 0;
   end;
-  DataDirPage.Values[0] := GetPreviousData('DataDir0', '');
-  DataDirPage.Values[1] := GetPreviousData('DataDir1', '');
-  DataDirPage.Values[2] := GetPreviousData('DataDir2', '');
-end;
-
-procedure RegisterPreviousData(PreviousDataKey: Integer);
-var
-  UsageMode: String;
-begin
-  { Store the settings so we can restore them next time }
-  case UsagePage.SelectedValueIndex of
-    0: UsageMode := 'Default';
-    1: UsageMode := 'Assembly';
-    2: UsageMode := 'Custom';
-  end;
-  SetPreviousData(PreviousDataKey, 'UsageMode', UsageMode);
-  SetPreviousData(PreviousDataKey, 'DataDir0', DataDirPage.Values[0]);
-  SetPreviousData(PreviousDataKey, 'DataDir1', DataDirPage.Values[1]);
-  SetPreviousData(PreviousDataKey, 'DataDir2', DataDirPage.Values[2]);
+  DataDirPage.Values[0] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway');
+  DataDirPage.Values[1] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train');
+  DataDirPage.Values[2] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Other');
 end;
 
 function GetDataDir(Param: String): String;
@@ -150,11 +133,68 @@ end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
-  { Skip pages that shouldn't be shown }
+
 if (PageID = DataDirPage.ID) and (UsagePage.SelectedValueIndex <> 2) then
-    Result := True
-  else
-    Result := False;
+    begin
+    //If this is a NEW install, and we've selected one of the default route/ train install locations
+    //Skip the folder selection page
+    Result := True;
+    end
+else if (PageID = UsagePage.ID) then
+    begin
+    //Detect whether we've got an existing filsystem.cfg file present
+    if (FileExists(ExpandConstant('{userappdata}\{#MyAppName}\Settings\FileSystem.cfg')) or FileExists(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'))) then
+      begin
+      //Existing install with cfg present, don't show the configuration dialog
+      Result := True;
+      end
+    else
+      //No existing filesystem.cfg , so ask the user for the directories
+      Result := False;
+  end
+else
+      //Catch-all final false
+      Result := False;
+end;
+
+procedure WriteFileSystemConfig;
+var FileLines: TArrayOfString;
+begin
+      //Check the selected index to determine what we need to write
+      if (UsagePage.SelectedValueIndex = 0) then
+      begin
+        //Stored under AppData, so we need to delete the preinstalled filesystem.cfg
+        DeleteFile(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'));
+      end;
+      if (UsagePage.SelectedValueIndex = 1) then
+      begin
+        //Stored under the program location, so we shouldn't need to do anything
+      end;
+      if (UsagePage.SelectedValueIndex = 2) then
+      begin
+        //Create the directory in AppData
+        ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
+        //Load the preinstalled filesystem.cfg for modification
+        LoadStringsFromFile(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), FileLines);
+        FileLines[2]:='InitialRoute = '+DataDirPage.Values[0];
+        FileLines[3]:='InitialTrain = '+DataDirPage.Values[1];
+        FileLines[4]:='RoutePackageInstall = '+DataDirPage.Values[0];
+        FileLines[5]:='TrainPackageInstall = '+DataDirPage.Values[1];
+        //Save filesystem.cfg
+        SaveStringsToUTF8File(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'),FileLines,false);
+      end;
+        //Create the selected route/ train directories if appropriate
+        ForceDirectories(DataDirPage.Values[0]);
+        ForceDirectories(DataDirPage.Values[1])
+end;
+
+function NextButtonClick(PageID: Integer): Boolean;
+begin
+  Result:= True
+if (PageID = DataDirPage.ID) or ((PageID = UsagePage.ID) and (UsagePage.SelectedValueIndex <> 2))
+ then
+    //If we are on the data directory select page OR we've selected a default option
+    WriteFileSystemConfig;
 end;
 
 function GetHKLM: Integer;
@@ -165,12 +205,13 @@ begin
   else
     Result := HKLM32;
 end;
+
+
 procedure AfterMyProgInstall(S: String);
 var
 Installed: Cardinal;
-FileLines: TArrayOfString;
   begin
-  //Determine whether the component is installed. 
+  //Determine whether the component is installed.
     if RegQueryDWordValue(GetHKLM(),'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Install',Installed) then begin
       use_Net4:=Installed
     end;
@@ -184,7 +225,7 @@ FileLines: TArrayOfString;
     end else begin
     WizardForm.FilenameLabel.Caption := 'Installing Microsoft .NET Framework 4 Full';
       if Exec(ExpandConstant('{app}\dotNetFx40_Full_setup.exe'), '/norestart /passive /showrmui', '', SW_SHOW,
-        ewWaitUntilTerminated, ResultCode_Net4) then 
+        ewWaitUntilTerminated, ResultCode_Net4) then
         begin
         IntToStr(ResultCode_Net4)
         // handle success if necessary; ResultCode contains the exit code
@@ -206,35 +247,6 @@ FileLines: TArrayOfString;
         // handle failure if necessary; ResultCode contains the error code
       end;
     end;
-      //OpenBVE filesystem.cfg
-      if (UsagePage.SelectedValueIndex = 0) then
-      begin
-        CreateDir(ExpandConstant('{userappdata}\{#MyAppName}'));
-        DataDirPage.Values[0] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway');
-        DataDirPage.Values[1] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train');
-      end;
-      if (UsagePage.SelectedValueIndex = 1) then
-      begin
-        ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
-        FileCopy(ExpandConstant('{app}\filesystem.cfg'), ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), True);
-        DataDirPage.Values[0] := ExpandConstant('{app}\UserData');
-
-      end;
-      if (UsagePage.SelectedValueIndex = 2) then
-      begin
-        ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
-        //Load filesystem.cfg
-        LoadStringsFromFile(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), FileLines);
-        FileLines[2]:='InitialRoute = '+DataDirPage.Values[0];
-        FileLines[3]:='InitialTrain = '+DataDirPage.Values[1];
-        FileLines[4]:='RoutePackageInstall = '+DataDirPage.Values[0];
-        FileLines[5]:='TrainPackageInstall = '+DataDirPage.Values[1];
-        //Save filesystem.cfg
-        SaveStringsToUTF8File(ExpandConstant('{app}\UserData\Settings\filesystem.cfg'),FileLines,false);
-      end;
-        ForceDirectories(DataDirPage.Values[0]);
-        ForceDirectories(DataDirPage.Values[1])
-
     end;
 end;
 
