@@ -31,7 +31,8 @@ namespace OpenBve
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-	        Game.InfoFrameRate = RenderFrequency;
+			Program.MouseMovement();
+			Game.InfoFrameRate = RenderFrequency;
             GL.ClearColor(0.75f, 0.75f, 0.75f, 1.0f);
             //Do not do anything whilst loading
             if (currentlyLoading)
@@ -89,6 +90,8 @@ namespace OpenBve
         {
             KeyDown += Program.keyDownEvent;
             KeyUp += Program.keyUpEvent;
+			MouseDown += Program.MouseEvent;
+			MouseUp += Program.MouseEvent;
             Program.ResetCamera();
             World.BackgroundImageDistance = 600.0;
             World.ForwardViewingDistance = 600.0;

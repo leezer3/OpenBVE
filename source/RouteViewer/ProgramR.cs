@@ -14,6 +14,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using ButtonState = OpenTK.Input.ButtonState;
 
 namespace OpenBve {
 	internal static class Program {
@@ -47,6 +48,9 @@ namespace OpenBve {
 
 		internal static GameWindow currentGameWindow;
 		internal static GraphicsMode currentGraphicsMode;
+
+		// mouse
+		internal static int MouseButton;
 
 		// main
 		[STAThread]
@@ -217,6 +221,51 @@ namespace OpenBve {
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
 				Program.CurrentlyLoading = false;
+			}
+		}
+
+		internal static void MouseEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (e.Button == OpenTK.Input.MouseButton.Left)
+			{
+				MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
+			}
+			if (e.Button == OpenTK.Input.MouseButton.Right)
+			{
+				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 2 : 0;
+			}
+			if (e.Button == OpenTK.Input.MouseButton.Middle)
+			{
+				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
+			}
+			previousMouseState = Mouse.GetState();
+		}
+
+		internal static MouseState currentMouseState;
+		internal static MouseState previousMouseState;
+
+		internal static bool buttonDown = false;
+
+		internal static void MouseMovement()
+		{
+			currentMouseState = Mouse.GetState();
+			if (currentMouseState != previousMouseState)
+			{
+				World.CameraAlignmentDirection.Yaw = 0.0;
+				World.CameraAlignmentDirection.Pitch = 0.0;
+				World.CameraAlignmentDirection.Position.X = 0.0;
+				World.CameraAlignmentDirection.Position.Y = 0.0;
+				if (MouseButton == 1)
+				{
+					World.CameraAlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
+					World.CameraAlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
+				}
+				else if (MouseButton == 2)
+				{
+					World.CameraAlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
+					World.CameraAlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
+				}
+				
 			}
 		}
 
