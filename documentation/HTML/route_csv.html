@@ -621,7 +621,53 @@ This command creates one or more preceding or following trains. These other trai
 <b><em>ValueInKPa</em></b>: A positive floating-point number representing the initial air pressure in <b>kPa</b> (1000 Pascal). The default value is 101.325.
 </font></td></tr></table>
 <hr />
-<br /><table border="0">
+
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.DisplaySpeed</b> <em>Unit,ConversionFactor</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Unit</em></b>: The textual units in which speed-related messages are to be displayed.<br />
+<b><em>ConversionFactor</em></b>: The conversion factor between km/h and your custom unit of speed. For mph, this is 0.621371.<br />
+</font></td></tr></table>
+This command allows speed related messages (overspeed etc.) to be displayed in a custom unit, for example mph.
+
+<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.LoadingScreen</b> <em>Image.png</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Image.png</em></b>: A path to a supported image file.<br />
+</font></td></tr></table>
+This command allows a custom image to be set as the loading screen background.
+
+<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
+
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.StartTime</b> <em>Time</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Time</em></b>: The time at which the simulation is to start.<br />
+</font></td></tr></table>
+This command allows the start time of the simulation to be set.<br>
+<em>Note:</em> If this is not set or is invalid, the simulation will start at the arrival time set at the first station.
+
+<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
+
+<table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.DynamicLight</b> <em>Dynamic.XML</em></font></td></tr>
 </table>
