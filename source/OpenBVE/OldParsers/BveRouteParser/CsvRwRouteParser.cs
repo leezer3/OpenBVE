@@ -1686,7 +1686,7 @@ namespace OpenBve {
 									else
 									{
 										double t;
-										if(!Interface.TryParseTime(Arguments[0]), out t)
+										if(!Interface.TryParseTime(Arguments[0], out t))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, Arguments[0] + " does not parse to a valid time in command "+ Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										}
