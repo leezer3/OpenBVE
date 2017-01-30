@@ -1654,10 +1654,17 @@ namespace OpenBve {
 									} break;
 								case "route.loadingscreen":
 								case "route.displayspeed":
+								case "route.starttime":
 									if (!PreviewOnly)
 									{
 										Interface.AddMessage(Interface.MessageType.Information, false, "" + Command + " is only supported in OpenBVE versions 1.4.4.0 and above at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} break;
+								case "route.dynamiclight":
+									if (!PreviewOnly)
+									{
+										Interface.AddMessage(Interface.MessageType.Information, false, "" + Command + " is not supported when using RouteViewer at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									} break;
+									break;
 								case "route.change":
 									if (!PreviewOnly) {
 										int change = 0;

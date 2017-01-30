@@ -1677,6 +1677,28 @@ namespace OpenBve {
 											Game.RouteAccelerationDueToGravity = a;
 										}
 									} break;
+								//Sets the time the game will start at
+								case "route.starttime":
+									if (Arguments.Length < 1)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										double t;
+										if(!Interface.TryParseTime(Arguments[0]), out t)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, Arguments[0] + " does not parse to a valid time in command "+ Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										else
+										{
+											if (Game.InitialStationTime == -1)
+											{
+												Game.InitialStationTime = t;
+											}
+										}
+									}
+									break;
 								//Sets the route's loading screen texture
 								case "route.loadingscreen":
 									if (Arguments.Length < 1)
