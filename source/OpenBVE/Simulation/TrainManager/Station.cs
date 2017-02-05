@@ -47,7 +47,7 @@ namespace OpenBve
 					{
 						Train.StationDepartureSoundPlayed = false;
 						// automatically open doors
-						if (Train.Specs.DoorOpenMode != DoorMode.Manual)
+						if (Train.Specs.DoorOpenMode != DoorMode.Manual & Train.Specs.DoorInterlockState == DoorInterlockStates.Unlocked)
 						{
 							if ((GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
 							{
@@ -99,6 +99,7 @@ namespace OpenBve
 								// arrival
 								Train.StationState = TrainStopState.Boarding;
 								Train.StationAdjust = false;
+								Train.Specs.DoorClosureAttempted = false;
 								Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
 								Sounds.SoundBuffer buffer = Game.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
@@ -219,13 +220,14 @@ namespace OpenBve
 				else if (Train.StationState == TrainStopState.Boarding)
 				{
 					// automatically close doors
-					if (Train.Specs.DoorCloseMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal)
+					if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState == DoorInterlockStates.Unlocked & Game.Stations[i].StationType == Game.StationType.Normal)
 					{
 						if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
 						{
 							if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
 							{
 								CloseTrainDoors(Train, true, true);
+								Train.Specs.DoorClosureAttempted = true;
 							}
 						}
 					}
@@ -345,13 +347,14 @@ namespace OpenBve
 				Train.StationState = TrainStopState.Pending;
 			}
 			// automatically close doors
-			if (Train.Specs.DoorCloseMode == DoorMode.Automatic)
+			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState == DoorInterlockStates.Unlocked & !Train.Specs.DoorClosureAttempted)
 			{
 				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
 				{
 					if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
 					{
 						CloseTrainDoors(Train, true, true);
+						Train.Specs.DoorClosureAttempted = true;
 					}
 				}
 			}

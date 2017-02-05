@@ -597,7 +597,7 @@ namespace OpenBveApi.Runtime {
 			this.MyConstSpeed = constSpeed;
 		}
 	}
-	
+
 	/// <summary>Represents data given to the plugin in the Elapse call.</summary>
 	public class ElapseData {
 		// --- members ---
@@ -607,6 +607,8 @@ namespace OpenBveApi.Runtime {
 		private readonly PrecedingVehicleState MyPrecedingVehicle;
 		/// <summary>The virtual handles.</summary>
 		private Handles MyHandles;
+		/// <summary>The state of the door interlock.</summary>
+		private DoorInterlockStates MyDoorInterlockState;
 		/// <summary>The current absolute time.</summary>
 		private readonly Time MyTotalTime;
 		/// <summary>The elapsed time since the last call to Elapse.</summary>
@@ -631,10 +633,11 @@ namespace OpenBveApi.Runtime {
 		/// <param name="stations">The current route's list of stations.</param>
 		/// <param name="cameraView">The current camera view mode</param>
 		/// <param name="languageCode">The current language code</param>
-		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode) {
+		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, DoorInterlockStates doorinterlock, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode) {
 			this.MyVehicle = vehicle;
 			this.MyPrecedingVehicle = precedingVehicle;
 			this.MyHandles = handles;
+			this.MyDoorInterlockState = doorinterlock;
 			this.MyTotalTime = totalTime;
 			this.MyElapsedTime = elapsedTime;
 			this.MyDebugMessage = null;
@@ -664,6 +667,18 @@ namespace OpenBveApi.Runtime {
 			}
 			set {
 				this.MyHandles = value;
+			}
+		}
+		/// <summary>Gets or sets the state of the door lock.</summary>
+		public DoorInterlockStates DoorInterlockState
+		{
+			get
+			{
+				return this.MyDoorInterlockState;
+			}
+			set
+			{
+				this.MyDoorInterlockState = value;
 			}
 		}
 		/// <summary>Gets the absolute in-game time.</summary>
@@ -835,6 +850,13 @@ namespace OpenBveApi.Runtime {
 		FlyByZooming
 	}
 
+	/// <summary>Represents the states of the door interlock.</summary>
+	public enum DoorInterlockStates
+	{		/// <summary>The train doors are unlocked.</summary>
+		Unlocked = 0,
+		/// <summary>The train doors are locked.</summary>
+		Locked = 1,
+	}
 
 	// --- door change ---
 	

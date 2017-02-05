@@ -130,10 +130,11 @@ namespace OpenBve {
                  * 
                  */
 			    CurrentCameraViewMode = (OpenBveApi.Runtime.CameraViewMode)World.CameraMode;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
+				this.Train.Specs.DoorInterlockState = (TrainManager.DoorInterlockStates)data.DoorInterlockState;
 			    DisableTimeAcceleration = data.DisableTimeAcceleration;
 				/*
 				 * Set the virtual handles.

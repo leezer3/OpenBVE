@@ -17,6 +17,15 @@ namespace OpenBve
 			internal double DoorLockDuration;
 		}
 
+		/// <summary>The states of the door lock.</summary>
+		internal enum DoorInterlockStates
+		{
+			/// <summary>The train doors are unlocked.</summary>
+			Unlocked = 0,
+			/// <summary>The train doors are locked.</summary>
+			Locked = 1,
+		}
+
 		/// <summary>The potential states of the train's doors.</summary>
 		[Flags]
 		internal enum TrainDoorState
