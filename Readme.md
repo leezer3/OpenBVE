@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/leezer3/OpenBVE.svg?branch=master)](https://travis-ci.org/leezer3/OpenBVE)
+
 ## openBVE Source Code - Readme
 
 This source code is an experimental port of openBVE to the OpenTK framework. 
