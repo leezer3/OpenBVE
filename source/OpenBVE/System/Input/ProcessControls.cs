@@ -1319,7 +1319,7 @@ namespace OpenBve
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode !=
-												TrainManager.DoorMode.Automatic)
+											    TrainManager.DoorMode.Automatic && TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1327,7 +1327,7 @@ namespace OpenBve
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorCloseMode !=
-												TrainManager.DoorMode.Automatic)
+												TrainManager.DoorMode.Automatic && TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1339,7 +1339,7 @@ namespace OpenBve
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode !=
-												TrainManager.DoorMode.Automatic)
+												TrainManager.DoorMode.Automatic && TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
@@ -1347,7 +1347,7 @@ namespace OpenBve
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorCloseMode !=
-												TrainManager.DoorMode.Automatic)
+												TrainManager.DoorMode.Automatic && TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}

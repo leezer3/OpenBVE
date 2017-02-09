@@ -392,6 +392,8 @@ namespace OpenBve
 			internal PassAlarmType PassAlarm;
 			internal DoorMode DoorOpenMode;
 			internal DoorMode DoorCloseMode;
+			internal DoorInterlockStates DoorInterlockState;
+			internal bool DoorClosureAttempted;
 		}
 
 		
