@@ -1343,6 +1343,7 @@ namespace OpenBve {
 
 		private void timerEvents_Tick(object sender, EventArgs e)
 		{
+			Joysticks.RefreshJoysticks();
 			if (currentJoystickStates == null || currentJoystickStates.Length < Joysticks.AttachedJoysticks.Length)
 			{
 				currentJoystickStates = new JoystickState[Joysticks.AttachedJoysticks.Length];

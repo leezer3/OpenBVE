@@ -239,6 +239,13 @@ namespace OpenBve {
 				MouseButton = e.Mouse.RightButton == ButtonState.Pressed ? 3 : 0;
 			}
 			previousMouseState = Mouse.GetState();
+			if (MouseButton == 0)
+			{
+				World.CameraAlignmentDirection.Yaw = 0.0;
+				World.CameraAlignmentDirection.Pitch = 0.0;
+				World.CameraAlignmentDirection.Position.X = 0.0;
+				World.CameraAlignmentDirection.Position.Y = 0.0;
+			}
 		}
 
 		internal static MouseState currentMouseState;
@@ -248,6 +255,10 @@ namespace OpenBve {
 
 		internal static void MouseMovement()
 		{
+			if (MouseButton == 0)
+			{
+				return;
+			}
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
 			{
