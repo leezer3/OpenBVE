@@ -2,11 +2,11 @@
 
 ## openBVE Source Code - Readme
 
-This source code is an experimental port of openBVE to the OpenTK framework. 
+This source code started out life as a port of openBVE to the OpenTK framework, but now has begun major development work to improve the sim and the possibilities it presents.
 
 ### Compatibility Changes
 
-There have also been various additions, including to the OpenBveApi, and animated objects which are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes).
+A general overview of compatibility changes, including to the OpenBveApi, and animated objects are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Compatibility-Notes).
 
 ### Fixed Errata
 
@@ -31,20 +31,10 @@ This build has been tested to compile correctly using VS2013 and MonoDevelop, bu
 
 Joystick hat support does not function correctly in the current release build of OpenTK (1.1.4). Please compile OpenTK yourself from the most recent source if you wish to use this feature.
 
-### Contributors
+### Contributing
 
-**OpenBVE**:
-- michelle
-- odakyufan
-- Anthony Bowden
-- Paul Sladen
+Please see the [Contributors File] (Contributing.md) for a list of contributors, and basic guidelines for contributing to the development of openBVE.
 
-**OpenTK Port and Continuing Development**:
-
-- Christopher Lees
-- Jakub Vanek
-- Maurizo M. Gavioli
-- Connor Fitzgerald
 
 ### Links
 
