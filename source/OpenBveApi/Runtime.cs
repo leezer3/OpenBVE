@@ -72,8 +72,13 @@ namespace OpenBveApi.Runtime {
 	/// <param name="Color">The color in which to display the message</param>
 	/// <param name="Time">The time in seconds for which to display the message</param>
 	public delegate void AddInterfaceMessageDelegate(string Message, MessageColor Color, double Time);
-	
-		
+
+	/// <summary>Adds a score to the after game log</summary>
+	/// <param name="Message">The score to add or subtract</param>
+	/// <param name="Message">The message to be displayed in the post-game log</param>
+	/// /// <param name="Color">The color in which to display the message</param>
+	/// <param name="Time">The time in seconds for which to display the message</param>
+	public delegate void AddScoreDelegate(int Score, string Message, MessageColor Color, double Time);
 	
 	/// <summary>Represents to which extent the plugin supports the AI.</summary>
 	public enum AISupport {
@@ -98,6 +103,9 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The callback function for adding interface messages.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly AddInterfaceMessageDelegate MyAddInterfaceMessage;
+		/// <summary>The callback function for adding or subtracting scores.</summary>
+		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+		private readonly AddScoreDelegate MyAddScore;
 		/// <summary>The extent to which the plugin supports the AI.</summary>
 		private AISupport MyAISupport;
 		/// <summary>The reason why the plugin failed loading.</summary>
@@ -139,6 +147,15 @@ namespace OpenBveApi.Runtime {
 				}
 		}
 
+		/// <summary>Gets the callback function for adding interface messages.</summary>
+		public AddScoreDelegate AddScore
+		{
+			get
+			{
+				return this.MyAddScore;
+			}
+		}
+
 		//public 
 		/// <summary>Gets or sets the extent to which the plugin supports the AI.</summary>
 		public AISupport AISupport {
@@ -163,12 +180,14 @@ namespace OpenBveApi.Runtime {
 		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
 		/// <param name="trainFolder">The absolute path to the train folder.</param>
 		/// <param name="playSound">The callback function for playing sounds.</param>
-		/// /// <param name="addMessage">The callback function for adding interface messages.</param>
-		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, AddInterfaceMessageDelegate addMessage) {
+		/// <param name="addMessage">The callback function for adding interface messages.</param>
+		/// <param name="addScore">The callback function for adding scores.</param>
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore) {
 			this.MyPluginFolder = pluginFolder;
 			this.MyTrainFolder = trainFolder;
 			this.MyPlaySound = playSound;
 			this.MyAddInterfaceMessage = addMessage;
+			this.MyAddScore = addScore;
 			this.MyFailureReason = null;
 		}
 	}
@@ -628,6 +647,7 @@ namespace OpenBveApi.Runtime {
 		/// <param name="vehicle">The state of the train.</param>
 		/// <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
 		/// <param name="handles">The virtual handles.</param>
+		/// <param name="doorinterlock">Whether the door interlock is currently enabled</param>
 		/// <param name="totalTime">The current absolute time.</param>
 		/// <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
 		/// <param name="stations">The current route's list of stations.</param>
