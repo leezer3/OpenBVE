@@ -63,6 +63,9 @@ namespace OpenBveApi.Packages
 		/// <summary>The image for this package</summary>
 		[XmlIgnore]
 		public Image PackageImage;
+		/// <summary>The compatibility XML file 
+		/// (If a CompatibilityData package)</summary>
+		public string CompatabilityXml;
 		/// <summary>The list of dependancies for this package</summary>
 		public List<Package> Dependancies;
 		/// <summary>The list of packages that this package reccomends you also install</summary>
@@ -170,6 +173,8 @@ namespace OpenBveApi.Packages
 		Train = 2,
 		/// <summary>The package is a route, utility etc.</summary>
 		Other = 3,
+		/// <summary>The package contains compatibility data.</summary>
+		CompatibilityData = 5
 	}
 
 	/// <summary>Holds the properties of a file, used during creation of a package.</summary>
@@ -206,6 +211,7 @@ namespace OpenBveApi.Packages
 			int i = 0;
 			int j = 0;
 			string fp = String.Empty;
+			XmlDocument uninstallXML = new XmlDocument();
 			try
 			{
 				using (Stream stream = File.OpenRead(currentPackage.PackageFile))
@@ -225,6 +231,18 @@ namespace OpenBveApi.Packages
 						else if (archiveEntry.Size == 0)
 						{
 							//Skip zero-byte files
+						}
+						else if(archiveEntry.Key.ToLowerInvariant() == currentPackage.CompatabilityXml)
+						{
+							 archiveEntry.WriteToDirectory(System.IO.Path.GetTempPath());
+							try
+							{
+								//Load the compatibility data for uninstall purposes
+								uninstallXML.Load(Path.CombineFile(System.IO.Path.GetTempPath(), currentPackage.CompatabilityXml));
+							}
+							catch
+							{
+							}
 						}
 						else
 						{
@@ -246,7 +264,7 @@ namespace OpenBveApi.Packages
 						Text += FileName + "\r\n";
 					}
 					packageFiles = Text;
-					//Write out the package file list
+					//Write out the uninstall XML file
 					var fileListDirectory = OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed");
 					if (!Directory.Exists(fileListDirectory))
 					{
@@ -255,8 +273,30 @@ namespace OpenBveApi.Packages
 					var fileList = OpenBveApi.Path.CombineFile(fileListDirectory, currentPackage.GUID.ToUpper() + ".xml");
 					using (StreamWriter sw = new StreamWriter(fileList))
 					{
-						XmlSerializer listWriter = new XmlSerializer(typeof(List<string>));
-						listWriter.Serialize(sw, PackageFiles);
+						var currentXML = new XmlDocument();
+						XmlElement rootElement = (XmlElement)currentXML.AppendChild(currentXML.CreateElement("openBVE"));
+						XmlElement firstElement = (XmlElement)rootElement.AppendChild(currentXML.CreateElement("UninstallData"));
+						XmlElement secondElement = (XmlElement)firstElement.AppendChild(currentXML.CreateElement("FilesInstalled"));
+						for (int k = 0; k < PackageFiles.Count; k++)
+						{
+							secondElement.AppendChild(currentXML.CreateElement("FileName")).InnerText = PackageFiles[k];
+						}
+						try
+						{
+							XmlNodeList nodes = uninstallXML.SelectNodes("/openBVE/TrainPlugins");
+							if (nodes != null)
+							{
+								for (int k = 0; k < nodes.Count; k++)
+								{
+									firstElement.AppendChild(firstElement.OwnerDocument.ImportNode(nodes[k], true));
+								}
+							}
+						}
+						catch 
+						{
+						}
+						
+						currentXML.Save(sw);
 					}
 				}
 
@@ -366,11 +406,123 @@ namespace OpenBveApi.Packages
 				//The list of files installed by this package is missing
 				return false;
 			}
-			XmlSerializer listReader = new XmlSerializer(typeof(List<string>));
 			List<string> filesToDelete;
 			using (FileStream readFileStream = new FileStream(fileList, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
-				filesToDelete = (List<string>)listReader.Deserialize(readFileStream);
+
+				XmlDocument uninstallXml = new XmlDocument();
+				uninstallXml.Load(readFileStream);
+				//Original format, just a serialized array.... 
+				XmlNodeList nodes = uninstallXml.SelectNodes("/ArrayOfString");
+				filesToDelete = new List<string>();
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						filesToDelete.Add(nodes[i].InnerText);
+					}
+				}
+				//Format V2, better formed XML and allows us to uninstall compatibility items
+				nodes = uninstallXml.SelectNodes("/openBVE/UninstallData/FilesInstalled/FileName");
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						filesToDelete.Add(nodes[i].InnerText);
+					}
+				}
+			}
+			File.Delete(fileList);
+			bool noErrors = true;
+			int errorCount = 0;
+			int deletionCount = 0;
+			string Result = "";
+			foreach (var String in filesToDelete)
+			{
+				try
+				{
+					File.Delete(String);
+					Result += String + " deleted successfully. \r\n ";
+					deletionCount++;
+				}
+				catch (Exception ex)
+				{
+					//We have caught an error....
+					//Set the return type to false, and add the exception to the results string
+					noErrors = false;
+					Result += String + "\r\n";
+					Result += ex.Message + "\r\n";
+					errorCount++;
+				}
+			}
+			//Set the final results string to display
+			PackageFiles = deletionCount + " files deleted successfully. \r\n" + errorCount + " errors were encountered. \r\n \r\n \r\n" + Result;
+			return noErrors;
+		}
+
+		/// <summary>Uninstalls a package</summary>
+		/// <param name="currentPackage">The package to uninstall</param>
+		/// <param name="databaseFolder">The package database folder</param>
+		/// <param name="PackageFiles">Returns via 'ref' a list of files uninstalled</param>
+		/// <param name="uninstallNodes">A list of nodes to be uninstalled from the compatibility database</param>
+		/// <returns>True if uninstall succeeded with no errors, false otherwise</returns>
+		public static bool UninstallPackage(Package currentPackage, string databaseFolder, out string PackageFiles, out XmlDocument uninstallNodes)
+		{
+			var fileList = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(databaseFolder, "Installed"), currentPackage.GUID.ToUpper() + ".xml");
+			if (!File.Exists(fileList))
+			{
+				PackageFiles = null;
+				uninstallNodes = null;
+				//The list of files installed by this package is missing
+				return false;
+			}
+			List<string> filesToDelete;
+			uninstallNodes = null;
+			using (FileStream readFileStream = new FileStream(fileList, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
+
+				XmlDocument uninstallXml = new XmlDocument();
+				uninstallXml.Load(readFileStream);
+				//Original format, just a serialized array.... 
+				XmlNodeList nodes = uninstallXml.SelectNodes("/ArrayOfString");
+				filesToDelete = new List<string>();
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						filesToDelete.Add(nodes[i].InnerText);
+					}
+				}
+				//Format V2, better formed XML and allows us to uninstall compatibility items
+				nodes = uninstallXml.SelectNodes("/openBVE/UninstallData/FilesInstalled/FileName");
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						filesToDelete.Add(nodes[i].InnerText);
+					}
+				}
+				//Now select any train plugin data
+				nodes = uninstallXml.SelectNodes("/openBVE/UninstallData/TrainPlugins");
+				uninstallNodes = new XmlDocument();
+				XmlElement rootElement = (XmlElement)uninstallNodes.AppendChild(uninstallNodes.CreateElement("openBVE"));
+				//XmlElement firstElement = (XmlElement)rootElement.AppendChild(uninstallNodes.CreateElement("TrainPlugins"));
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						rootElement.AppendChild(rootElement.OwnerDocument.ImportNode(nodes[i], true));
+					}
+				}
+				//Finally, compatbility object data
+				nodes = uninstallXml.SelectNodes("/openBVE/UninstallData/Compatibility");
+				if (nodes != null)
+				{
+					for (int i = 0; i < nodes.Count; i++)
+					{
+						rootElement.AppendChild(rootElement.OwnerDocument.ImportNode(nodes[i], true));
+					}
+				}
 			}
 			File.Delete(fileList);
 			bool noErrors = true;
@@ -556,7 +708,7 @@ namespace OpenBveApi.Packages
 				//Check GUID
 				if (currentPackage.GUID == Package.GUID)
 				{
-					oldPackage = currentPackage;
+					oldPackage = Package;
 					//GUID found, check versions
 					if (currentPackage.PackageVersion == Package.PackageVersion)
 					{

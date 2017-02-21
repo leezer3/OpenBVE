@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Packages;
 using System.Text;
+using System.Xml;
 
 namespace OpenBve
 {
@@ -265,6 +266,9 @@ namespace OpenBve
 					case PackageType.Train:
 						ExtractionDirectory = Program.FileSystem.TrainInstallationDirectory;
 						break;
+					case PackageType.CompatibilityData:
+						ExtractionDirectory = Program.FileSystem.DataFolder;
+						break;
 					default:
 						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
 						break;
@@ -324,6 +328,34 @@ namespace OpenBve
 								}
 							}
 							Database.currentDatabase.InstalledOther.Add(currentPackage);
+							if (currentPackage.PackageType == PackageType.CompatibilityData)
+							{
+								//Compatibility data is not installed in a user selected folder, but should show in the 'Other' list
+								//We now need to add our new compatibility XML file to the compatibility database
+								if (!string.IsNullOrEmpty(currentPackage.CompatabilityXml))
+								{
+									//TODO: Handle objects
+									string xmlFile = OpenBveApi.Path.CombineFile(System.IO.Path.GetTempPath(), currentPackage.CompatabilityXml);
+									if (!System.IO.File.Exists(xmlFile))
+									{
+										break;
+									}
+									XmlDocument currentXML = new XmlDocument();
+									currentXML.Load(xmlFile);
+									XmlNodeList nodes = currentXML.SelectNodes("/openBVE/TrainPlugins/Replacements");
+									if (nodes != null)
+									{
+										PluginManager.LoadReplacementDatabase(currentXML);
+										PluginManager.WriteReplacementDatabase();
+									}
+									nodes = currentXML.SelectNodes("/openBVE/TrainPlugins/Blacklist");
+									if(nodes != null)
+									{
+										PluginManager.LoadBlackListDatabase(currentXML);
+										PluginManager.WriteBlackListDatabase();
+									}
+								}
+							}
 							break;
 					}
 					labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_success");
@@ -485,7 +517,17 @@ namespace OpenBve
 				HidePanels();
 				panelDependancyError.Show();
 			}
-			if (Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, ref uninstallResults))
+			bool uninstallOK;
+			XmlDocument xmlToUninstall = null;
+			if (packageToUninstall.PackageType == PackageType.CompatibilityData)
+			{
+				uninstallOK = Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, out uninstallResults, out xmlToUninstall);
+			}
+			else
+			{
+				uninstallOK = Manipulation.UninstallPackage(packageToUninstall, currentDatabaseFolder, ref uninstallResults);
+			}
+			if (uninstallOK)
 			{
 				Packages.Remove(packageToUninstall);
 				switch (packageToUninstall.PackageType)
@@ -498,6 +540,30 @@ namespace OpenBve
 						break;
 					case PackageType.Train:
 						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref uninstallResults);
+						break;
+					case PackageType.CompatibilityData:
+						DatabaseFunctions.cleanDirectory(Program.FileSystem.DataFolder, ref uninstallResults);
+						if (xmlToUninstall != null)
+						{
+							XmlNodeList nodes = xmlToUninstall.SelectNodes("/openBVE/TrainPlugins/BlackList");
+							if (nodes != null && nodes.Count > 0)
+							{
+								for (int i = 0; i < nodes.Count; i++)
+								{
+									PluginManager.RemoveBlackListEntry(PluginManager.ParseBlackListEntry(nodes[i]));
+								}
+							}
+							PluginManager.WriteBlackListDatabase();
+							nodes = xmlToUninstall.SelectNodes("/openBVE/TrainPlugins/Replacements");
+							if (nodes != null && nodes.Count > 0)
+							{
+								for (int i = 0; i < nodes.Count; i++)
+								{
+									PluginManager.RemoveReplacementPlugin(PluginManager.ParseReplacementPlugin(nodes[i]));
+								}
+							}
+							PluginManager.WriteReplacementDatabase();
+						}
 						break;
 				}
 				labelUninstallSuccess.Text = Interface.GetInterfaceString("packages_uninstall_success");
@@ -588,6 +654,7 @@ namespace OpenBve
 					case PackageType.Train:
 						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledTrains);
 						break;
+					case PackageType.CompatibilityData:
 					case PackageType.Other:
 						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledOther);
 						break;
@@ -616,6 +683,7 @@ namespace OpenBve
 				{
 					switch (currentPackage.PackageType)
 					{
+						case PackageType.CompatibilityData:
 						case PackageType.Other:
 							Database.currentDatabase.InstalledOther.Remove(currentPackage);
 							break;
@@ -1424,51 +1492,46 @@ namespace OpenBve
 		private void buttonProceedAnyway1_Click(object sender, EventArgs e)
 		{
 			HidePanels();
-			if (radioButtonOverwrite.Checked)
-			{
-				//Plain overwrite
-				Extract();
-			}
-			else if (radioButtonReplace.Checked)
+			string result = String.Empty;
+			if (radioButtonReplace.Checked)
 			{
 				//Reinstall
-				string result = String.Empty;
 				Manipulation.UninstallPackage(currentPackage, currentDatabaseFolder, ref result);
-				switch (currentPackage.PackageType)
-				{
-					case PackageType.Route:
-						for (int i = Database.currentDatabase.InstalledRoutes.Count -1; i >= 0; i--)
-						{
-							if (Database.currentDatabase.InstalledRoutes[i].GUID == currentPackage.GUID)
-							{
-								Database.currentDatabase.InstalledRoutes.RemoveAt(i);
-							}
-						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref result);
-						break;
-					case PackageType.Train:
-						for (int i = Database.currentDatabase.InstalledTrains.Count - 1; i >= 0; i--)
-						{
-							if (Database.currentDatabase.InstalledTrains[i].GUID == currentPackage.GUID)
-							{
-								Database.currentDatabase.InstalledTrains.RemoveAt(i);
-							}
-						}
-						DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref result);
-						break;
-					case PackageType.Other:
-						for (int i = Database.currentDatabase.InstalledOther.Count - 1; i >= 0; i--)
-						{
-							if (Database.currentDatabase.InstalledOther[i].GUID == currentPackage.GUID)
-							{
-								Database.currentDatabase.InstalledOther.RemoveAt(i);
-							}
-						}
-						break;
-				}
-				Extract();
 			}
-
+			switch (currentPackage.PackageType)
+			{
+				case PackageType.Route:
+					for (int i = Database.currentDatabase.InstalledRoutes.Count - 1; i >= 0; i--)
+					{
+						if (Database.currentDatabase.InstalledRoutes[i].GUID == currentPackage.GUID)
+						{
+							Database.currentDatabase.InstalledRoutes.RemoveAt(i);
+						}
+					}
+					DatabaseFunctions.cleanDirectory(Program.FileSystem.RouteInstallationDirectory, ref result);
+					break;
+				case PackageType.Train:
+					for (int i = Database.currentDatabase.InstalledTrains.Count - 1; i >= 0; i--)
+					{
+						if (Database.currentDatabase.InstalledTrains[i].GUID == currentPackage.GUID)
+						{
+							Database.currentDatabase.InstalledTrains.RemoveAt(i);
+						}
+					}
+					DatabaseFunctions.cleanDirectory(Program.FileSystem.TrainInstallationDirectory, ref result);
+					break;
+				case PackageType.CompatibilityData:
+				case PackageType.Other:
+					for (int i = Database.currentDatabase.InstalledOther.Count - 1; i >= 0; i--)
+					{
+						if (Database.currentDatabase.InstalledOther[i].GUID == currentPackage.GUID)
+						{
+							Database.currentDatabase.InstalledOther.RemoveAt(i);
+						}
+					}
+					break;
+			}
+			Extract();
 		}
 
 		private void dataGridViewDependancies_CellContentClick(object sender, DataGridViewCellEventArgs e)

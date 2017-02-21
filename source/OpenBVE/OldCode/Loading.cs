@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -29,8 +31,10 @@ namespace OpenBve {
 		private static Encoding CurrentTrainEncoding;
 		internal static double TrainProgressCurrentSum;
 		internal static double TrainProgressCurrentWeight;
-		/// <summary>Stores the plugin error message string, or a null reference if no error encountered</summary>
-		internal static string PluginError;
+		/// <summary>The queue of messages to be displayed once the game has loaded</summary>
+		internal static List<Game.Message> MessageQueue = new List<Game.Message>();
+		/// <summary>The color to be used for the plugin message</summary>
+		internal static MessageColor PluginMessageColor = MessageColor.Red;
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>

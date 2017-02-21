@@ -151,6 +151,9 @@ namespace OpenBve {
 					//Environment.Exit(0);
 				}
 			}
+			//Load lists of blacklisted and compatible replacement plugins
+			PluginManager.LoadBlackListDatabase(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("PluginDatabase"), "blacklist.xml"));
+			PluginManager.LoadReplacementDatabase(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("PluginDatabase"), "compatiblereplacements.xml"));
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			{
 				string folder = Program.FileSystem.GetDataFolder("Controls");
