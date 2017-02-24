@@ -157,6 +157,35 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>Called once a frame for each train wen arriving at a station, in order to update the automatic doors</summary>
+		/// <param name="Train">The train</param>
+		/// <param name="StationIndex">The index of the train's next station</param>
+		/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>
+		/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
+		internal static void AttemptToOpenDoors(Train Train, int StationIndex, double BackwardsTolerance, double ForwardsTolerance)
+		{
+			if ((GetDoorsState(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+			{
+					if (Train.StationDistanceToStopPoint < BackwardsTolerance & -Train.StationDistanceToStopPoint < ForwardsTolerance)
+					{
+						OpenTrainDoors(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors);
+					}
+				
+			}
+		}
+
+		internal static void AttemptToCloseDoors(Train Train)
+		{
+			if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
+			{
+				if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
+				{
+					CloseTrainDoors(Train, true, true);
+					Train.Specs.DoorClosureAttempted = true;
+				}
+			}
+		}
+
 		/// <summary>Opens the left-hand or right-hand doors for the specified train</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="Left">Whether to open the left-hand doors</param>

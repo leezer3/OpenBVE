@@ -46,20 +46,38 @@ namespace OpenBve
 					if (Game.StopsAtStation(i, Train))
 					{
 						Train.StationDepartureSoundPlayed = false;
-						// automatically open doors
-						if (Train.Specs.DoorOpenMode != DoorMode.Manual
-						    && ((Game.Stations[i].OpenLeftDoors & Train.Specs.DoorInterlockState == DoorInterlockStates.Left)
-							| (Game.Stations[i].OpenRightDoors & Train.Specs.DoorInterlockState == DoorInterlockStates.Right)
-							| (Game.Stations[i].OpenLeftDoors && Game.Stations[i].OpenRightDoors && Train.Specs.DoorInterlockState == DoorInterlockStates.Unlocked)))
+						//Check whether all doors are controlled by the driver
+						if (Train.Specs.DoorOpenMode != DoorMode.Manual)
 						{
-							if ((GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+							//Check that we are not moving
+							if (Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.1 / 3.6 &
+							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
-								if (Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.1 / 3.6 & Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
+								//Check the interlock state for the doors
+								switch (Train.Specs.DoorInterlockState)
 								{
-									if (Train.StationDistanceToStopPoint < tb & -Train.StationDistanceToStopPoint < tf)
-									{
-										OpenTrainDoors(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors);
-									}
+									case DoorInterlockStates.Unlocked:
+										if (Game.Stations[i].OpenLeftDoors || Game.Stations[i].OpenRightDoors)
+										{
+											AttemptToOpenDoors(Train, i, tb, tf);
+										}
+										break;
+									case DoorInterlockStates.Left:
+										if (Game.Stations[i].OpenLeftDoors && !Game.Stations[i].OpenRightDoors)
+										{
+											AttemptToOpenDoors(Train, i, tb, tf);
+										}
+										break;
+									case DoorInterlockStates.Right:
+										if (!Game.Stations[i].OpenLeftDoors && Game.Stations[i].OpenRightDoors)
+										{
+											AttemptToOpenDoors(Train, i, tb, tf);
+										}
+										break;
+									case DoorInterlockStates.Locked:
+										//All doors are currently locked, do nothing
+										break;
+
 								}
 							}
 						}
@@ -222,19 +240,31 @@ namespace OpenBve
 				}
 				else if (Train.StationState == TrainStopState.Boarding)
 				{
-					// automatically close doors
-					if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal
-						&& ((Game.Stations[i].OpenLeftDoors & Train.Specs.DoorInterlockState == DoorInterlockStates.Left)
-						| (Game.Stations[i].OpenRightDoors & Train.Specs.DoorInterlockState == DoorInterlockStates.Right)
-						| (Game.Stations[i].OpenLeftDoors && Game.Stations[i].OpenRightDoors && Train.Specs.DoorInterlockState == DoorInterlockStates.Unlocked)))
+					//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
+					//e.g. Change ends
+					if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal)
 					{
-						if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
+						//Check the interlock state for the doors
+						switch (Train.Specs.DoorInterlockState)
 						{
-							if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
-							{
-								CloseTrainDoors(Train, true, true);
-								Train.Specs.DoorClosureAttempted = true;
-							}
+							case DoorInterlockStates.Unlocked:
+								AttemptToCloseDoors(Train);
+								break;
+							case DoorInterlockStates.Left:
+								if (Game.Stations[i].OpenLeftDoors)
+								{
+									AttemptToCloseDoors(Train);
+								}
+								break;
+							case DoorInterlockStates.Right:
+								if (Game.Stations[i].OpenRightDoors)
+								{
+									AttemptToCloseDoors(Train);
+								}
+								break;
+							case DoorInterlockStates.Locked:
+								//All doors are currently locked, do nothing
+								break;
 						}
 					}
 					// detect departure
