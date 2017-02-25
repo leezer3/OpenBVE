@@ -30,12 +30,24 @@ namespace OpenBve
 
 			public static bool operator ==(BlackListEntry a, BlackListEntry b)
 			{
-				return a.Equals(b);
+				if (a.FileLength != b.FileLength) return false;
+				if (a.FileName != b.FileName) return false;
+				if (a.MD5 != b.MD5) return false;
+				if ((a.Train ?? "") != (b.Train ?? "")) return false;
+				if ((a.Reason ?? "") != (b.Reason ?? "")) return false;
+				if (a.AllVersions != b.AllVersions) return false;
+				return true;
 			}
 
 			public static bool operator !=(BlackListEntry a, BlackListEntry b)
 			{
-				return !(a == b);
+				if (a.FileLength != b.FileLength) return true;
+				if (a.FileName != b.FileName) return true;
+				if (a.MD5 != b.MD5) return true;
+				if ((a.Train ?? "") != (b.Train ?? "")) return true;
+				if ((a.Reason ?? "") != (b.Reason ?? "")) return true;
+				if (a.AllVersions != b.AllVersions) return true;
+				return false;
 			}
 		}
 
@@ -157,9 +169,23 @@ namespace OpenBve
 					for(int i = 0; i < DocumentNodes.Count; i++)
 					{
 						BlackListEntry entry = ParseBlackListEntry(DocumentNodes[i]);
-						if (entry != new BlackListEntry() && !BlackListedPlugins.Contains(entry))
+						if (BlackListedPlugins.Count == 0)
 						{
 							BlackListedPlugins.Add(entry);
+						}
+						else
+						{
+							for (int j = 0; j < BlackListedPlugins.Count; j++)
+							{
+								if (BlackListedPlugins[j] == entry)
+								{
+									break;
+								}
+								if (j == BlackListedPlugins.Count -1)
+								{
+									BlackListedPlugins.Add(entry);
+								}
+							}
 						}
 					}
 					
@@ -220,7 +246,7 @@ namespace OpenBve
 			{
 				return false;
 			}
-			for (int i = BlackListedPlugins.Count -1; i > 0; i--)
+			for (int i = BlackListedPlugins.Count -1; i >= 0; i--)
 			{
 				if (BlackListedPlugins[i] == entry)
 				{
@@ -236,6 +262,11 @@ namespace OpenBve
 		{
 			if (BlackListedPlugins == null || BlackListedPlugins.Count == 0)
 			{
+				try
+				{
+					File.Delete(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("PluginDatabase"), "blacklist.xml"));
+				}
+				catch {}
 				return;
 			}
 			//This isn't a public class, hence building the XML manually for write out

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using OpenBveApi.Colors;
@@ -36,12 +37,54 @@ namespace OpenBve
 
 			public static bool operator !=(ReplacementPlugin a, ReplacementPlugin b)
 			{
-				return !a.Equals(b);
+				if ((a.Message ?? "") != (b.Message ?? "")) return true;
+				if (a.OriginalPlugin != b.OriginalPlugin) return true;
+				if (a.PluginPath.Trim() != b.PluginPath.Trim()) return true;
+				if (a.Trains != null && b.Trains != null)
+				{
+					if (a.Trains.Length == b.Trains.Length)
+					{
+						if (a.Trains.Length < 0)
+						{
+							for (int i = 0; i < a.Trains.Length; i++)
+							{
+								if (a.Trains[i] != b.Trains[i])
+								{
+									return true;
+								}
+							}
+						}
+					}
+					else
+					{
+						return true;
+					}
+				}
+				if ((a.ConfigurationFile ?? "") != (b.ConfigurationFile ?? "")) return true;
+				return false;
 			}
 
 			public static bool operator ==(ReplacementPlugin a, ReplacementPlugin b)
 			{
-				return a.Equals(b);
+				if ((a.Message ?? "") != (b.Message ?? "")) return false;
+				if (a.OriginalPlugin != b.OriginalPlugin) return false;
+				if (a.PluginPath.Trim() != b.PluginPath.Trim()) return false;
+				if (a.Trains != null && b.Trains != null)
+				{
+					if (a.Trains.Length != b.Trains.Length) return false;
+					if (a.Trains.Length < 0)
+					{
+						for (int i = 0; i < a.Trains.Length; i++)
+						{
+							if (a.Trains[i] != b.Trains[i])
+							{
+								return false;
+							}
+						}
+					}
+				}
+				if ((a.ConfigurationFile ?? "") != (b.ConfigurationFile ?? "")) return false;
+				return true;
 			}
 		}
 
@@ -177,9 +220,24 @@ namespace OpenBve
 					foreach (XmlNode n in DocumentNodes)
 					{
 						ReplacementPlugin plugin = ParseReplacementPlugin(n);
-						if (plugin != new ReplacementPlugin() && !AvailableReplacementPlugins.Contains(plugin))
+						if (AvailableReplacementPlugins.Count == 0)
 						{
 							AvailableReplacementPlugins.Add(plugin);
+						}
+						else
+						{
+							for (int i = 0; i < AvailableReplacementPlugins.Count; i++)
+							{
+								//List.Contains() doesn't use the custom equality operator
+								if (AvailableReplacementPlugins[i] == plugin)
+								{
+									break;
+								}
+								if (i == AvailableReplacementPlugins.Count -1)
+								{
+									AvailableReplacementPlugins.Add(plugin);
+								}
+							}
 						}
 					}
 				}
@@ -246,26 +304,7 @@ namespace OpenBve
 							ch1 = true;
 							break;
 						case "configuration":
-							if (!string.IsNullOrEmpty(c.InnerText))
-							{
-								string configFile = c.InnerText;
-								if (System.IO.File.Exists(configFile))
-								{
-									r.ConfigurationFile = configFile;
-									break;
-								}
-								try
-								{
-									configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("PluginDatabase"), c.InnerText);
-								}
-								catch
-								{
-								}
-								if (System.IO.File.Exists(configFile))
-								{
-									r.ConfigurationFile = configFile;
-								}
-							}
+							r.ConfigurationFile = c.InnerText;
 							break;
 						case "message":
 							r.Message = c.InnerText;
@@ -287,9 +326,11 @@ namespace OpenBve
 			{
 				return false;
 			}
-			for (int i = AvailableReplacementPlugins.Count - 1; i > 0; i--)
+			int t = AvailableReplacementPlugins.Count -1;
+			for (int i = 0; i < AvailableReplacementPlugins.Count; i++)
 			{
-				if (AvailableReplacementPlugins[i] == plugin)
+
+				if (plugin == AvailableReplacementPlugins[i])
 				{
 					AvailableReplacementPlugins.RemoveAt(i);
 					return true;
@@ -303,6 +344,12 @@ namespace OpenBve
 		{
 			if (AvailableReplacementPlugins == null || AvailableReplacementPlugins.Count == 0)
 			{
+				try
+				{
+					File.Delete(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("PluginDatabase"),
+						"compatiblereplacements.xml"));
+				}
+				catch {}
 				return;
 			}
 			//This isn't a public class, hence building the XML manually for write out

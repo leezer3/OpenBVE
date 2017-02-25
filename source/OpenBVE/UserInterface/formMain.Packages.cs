@@ -343,13 +343,13 @@ namespace OpenBve
 									XmlDocument currentXML = new XmlDocument();
 									currentXML.Load(xmlFile);
 									XmlNodeList nodes = currentXML.SelectNodes("/openBVE/TrainPlugins/Replacements");
-									if (nodes != null)
+									if (nodes != null && nodes.Count > 0)
 									{
 										PluginManager.LoadReplacementDatabase(currentXML);
 										PluginManager.WriteReplacementDatabase();
 									}
 									nodes = currentXML.SelectNodes("/openBVE/TrainPlugins/Blacklist");
-									if(nodes != null)
+									if(nodes != null && nodes.Count > 0)
 									{
 										PluginManager.LoadBlackListDatabase(currentXML);
 										PluginManager.WriteBlackListDatabase();
@@ -545,7 +545,7 @@ namespace OpenBve
 						DatabaseFunctions.cleanDirectory(Program.FileSystem.DataFolder, ref uninstallResults);
 						if (xmlToUninstall != null)
 						{
-							XmlNodeList nodes = xmlToUninstall.SelectNodes("/openBVE/TrainPlugins/BlackList");
+							XmlNodeList nodes = xmlToUninstall.SelectNodes("/openBVE/TrainPlugins/Blacklist");
 							if (nodes != null && nodes.Count > 0)
 							{
 								for (int i = 0; i < nodes.Count; i++)
