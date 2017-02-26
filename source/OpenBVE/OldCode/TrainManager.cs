@@ -1449,19 +1449,24 @@ namespace OpenBve
 				UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
 			}
 		}
+
+		internal static void UpdateCabObjects(Train Train)
+		{
+			UpdateTrainObjects(Train, 0, 0.0, true, false);
+		}
 		private static void UpdateTrainObjects(Train Train, double TimeElapsed, bool ForceUpdate)
 		{
 			if (!Game.MinimalisticSimulation)
 			{
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
-					UpdateTrainObjects(Train, i, TimeElapsed, ForceUpdate);
+					UpdateTrainObjects(Train, i, TimeElapsed, ForceUpdate, true);
 					UpdateFrontBogieObjects(Train, i, TimeElapsed, ForceUpdate);
 					UpdateRearBogieObjects(Train, i, TimeElapsed, ForceUpdate);
 				}
 			}
 		}
-		private static void UpdateTrainObjects(Train Train, int CarIndex, double TimeElapsed, bool ForceUpdate) {
+		private static void UpdateTrainObjects(Train Train, int CarIndex, double TimeElapsed, bool ForceUpdate, bool EnableDamping) {
 			// calculate positions and directions for section element update
 			int c = CarIndex;
 			double dx = Train.Cars[c].FrontAxle.Follower.WorldPosition.X - Train.Cars[c].RearAxle.Follower.WorldPosition.X;
@@ -1529,7 +1534,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < Train.Cars[c].CarSections[s].Elements.Length; i++)
 				{
-					UpdateCarSectionElement(Train, CarIndex, s, i, new Vector3(px, py, pz), new Vector3(dx, dy, dz), new Vector3(ux, uy, uz), new Vector3(sx, sy, sz), Train.Cars[c].CurrentlyVisible, TimeElapsed, ForceUpdate);
+					UpdateCarSectionElement(Train, CarIndex, s, i, new Vector3(px, py, pz), new Vector3(dx, dy, dz), new Vector3(ux, uy, uz), new Vector3(sx, sy, sz), Train.Cars[c].CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
 					
 					// brightness change
 					int o = Train.Cars[c].CarSections[s].Elements[i].ObjectIndex;
@@ -1733,7 +1738,9 @@ namespace OpenBve
 				}
 			}
 			Train.Cars[CarIndex].CurrentCarSection = SectionIndex;
-			UpdateTrainObjects(Train, CarIndex, 0.0, true);
+			//When changing car section, do not apply damping
+			//This stops objects from spinning if the last position before they were hidden is different
+			UpdateTrainObjects(Train, CarIndex, 0.0, true, false);
 		}
 
 		internal static void ChangeFrontBogieSection(Train Train, int CarIndex, int SectionIndex)
@@ -1797,7 +1804,7 @@ namespace OpenBve
 		}
 
 		// update car section element
-		private static void UpdateCarSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+		private static void UpdateCarSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		{
 			Vector3 p;
 			if (Train.Cars[CarIndex].CarSections[SectionIndex].Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
@@ -1835,7 +1842,7 @@ namespace OpenBve
 			{
 				updatefunctions = true;
 			}
-			ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex, Train.Cars[CarIndex].CurrentCarSection, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].FrontAxlePosition, p, Direction, Up, Side, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
+			ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex, Train.Cars[CarIndex].CurrentCarSection, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].FrontAxlePosition, p, Direction, Up, Side, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, EnableDamping);
 		}
 
 		private static void UpdateFrontBogieSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
@@ -1882,7 +1889,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].FrontBogie.CurrentCarSection,Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,Side, Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
+				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].FrontBogie.CurrentCarSection,Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,Side, Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
 			}
 		}
 
@@ -1934,7 +1941,7 @@ namespace OpenBve
 					updatefunctions = true;
 				}
 				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].RearBogie.CurrentCarSection,Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,
-					Side, Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta);
+					Side, Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
 			}
 		}
 

@@ -118,6 +118,7 @@ namespace OpenBve {
 			internal Damping RotateXDamping;
 			internal Damping RotateYDamping;
 			internal Damping RotateZDamping;
+			internal bool EnableDamping;
 			internal Vector2 TextureShiftXDirection;
 			internal Vector2 TextureShiftYDirection;
 			internal FunctionScripts.FunctionScript TextureShiftXFunction;
@@ -293,7 +294,9 @@ namespace OpenBve {
 		/// <param name="UpdateFunctions">Whether the functions associated with this object should be re-evaluated</param>
 		/// <param name="Show"></param>
 		/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
-		internal static void UpdateAnimatedObject(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed) {
+		/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
+		internal static void UpdateAnimatedObject(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, 
+			int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping) {
 			int s = Object.CurrentState;
 			int i = Object.ObjectIndex;
 			// state change
@@ -453,7 +456,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateXFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateXDamping, TimeElapsed, ref a);
+				ObjectManager.UpdateDamping(ref Object.RotateXDamping, TimeElapsed, ref a, EnableDamping);
 				cosX = Math.Cos(a);
 				sinX = Math.Sin(a);
 			} else {
@@ -467,7 +470,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateYFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateYDamping, TimeElapsed, ref a);
+				ObjectManager.UpdateDamping(ref Object.RotateYDamping, TimeElapsed, ref a, EnableDamping);
 				cosY = Math.Cos(a);
 				sinY = Math.Sin(a);
 			} else {
@@ -481,7 +484,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateZFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateZDamping, TimeElapsed, ref a);
+				ObjectManager.UpdateDamping(ref Object.RotateZDamping, TimeElapsed, ref a, EnableDamping);
 				cosZ = Math.Cos(a);
 				sinZ = Math.Sin(a);
 			} else {
@@ -784,7 +787,15 @@ namespace OpenBve {
 		}
 
 		// update damping
-		internal static void UpdateDamping(ref Damping Damping, double TimeElapsed, ref double Angle) {
+		internal static void UpdateDamping(ref Damping Damping, double TimeElapsed, ref double Angle, bool Enable) {
+			if (Damping != null && Enable == false)
+			{
+				Damping.CurrentValue = 1.0;
+				Damping.CurrentAngle = Angle;
+				Damping.OriginalAngle = Angle;
+				Damping.TargetAngle = Angle;
+				return;
+			}
 			if (TimeElapsed < 0.0) {
 				TimeElapsed = 0.0;
 			} else if (TimeElapsed > 1.0) {
@@ -1038,13 +1049,13 @@ namespace OpenBve {
 								
 							}
 							//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
+							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta, true);
 							
 						}
 						else
 						{
 							UpdateAnimatedObject(ref AnimatedWorldObjects[i].Object, false, train, train == null ? 0 : train.DriverCar,AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position,
-								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true,timeDelta);
+								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true,timeDelta, true);
 						}
 
 					} else {

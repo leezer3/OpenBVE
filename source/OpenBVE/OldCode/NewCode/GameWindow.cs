@@ -597,6 +597,10 @@ namespace OpenBve
 			// animated objects
 			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			TrainManager.UpdateTrainObjects(0.0, true);
+			//HACK: This function calls a single update on all objects attached to the player's train
+			//      but ignores any specified damping so that all needles etc. are in the correct place
+			//      for the first frame, rather than spinning wildly to get to the starting point.
+			TrainManager.UpdateCabObjects(TrainManager.PlayerTrain);
 			// timetable
 			if (TrainManager.PlayerTrain.Station >= 0)
 			{
