@@ -58,7 +58,7 @@ namespace OpenBve {
 		
 		// --- functions ---
 		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
-			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
+			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
 			bool success;
 			#if !DEBUG
 			try {

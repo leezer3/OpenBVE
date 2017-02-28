@@ -67,6 +67,15 @@ namespace OpenBveApi.Runtime {
 	/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 	public delegate SoundHandle PlaySoundDelegate(int index, double volume, double pitch, bool looped);
 
+	/// <summary>Plays a sound.</summary>
+	/// <param name="index">The index to the sound to be played.</param>
+	/// <param name="volume">The initial volume of the sound. A value of 1.0 represents nominal volume.</param>
+	/// <param name="pitch">The initial pitch of the sound. A value of 1.0 represents nominal pitch.</param>
+	/// <param name="looped">Whether the sound should be played in an indefinate loop.</param>
+	/// <returns>The handle to the sound, or a null reference if the sound could not be played.</returns>
+	/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+	public delegate SoundHandle PlayCarSoundDelegate(int index, double volume, double pitch, bool looped, int carIndex);
+	
 	/// <summary>Adds a message to the in-game display</summary>
 	/// <param name="Message">The message to display</param>
 	/// <param name="Color">The color in which to display the message</param>
@@ -100,6 +109,9 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The callback function for playing sounds.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly PlaySoundDelegate MyPlaySound;
+		/// <summary>The callback function for playing car-based  sounds.</summary>
+		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+		private readonly PlayCarSoundDelegate MyPlayCarSound;
 		/// <summary>The callback function for adding interface messages.</summary>
 		/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 		private readonly AddInterfaceMessageDelegate MyAddInterfaceMessage;
@@ -138,7 +150,14 @@ namespace OpenBveApi.Runtime {
 				return this.MyPlaySound;
 			}
 		}
-
+		/// <summary>Gets the callback function for playing sounds.</summary>
+		public PlayCarSoundDelegate PlayCarSound
+		{
+			get
+			{
+				return this.MyPlayCarSound;
+			}
+		}
 		/// <summary>Gets the callback function for adding interface messages.</summary>
 		public AddInterfaceMessageDelegate AddMessage
 		{
@@ -180,12 +199,14 @@ namespace OpenBveApi.Runtime {
 		/// <param name="pluginFolder">The absolute path to the plugin folder.</param>
 		/// <param name="trainFolder">The absolute path to the train folder.</param>
 		/// <param name="playSound">The callback function for playing sounds.</param>
+		/// <param name="playCarSound">The callback function for playing car-based sounds.</param>
 		/// <param name="addMessage">The callback function for adding interface messages.</param>
 		/// <param name="addScore">The callback function for adding scores.</param>
-		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore) {
+		public LoadProperties(string pluginFolder, string trainFolder, PlaySoundDelegate playSound, PlayCarSoundDelegate playCarSound, AddInterfaceMessageDelegate addMessage, AddScoreDelegate addScore) {
 			this.MyPluginFolder = pluginFolder;
 			this.MyTrainFolder = trainFolder;
 			this.MyPlaySound = playSound;
+			this.MyPlayCarSound = playCarSound;
 			this.MyAddInterfaceMessage = addMessage;
 			this.MyAddScore = addScore;
 			this.MyFailureReason = null;
