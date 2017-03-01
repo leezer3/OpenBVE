@@ -344,7 +344,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <!-- This is the important line: -->
-  <Import Project="$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets" />
+  <Import Condition=" '$(OS)' != 'Unix' " Project="$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets" />
   <!-- Details about translation -->
   <PropertyGroup>
     <TransformOnBuild>true</TransformOnBuild>
@@ -354,6 +354,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
