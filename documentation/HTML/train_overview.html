@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_overview.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:06 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Developing trains</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Developing trains - Overview</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />Trains consist of a series of individual configuration files accompanied by bitmaps and sounds. The following is an overview on which files are required and what they represent.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Characteristics</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<a href="train_train_dat.html"><b>train.dat:</b></a><br />This is the core configuration file for the train's characteristics, and is mandatory.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Panels</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<a href="train_panel_animated.html"><b>panel.animated:</b></a><br />This file allows to create a fully 3D cab. If present in the train folder, this file has precedence over the panel2.cfg and panel.cfg files.<br /><br /><a href="train_panel2_cfg.html"><b>panel2.cfg:</b></a><br />This file allows to create a limited 2D cab. If present in the train folder, this file has precedence over the panel.cfg. The panel2.cfg has fully superseded the panel.cfg as it offers greater functionality.<br /><br /><a href="train_panel_cfg.html"><b>panel.cfg:</b></a><br />This file is outdated, and allows to create a limited 2D cab. It has been fully superseded by the panel2.cfg file, which should be used instead.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Sounds</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<a href="train_default_sounds.html"><b>Default sounds:</b></a><br />If no <em>sound.cfg</em> is present, these are the default sound files that are being looked for in the train folder.<br /><br /><a href="train_sound_cfg.html"><b>sound.cfg:</b></a><br />This defines the names of the sound files to use. The file is required if plugin-specific sounds are to be made available.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Safety systems</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<b>Built-in systems:</b><br />The built-in safety systems ATS-SN, ATS-P and ATC are only used if no <em>ats.cfg</em> file is present, and if the <em>train.dat</em> is configured to define which of these systems should be available.<br /><br /><a href="train_ats_cfg.html"><b>ats.cfg:</b></a><br />This file defines which external train plugin to use. For information on how to create plugins, see <a href="train_plugin.html">here</a>.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Miscellaneous</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<a href="train_extensions_cfg.html"><b>extensions.cfg:</b></a><br />This defines additional characteristics that are not covered by the other files.
+</body>
+
+<!-- Mirrored from www.trainsimframework.org/develop/train_overview.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:31:06 GMT -->
+</html>

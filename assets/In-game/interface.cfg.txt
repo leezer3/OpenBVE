@@ -1,0 +1,86 @@
+﻿A short overview of the interface.cfg file. Elements are rendered from top to bottom. Within each element, BACKGROUND is rendered first, then TEXT, then OVERLAY.
+
+
+elements
+--------
+
+[element]
+subject = SUBJECT
+alignment = HORIZONTAL, VERTICAL
+position = X, Y
+topleft = BACKGROUND, OVERLAY
+topmiddle = BACKGROUND, OVERLAY
+topright = BACKGROUND, OVERLAY
+centerleft = BACKGROUND, OVERLAY
+centermiddle = BACKGROUND, OVERLAY
+centerright = BACKGROUND, OVERLAY
+bottomleft = BACKGROUND, OVERLAY
+bottommiddle = BACKGROUND, OVERLAY
+bottomright = BACKGROUND, OVERLAY
+backcolor = R, G, B, A
+overlaycolor = R, G, B, A
+textcolor = R, G, B, A
+textposition = X, Y
+textalignment = HORIZONTAL, VERTICAL
+textsize = SIZE
+textshadow = SHADOW
+text = TEXT
+value = VALUE
+transition = TRANSITION
+transitionvector = X, Y
+
+
+parameters
+----------
+SUBJECT: see below
+HORIZONTAL: -1 (left), 0 (center), 1 (right)
+VERTICAL = -1 (top), 0 (center), 1 (bottom)
+X: negative (left), positive (right)
+Y: negative (up), positive (down)
+BACKGROUND: file of background image, or NULL
+OVERLAY = file of overlay image, or NULL
+R = red (1 to 255, 0 is default color)
+G = green (1 to 255, 0 is default color)
+B = blue (1 to 255, 0 is default color)
+A = alpha (0 to 255)
+SIZE = 0 (extra small), 1 (small), 2 (medium), 3 (large), 4 (extra large)
+SHADOW = 0 (no), 1 (yes)
+TEXT = text literal
+TRANSITION = 0 (none), 1 (move), 2 (fade), 3 (move+fade)
+VALUE1[, VALUE2] = specific to the subject
+
+
+subjects
+--------
+Generally, only the centercenter images are used, unless otherwise stated. Transitions are only used if so stated.
+
+ats:
+Displays a vertically stacked list of ATS lamps. TEXT is overwritten for each lamp. Center elements are stretched horizontally to fit the width of the longest text. Uses top, center and bottom elements, which should not be omitted or NULL. Left, middle and right elements are optional. VALUE2 specifies the y-translation for each successive line.
+
+messages:
+Displays a vertically stacked list of messages. TEXT is overwritten for each message. Center elements are stretched horizontally to fit the width of the longest text. Uses top, center and bottom elements, which should not be omitted or NULL. Left, middle and right elements are optional. VALUE1 indicates the amount of x-translation for each successive line. VALUE2 indicates the y-translation for each successive line.
+
+scoremessages:
+Displays a vertically stacked list of score messages. TEXT is overwritten for each score message. Center elements are stretched horizontally to fit the width of the longest text. Uses top, center and bottom elements, which should not be omitted or NULL. Left, middle and right elements are optional. VALUE1 indicates the amount of x-translation for each successive line. VALUE2 indicates the y-translation for each successive line.
+
+score, ai:
+Override TEXT.
+
+reverser, power, brake, single:
+Overwrite TEXT. power and brake are only displayed for two-handled trains, while single is only displayed for single-handled trains.
+
+stopleft, stopright:
+Use TRANSITION.
+
+stoplefttick, stoprighttick:
+VALUE1 specifies the maximum vertical deviation from the center. Uses TRANSITION.
+
+clock, speed, fps:
+Overwrite TEXT and use TRANSITION.
+
+NULL:
+No special meaning. Displays the element as-is.
+
+-----
+
+In order to create a custom interface, create a new folder with an interface.cfg file inside it and edit the [interface] section inside the options.cfg file accordingly in order to load the interface.

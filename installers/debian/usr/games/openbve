@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/cli /usr/lib/openbve/OpenBve.exe /filesystem=/etc/openbve/filesystem.cfg "$@"

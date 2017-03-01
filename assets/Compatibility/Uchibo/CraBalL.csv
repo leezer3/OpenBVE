@@ -1,0 +1,12 @@
+CreateMeshBuilder
+AddVertex,-3.8,-0.29,0
+AddVertex,-3.8,-0.295,25.3
+AddVertex,-1.9,-0.295,25.3
+AddVertex,-1.9,-0.29,0
+AddFace,0,1,2,3
+
+LoadTexture,Ballast.png
+SetTextureCoordinates,0,2,1
+SetTextureCoordinates,1,2,0
+SetTextureCoordinates,2,0,0
+SetTextureCoordinates,3,0,1

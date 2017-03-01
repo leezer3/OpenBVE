@@ -1,0 +1,70 @@
+;Large track support beam
+
+CreateMeshBuilder
+;Main cube
+AddVertex,-8.2,-2.7,0.6
+AddVertex,8.2,-2.7,0.6
+AddVertex,8.2,-0.9,0.6
+AddVertex,-8.2,-0.9,0.6
+AddVertex,-8.2,-0.9,-0.6
+AddVertex,8.2,-0.9,-0.6
+AddVertex,8.2,-2.7,-0.6
+AddVertex,-8.2,-2.7,-0.6
+;Leg L
+AddVertex,-7.9,-7.7,-0.3
+AddVertex,-7.9,-7.7,0.3
+AddVertex,-7.3,-7.7,0.3
+AddVertex,-7.3,-7.7,-0.3
+AddVertex,-7,-2.7,-0.6
+AddVertex,-7,-2.7,0.6
+;Leg R
+AddVertex,7.9,-7.7,-0.3
+AddVertex,7.9,-7.7,0.3
+AddVertex,7.3,-7.7,0.3
+AddVertex,7.3,-7.7,-0.3
+AddVertex,7,-2.7,-0.6
+AddVertex,7,-2.7,0.6
+
+AddFace,19,16,15,1
+AddFace,14,15,16,17
+AddFace,19,18,17,16
+AddFace,6,14,17,18
+AddFace2,1,6,14,15
+
+AddFace,0,9,10,13
+AddFace,12,11,8,7
+AddFace,10,11,12,13
+AddFace,11,10,9,8
+AddFace,0,7,8,9
+AddFace,6,5,2,1
+AddFace,0,3,4,7
+AddFace,0,1,2,3
+AddFace,5,4,3,2
+AddFace,4,5,6,7
+AddFace,7,6,1,0
+SetColor,168,170,176
+
+
+;Base cube R
+CreateMeshBuilder
+Cube,0.9,0.9,0.9
+Translate,-7.6,-9.2,0
+SetColor,160,152,144
+
+;Base cube L
+CreateMeshBuilder
+Cube,0.9,0.9,0.9
+Translate,7.6,-9.2,0
+SetColor,160,152,144
+
+;Foot L
+CreateMeshBuilder
+Cylinder,4,0.15,0.6,0.6
+Translate,-7.6,-8,0
+SetColor,168,170,176
+
+;Foot R
+CreateMeshBuilder
+Cylinder,4,0.15,0.6,0.6
+Translate,7.6,-8,0
+SetColor,168,170,176,

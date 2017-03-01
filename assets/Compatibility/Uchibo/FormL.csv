@@ -1,0 +1,38 @@
+CreateMeshBuilder
+AddVertex,-1.5, 1.1, 0
+AddVertex,-1.505, 1.105, 25.3
+AddVertex,-2.7, 1.105, 25.3
+AddVertex,-2.7, 1.1, 0
+AddFace,3, 2, 1, 0
+
+LoadTexture,Form.png
+SetTextureCoordinates,0, 0, 9
+SetTextureCoordinates,1, 0, 0
+SetTextureCoordinates,2, 1, 0
+SetTextureCoordinates,3, 1, 9
+
+CreateMeshBuilder
+AddVertex,-1.5, -0.45, 0
+AddVertex,-1.505, -0.45, 25.3
+AddVertex,-1.505, 1.1, 25.3
+AddVertex,-1.5, 1.1, 0
+AddFace,3, 2, 1, 0
+
+LoadTexture,FormSide.png
+SetTextureCoordinates,0, 0, 1
+SetTextureCoordinates,1, 4, 1
+SetTextureCoordinates,2, 4, 0
+SetTextureCoordinates,3, 0, 0
+
+CreateMeshBuilder
+AddVertex,-1.5, -0.45, 0
+AddVertex,-1.5, 1.1, 0
+AddVertex,-2.7, 1.1, 0
+AddVertex,-2.7, -0.45, 0
+AddFace,3, 2, 1, 0
+
+LoadTexture,pier.png
+SetTextureCoordinates,0, 0, 1
+SetTextureCoordinates,1, 0, 0
+SetTextureCoordinates,2, 1, 0
+SetTextureCoordinates,3, 1, 1

@@ -1,0 +1,286 @@
+﻿; panel
+CreateMeshBuilder
+AddVertex, -1.35, 2.20, 9.9
+AddVertex, -1.35, 3.10, 9.9
+AddVertex, -0.40, 3.10, 9.9
+AddVertex, -0.40, 2.20, 9.9
+AddFace, 0, 1, 2, 3
+LoadTexture, ..\panel.bmp
+SetTextureCoordinates, 0, 0, 1
+SetTextureCoordinates, 1, 0, 0
+SetTextureCoordinates, 2, 1, 0
+SetTextureCoordinates, 3, 1, 1
+SetDecalTransparentColor, 0, 0, 255
+
+; floor and ceiling
+CreateMeshBuilder
+AddVertex, -1.35, 1.10, 8.4
+AddVertex, -1.35, 1.10, 9.9
+AddVertex, 1.35, 1.10, 9.9
+AddVertex, 1.35, 1.10, 8.4
+AddFace, 0, 1, 2, 3
+AddVertex, -1.35, 3.30, 8.4
+AddVertex, -1.35, 3.30, 9.9
+AddVertex, 1.35, 3.30, 9.9
+AddVertex, 1.35, 3.30, 8.4
+AddFace, 7, 6, 5, 4
+SetColor, 40, 40, 40
+
+; ceiling railing
+CreateMeshBuilder
+AddVertex, -1.35, 3.10, 9.9
+AddVertex, -1.35, 3.30, 9.9
+AddVertex, 1.35, 3.30, 9.9
+AddVertex, 1.35, 3.10, 9.9
+AddVertex, 1.35, 3.10, 8.4
+AddVertex, 1.35, 3.30, 8.4
+AddVertex, -1.35, 3.30, 8.4
+AddVertex, -1.35, 3.10, 8.4
+AddFace, 0, 1, 2, 3
+AddFace, 5, 4, 3, 2
+AddFace, 4, 5, 6, 7
+AddFace, 1, 0, 7, 6
+SetColor, 56, 80, 62
+
+; panel workspace
+CreateMeshBuilder
+AddVertex, -1.35, 2.20, 9.9
+AddVertex, -1.35, 2.20, 9.6
+AddVertex, -0.40, 2.20, 9.6
+AddVertex, -0.40, 2.20, 9.9
+AddFace, 3, 2, 1, 0 ; top
+AddVertex, -1.35, 2.20, 9.6
+AddVertex, -1.35, 1.10, 9.6
+AddVertex, -0.40, 1.10, 9.6
+AddVertex, -0.40, 2.20, 9.6
+AddFace, 7, 6, 5, 4 ; front
+AddVertex, -0.40, 2.20, 9.9
+AddVertex, -0.40, 1.10, 9.9
+AddVertex, -0.40, 1.10, 9.6
+AddVertex, -0.40, 2.20, 9.6
+AddFace, 8, 9, 10, 11 ; right
+AddVertex, -1.35, 1.10, 9.2
+AddVertex, -1.35, 2.61, 9.2
+AddVertex, -1.35, 2.61, 9.9
+AddVertex, -1.35, 1.10, 9.9
+AddFace, 12, 13, 14, 15 ; left
+AddVertex, -1.35, 2.61, 9.8
+AddVertex, -1.35, 3.10, 9.8
+AddVertex, -1.35, 3.10, 9.9
+AddVertex, -1.35, 2.61, 9.9
+AddFace, 16, 17, 18, 19 ; left window front
+AddVertex, -1.35, 2.61, 9.2
+AddVertex, -1.35, 3.10, 9.2
+AddVertex, -1.35, 3.10, 9.4
+AddVertex, -1.35, 2.61, 9.4
+AddFace, 20, 21, 22, 23 ; left window back
+SetColor, 56, 80, 62
+
+; front left window
+CreateMeshBuilder
+AddVertex, -1.32, 2.61, 9.90
+AddVertex, -1.32, 2.61, 9.93
+AddVertex, -0.40, 2.61, 9.93
+AddVertex, -0.40, 2.61, 9.90
+AddVertex, -0.40, 3.10, 9.90
+AddVertex, -0.40, 3.10, 9.93
+AddVertex, -1.32, 3.10, 9.93
+AddVertex, -1.32, 3.10, 9.90
+AddFace, 0, 1, 2, 3
+AddFace, 5, 4, 3, 2
+AddFace, 4, 5, 6, 7
+AddFace, 1, 0, 7, 6
+SetColor, 40, 40, 40
+
+; front right window
+CreateMeshBuilder
+AddVertex, 0.32, 2.61, 9.90
+AddVertex, 0.32, 2.61, 9.93
+AddVertex, -0.32, 2.61, 9.93
+AddVertex, -0.32, 2.61, 9.90
+AddVertex, -0.32, 3.10, 9.90
+AddVertex, -0.32, 3.10, 9.93
+AddVertex, 0.32, 3.10, 9.93
+AddVertex, 0.32, 3.10, 9.90
+AddFace, 3, 2, 1, 0
+AddFace, 2, 3, 4, 5
+AddFace, 7, 6, 5, 4
+AddFace, 6, 7, 0, 1
+SetColor, 40, 40, 40
+
+; front center window
+CreateMeshBuilder
+AddVertex, 1.32, 2.61, 9.90
+AddVertex, 1.32, 2.61, 9.93
+AddVertex, 0.40, 2.61, 9.93
+AddVertex, 0.40, 2.61, 9.90
+AddVertex, 0.40, 3.10, 9.90
+AddVertex, 0.40, 3.10, 9.93
+AddVertex, 1.32, 3.10, 9.93
+AddVertex, 1.32, 3.10, 9.90
+AddFace, 3, 2, 1, 0
+AddFace, 2, 3, 4, 5
+AddFace, 7, 6, 5, 4
+AddFace, 6, 7, 0, 1
+SetColor, 40, 40, 40
+
+; left window
+CreateMeshBuilder
+AddVertex, -1.38, 2.61, 9.8
+AddVertex, -1.35, 2.61, 9.8
+AddVertex, -1.35, 2.61, 9.4
+AddVertex, -1.38, 2.61, 9.4
+AddVertex, -1.38, 3.10, 9.4
+AddVertex, -1.35, 3.10, 9.4
+AddVertex, -1.35, 3.10, 9.8
+AddVertex, -1.38, 3.10, 9.8
+AddFace, 0, 1, 2, 3
+AddFace, 5, 4, 3, 2
+AddFace, 4, 5, 6, 7
+AddFace, 1, 0, 7, 6
+SetColor, 40, 40, 40
+
+; right front wall
+CreateMeshBuilder
+AddVertex, 1.35, 2.61, 9.9
+AddVertex, 1.35, 1.10, 9.9
+AddVertex, 0.40, 1.10, 9.9
+AddVertex, 0.40, 2.61, 9.9
+AddFace, 0, 1, 2, 3
+AddVertex, 1.32, 3.10, 9.9
+AddVertex, 1.32, 2.61, 9.9
+AddVertex, 1.35, 2.61, 9.9
+AddVertex, 1.35, 3.10, 9.9
+AddFace, 7, 6, 5, 4
+SetColor, 56, 80, 62
+
+; right door
+CreateMeshBuilder
+AddVertex, 1.35, 2.20, 9.8
+AddVertex, 1.35, 3.05, 9.8
+AddVertex, 1.35, 3.05, 9.9
+AddVertex, 1.35, 2.20, 9.9
+AddFace, 3, 2, 1, 0 ; window front
+AddVertex, 1.35, 2.20, 9.3
+AddVertex, 1.35, 3.05, 9.3
+AddVertex, 1.35, 3.05, 9.4
+AddVertex, 1.35, 2.20, 9.4
+AddFace, 7, 6, 5, 4 ; window back
+AddVertex, 1.35, 1.10, 9.3
+AddVertex, 1.35, 2.20, 9.3
+AddVertex, 1.35, 2.20, 9.9
+AddVertex, 1.35, 1.10, 9.9
+AddFace, 11, 10, 9, 8 ; window bottom
+AddVertex, 1.35, 3.05, 9.3
+AddVertex, 1.35, 3.10, 9.3
+AddVertex, 1.35, 3.10, 9.9
+AddVertex, 1.35, 3.05, 9.9
+AddFace, 15, 14, 13, 12 ; window bottom
+SetColor, 40, 60, 50
+
+; right door window
+CreateMeshBuilder
+AddVertex, 1.38, 2.20, 9.8
+AddVertex, 1.35, 2.20, 9.8
+AddVertex, 1.35, 2.20, 9.4
+AddVertex, 1.38, 2.20, 9.4
+AddVertex, 1.38, 3.05, 9.4
+AddVertex, 1.35, 3.05, 9.4
+AddVertex, 1.35, 3.05, 9.8
+AddVertex, 1.38, 3.05, 9.8
+AddFace, 3, 2, 1, 0
+AddFace, 2, 3, 4, 5
+AddFace, 7, 6, 5, 4
+AddFace, 6, 7, 0, 1
+SetColor, 40, 40, 40
+
+; back
+CreateMeshBuilder
+AddVertex, 1.35, 1.10, 8.4
+AddVertex, 1.35, 3.10, 8.4
+AddVertex, 1.35, 3.10, 9.3
+AddVertex, 1.35, 1.10, 9.3
+AddVertex, -1.35, 1.10, 8.4
+AddVertex, -1.35, 3.10, 8.4
+AddVertex, -1.35, 3.10, 8.6
+AddVertex, -1.35, 1.10, 8.6
+AddFace, 3, 2, 1, 0
+AddFace, 4, 5, 6, 7
+AddFace, 1, 5, 4, 0
+SetColor, 56, 80, 62
+
+; left door
+CreateMeshBuilder
+AddVertex, -1.35, 2.20, 9.1
+AddVertex, -1.35, 3.05, 9.1
+AddVertex, -1.35, 3.05, 9.2
+AddVertex, -1.35, 2.20, 9.2
+AddFace, 0, 1, 2, 3 ; window front
+AddVertex, -1.35, 2.20, 8.6
+AddVertex, -1.35, 3.05, 8.6
+AddVertex, -1.35, 3.05, 8.7
+AddVertex, -1.35, 2.20, 8.7
+AddFace, 4, 5, 6, 7 ; window back
+AddVertex, -1.35, 1.10, 8.6
+AddVertex, -1.35, 2.20, 8.6
+AddVertex, -1.35, 2.20, 9.2
+AddVertex, -1.35, 1.10, 9.2
+AddFace, 8, 9, 10, 11 ; window bottom
+AddVertex, -1.35, 3.05, 8.6
+AddVertex, -1.35, 3.10, 8.6
+AddVertex, -1.35, 3.10, 9.2
+AddVertex, -1.35, 3.05, 9.2
+AddFace, 12, 13, 14, 15 ; window top
+SetColor, 40, 60, 50
+
+; left door window
+CreateMeshBuilder
+AddVertex, -1.38, 2.20, 9.1
+AddVertex, -1.35, 2.20, 9.1
+AddVertex, -1.35, 2.20, 8.7
+AddVertex, -1.38, 2.20, 8.7
+AddVertex, -1.38, 3.05, 8.7
+AddVertex, -1.35, 3.05, 8.7
+AddVertex, -1.35, 3.05, 9.1
+AddVertex, -1.38, 3.05, 9.1
+AddFace, 0, 1, 2, 3
+AddFace, 5, 4, 3, 2
+AddFace, 4, 5, 6, 7
+AddFace, 1, 0, 7, 6
+SetColor, 40, 40, 40
+
+; center support
+CreateMeshBuilder
+AddVertex, -0.40, 1.10, 9.9
+AddVertex, -0.40, 3.10, 9.9
+AddVertex, -0.35, 3.10, 9.9
+AddVertex, -0.35, 1.10, 9.9
+AddFace, 0, 1, 2, 3
+AddVertex, 0.40, 1.10, 9.9
+AddVertex, 0.40, 3.10, 9.9
+AddVertex, 0.35, 3.10, 9.9
+AddVertex, 0.35, 1.10, 9.9
+AddFace, 7, 6, 5, 4
+SetColor, 56, 80, 62
+
+; center door
+CreateMeshBuilder
+AddVertex, -0.35, 1.10, 9.9
+AddVertex, -0.35, 2.61, 9.9
+AddVertex, 0.35, 2.61, 9.9
+AddVertex, 0.35, 1.10, 9.9
+AddFace, 0, 1, 2, 3
+AddVertex, -0.35, 2.61, 9.9
+AddVertex, -0.35, 3.10, 9.9
+AddVertex, -0.32, 3.10, 9.9
+AddVertex, -0.32, 2.61, 9.9
+AddFace, 4, 5, 6, 7
+AddVertex, 0.35, 2.61, 9.9
+AddVertex, 0.35, 3.10, 9.9
+AddVertex, 0.32, 3.10, 9.9
+AddVertex, 0.32, 2.61, 9.9
+AddFace, 11, 10, 9, 8
+SetColor, 40, 60, 50
+
+; enable if you want to superimpose the exterior object in ObjectViewer
+; TranslateAll, 0, 0, -0.4

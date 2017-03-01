@@ -1,0 +1,47 @@
+CreateMeshBuilder
+AddVertex,-2.1, -1.5, -0.9
+AddVertex,5.9, -1.5, -0.9
+AddVertex,5.9, -3, -0.9
+AddVertex,-2.1, -3, -0.9
+AddVertex,-0.5, -3.5, -0.9
+AddVertex,4.3, -3.5, -0.9
+AddVertex,4.3, -10, -0.9
+AddVertex,-0.5, -10, -0.9
+AddVertex,5.9, -1.5, 0.9
+AddVertex,5.9, -3, 0.9
+AddVertex,4.3, -3.5, 0.9
+AddVertex,4.3, -10, 0.9
+AddVertex,-2.1, -1.5, 0.9
+AddVertex,-2.1, -3, 0.9
+AddVertex,-0.5, -3.5, 0.9
+AddVertex,-0.5, -10, 0.9
+AddFace,0,1,2,3
+AddFace,5,4,3,2
+AddFace,4,5,6,7
+AddFace,8,9,2,1
+AddFace,9,10,5,2
+AddFace,10,11,6,5
+AddFace,13,12,0,3
+AddFace,14,13,3,4
+AddFace,15,14,4,7
+AddFace,12,13,9,8
+AddFace,13,14,10,9
+AddFace,14,15,11,10
+
+LoadTexture,Pier.png
+SetTextureCoordinates,0,0,0
+SetTextureCoordinates,1,2,0
+SetTextureCoordinates,2,2,0.176
+SetTextureCoordinates,3,0,0.176
+SetTextureCoordinates,4,0.4,0.235
+SetTextureCoordinates,5,1.6,0.235
+SetTextureCoordinates,6,1.6,1
+SetTextureCoordinates,7,0.4,1
+SetTextureCoordinates,8,3,0
+SetTextureCoordinates,9,3,0.176
+SetTextureCoordinates,10,2.6,0.235
+SetTextureCoordinates,11,2.6,1
+SetTextureCoordinates,12,1,0
+SetTextureCoordinates,13,1,0.176
+SetTextureCoordinates,14,1.4,0.235
+SetTextureCoordinates,15,1.4,1
