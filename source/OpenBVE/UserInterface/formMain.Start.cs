@@ -38,12 +38,17 @@ namespace OpenBve
 			rf = Folder;
 			try
 			{
-				routeWatcher = new FileSystemWatcher();
-				routeWatcher.Path = Folder;
-				routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-				routeWatcher.Filter = "*.*";
-				routeWatcher.Changed += onRouteFolderChanged;
-				routeWatcher.EnableRaisingEvents = true;
+				if (!OpenTK.Configuration.RunningOnMacOS)
+				{
+					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
+					//Triggered by NWM which has 600+ files in the route folder
+					routeWatcher = new FileSystemWatcher();
+					routeWatcher.Path = Folder;
+					routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+					routeWatcher.Filter = "*.*";
+					routeWatcher.Changed += onRouteFolderChanged;
+					routeWatcher.EnableRaisingEvents = true;
+				}
 			}
 			catch
 			{
@@ -168,13 +173,17 @@ namespace OpenBve
 										{
 											try
 											{
-												string text = System.IO.File.ReadAllText(Files[i], Encoding.UTF8);
-												if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
-												    text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
-												    text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
+												using (StreamReader sr = new StreamReader(Files[i], Encoding.UTF8))
 												{
-													Item.ImageKey = "route";
+													string text = sr.ReadToEnd();
+													if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
+													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
+													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
+													{
+														Item.ImageKey = "route";
+													}
 												}
+												
 											}
 											catch
 											{
@@ -406,12 +415,15 @@ namespace OpenBve
 			tf = Folder;
 			try
 			{
-				trainWatcher = new FileSystemWatcher();
-				trainWatcher.Path = Folder;
-				trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-				trainWatcher.Filter = "*.*";
-				trainWatcher.Changed += onTrainFolderChanged;
-				trainWatcher.EnableRaisingEvents = true;
+				if (!OpenTK.Configuration.RunningOnMacOS)
+				{
+					trainWatcher = new FileSystemWatcher();
+					trainWatcher.Path = Folder;
+					trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+					trainWatcher.Filter = "*.*";
+					trainWatcher.Changed += onTrainFolderChanged;
+					trainWatcher.EnableRaisingEvents = true;
+				}
 			}
 			catch
 			{
