@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace OpenBve {
@@ -34,7 +35,10 @@ namespace OpenBve {
 						File = OpenBveApi.Path.CombineFile(Folder, "unknown.png");
 					}
 					if (System.IO.File.Exists(File)) {
-						pictureboxLanguage.Image = Image.FromFile(File);
+						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							pictureboxLanguage.Image = Image.FromStream(fs);
+						}
 					} else {
 						pictureboxLanguage.Image = null;
 					}

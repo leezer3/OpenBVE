@@ -1444,7 +1444,10 @@ namespace OpenBve {
 				{
 					try
 					{
-						return Image.FromFile(File);
+						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							return  Image.FromStream(fs);
+						}
 					}
 					catch
 					{
