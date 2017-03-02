@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -1468,7 +1469,10 @@ namespace OpenBve {
 				{
 					try
 					{
-						Box.Image = Image.FromFile(File);
+						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							Box.Image = Image.FromStream(fs);
+						}
 						return;
 					}
 					catch

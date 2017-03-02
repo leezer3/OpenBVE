@@ -744,7 +744,10 @@ namespace OpenBve
 				{
 					try
 					{
-						pictureboxRouteImage.Image = Image.FromFile(Game.RouteImage);
+						using (var fs = new FileStream(Game.RouteImage, FileMode.Open, FileAccess.Read))
+						{
+							pictureboxRouteImage.Image = Image.FromStream(fs);							
+						}
 					}
 					catch
 					{
@@ -763,7 +766,10 @@ namespace OpenBve
 						{
 							try
 							{
-								pictureboxRouteImage.Image = Image.FromFile(g);
+								using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
+								{
+									pictureboxRouteImage.Image = Image.FromStream(fs);
+								}
 							}
 							catch
 							{
@@ -988,7 +994,10 @@ namespace OpenBve
 				}
 				if (System.IO.File.Exists(File)) {
 					try {
-						pictureboxTrainImage.Image = Image.FromFile(File);
+						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							pictureboxTrainImage.Image = Image.FromStream(fs);
+						}
 					} catch {
 						pictureboxTrainImage.Image = null;
 						TryLoadImage(pictureboxTrainImage, "train_error.png");
