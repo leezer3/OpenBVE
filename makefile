@@ -238,6 +238,9 @@ debian: $(DEBIAN_BUILD_RESULT)
 
 $(MAC_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
+	# Clear previous Mac build temporary files if they exist
+	@rm -rf mac
+	@rm -rf macbuild.dmg
 	@mkdir mac
 	@tar -C mac -xzf installers/mac/MacBundle.tgz
 
