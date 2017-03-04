@@ -999,8 +999,12 @@ namespace OpenBve {
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();
-			routeWatcher.Dispose();
 			routeWorkerThread.Dispose();
+			if (!OpenTK.Configuration.RunningOnMacOS)
+			{
+				routeWatcher.Dispose();
+				trainWatcher.Dispose();
+			}
 			workerThread.Dispose();
 			// finish
 #if !DEBUG
