@@ -415,7 +415,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance)
+					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance | p == 0.0)
 					{
 						// brake cylinder release
 						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
