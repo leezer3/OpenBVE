@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
@@ -162,6 +163,8 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
+			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"),"error_route.png");
+			pictureboxTrainImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_train.png");
 			/* 
 			 * TODO: Integrate into packages
 			 */
@@ -1451,10 +1454,7 @@ namespace OpenBve {
 				{
 					try
 					{
-						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
-						{
-							return  Image.FromStream(fs);
-						}
+						return Image.FromFile(File);
 					}
 					catch
 					{
@@ -1467,23 +1467,22 @@ namespace OpenBve {
 				return null;
 			}
 		}
-
+	
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
-		private void TryLoadImage(PictureBox Box, string Title)
+		private void TryLoadImage(PictureBox Box, string File)
 		{
 			try
 			{
-				string Folder = Program.FileSystem.GetDataFolder("Menu");
-				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				if (!System.IO.File.Exists(File))
+				{
+					string Folder = Program.FileSystem.GetDataFolder("Menu");
+					File = OpenBveApi.Path.CombineFile(Folder, File);
+				}
 				if (System.IO.File.Exists(File))
 				{
 					try
 					{
-						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
-						{
-							Box.Image = Image.FromStream(fs);
-						}
-						return;
+						Box.Image = Image.FromFile(File);
 					}
 					catch
 					{
@@ -1498,7 +1497,6 @@ namespace OpenBve {
 				Box.Image = Box.ErrorImage;
 			}
 		}
-
 
 		private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
 		{

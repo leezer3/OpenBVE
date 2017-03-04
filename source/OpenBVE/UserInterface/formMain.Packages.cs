@@ -931,10 +931,7 @@ namespace OpenBve
 					ImageFile = openPackageFileDialog.FileName;
 					try
 					{
-						using (var fs = new FileStream(openPackageFileDialog.FileName, FileMode.Open, FileAccess.Read))
-						{
-							pictureBoxPackageImage.Image = Image.FromStream(fs);
-						}
+						pictureBoxPackageImage.Image = Image.FromFile(ImageFile);
 					}
 					catch
 					{

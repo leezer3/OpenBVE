@@ -232,6 +232,11 @@ namespace OpenBve
 						Result.RouteFile = t;
 						ShowRoute(false);
 					}
+					else
+					{
+						groupboxRouteDetails.Visible = false;
+						buttonStart.Enabled = false;
+					}
 				}
 			}
 		}
@@ -559,6 +564,11 @@ namespace OpenBve
 							ShowTrain(false);
 							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
 						}
+						else
+						{
+							groupboxTrainDetails.Visible = false;
+							buttonStart.Enabled = false;
+						}
 					}
 				}
 			}
@@ -754,17 +764,7 @@ namespace OpenBve
 				// image
 				if (Game.RouteImage.Length != 0)
 				{
-					try
-					{
-						using (var fs = new FileStream(Game.RouteImage, FileMode.Open, FileAccess.Read))
-						{
-							pictureboxRouteImage.Image = Image.FromStream(fs);							
-						}
-					}
-					catch
-					{
-						TryLoadImage(pictureboxRouteImage, "route_error.png");
-					}
+					TryLoadImage(pictureboxRouteImage, Game.RouteImage);
 				}
 				else
 				{
@@ -780,7 +780,7 @@ namespace OpenBve
 							{
 								using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
 								{
-									pictureboxRouteImage.Image = Image.FromStream(fs);
+									pictureboxRouteImage.Image = new Bitmap(fs);
 								}
 							}
 							catch
@@ -1005,15 +1005,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.bmp");
 				}
 				if (System.IO.File.Exists(File)) {
-					try {
-						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
-						{
-							pictureboxTrainImage.Image = Image.FromStream(fs);
-						}
-					} catch {
-						pictureboxTrainImage.Image = null;
-						TryLoadImage(pictureboxTrainImage, "train_error.png");
-					}
+					TryLoadImage(pictureboxTrainImage, File);
 				} else {
 					TryLoadImage(pictureboxTrainImage, "train_unknown.png");
 				}

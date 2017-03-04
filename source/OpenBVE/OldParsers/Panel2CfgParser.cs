@@ -188,6 +188,7 @@ namespace OpenBve {
 					OpenBVEGame.RunInRenderThread(() =>
 					{
 						Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+						//Textures.LoadTexture(tnight, Textures.OpenGlTextureWrapMode.ClampClamp);
 					});
 					PanelBitmapWidth = (double)tday.Width;
 					PanelBitmapHeight = (double)tday.Height;

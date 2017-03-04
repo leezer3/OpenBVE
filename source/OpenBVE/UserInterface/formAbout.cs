@@ -17,10 +17,7 @@ namespace OpenBve
 				{
 					try
 					{
-						using (var fs = new FileStream(File, FileMode.Open, FileAccess.Read))
-						{
-							pictureBoxLogo.Image = Image.FromStream(fs);
-						}
+						pictureBoxLogo.Image = Image.FromFile(File);
 					}
 					catch
 					{
