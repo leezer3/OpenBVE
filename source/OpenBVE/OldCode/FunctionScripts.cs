@@ -854,7 +854,7 @@ namespace OpenBve {
 								 * 2 ==> Secondary horn
 								 * 3 ==> Music horn
 								 */
-								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Sound.Source))
+								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Source))
 								{
 									Function.Stack[s] = j + 1;
 									break;

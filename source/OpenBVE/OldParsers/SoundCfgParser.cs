@@ -95,15 +95,18 @@ namespace OpenBve {
 			train.Cars[train.DriverCar].Sounds.Adjust = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Adjust.wav"), panel, tiny);
 			train.Cars[train.DriverCar].Sounds.Brake = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Brake.wav"), center, small);
 			train.Cars[train.DriverCar].Sounds.Halt = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Halt.wav"), cab, tiny);
-			train.Cars[train.DriverCar].Sounds.Horns[0].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon0.wav"), front, large);
+			train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon0.wav"), large);
 			train.Cars[train.DriverCar].Sounds.Horns[0].Loop = false;
-			if (train.Cars[train.DriverCar].Sounds.Horns[0].Sound.Buffer == null) {
-				train.Cars[train.DriverCar].Sounds.Horns[0].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon.wav"), front, large);
+			train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
+			if (train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound == null) {
+				train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon.wav"), large);
 			}
-			train.Cars[train.DriverCar].Sounds.Horns[1].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon1.wav"), front, large);
+			train.Cars[train.DriverCar].Sounds.Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon1.wav"), large);
 			train.Cars[train.DriverCar].Sounds.Horns[1].Loop = false;
-			train.Cars[train.DriverCar].Sounds.Horns[2].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon2.wav"), front, medium);
+			train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
+			train.Cars[train.DriverCar].Sounds.Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, "Klaxon2.wav"), medium);
 			train.Cars[train.DriverCar].Sounds.Horns[2].Loop = true;
+			train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
 			train.Cars[train.DriverCar].Sounds.PilotLampOn = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Leave.wav"), cab, tiny);
 			train.Cars[train.DriverCar].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
 			// load sounds for all cars
@@ -203,7 +206,7 @@ namespace OpenBve {
 				switch (Lines[i].ToLowerInvariant()) {
 					case "[run]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -232,7 +235,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[flange]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -261,7 +264,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[motor]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -288,7 +291,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[switch]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -308,7 +311,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[brake]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -345,7 +348,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[compressor]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -375,7 +378,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[suspension]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -401,7 +404,7 @@ namespace OpenBve {
 					case "[horn]":
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -409,16 +412,55 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
+										//PRIMARY HORN (Enter)
+										case "primarystart":
+											train.Cars[train.DriverCar].Sounds.Horns[0].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
+											break;
+										case "primaryend":
+											train.Cars[train.DriverCar].Sounds.Horns[0].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
+											break;
+										case "primaryloop":
 										case "primary":
-											train.Cars[train.DriverCar].Sounds.Horns[0].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), front, large);
+											train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[0].Loop = false;
 											break;
+										//SECONDARY HORN (Numpad Enter)
+										case "secondarystart":
+											train.Cars[train.DriverCar].Sounds.Horns[1].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
+											break;
+										case "secondaryend":
+											train.Cars[train.DriverCar].Sounds.Horns[1].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
+											break;
+										case "secondaryloop":
 										case "secondary":
-											train.Cars[train.DriverCar].Sounds.Horns[1].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), front, large);
+											train.Cars[train.DriverCar].Sounds.Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), large);
+											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[1].Loop = false;
 											break;
+										//MUSIC HORN
+										case "musicstart":
+											train.Cars[train.DriverCar].Sounds.Horns[2].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), medium);
+											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
+											break;
+										case "musicend":
+											train.Cars[train.DriverCar].Sounds.Horns[2].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), medium);
+											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
+											break;
+										case "musicloop":
 										case "music":
-											train.Cars[train.DriverCar].Sounds.Horns[2].Sound = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), front, medium);
+											train.Cars[train.DriverCar].Sounds.Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(TrainPath, b), medium);
+											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[2].Loop = true;
 											break;
 										default:
@@ -430,7 +472,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[door]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -463,7 +505,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[ats]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -492,7 +534,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[buzzer]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -512,7 +554,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[pilot lamp]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -535,7 +577,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[brake handle]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -564,7 +606,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[master controller]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -593,7 +635,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[reverser]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -616,7 +658,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[breaker]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -639,7 +681,7 @@ namespace OpenBve {
 						} i--; break;
 					case "[others]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-                            int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
@@ -688,6 +730,18 @@ namespace OpenBve {
 			}
 		}
 
+		private static Sounds.SoundBuffer TryLoadSoundBuffer(string FileName, double Radius)
+		{
+			if (FileName != null)
+			{
+				if (System.IO.File.Exists(FileName))
+				{
+					return Sounds.RegisterBuffer(FileName, Radius);
+				}
+			}
+			return null;
+		}
+
 		// try load sound
 		private static TrainManager.CarSound TryLoadSound(string FileName, Vector3 Position, double Radius) {
 			TrainManager.CarSound s = TrainManager.CarSound.Empty;
@@ -711,7 +765,7 @@ namespace OpenBve {
 			string[] Files = System.IO.Directory.GetFiles(Folder);
 			for (int i = 0; i < Files.Length; i++) {
 				string a = System.IO.Path.GetFileName(Files[i]);
-                if (a == null) return Sounds;
+				if (a == null) return Sounds;
 				if (a.Length > FileStart.Length + FileEnd.Length) {
 					if (a.StartsWith(FileStart, StringComparison.OrdinalIgnoreCase) & a.EndsWith(FileEnd, StringComparison.OrdinalIgnoreCase)) {
 						string b = a.Substring(FileStart.Length, a.Length - FileEnd.Length - FileStart.Length);
