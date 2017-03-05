@@ -1483,6 +1483,7 @@ namespace OpenBve {
 					try
 					{
 						Box.Image = Image.FromFile(File);
+						return;
 					}
 					catch
 					{
