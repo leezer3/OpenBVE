@@ -63,7 +63,7 @@ namespace OpenBve {
 												else
 												{
 													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
- 													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
 													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 10px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 												break;
@@ -1172,6 +1172,18 @@ namespace OpenBve {
 					break;
 				case "atc":
 					Code = "271 pluginstate";
+					break;
+				case "klaxon":
+				case "horn":
+					Code = "klaxon";
+					break;
+				case "primaryklaxon":
+				case "primaryhorn":
+					Code = "primaryklaxon";
+					break;
+				case "secondaryklaxon":
+				case "secondaryhorn":
+					Code = "secondaryklaxon";
 					break;
 				default:
 					{
