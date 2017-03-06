@@ -566,22 +566,32 @@ namespace OpenBve {
 				Train.Cars[i].Specs.BrakeControlSpeed = BrakeControlSpeed;
 				Train.Cars[i].Specs.BrakeDecelerationAtServiceMaximumPressure = BrakeDeceleration;
 				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
-				Train.Cars[i].Specs.AirBrake.AirCompressorEnabled = false;
-				Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure = MainReservoirMinimumPressure;
-				Train.Cars[i].Specs.AirBrake.AirCompressorMaximumPressure = MainReservoirMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.AirCompressorRate = 5000.0;
-				Train.Cars[i].Specs.AirBrake.MainReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure + (Train.Cars[i].Specs.AirBrake.AirCompressorMaximumPressure - Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure) * Program.RandomNumberGenerator.NextDouble();
-				Train.Cars[i].Specs.AirBrake.MainReservoirEqualizingReservoirCoefficient = 0.01;
-				Train.Cars[i].Specs.AirBrake.MainReservoirBrakePipeCoefficient = (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake ? 0.25 : 0.075) / Cars;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure = 1.005 * OperatingPressure;
-				/*
-				 * These values are all constants, and are expressed in pascals per second
-				 * Presumably, Michelle intended for them to be editable in v2.0
-				 */
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirServiceRate = 50000.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirEmergencyRate = 250000.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirChargeRate = 200000.0;
+					/*
+					* Rate values are all constants, and are expressed in pascals per second
+					* Presumably, Michelle intended for them to be editable in v2.0
+					*/
+				Train.Cars[i].Specs.AirBrake.Compressor = new TrainManager.AirCompressor(Train.Cars[i].Specs.AirBrake)
+				{
+					Enabled = false,
+					MinimumPressure = MainReservoirMinimumPressure,
+					MaximumPressure = MainReservoirMaximumPressure,
+					Rate = 5000.0
+				};
+				Train.Cars[i].Specs.AirBrake.MainReservoir = new TrainManager.MainReservoir(Train.Cars[i].Specs.AirBrake)
+				{
+					CurrentPressure = Train.Cars[i].Specs.AirBrake.Compressor.MinimumPressure + (Train.Cars[i].Specs.AirBrake.Compressor.MaximumPressure - Train.Cars[i].Specs.AirBrake.Compressor.MinimumPressure) * Program.RandomNumberGenerator.NextDouble(),
+					EqualizingReservoirCoefficient = 0.01,
+					BrakePipeCoefficient = (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake ? 0.25 : 0.075) / Cars
+				};
+				Train.Cars[i].Specs.AirBrake.EqualizingReservoir = new TrainManager.EqualizingReservior(Train.Cars[i].Specs.AirBrake)
+				{
+					CurrentPressure = 0.0,
+					NormalPressure = 1.005 * OperatingPressure,
+					ServiceRate = 50000.0,
+					EmergencyRate = 250000.0,
+					ChargeRate = 200000.0
+				};
+
 				Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure = OperatingPressure;
 				Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake ? 0.0 : Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
 				Train.Cars[i].Specs.AirBrake.BrakePipeFlowSpeed = 100000000.0;
@@ -642,7 +652,7 @@ namespace OpenBve {
 					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
 					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure;
+					Train.Cars[i].Specs.AirBrake.EqualizingReservoir.CurrentPressure = Train.Cars[i].Specs.AirBrake.EqualizingReservoir.NormalPressure;
 				}
 				Train.Specs.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
@@ -662,7 +672,7 @@ namespace OpenBve {
 					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
 					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
+					Train.Cars[i].Specs.AirBrake.EqualizingReservoir.CurrentPressure = 0.0;
 				}
 				Train.Specs.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
@@ -679,7 +689,7 @@ namespace OpenBve {
 					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
 					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
+					Train.Cars[i].Specs.AirBrake.EqualizingReservoir.CurrentPressure = 0.0;
 				}
 				Train.Specs.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;

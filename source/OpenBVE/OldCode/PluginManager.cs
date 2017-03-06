@@ -94,8 +94,8 @@ namespace OpenBve {
 			    //End of additions
 				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
 				double bcPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakeCylinderCurrentPressure;
-				double mrPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.MainReservoirCurrentPressure;
-				double erPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.EqualizingReservoirCurrentPressure;
+				double mrPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.MainReservoir.CurrentPressure;
+				double erPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.EqualizingReservoir.CurrentPressure;
 				double bpPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakePipeCurrentPressure;
 				double sapPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.StraightAirPipeCurrentPressure;
 				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, CurrentRadius, CurrentCant, CurrentPitch);

@@ -137,6 +137,12 @@
     </Compile>
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\AirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\AirBrake.Types.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Compressor.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\EqualizingReservior.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\MainReservoir.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirCompressor.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
@@ -356,7 +362,7 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-  <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

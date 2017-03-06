@@ -247,7 +247,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
+                return Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
