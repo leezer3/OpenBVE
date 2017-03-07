@@ -261,7 +261,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
+                return Train.Cars[CarIndex].Specs.AirBrake.BrakePipe.CurrentPressure;
             }
 
             /// <summary>Returns the brake cylinder pressure of the selected car of the selected train</summary>
@@ -275,7 +275,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
+                return Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
@@ -289,7 +289,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
+                return Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipe.CurrentPressure;
             }
 
             /// <summary>Returns the doors state of the selected train</summary>

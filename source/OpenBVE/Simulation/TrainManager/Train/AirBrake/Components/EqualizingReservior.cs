@@ -45,7 +45,7 @@
 				}
 				else
 				{
-					if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+					if (AirBrake is AutomaticAirBrake)
 					{
 						// automatic air brake
 						if (Train.Specs.AirBrake.Handle.Actual == AirBrakeHandleState.Service)
@@ -77,7 +77,7 @@
 							AirBrake.MainReservoir.CurrentPressure -= 0.5 * s;
 						}
 					}
-					else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake)
+					else if (AirBrake is ElectromagneticStraightAirBrake)
 					{
 						// electromagnetic straight air brake
 						double r = ChargeRate;

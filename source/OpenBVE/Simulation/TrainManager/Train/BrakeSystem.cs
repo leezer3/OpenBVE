@@ -26,24 +26,24 @@ namespace OpenBve
 				{
 					if (Train.Cars[i - 1].Derailed | Train.Cars[i].Derailed)
 					{
-						Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
+						Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+						if (Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = 0.0;
 					}
 				}
 				if (i < Train.Cars.Length - 1)
 				{
 					if (Train.Cars[i].Derailed | Train.Cars[i + 1].Derailed)
 					{
-						Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
+						Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+						if (Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = 0.0;
 					}
 				}
-				TotalPressure += Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure;
+				TotalPressure += Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure;
 			}
 			double AveragePressure = TotalPressure / (double)Train.Cars.Length;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = AveragePressure;
+				Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = AveragePressure;
 			}
 		}
 
@@ -56,319 +56,12 @@ namespace OpenBve
 		private static void UpdateBrakeSystem(Train Train, int CarIndex, double TimeElapsed, out double DecelerationDueToBrake, out double DecelerationDueToMotor)
 		{
 			// initialize
-			const double Tolerance = 5000.0;
 			AirSound airsound = AirSound.None;
-			if (Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				Train.Cars[CarIndex].Specs.AirBrake.Compressor.Update(Train, CarIndex, TimeElapsed);
-				Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoir.Update(Train, CarIndex, TimeElapsed);
-			}
-			if ((Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake | Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake) & Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.UpdateBrakePipe(Train, CarIndex, TimeElapsed);
-			}
-			// triple valve (auxillary reservoir, brake pipe, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
-			{
-				Train.Cars[CarIndex].Specs.AirBrake.UpdateAutomaticAirBrake(Train, CarIndex, TimeElapsed, ref airsound);
-			}
-			// solenoid valve for electromagnetic straight air brake (auxillary reservoir, electric command, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake)
-			{
-				// refill auxillary reservoir from brake pipe
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure + Tolerance)
-				{
-					double r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirChargeRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					}
-					if (r > d) r = d;
-					d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-					if (r > d) r = d;
-					double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient;
-					double s = r / f;
-					if (s > Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure)
-					{
-						r *= Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure / s;
-						s = Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
-					}
-					if (s > d)
-					{
-						r *= d / s;
-						s = d;
-					}
-					Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure += 0.5 * r;
-					Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure -= 0.5 * s;
-				}
-				{ // electric command
-					bool emergency;
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-					{
-						emergency = true;
-					}
-					else
-					{
-						emergency = Train.Specs.CurrentEmergencyBrake.Actual;
-					}
-					double p; if (emergency)
-					{
-						p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-					else
-					{
-						p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-						p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-					}
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
-					{
-						// brake control system
-						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
-						{
-							if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
-							{
-								// closing electromagnetic valve (lock-out valve)
-								p = 0.0;
-							}
-							else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
-							{
-								// delay-filling control
-								//Variable f is never used, so don't calculate it
-								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-								double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-								double d = b - a;
-								if (d > 0.0)
-								{
-									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-									if (p > 1.0) p = 1.0;
-									p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								}
-								else
-								{
-									p = 0.0;
-								}
-							}
-						}
-					}
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance | p == 0.0)
-					{
-						// brake cylinder release
-						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - p;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-						r = GetRate(d / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						if (r > d) r = d;
-						// air sound
-						if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
-						{
-							Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-							airsound = (AirSound)(p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1);
-						}
-						// pressure change
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
-					}
-					else if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < p)
-					{
-						// refill brake cylinder from auxillary reservoir
-						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-						double r;
-						if (emergency)
-						{
-							r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyChargeRate * f;
-						}
-						else
-						{
-							r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate * f;
-						}
-						double d = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-						r = GetRate(d / m, r * TimeElapsed);
-						if (r > Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure)
-						{
-							r = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure;
-						}
-						if (r > d) r = d;
-						double s = r / f;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-						if (s > d)
-						{
-							r *= d / s;
-							s = d;
-						}
-						Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirCurrentPressure -= 0.5 * r;
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure += 0.5 * s;
-						// air sound
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-					else
-					{
-						// air sound
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					}
-				}
-			}
-			// valves for electric command brake (main reservoir, electric command, brake cylinder)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				if (!Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
-				{
-					// brake control system
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
-					{
-						if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
-						{
-							// closing electromagnetic valve (lock-out valve)
-							p = 0.0;
-						}
-						else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
-						{
-							// delay-filling control
-							// Variable f is never used, so don't calculate it
-							//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-							double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-							double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-							double d = b - a;
-							if (d > 0.0)
-							{
-								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
-								if (p > 1.0) p = 1.0;
-								p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							}
-							else
-							{
-								p = 0.0;
-							}
-						}
-					}
-				}
-				if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance | p == 0.0)
-				{
-					// brake cylinder exhaust valve
-					double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-					double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					// air sound
-					if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
-					{
-						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-						airsound = (AirSound)(p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1);
-					}
-					// pressure change
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
-				}
-				else if ((Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < p | p == Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure) & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure)
-				{
-					// fill brake cylinder from main reservoir
-					double r;
-					if (Train.Specs.CurrentEmergencyBrake.Actual)
-					{
-						r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyChargeRate;
-					}
-					else
-					{
-						r = 2.0 * Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceChargeRate;
-					}
-					double pm = p < Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure ? p : Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure;
-					double d = pm - Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					double f1 = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
-					double f2 = Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.BrakePipeCoefficient;
-					double f3 = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient;
-					double f = f1 * f2 / f3; // MainReservoirBrakeCylinderCoefficient
-					double s = r * f;
-					if (s > Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure)
-					{
-						r *= Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure / s;
-						s = Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure;
-					}
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure += 0.5 * r;
-					Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.CurrentPressure -= 0.5 * s;
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					// air sound
-					Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-			}
-			// straight air pipe (for compatibility needle only)
-			if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectromagneticStraightAirBrake & Train.Cars[CarIndex].Specs.AirBrake.Type == AirBrakeType.Main)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = 0.0;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				if (p + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure)
-				{
-					double r;
-					if (Train.Specs.CurrentEmergencyBrake.Actual)
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeEmergencyRate;
-					}
-					else
-					{
-						r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeReleaseRate;
-					}
-					double d = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure - p;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure -= r;
-				}
-				else if (p > Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure + Tolerance)
-				{
-					double r = Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeServiceRate;
-					double d = p - Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
-					double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					r = GetRate(d / m, r * TimeElapsed);
-					if (r > d) r = d;
-					Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure += r;
-				}
-			}
-			else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
-			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
-				{
-					p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-				}
-				else
-				{
-					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-				}
-				Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure = p;
-			}
+			
+
+			Train.Cars[CarIndex].Specs.AirBrake.UpdateSystem(Train, CarIndex, TimeElapsed, ref airsound);
+
+			
 			// air sound
 			Sounds.SoundBuffer buffer;
 			switch (airsound)
@@ -399,7 +92,7 @@ namespace OpenBve
 					break;
 			}
 			// deceleration provided by brake
-			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
+			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure;
 			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
 			// deceleration provided by motor
 			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.Specs.CurrentEmergencyBrake.Actual)
