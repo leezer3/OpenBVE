@@ -160,12 +160,7 @@ namespace OpenBve
 				}
 			}
 		}
-		private static double GetRate(double Ratio, double Factor)
-		{
-			Ratio = Ratio < 0.0 ? 0.0 : Ratio > 1.0 ? 1.0 : Ratio;
-			Ratio = 1.0 - Ratio;
-			return 1.5 * Factor * (1.01 - Ratio * Ratio);
-		}
+		
 
 		/// <summary>Applies the emergency brake</summary>
 		/// <param name="Train">The train</param>

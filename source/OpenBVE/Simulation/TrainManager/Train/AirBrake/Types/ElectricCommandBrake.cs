@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace OpenBve
+namespace OpenBve.BrakeSystems
 {
-	public static partial class TrainManager
+	public partial class AirBrake
 	{
 		internal class ElectricCommandBrake : CarAirBrake
 		{
-			internal override void Update(Train Train, int CarIndex, double TimeElapsed, ref AirSound Sound)
+			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed, ref TrainManager.AirSound Sound)
 			{
 				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
 				{
@@ -22,12 +22,12 @@ namespace OpenBve
 					// brake control system
 					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
 					{
-						if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
+						if (Train.Cars[CarIndex].Specs.ElectropneumaticType == TrainManager.EletropneumaticBrakeType.ClosingElectromagneticValve)
 						{
 							// closing electromagnetic valve (lock-out valve)
 							p = 0.0;
 						}
-						else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
+						else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == TrainManager.EletropneumaticBrakeType.DelayFillingControl)
 						{
 							// delay-filling control
 							// Variable f is never used, so don't calculate it
@@ -61,7 +61,7 @@ namespace OpenBve
 					if (r > 0.0 & BrakeCylinder.CurrentPressure < BrakeCylinder.SoundPlayedForPressure)
 					{
 						BrakeCylinder.SoundPlayedForPressure = p;
-						Sound = (AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
+						Sound = (TrainManager.AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
 					}
 					// pressure change
 					BrakeCylinder.CurrentPressure -= r;

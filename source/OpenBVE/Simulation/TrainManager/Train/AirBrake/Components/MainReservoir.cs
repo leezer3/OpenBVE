@@ -1,6 +1,6 @@
-﻿namespace OpenBve
+﻿namespace OpenBve.BrakeSystems
 {
-	public static partial class TrainManager
+	public partial class AirBrake
 	{
 		/// <summary>Represents the main reservoir of an air-brake system</summary>
 		internal class MainReservoir
@@ -11,9 +11,11 @@
 			internal double EqualizingReservoirCoefficient;
 			/// <summary>The coefficient governing pressure transfer to the brake pipe</summary>
 			internal double BrakePipeCoefficient;
-			/// <summary>The parent air brake</summary>
+			/// <summary>The parent air-brake</summary>
 			private readonly CarAirBrake AirBrake;
 
+			/// <summary>Creates a new main reservoir</summary>
+			/// <param name="airBrake">The parent air-brake</param>
 			internal MainReservoir(CarAirBrake airBrake)
 			{
 				this.CurrentPressure = 0.0;
@@ -26,7 +28,7 @@
 			/// <param name="Train">The train</param>
 			/// <param name="CarIndex">The car index</param>
 			/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-			internal void UpdateBrakePipe(Train Train, int CarIndex, double TimeElapsed)
+			internal void UpdateBrakePipe(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				if (AirBrake.BrakePipe.CurrentPressure > AirBrake.EqualizingReservoir.CurrentPressure + CarAirBrake.Tolerance)
 				{

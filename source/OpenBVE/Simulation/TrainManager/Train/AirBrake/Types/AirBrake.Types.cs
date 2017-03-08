@@ -1,9 +1,9 @@
-﻿namespace OpenBve
+﻿namespace OpenBve.BrakeSystems
 {
-	public static partial class TrainManager
+	public partial class AirBrake
 	{
 		/// <summary>Determines the type of air brake fitted to a car</summary>
-		internal enum AirBrakeType
+		internal enum BrakeType
 		{
 			/// <summary>A main air brake with compressor</summary>
 			Main,

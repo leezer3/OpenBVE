@@ -1,22 +1,23 @@
-﻿namespace OpenBve
+﻿namespace OpenBve.BrakeSystems
 {
-	public static partial class TrainManager
+	public partial class AirBrake
 	{
 		/// <summary>Represents an air compressor</summary>
 		internal class AirCompressor
 		{
 			/// <summary>Whether the compressor is enabled</summary>
 			internal bool Enabled;
-			/// <summary>The minimum pressure at which the compressor activates</summary>
+			/// <summary>The minimum pressure at which the compressor activates in Pa</summary>
 			internal double MinimumPressure;
-			/// <summary>The maximum pressure at which the compressor de-activates</summary>
+			/// <summary>The maximum pressure at which the compressor de-activates in Pa</summary>
 			internal double MaximumPressure;
-			/// <summary>The rate at which the compressor operates</summary>
+			/// <summary>The rate at which the compressor operates in Pa per second</summary>
 			internal double Rate;
-			/// <summary>The parent air brake</summary>
-			private CarAirBrake AirBrake;
+			/// <summary>The parent air-brake</summary>
+			private readonly CarAirBrake AirBrake;
+
 			/// <summary>Creates a new air compressor</summary>
-			/// <param name="airBrake">The parent air brake system</param>
+			/// <param name="airBrake">The parent air-brake system</param>
 			internal AirCompressor(CarAirBrake airBrake)
 			{
 				this.Enabled = false;
@@ -30,7 +31,7 @@
 			/// <param name="Train">The train</param>
 			/// <param name="CarIndex">The car the air brake compressor is situated in (Used for sounds)</param>
 			/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-			internal void Update(Train Train, int CarIndex, double TimeElapsed)
+			internal void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				//Check whether the air compressor is currently running
 				if (Enabled)

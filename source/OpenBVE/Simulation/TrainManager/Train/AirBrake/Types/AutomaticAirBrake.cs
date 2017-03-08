@@ -1,6 +1,6 @@
-﻿namespace OpenBve
+﻿namespace OpenBve.BrakeSystems
 {
-	public static partial  class TrainManager
+	public partial class AirBrake
 	{
 		internal class AutomaticAirBrake : CarAirBrake
 		{
@@ -9,9 +9,9 @@
 			/// <param name="CarIndex">The car index</param>
 			/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
 			/// <param name="Sound">The air sound to be played</param>
-			internal override void Update(Train Train, int CarIndex, double TimeElapsed, ref AirSound Sound)
+			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed, ref TrainManager.AirSound Sound)
 			{
-				if (Type == AirBrakeType.Main)
+				if (Type == BrakeType.Main)
 				{
 					Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.UpdateBrakePipe(Train, CarIndex, TimeElapsed);
 				}
@@ -123,7 +123,7 @@
 							double p = 0.8 * BrakeCylinder.CurrentPressure - 0.2 * BrakeCylinder.EmergencyMaximumPressure;
 							if (p < 0.0) p = 0.0;
 							BrakeCylinder.SoundPlayedForPressure = p;
-							Sound = (AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
+							Sound = (TrainManager.AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
 						}
 					}
 				}

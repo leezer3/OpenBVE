@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBve.BrakeSystems;
 
 namespace OpenBve
 {
@@ -123,7 +124,7 @@ namespace OpenBve
 			internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
+			internal AirBrake.CarAirBrake AirBrake;
 			/// doors
 			internal Door[] Doors;
 			internal double DoorOpenFrequency;

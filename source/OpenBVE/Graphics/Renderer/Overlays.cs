@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 
@@ -1625,7 +1626,7 @@ namespace OpenBve
 						RenderOverlaySolid(x, y, x + r * w, y + h);
 					} x += w + 8.0;
 					// main reservoir
-					if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
+					if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == AirBrake.BrakeType.Main)
 					{
 						if (!heading[3])
 						{
@@ -1641,7 +1642,7 @@ namespace OpenBve
 						RenderOverlaySolid(x, y, x + r * w, y + h);
 					} x += w + 8.0;
 					// equalizing reservoir
-					if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
+					if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == AirBrake.BrakeType.Main)
 					{
 						if (!heading[4])
 						{
@@ -1657,7 +1658,7 @@ namespace OpenBve
 						RenderOverlaySolid(x, y, x + r * w, y + h);
 					} x += w + 8.0;
 					// straight air pipe
-					if (TrainManager.PlayerTrain.Cars[i].Specs.BrakeType == TrainManager.CarBrakeType.ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
+					if (TrainManager.PlayerTrain.Cars[i].Specs.BrakeType == TrainManager.CarBrakeType.ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == AirBrake.BrakeType.Main)
 					{
 						if (!heading[5])
 						{

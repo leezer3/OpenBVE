@@ -1,15 +1,23 @@
-﻿namespace OpenBve
+﻿namespace OpenBve.BrakeSystems
 {
-	public static partial class TrainManager
+	public partial class AirBrake
 	{
+		/// <summary>Represents the straight air pipe of an air-brake system</summary>
 		internal class StraightAirPipe
 		{
+			/// <summary>The current pressure in Pa</summary>
 			internal double CurrentPressure;
+			/// <summary>The normal release rate in Pa per second</summary>
 			internal double ReleaseRate;
+			/// <summary>The release rate when using service brakes in Pa per second</summary>
 			internal double ServiceRate;
+			/// <summary>The release rate when using emergency brakes in Pa per second</summary>
 			internal double EmergencyRate;
+			/// <summary>The parent air-brake</summary>
 			internal CarAirBrake CarAirBrake;
 
+			/// <summary>Creates a new straight air pipe</summary>
+			/// <param name="carAirBrake">The parent air-brake</param>
 			internal StraightAirPipe(CarAirBrake carAirBrake)
 			{
 				this.CurrentPressure = 0.0;
@@ -18,9 +26,9 @@
 				this.CarAirBrake = carAirBrake;
 			}
 			
-			internal void Update(Train Train, int CarIndex, double TimeElapsed)
+			internal void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
-				if (CarAirBrake is ElectromagneticStraightAirBrake & CarAirBrake.Type == AirBrakeType.Main)
+				if (CarAirBrake is ElectromagneticStraightAirBrake & CarAirBrake.Type == BrakeType.Main)
 				{
 					double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
 					{
@@ -58,7 +66,7 @@
 						CurrentPressure += r;
 					}
 				}
-				else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
+				else if (Train.Cars[CarIndex].Specs.BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake)
 				{
 					double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
 					{
