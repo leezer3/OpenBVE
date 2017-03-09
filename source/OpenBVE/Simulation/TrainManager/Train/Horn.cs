@@ -5,7 +5,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>Represents a horn or whistle</summary>
-		internal struct Horn
+		internal class Horn
 		{
 			/// <summary>The sound source for this horn</summary>
 			internal Sounds.SoundSource Source;
@@ -24,7 +24,16 @@ namespace OpenBve
 			/// <summary>Stores the loop state</summary>
 			private bool LoopStarted;
 
-			private Horn(Sounds.SoundBuffer startSound, Sounds.SoundBuffer loopSound, Sounds.SoundBuffer endSound, bool loop)
+			/// <summary>The default constructor</summary>
+			internal Horn()
+			{
+				this.StartSound = null;
+				this.LoopSound = null;
+				this.EndSound = null;
+				this.Loop = false;
+			}
+
+			internal Horn(Sounds.SoundBuffer startSound, Sounds.SoundBuffer loopSound, Sounds.SoundBuffer endSound, bool loop)
 			{
 				this.Source = null;
 				this.StartSound = startSound;
@@ -106,7 +115,6 @@ namespace OpenBve
 										TrainManager.PlayerTrain.DriverCar, false);
 				}
 			}
-			internal static readonly Horn Empty = new Horn(null, null, null, false);
 		}
 	}
 }
