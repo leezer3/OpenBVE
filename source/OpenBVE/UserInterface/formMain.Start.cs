@@ -751,6 +751,7 @@ namespace OpenBve
 				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+				routeWorkerThread.Dispose();
 				return;
 			}
 			try

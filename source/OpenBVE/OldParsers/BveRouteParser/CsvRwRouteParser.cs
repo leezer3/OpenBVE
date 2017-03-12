@@ -68,6 +68,8 @@ namespace OpenBve {
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
+			freeObjCount = 0;
+			railtypeCount = 0;
 			Game.UnitOfSpeed = "km/h";
 			Game.SpeedConversionFactor = 0.0;
 			Game.RouteInformation.RouteBriefing = null;
@@ -1332,6 +1334,9 @@ namespace OpenBve {
 			}
 		}
 
+		private static int freeObjCount = 0;
+		private static int railtypeCount = 0;
+
 		// parse route for data
 		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, string TrainPath, string ObjectPath, string SoundPath, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -1922,6 +1927,10 @@ namespace OpenBve {
 												}
 												Data.Structure.Run[CommandIndex1] = val;
 											}
+										}
+										else
+										{
+											railtypeCount++;
 										}
 									} break;
 								case "train.flange":
@@ -2516,6 +2525,10 @@ namespace OpenBve {
 													}
 												}
 											}
+										}
+										else
+										{
+											freeObjCount++;
 										}
 									} break;
 									// signal
@@ -4855,6 +4868,13 @@ namespace OpenBve {
 			if (CompatibilityObjectsUsed != 0)
 			{
 				Interface.AddMessage(Interface.MessageType.Warning, false, "Warning: " + CompatibilityObjectsUsed + " compatibility objects were used.");
+			}
+			if (PreviewOnly)
+			{
+				if (freeObjCount == 0 && railtypeCount == 0)
+				{
+					throw new Exception(Interface.GetInterfaceString("errors_route_corrupt_noobjects"));
+				}
 			}
 			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;
 			ObjectManager.StaticObject SignalPost, LimitPostStraight, LimitPostLeft, LimitPostRight, LimitPostInfinite;
