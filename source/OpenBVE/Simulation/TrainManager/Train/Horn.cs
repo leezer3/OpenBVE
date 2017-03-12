@@ -54,9 +54,12 @@ namespace OpenBve
 					{
 						if (!Sounds.IsPlaying(Source))
 						{
-							//The start sound is not currently playing, so start it
-							Source = Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition,
-								TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+							if (StartSound != null)
+							{
+								//The start sound is not currently playing, so start it
+								Source = Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition,
+									TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+							}
 							//Set the loop control variable to started
 							LoopStarted = true;
 						}
