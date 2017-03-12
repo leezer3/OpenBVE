@@ -28,7 +28,7 @@ namespace OpenBve {
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon,
+			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
@@ -854,7 +854,7 @@ namespace OpenBve {
 								 * 2 ==> Secondary horn
 								 * 3 ==> Music horn
 								 */
-								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Sound.Source))
+								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Source))
 								{
 									Function.Stack[s] = j + 1;
 									break;
@@ -864,6 +864,36 @@ namespace OpenBve {
 									Function.Stack[s] = 0.0;
 								}
 							}
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.PrimaryKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[0].Source) ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.SecondaryKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[1].Source) ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.MusicKlaxon:
+						if (Train != null)
+						{
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[2].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -2532,9 +2562,25 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.EmergencyBrake;
 							n++; s++; if (s >= m) m = s; break;
+						case "horn":
 						case "klaxon":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.Klaxon;
+							n++; s++; if (s >= m) m = s; break;
+						case "primaryhorn":
+						case "primaryklaxon":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.PrimaryKlaxon;
+							n++; s++; if (s >= m) m = s; break;
+						case "secondaryhorn":
+						case "secondaryklaxon":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.SecondaryKlaxon;
+							n++; s++; if (s >= m) m = s; break;
+						case "musichorn":
+						case "musicklaxon":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.MusicKlaxon;
 							n++; s++; if (s >= m) m = s; break;
 						case "hasairbrake":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
