@@ -80,11 +80,7 @@ namespace OpenBve
 					{
 						if (Loop)
 						{
-							if (Sounds.IsPlaying(Source))
-							{
-								Sounds.StopSound(Source);
-							}
-							else
+							if (!Sounds.IsPlaying(Source))
 							{
 								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
 										TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, true);
