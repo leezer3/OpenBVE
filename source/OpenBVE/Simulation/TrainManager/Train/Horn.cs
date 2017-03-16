@@ -88,8 +88,12 @@ namespace OpenBve
 						}
 						else
 						{
-							Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, TrainManager.PlayerTrain,
+							if (!LoopStarted)
+							{
+								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, TrainManager.PlayerTrain,
 									TrainManager.PlayerTrain.DriverCar, false);
+							}
+							LoopStarted = true;
 						}
 					}
 				}
