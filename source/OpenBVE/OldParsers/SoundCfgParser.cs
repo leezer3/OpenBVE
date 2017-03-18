@@ -447,6 +447,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
 											break;
 										case "primaryend":
+										case "primaryrelease":
 											train.Cars[train.DriverCar].Sounds.Horns[0].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
 											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
@@ -464,6 +465,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
 											break;
 										case "secondaryend":
+										case "secondaryrelease":
 											train.Cars[train.DriverCar].Sounds.Horns[1].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
 											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
@@ -481,6 +483,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
 											break;
 										case "musicend":
+										case "musicrelease":
 											train.Cars[train.DriverCar].Sounds.Horns[2].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
 											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
 											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
