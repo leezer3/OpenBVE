@@ -105,6 +105,11 @@ namespace OpenBve
 			{
 				//Reset loop control variable
 				LoopStarted = false;
+				if (!StartEndSounds & !Loop)
+				{
+					//Don't stop horns which are play-once single part sounds
+					return;
+				}
 				if (Sounds.IsPlaying(Source))
 				{
 					//Stop the loop sound playing
