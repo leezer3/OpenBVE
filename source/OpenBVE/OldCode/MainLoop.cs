@@ -490,8 +490,11 @@ namespace OpenBve {
 				//Glu.Perspective(World.VerticalViewingAngle * invdeg, -World.AspectRatio, 0.025, 50.0);
 				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle,-World.AspectRatio, 0.025, 50.0);
 				GL.MultMatrix(ref perspective);
-			} else {
-				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, World.BackgroundImageDistance);
+			} else
+			{
+				var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
+				var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
+				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
 				GL.MultMatrix(ref perspective);
 			}
 			GL.MatrixMode(MatrixMode.Modelview);
