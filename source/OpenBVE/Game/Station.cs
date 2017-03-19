@@ -91,6 +91,8 @@ namespace OpenBve
 			/// <summary>The timetable to be shown from this point onwards (Nighttime)</summary>
 			internal Textures.Texture TimetableNighttimeTexture;
 			internal double DefaultTrackPosition;
+
+			internal string Key;
 		}
 		internal static Station[] Stations = new Station[] { };
 

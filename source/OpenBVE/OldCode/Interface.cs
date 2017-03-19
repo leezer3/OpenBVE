@@ -917,6 +917,51 @@ namespace OpenBve {
 			Value = 0.0;
 			return false;
 		}
+
+		/// <summary>Parses a BVE5 format time into OpenBVE's internal time representation</summary>
+		/// <param name="Expression">The time to parse</param>
+		/// <param name="Value">The number of seconds since midnight on the first day this represents, updated via 'out'</param>
+		/// <returns>True if the parse succeeds, false if it does not</returns>
+		internal static bool TryParseBve5Time(string Expression, out double Value)
+		{
+			Expression = TrimInside(Expression);
+			if (Expression.Length != 0)
+			{
+				CultureInfo Culture = CultureInfo.InvariantCulture;
+				string[] Split = Expression.Split(':');
+				int h, m, s;
+				switch (Split.Length)
+				{
+					case 1:
+						//Single number - plain hours
+
+						if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h))
+						{
+							Value = 3600.0 * (double)h;
+							return true;
+						}
+						break;
+					case 2:
+						//HH:MM
+						if (int.TryParse(Split[0], NumberStyles.Integer, Culture, out h) && int.TryParse(Split[1], NumberStyles.Integer, Culture, out m))
+						{
+							Value = 3600.0 * (double)h + 60.0 * (double)m;
+							return true;
+						}
+						break;
+					case 3:
+						//HH:MM:SS
+						if (int.TryParse(Split[0], NumberStyles.Integer, Culture, out h) && int.TryParse(Split[1], NumberStyles.Integer, Culture, out m) && int.TryParse(Split[2], NumberStyles.Integer, Culture, out s))
+						{
+							Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;
+							return true;
+						}
+						break;
+				}
+			}
+			Value = 0.0;
+			return false;
+		}
 	
 		
 
