@@ -383,7 +383,8 @@ namespace OpenBve
 				Array.Resize(ref Menus, CurrMenu + 1);
 			Menus[CurrMenu]			= new Menu.SingleMenu(type, data);
 			PositionMenu();
-			Game.CurrentInterface	= Game.InterfaceType.Menu;
+			Game.PreviousInterface  = Game.CurrentInterface;
+			Game.CurrentInterface	= Game.InterfaceType.Menu;			
 		}
 
 		//
@@ -400,7 +401,8 @@ namespace OpenBve
 			else
 			{							// if only one menu remaining...
 				Reset();
-				Game.CurrentInterface = Game.InterfaceType.Normal;	// return to simulation
+				Game.PreviousInterface = Game.CurrentInterface;
+				Game.CurrentInterface  = Game.InterfaceType.Normal;	// return to simulation
 			}
 		}
 
@@ -560,6 +562,7 @@ namespace OpenBve
 						break;
 					case MenuTag.BackToSim:				// OUT OF MENU BACK TO SIMULATION
 						Reset();
+						Game.PreviousInterface = Game.InterfaceType.Menu;
 						Game.CurrentInterface = Game.InterfaceType.Normal;
 						break;
 

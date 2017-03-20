@@ -62,6 +62,13 @@ namespace OpenBve
 		/// <summary>Called when a KeyUp event is generated</summary>
 		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			if (Game.PreviousInterface == Game.InterfaceType.Menu & Game.CurrentInterface == Game.InterfaceType.Normal)
+			{
+				//Block the first keyup event after the menu has been closed, as this may produce unwanted effects
+				//if the menu select key is also mapped in-game
+				Game.PreviousInterface = Game.InterfaceType.Normal;
+				return;
+			}
 			//We don't need to check for modifiers on key up
 			BlockKeyRepeat = true;
 			//Traverse the controls array
