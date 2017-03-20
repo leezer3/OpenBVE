@@ -10,7 +10,7 @@ A general overview of compatibility changes, including to the OpenBveApi, and an
 
 ### Fixed Errata
 
-These are described fully [here] (https://github.com/leezer3/OpenBVE/wiki/Errata).
+These are described fully [here](https://github.com/leezer3/OpenBVE/wiki/Errata).
 
 ### Nightly Builds
 
@@ -23,7 +23,7 @@ Documentation for development of add-ons (update version of docs originally writ
 ### Packages
 
 openBVE now supports the installation of 'package files' , which are intended as a replacement for the now defunct managed content.
-These are described fully [here] (http://openbve-project.net/packages/).
+These are described fully [here](http://openbve-project.net/packages/).
 
 ### Notes
 
@@ -33,7 +33,7 @@ Joystick hat support does not function correctly in the current release build of
 
 ### Contributing
 
-Please see the [Contributors File] (Contributing.md) for a list of contributors, and basic guidelines for contributing to the development of openBVE.
+Please see the [Contributors File](Contributing.md) for a list of contributors, and basic guidelines for contributing to the development of openBVE.
 
 
 ### Links
