@@ -244,10 +244,23 @@ namespace OpenBve
 					switch (loadedControl.Method)
 					{
 					case Interface.ControlMethod.Keyboard:
+						string keyName = loadedControl.Key.ToString();
+						for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+						{
+							if (Interface.TranslatedKeys[k].Key == loadedControl.Key)
+							{
+								keyName = Interface.TranslatedKeys[k].Description;
+								break;
+							}
+						}
 						if (loadedControl.Modifier != Interface.KeyboardModifier.None)
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + loadedControl.Key + "]";
+						{
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
+						}
 						else
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Key + "]";
+						{
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
+						}
 						break;
 					case Interface.ControlMethod.Joystick:
 						str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";

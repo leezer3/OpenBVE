@@ -129,8 +129,16 @@ namespace OpenBve {
 					//OpenTK key description
 					if (Interface.CurrentControls[Index].Key != Key.Unknown)
 					{
+						for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+						{
+							if (Interface.CurrentControls[Index].Key == Interface.TranslatedKeys[k].Key)
+							{
+								t += Interface.TranslatedKeys[k].Description;
+								return t;
+							}
+						}
 						t += Interface.CurrentControls[Index].Key;
-						break;
+						return t;
 					}
 				} if (j == 133) {
 					t += "{" + Interface.CurrentControls[Index].Element.ToString(Culture) + "}";
