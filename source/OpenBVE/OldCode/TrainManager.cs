@@ -260,8 +260,8 @@ namespace OpenBve
 			internal CarSound PilotLampOn;
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
-			internal CarSound PointFrontAxle;
-			internal CarSound PointRearAxle;
+			internal CarSound[] PointFrontAxle;
+			internal CarSound[] PointRearAxle;
 			internal CarSound Rub;
 			internal CarSound ReverserOn;
 			internal CarSound ReverserOff;
