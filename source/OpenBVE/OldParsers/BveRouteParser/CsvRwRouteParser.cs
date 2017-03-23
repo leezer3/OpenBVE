@@ -3147,7 +3147,12 @@ namespace OpenBve {
 												} else {
 													if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
 														Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+														int ol = Data.Blocks[BlockIndex].RailCycle.Length;
 														Array.Resize(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
+														for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
+														{
+															Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
+														}
 													}
 													if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null) {
 														Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
@@ -4795,7 +4800,7 @@ namespace OpenBve {
 					if (!PreviewOnly) {
 						for (int j = 0; j < Data.Blocks[i].RailType.Length; j++) {
 							int rc = Data.Blocks[i].RailCycle[j].RailCycleIndex;
-							if (rc != -1 && Data.Structure.RailCycle[rc].Length > 1) {
+							if (rc != -1 && Data.Structure.RailCycle.Length > rc && Data.Structure.RailCycle[rc].Length > 1) {
 								int cc = Data.Blocks[i].RailCycle[j].CurrentCycle;
 								if (cc == Data.Structure.RailCycle[rc].Length - 1) {
 									Data.Blocks[i].RailType[j] = Data.Structure.RailCycle[rc][0];

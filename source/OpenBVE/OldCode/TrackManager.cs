@@ -510,7 +510,7 @@ namespace OpenBve {
 							if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 								if (Train.Specs.CurrentAverageSpeed <= 0.0) return;
 								int bufferIndex = Train.Cars[CarIndex].Sounds.FrontAxleRunIndex;
-								if (bufferIndex > Train.Cars[CarIndex].Sounds.PointFrontAxle.Length)
+								if (bufferIndex > Train.Cars[CarIndex].Sounds.PointFrontAxle.Length -1 || Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Buffer == null)
 								{
 									//If the switch sound does not exist, return zero
 									//Required to handle legacy trains which don't have idx specific run sounds defined
