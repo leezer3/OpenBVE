@@ -219,7 +219,7 @@ namespace OpenBve {
 									string t = Lines[i].Substring(6, Lines[i].Length - 7);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
 									{
-										if (n > Train.Cars.Length)
+										if (n > BogiesDefined.Length -1)
 										{
 											continue;
 										}

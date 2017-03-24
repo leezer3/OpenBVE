@@ -484,7 +484,7 @@ namespace OpenBve
 			SingleMenu	menu	= Menus[CurrMenu];
 			int			item	= (y - topItemY) / lineHeight + menu.TopItem;
 			// if the mouse is above a command item, select it
-			if (item >= 0 && item < visibleItems && menu.Items[item] is MenuCommand)
+			if (item >= 0 && item < visibleItems + menu.TopItem && menu.Items[item] is MenuCommand)
 			{
 				menu.Selection	= item;
 				return true;
@@ -620,6 +620,7 @@ namespace OpenBve
 		/// <summary>Draws the current menu as a screen overlay</summary>
 		internal void Draw()
 		{
+
 			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
@@ -651,6 +652,7 @@ namespace OpenBve
 			int	itemY	= topItemY;
 			for (i = menu.TopItem; i <= menuBottomItem; i++)
 			{
+				
 				if (i == menu.Selection)
 				{
 					// draw a solid highlight rectangle under the text
