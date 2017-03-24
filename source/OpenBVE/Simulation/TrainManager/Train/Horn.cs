@@ -50,6 +50,7 @@ namespace OpenBve
 			{
 				if (StartEndSounds == true)
 				{
+					//New style three-part sounds
 					if (LoopStarted == false)
 					{
 						if (!Sounds.IsPlaying(Source))
@@ -76,14 +77,28 @@ namespace OpenBve
 				}
 				else
 				{
+					//Original single part sounds
 					if (LoopSound != null)
 					{
+						//Loop is ONLY true if this is a Music Horn
 						if (Loop)
 						{
-							if (!Sounds.IsPlaying(Source))
+							if (!Sounds.IsPlaying(Source) && !LoopStarted)
 							{
+								//On the first keydown event, start the sound source playing and trigger the loop control variable
 								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
 										TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, true);
+								LoopStarted = true;
+							}
+							else
+							{
+								if (!LoopStarted)
+								{
+									//Our loop control variable is reset by the keyup event so this code will only trigger on the 
+									//second keydown meaning our horn toggles
+									Sounds.StopSound(Source);
+									LoopStarted = true;
+								}
 							}
 						}
 						else
@@ -108,6 +123,11 @@ namespace OpenBve
 				if (!StartEndSounds & !Loop)
 				{
 					//Don't stop horns which are play-once single part sounds
+					return;
+				}
+				if (!StartEndSounds & Loop)
+				{
+					//This sound is a toggle music horn sound
 					return;
 				}
 				if (Sounds.IsPlaying(Source))
