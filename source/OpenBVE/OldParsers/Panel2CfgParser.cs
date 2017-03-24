@@ -309,7 +309,7 @@ namespace OpenBve {
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 									double Minimum = 0.0, Maximum = 1000.0;
 									double NaturalFrequency = -1.0, DampingRatio = -1.0;
-									bool Backstop = false;
+									bool Backstop = false, Smoothed = false;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0) {
@@ -432,6 +432,12 @@ namespace OpenBve {
 														Backstop = true;
 													}
 													break;
+												case "smoothed":
+													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
+													{
+														Smoothed = true;
+													}
+													break;
 											}
 										} i++;
 									} i--;
@@ -474,13 +480,13 @@ namespace OpenBve {
 										string f;
 										switch (Subject.ToLowerInvariant()) {
 											case "hour":
-												f = "0.000277777777777778 time * floor";
+												f = Smoothed ? "0.000277777777777778 time * 24 mod" : "0.000277777777777778 time * floor";
 												break;
 											case "min":
-												f = "0.0166666666666667 time * floor";
+												f = Smoothed ? "0.0166666666666667 time * 60 mod" : "0.0166666666666667 time * floor";
 												break;
 											case "sec":
-												f = "time floor";
+												f = Smoothed ? "time 60 mod" : "time floor";
 												break;
 											default:
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
