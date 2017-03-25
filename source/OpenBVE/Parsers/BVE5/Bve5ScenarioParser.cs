@@ -510,7 +510,7 @@ namespace OpenBve
 								int idb = Commands[c].IndexOf(']');
 								string key = Commands[c].Substring(ida + 1, idb - ida - 1);
 								//Remove the single quotes BVE5 uses to surround names
-								key = key.RemoveEnclosingQuotes();
+								key = key.RemoveEnclosingQuotes().ToLowerInvariant();
 								PutStation(key, Arguments, ref Data, BlockIndex, UnitOfLength);
 								continue;
 							}

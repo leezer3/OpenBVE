@@ -97,6 +97,7 @@ namespace OpenBve
 		/// <summary>Loads the list of stations for a BVE5 map</summary>
 		/// <param name="StationList">The absolute on-disk path to the station list</param>
 		/// <param name="Data">The route data</param>
+		/// <param name="Encoding">The text encoding</param>
 		/// <param name="PreviewOnly">Whether this is a preview only</param>
 		private static void LoadStations(string StationList, ref RouteData Data, System.Text.Encoding Encoding, bool PreviewOnly)
 		{
@@ -157,7 +158,7 @@ namespace OpenBve
 					//stationName - The station name that is displayed in the time table
 					Game.Stations[CurrentStation].Name = Arguments[1];
 				}
-				Game.Stations[CurrentStation].Key = Arguments[0];
+				Game.Stations[CurrentStation].Key = Arguments[0].ToLowerInvariant();
 
 				//TODO: Sounds are referred to using the key methodology, rather than by a simple filename
 				//TODO: Jump time is not implemented in openBVE (?? - CHECK whether it resets to the specified arrival time ??)
