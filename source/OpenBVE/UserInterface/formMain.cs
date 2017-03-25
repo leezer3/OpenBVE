@@ -694,8 +694,15 @@ namespace OpenBve {
 			radiobuttonKeyboard.Text = Interface.GetInterfaceString("controls_selection_keyboard");
 			labelKeyboardKey.Text = Interface.GetInterfaceString("controls_selection_keyboard_key");
 			labelKeyboardModifier.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers");
+			//Load text for SHIFT modifier
 			checkboxKeyboardShift.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
+			//Shift CTRL
+			checkboxKeyboardCtrl.Location = new Point(checkboxKeyboardShift.Location.X + (checkboxKeyboardShift.Text.Length + 5) * 5, checkboxKeyboardCtrl.Location.Y);
+			//Load text for CTRL modifier
 			checkboxKeyboardCtrl.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
+			//Shift ALT to suit
+			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
+			
 			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");
