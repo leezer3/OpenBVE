@@ -466,6 +466,11 @@ namespace OpenBve
 							//Horrible hack, but we've already validated parenthesis when we split into expressions......
 							string[] Arguments = Commands[c].Substring(idx + 1, Commands[c].Length - idx - 2).Split(',');
 							string command = Commands[c].Substring(0, idx).ToLowerInvariant();
+							if (command.StartsWith("#"))
+							{
+								//comment
+								continue;
+							}
 							if (command.StartsWith("legacy."))
 							{
 								command = command.Substring(7, command.Length - 7);
@@ -760,6 +765,11 @@ namespace OpenBve
 								}
 								continue;
 							}
+							if (!PreviewOnly)
+							{
+								Interface.AddMessage(Interface.MessageType.Warning, false, command);
+							}
+
 						}
 						continue;
 					}
@@ -1733,13 +1743,51 @@ namespace OpenBve
 						switch (Data.Blocks[i].Repeaters[j].Type)
 						{
 							case 0:
-								int sttype = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-								double d = Data.Blocks[i].Repeaters[j].TrackPosition - StartingDistance;
-								double dx = 0;
-								double dy = 0;
-								Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
-								double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
-								ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation, new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);	
+								double lastRepetion = Data.Blocks[i].Repeaters[j].TrackPosition;
+								int t;
+								if (i != 0)
+								{
+									for (t = 0; t < Data.Blocks[i - 1].Repeaters.Length; t++)
+									{
+										if (Data.Blocks[i - 1].Repeaters[t].Name == Data.Blocks[i].Repeaters[j].Name)
+										{
+											lastRepetion = Data.Blocks[i - 1].Repeaters[t].TrackPosition;
+											break;
+										}
+									}
+								}
+								if (lastRepetion != Data.Blocks[i].Repeaters[j].TrackPosition)
+								{
+									Data.Blocks[i].Repeaters[j].TrackPosition = lastRepetion;
+									double nextRepetition = lastRepetion + Data.Blocks[i].Repeaters[j].RepetitionInterval;
+									
+									if (nextRepetition > Data.Blocks[i].Repeaters[j].TrackPosition)
+									{
+										Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
+										int sttype = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+										double d = lastRepetion - StartingDistance;
+										double dx = 0;
+										double dy = 0;
+										Vector3 wpos = Position +
+										               new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height,
+											               Direction.Y * d - Direction.X * dx);
+										double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
+										ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation,
+											new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+											Data.BlockInterval, tpos);
+									}
+								}
+								else
+								{
+									int sttype = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+									double d = Data.Blocks[i].Repeaters[j].TrackPosition - StartingDistance;
+									double dx = 0;
+									double dy = 0;
+									Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
+									double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
+									ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation, new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);		
+								}
+								
 								break;
 							case 1:
 								//The repeater follows the gradient of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
@@ -2030,6 +2078,11 @@ namespace OpenBve
 									c2 = d2 / Math.Sqrt(1.0 + p2 * p2);
 									h2 = c2 * p2;
 								}
+								double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
+								double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
+								World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
+								World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
+								RailTransformation = new World.Transformation(TrackTransformation2, 0.0, 0.0, 0.0);
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
@@ -2047,6 +2100,8 @@ namespace OpenBve
 								planar = Math.Atan(dx / c);
 								dh = dy / c;
 								updown = Math.Atan(dh);
+								
+								
 							}
 							else
 							{
