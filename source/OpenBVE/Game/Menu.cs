@@ -294,6 +294,10 @@ namespace OpenBve
 				// compute menu extent
 				for (i = 0; i < Items.Length; i++)
 				{
+					if (Items[i] == null)
+					{
+						continue;
+					}
 					size = Renderer.MeasureString(Game.Menu.MenuFont, Items [i].Text);
 					if (size.Width > Width)
 						Width		= size.Width;
@@ -461,10 +465,37 @@ namespace OpenBve
 			}
 		}
 
+		
+		//
+		// PROCESS MOUSE EVENTS
+		//
 
-		//
-		// PROCESS MOUSE MOVE EVENTS
-		//
+		/// <summary>Processes a scroll wheel event</summary>
+		/// <param name="Scroll">The delta</param>
+		internal void ProcessMouseScroll(int Scroll)
+		{
+			// Load the current menu
+			SingleMenu menu = Menus[CurrMenu];
+			if (Math.Abs(Scroll) == Scroll)
+			{
+				//Negative
+				if (menu.TopItem > 0)
+				{
+					menu.TopItem--;
+				}
+
+			}
+			else
+			{
+				//Positive
+				if (menu.Items.Length - menu.TopItem > visibleItems)
+				{
+					menu.TopItem++;
+				}
+			}
+		}
+
+
 		/// <summary>Processes a mouse move event</summary>
 		/// <param name="x">The screen-relative x coordinate of the move event</param>
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
@@ -684,7 +715,10 @@ namespace OpenBve
 			int	itemY	= topItemY;
 			for (i = menu.TopItem; i <= menuBottomItem && i < menu.Items.Length; i++)
 			{
-				
+				if (menu.Items[i] == null)
+				{
+					continue;
+				}
 				if (i == menu.Selection)
 				{
 					// draw a solid highlight rectangle under the text
