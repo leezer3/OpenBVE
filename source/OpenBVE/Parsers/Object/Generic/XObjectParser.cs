@@ -738,13 +738,18 @@ namespace OpenBve
 					switch (Template.Members[m])
 					{
 						case "DWORD":
-							while (Position < Content.Length) {
-								if (Content[Position] == '{' | Content[Position] == '}' | Content[Position] == ',' | Content[Position] == '"') {
+							while (Position < Content.Length)
+							{
+								if (Content[Position] == '{' | Content[Position] == '}' | Content[Position] == ',' | Content[Position] == '"')
+								{
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid character encountered while processing a DWORD in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
-								} else if (Content[Position] == ';') {
+								}
+								else if (Content[Position] == ';')
+								{
 									string s = Content.Substring(i, Position - i).Trim();
-									int a; if (!int.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out a)) {
+									int a; if (!int.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out a))
+									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "DWORD could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									}

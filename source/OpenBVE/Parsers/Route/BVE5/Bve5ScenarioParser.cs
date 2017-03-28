@@ -189,6 +189,7 @@ namespace OpenBve
 			internal double Accuracy;
 			internal double AdhesionMultiplier;
 			internal bool JointNoise = false;
+			internal bool BeginInterpolation = false;
 		}
 
 		private struct TrackSound
@@ -1301,7 +1302,7 @@ namespace OpenBve
 			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;
 			ObjectManager.StaticObject SignalPost, LimitPostStraight, LimitPostLeft, LimitPostRight, LimitPostInfinite;
 			ObjectManager.StaticObject LimitOneDigit, LimitTwoDigits, LimitThreeDigits, StopPost;
-			ObjectManager.StaticObject TransponderS, TransponderSN, TransponderFalseStart, TransponderPOrigin, TransponderPStop;
+			//ObjectManager.StaticObject TransponderS, TransponderSN, TransponderFalseStart, TransponderPOrigin, TransponderPStop;
 			if (!PreviewOnly)
 			{
 				string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
@@ -1317,13 +1318,13 @@ namespace OpenBve
 				LimitOneDigit = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 				LimitTwoDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 				LimitThreeDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				StopPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//StopPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 				TransponderPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Transponders");
-				TransponderS = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderSN = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderFalseStart = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderPOrigin = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderPStop = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//TransponderS = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//TransponderSN = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//TransponderFalseStart = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//TransponderPOrigin = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				//TransponderPStop = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 			}
 			else
 			{
@@ -1340,11 +1341,11 @@ namespace OpenBve
 				LimitTwoDigits = null;
 				LimitThreeDigits = null;
 				StopPost = null;
-				TransponderS = null;
-				TransponderSN = null;
-				TransponderFalseStart = null;
-				TransponderPOrigin = null;
-				TransponderPStop = null;
+				//TransponderS = null;
+				//TransponderSN = null;
+				//TransponderFalseStart = null;
+				//TransponderPOrigin = null;
+				//TransponderPStop = null;
 			}
 			// initialize
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -1772,7 +1773,11 @@ namespace OpenBve
 										               new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height,
 											               Direction.Y * d - Direction.X * dx);
 										double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
-										ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation,
+										if (sttype > Data.Structure.Objects.Length || Data.Structure.Objects[sttype] == null)
+										{
+											continue;
+										}
+										Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation,
 											new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
 											Data.BlockInterval, tpos);
 									}
@@ -1785,7 +1790,7 @@ namespace OpenBve
 									double dy = 0;
 									Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
 									double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
-									ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation, new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);		
+									Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation, new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);		
 								}
 								
 								break;
@@ -1999,7 +2004,11 @@ namespace OpenBve
 						double dy = Data.Blocks[i].GroundFreeObj[j].Y;
 						Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
 						double tpos = Data.Blocks[i].GroundFreeObj[j].TrackPosition;
-						ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, GroundTransformation, new World.Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+						if (sttype > Data.Structure.Objects.Length || Data.Structure.Objects[sttype] == null)
+						{
+							continue;
+						}
+						Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation, new World.Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
 					}
 				}
 				// rail-aligned objects
@@ -2174,7 +2183,11 @@ namespace OpenBve
 									wpos.Y += dx*RailTransformation.X.Y + dy*RailTransformation.Y.Y + dz*RailTransformation.Z.Y;
 									wpos.Z += dx*RailTransformation.X.Z + dy*RailTransformation.Y.Z + dz*RailTransformation.Z.Z;
 									double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
-									ObjectManager.CreateObject(Data.Structure.Objects[sttype], wpos, RailTransformation,
+									if (sttype > Data.Structure.Objects.Length || Data.Structure.Objects[sttype] == null)
+									{
+										continue;
+									}
+									Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
 										new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
 											Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
 										Data.BlockInterval, tpos, 1.0, false);
@@ -2233,7 +2246,11 @@ namespace OpenBve
 											aoc.Objects[0].States = new ObjectManager.AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
-												aoc.Objects[0].States[l].Object = ObjectManager.CloneObject(csd.Objects[l]);
+												if (csd.Objects[l] == null)
+												{
+													continue;
+												}
+												aoc.Objects[0].States[l].Object = csd.Objects[l].Clone();
 											}
 											string expr = "";
 											for (int l = 0; l < csd.Numbers.Length - 1; l++)
@@ -2247,7 +2264,7 @@ namespace OpenBve
 											}
 											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Program.RandomNumberGenerator.NextDouble();
-											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
+											aoc.CreateObject(wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
 										}
 									}
 
@@ -2710,8 +2727,8 @@ namespace OpenBve
 					TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
 					double r = (double)m / (double)subdivisions;
 					double p = (1.0 - r) * TrackManager.CurrentTrack.Elements[q].StartingTrackPosition + r * TrackManager.CurrentTrack.Elements[q + 1].StartingTrackPosition;
-					TrackManager.UpdateTrackFollower(ref follower, -1.0, true, false);
-					TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+					follower.Update(-1.0, true, false);
+					follower.Update(p, true, false);
 					midpointsTrackPositions[i] = p;
 					midpointsWorldPositions[i] = follower.WorldPosition;
 					midpointsWorldDirections[i] = follower.WorldDirection;
@@ -2753,7 +2770,7 @@ namespace OpenBve
 					if (m == 0)
 					{
 						double p = 0.00000001 * TrackManager.CurrentTrack.Elements[i - 1].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
-						TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+						follower.Update(p, true, false);
 						Vector3 d1 = TrackManager.CurrentTrack.Elements[i].WorldDirection;
 						Vector3 d2 = follower.WorldDirection;
 						Vector3 d = d1 - d2;
@@ -2832,8 +2849,8 @@ namespace OpenBve
 							TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
 							TrackManager.CurrentTrack.Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * TrackManager.CurrentTrack.Elements[i - 1].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
-							TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+							follower.Update(p - 1.0, true, false);
+							follower.Update(p, true, false);
 							TrackManager.CurrentTrack.Elements[i].CurveRadius = r;
 							//TrackManager.CurrentTrack.Elements[i].CurveCant = TrackManager.CurrentTrack.Elements[i].CurveCant;
 							//TrackManager.CurrentTrack.Elements[i].CurveCantInterpolation = TrackManager.CurrentTrack.Elements[i].CurveCantInterpolation;
@@ -2843,8 +2860,8 @@ namespace OpenBve
 							TrackManager.CurrentTrack.Elements[i].WorldSide = follower.WorldSide;
 							// iterate to shorten track element length
 							p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-							TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+							follower.Update(p - 1.0, true, false);
+							follower.Update(p, true, false);
 							Vector3 d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 							double bestT = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 							int bestJ = 0;
@@ -2852,7 +2869,7 @@ namespace OpenBve
 							double a = 1.0 / (double)n * (TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - TrackManager.CurrentTrack.Elements[i].StartingTrackPosition);
 							for (int j = 1; j < n - 1; j++)
 							{
-								TrackManager.UpdateTrackFollower(ref follower, TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+								follower.Update(TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 								d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 								double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 								if (t < bestT)
@@ -2873,8 +2890,8 @@ namespace OpenBve
 							totalShortage += s;
 							// introduce turn to compensate for curve
 							p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-							TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+							follower.Update(p - 1.0, true, false);
+							follower.Update(p, true, false);
 							Vector3 AB = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 							Vector3 AC = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - TrackManager.CurrentTrack.Elements[i].WorldPosition;
 							Vector3 BC = follower.WorldPosition - TrackManager.CurrentTrack.Elements[i].WorldPosition;
@@ -2913,8 +2930,8 @@ namespace OpenBve
 									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, 0.0, 1.0, 0.0, cosg, sing);
 									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide.X, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Y, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Z, 0.0, 1.0, 0.0, cosg, sing);
 									p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-									TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-									TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+									follower.Update(p - 1.0, true, false);
+									follower.Update(p, true, false);
 									d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 									if (t < bestT)
@@ -2934,8 +2951,8 @@ namespace OpenBve
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-								TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-								TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+								follower.Update(p - 1.0, true, false);
+								follower.Update(p, true, false);
 								d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 								bestT = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 								bestJ = 0;
@@ -2943,7 +2960,7 @@ namespace OpenBve
 								a = 1.0 / (double)n * (TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - TrackManager.CurrentTrack.Elements[i].StartingTrackPosition);
 								for (int j = 1; j < n - 1; j++)
 								{
-									TrackManager.UpdateTrackFollower(ref follower, TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+									follower.Update(TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 									d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 									if (t < bestT)
@@ -2965,8 +2982,8 @@ namespace OpenBve
 							}
 							// compensate for height difference
 							p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-							TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref follower, p, true, false);
+							follower.Update(p - 1.0, true, false);
+							follower.Update(p, true, false);
 							Vector3 d1 = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - TrackManager.CurrentTrack.Elements[i].WorldPosition;
 							double a1 = Math.Atan(d1.Y / Math.Sqrt(d1.X * d1.X + d1.Z * d1.Z));
 							Vector3 d2 = follower.WorldPosition - TrackManager.CurrentTrack.Elements[i].WorldPosition;

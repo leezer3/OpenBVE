@@ -83,6 +83,10 @@ namespace OpenBve
 				for (int i = 0; i < this.States.Length; i++)
 				{
 					Result.States[i].Position = this.States[i].Position;
+					if (this.States[i].Object == null)
+					{
+						continue;
+					}
 					Result.States[i].Object = this.States[i].Object.Clone();
 				}
 				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();

@@ -35,6 +35,8 @@ namespace OpenBve
 			/// <summary>An array containing all events attached to this element</summary>
 			internal GeneralEvent[] Events;
 
+			internal bool BeginInterpolation;
+
 			internal TrackElement(double StartingTrackPosition)
 			{
 				this.StartingTrackPosition = StartingTrackPosition;
@@ -49,6 +51,7 @@ namespace OpenBve
 				this.WorldUp = new Vector3(0.0, 1.0, 0.0);
 				this.WorldSide = new Vector3(1.0, 0.0, 0.0);
 				this.Events = new GeneralEvent[] { };
+				this.BeginInterpolation = false;
 			}
 		}
 	}

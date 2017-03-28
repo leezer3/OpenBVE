@@ -162,6 +162,10 @@
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
+    <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.Commands.cs" />
+    <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.Components.cs" />
+    <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.cs" />
+    <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.Functions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
