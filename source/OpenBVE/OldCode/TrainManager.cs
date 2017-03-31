@@ -180,17 +180,7 @@ namespace OpenBve
 			internal float NextBrightness;
 			internal double NextTrackPosition;
 		}
-		internal struct Horn
-		{
-			internal CarSound Sound;
-			internal bool Loop;
-			private Horn(CarSound sound, bool loop)
-			{
-				this.Sound = sound;
-				this.Loop = loop;
-			}
-			internal static readonly Horn Empty = new Horn(CarSound.Empty, false);
-		}
+
 		internal struct CarSound
 		{
 			internal Sounds.SoundBuffer Buffer;
@@ -270,8 +260,8 @@ namespace OpenBve
 			internal CarSound PilotLampOn;
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
-			internal CarSound PointFrontAxle;
-			internal CarSound PointRearAxle;
+			internal CarSound[] PointFrontAxle;
+			internal CarSound[] PointRearAxle;
 			internal CarSound Rub;
 			internal CarSound ReverserOn;
 			internal CarSound ReverserOff;

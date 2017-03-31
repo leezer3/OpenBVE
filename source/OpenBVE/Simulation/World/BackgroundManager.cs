@@ -239,11 +239,27 @@ namespace OpenBve
 			/// <summary>The object used for this background (NOTE: Static objects only)</summary>
 			internal ObjectManager.StaticObject ObjectBackground;
 
+			internal double ClipDistance = 0;
+
 			/// <summary>Creates a new background object</summary>
 			/// <param name="Object">The object to use for the background</param>
 			internal BackgroundObject(ObjectManager.StaticObject Object)
 			{
 				this.ObjectBackground = Object;
+				//As we are using an object based background, calculate the minimum clip distance
+				for (int i = 0; i > Object.Mesh.Vertices.Length; i++)
+				{
+					double X = Math.Abs(Object.Mesh.Vertices[i].Coordinates.X);
+					double Z = Math.Abs(Object.Mesh.Vertices[i].Coordinates.Z);
+					if (X < ClipDistance)
+					{
+						ClipDistance = X;
+					}
+					if (Z < ClipDistance)
+					{
+						ClipDistance = Z;
+					}
+				}
 			}
 
 			internal override void UpdateBackground(double TimeElapsed, bool Target)

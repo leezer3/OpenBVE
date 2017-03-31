@@ -244,10 +244,23 @@ namespace OpenBve
 					switch (loadedControl.Method)
 					{
 					case Interface.ControlMethod.Keyboard:
+						string keyName = loadedControl.Key.ToString();
+						for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+						{
+							if (Interface.TranslatedKeys[k].Key == loadedControl.Key)
+							{
+								keyName = Interface.TranslatedKeys[k].Description;
+								break;
+							}
+						}
 						if (loadedControl.Modifier != Interface.KeyboardModifier.None)
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + loadedControl.Key + "]";
+						{
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
+						}
 						else
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Key + "]";
+						{
+							str = Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
+						}
 						break;
 					case Interface.ControlMethod.Joystick:
 						str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
@@ -281,6 +294,10 @@ namespace OpenBve
 				// compute menu extent
 				for (i = 0; i < Items.Length; i++)
 				{
+					if (Items[i] == null)
+					{
+						continue;
+					}
 					size = Renderer.MeasureString(Game.Menu.MenuFont, Items [i].Text);
 					if (size.Width > Width)
 						Width		= size.Width;
@@ -383,7 +400,8 @@ namespace OpenBve
 				Array.Resize(ref Menus, CurrMenu + 1);
 			Menus[CurrMenu]			= new Menu.SingleMenu(type, data);
 			PositionMenu();
-			Game.CurrentInterface	= Game.InterfaceType.Menu;
+			Game.PreviousInterface  = Game.CurrentInterface;
+			Game.CurrentInterface	= Game.InterfaceType.Menu;			
 		}
 
 		//
@@ -400,7 +418,8 @@ namespace OpenBve
 			else
 			{							// if only one menu remaining...
 				Reset();
-				Game.CurrentInterface = Game.InterfaceType.Normal;	// return to simulation
+				Game.PreviousInterface = Game.CurrentInterface;
+				Game.CurrentInterface  = Game.InterfaceType.Normal;	// return to simulation
 			}
 		}
 
@@ -446,9 +465,37 @@ namespace OpenBve
 			}
 		}
 
+		
 		//
-		// PROCESS MOUSE MOVE EVENTS
+		// PROCESS MOUSE EVENTS
 		//
+
+		/// <summary>Processes a scroll wheel event</summary>
+		/// <param name="Scroll">The delta</param>
+		internal void ProcessMouseScroll(int Scroll)
+		{
+			// Load the current menu
+			SingleMenu menu = Menus[CurrMenu];
+			if (Math.Abs(Scroll) == Scroll)
+			{
+				//Negative
+				if (menu.TopItem > 0)
+				{
+					menu.TopItem--;
+				}
+
+			}
+			else
+			{
+				//Positive
+				if (menu.Items.Length - menu.TopItem > visibleItems)
+				{
+					menu.TopItem++;
+				}
+			}
+		}
+
+
 		/// <summary>Processes a mouse move event</summary>
 		/// <param name="x">The screen-relative x coordinate of the move event</param>
 		/// <param name="y">The screen-relative y coordinate of the move event</param>
@@ -461,19 +508,34 @@ namespace OpenBve
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Game.CurrentInterface != Game.InterfaceType.Menu ||
-				isCustomisingControl ||
-				(x < topItemY || x > menuXmax || y < menuYmin || y > menuYmax) )
+			    isCustomisingControl)
 				return false;
 
-			// locate the menu item under the mouse
-			SingleMenu	menu	= Menus[CurrMenu];
-			int			item	= (y - topItemY) / lineHeight + menu.TopItem;
-			// if the mouse is above a command item, select it
-			if (item >= 0 && item < visibleItems && menu.Items[item] is MenuCommand)
+			// Load the current menu
+			SingleMenu menu = Menus[CurrMenu];
+			if (menu.TopItem > 1 && y < topItemY && y > menuYmin)
 			{
-				menu.Selection	= item;
+				//Item is the scroll up ellipsis
+				menu.Selection = menu.TopItem - 1;
 				return true;
 			}
+			if (x < topItemY || x > menuXmax || y < menuYmin || y > menuYmax)
+			{
+				return false;
+			}
+
+			int	item = (y - topItemY) / lineHeight + menu.TopItem;
+			// if the mouse is above a command item, select it
+			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand)
+			{
+				if (item < visibleItems + menu.TopItem + 1)
+				{
+					//Item is a standard menu entry or the scroll down elipsis
+					menu.Selection = item;
+					return true;
+				}
+			}
+			
 			return false;
 		}
 
@@ -488,6 +550,16 @@ namespace OpenBve
 		{
 			if (ProcessMouseMove(x, y))
 			{
+				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem + visibleItems)
+				{
+					ProcessCommand(Interface.Command.MenuDown, 0);
+					return true;
+				}
+				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem - 1)
+				{
+					ProcessCommand(Interface.Command.MenuUp, 0);
+					return true;
+				}
 				ProcessCommand(Interface.Command.MenuEnter, 0);
 				return true;
 			}
@@ -560,6 +632,7 @@ namespace OpenBve
 						break;
 					case MenuTag.BackToSim:				// OUT OF MENU BACK TO SIMULATION
 						Reset();
+						Game.PreviousInterface = Game.InterfaceType.Menu;
 						Game.CurrentInterface = Game.InterfaceType.Normal;
 						break;
 
@@ -604,6 +677,7 @@ namespace OpenBve
 		/// <summary>Draws the current menu as a screen overlay</summary>
 		internal void Draw()
 		{
+
 			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
@@ -628,13 +702,23 @@ namespace OpenBve
 				menuXmax + MenuBorderX, menuYmax + MenuBorderY);
 
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
+			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
+			{
+				GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
+					itemLeft + menu.ItemWidth + MenuItemBorderX, menuYmin + em + MenuItemBorderY * 2);
+			}
 			if (menu.TopItem > 0)
 				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			int	itemY	= topItemY;
-			for (i = menu.TopItem; i <= menuBottomItem; i++)
+			for (i = menu.TopItem; i <= menuBottomItem && i < menu.Items.Length; i++)
 			{
+				if (menu.Items[i] == null)
+				{
+					continue;
+				}
 				if (i == menu.Selection)
 				{
 					// draw a solid highlight rectangle under the text
@@ -654,6 +738,14 @@ namespace OpenBve
 					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
+			}
+			
+			
+			if (menu.Selection == menu.TopItem + visibleItems)
+			{
+				GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+					itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)

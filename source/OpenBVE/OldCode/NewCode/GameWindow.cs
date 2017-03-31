@@ -269,6 +269,7 @@ namespace OpenBve
 			Keyboard.KeyRepeat	 = false;
 			Mouse.ButtonDown	+= MainLoop.mouseDownEvent;
 			Mouse.Move			+= MainLoop.mouseMoveEvent;
+			Mouse.WheelChanged  += MainLoop.mouseWheelEvent;
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{

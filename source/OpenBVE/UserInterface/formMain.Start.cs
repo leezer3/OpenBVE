@@ -38,12 +38,17 @@ namespace OpenBve
 			rf = Folder;
 			try
 			{
-				routeWatcher = new FileSystemWatcher();
-				routeWatcher.Path = Folder;
-				routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-				routeWatcher.Filter = "*.*";
-				routeWatcher.Changed += onRouteFolderChanged;
-				routeWatcher.EnableRaisingEvents = true;
+				if (!OpenTK.Configuration.RunningOnMacOS)
+				{
+					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
+					//Triggered by NWM which has 600+ files in the route folder
+					routeWatcher = new FileSystemWatcher();
+					routeWatcher.Path = Folder;
+					routeWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+					routeWatcher.Filter = "*.*";
+					routeWatcher.Changed += onRouteFolderChanged;
+					routeWatcher.EnableRaisingEvents = true;
+				}
 			}
 			catch
 			{
@@ -168,13 +173,17 @@ namespace OpenBve
 										{
 											try
 											{
-												string text = System.IO.File.ReadAllText(Files[i], Encoding.UTF8);
-												if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
-												    text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
-												    text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
+												using (StreamReader sr = new StreamReader(Files[i], Encoding.UTF8))
 												{
-													Item.ImageKey = "route";
+													string text = sr.ReadToEnd();
+													if (text.IndexOf("With Track", StringComparison.OrdinalIgnoreCase) >= 0 |
+													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
+													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
+													{
+														Item.ImageKey = "route";
+													}
 												}
+												
 											}
 											catch
 											{
@@ -222,6 +231,11 @@ namespace OpenBve
 					{
 						Result.RouteFile = t;
 						ShowRoute(false);
+					}
+					else
+					{
+						groupboxRouteDetails.Visible = false;
+						buttonStart.Enabled = false;
 					}
 				}
 			}
@@ -406,12 +420,15 @@ namespace OpenBve
 			tf = Folder;
 			try
 			{
-				trainWatcher = new FileSystemWatcher();
-				trainWatcher.Path = Folder;
-				trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-				trainWatcher.Filter = "*.*";
-				trainWatcher.Changed += onTrainFolderChanged;
-				trainWatcher.EnableRaisingEvents = true;
+				if (!OpenTK.Configuration.RunningOnMacOS)
+				{
+					trainWatcher = new FileSystemWatcher();
+					trainWatcher.Path = Folder;
+					trainWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+					trainWatcher.Filter = "*.*";
+					trainWatcher.Changed += onTrainFolderChanged;
+					trainWatcher.EnableRaisingEvents = true;
+				}
 			}
 			catch
 			{
@@ -546,6 +563,11 @@ namespace OpenBve
 							Result.TrainFolder = t;
 							ShowTrain(false);
 							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+						}
+						else
+						{
+							groupboxTrainDetails.Visible = false;
+							buttonStart.Enabled = false;
 						}
 					}
 				}
@@ -729,6 +751,7 @@ namespace OpenBve
 				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+				routeWorkerThread.Dispose();
 				return;
 			}
 			try
@@ -742,14 +765,7 @@ namespace OpenBve
 				// image
 				if (Game.RouteImage.Length != 0)
 				{
-					try
-					{
-						pictureboxRouteImage.Image = Image.FromFile(Game.RouteImage);
-					}
-					catch
-					{
-						TryLoadImage(pictureboxRouteImage, "route_error.png");
-					}
+					TryLoadImage(pictureboxRouteImage, Game.RouteImage);
 				}
 				else
 				{
@@ -763,7 +779,10 @@ namespace OpenBve
 						{
 							try
 							{
-								pictureboxRouteImage.Image = Image.FromFile(g);
+								using (var fs = new FileStream(g, FileMode.Open, FileAccess.Read))
+								{
+									pictureboxRouteImage.Image = new Bitmap(fs);
+								}
 							}
 							catch
 							{
@@ -987,12 +1006,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(Result.TrainFolder, "train.bmp");
 				}
 				if (System.IO.File.Exists(File)) {
-					try {
-						pictureboxTrainImage.Image = Image.FromFile(File);
-					} catch {
-						pictureboxTrainImage.Image = null;
-						TryLoadImage(pictureboxTrainImage, "train_error.png");
-					}
+					TryLoadImage(pictureboxTrainImage, File);
 				} else {
 					TryLoadImage(pictureboxTrainImage, "train_unknown.png");
 				}

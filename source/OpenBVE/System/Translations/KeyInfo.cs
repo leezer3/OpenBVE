@@ -49,6 +49,7 @@ namespace OpenBve
 			new KeyInfo(Key.Delete, "DELETE"),
 			new KeyInfo(Key.Down, "DOWN"),
 			new KeyInfo(Key.End, "END"),
+			new KeyInfo(Key.Enter, "ENTER"),
 			new KeyInfo(Key.Escape, "ESCAPE"),
 			new KeyInfo(Key.F1, "F1"),
 			new KeyInfo(Key.F2, "F2"),

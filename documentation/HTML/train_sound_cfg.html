@@ -128,13 +128,14 @@ Assigns a motor sound. The non-negative integer <em>Index</em> represents the in
 <table><tr style="height: 2px;"><td /></tr></table>
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
-<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">0 = <em>FileName</em></font></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Index = <em>FileName</em></font></td></tr>
 </table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font color="#808080">
 
 </font></td></tr></table>
-Played once per axle when the train crosses a pointwork.<br /><br /><hr />
+Assigns a switch sound- These are played once per axle when the train crosses a block containing pointwork. The non-negative integer <em>Index</em> represents the type of switch sound to use. Route developers can choose which flange sound to play for a given piece of track. Please see the page about <a href="information_standards.html">standards</a> for further information.
+<br /><br /><hr />
 <table><tr style="height: 4px;"><td /></tr></table>
 <font color="#0080FF">● [Brake]</font>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
@@ -242,6 +243,62 @@ Played occasionally when the train sways to the right side.<br /><br /><hr />
 <table><tr style="height: 4px;"><td /></tr></table>
 <font color="#0080FF">● [Horn]</font>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><br>
+There are two possible types of horn which may be defined via a <em>[Horn]</em> section- 'Looped Horns' and 'Legacy Horns'<br><br>
+<font color="#808080"><b><em>Looped Horns</b></em><br><br></font>
+A looped horn is made up of three components:<br>
+A start sound, a loop sound and an end sound.<br>
+The start sound is played once, followed by the loop sound for the duration of the keypress. When the horn key is released, the end sound will be played once.
+
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">PrimaryStart = <em>FileName</em>
+<br>SecondaryStart = <em>FileName</em>
+<br>MusicStart = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+Played once when the given horn is applied.<table border="0">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">PrimaryLoop = <em>FileName</em>
+<br>SecondaryLoop = <em>FileName</em>
+<br>MusicLoop = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+Played in a loop whilst the given horn is active.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">PrimaryEnd = <em>FileName</em>
+<br>SecondaryEnd = <em>FileName</em>
+<br>MusicEnd = <em>FileName</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+Played once when the given horn is released.<br /><br />
+
+
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><br>
+<font color="#808080"><b><em>Legacy Horns</b></em><br><br></font>
+A legacy horn is made up of a single sound.<br>
+
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font size="-1" color="#808080">
 
 </font></td></tr></table>
@@ -254,7 +311,11 @@ Played occasionally when the train sways to the right side.<br /><br /><hr />
 <tr><td><font color="#808080">
 
 </font></td></tr></table>
-Played once when the primary horn is applied.<br /><br /><table border="0">
+Played once whilst the primary horn is active.<table border="0">
+
+</font></td></tr></table>
+<table><tr style="height: 2px;"><td /></tr></table>
+<br /><table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Secondary = <em>FileName</em></font></td></tr>
 </table>
@@ -262,7 +323,7 @@ Played once when the primary horn is applied.<br /><br /><table border="0">
 <tr><td><font color="#808080">
 
 </font></td></tr></table>
-Played once when the secondary horn is applied.<br /><br /><table border="0">
+Played once whilst the secondary horn is active.<br /><br /><table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Music = <em>FileName</em></font></td></tr>
 </table>
@@ -270,16 +331,14 @@ Played once when the secondary horn is applied.<br /><br /><table border="0">
 <tr><td><font color="#808080">
 
 </font></td></tr></table>
-Played in a loop when the music horn is applied.<br /><br /><hr />
-<table><tr style="height: 4px;"><td /></tr></table>
-<font color="#0080FF">● [Door]</font>
-<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
-<tr><td><font size="-1" color="#808080">
+Played in a continuous loop whilst the music horn is active.<br /><br />
 
-</font></td></tr></table>
-<table><tr style="height: 2px;"><td /></tr></table>
-<br /><table border="0">
-<tr style="height:16"><td></td></tr>
+
+</table>
+<hr><table><tr style="height: 4px;"><td /></tr></table>
+<font color="#0080FF">● [Horn]</font>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000">Open Left = <em>FileName</em></font></td></tr>
 </table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">

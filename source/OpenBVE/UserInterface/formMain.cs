@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -56,8 +58,11 @@ namespace OpenBve {
 				//Dispose of the worker thread when closing the form
 				//If it's still running, it attempts to update a non-existant form and crashes nastily
 				Dialog.routeWorkerThread.Dispose();
-				Dialog.trainWatcher.Dispose();
-				Dialog.routeWatcher.Dispose();
+				if (!OpenTK.Configuration.RunningOnMacOS)
+				{
+					Dialog.trainWatcher.Dispose();
+					Dialog.routeWatcher.Dispose();
+				}
 				Dialog.Dispose();
 				return result;
 			}
@@ -158,6 +163,8 @@ namespace OpenBve {
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
+			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"),"error_route.png");
+			pictureboxTrainImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_train.png");
 			/* 
 			 * TODO: Integrate into packages
 			 */
@@ -687,8 +694,15 @@ namespace OpenBve {
 			radiobuttonKeyboard.Text = Interface.GetInterfaceString("controls_selection_keyboard");
 			labelKeyboardKey.Text = Interface.GetInterfaceString("controls_selection_keyboard_key");
 			labelKeyboardModifier.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers");
+			//Load text for SHIFT modifier
 			checkboxKeyboardShift.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
+			//Shift CTRL
+			checkboxKeyboardCtrl.Location = new Point(checkboxKeyboardShift.Location.X + (checkboxKeyboardShift.Text.Length + 5) * 5, checkboxKeyboardCtrl.Location.Y);
+			//Load text for CTRL modifier
 			checkboxKeyboardCtrl.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
+			//Shift ALT to suit
+			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
+			
 			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");
@@ -995,8 +1009,12 @@ namespace OpenBve {
 				Interface.CurrentOptions.TrainEncodings = a;
 			}
 			Sounds.Deinitialize();
-			routeWatcher.Dispose();
 			routeWorkerThread.Dispose();
+			if (!OpenTK.Configuration.RunningOnMacOS)
+			{
+				routeWatcher.Dispose();
+				trainWatcher.Dispose();
+			}
 			workerThread.Dispose();
 			// finish
 #if !DEBUG
@@ -1456,14 +1474,17 @@ namespace OpenBve {
 				return null;
 			}
 		}
-
+	
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
-		private void TryLoadImage(PictureBox Box, string Title)
+		private void TryLoadImage(PictureBox Box, string File)
 		{
 			try
 			{
-				string Folder = Program.FileSystem.GetDataFolder("Menu");
-				string File = OpenBveApi.Path.CombineFile(Folder, Title);
+				if (!System.IO.File.Exists(File))
+				{
+					string Folder = Program.FileSystem.GetDataFolder("Menu");
+					File = OpenBveApi.Path.CombineFile(Folder, File);
+				}
 				if (System.IO.File.Exists(File))
 				{
 					try
@@ -1484,7 +1505,6 @@ namespace OpenBve {
 				Box.Image = Box.ErrorImage;
 			}
 		}
-
 
 		private void checkBoxLoadInAdvance_CheckedChanged(object sender, EventArgs e)
 		{

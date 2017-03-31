@@ -2,31 +2,29 @@
 #Set base development branch revision numbers
 #This needs to be bumped once we have a stable release branch
 MajorVersion=1
-MinorVersion=4
+MinorVersion=5
 
 # cd to correct directory
 cd -P -- "$(dirname -- "$0")"
 
 #If we're a tagged commit
-if (git describe --tags --exact-match 2> /dev/null)
-then
-Version=$(git describe --tags)
-InfoVersion=$(git describe --tags)
+if (git describe --tags --exact-match 2> /dev/null) then
+	Version=$(git describe --tags)
+	InfoVersion=$(git describe --tags)
 else
+	# determine revision and build numbers
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		#OSX
+		Revision=$(((($(date +%s) - $(date -jf "%Y-%m-%d" "2016-03-08" $B +%s))/86400 )+40 ))
+		Minutes=$(( $(date "+10#%H * 60 + 10#%M") ))
+	else
+		#Linux & Cygwin
+		Revision=$(( ( ($(date "+%s") - $(date --date="2016-03-08" +%s))/(60*60*24) )+40 ))
+		Minutes=$(( ( $(date "+%s") - $(date -d "today 0" +%s))/60 ))
+	fi
 
-# determine revision and build numbers
-if [[ "$OSTYPE" == "darwin"* ]]; then
-#OSX
-Revision=$(((($(date +%s) - $(date -jf "%Y-%m-%d" "2016-03-08" $B +%s))/86400 )+40 ))
-Minutes=$(( $(date "+10#%H * 60 + 10#%M") ))
-else
-#Linux & Cygwin
-Revision=$(( ( ($(date "+%s") - $(date --date="2016-03-08" +%s))/(60*60*24) )+40 ))
-Minutes=$(( ( $(date "+%s") - $(date -d "today 0" +%s))/60 ))
-fi
-
-Version=$MajorVersion.$MinorVersion.$Revision.$Minutes
-InfoVersion=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
+	Version=$MajorVersion.$MinorVersion.$Revision.$Minutes
+	InfoVersion=$MajorVersion.$MinorVersion.$Revision.$Minutes-$USER
 fi
 
 cat > AssemblyInfo.cs << EOF

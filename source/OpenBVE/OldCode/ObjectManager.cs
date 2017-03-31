@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using CSScriptLibrary;
 using OpenBveApi.Math;
 
@@ -1142,6 +1141,10 @@ namespace OpenBve {
 		// load object
 		internal enum ObjectLoadMode { Normal, DontAllowUnloadOfTextures }
 		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+			if (String.IsNullOrEmpty(FileName))
+			{
+				return null;
+			}
 			#if !DEBUG
 			try {
 				#endif
@@ -1199,6 +1202,10 @@ namespace OpenBve {
 			#endif
 		}
 		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+			if (String.IsNullOrEmpty(FileName))
+			{
+				return null;
+			}
 			#if !DEBUG
 			try {
 				#endif

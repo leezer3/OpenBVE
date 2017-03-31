@@ -63,7 +63,7 @@ namespace OpenBve {
 												else
 												{
 													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
- 													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
 													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 10px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 												break;
@@ -188,6 +188,7 @@ namespace OpenBve {
 					OpenBVEGame.RunInRenderThread(() =>
 					{
 						Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+						//Textures.LoadTexture(tnight, Textures.OpenGlTextureWrapMode.ClampClamp);
 					});
 					PanelBitmapWidth = (double)tday.Width;
 					PanelBitmapHeight = (double)tday.Height;
@@ -308,7 +309,7 @@ namespace OpenBve {
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 									double Minimum = 0.0, Maximum = 1000.0;
 									double NaturalFrequency = -1.0, DampingRatio = -1.0;
-									bool Backstop = false;
+									bool Backstop = false, Smoothed = false;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0) {
@@ -431,6 +432,12 @@ namespace OpenBve {
 														Backstop = true;
 													}
 													break;
+												case "smoothed":
+													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
+													{
+														Smoothed = true;
+													}
+													break;
 											}
 										} i++;
 									} i--;
@@ -473,13 +480,13 @@ namespace OpenBve {
 										string f;
 										switch (Subject.ToLowerInvariant()) {
 											case "hour":
-												f = "0.000277777777777778 time * floor";
+												f = Smoothed ? "0.000277777777777778 time * 24 mod" : "0.000277777777777778 time * floor";
 												break;
 											case "min":
-												f = "0.0166666666666667 time * floor";
+												f = Smoothed ? "0.0166666666666667 time * 60 mod" : "0.0166666666666667 time * floor";
 												break;
 											case "sec":
-												f = "time floor";
+												f = Smoothed ? "time 60 mod" : "time floor";
 												break;
 											default:
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -1171,6 +1178,18 @@ namespace OpenBve {
 					break;
 				case "atc":
 					Code = "271 pluginstate";
+					break;
+				case "klaxon":
+				case "horn":
+					Code = "klaxon";
+					break;
+				case "primaryklaxon":
+				case "primaryhorn":
+					Code = "primaryklaxon";
+					break;
+				case "secondaryklaxon":
+				case "secondaryhorn":
+					Code = "secondaryklaxon";
 					break;
 				default:
 					{

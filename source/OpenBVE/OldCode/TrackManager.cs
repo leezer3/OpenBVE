@@ -509,8 +509,15 @@ namespace OpenBve {
 							// HACK: Represents the train point sound
 							if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 								if (Train.Specs.CurrentAverageSpeed <= 0.0) return;
-								buffer = Train.Cars[CarIndex].Sounds.PointFrontAxle.Buffer;
-								p = Train.Cars[CarIndex].Sounds.PointFrontAxle.Position;
+								int bufferIndex = Train.Cars[CarIndex].Sounds.FrontAxleRunIndex;
+								if (bufferIndex > Train.Cars[CarIndex].Sounds.PointFrontAxle.Length -1 || Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Buffer == null)
+								{
+									//If the switch sound does not exist, return zero
+									//Required to handle legacy trains which don't have idx specific run sounds defined
+									bufferIndex = 0;
+								}
+								buffer = Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Buffer;
+								p = Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Position;
 							} else {
 								return; // HACK: Don't trigger sound for the rear axles
 								//buffer = Train.Cars[CarIndex].Sounds.PointRearAxle.Buffer;
