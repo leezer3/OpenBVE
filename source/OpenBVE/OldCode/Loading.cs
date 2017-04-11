@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
@@ -60,10 +61,16 @@ namespace OpenBve {
 		private static string GetRailwayFolder(string RouteFile) {
 			try {
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				
 				while (true) {
 					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
 					if (System.IO.Directory.Exists(Subfolder)) {
-						return Subfolder;
+						if (System.IO.Directory.EnumerateFiles(Subfolder).Count() > 20)
+						{
+							//HACK: If this subfolder doesn't contain more than 20 files, it's probably not the right one
+							return Subfolder;
+						}
+						
 					}
 					if (Folder == null) continue;
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
@@ -71,6 +78,7 @@ namespace OpenBve {
 					Folder = Info.FullName;
 				}
 			} catch { }
+			
 			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
 			try
 			{
