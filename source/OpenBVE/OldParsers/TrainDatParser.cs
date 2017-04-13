@@ -6,12 +6,11 @@ namespace OpenBve {
 	internal static class TrainDatParser {
 
 		// parse train data
-		internal static void ParseTrainData(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train) {
+		internal static void ParseTrainData(string FileName, System.Text.Encoding Encoding, TrainManager.Train Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Create the array using the default compatibility train.dat
 			string[] Lines = {"BVE2000000","#CAR","1","1","1","0","1","1"};
 			// load file
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "train.dat");
 			try
 			{
 				Lines = System.IO.File.ReadAllLines(FileName, Encoding);
@@ -22,8 +21,8 @@ namespace OpenBve {
 			if (Lines.Length == 0)
 			{
 				//Catch zero-length train.dat files
-				MessageBox.Show("The train.dat file " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat") + " is of zero length.");
-				throw new Exception("The train.dat file " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat") + " is of zero length.");
+				MessageBox.Show("The train.dat file " + FileName + " is of zero length.");
+				throw new Exception("The train.dat file " + FileName + " is of zero length.");
 			}
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
@@ -40,7 +39,7 @@ namespace OpenBve {
 					if (t == "bve1220000") {
 						ver1220000 = true;
 					} else if (t != "bve2000000" & t != "openbve") {
-						Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat"));
+						Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
 					}
 					break;
 				}

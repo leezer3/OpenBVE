@@ -65,11 +65,14 @@ namespace OpenBve {
 				while (true) {
 					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
 					if (System.IO.Directory.Exists(Subfolder)) {
-						if (System.IO.Directory.EnumerateFiles(Subfolder).Count() > 20)
+						if (System.IO.Directory.EnumerateFiles(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
 						{
-							//HACK: If this subfolder doesn't contain more than 20 files, it's probably not the right one
+							//HACK: Ignore completely empty directories
+							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
+							Program.AppendToLogFile(Subfolder + " : Railway folder found.");
 							return Subfolder;
 						}
+					Program.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
 						
 					}
 					if (Folder == null) continue;
@@ -90,6 +93,7 @@ namespace OpenBve {
 					string SoundFolder = OpenBveApi.Path.CombineDirectory(Folder, "Sound");
 					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
 					{
+						Program.AppendToLogFile(Folder + " : Railway folder found.");
 						return Folder;
 					}
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
@@ -98,6 +102,7 @@ namespace OpenBve {
 				}
 			}
 			catch { }
+			Program.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
 			return Application.StartupPath;
 		}
 
@@ -192,8 +197,8 @@ namespace OpenBve {
 				Thread.Sleep(20);
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
-					string Folder = Program.FileSystem.GetDataFolder("Compatibility", "PreTrain");
-					TrainDatParser.ParseTrainData(Folder, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
+					string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
+					TrainDatParser.ParseTrainData(TrainData, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					SoundCfgParser.InitializeCarSounds(TrainManager.Trains[k]);
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -203,7 +208,8 @@ namespace OpenBve {
 					// real train
 					Program.AppendToLogFile("Loading player train: " + CurrentTrainFolder);
 					TrainProgressCurrentWeight = 0.1 / TrainProgressMaximum;
-					TrainDatParser.ParseTrainData(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+					string TrainData = OpenBveApi.Path.CombineFile(CurrentTrainFolder, "train.dat");
+					TrainDatParser.ParseTrainData(TrainData, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.2 / TrainProgressMaximum;
