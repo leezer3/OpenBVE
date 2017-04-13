@@ -10,8 +10,11 @@ namespace OpenBve {
 		internal static double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		internal const double EyeDistance = 1.0;
-		
-		// parse panel config
+
+		/// <summary>Parses a BVE2 / openNBVE panel.cfg file</summary>
+		/// <param name="TrainPath">The on-disk path to the train</param>
+		/// <param name="Encoding">The train's text encoding</param>
+		/// <param name="Train">The train</param>
 		internal static void ParsePanel2Config(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
 		{
 			// read lines
@@ -64,7 +67,7 @@ namespace OpenBve {
 												{
 													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
 													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 10px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 100px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 												break;
 											case "left":
@@ -1088,7 +1091,11 @@ namespace OpenBve {
 			return String.Empty;
 		}
 
-		// get stack language from subject
+		/// <summary>Converts a Panel2.cfg subject to an animation function stack</summary>
+		/// <param name="Train">The train</param>
+		/// <param name="Subject">The subject to convert</param>
+		/// <param name="ErrorLocation">The location in the Panel2.cfg file</param>
+		/// <returns>The parsed animation function stack</returns>
 		private static string GetStackLanguageFromSubject(TrainManager.Train Train, string Subject, string ErrorLocation) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Suffix = "";

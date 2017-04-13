@@ -5,7 +5,10 @@ using OpenBveApi.Math;
 namespace OpenBve {
 	internal static class TrainDatParser {
 
-		// parse train data
+		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
+		/// <param name="FileName">The train.dat file to parse</param>
+		/// <param name="Encoding">The text encoding to use</param>
+		/// <param name="Train">The train</param>
 		internal static void ParseTrainData(string FileName, System.Text.Encoding Encoding, TrainManager.Train Train) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Create the array using the default compatibility train.dat
@@ -32,6 +35,7 @@ namespace OpenBve {
 					Lines[i] = Lines[i].Trim();
 				}
 			}
+			//Check to see if the train.dat file was written for BVE1
 			bool ver1220000 = false;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {

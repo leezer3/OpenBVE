@@ -164,7 +164,7 @@ namespace OpenBve {
 				};
 				train.Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[]
 				{
-					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), frontaxle, small)
+					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), rearaxle, small)
 				};
 				train.Cars[i].Sounds.Rub = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), center, medium);
 				train.Cars[i].Sounds.Run = TryLoadSoundArray(trainFolder, "Run", ".wav", center, medium);

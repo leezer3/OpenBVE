@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using OpenBveApi.Colors;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenTK.Graphics.OpenGL;
 

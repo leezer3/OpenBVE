@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using OpenBveApi.Runtime;
+﻿using OpenBveApi.Runtime;
 
 namespace Plugin {
 	/// <summary>The interface to be implemented by the plugin.</summary>

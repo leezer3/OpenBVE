@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -39,14 +38,14 @@ namespace OpenBve {
 			internal int LastSection;
 			/// <summary>The last exception the plugin raised.</summary>
 			internal Exception LastException;
-            //NEW: Whether this plugin can disable the time acceleration factor
-		    /// <summary>Whether this plugin can disable time acceleration.</summary>
-		    internal static bool DisableTimeAcceleration;
-            /// <summary>The current camera view mode</summary>
-		    internal OpenBveApi.Runtime.CameraViewMode CurrentCameraViewMode;
+			//NEW: Whether this plugin can disable the time acceleration factor
+			/// <summary>Whether this plugin can disable time acceleration.</summary>
+			internal static bool DisableTimeAcceleration;
+			/// <summary>The current camera view mode</summary>
+			internal OpenBveApi.Runtime.CameraViewMode CurrentCameraViewMode;
 
-		    private List<Station> currentRouteStations;
-		    internal bool StationsLoaded;
+			private List<Station> currentRouteStations;
+			internal bool StationsLoaded;
 			// --- functions ---
 			/// <summary>Called to load and initialize the plugin.</summary>
 			/// <param name="specs">The train specifications.</param>
@@ -66,32 +65,32 @@ namespace OpenBve {
 				 * Prepare the vehicle state.
 				 * */
 				double location = this.Train.Cars[0].FrontAxle.Follower.TrackPosition - this.Train.Cars[0].FrontAxlePosition + 0.5 * this.Train.Cars[0].Length;
-			    //Curve Radius, Cant and Pitch Added
-                double CurrentRadius = this.Train.Cars[0].FrontAxle.Follower.CurveRadius;
-                double CurrentCant = this.Train.Cars[0].FrontAxle.Follower.CurveCant;
-			    double CurrentPitch = this.Train.Cars[0].FrontAxle.Follower.Pitch;
-                //If the list of stations has not been loaded, do so
-			    if (!StationsLoaded)
-			    {
-                    currentRouteStations = new List<Station>();
-			        foreach (Game.Station selectedStation in Game.Stations)
-			        {
-				        Station i = new Station
-				        {
-					        Name = selectedStation.Name,
-					        ArrivalTime = selectedStation.ArrivalTime,
-					        DepartureTime = selectedStation.DepartureTime,
-					        StopTime = selectedStation.StopTime,
-					        OpenLeftDoors = selectedStation.OpenLeftDoors,
-					        OpenRightDoors = selectedStation.OpenRightDoors,
-					        ForceStopSignal = selectedStation.ForceStopSignal,
-					        DefaultTrackPosition = selectedStation.DefaultTrackPosition
-				        };
-				        currentRouteStations.Add(i);
-			        }
-			        StationsLoaded = true;
-			    }
-			    //End of additions
+				//Curve Radius, Cant and Pitch Added
+				double CurrentRadius = this.Train.Cars[0].FrontAxle.Follower.CurveRadius;
+				double CurrentCant = this.Train.Cars[0].FrontAxle.Follower.CurveCant;
+				double CurrentPitch = this.Train.Cars[0].FrontAxle.Follower.Pitch;
+				//If the list of stations has not been loaded, do so
+				if (!StationsLoaded)
+				{
+					currentRouteStations = new List<Station>();
+					foreach (Game.Station selectedStation in Game.Stations)
+					{
+						Station i = new Station
+						{
+							Name = selectedStation.Name,
+							ArrivalTime = selectedStation.ArrivalTime,
+							DepartureTime = selectedStation.DepartureTime,
+							StopTime = selectedStation.StopTime,
+							OpenLeftDoors = selectedStation.OpenLeftDoors,
+							OpenRightDoors = selectedStation.OpenRightDoors,
+							ForceStopSignal = selectedStation.ForceStopSignal,
+							DefaultTrackPosition = selectedStation.DefaultTrackPosition
+						};
+						currentRouteStations.Add(i);
+					}
+					StationsLoaded = true;
+				}
+				//End of additions
 				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
 				double bcPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakeCylinderCurrentPressure;
 				double mrPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.MainReservoirCurrentPressure;
@@ -124,18 +123,18 @@ namespace OpenBve {
 				 * */
 				double totalTime = Game.SecondsSinceMidnight;
 				double elapsedTime = Game.SecondsSinceMidnight - LastTime;
-                /* 
-                 * Set the current camera view mode
-                 * Could probably do away with the CurrentCameraViewMode and use a direct cast??
-                 * 
-                 */
-			    CurrentCameraViewMode = (OpenBveApi.Runtime.CameraViewMode)World.CameraMode;
+				/* 
+				 * Set the current camera view mode
+				 * Could probably do away with the CurrentCameraViewMode and use a direct cast??
+				 * 
+				 */
+				CurrentCameraViewMode = (OpenBveApi.Runtime.CameraViewMode)World.CameraMode;
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.Specs.DoorInterlockState = (TrainManager.DoorInterlockStates)data.DoorInterlockState;
-			    DisableTimeAcceleration = data.DisableTimeAcceleration;
+				DisableTimeAcceleration = data.DisableTimeAcceleration;
 				/*
 				 * Set the virtual handles.
 				 * */
@@ -587,7 +586,7 @@ namespace OpenBve {
 			/*
 			 * Check if the plugin is a Win32 plugin.
 			 * 
-             */
+			 */
 			try {
 				if (!CheckWin32Header(pluginFile)) {
 					Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
@@ -601,11 +600,11 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 				return false;
 			}
-		    if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
-		    {
-                Interface.AddMessage(Interface.MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
-		        return false;
-		    }
+			if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
+			{
+				Interface.AddMessage(Interface.MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
+				return false;
+			}
 			train.Plugin = new Win32Plugin(pluginFile, train);
 			if (train.Plugin.Load(specs, mode)) {
 				return true;
