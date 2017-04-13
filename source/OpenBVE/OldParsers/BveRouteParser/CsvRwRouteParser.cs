@@ -695,6 +695,12 @@ namespace OpenBve {
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;
 											Interface.AddMessage(Interface.MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
+											for (int ta = i; ta < Expressions.Length - 1; ta++)
+											{
+												Expressions[ta] = Expressions[ta + 1];
+											}
+											Array.Resize<Expression>(ref Expressions, Expressions.Length - 1);
+											i--;
 											break;
 										}
 										if (2 * ia + 1 < args.Length)
