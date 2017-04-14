@@ -1261,46 +1261,13 @@ namespace OpenBve
 									case Interface.Command.HornSecondary:
 									case Interface.Command.HornMusic:
 										// horn
-									{
-										int j = Interface.CurrentControls[i].Command == Interface.Command.HornPrimary
-											? 0
-											: Interface.CurrentControls[i].Command == Interface.Command.HornSecondary
-												? 1
-												: 2;
-										int d = TrainManager.PlayerTrain.DriverCar;
-										if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
 										{
-											Sounds.SoundBuffer buffer =
-												TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound.Buffer;
-											if (buffer != null)
+										int j = Interface.CurrentControls[i].Command == Interface.Command.HornPrimary
+											? 0 : Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
+										int d = TrainManager.PlayerTrain.DriverCar;
+											if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
 											{
-												OpenBveApi.Math.Vector3 pos =
-													TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound.Position;
-												if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Loop)
-												{
-													if (
-														Sounds.IsPlaying(
-															TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound
-																.Source))
-													{
-														Sounds.StopSound(
-															TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound
-																.Source);
-													}
-													else
-													{
-														TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound.Source =
-															Sounds.PlaySound(buffer, 1.0, 1.0, pos,
-																TrainManager.PlayerTrain,
-																TrainManager.PlayerTrain.DriverCar, true);
-													}
-												}
-												else
-												{
-													TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Sound.Source =
-														Sounds.PlaySound(buffer, 1.0, 1.0, pos, TrainManager.PlayerTrain,
-															TrainManager.PlayerTrain.DriverCar, false);
-												}
+												TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Play();
 												if (TrainManager.PlayerTrain.Plugin != null)
 												{
 													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
@@ -1311,7 +1278,6 @@ namespace OpenBve
 												}
 											}
 										}
-									}
 										break;
 									case Interface.Command.DoorsLeft:
 										// doors: left
@@ -1709,6 +1675,21 @@ namespace OpenBve
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(
 												Interface.SecurityToVirtualKey(Interface.CurrentControls[i].Command));
+										}
+										break;
+
+									case Interface.Command.HornPrimary:
+									case Interface.Command.HornSecondary:
+									case Interface.Command.HornMusic:
+										// horn
+										int j = Interface.CurrentControls[i].Command == Interface.Command.HornPrimary
+											? 0
+											: Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
+										int d = TrainManager.PlayerTrain.DriverCar;
+										if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
+										{
+											//Required for detecting the end of the loop and triggering the stop sound
+											TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Stop();
 										}
 										break;
 								}

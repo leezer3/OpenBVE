@@ -192,7 +192,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedRoutes.Length; i++)
 			{
 				ListViewItem Item = listviewRouteRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedRoutes[i]));
-				Item.ImageKey = "route";
+				Item.ImageKey = @"route";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedRoutes[i];
 				string RoutePath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedRoutes[i]);
 				if (textboxRouteFolder.Items.Count == 0 || !textboxRouteFolder.Items.Contains(RoutePath))
@@ -216,7 +216,7 @@ namespace OpenBve {
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));
-				Item.ImageKey = "train";
+				Item.ImageKey = @"train";
 				Item.Tag = Interface.CurrentOptions.RecentlyUsedTrains[i];
 				string TrainPath = System.IO.Path.GetDirectoryName(Interface.CurrentOptions.RecentlyUsedTrains[i]);
 				if (textboxTrainFolder.Items.Count == 0 || !textboxTrainFolder.Items.Contains(TrainPath))
@@ -694,8 +694,15 @@ namespace OpenBve {
 			radiobuttonKeyboard.Text = Interface.GetInterfaceString("controls_selection_keyboard");
 			labelKeyboardKey.Text = Interface.GetInterfaceString("controls_selection_keyboard_key");
 			labelKeyboardModifier.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers");
+			//Load text for SHIFT modifier
 			checkboxKeyboardShift.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
+			//Shift CTRL
+			checkboxKeyboardCtrl.Location = new Point(checkboxKeyboardShift.Location.X + (checkboxKeyboardShift.Text.Length + 5) * 5, checkboxKeyboardCtrl.Location.Y);
+			//Load text for CTRL modifier
 			checkboxKeyboardCtrl.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
+			//Shift ALT to suit
+			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
+			
 			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");

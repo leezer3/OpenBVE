@@ -11,7 +11,10 @@ namespace OpenBve {
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed</remarks>
 		internal const double EyeDistance = 1.0;
 
-		// parse panel config
+		/// <summary>Parses a BVE1 panel.cfg file</summary>
+		/// <param name="TrainPath">The on-disk path to the train</param>
+		/// <param name="Encoding">The train's text encoding</param>
+		/// <param name="Train">The train</param>
 		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train) {
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -114,10 +117,10 @@ namespace OpenBve {
 				} else {
 					Textures.Texture t;
 					Textures.RegisterTexture(PanelBackground, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-				    OpenBVEGame.RunInRenderThread(() =>
-				    {
-				        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp); 
-                    });
+					OpenBVEGame.RunInRenderThread(() =>
+					{
+						Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp); 
+					});
 					double w = (double)t.Width;
 					double h = (double)t.Height;
 					SemiHeight = FullHeight - h;
@@ -320,10 +323,10 @@ namespace OpenBve {
 									if (Background != null) {
 										Textures.Texture t;
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
@@ -332,10 +335,10 @@ namespace OpenBve {
 									if (Cover != null) {
 										Textures.Texture t;
 										Textures.RegisterTexture(Cover, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
@@ -348,10 +351,10 @@ namespace OpenBve {
 												string File = OpenBveApi.Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 												Textures.Texture t;
 												Textures.RegisterTexture(File, out t);
-											    OpenBVEGame.RunInRenderThread(() =>
-											    {
-											        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-											    });
+												OpenBVEGame.RunInRenderThread(() =>
+												{
+													Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+												});
 												double w = (double)t.Width;
 												double h = (double)t.Height;
 												int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - (double)(4 + k) * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, NeedleColor[k], false);
@@ -551,10 +554,10 @@ namespace OpenBve {
 										// background/led
 										Textures.Texture t;
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
@@ -563,10 +566,10 @@ namespace OpenBve {
 										// cover
 										Textures.Texture t;
 										Textures.RegisterTexture(Cover, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
@@ -602,10 +605,10 @@ namespace OpenBve {
 												double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
 												Textures.Texture t;
 												Textures.RegisterTexture(Atc, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
-											    OpenBVEGame.RunInRenderThread(() =>
-											    {
-											        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-											    });
+												OpenBVEGame.RunInRenderThread(() =>
+												{
+													Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+												});
 												if (j == 0) {
 													k = CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
 												} else {
@@ -621,10 +624,10 @@ namespace OpenBve {
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_speedometer.png");
 										Textures.Texture t;
 										Textures.RegisterTexture(File, out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, Needle, false);
@@ -866,11 +869,11 @@ namespace OpenBve {
 										Textures.Texture t0, t1;
 										Textures.RegisterTexture(TurnOn, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t0);
 										Textures.RegisterTexture(TurnOff, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t1);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t0, Textures.OpenGlTextureWrapMode.ClampClamp);
-									        Textures.LoadTexture(t1, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t0, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t1, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t0.Width;
 										double h = (double)t0.Height;
 										int j = CreateElement(Train, CornerX, CornerY + SemiHeight, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 2.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t0, new Color32(255, 255, 255, 255), false);
@@ -955,10 +958,10 @@ namespace OpenBve {
 									if (Background != null) {
 										Textures.Texture t;
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										CreateElement(Train, CenterX - 0.5 * w, CenterY + SemiHeight - 0.5 * h, w, h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 3.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
@@ -968,10 +971,10 @@ namespace OpenBve {
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_hour.png");
 										Textures.Texture t;
 										Textures.RegisterTexture(File, out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, Needle, false);
@@ -985,10 +988,10 @@ namespace OpenBve {
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
 										Textures.Texture t;
 										Textures.RegisterTexture(File, out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, Needle, false);
@@ -1002,10 +1005,10 @@ namespace OpenBve {
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
 										Textures.Texture t;
 										Textures.RegisterTexture(File, out t);
-									    OpenBVEGame.RunInRenderThread(() =>
-									    {
-									        Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
-									    });
+										OpenBVEGame.RunInRenderThread(() =>
+										{
+											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, Needle, false);
@@ -1075,7 +1078,6 @@ namespace OpenBve {
 												Textures.Texture t;
 												OpenBveApi.Textures.TextureClipRegion clip = new OpenBveApi.Textures.TextureClipRegion(j * Width, 0, Width, h);
 												Textures.RegisterTexture(Image, new OpenBveApi.Textures.TextureParameters(clip, Color24.Blue), out t);
-												//TextureManager.UseTexture(t, TextureManager.UseMode.Normal);
 												if (j == 0) {
 													k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].DriverX, Train.Cars[Train.DriverCar].DriverY, Train.Cars[Train.DriverCar].DriverZ, t, new Color32(255, 255, 255, 255), false);
 												} else {

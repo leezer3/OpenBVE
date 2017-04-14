@@ -79,10 +79,20 @@ namespace OpenBve
 				TotalTimeElapsedForInfo = 0.0;
 			}
 			
+			
+			if (Game.PreviousInterface != Game.InterfaceType.Normal)
+			{
+				ObjectManager.UpdateAnimatedWorldObjects(0.0, false);
+				Game.PreviousInterface = Game.InterfaceType.Normal;
+			}
+			else
+			{
+				ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
+			}
+
 			//We need to update the camera position in the render sequence
 			//Not doing this means that the camera doesn't move
 			// update in one piece
-			ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
 			{
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
@@ -269,6 +279,7 @@ namespace OpenBve
 			Keyboard.KeyRepeat	 = false;
 			Mouse.ButtonDown	+= MainLoop.mouseDownEvent;
 			Mouse.Move			+= MainLoop.mouseMoveEvent;
+			Mouse.WheelChanged  += MainLoop.mouseWheelEvent;
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{

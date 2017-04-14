@@ -263,7 +263,7 @@ namespace OpenBve {
 					arguments = FileSystem.RestartArguments + RestartArguments;
 				}
 				try {
-					System.Diagnostics.Process.Start(FileSystem.RestartProcess, arguments);
+					System.Diagnostics.Process.Start(System.IO.File.Exists(FileSystem.RestartProcess) ? FileSystem.RestartProcess : Application.ExecutablePath, arguments);
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message + "\n\nProcess = " + FileSystem.RestartProcess + "\nArguments = " + arguments, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}

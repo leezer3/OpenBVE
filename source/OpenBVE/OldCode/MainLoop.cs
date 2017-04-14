@@ -189,8 +189,13 @@ namespace OpenBve {
 		//
 		// MOUSE EVENTS
 		//
+
+		/// <summary>The current mouse state</summary>
 		internal static MouseState currentMouseState, previousMouseState;
 
+		/// <summary>Called when a mouse button is pressed</summary>
+		/// <param name="sender">The sender</param>
+		/// <param name="e">The button arguments</param>
 		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
 			if (e.Button == MouseButton.Right)
@@ -206,11 +211,23 @@ namespace OpenBve {
 			}
 		}
 
+		/// <summary>Called when a mouse button is released</summary>
+		/// <param name="sender">The sender</param>
+		/// <param name="e">The button arguments</param>
 		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
 			// if currently in a menu, forward the click to the menu system
 			if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.ProcessMouseMove(e.X, e.Y);
+		}
+
+		/// <summary>Called when the state of the mouse wheel changes</summary>
+		/// <param name="sender">The sender</param>
+		/// <param name="e">The button arguments</param>
+		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
+		{
+			if (Game.CurrentInterface == Game.InterfaceType.Menu)
+				Game.Menu.ProcessMouseScroll(e.Delta);
 		}
 
 		//
@@ -490,8 +507,11 @@ namespace OpenBve {
 				//Glu.Perspective(World.VerticalViewingAngle * invdeg, -World.AspectRatio, 0.025, 50.0);
 				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle,-World.AspectRatio, 0.025, 50.0);
 				GL.MultMatrix(ref perspective);
-			} else {
-				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, World.BackgroundImageDistance);
+			} else
+			{
+				var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
+				var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
+				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
 				GL.MultMatrix(ref perspective);
 			}
 			GL.MatrixMode(MatrixMode.Modelview);

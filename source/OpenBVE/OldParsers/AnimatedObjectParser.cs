@@ -826,21 +826,21 @@ namespace OpenBve
 										{
 											if (Result.Objects[ObjectCount].RotateXFunction != null)
 											{
-												break;
+												continue;
 											}
 										}
 										if (!StaticYRotation)
 										{
 											if (Result.Objects[ObjectCount].RotateYFunction != null)
 											{
-												break;
+												continue;
 											}
 										}
 										if (!StaticZRotation)
 										{
 											if (Result.Objects[ObjectCount].RotateZFunction != null)
 											{
-												break;
+												continue;
 											}
 										}
 										if (StaticXRotation)

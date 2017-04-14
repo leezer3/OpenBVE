@@ -30,7 +30,9 @@
             Menu,
         }
         /// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
-        internal static InterfaceType		CurrentInterface	= InterfaceType.Normal;
+        internal static InterfaceType CurrentInterface = InterfaceType.Normal;
+		/// <summary>Holds a reference to the previous interface type of the game</summary>
+		internal static InterfaceType PreviousInterface = InterfaceType.Normal;
 		/// <summary>The in-game menu system</summary>
 		internal static Menu				Menu				= Menu.Instance;
 		/// <summary>The in-game overlay with route info drawings</summary>

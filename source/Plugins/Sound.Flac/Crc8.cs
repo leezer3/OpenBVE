@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Flac {
+﻿namespace Flac {
 	internal static class Crc8 {
 
 		private const byte Polynomial = 0x07;

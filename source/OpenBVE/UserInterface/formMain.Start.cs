@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -95,7 +94,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = "folder";
+							Item.ImageKey = @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewRouteFiles.Tag = null;
 						}
@@ -114,14 +113,14 @@ namespace OpenBve
 						if (Info != null)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add("..");
-							Item.ImageKey = "parent";
+							Item.ImageKey = @"parent";
 							Item.Tag = Info.FullName;
 							listviewRouteFiles.Tag = Info.FullName;
 						}
 						else
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add("..");
-							Item.ImageKey = "parent";
+							Item.ImageKey = @"parent";
 							Item.Tag = "";
 							listviewRouteFiles.Tag = "";
 						}
@@ -180,7 +179,7 @@ namespace OpenBve
 													text.IndexOf("Track.", StringComparison.OrdinalIgnoreCase) >= 0 |
 													text.IndexOf("$Include", StringComparison.OrdinalIgnoreCase) >= 0)
 													{
-														Item.ImageKey = "route";
+														Item.ImageKey = @"route";
 													}
 												}
 												
@@ -191,7 +190,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Item.ImageKey = "route";
+											Item.ImageKey = @"route";
 										}
 										Item.Tag = Files[i];
 									}
@@ -471,7 +470,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = "folder";
+							Item.ImageKey = @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewTrainFolders.Tag = null;
 						}
@@ -490,14 +489,14 @@ namespace OpenBve
 						if (Info != null)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add("..");
-							Item.ImageKey = "parent";
+							Item.ImageKey = @"parent";
 							Item.Tag = Info.FullName;
 							listviewTrainFolders.Tag = Info.FullName;
 						}
 						else
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add("..");
-							Item.ImageKey = "parent";
+							Item.ImageKey = @"parent";
 							Item.Tag = "";
 							listviewTrainFolders.Tag = "";
 						}
@@ -751,6 +750,7 @@ namespace OpenBve
 				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
+				routeWorkerThread.Dispose();
 				return;
 			}
 			try

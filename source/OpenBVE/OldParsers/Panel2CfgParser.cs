@@ -10,8 +10,11 @@ namespace OpenBve {
 		internal static double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
 		internal const double EyeDistance = 1.0;
-		
-		// parse panel config
+
+		/// <summary>Parses a BVE2 / openNBVE panel.cfg file</summary>
+		/// <param name="TrainPath">The on-disk path to the train</param>
+		/// <param name="Encoding">The train's text encoding</param>
+		/// <param name="Train">The train</param>
 		internal static void ParsePanel2Config(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
 		{
 			// read lines
@@ -63,8 +66,8 @@ namespace OpenBve {
 												else
 												{
 													//Parsing very low numbers (Probable typos) for the panel resolution causes some very funky graphical bugs
- 													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
-													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 10px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													//Cap the minimum panel resolution at 100px wide (BVE1 panels are 480px wide, so this is probably a safe minimum)
+													Interface.AddMessage(Interface.MessageType.Error, false, "A panel resolution of less than 100px was given at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												}
 												break;
 											case "left":
@@ -309,7 +312,7 @@ namespace OpenBve {
 									double InitialAngle = -2.0943951023932, LastAngle = 2.0943951023932;
 									double Minimum = 0.0, Maximum = 1000.0;
 									double NaturalFrequency = -1.0, DampingRatio = -1.0;
-									bool Backstop = false;
+									bool Backstop = false, Smoothed = false;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
 										if (j >= 0) {
@@ -432,6 +435,12 @@ namespace OpenBve {
 														Backstop = true;
 													}
 													break;
+												case "smoothed":
+													if (Value.Length != 0 && Value.ToLowerInvariant() == "true" || Value == "1")
+													{
+														Smoothed = true;
+													}
+													break;
 											}
 										} i++;
 									} i--;
@@ -474,13 +483,13 @@ namespace OpenBve {
 										string f;
 										switch (Subject.ToLowerInvariant()) {
 											case "hour":
-												f = "0.000277777777777778 time * floor";
+												f = Smoothed ? "0.000277777777777778 time * 24 mod" : "0.000277777777777778 time * floor";
 												break;
 											case "min":
-												f = "0.0166666666666667 time * floor";
+												f = Smoothed ? "0.0166666666666667 time * 60 mod" : "0.0166666666666667 time * floor";
 												break;
 											case "sec":
-												f = "time floor";
+												f = Smoothed ? "time 60 mod" : "time floor";
 												break;
 											default:
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -1082,7 +1091,11 @@ namespace OpenBve {
 			return String.Empty;
 		}
 
-		// get stack language from subject
+		/// <summary>Converts a Panel2.cfg subject to an animation function stack</summary>
+		/// <param name="Train">The train</param>
+		/// <param name="Subject">The subject to convert</param>
+		/// <param name="ErrorLocation">The location in the Panel2.cfg file</param>
+		/// <returns>The parsed animation function stack</returns>
 		private static string GetStackLanguageFromSubject(TrainManager.Train Train, string Subject, string ErrorLocation) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Suffix = "";
@@ -1172,6 +1185,18 @@ namespace OpenBve {
 					break;
 				case "atc":
 					Code = "271 pluginstate";
+					break;
+				case "klaxon":
+				case "horn":
+					Code = "klaxon";
+					break;
+				case "primaryklaxon":
+				case "primaryhorn":
+					Code = "primaryklaxon";
+					break;
+				case "secondaryklaxon":
+				case "secondaryhorn":
+					Code = "secondaryklaxon";
 					break;
 				default:
 					{

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using CSScriptLibrary;
 using OpenBveApi.Math;
 
@@ -259,10 +258,6 @@ namespace OpenBve {
 
 		internal static double UpdateTrackFollowerScript(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)
 		{
-			if (Object.CurrentState == -1)
-			{
-				return 0;
-			}
 			double x = 0.0;
 			if (Object.TrackFollowerFunction != null)
 			{
@@ -1142,6 +1137,10 @@ namespace OpenBve {
 		// load object
 		internal enum ObjectLoadMode { Normal, DontAllowUnloadOfTextures }
 		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+			if (String.IsNullOrEmpty(FileName))
+			{
+				return null;
+			}
 			#if !DEBUG
 			try {
 				#endif
@@ -1199,6 +1198,10 @@ namespace OpenBve {
 			#endif
 		}
 		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+			if (String.IsNullOrEmpty(FileName))
+			{
+				return null;
+			}
 			#if !DEBUG
 			try {
 				#endif

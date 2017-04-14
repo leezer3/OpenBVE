@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Flac {
+﻿namespace Flac {
 	internal static class Crc16 {
 
 		private const ushort Polynomial = 0x8005;

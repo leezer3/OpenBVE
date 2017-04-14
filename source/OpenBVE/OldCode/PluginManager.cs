@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -506,7 +505,7 @@ namespace OpenBve {
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success) {
 				train.Plugin.IsDefault = true;
-				SoundCfgParser.LoadDefaultPluginSounds(train, trainFolder);
+				SoundCfgParser.LoadDefaultATSSounds(train, trainFolder);
 			}
 			return success;
 		}

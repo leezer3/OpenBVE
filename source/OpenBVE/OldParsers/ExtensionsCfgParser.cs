@@ -219,6 +219,10 @@ namespace OpenBve {
 									string t = Lines[i].Substring(6, Lines[i].Length - 7);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
 									{
+										if (n > BogiesDefined.Length -1)
+										{
+											continue;
+										}
 										if (BogiesDefined[n])
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "Bogie " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -229,7 +233,6 @@ namespace OpenBve {
 										int CarIndex = n / 2;
 										if (n >= 0 & n < Train.Cars.Length * 2)
 										{
-											bool DefinedLength = false;
 											bool DefinedAxles = false;
 											i++;
 											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -323,7 +326,7 @@ namespace OpenBve {
 												i++;
 											}
 											i--;
-											if (DefinedLength & !DefinedAxles)
+											if (!DefinedAxles)
 											{
 												if (IsOdd)
 												{
