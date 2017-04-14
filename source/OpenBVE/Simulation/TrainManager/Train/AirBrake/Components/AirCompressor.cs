@@ -1,4 +1,6 @@
-﻿namespace OpenBve.BrakeSystems
+﻿using OpenBveApi.Math;
+
+namespace OpenBve.BrakeSystems
 {
 	public partial class AirBrake
 	{
@@ -15,6 +17,18 @@
 			internal double Rate;
 			/// <summary>The parent air-brake</summary>
 			private readonly CarAirBrake AirBrake;
+			/// <summary>Whether the loop has started</summary>
+			private bool LoopStarted = false;
+			/// <summary>The time the current loop started</summary>
+			private double TimeStarted = 0.0;
+			/// <summary>The start sound</summary>
+			internal Sounds.SoundBuffer StartSound;
+			/// <summary>The loop sound</summary>
+			internal Sounds.SoundBuffer LoopSound;
+			/// <summary>The end sound</summary>
+			internal Sounds.SoundBuffer EndSound;
+			/// <summary>The sound position</summary>
+			internal Vector3 SoundPosition;
 
 			/// <summary>Creates a new air compressor</summary>
 			/// <param name="airBrake">The parent air-brake system</param>
@@ -41,17 +55,14 @@
 					{
 						//Disable compressor and stop sound
 						Enabled = false;
-						Train.Cars[CarIndex].Sounds.CpLoopStarted = false;
-						Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpEnd.Buffer;
-						if (buffer != null)
+						LoopStarted = false;
+						if (StartSound != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpEnd.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
+							Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition, Train, CarIndex, false);
 						}
-						buffer = Train.Cars[CarIndex].Sounds.CpLoop.Buffer;
-						if (buffer != null)
+						if (LoopSound != null)
 						{
-							Sounds.StopSound(Train.Cars[CarIndex].Sounds.CpLoop.Source);
+							Sounds.StopSound(Train.Cars[CarIndex].Sounds.Compressor);
 						}
 					}
 					else
@@ -59,14 +70,12 @@
 						//Increase main reservoir pressure
 						AirBrake.MainReservoir.CurrentPressure += Rate * TimeElapsed;
 						//After 5s from activation, play the compressor loop sound
-						if (!Train.Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Train.Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
+						if (!LoopStarted && Game.SecondsSinceMidnight > TimeStarted + 5.0)
 						{
-							Train.Cars[CarIndex].Sounds.CpLoopStarted = true;
-							Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpLoop.Buffer;
-							if (buffer != null)
+							LoopStarted = true;
+							if (LoopSound != null)
 							{
-								OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpLoop.Position;
-								Train.Cars[CarIndex].Sounds.CpLoop.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, true);
+								Train.Cars[CarIndex].Sounds.Compressor = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, Train, CarIndex, true);
 							}
 						}
 					}
@@ -79,13 +88,11 @@
 						//Activate compressor
 						Enabled = true;
 						//Set time that the compressor was started
-						Train.Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
-						Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.CpStart.Buffer;
+						TimeStarted = Game.SecondsSinceMidnight;
 						//Play compressor start sound
-						if (buffer != null)
+						if (StartSound != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.CpStart.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
+							Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition, Train, CarIndex, false);
 						}
 					}
 				}

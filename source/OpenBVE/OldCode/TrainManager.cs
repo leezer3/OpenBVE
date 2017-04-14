@@ -181,6 +181,8 @@ namespace OpenBve
 		}
 		internal struct CarSounds
 		{
+			/// <summary>The sound source for the compressor</summary>
+			internal Sounds.SoundSource Compressor;
 			internal MotorSound Motor;
 			internal CarSound Adjust;
 			internal CarSound Air;
@@ -194,11 +196,6 @@ namespace OpenBve
 			internal CarSound BreakerResume;
 			internal CarSound BreakerResumeOrInterrupt;
 			internal bool BreakerResumed;
-			internal CarSound CpEnd;
-			internal CarSound CpLoop;
-			internal bool CpLoopStarted;
-			internal CarSound CpStart;
-			internal double CpStartTimeStarted;
 			/// <summary>Played once when the left doors close</summary>
 			internal CarSound DoorCloseL;
 			/// <summary>Played once when the right doors close</summary>
