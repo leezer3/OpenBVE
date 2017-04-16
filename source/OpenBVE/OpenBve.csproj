@@ -141,6 +141,7 @@
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Train\AirBrake\AirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\AirSound.cs" />
     <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\AuxillaryReservoir.cs" />
     <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\BrakeCylinder.cs" />
     <Compile Include="Simulation\TrainManager\Train\AirBrake\Types\AirBrake.Types.cs" />

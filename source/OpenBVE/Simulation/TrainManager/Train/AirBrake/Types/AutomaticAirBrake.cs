@@ -9,7 +9,7 @@
 			/// <param name="CarIndex">The car index</param>
 			/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
 			/// <param name="Sound">The air sound to be played</param>
-			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed, ref TrainManager.AirSound Sound)
+			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				if (Type == BrakeType.Main)
 				{
@@ -123,7 +123,7 @@
 							double p = 0.8 * BrakeCylinder.CurrentPressure - 0.2 * BrakeCylinder.EmergencyMaximumPressure;
 							if (p < 0.0) p = 0.0;
 							BrakeCylinder.SoundPlayedForPressure = p;
-							Sound = (TrainManager.AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
+							AirSound = (AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
 						}
 					}
 				}

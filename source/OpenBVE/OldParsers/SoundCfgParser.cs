@@ -43,9 +43,11 @@ namespace OpenBve {
 				train.Cars[i].Sounds.Run = new TrainManager.CarSound[] { };
 				train.Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
 				train.Cars[i].Sounds.Adjust = TrainManager.CarSound.Empty;
+				/*
 				train.Cars[i].Sounds.Air = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.AirHigh = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.AirZero = TrainManager.CarSound.Empty;
+				 */
 				train.Cars[i].Sounds.Brake = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.BrakeHandleApply = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.BrakeHandleMin = TrainManager.CarSound.Empty;
@@ -130,9 +132,11 @@ namespace OpenBve {
 			for (int i = 0; i < train.Cars.Length; i++) {
 				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxlePosition);
 				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxlePosition);
-				train.Cars[i].Sounds.Air = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), center, small);
-				train.Cars[i].Sounds.AirHigh = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), center, small);
-				train.Cars[i].Sounds.AirZero = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), center, small);
+				//Air brake sounds
+				train.Cars[i].Specs.AirBrake.AirSoundPosition = center;
+				train.Cars[i].Specs.AirBrake.AirNormal = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), small);
+				train.Cars[i].Specs.AirBrake.AirHigh = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), small);
+				train.Cars[i].Specs.AirBrake.AirZero = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), small);
 				if (train.Cars[i].Specs.AirBrake.Type == AirBrake.BrakeType.Main) {
 					train.Cars[i].Specs.AirBrake.Compressor.EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), medium);
 					train.Cars[i].Specs.AirBrake.Compressor.LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), medium);
@@ -371,16 +375,20 @@ namespace OpenBve {
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "bc release high":
-											for (int c = 0; c < train.Cars.Length; c++) {
-												train.Cars[c].Sounds.AirHigh = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, small);
+											for (int c = 0; c < train.Cars.Length; c++)
+											{
+												train.Cars[c].Specs.AirBrake.AirSoundPosition = center;
+												train.Cars[c].Specs.AirBrake.AirHigh = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), small);
 											} break;
 										case "bc release":
 											for (int c = 0; c < train.Cars.Length; c++) {
-												train.Cars[c].Sounds.Air = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, small);
+												train.Cars[c].Specs.AirBrake.AirSoundPosition = center;
+												train.Cars[c].Specs.AirBrake.AirNormal = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), small);
 											} break;
 										case "bc release full":
 											for (int c = 0; c < train.Cars.Length; c++) {
-												train.Cars[c].Sounds.AirZero = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, small);
+												train.Cars[c].Specs.AirBrake.AirSoundPosition = center;
+												train.Cars[c].Specs.AirBrake.AirZero = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), small);
 											} break;
 										case "emergency":
 											for (int c = 0; c < train.Cars.Length; c++) {

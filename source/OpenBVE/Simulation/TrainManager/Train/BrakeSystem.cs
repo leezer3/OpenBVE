@@ -55,42 +55,8 @@ namespace OpenBve
 		/// <param name="DecelerationDueToMotor">The total motor deceleration this car provides</param>
 		private static void UpdateBrakeSystem(Train Train, int CarIndex, double TimeElapsed, out double DecelerationDueToBrake, out double DecelerationDueToMotor)
 		{
-			// initialize
-			AirSound airsound = AirSound.None;
+			Train.Cars[CarIndex].Specs.AirBrake.UpdateSystem(Train, CarIndex, TimeElapsed);			
 			
-
-			Train.Cars[CarIndex].Specs.AirBrake.UpdateSystem(Train, CarIndex, TimeElapsed, ref airsound);
-
-			
-			// air sound
-			Sounds.SoundBuffer buffer;
-			switch (airsound)
-			{
-				case AirSound.Zero:
-					buffer = Train.Cars[CarIndex].Sounds.AirZero.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.AirZero.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-					}
-					break;
-				case AirSound.Normal:
-					buffer = Train.Cars[CarIndex].Sounds.Air.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.Air.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-					}
-					break;
-				case AirSound.High:
-					buffer = Train.Cars[CarIndex].Sounds.AirHigh.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Sounds.AirHigh.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, CarIndex, false);
-					}
-					break;
-			}
 			// deceleration provided by brake
 			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure;
 			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
@@ -123,6 +89,7 @@ namespace OpenBve
 				Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
 			}
 			{ // rub sound
+				Sounds.SoundBuffer buffer;
 				buffer = Train.Cars[CarIndex].Sounds.Rub.Buffer;
 				if (buffer != null)
 				{

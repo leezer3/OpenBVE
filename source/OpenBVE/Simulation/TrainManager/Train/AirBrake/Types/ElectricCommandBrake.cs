@@ -6,7 +6,7 @@ namespace OpenBve.BrakeSystems
 	{
 		internal class ElectricCommandBrake : CarAirBrake
 		{
-			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed, ref TrainManager.AirSound Sound)
+			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
 				{
@@ -61,7 +61,7 @@ namespace OpenBve.BrakeSystems
 					if (r > 0.0 & BrakeCylinder.CurrentPressure < BrakeCylinder.SoundPlayedForPressure)
 					{
 						BrakeCylinder.SoundPlayedForPressure = p;
-						Sound = (TrainManager.AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
+						AirSound = (AirSound)(p < Tolerance ? 0 : BrakeCylinder.CurrentPressure > m - Tolerance ? 2 : 1);
 					}
 					// pressure change
 					BrakeCylinder.CurrentPressure -= r;

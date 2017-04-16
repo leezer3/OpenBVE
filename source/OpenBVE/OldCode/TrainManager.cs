@@ -185,9 +185,6 @@ namespace OpenBve
 			internal Sounds.SoundSource Compressor;
 			internal MotorSound Motor;
 			internal CarSound Adjust;
-			internal CarSound Air;
-			internal CarSound AirHigh;
-			internal CarSound AirZero;
 			internal CarSound Brake;
 			internal CarSound BrakeHandleApply;
 			internal CarSound BrakeHandleRelease;
