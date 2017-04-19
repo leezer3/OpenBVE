@@ -739,7 +739,15 @@ namespace OpenBve {
 											}
 										}
 										Expression[] expr;
-										string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], Encoding);
+										//Get the text encoding of our $Include file
+										System.Text.Encoding includeEncoding = TextEncoding.GetSystemEncodingFromFile(files[chosenIndex]);
+										if (!includeEncoding.Equals(Encoding))
+										{
+											//If the encodings do not match, add a warning
+											//This is not critical, but it's a bad idea to mix and match character encodings within a routefile, as the auto-detection may sometimes be wrong
+											Interface.AddMessage(Interface.MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
+										}
+										string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding);
 										PreprocessSplitIntoExpressions(files[chosenIndex], IsRW, lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
 										int length = Expressions.Length;
 										if (expr.Length == 0) {

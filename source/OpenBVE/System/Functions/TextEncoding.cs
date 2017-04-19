@@ -32,6 +32,34 @@ namespace OpenBve
 			/// <summary>SHIFT_JIS</summary>
 			Shift_JIS = 7,
 		}
+
+		/// <summary>Gets the character endcoding of a file</summary>
+		/// <param name="File">The absolute path to a file</param>
+		/// <returns>The character encoding, or the system default encoding if unknown</returns>
+		internal static System.Text.Encoding GetSystemEncodingFromFile(string File)
+		{
+			Encoding e = GetEncodingFromFile(File);
+			switch (e)
+			{
+				case Encoding.Utf7:
+					return System.Text.Encoding.UTF7;
+				case Encoding.Utf8:
+					return System.Text.Encoding.UTF8;
+				case Encoding.Utf16Le:
+					return System.Text.Encoding.Unicode;
+				case Encoding.Utf16Be:
+					return System.Text.Encoding.BigEndianUnicode;
+				case Encoding.Utf32Le:
+					return System.Text.Encoding.UTF32;
+				case Encoding.Utf32Be:
+					return System.Text.Encoding.GetEncoding(12001);
+				case Encoding.Shift_JIS:
+					return System.Text.Encoding.GetEncoding(932);
+				default:
+					return System.Text.Encoding.Default;
+			}
+		}
+		
 		/// <summary>Gets the character endcoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
 		/// <returns>The character encoding, or unknown</returns>
