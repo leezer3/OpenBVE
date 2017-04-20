@@ -65,7 +65,7 @@ namespace OpenBve {
 				while (true) {
 					string Subfolder = OpenBveApi.Path.CombineDirectory(Folder, "Railway");
 					if (System.IO.Directory.Exists(Subfolder)) {
-						if (System.IO.Directory.EnumerateFiles(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
+						if (System.IO.Directory.EnumerateDirectories(Subfolder).Any() || System.IO.Directory.EnumerateFiles(Subfolder).Any())
 						{
 							//HACK: Ignore completely empty directories
 							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
