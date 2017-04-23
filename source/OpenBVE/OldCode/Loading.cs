@@ -86,6 +86,7 @@ namespace OpenBve {
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
+				string candidate = null;
 				while (true)
 				{
 					string RouteFolder = OpenBveApi.Path.CombineDirectory(Folder, "Route");
@@ -96,8 +97,20 @@ namespace OpenBve {
 						Program.AppendToLogFile(Folder + " : Railway folder found.");
 						return Folder;
 					}
+					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
+					{
+						candidate = Folder;
+					}
 					System.IO.DirectoryInfo Info = System.IO.Directory.GetParent(Folder);
-					if (Info == null) break;
+					if (Info == null)
+					{
+						if (candidate != null)
+						{
+							Program.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
+							return candidate;
+						}
+						break;
+					}
 					Folder = Info.FullName;
 				}
 			}
