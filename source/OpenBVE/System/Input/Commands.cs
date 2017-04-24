@@ -112,6 +112,8 @@ namespace OpenBve {
 			MiscClock,
 			/// <summary>Shows or hides the in-game speed display</summary>
 			MiscSpeed,
+			/// <summary>Shows or hides the in-game gradient display</summary>
+			MiscGradient,
 			/// <summary>Shows or hides the in-game FPS display</summary>
 			MiscFps,
 			/// <summary>Toggles AI control of the player train</summary>
