@@ -140,6 +140,19 @@
     </Compile>
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\AirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\AirSound.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\AuxillaryReservoir.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\BrakeCylinder.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Types\AirBrake.Types.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Types\AutomaticAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Types\ElectricCommandBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Types\ElectromagneticStraightAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\EqualizingReservior.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\MainReservoir.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\StraightAirPipe.cs" />
+    <Compile Include="Simulation\TrainManager\Train\AirBrake\Components\AirCompressor.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
@@ -360,7 +373,7 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-  <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
