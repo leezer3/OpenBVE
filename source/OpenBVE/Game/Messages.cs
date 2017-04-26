@@ -71,20 +71,18 @@ namespace OpenBve
 				Messages[n].RendererAlpha = 0.0;
 			}
 		}
-		internal static void AddDebugMessage(string text, double duration)
-		{
-			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
-		}
 
 		/// <summary>The number 1km/h must be multiplied by to produce your desired speed units, or 0.0 to disable this</summary>
 		internal static double SpeedConversionFactor = 0.0;
 		/// <summary>The unit of speed displayed in in-game messages</summary>
 		internal static string UnitOfSpeed = "km/h";
 
+		/// <summary>Called once a frame to update the messages displayed on-screen</summary>
 		internal static void UpdateMessages()
 		{
 			for (int i = 0; i < Messages.Length; i++)
 			{
+				//If our message timeout is greater than or equal to the current time, queue it for removal
 				bool remove = SecondsSinceMidnight >= Messages[i].Timeout;
 				switch (Messages[i].Depencency)
 				{
@@ -147,6 +145,7 @@ namespace OpenBve
 							}
 							else
 							{
+								//Queue the mesasge for removal if we have completed the station stop for this message
 								remove = true;
 							}
 						} break;
@@ -160,6 +159,8 @@ namespace OpenBve
 					{
 						Messages[i].Timeout = SecondsSinceMidnight - 1.0;
 					}
+					//Remove the message if it has completely faded out
+					//NOTE: The fadeout is done in the renderer itself...
 					if (SecondsSinceMidnight >= Messages[i].Timeout & Messages[i].RendererAlpha == 0.0)
 					{
 						for (int j = i; j < Messages.Length - 1; j++)
