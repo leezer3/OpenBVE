@@ -310,7 +310,7 @@ namespace OpenBve {
 					}
 					// messages
 					if (this.NextSectionIndex < 0 || !Game.Sections[this.NextSectionIndex].Invisible) {
-						if (Train.CurrentSectionLimit == 0.0) {
+						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false) {
 							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity);
 						} else if (Train.Specs.CurrentAverageSpeed > Train.CurrentSectionLimit) {
 							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity);
