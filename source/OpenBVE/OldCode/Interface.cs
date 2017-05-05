@@ -153,6 +153,7 @@ namespace OpenBve {
 			new CommandInfo(Command.MenuBack, CommandType.Digital, "MENU_BACK"),
 			new CommandInfo(Command.MiscClock, CommandType.Digital, "MISC_CLOCK"),
 			new CommandInfo(Command.MiscSpeed, CommandType.Digital, "MISC_SPEED"),
+			new CommandInfo(Command.MiscGradient, CommandType.Digital, "MISC_GRADIENT"),
 			new CommandInfo(Command.MiscFps, CommandType.Digital, "MISC_FPS"),
 			new CommandInfo(Command.MiscAI, CommandType.Digital, "MISC_AI"),
 			new CommandInfo(Command.MiscFullscreen, CommandType.Digital, "MISC_FULLSCREEN"),

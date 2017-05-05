@@ -106,12 +106,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\Messages.cs" />
+    <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />
+    <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />

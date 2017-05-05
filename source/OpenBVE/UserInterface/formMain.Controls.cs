@@ -95,12 +95,12 @@ namespace OpenBve {
 			}
 			Item.SubItems[2].Text = Info.Description;
 			if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.Keyboard) {
-				Item.ImageKey = "keyboard";
+				Item.ImageKey = @"keyboard";
 			} else if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.Joystick) {
 				if (Info.Type == Interface.CommandType.AnalogHalf | Info.Type == Interface.CommandType.AnalogFull) {
-					Item.ImageKey = "joystick";
+					Item.ImageKey = @"joystick";
 				} else {
-					Item.ImageKey = "gamepad";
+					Item.ImageKey = @"gamepad";
 				}
 			} else {
 				Item.ImageKey = null;
@@ -413,8 +413,8 @@ namespace OpenBve {
 			{
 				OverwritePrompt = true,
 				Filter =
-					Interface.GetInterfaceString("dialog_controlsfiles") + "|*.controls|" +
-					Interface.GetInterfaceString("dialog_allfiles") + "|*"
+					Interface.GetInterfaceString("dialog_controlsfiles") + @"|*.controls|" +
+					Interface.GetInterfaceString("dialog_allfiles") + @"|*"
 			};
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {

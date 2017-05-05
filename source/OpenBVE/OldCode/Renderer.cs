@@ -53,7 +53,12 @@ namespace OpenBve
         internal static bool OptionBackfaceCulling = true;
 
         // interface options
+		/// <summary>Whether the clock overlay is currently displayed</summary>
         internal static bool OptionClock = false;
+
+		internal enum GradientDisplayMode { Percentage, UnitOfChange, None }
+		/// <summary>Whether the gradient overlay is currently displayed</summary>
+	    internal static GradientDisplayMode OptionGradient = GradientDisplayMode.None;
         internal enum SpeedDisplayMode { None, Kmph, Mph }
         internal static SpeedDisplayMode OptionSpeed = SpeedDisplayMode.None;
         internal static bool OptionFrameRates = false;

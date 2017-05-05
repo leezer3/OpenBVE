@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
 using GL = OpenTK.Graphics.OpenGL.GL;
@@ -79,10 +80,20 @@ namespace OpenBve
 				TotalTimeElapsedForInfo = 0.0;
 			}
 			
+			
+			if (Game.PreviousInterface != Game.InterfaceType.Normal)
+			{
+				ObjectManager.UpdateAnimatedWorldObjects(0.0, false);
+				Game.PreviousInterface = Game.InterfaceType.Normal;
+			}
+			else
+			{
+				ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
+			}
+
 			//We need to update the camera position in the render sequence
 			//Not doing this means that the camera doesn't move
 			// update in one piece
-			ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
 			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
 			{
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
@@ -648,23 +659,23 @@ namespace OpenBve
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";
-					Game.AddDebugMessage(NotFound, 10.0);
+					Game.AddMessage(NotFound, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
 					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
-					Game.AddDebugMessage(Messages, 10.0);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0);
 				}
 				else if (errors != 0)
 				{
 					Messages = errors.ToString() + " error(s)";
-					Game.AddDebugMessage(Messages, 10.0);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0);
 				}
 				else
 				{
 					Messages = warnings.ToString() + " warning(s)";
-					Game.AddDebugMessage(Messages, 10.0);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0);
 				}
 				Game.RouteInformation.FilesNotFound = NotFound;
 				Game.RouteInformation.ErrorsAndWarnings = Messages;

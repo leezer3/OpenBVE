@@ -1571,6 +1571,21 @@ namespace OpenBve
 											if ((int) Renderer.OptionSpeed >= 3) Renderer.OptionSpeed = 0;
 										}
 										break;
+									case Interface.Command.MiscGradient:
+										// gradient
+										if (Interface.CurrentOptions.GameMode == Interface.GameMode.Expert)
+										{
+											Game.AddMessage(
+												Interface.GetInterfaceString("notification_notavailableexpert"),
+												Game.MessageDependency.None, Interface.GameMode.Expert,
+												MessageColor.Blue, Game.SecondsSinceMidnight + 5.0);
+										}
+										else
+										{
+											Renderer.OptionGradient++;
+											if ((int)Renderer.OptionGradient >= 3) Renderer.OptionGradient = 0;
+										}
+										break;
 									case Interface.Command.MiscFps:
 										// fps
 										Renderer.OptionFrameRates = !Renderer.OptionFrameRates;

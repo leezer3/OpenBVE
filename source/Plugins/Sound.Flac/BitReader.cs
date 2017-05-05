@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Flac {
 	/// <summary>Represents a bit reader using a big-endian bit and byte order.</summary>

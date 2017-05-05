@@ -158,8 +158,14 @@ namespace OpenBve {
 				train.Cars[i].Sounds.Flange = TryLoadSoundArray(trainFolder, "Flange", ".wav", center, medium);
 				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
 				train.Cars[i].Sounds.Loop = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Loop.wav"), center, medium);
-				train.Cars[i].Sounds.PointFrontAxle[0] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), frontaxle, small);
-				train.Cars[i].Sounds.PointRearAxle[0] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), rearaxle, small);
+				train.Cars[i].Sounds.PointFrontAxle = new TrainManager.CarSound[]
+				{
+					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), frontaxle, small)
+				};
+				train.Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[]
+				{
+					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), rearaxle, small)
+				};
 				train.Cars[i].Sounds.Rub = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), center, medium);
 				train.Cars[i].Sounds.Run = TryLoadSoundArray(trainFolder, "Run", ".wav", center, medium);
 				train.Cars[i].Sounds.RunVolume = new double[train.Cars[i].Sounds.Run.Length];

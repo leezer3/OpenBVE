@@ -233,7 +233,6 @@ namespace OpenBve {
 										int CarIndex = n / 2;
 										if (n >= 0 & n < Train.Cars.Length * 2)
 										{
-											bool DefinedLength = false;
 											bool DefinedAxles = false;
 											i++;
 											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -327,7 +326,7 @@ namespace OpenBve {
 												i++;
 											}
 											i--;
-											if (DefinedLength & !DefinedAxles)
+											if (!DefinedAxles)
 											{
 												if (IsOdd)
 												{

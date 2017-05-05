@@ -81,6 +81,7 @@ MENU_ENTER, keyboard, Enter, 0
 MENU_BACK, keyboard, Escape, 0
 MISC_CLOCK, keyboard, C, 2
 MISC_SPEED, keyboard, V, 2
+MISC_GRADIENT, keyboard, N, 2
 MISC_TIMEFACTOR, keyboard, J, 2
 MISC_FPS, keyboard, X, 2
 MISC_AI, keyboard, A, 2

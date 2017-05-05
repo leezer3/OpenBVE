@@ -36,9 +36,9 @@ namespace OpenBve {
 		private void buttonBlackBoxExport_Click(object sender, EventArgs e) {
 		    SaveFileDialog Dialog = new SaveFileDialog {OverwritePrompt = true};
 		    if (comboboxBlackBoxFormat.SelectedIndex == 0) {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_csvfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
+				Dialog.Filter = Interface.GetInterfaceString("dialog_csvfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + @"|*";
 			} else {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
+				Dialog.Filter = Interface.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + @"|*";
 			}
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
