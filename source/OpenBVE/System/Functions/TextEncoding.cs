@@ -91,6 +91,10 @@ namespace OpenBve
 				{
 					case "SHIFT_JIS":
 						return Encoding.Shift_JIS;
+					case "UTF-8":
+						return Encoding.Utf8;
+					case "UTF-7":
+						return Encoding.Utf7;
 				}
 				Det.Reset();
 				return Encoding.Unknown;

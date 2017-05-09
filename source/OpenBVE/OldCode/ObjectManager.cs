@@ -1170,6 +1170,7 @@ namespace OpenBve {
 					}
 				}
 				UnifiedObject Result;
+				Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
