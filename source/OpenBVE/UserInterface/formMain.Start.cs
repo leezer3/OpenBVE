@@ -853,7 +853,6 @@ namespace OpenBve
 			}
 			if (Result.RouteFile != null && !routeWorkerThread.IsBusy)
 			{
-				
 				this.Cursor = Cursors.WaitCursor;
 				TryLoadImage(pictureboxRouteImage, "loading.png");
 				groupboxRouteDetails.Visible = true;
@@ -933,7 +932,12 @@ namespace OpenBve
 					}
 					comboboxRouteEncoding.Tag = null;
 				}
-				routeWorkerThread.RunWorkerAsync();
+				if (!routeWorkerThread.IsBusy)
+				{
+					//HACK: If clicking very rapidly or holding down an arrow
+					//		we can sometimes try to spawn two worker threads
+					routeWorkerThread.RunWorkerAsync();
+				}
 			}
 		}
 
