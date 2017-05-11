@@ -5089,6 +5089,11 @@ namespace OpenBve {
 				if (!PreviewOnly) {
 					if (Data.FogTransitionMode) {
 						if (Data.Blocks[i].FogDefined) {
+							if (i == 0 && StartingDistance == 0)
+							{
+								//Fog starts at zero position
+								PreviousFog = Data.Blocks[i].Fog;
+							}
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
@@ -5106,12 +5111,26 @@ namespace OpenBve {
 							PreviousFogEvent = m;
 						}
 					} else {
-						Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
-						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-						TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
-						PreviousFog = CurrentFog;
-						CurrentFog = Data.Blocks[i].Fog;
+						if (i == 0 && StartingDistance == 0)
+						{
+							//Fog starts at zero position
+							CurrentFog = Data.Blocks[i].Fog;
+							PreviousFog = CurrentFog;
+							Game.PreviousFog = CurrentFog;
+							Game.CurrentFog = CurrentFog;
+							Game.NextFog = CurrentFog;
+							
+							
+						}
+						else
+						{
+							Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
+							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
+							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
+							PreviousFog = CurrentFog;
+							CurrentFog = Data.Blocks[i].Fog;
+						}
 					}
 				}
 				// rail sounds
