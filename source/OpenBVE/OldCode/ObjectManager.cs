@@ -1196,6 +1196,12 @@ namespace OpenBve {
 						case TextEncoding.Encoding.Shift_JIS:
 							Encoding = System.Text.Encoding.GetEncoding(932);
 							break;
+						case TextEncoding.Encoding.Windows1252:
+							Encoding = System.Text.Encoding.GetEncoding(1252);
+							break;
+						case TextEncoding.Encoding.Big5:
+							Encoding = System.Text.Encoding.GetEncoding(950);
+							break;
 					}
 				}
 			switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {

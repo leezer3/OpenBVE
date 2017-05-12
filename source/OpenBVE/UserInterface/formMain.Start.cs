@@ -908,6 +908,18 @@ namespace OpenBve
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 							break;
+						case TextEncoding.Encoding.Windows1252:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Western European (Windows) 1252";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(1252);
+							break;
+						case TextEncoding.Encoding.Big5:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Chinese Traditional (Big5) 950";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
+							break;
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();
@@ -979,6 +991,16 @@ namespace OpenBve
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
+						break;
+					case TextEncoding.Encoding.Windows1252:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "Western European (Windows) 1252";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(1252);
+						break;
+					case TextEncoding.Encoding.Big5:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "Chinese Traditional (Big5) 950";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
 						break;
 				}
 				int i;
