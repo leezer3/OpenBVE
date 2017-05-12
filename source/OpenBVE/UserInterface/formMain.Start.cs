@@ -853,7 +853,6 @@ namespace OpenBve
 			}
 			if (Result.RouteFile != null && !routeWorkerThread.IsBusy)
 			{
-				
 				this.Cursor = Cursors.WaitCursor;
 				TryLoadImage(pictureboxRouteImage, "loading.png");
 				groupboxRouteDetails.Visible = true;
@@ -909,6 +908,18 @@ namespace OpenBve
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 							break;
+						case TextEncoding.Encoding.Windows1252:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Western European (Windows) 1252";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(1252);
+							break;
+						case TextEncoding.Encoding.Big5:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Chinese Traditional (Big5) 950";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
+							break;
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();
@@ -933,7 +944,12 @@ namespace OpenBve
 					}
 					comboboxRouteEncoding.Tag = null;
 				}
-				routeWorkerThread.RunWorkerAsync();
+				if (!routeWorkerThread.IsBusy)
+				{
+					//HACK: If clicking very rapidly or holding down an arrow
+					//		we can sometimes try to spawn two worker threads
+					routeWorkerThread.RunWorkerAsync();
+				}
 			}
 		}
 
@@ -975,6 +991,16 @@ namespace OpenBve
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
+						break;
+					case TextEncoding.Encoding.Windows1252:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "Western European (Windows) 1252";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(1252);
+						break;
+					case TextEncoding.Encoding.Big5:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "Chinese Traditional (Big5) 950";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
 						break;
 				}
 				int i;

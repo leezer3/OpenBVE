@@ -533,21 +533,27 @@ namespace OpenBve
 		internal void AddDependendsReccomends(Package packageToAdd, ref List<Package> DependsReccomendsList,
 			bool recommendsOnly)
 		{
-			var row = dataGridViewPackages2.SelectedRows[0].Index;
-			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
-			selectedDependacies.Add(key);
-			dataGridViewPackages2.Rows.RemoveAt(row);
-			if (DependsReccomendsList == null)
+			try
 			{
-				DependsReccomendsList = new List<Package>();
+				var row = dataGridViewPackages2.SelectedRows[0].Index;
+				var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
+				selectedDependacies.Add(key);
+				dataGridViewPackages2.Rows.RemoveAt(row);
+				if (DependsReccomendsList == null)
+				{
+					DependsReccomendsList = new List<Package>();
+				}
+				packageToAdd.PackageVersion = null;
+				DependsReccomendsList.Add(packageToAdd);
+				dataGridViewPackages2.ClearSelection();
+				if (currentPackage.Dependancies != null)
+					PopulatePackageList(currentPackage.Dependancies, dataGridViewPackages3, false, true, false);
+				if (currentPackage.Reccomendations != null)
+					PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
 			}
-			packageToAdd.PackageVersion = null;
-			DependsReccomendsList.Add(packageToAdd);
-			dataGridViewPackages2.ClearSelection();
-			if (currentPackage.Dependancies != null)
-				PopulatePackageList(currentPackage.Dependancies, dataGridViewPackages3, false, true, false);
-			if (currentPackage.Reccomendations != null)
-				PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
+			catch
+			{				
+			}
 		}
 
 
@@ -560,19 +566,27 @@ namespace OpenBve
 				currentPackage = null;
 				return;
 			}
-			var row = dataGridViewPackages.SelectedRows[0].Index;
-			var key = dataGridViewPackages.Rows[row].Cells[dataGridViewPackages.ColumnCount - 1].Value.ToString();
-			switch (comboBoxPackageType.SelectedIndex)
+			try
 			{
-				case 0:
-					currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
-					break;
-				case 1:
-					currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
-					break;
-				case 2:
-					currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
-					break;
+				var row = dataGridViewPackages.SelectedRows[0].Index;
+				var key = dataGridViewPackages.Rows[row].Cells[dataGridViewPackages.ColumnCount - 1].Value.ToString();
+
+				switch (comboBoxPackageType.SelectedIndex)
+				{
+					case 0:
+						currentPackage = Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key);
+						break;
+					case 1:
+						currentPackage = Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key);
+						break;
+					case 2:
+						currentPackage = Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key);
+						break;
+				}
+			}
+			catch
+			{
+				currentPackage = null;
 			}
 		}
 
@@ -713,18 +727,27 @@ namespace OpenBve
 			buttonDepends.Enabled = true;
 			buttonReccomends.Enabled = true;
 			var row = dataGridViewPackages2.SelectedRows[0].Index;
-			var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
-			switch (comboBoxDependancyType.SelectedIndex)
+			try
 			{
-				case 0:
-					dependantPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true);
-					break;
-				case 1:
-					dependantPackage = new Package(Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key), true);
-					break;
-				case 2:
-					dependantPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), true);
-					break;
+				var key = dataGridViewPackages2.Rows[row].Cells[dataGridViewPackages2.ColumnCount - 1].Value.ToString();
+				switch (comboBoxDependancyType.SelectedIndex)
+				{
+					case 0:
+						dependantPackage = new Package(Database.currentDatabase.InstalledRoutes.FirstOrDefault(x => x.GUID == key), true);
+						break;
+					case 1:
+						dependantPackage = new Package(Database.currentDatabase.InstalledTrains.FirstOrDefault(x => x.GUID == key), true);
+						break;
+					case 2:
+						dependantPackage = new Package(Database.currentDatabase.InstalledOther.FirstOrDefault(x => x.GUID == key), true);
+						break;
+				}
+			}
+			catch
+			{
+				buttonDepends.Enabled = false;
+				buttonReccomends.Enabled = false;
+				dependantPackage = null;
 			}
 		}
 
@@ -740,31 +763,37 @@ namespace OpenBve
 
 		private void buttonRemove_Click(object sender, EventArgs e)
 		{
-			var row = dataGridViewPackages3.SelectedRows[0].Index;
-			var key = dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 1].Value.ToString();
-			selectedDependacies.Remove(key);
+			try
+			{
+				var row = dataGridViewPackages3.SelectedRows[0].Index;
+				var key = dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 1].Value.ToString();
+				selectedDependacies.Remove(key);
 
-			if (dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 2].Value.ToString() == Interface.GetInterfaceString("packages_dependancy"))
-			{
-				currentPackage.Dependancies.Remove(currentPackage.Dependancies.FirstOrDefault(x => x.GUID == key));
+				if (dataGridViewPackages3.Rows[row].Cells[dataGridViewPackages3.ColumnCount - 2].Value.ToString() == Interface.GetInterfaceString("packages_dependancy"))
+				{
+					currentPackage.Dependancies.Remove(currentPackage.Dependancies.FirstOrDefault(x => x.GUID == key));
+				}
+				else
+				{
+					currentPackage.Reccomendations.Remove(currentPackage.Reccomendations.FirstOrDefault(x => x.GUID == key));
+				}
+				dataGridViewPackages3.Rows.RemoveAt(row);
+				dataGridViewPackages3.ClearSelection();
+				switch (comboBoxDependancyType.SelectedIndex)
+				{
+					case 0:
+						PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
+						break;
+					case 1:
+						PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages2, true, false, false);
+						break;
+					case 2:
+						PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages2, true, false, false);
+						break;
+				}
 			}
-			else
+			catch
 			{
-				currentPackage.Reccomendations.Remove(currentPackage.Reccomendations.FirstOrDefault(x => x.GUID == key));
-			}
-			dataGridViewPackages3.Rows.RemoveAt(row);
-			dataGridViewPackages3.ClearSelection();
-			switch (comboBoxDependancyType.SelectedIndex)
-			{
-				case 0:
-					PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
-					break;
-				case 1:
-					PopulatePackageList(Database.currentDatabase.InstalledTrains, dataGridViewPackages2, true, false, false);
-					break;
-				case 2:
-					PopulatePackageList(Database.currentDatabase.InstalledOther, dataGridViewPackages2, true, false, false);
-					break;
 			}
 		}
 
@@ -1068,7 +1097,19 @@ namespace OpenBve
 			{
 				replacePackageButton.Enabled = true;
 				var row = dataGridViewReplacePackage.SelectedRows[0].Index;
-				var key = dataGridViewReplacePackage.Rows[row].Cells[dataGridViewReplacePackage.ColumnCount - 1].Value.ToString();
+				string key;
+				try
+				{
+					//BUG:
+					//Mono seems to have some sort of race condition, meaning that the update function is called before the datagrid is populated
+					//This masks the underlying issue, but it's not a good thing if the key is invalid in the first place either.....
+					key = dataGridViewReplacePackage.Rows[row].Cells[dataGridViewReplacePackage.ColumnCount - 1].Value.ToString();
+				}
+				catch
+				{
+					return;
+				}
+				
 				switch (newPackageType)
 				{
 					case PackageType.Route:

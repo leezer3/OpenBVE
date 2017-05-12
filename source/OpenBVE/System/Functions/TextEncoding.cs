@@ -31,6 +31,10 @@ namespace OpenBve
 			Utf32Be = 6,
 			/// <summary>SHIFT_JIS</summary>
 			Shift_JIS = 7,
+			/// <summary>Windows-1252 (Legacy Microsoft)</summary>
+			Windows1252,
+			/// <summary>BIG5</summary>
+			Big5
 		}
 
 		/// <summary>Gets the character endcoding of a file</summary>
@@ -91,6 +95,14 @@ namespace OpenBve
 				{
 					case "SHIFT_JIS":
 						return Encoding.Shift_JIS;
+					case "UTF-8":
+						return Encoding.Utf8;
+					case "UTF-7":
+						return Encoding.Utf7;
+					case "WINDOWS-1252":
+						return Encoding.Windows1252;
+					case "BIG5":
+						return Encoding.Big5;
 				}
 				Det.Reset();
 				return Encoding.Unknown;

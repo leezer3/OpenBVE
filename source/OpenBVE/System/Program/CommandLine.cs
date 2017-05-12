@@ -49,6 +49,12 @@ namespace OpenBve
 								case TextEncoding.Encoding.Shift_JIS:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 									break;
+								case TextEncoding.Encoding.Windows1252:
+									Result.RouteEncoding = System.Text.Encoding.GetEncoding(1252);
+									break;
+								case TextEncoding.Encoding.Big5:
+									Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
+									break;
 								default:
 									Result.RouteEncoding = Encoding.Default;
 									break;
@@ -75,6 +81,12 @@ namespace OpenBve
 									break;
 								case TextEncoding.Encoding.Shift_JIS:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
+									break;
+								case TextEncoding.Encoding.Windows1252:
+									Result.TrainEncoding = System.Text.Encoding.GetEncoding(1252);
+									break;
+								case TextEncoding.Encoding.Big5:
+									Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
 									break;
 								default:
 									Result.TrainEncoding = Encoding.Default;
