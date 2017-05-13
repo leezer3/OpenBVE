@@ -5,7 +5,7 @@ matrix:
 #Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
     - os: linux
       dist: precise
-      mono: 3.2.8
+      mono: latest
       script: make publish
     - os: osx
       mono: latest
