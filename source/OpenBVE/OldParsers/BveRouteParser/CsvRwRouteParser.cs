@@ -1154,6 +1154,12 @@ namespace OpenBve {
 		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors) {
 			bool openingerror = false, closingerror = false;
 			int i, fcb = 0;
+			if (Expression.Text.StartsWith("Train. ", StringComparison.InvariantCultureIgnoreCase))
+			{
+				//HACK: Some Chinese routes seem to have used a space between Train. and the rest of the command
+				//e.g. Taipei Metro. BVE4/ 2 accept this......
+				Expression.Text = "Train." + Expression.Text.Substring(7, Expression.Text.Length -7);
+			}
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {
 					bool found = false;
