@@ -408,6 +408,10 @@ namespace OpenBve {
 			}
 			// parse
 			for (int i = 0; i < Lines.Length; i++) {
+				//Remove empty null characters
+				//Found these in a couple of older routes, harmless but generate errors
+				//Possibly caused by BVE-RR (DOS version)
+				Lines[i] = Lines[i].Replace("\0", "");
 				if (IsRW & AllowRwRouteDescription) {
 					// ignore rw route description
 					if (
