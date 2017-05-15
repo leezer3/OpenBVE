@@ -58,6 +58,9 @@ namespace OpenBve
 											case "none":
 												mode = BackgroundManager.BackgroundTransitionMode.None;
 												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
+												break;
 										}
 										break;
 									case "object":
@@ -82,7 +85,7 @@ namespace OpenBve
 										var file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
 										if (!System.IO.File.Exists(file))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The background file " + c.InnerText + " does not exist in " + fileName);
+											Interface.AddMessage(Interface.MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
 										}
 										else
 										{
