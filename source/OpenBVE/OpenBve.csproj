@@ -372,6 +372,11 @@
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
 	</PostBuildEvent>
+	<PostBuildEvent>
+	<!-- Set LBA flag & cleanup -->
+		"$(TargetDir)LBAHeader.exe" OpenBve.exe
+		del "$(TargetDir)LBAHeader.exe"
+	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

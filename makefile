@@ -103,6 +103,9 @@ OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 TRAIN_EDITOR_ROOT     :=source/TrainEditor
 TRAIN_EDITOR_FILE     :=TrainEditor.exe
 
+LBAHEADER_ROOT        :=source/LBAHeader
+LBAHEADER_FILE        :=LBAHeader.exe
+
 # Dependences 
 DEBUG_DEPEND := $(patsubst dependencies/%,$(DEBUG_DIR)/%,$(wildcard dependencies/*))
 RELEASE_DEPEND := $(patsubst dependencies/%,$(RELEASE_DIR)/%,$(wildcard dependencies/*))
@@ -127,6 +130,7 @@ RELEASE_ASSETS := $(patsubst assets/%,$(DEBUG_DIR)/Data/%,$(wildcard assets/*))
 .PHONY: publish
 .PHONY: debian
 .PHONY: print_csc_type
+.PHONY: fix_header
 
 debug: openbve-debug
 release: openbve-release
@@ -150,7 +154,9 @@ all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
+all-debug: $(DEBUG_DIR)/$(LBAHEADER_FILE)
 all-debug: copy_depends
+all-debug: fix_header
 
 all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
@@ -160,7 +166,9 @@ all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
+all-release: $(RELEASE_DIR)/$(LBAHEADER_FILE)
 all-release: copy_release_depends
+all-release: fix_header
 
 CP_UPDATE_FLAG = -u
 CP_RECURSE = -r
@@ -197,6 +205,11 @@ copy_release_depends: $(RELEASE_DIR)/Data
 copy_depends copy_release_depends:
 	@echo $(COLOR_BLUE)Copying $(COLOR_CYAN)assets/*$(COLOR_BLUE) to $(COLOR_CYAN)$(OUTPUT_DIR)/Data/*$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) assets/* $(OUTPUT_DIR)/Data
+
+fix_header:
+	@echo $(COLOR_BLUE)Fixing executable LBA Header$(COLOR_END)
+	@mono $(OUTPUT_DIR)/LBAHeader.exe $(OUTPUT_DIR)/OpenBve.exe
+	@rm -f $(OUTPUT_DIR)/LBAHeader.exe
 
 clean: 
 	# Executables
@@ -538,3 +551,16 @@ $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_E
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TRAIN_EDITOR_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
+
+################
+# LBAHeader    #
+################
+
+LBAHEADER_FOLDERS  := .
+LBAHEADER_FOLDERS  := $(addprefix $(LBAHEADER_ROOT)/, $(LBAHEADER_FOLDERS))
+LBAHEADER_SRC      := $(foreach sdir, $(LBAHEADER_FOLDERS), $(wildcard $(sdir)/*.cs))
+LBAHEADER_OUT       =$(OUTPUT_DIR)/$(LBAHEADER_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(LBAHEADER_FILE): $(LBAHEADER_SRC)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LBAHEADER_OUT)$(COLOR_END)
+	@$(CSC) /out:$(LBAHEADER_OUT) /target:winexe /main:LBAHeader.FixLBAHeader $(LBAHEADER_SRC) $(ARGS)
