@@ -261,7 +261,7 @@ namespace OpenBve {
 						int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
 						for (int i = 0; i < buttons; i++)
 						{
-							if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton) i) == ButtonState.Pressed)
+							if (OpenTK.Input.Joystick.GetState(k).GetButton(i) == ButtonState.Pressed)
 							{
 								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Button, i, 1);
 								return;
@@ -388,7 +388,7 @@ namespace OpenBve {
 							break;
 						case Interface.JoystickComponent.Button:
 							//Load the current state
-							var buttonState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetButton((JoystickButton)Interface.CurrentControls[i].Element);
+							var buttonState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetButton(Interface.CurrentControls[i].Element);
 							//Test whether the state is the same as the last frame
 							if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 							{
