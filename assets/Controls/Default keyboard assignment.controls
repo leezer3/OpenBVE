@@ -1,6 +1,7 @@
 ﻿; Current control configuration
 ; =============================
 ; This file was automatically generated. Please modify only if you know what you're doing.
+; Default keyconfig version 3- 08.06.2017
 
 POWER_INCREASE, keyboard, Z, 0
 POWER_DECREASE, keyboard, A, 0
@@ -93,3 +94,7 @@ MISC_INTERFACE, keyboard, F10, 0
 MISC_BACKFACE, keyboard, F11, 0
 MISC_CPUMODE, keyboard, F12, 0
 ROUTE_INFORMATION, keyboard, F8, 0
+WIPER_SPEED_UP, keyboard, Y, 0
+WIPER_SPEED_DOWN, keyboard, Y, 2
+INCREASE_CUTOFF, keyboard, U, 0
+DECREASE_CUTOFF, keyboard, U, 2
