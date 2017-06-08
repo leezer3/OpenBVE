@@ -21,8 +21,8 @@ namespace LBAHeader
 				Console.WriteLine("No suitable executables found....");
 				return;
 			}
-			Console.WriteLine("Adding LBA Flag to executable {0}", args[0]);
-			data = File.ReadAllBytes(args[0]);
+			Console.WriteLine("Adding LBA Flag to executable {0}", f);
+			data = File.ReadAllBytes(f);
 			var offset = BitConverter.ToInt32(data, 0x3c);
 			//Set LBA Flag for the file supplied via Arguments[0]
 			data[offset + 4 + 18] |= 0x20;
