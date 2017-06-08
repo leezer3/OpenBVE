@@ -2589,11 +2589,23 @@ namespace OpenBve {
 												} else {
 													if (Path.ContainsInvalidChars(Arguments[0])) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-													} else {
+													}
+													else {
 														if (Arguments.Length > 2) {
 															Interface.AddMessage(Interface.MessageType.Warning, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														}
-														string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+														string f;
+														try
+														{
+															f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+														}
+														catch
+														{
+															//NYCT-1 line has a comment containing SIGNAL, which is then misinterpreted by the parser here
+															//Really needs commenting fixing, rather than hacks like this.....
+															Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not contain a valid path in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															break;
+														}
 														Bve4SignalData Signal = new Bve4SignalData
 														{
 															BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false),
