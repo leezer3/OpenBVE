@@ -418,7 +418,7 @@ namespace OpenBve {
 			};
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
-					Interface.SaveControls(Dialog.FileName);
+					Interface.SaveControls(Dialog.FileName, Interface.CurrentControls);
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}

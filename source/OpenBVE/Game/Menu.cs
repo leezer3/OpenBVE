@@ -444,7 +444,7 @@ namespace OpenBve
 				Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Keyboard;
 				Interface.CurrentControls[CustomControlIdx].Key = key;
 				Interface.CurrentControls[CustomControlIdx].Modifier = keybMod;
-				Interface.SaveControls(null);
+				Interface.SaveControls(null, Interface.CurrentControls);
 			}
 			PopMenu();
 			isCustomisingControl	= false;
@@ -459,7 +459,7 @@ namespace OpenBve
 				Interface.CurrentControls[CustomControlIdx].Component	= component;
 				Interface.CurrentControls[CustomControlIdx].Element		= element;
 				Interface.CurrentControls[CustomControlIdx].Direction	= dir;
-				Interface.SaveControls(null);
+				Interface.SaveControls(null, Interface.CurrentControls);
 				PopMenu();
 				isCustomisingControl	= false;
 			}

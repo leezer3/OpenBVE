@@ -1034,7 +1034,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.SaveControls(null);
+				Interface.SaveControls(null, Interface.CurrentControls);
 #if !DEBUG
 			}
 			catch (Exception ex)

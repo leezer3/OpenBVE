@@ -186,9 +186,10 @@ namespace OpenBve {
 			return false;
 		}
 
-		/// <summary>Saves the current control configuration</summary>
+		/// <summary>Saves a control configuration to disk</summary>
 		/// <param name="FileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
-		internal static void SaveControls(string FileOrNull) {
+		/// <param name="controlsToSave">The list of controls to save</param>
+		internal static void SaveControls(string FileOrNull, Control[] controlsToSave) {
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			Builder.AppendLine("; Current control configuration");
@@ -196,28 +197,28 @@ namespace OpenBve {
 			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
-			for (int i = 0; i < CurrentControls.Length; i++) {
+			for (int i = 0; i < controlsToSave.Length; i++) {
 				CommandInfo Info;
-				TryGetCommandInfo(CurrentControls[i].Command, out Info);
+				TryGetCommandInfo(controlsToSave[i].Command, out Info);
 				Builder.Append(Info.Name + ", ");
-				switch (CurrentControls[i].Method) {
+				switch (controlsToSave[i].Method) {
 					case ControlMethod.Keyboard:
-						Builder.Append("keyboard, " + CurrentControls[i].Key + ", " + ((int)CurrentControls[i].Modifier).ToString(Culture));
+						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture));
 						break;
 					case ControlMethod.Joystick:
-						Builder.Append("joystick, " + CurrentControls[i].Device.ToString(Culture) + ", ");
-						switch (CurrentControls[i].Component) {
+						Builder.Append("joystick, " + controlsToSave[i].Device.ToString(Culture) + ", ");
+						switch (controlsToSave[i].Component) {
 							case JoystickComponent.Axis:
-								Builder.Append("axis, " + CurrentControls[i].Element.ToString(Culture) + ", " + CurrentControls[i].Direction.ToString(Culture));
+								Builder.Append("axis, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
 								break;
 							case JoystickComponent.Ball:
-								Builder.Append("ball, " + CurrentControls[i].Element.ToString(Culture) + ", " + CurrentControls[i].Direction.ToString(Culture));
+								Builder.Append("ball, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
 								break;
 							case JoystickComponent.Hat:
-								Builder.Append("hat, " + CurrentControls[i].Element.ToString(Culture) + ", " + CurrentControls[i].Direction.ToString(Culture));
+								Builder.Append("hat, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
 								break;
 							case JoystickComponent.Button:
-								Builder.Append("button, " + CurrentControls[i].Element.ToString(Culture));
+								Builder.Append("button, " + controlsToSave[i].Element.ToString(Culture));
 								break;
 							default:
 								Builder.Append("invalid");
