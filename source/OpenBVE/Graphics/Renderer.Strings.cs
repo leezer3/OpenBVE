@@ -53,7 +53,7 @@ namespace OpenBve {
 		internal static Size MeasureString(Fonts.OpenGlFont font, string text) {
 			int width = 0;
 			int height = 0;
-			if (text != null) {
+			if (text != null && font != null) {
 				for (int i = 0; i < text.Length; i++) {
 					Textures.Texture texture;
 					Fonts.OpenGlFontChar data;
@@ -75,7 +75,7 @@ namespace OpenBve {
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
 		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
-			if (text == null) {
+			if (text == null || font == null) {
 				return;
 			}
 			/*

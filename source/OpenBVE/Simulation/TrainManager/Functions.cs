@@ -133,7 +133,7 @@ namespace OpenBve
 				{
 					Game.CurrentScore.DepartureStation = stationIndex;
 					Game.CurrentInterface = Game.InterfaceType.Normal;
-					Game.Messages = new Game.Message[] { };
+					//Game.Messages = new Game.Message[] { };
 				}
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				TrainManager.UpdateTrainObjects(0.0, true);

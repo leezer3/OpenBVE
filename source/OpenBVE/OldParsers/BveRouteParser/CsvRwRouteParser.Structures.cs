@@ -108,11 +108,12 @@
 			internal double TrackPosition;
 			internal float Value;
 		}
-		private struct Marker
+
+		internal struct Marker
 		{
 			internal double StartingPosition;
 			internal double EndingPosition;
-			internal Textures.Texture Texture;
+			internal MessageManager.Message Message;
 		}
 		private enum SoundType { World, TrainStatic, TrainDynamic }
 		private struct Sound
