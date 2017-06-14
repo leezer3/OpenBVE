@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -104,37 +105,63 @@ namespace OpenBve {
 			}
 		}
 		// marker start
-		internal class MarkerStartEvent : GeneralEvent {
-			internal Textures.Texture Texture;
-			internal MarkerStartEvent(double trackPositionDelta, Textures.Texture texture) {
+		internal class MarkerStartEvent : GeneralEvent
+		{
+			internal MessageManager.Message Message;
+			internal MarkerStartEvent(double trackPositionDelta, MessageManager.Message message) {
 				this.TrackPositionDelta = trackPositionDelta;
 				this.DontTriggerAnymore = false;
-				this.Texture = texture;
+				this.Message = message;
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle) {
-					if (Direction < 0) {
-						Game.RemoveMarker(this.Texture);
-					} else if (Direction > 0) {
-						Game.AddMarker(this.Texture);
+					if (this.Message != null)
+					{
+						if (Direction < 0)
+						{
+							this.Message.QueueForRemoval = true;
+						}
+						else if (Direction > 0)
+						{
+							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Game.RouteInformation.TrainFolder).Name))
+							{
+								//Our train is NOT in the list of trains which this message triggers for
+								return;
+							}
+							MessageManager.AddMessage(this.Message);
+							
+						}
 					}
+					
 				}
 			}
 		}
 		// marker end
-		internal class MarkerEndEvent : GeneralEvent {
-			internal Textures.Texture Texture;
-			internal MarkerEndEvent(double trackPositionDelta, Textures.Texture texture) {
+		internal class MarkerEndEvent : GeneralEvent
+		{
+			internal MessageManager.Message Message;
+			internal MarkerEndEvent(double trackPositionDelta, MessageManager.Message message) {
 				this.TrackPositionDelta = trackPositionDelta;
 				this.DontTriggerAnymore = false;
-				this.Texture = texture;
+				this.Message = message;
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle) {
-					if (Direction < 0) {
-						Game.AddMarker(this.Texture);
-					} else if (Direction > 0) {
-						Game.RemoveMarker(this.Texture);
+					if (this.Message != null)
+					{
+						if (Direction < 0)
+						{
+							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Game.RouteInformation.TrainFolder).Name))
+							{
+								//Our train is NOT in the list of trains which this message triggers for
+								return;
+							}
+							MessageManager.AddMessage(this.Message);
+						}
+						else if (Direction > 0)
+						{
+							this.Message.QueueForRemoval = true;
+						}
 					}
 				}
 			}
@@ -220,11 +247,11 @@ namespace OpenBve {
 								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending) {
 									string s = Interface.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0, null);
 								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
 									string s = Interface.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 10.0, null);
 								}
 							}
 							Train.Station = -1;
@@ -311,9 +338,9 @@ namespace OpenBve {
 					// messages
 					if (this.NextSectionIndex < 0 || !Game.Sections[this.NextSectionIndex].Invisible) {
 						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						} else if (Train.Specs.CurrentAverageSpeed > Train.CurrentSectionLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
 				}
@@ -444,7 +471,7 @@ namespace OpenBve {
 							Train.CurrentRouteLimit = this.NextSpeedLimit;
 						}
 						if (Train.Specs.CurrentAverageSpeed > this.NextSpeedLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 						int n = Train.RouteLimits.Length;

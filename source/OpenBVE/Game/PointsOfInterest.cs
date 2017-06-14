@@ -90,7 +90,7 @@ namespace OpenBve
 			if (PointsOfInterest[j].Text != null)
 			{
 				double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
-				Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + n);
+				Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + n, null);
 			}
 			return true;
 		}
