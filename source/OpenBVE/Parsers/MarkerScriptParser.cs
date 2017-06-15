@@ -227,6 +227,7 @@ namespace OpenBve
 							{
 								if (LateTexture != null)
 								{
+									t.MessageLateTime = LateTime;
 									t.MessageLateTexture = LateTexture;
 								}
 								else
