@@ -503,8 +503,9 @@ namespace OpenBve
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
 					double length = TrainManager.Trains[i].Cars[0].Length;
-					TrainManager.MoveCar(TrainManager.Trains[i], j, -length, 0.01);
-					TrainManager.MoveCar(TrainManager.Trains[i], j, length, 0.01);
+					//TODO: Why do we move a car it's length then back again?
+					TrainManager.Trains[i].MoveCar(j, -length, 0.01);
+					TrainManager.Trains[i].MoveCar(j, length, 0.01);
 				}
 			}
 			// score
@@ -549,7 +550,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
-					TrainManager.MoveCar(TrainManager.Trains[i], j, p, 0.01);
+					TrainManager.Trains[i].MoveCar(j, p, 0.01);
 				}
 			}
 			// timetable

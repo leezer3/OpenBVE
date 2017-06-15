@@ -122,6 +122,9 @@
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\Trains\Train.Base.cs" />
     <Compile Include="Game\Trains\Train.Car.cs" />
+    <Compile Include="Game\Trains\Train.CarSpecs.cs" />
+    <Compile Include="Game\Trains\Train.Specs.cs" />
+    <Compile Include="Game\Trains\Train.State.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />

@@ -65,6 +65,30 @@ namespace OpenBve
 				}
 			}
 
+			/// <summary>Call this method to move a car</summary>
+			/// <param name="CarIndex">The car index to move</param>
+			/// <param name="Delta">The length to move</param>
+			/// <param name="TimeElapsed">The elapsed time</param>
+			internal void MoveCar(int CarIndex, double Delta, double TimeElapsed)
+			{
+				if (State != TrainState.Disposed)
+				{
+					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontAxle.Follower, Cars[CarIndex].FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontBogie.FrontAxle.Follower, Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontBogie.RearAxle.Follower, Cars[CarIndex].FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					if (State != TrainState.Disposed)
+					{
+						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearAxle.Follower, Cars[CarIndex].RearAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearBogie.FrontAxle.Follower, Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearBogie.RearAxle.Follower, Cars[CarIndex].RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						if (State != TrainState.Disposed)
+						{
+							TrackManager.UpdateTrackFollower(ref Cars[CarIndex].BeaconReceiver, Cars[CarIndex].BeaconReceiver.TrackPosition + Delta, true, true);
+						}
+					}
+				}
+			}
+
 			/// <summary>Call this method to place the cars of a train</summary>
 			/// <param name="TrackPosition">The track position to start from</param>
 			internal void PlaceCars(double TrackPosition)

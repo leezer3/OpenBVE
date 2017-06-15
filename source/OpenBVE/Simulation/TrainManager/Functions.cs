@@ -77,7 +77,7 @@ namespace OpenBve
 					}
 					for (int h = 0; h < train.Cars.Length; h++)
 					{
-						TrainManager.MoveCar(train, h, x, 0.0);
+						train.MoveCar(h, x, 0.0);
 					}
 					if (Math.Abs(d) >= 1.0)
 					{
