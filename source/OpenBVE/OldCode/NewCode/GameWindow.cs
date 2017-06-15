@@ -659,23 +659,23 @@ namespace OpenBve
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";
-					Game.AddMessage(NotFound, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0, null);
+					Game.AddMessage(NotFound, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
 					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0, null);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
 					Messages = errors.ToString() + " error(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0, null);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
 					Messages = warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, 10.0, null);
+					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				Game.RouteInformation.FilesNotFound = NotFound;
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
