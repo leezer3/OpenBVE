@@ -710,8 +710,8 @@ namespace OpenBve {
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
 				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
 				Train.Cars[i].RearAxle.Follower.CarIndex = i;
-				Train.Cars[i].FrontAxlePosition = AxleDistance;
-				Train.Cars[i].RearAxlePosition = -AxleDistance;
+				Train.Cars[i].FrontAxle.Position = AxleDistance;
+				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.IsMotorCar = false;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
@@ -856,9 +856,9 @@ namespace OpenBve {
 			}
 			// driver
 			Train.DriverCar = DriverCar;
-			Train.Cars[Train.DriverCar].DriverX = DriverX;
-			Train.Cars[Train.DriverCar].DriverY = DriverY;
-			Train.Cars[Train.DriverCar].DriverZ = 0.5 * CarLength + DriverZ;
+			Train.Cars[Train.DriverCar].DriverPosition.X = DriverX;
+			Train.Cars[Train.DriverCar].DriverPosition.Y = DriverY;
+			Train.Cars[Train.DriverCar].DriverPosition.Z = 0.5 * CarLength + DriverZ;
 			// couplers
 			Train.Couplers = new TrainManager.Coupler[Cars - 1];
 			for (int i = 0; i < Train.Couplers.Length; i++) {

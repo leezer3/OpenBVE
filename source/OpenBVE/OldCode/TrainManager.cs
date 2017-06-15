@@ -13,6 +13,7 @@ namespace OpenBve
 		{
 			internal TrackManager.TrackFollower Follower;
 			internal bool CurrentWheelSlip;
+			internal double Position;
 		}
 
 		// coupler
@@ -278,34 +279,7 @@ namespace OpenBve
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}
-		internal struct Car
-		{
-			internal double Width;
-			internal double Height;
-			internal double Length;
-			internal Axle FrontAxle;
-			internal Bogie FrontBogie;
-			internal Axle RearAxle;
-			internal Bogie RearBogie;
-			internal double FrontAxlePosition;
-			internal double RearAxlePosition;
-			internal Vector3 Up;
-			internal CarSection[] CarSections;
-			internal int CurrentCarSection;
-			internal double DriverX;
-			internal double DriverY;
-			internal double DriverZ;
-			internal double DriverYaw;
-			internal double DriverPitch;
-			internal CarSpecs Specs;
-			internal CarSounds Sounds;
-			internal bool CurrentlyVisible;
-			internal bool Derailed;
-			internal bool Topples;
-			internal CarBrightness Brightness;
-			internal double BeaconReceiverPosition;
-			internal TrackManager.TrackFollower BeaconReceiver;	
-		}
+
 		//Using a much cut-down version of the car struct for bogies
 		internal struct Bogie {
 #pragma warning disable 0649
@@ -403,62 +377,7 @@ namespace OpenBve
 		}
 
 
-		/// <summary>The root class for a train within the simulation</summary>
-		public class Train
-		{
-			/// <summary>The plugin used by this train.</summary>
-			internal PluginManager.Plugin Plugin;
-			internal int TrainIndex;
-			internal TrainState State;
-			internal Car[] Cars;
-			internal Coupler[] Couplers;
-			internal int DriverCar;
-			internal TrainSpecs Specs;
-			internal TrainPassengers Passengers;
-			internal int LastStation;
-			internal int Station;
-			internal bool StationFrontCar;
-			internal bool StationRearCar;
-			internal TrainStopState StationState;
-			internal double StationArrivalTime;
-			internal double StationDepartureTime;
-			internal bool StationDepartureSoundPlayed;
-			internal bool StationAdjust;
-			internal double StationDistanceToStopPoint;
-			internal double[] RouteLimits;
-			internal double CurrentRouteLimit;
-			internal double CurrentSectionLimit;
-			internal int CurrentSectionIndex;
-			internal double TimetableDelta;
-			internal Game.GeneralAI AI;
-			internal double InternalTimerTimeElapsed;
-			internal bool Derailed;
-
-			/// <summary>Call this method to derail a car</summary>
-			/// <param name="CarIndex">The car index to derail</param>
-			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-			internal void Derail(int CarIndex, double ElapsedTime)
-			{
-				this.Cars[CarIndex].Derailed = true;
-				this.Derailed = true;
-				if (Program.GenerateDebugLogging)
-				{
-					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
-				}
-			}
-
-			/// <summary>Call this method to topple a car</summary>
-			/// <param name="CarIndex">The car index to derail</param>
-			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-			internal void Topple(int CarIndex, double ElapsedTime)
-			{
-				this.Cars[CarIndex].Topples = true;
-				if (Program.GenerateDebugLogging)
-				{
-					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
-				}
-			}
-		}
+		
 
 		// trains
 		/// <summary>The list of trains available in the simulation.</summary>
@@ -1268,14 +1187,14 @@ namespace OpenBve
 			double rx = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.X + Train.Cars[i].RearAxle.Follower.WorldPosition.X);
 			double ry = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Y + Train.Cars[i].RearAxle.Follower.WorldPosition.Y);
 			double rz = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Z + Train.Cars[i].RearAxle.Follower.WorldPosition.Z);
-			double cx = rx + sx * Train.Cars[j].DriverX + ux * Train.Cars[j].DriverY + dx * Train.Cars[j].DriverZ;
-			double cy = ry + sy * Train.Cars[j].DriverX + uy * Train.Cars[j].DriverY + dy * Train.Cars[j].DriverZ;
-			double cz = rz + sz * Train.Cars[j].DriverX + uz * Train.Cars[j].DriverY + dz * Train.Cars[j].DriverZ;
+			double cx = rx + sx * Train.Cars[j].DriverPosition.X + ux * Train.Cars[j].DriverPosition.Y + dx * Train.Cars[j].DriverPosition.Z;
+			double cy = ry + sy * Train.Cars[j].DriverPosition.X + uy * Train.Cars[j].DriverPosition.Y + dy * Train.Cars[j].DriverPosition.Z;
+			double cz = rz + sz * Train.Cars[j].DriverPosition.X + uz * Train.Cars[j].DriverPosition.Y + dz * Train.Cars[j].DriverPosition.Z;
 			World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
 			World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
 			World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
 			World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
-			double f = (Train.Cars[i].DriverZ - Train.Cars[i].RearAxlePosition) / (Train.Cars[i].FrontAxlePosition - Train.Cars[i].RearAxlePosition);
+			double f = (Train.Cars[i].DriverPosition.Z - Train.Cars[i].RearAxle.Position) / (Train.Cars[i].FrontAxle.Position - Train.Cars[i].RearAxle.Position);
 			double tp = (1.0 - f) * Train.Cars[i].RearAxle.Follower.TrackPosition + f * Train.Cars[i].FrontAxle.Follower.TrackPosition;
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, tp, false, false);
 		}
@@ -1483,7 +1402,7 @@ namespace OpenBve
 			double px = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.X + Train.Cars[c].RearAxle.Follower.WorldPosition.X);
 			double py = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.Y + Train.Cars[c].RearAxle.Follower.WorldPosition.Y);
 			double pz = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.Z + Train.Cars[c].RearAxle.Follower.WorldPosition.Z);
-			double d = 0.5 * (Train.Cars[c].FrontAxlePosition + Train.Cars[c].RearAxlePosition);
+			double d = 0.5 * (Train.Cars[c].FrontAxle.Position + Train.Cars[c].RearAxle.Position);
 			px -= dx * d;
 			py -= dy * d;
 			pz -= dz * d;
@@ -1572,7 +1491,7 @@ namespace OpenBve
 			double px = 0.5 * (Train.Cars[c].FrontBogie.FrontAxle.Follower.WorldPosition.X + Train.Cars[c].FrontBogie.RearAxle.Follower.WorldPosition.X);
 			double py = 0.5 * (Train.Cars[c].FrontBogie.FrontAxle.Follower.WorldPosition.Y + Train.Cars[c].FrontBogie.RearAxle.Follower.WorldPosition.Y);
 			double pz = 0.5 * (Train.Cars[c].FrontBogie.FrontAxle.Follower.WorldPosition.Z + Train.Cars[c].FrontBogie.RearAxle.Follower.WorldPosition.Z);
-			double d = 0.5 * (Train.Cars[c].FrontBogie.FrontAxlePosition + Train.Cars[c].FrontBogie.RearAxlePosition);
+			double d = 0.5 * (Train.Cars[c].FrontBogie.FrontAxle.Position + Train.Cars[c].FrontBogie.RearAxlePosition);
 			px -= dx * d;
 			py -= dy * d;
 			pz -= dz * d;
@@ -1654,7 +1573,7 @@ namespace OpenBve
 			double px = 0.5 * (Train.Cars[c].RearBogie.FrontAxle.Follower.WorldPosition.X + Train.Cars[c].RearBogie.RearAxle.Follower.WorldPosition.X);
 			double py = 0.5 * (Train.Cars[c].RearBogie.FrontAxle.Follower.WorldPosition.Y + Train.Cars[c].RearBogie.RearAxle.Follower.WorldPosition.Y);
 			double pz = 0.5 * (Train.Cars[c].RearBogie.FrontAxle.Follower.WorldPosition.Z + Train.Cars[c].RearBogie.RearAxle.Follower.WorldPosition.Z);
-			double d = 0.5 * (Train.Cars[c].RearBogie.FrontAxlePosition + Train.Cars[c].RearBogie.RearAxlePosition);
+			double d = 0.5 * (Train.Cars[c].RearBogie.FrontAxle.Position + Train.Cars[c].RearBogie.RearAxlePosition);
 			px -= dx * d;
 			py -= dy * d;
 			pz -= dz * d;
@@ -1799,7 +1718,7 @@ namespace OpenBve
 			Vector3 p;
 			if (Train.Cars[CarIndex].CarSections[SectionIndex].Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
 			{
-				p = new Vector3(Train.Cars[CarIndex].DriverX, Train.Cars[CarIndex].DriverY, Train.Cars[CarIndex].DriverZ);
+				p = new Vector3(Train.Cars[CarIndex].DriverPosition.X, Train.Cars[CarIndex].DriverPosition.Y, Train.Cars[CarIndex].DriverPosition.Z);
 			}
 			else
 			{
@@ -1832,7 +1751,7 @@ namespace OpenBve
 			{
 				updatefunctions = true;
 			}
-			ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex, Train.Cars[CarIndex].CurrentCarSection, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].FrontAxlePosition, p, Direction, Up, Side, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, EnableDamping);
+			ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex, Train.Cars[CarIndex].CurrentCarSection, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].FrontAxle.Position, p, Direction, Up, Side, Train.Cars[CarIndex].CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, EnableDamping);
 		}
 
 		private static void UpdateFrontBogieSectionElement(Train Train, int CarIndex, int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
@@ -1843,7 +1762,7 @@ namespace OpenBve
 					World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
 				{
 					//Should never be hit, as a bogie cannot be a cab object
-					p = new Vector3(Train.Cars[CarIndex].DriverX, Train.Cars[CarIndex].DriverY, Train.Cars[CarIndex].DriverZ);
+					p = new Vector3(Train.Cars[CarIndex].DriverPosition.X, Train.Cars[CarIndex].DriverPosition.Y, Train.Cars[CarIndex].DriverPosition.Z);
 				}
 				else
 				{
@@ -1879,7 +1798,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].FrontBogie.CurrentCarSection,Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,Side, Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
+				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].FrontBogie.CurrentCarSection,Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxle.Position, p, Direction, Up,Side, Train.Cars[CarIndex].FrontBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
 			}
 		}
 
@@ -1892,7 +1811,7 @@ namespace OpenBve
 					World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
 				{
 					//Should never be hit, as a bogie cannot be a cab object
-					p = new Vector3(Train.Cars[CarIndex].DriverX, Train.Cars[CarIndex].DriverY, Train.Cars[CarIndex].DriverZ);
+					p = new Vector3(Train.Cars[CarIndex].DriverPosition.X, Train.Cars[CarIndex].DriverPosition.Y, Train.Cars[CarIndex].DriverPosition.Z);
 				}
 				else
 				{
@@ -1930,7 +1849,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].RearBogie.CurrentCarSection,Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxlePosition, p, Direction, Up,
+				ObjectManager.UpdateAnimatedObject(ref Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Elements[ElementIndex], true, Train, CarIndex,Train.Cars[CarIndex].RearBogie.CurrentCarSection,Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearBogie.FrontAxle.Position, p, Direction, Up,
 					Side, Train.Cars[CarIndex].RearBogie.CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
 			}
 		}
@@ -2051,18 +1970,18 @@ namespace OpenBve
 					// with other trains
 					if (Trains[i].State == TrainState.Available)
 					{
-						double a = Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - Trains[i].Cars[0].FrontAxlePosition +
+						double a = Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - Trains[i].Cars[0].FrontAxle.Position +
 								   0.5*Trains[i].Cars[0].Length;
 						double b = Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxlePosition - 0.5*Trains[i].Cars[0].Length;
+								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Position - 0.5*Trains[i].Cars[0].Length;
 						for (int j = i + 1; j < Trains.Length; j++)
 						{
 							if (Trains[j].State == TrainState.Available)
 							{
 								double c = Trains[j].Cars[0].FrontAxle.Follower.TrackPosition -
-										   Trains[j].Cars[0].FrontAxlePosition + 0.5*Trains[j].Cars[0].Length;
+										   Trains[j].Cars[0].FrontAxle.Position + 0.5*Trains[j].Cars[0].Length;
 								double d = Trains[j].Cars[Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-										   Trains[j].Cars[Trains[j].Cars.Length - 1].RearAxlePosition -
+										   Trains[j].Cars[Trains[j].Cars.Length - 1].RearAxle.Position -
 										   0.5*Trains[j].Cars[0].Length;
 								if (a > d & b < c)
 								{
@@ -2103,9 +2022,9 @@ namespace OpenBve
 											for (int h = Trains[i].Cars.Length - 2; h >= 0; h--)
 											{
 												a = Trains[i].Cars[h + 1].FrontAxle.Follower.TrackPosition -
-													Trains[i].Cars[h + 1].FrontAxlePosition + 0.5*Trains[i].Cars[h + 1].Length;
+													Trains[i].Cars[h + 1].FrontAxle.Position + 0.5*Trains[i].Cars[h + 1].Length;
 												b = Trains[i].Cars[h].RearAxle.Follower.TrackPosition -
-													Trains[i].Cars[h].RearAxlePosition - 0.5*Trains[i].Cars[h].Length;
+													Trains[i].Cars[h].RearAxle.Position - 0.5*Trains[i].Cars[h].Length;
 												d = b - a - Trains[i].Couplers[h].MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
@@ -2134,9 +2053,9 @@ namespace OpenBve
 											for (int h = 1; h < Trains[j].Cars.Length; h++)
 											{
 												a = Trains[j].Cars[h - 1].RearAxle.Follower.TrackPosition -
-													Trains[j].Cars[h - 1].RearAxlePosition - 0.5*Trains[j].Cars[h - 1].Length;
+													Trains[j].Cars[h - 1].RearAxle.Position - 0.5*Trains[j].Cars[h - 1].Length;
 												b = Trains[j].Cars[h].FrontAxle.Follower.TrackPosition -
-													Trains[j].Cars[h].FrontAxlePosition + 0.5*Trains[j].Cars[h].Length;
+													Trains[j].Cars[h].FrontAxle.Position + 0.5*Trains[j].Cars[h].Length;
 												d = a - b - Trains[j].Couplers[h - 1].MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
@@ -2199,9 +2118,9 @@ namespace OpenBve
 											for (int h = 1; h < Trains[i].Cars.Length; h++)
 											{
 												a = Trains[i].Cars[h - 1].RearAxle.Follower.TrackPosition -
-													Trains[i].Cars[h - 1].RearAxlePosition - 0.5*Trains[i].Cars[h - 1].Length;
+													Trains[i].Cars[h - 1].RearAxle.Position - 0.5*Trains[i].Cars[h - 1].Length;
 												b = Trains[i].Cars[h].FrontAxle.Follower.TrackPosition -
-													Trains[i].Cars[h].FrontAxlePosition + 0.5*Trains[i].Cars[h].Length;
+													Trains[i].Cars[h].FrontAxle.Position + 0.5*Trains[i].Cars[h].Length;
 												d = a - b - Trains[i].Couplers[h - 1].MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
@@ -2230,9 +2149,9 @@ namespace OpenBve
 											for (int h = Trains[j].Cars.Length - 2; h >= 0; h--)
 											{
 												a = Trains[j].Cars[h + 1].FrontAxle.Follower.TrackPosition -
-													Trains[j].Cars[h + 1].FrontAxlePosition + 0.5*Trains[j].Cars[h + 1].Length;
+													Trains[j].Cars[h + 1].FrontAxle.Position + 0.5*Trains[j].Cars[h + 1].Length;
 												b = Trains[j].Cars[h].RearAxle.Follower.TrackPosition -
-													Trains[j].Cars[h].RearAxlePosition - 0.5*Trains[j].Cars[h].Length;
+													Trains[j].Cars[h].RearAxle.Position - 0.5*Trains[j].Cars[h].Length;
 												d = b - a - Trains[j].Couplers[h].MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
@@ -2267,10 +2186,10 @@ namespace OpenBve
 					// with buffers
 					if (i == PlayerTrain.TrainIndex)
 					{
-						double a = Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - Trains[i].Cars[0].FrontAxlePosition +
+						double a = Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - Trains[i].Cars[0].FrontAxle.Position +
 								   0.5*Trains[i].Cars[0].Length;
 						double b = Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxlePosition - 0.5*Trains[i].Cars[0].Length;
+								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Position - 0.5*Trains[i].Cars[0].Length;
 						for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
 						{
 							if (a > Game.BufferTrackPositions[j] & b < Game.BufferTrackPositions[j])
@@ -2292,9 +2211,9 @@ namespace OpenBve
 									for (int h = 1; h < Trains[i].Cars.Length; h++)
 									{
 										a = Trains[i].Cars[h - 1].RearAxle.Follower.TrackPosition -
-											Trains[i].Cars[h - 1].RearAxlePosition - 0.5*Trains[i].Cars[h - 1].Length;
+											Trains[i].Cars[h - 1].RearAxle.Position - 0.5*Trains[i].Cars[h - 1].Length;
 										b = Trains[i].Cars[h].FrontAxle.Follower.TrackPosition -
-											Trains[i].Cars[h].FrontAxlePosition + 0.5*Trains[i].Cars[h].Length;
+											Trains[i].Cars[h].FrontAxle.Position + 0.5*Trains[i].Cars[h].Length;
 										double d = a - b - Trains[i].Couplers[h - 1].MinimumDistanceBetweenCars;
 										if (d < 0.0)
 										{
@@ -2324,9 +2243,9 @@ namespace OpenBve
 									for (int h = Trains[i].Cars.Length - 2; h >= 0; h--)
 									{
 										a = Trains[i].Cars[h + 1].FrontAxle.Follower.TrackPosition -
-											Trains[i].Cars[h + 1].FrontAxlePosition + 0.5*Trains[i].Cars[h + 1].Length;
+											Trains[i].Cars[h + 1].FrontAxle.Position + 0.5*Trains[i].Cars[h + 1].Length;
 										b = Trains[i].Cars[h].RearAxle.Follower.TrackPosition -
-											Trains[i].Cars[h].RearAxlePosition - 0.5*Trains[i].Cars[h].Length;
+											Trains[i].Cars[h].RearAxle.Position - 0.5*Trains[i].Cars[h].Length;
 										double d = b - a - Trains[i].Couplers[h].MinimumDistanceBetweenCars;
 										if (d < 0.0)
 										{
@@ -2420,7 +2339,7 @@ namespace OpenBve
 				double d = 0.5 * (Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].RearAxle.Follower.TrackPosition);
 				TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, s + d, false, false);
 				TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, s - d, false, false);
-				double b = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxlePosition + Train.Cars[i].BeaconReceiverPosition;
+				double b = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxle.Position + Train.Cars[i].BeaconReceiverPosition;
 				TrackManager.UpdateTrackFollower(ref Train.Cars[i].BeaconReceiver, b, false, false);
 			}
 		}
@@ -2946,8 +2865,8 @@ namespace OpenBve
 			double TrainMass = 0.0;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				double pr = Train.Cars[i].RearAxle.Follower.TrackPosition - Train.Cars[i].RearAxlePosition;
-				double pf = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxlePosition;
+				double pr = Train.Cars[i].RearAxle.Follower.TrackPosition - Train.Cars[i].RearAxle.Position;
+				double pf = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxle.Position;
 				CenterOfCarPositions[i] = 0.5 * (pr + pf);
 				CenterOfMassPosition += CenterOfCarPositions[i] * Train.Cars[i].Specs.MassCurrent;
 				TrainMass += Train.Cars[i].Specs.MassCurrent;

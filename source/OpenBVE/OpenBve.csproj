@@ -120,6 +120,8 @@
     <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
+    <Compile Include="Game\Trains\Train.Base.cs" />
+    <Compile Include="Game\Trains\Train.Car.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
@@ -371,7 +373,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
-	<!-- Finally, set LBA flag & cleanup -->	
+    <!-- Finally, set LBA flag & cleanup -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
 "$(TargetDir)LBAHeader.exe" OpenBve.exe 

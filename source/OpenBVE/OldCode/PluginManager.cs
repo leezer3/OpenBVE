@@ -64,7 +64,7 @@ namespace OpenBve {
 				/*
 				 * Prepare the vehicle state.
 				 * */
-				double location = this.Train.Cars[0].FrontAxle.Follower.TrackPosition - this.Train.Cars[0].FrontAxlePosition + 0.5 * this.Train.Cars[0].Length;
+				double location = this.Train.Cars[0].FrontAxle.Follower.TrackPosition - this.Train.Cars[0].FrontAxle.Position + 0.5 * this.Train.Cars[0].Length;
 				//Curve Radius, Cant and Pitch Added
 				double CurrentRadius = this.Train.Cars[0].FrontAxle.Follower.CurveRadius;
 				double CurrentCant = this.Train.Cars[0].FrontAxle.Follower.CurveCant;
@@ -106,7 +106,7 @@ namespace OpenBve {
 				for (int i = 0; i < TrainManager.Trains.Length; i++) {
 					if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainManager.TrainState.Available) {
 						int c = TrainManager.Trains[i].Cars.Length - 1;
-						double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxlePosition - 0.5 * TrainManager.Trains[i].Cars[c].Length;
+						double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManager.Trains[i].Cars[c].Length;
 						if (z >= location & z < bestLocation) {
 							bestLocation = z;
 							bestSpeed = TrainManager.Trains[i].Specs.CurrentAverageSpeed;

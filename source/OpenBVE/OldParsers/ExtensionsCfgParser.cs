@@ -130,8 +130,8 @@ namespace OpenBve {
 																		} else if (rear >= front) {
 																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
-																			Train.Cars[n].RearAxlePosition = rear;
-																			Train.Cars[n].FrontAxlePosition = front;
+																			Train.Cars[n].RearAxle.Position = rear;
+																			Train.Cars[n].FrontAxle.Position = front;
 																			DefinedAxles = true;
 																		}
 																	} else {
@@ -155,8 +155,8 @@ namespace OpenBve {
 											i--;
 											if (DefinedLength & !DefinedAxles) {
 												double AxleDistance = 0.4 * Train.Cars[n].Length;
-												Train.Cars[n].RearAxlePosition = -AxleDistance;
-												Train.Cars[n].FrontAxlePosition = AxleDistance;
+												Train.Cars[n].RearAxle.Position = -AxleDistance;
+												Train.Cars[n].FrontAxle.Position = AxleDistance;
 											}
 										} else {
 											Interface.AddMessage(Interface.MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -294,12 +294,12 @@ namespace OpenBve {
 																			if (IsOdd)
 																			{
 																				Train.Cars[CarIndex].FrontBogie.RearAxlePosition = rear;
-																				Train.Cars[CarIndex].FrontBogie.FrontAxlePosition = front;
+																				Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = front;
 																			}
 																			else
 																			{
 																				Train.Cars[CarIndex].RearBogie.RearAxlePosition = rear;
-																				Train.Cars[CarIndex].RearBogie.FrontAxlePosition = front;
+																				Train.Cars[CarIndex].RearBogie.FrontAxle.Position = front;
 																			}
 																			DefinedAxles = true;
 																		}
@@ -332,13 +332,13 @@ namespace OpenBve {
 												{
 													double AxleDistance = 0.4 * Train.Cars[CarIndex].FrontBogie.Length;
 													Train.Cars[CarIndex].FrontBogie.RearAxlePosition = -AxleDistance;
-													Train.Cars[CarIndex].FrontBogie.FrontAxlePosition = AxleDistance;
+													Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = AxleDistance;
 												}
 												else
 												{
 													double AxleDistance = 0.4 * Train.Cars[CarIndex].RearBogie.Length;
 													Train.Cars[CarIndex].RearBogie.RearAxlePosition = -AxleDistance;
-													Train.Cars[CarIndex].RearBogie.FrontAxlePosition = AxleDistance;
+													Train.Cars[CarIndex].RearBogie.FrontAxle.Position = AxleDistance;
 												}
 											}
 										}
@@ -369,9 +369,9 @@ namespace OpenBve {
 						if (CarObjectsReversed[i]) {
 							{
 								// reverse axle positions
-								double temp = Train.Cars[i].FrontAxlePosition;
-								Train.Cars[i].FrontAxlePosition = -Train.Cars[i].RearAxlePosition;
-								Train.Cars[i].RearAxlePosition = -temp;
+								double temp = Train.Cars[i].FrontAxle.Position;
+								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
+								Train.Cars[i].RearAxle.Position = -temp;
 							}
 							if (CarObjects[i] is ObjectManager.StaticObject) {
 								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
@@ -413,14 +413,14 @@ namespace OpenBve {
 								// reverse axle positions
 								if (IsOdd)
 								{
-									double temp = Train.Cars[CarIndex].FrontBogie.FrontAxlePosition;
-									Train.Cars[i].FrontBogie.FrontAxlePosition = -Train.Cars[CarIndex].FrontBogie.RearAxlePosition;
+									double temp = Train.Cars[CarIndex].FrontBogie.FrontAxle.Position;
+									Train.Cars[i].FrontBogie.FrontAxle.Position = -Train.Cars[CarIndex].FrontBogie.RearAxlePosition;
 									Train.Cars[i].FrontBogie.RearAxlePosition = -temp;
 								}
 								else
 								{
-									double temp = Train.Cars[CarIndex].RearBogie.FrontAxlePosition;
-									Train.Cars[i].RearBogie.FrontAxlePosition = -Train.Cars[CarIndex].RearBogie.RearAxlePosition;
+									double temp = Train.Cars[CarIndex].RearBogie.FrontAxle.Position;
+									Train.Cars[i].RearBogie.FrontAxle.Position = -Train.Cars[CarIndex].RearBogie.RearAxlePosition;
 									Train.Cars[i].RearBogie.RearAxlePosition = -temp;
 								}
 							}

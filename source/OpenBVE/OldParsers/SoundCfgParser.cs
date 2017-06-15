@@ -22,7 +22,7 @@ namespace OpenBve {
 		/// <param name="train">The train</param>
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
 		internal static void LoadDefaultATSSounds(TrainManager.Train train, string trainFolder) {
-			Vector3 position = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3 position = new Vector3(train.Cars[train.DriverCar].DriverPosition.X, train.Cars[train.DriverCar].DriverPosition.Y, train.Cars[train.DriverCar].DriverPosition.Z + 1.0);
 			const double radius = 2.0;
 			train.Cars[train.DriverCar].Sounds.Plugin = new TrainManager.CarSound[] {
 				TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), position, radius),
@@ -98,8 +98,8 @@ namespace OpenBve {
 			Vector3 center = new Vector3(0.0, 0.0, 0.0);
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
-			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverPosition.X, train.Cars[train.DriverCar].DriverPosition.Y, train.Cars[train.DriverCar].DriverPosition.Z - 0.5);
+			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverPosition.X, train.Cars[train.DriverCar].DriverPosition.Y, train.Cars[train.DriverCar].DriverPosition.Z + 1.0);
 			const double large = 30.0;
 			const double medium = 10.0;
 			const double small = 5.0;
@@ -125,8 +125,8 @@ namespace OpenBve {
 			train.Cars[train.DriverCar].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
 			// load sounds for all cars
 			for (int i = 0; i < train.Cars.Length; i++) {
-				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxlePosition);
-				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxlePosition);
+				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxle.Position);
+				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxle.Position);
 				train.Cars[i].Sounds.Air = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), center, small);
 				train.Cars[i].Sounds.AirHigh = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), center, small);
 				train.Cars[i].Sounds.AirZero = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), center, small);
@@ -205,7 +205,7 @@ namespace OpenBve {
 			//Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
 			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverPosition.X, train.Cars[train.DriverCar].DriverPosition.Y, train.Cars[train.DriverCar].DriverPosition.Z + 1.0);
 
 			//Radius at which the sound is audible at full volume, presumably in m
 			//TODO: All radii are much too small in external mode, but we can't change them by default.....
@@ -346,8 +346,8 @@ namespace OpenBve {
 												train.Cars[c].Sounds.PointRearAxle[h] = TrainManager.CarSound.Empty;
 											}
 										}
-										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxlePosition);
-										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxlePosition);
+										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
+										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
 										train.Cars[c].Sounds.PointFrontAxle[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), frontaxle, small);
 										train.Cars[c].Sounds.PointRearAxle[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), rearaxle, small);
 									}

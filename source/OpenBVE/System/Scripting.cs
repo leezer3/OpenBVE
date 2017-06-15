@@ -212,9 +212,9 @@ namespace OpenBve
             {
                 if (Train == null) return 0.0;
                 int r = Train.Cars.Length - 1;
-                double t0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition +
+                double t0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxle.Position +
                             0.5*Train.Cars[0].Length;
-                double t1 = Train.Cars[r].RearAxle.Follower.TrackPosition - Train.Cars[r].RearAxlePosition -
+                double t1 = Train.Cars[r].RearAxle.Follower.TrackPosition - Train.Cars[r].RearAxle.Position -
                             0.5*Train.Cars[r].Length;
                 return TrackPosition > t0 ? TrackPosition - t0 : TrackPosition < t1 ? TrackPosition - t1 : 0.0;
             }
@@ -231,7 +231,7 @@ namespace OpenBve
                 {
                     CarIndex = Train.Cars.Length - 1;
                 }
-                double t1 = Train.Cars[CarIndex].RearAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearAxlePosition -
+                double t1 = Train.Cars[CarIndex].RearAxle.Follower.TrackPosition - Train.Cars[CarIndex].RearAxle.Position -
                             0.5*Train.Cars[CarIndex].Length;
                 return TrackPosition < t1 ? TrackPosition - t1 : 0.0;
             }

@@ -29,9 +29,9 @@ namespace OpenBve {
 				}
 			}
 			// initialize
-			double DriverX = Train.Cars[Train.DriverCar].DriverX;
-			double DriverY = Train.Cars[Train.DriverCar].DriverY;
-			double DriverZ = Train.Cars[Train.DriverCar].DriverZ;
+			double DriverX = Train.Cars[Train.DriverCar].DriverPosition.X;
+			double DriverY = Train.Cars[Train.DriverCar].DriverPosition.Y;
+			double DriverZ = Train.Cars[Train.DriverCar].DriverPosition.Z;
 			double PanelResolution = 1024.0;
 			double PanelLeft = 0.0, PanelRight = 1024.0;
 			double PanelTop = 0.0, PanelBottom = 1024.0;
