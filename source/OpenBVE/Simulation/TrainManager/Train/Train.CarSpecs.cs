@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBve.BrakeSystems;
+
+namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
@@ -62,7 +64,7 @@
 			internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
+			internal AirBrake.CarAirBrake AirBrake;
 			/// doors
 			internal Door[] Doors;
 			internal double DoorOpenFrequency;

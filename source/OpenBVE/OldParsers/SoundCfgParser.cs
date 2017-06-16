@@ -130,7 +130,7 @@ namespace OpenBve {
 				train.Cars[i].Sounds.Air = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), center, small);
 				train.Cars[i].Sounds.AirHigh = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), center, small);
 				train.Cars[i].Sounds.AirZero = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), center, small);
-				if (train.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main) {
+				if (train.Cars[i].Specs.AirBrake.Type == BrakeSystems.AirBrake.BrakeType.Main) {
 					train.Cars[i].Sounds.CpEnd = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), center, medium);
 					train.Cars[i].Sounds.CpLoop = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), center, medium);
 					train.Cars[i].Sounds.CpStart = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "CpStart.wav"), center, medium);
@@ -403,7 +403,7 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									for (int c = 0; c < train.Cars.Length; c++) {
-										if (train.Cars[c].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main) {
+										if (train.Cars[c].Specs.AirBrake.Type == BrakeSystems.AirBrake.BrakeType.Main) {
 											switch (a.ToLowerInvariant()) {
 												case "attack":
 													train.Cars[c].Sounds.CpStart = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, medium);
