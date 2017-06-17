@@ -19,9 +19,6 @@ namespace OpenBve
 			Station = 3
 		}
 
-
-		/// <summary>The current in-game messages</summary>
-		//internal static Message[] Messages = new Message[] { };
 		/// <summary>The current size of the plane upon which messages are rendered</summary>
 		internal static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
 

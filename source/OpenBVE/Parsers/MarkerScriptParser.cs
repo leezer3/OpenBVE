@@ -35,7 +35,7 @@ namespace OpenBve
 				{
 					if (n.HasChildNodes)
 					{
-						bool EarlyDefined = false, OnTimeDefined = false, LateDefined = false;
+						bool EarlyDefined = false, LateDefined = false;
 						string EarlyText = null, Text = null, LateText = null;
 						string[] Trains = null;
 						Textures.Texture EarlyTexture = null, Texture = null, LateTexture = null;
@@ -91,7 +91,6 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false,
 											"No paramaters defined for the on-time message in " + fileName);
 									}
-									//OnTimeDefined = true;
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name.ToLowerInvariant())
@@ -283,6 +282,10 @@ namespace OpenBve
 			return true;
 		}
 
+		/// <summary>Parses a color string into a message color</summary>
+		/// <param name="s">The string to parse</param>
+		/// <param name="f">The filename (Use in errors)</param>
+		/// <returns></returns>
 		private static MessageColor ParseColor(string s, string f)
 		{
 			switch (s.ToLowerInvariant())
