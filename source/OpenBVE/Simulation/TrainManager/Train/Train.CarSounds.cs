@@ -8,9 +8,6 @@
 			internal Sounds.SoundSource Compressor;
 			internal MotorSound Motor;
 			internal CarSound Adjust;
-			internal CarSound Air;
-			internal CarSound AirHigh;
-			internal CarSound AirZero;
 			internal CarSound Brake;
 			internal CarSound BrakeHandleApply;
 			internal CarSound BrakeHandleRelease;
@@ -19,11 +16,6 @@
 			internal CarSound BreakerResume;
 			internal CarSound BreakerResumeOrInterrupt;
 			internal bool BreakerResumed;
-			internal CarSound CpEnd;
-			internal CarSound CpLoop;
-			internal bool CpLoopStarted;
-			internal CarSound CpStart;
-			internal double CpStartTimeStarted;
 			/// <summary>Played once when the left doors close</summary>
 			internal CarSound DoorCloseL;
 			/// <summary>Played once when the right doors close</summary>
