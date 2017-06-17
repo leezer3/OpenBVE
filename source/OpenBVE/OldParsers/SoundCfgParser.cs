@@ -63,7 +63,7 @@ namespace OpenBve {
 				train.Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
 				train.Cars[i].Sounds.FlangeVolume = new double[] { };
 				train.Cars[i].Sounds.Halt = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Horns = new TrainManager.Horn[]
+				train.Cars[i].Horns = new TrainManager.Horn[]
 				{
 					new TrainManager.Horn(), 
 					new TrainManager.Horn(), 
@@ -109,18 +109,18 @@ namespace OpenBve {
 			train.Cars[train.DriverCar].Sounds.Adjust = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Adjust.wav"), panel, tiny);
 			train.Cars[train.DriverCar].Sounds.Brake = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Brake.wav"), center, small);
 			train.Cars[train.DriverCar].Sounds.Halt = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Halt.wav"), cab, tiny);
-			train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon0.wav"), large);
-			train.Cars[train.DriverCar].Sounds.Horns[0].Loop = false;
-			train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
-			if (train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound == null) {
-				train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon.wav"), large);
+			train.Cars[train.DriverCar].Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon0.wav"), large);
+			train.Cars[train.DriverCar].Horns[0].Loop = false;
+			train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+			if (train.Cars[train.DriverCar].Horns[0].LoopSound == null) {
+				train.Cars[train.DriverCar].Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon.wav"), large);
 			}
-			train.Cars[train.DriverCar].Sounds.Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon1.wav"), large);
-			train.Cars[train.DriverCar].Sounds.Horns[1].Loop = false;
-			train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
-			train.Cars[train.DriverCar].Sounds.Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon2.wav"), medium);
-			train.Cars[train.DriverCar].Sounds.Horns[2].Loop = true;
-			train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
+			train.Cars[train.DriverCar].Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon1.wav"), large);
+			train.Cars[train.DriverCar].Horns[1].Loop = false;
+			train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+			train.Cars[train.DriverCar].Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon2.wav"), medium);
+			train.Cars[train.DriverCar].Horns[2].Loop = true;
+			train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
 			train.Cars[train.DriverCar].Sounds.PilotLampOn = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Leave.wav"), cab, tiny);
 			train.Cars[train.DriverCar].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
 			// load sounds for all cars
@@ -461,57 +461,57 @@ namespace OpenBve {
 									switch (a.ToLowerInvariant()) {
 										//PRIMARY HORN (Enter)
 										case "primarystart":
-											train.Cars[train.DriverCar].Sounds.Horns[0].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[0].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 											break;
 										case "primaryend":
 										case "primaryrelease":
-											train.Cars[train.DriverCar].Sounds.Horns[0].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[0].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[0].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].StartEndSounds = true;
 											break;
 										case "primaryloop":
 										case "primary":
-											train.Cars[train.DriverCar].Sounds.Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[0].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[0].Loop = false;
+											train.Cars[train.DriverCar].Horns[0].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[0].Loop = false;
 											break;
 										//SECONDARY HORN (Numpad Enter)
 										case "secondarystart":
-											train.Cars[train.DriverCar].Sounds.Horns[1].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[1].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
 											break;
 										case "secondaryend":
 										case "secondaryrelease":
-											train.Cars[train.DriverCar].Sounds.Horns[1].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[1].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[1].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].StartEndSounds = true;
 											break;
 										case "secondaryloop":
 										case "secondary":
-											train.Cars[train.DriverCar].Sounds.Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
-											train.Cars[train.DriverCar].Sounds.Horns[1].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[1].Loop = false;
+											train.Cars[train.DriverCar].Horns[1].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), large);
+											train.Cars[train.DriverCar].Horns[1].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[1].Loop = false;
 											break;
 										//MUSIC HORN
 										case "musicstart":
-											train.Cars[train.DriverCar].Sounds.Horns[2].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
-											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[2].StartSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
 											break;
 										case "musicend":
 										case "musicrelease":
-											train.Cars[train.DriverCar].Sounds.Horns[2].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
-											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[2].StartEndSounds = true;
+											train.Cars[train.DriverCar].Horns[2].EndSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].StartEndSounds = true;
 											break;
 										case "musicloop":
 										case "music":
-											train.Cars[train.DriverCar].Sounds.Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
-											train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
-											train.Cars[train.DriverCar].Sounds.Horns[2].Loop = true;
+											train.Cars[train.DriverCar].Horns[2].LoopSound = TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), medium);
+											train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
+											train.Cars[train.DriverCar].Horns[2].Loop = true;
 											break;
 										default:
 											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);

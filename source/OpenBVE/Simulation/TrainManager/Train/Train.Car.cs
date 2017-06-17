@@ -26,6 +26,8 @@ namespace OpenBve
 			/// <summary>The rear bogie</summary>
 			internal Bogie RearBogie;
 
+			internal Horn[] Horns;
+
 			internal Vector3 Up;
 			/// <summary>The car sections (Objects associated with the car)</summary>
 			internal CarSection[] CarSections;
