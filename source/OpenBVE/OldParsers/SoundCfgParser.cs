@@ -76,8 +76,8 @@ namespace OpenBve {
 				train.Cars[i].Sounds.MasterControllerMax = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.PilotLampOn = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.PointFrontAxle = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[] { };
+				train.Cars[i].FrontAxle.PointSounds = new TrainManager.CarSound[] { };
+				train.Cars[i].RearAxle.PointSounds = new TrainManager.CarSound[] { };
 				train.Cars[i].Sounds.ReverserOn = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.ReverserOff = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.Rub = TrainManager.CarSound.Empty;
@@ -158,11 +158,11 @@ namespace OpenBve {
 				train.Cars[i].Sounds.Flange = TryLoadSoundArray(trainFolder, "Flange", ".wav", center, medium);
 				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
 				train.Cars[i].Sounds.Loop = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Loop.wav"), center, medium);
-				train.Cars[i].Sounds.PointFrontAxle = new TrainManager.CarSound[]
+				train.Cars[i].FrontAxle.PointSounds = new TrainManager.CarSound[]
 				{
 					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), frontaxle, small)
 				};
-				train.Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[]
+				train.Cars[i].RearAxle.PointSounds = new TrainManager.CarSound[]
 				{
 					TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), rearaxle, small)
 				};
@@ -335,21 +335,21 @@ namespace OpenBve {
 								} else if (NumberFormats.TryParseIntVb6(a, out runIndex)) {
 									
 									for (int c = 0; c < train.Cars.Length; c++) {
-										int n = train.Cars[c].Sounds.PointFrontAxle.Length;
+										int n = train.Cars[c].FrontAxle.PointSounds.Length;
 										if (runIndex >= n)
 										{
-											Array.Resize<TrainManager.CarSound>(ref train.Cars[c].Sounds.PointFrontAxle, runIndex + 1);
-											Array.Resize<TrainManager.CarSound>(ref train.Cars[c].Sounds.PointRearAxle, runIndex + 1);
+											Array.Resize<TrainManager.CarSound>(ref train.Cars[c].FrontAxle.PointSounds, runIndex + 1);
+											Array.Resize<TrainManager.CarSound>(ref train.Cars[c].RearAxle.PointSounds, runIndex + 1);
 											for (int h = n; h < runIndex; h++)
 											{
-												train.Cars[c].Sounds.PointFrontAxle[h] = TrainManager.CarSound.Empty;
-												train.Cars[c].Sounds.PointRearAxle[h] = TrainManager.CarSound.Empty;
+												train.Cars[c].FrontAxle.PointSounds[h] = TrainManager.CarSound.Empty;
+												train.Cars[c].RearAxle.PointSounds[h] = TrainManager.CarSound.Empty;
 											}
 										}
 										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
 										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
-										train.Cars[c].Sounds.PointFrontAxle[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), frontaxle, small);
-										train.Cars[c].Sounds.PointRearAxle[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), rearaxle, small);
+										train.Cars[c].FrontAxle.PointSounds[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), frontaxle, small);
+										train.Cars[c].RearAxle.PointSounds[runIndex] = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, b), rearaxle, small);
 									}
 								} else {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported index " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);

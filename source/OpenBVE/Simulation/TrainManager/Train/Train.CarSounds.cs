@@ -46,8 +46,7 @@
 			internal CarSound PilotLampOn;
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
-			internal CarSound[] PointFrontAxle;
-			internal CarSound[] PointRearAxle;
+
 			internal CarSound Rub;
 			internal CarSound ReverserOn;
 			internal CarSound ReverserOff;
@@ -57,10 +56,7 @@
 			internal CarSound SpringL;
 			internal CarSound SpringR;
 			internal CarSound[] Plugin;
-			internal int FrontAxleRunIndex;
-			internal int RearAxleRunIndex;
-			internal int FrontAxleFlangeIndex;
-			internal int RearAxleFlangeIndex;
+
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}

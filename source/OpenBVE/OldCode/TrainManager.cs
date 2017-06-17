@@ -14,6 +14,11 @@ namespace OpenBve
 			internal TrackManager.TrackFollower Follower;
 			internal bool CurrentWheelSlip;
 			internal double Position;
+			internal CarSound[] PointSounds;
+			/// <summary>The current run index for this axle</summary>
+			internal int currentRunIdx;
+			/// <summary>The current flange index for this axle</summary>
+			internal int currentFlangeIdx;
 		}
 
 		// coupler
@@ -904,7 +909,7 @@ namespace OpenBve
 				pitch = Train.Cars[CarIndex].Sounds.FlangePitch;
 				for (int i = 0; i < Train.Cars[CarIndex].Sounds.Flange.Length; i++)
 				{
-					if (i == Train.Cars[CarIndex].Sounds.FrontAxleFlangeIndex | i == Train.Cars[CarIndex].Sounds.RearAxleFlangeIndex)
+					if (i == Train.Cars[CarIndex].FrontAxle.currentFlangeIdx | i == Train.Cars[CarIndex].RearAxle.currentFlangeIdx)
 					{
 						Train.Cars[CarIndex].Sounds.FlangeVolume[i] += TimeElapsed;
 						if (Train.Cars[CarIndex].Sounds.FlangeVolume[i] > 1.0) Train.Cars[CarIndex].Sounds.FlangeVolume[i] = 1.0;
@@ -2984,16 +2989,16 @@ namespace OpenBve
 						Train.Cars[i].Sounds.RunNextReasynchronizationPosition = Train.Cars[0].FrontAxle.Follower.TrackPosition;
 					}
 				}
-				else if (Train.Cars[i].Sounds.RunNextReasynchronizationPosition == double.MaxValue & Train.Cars[i].Sounds.FrontAxleRunIndex >= 0)
+				else if (Train.Cars[i].Sounds.RunNextReasynchronizationPosition == double.MaxValue & Train.Cars[i].FrontAxle.currentRunIdx >= 0)
 				{
 					double distance = Math.Abs(Train.Cars[i].FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
 					const double minDistance = 150.0;
 					const double maxDistance = 750.0;
 					if (distance > minDistance)
 					{
-						if (Train.Cars[i].Sounds.FrontAxleRunIndex < Train.Cars[i].Sounds.Run.Length)
+						if (Train.Cars[i].FrontAxle.currentRunIdx < Train.Cars[i].Sounds.Run.Length)
 						{
-							Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.Run[Train.Cars[i].Sounds.FrontAxleRunIndex].Buffer;
+							Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.Run[Train.Cars[i].FrontAxle.currentRunIdx].Buffer;
 							if (buffer != null)
 							{
 								double duration = Sounds.GetDuration(buffer);
@@ -3017,7 +3022,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < Train.Cars[i].Sounds.Run.Length; j++)
 				{
-					if (j == Train.Cars[i].Sounds.FrontAxleRunIndex | j == Train.Cars[i].Sounds.RearAxleRunIndex)
+					if (j == Train.Cars[i].FrontAxle.currentRunIdx | j == Train.Cars[i].RearAxle.currentRunIdx)
 					{
 						Train.Cars[i].Sounds.RunVolume[j] += 3.0 * TimeElapsed;
 						if (Train.Cars[i].Sounds.RunVolume[j] > 1.0) Train.Cars[i].Sounds.RunVolume[j] = 1.0;
