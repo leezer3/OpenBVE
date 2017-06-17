@@ -153,8 +153,10 @@ namespace OpenBve
 						{
 							ObjectManager.StaticObject s = (ObjectManager.StaticObject)CarObjects[i];
 							Cars[i].CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-							Cars[i].CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-							Cars[i].CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
+							Cars[i].CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
+							{
+								States = new ObjectManager.AnimatedObjectState[1]
+							};
 							Cars[i].CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
 							Cars[i].CarSections[j].Elements[0].States[0].Object = s;
 							Cars[i].CarSections[j].Elements[0].CurrentState = 0;
@@ -209,8 +211,10 @@ namespace OpenBve
 						{
 							ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
 							Cars[i].RearBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-							Cars[i].RearBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-							Cars[i].RearBogie.CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
+							Cars[i].RearBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
+							{
+								States = new ObjectManager.AnimatedObjectState[1]
+							};
 							Cars[i].RearBogie.CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
 							Cars[i].RearBogie.CarSections[j].Elements[0].States[0].Object = s;
 							Cars[i].RearBogie.CarSections[j].Elements[0].CurrentState = 0;
@@ -228,6 +232,45 @@ namespace OpenBve
 						}
 					}
 					currentBogieObject++;
+				}
+			}
+
+			/// <summary>Updates the atmospheric constants applying to this train (Effects brake pressure speeds etc.)</summary>
+			internal void UpdateAtmosphericConstants()
+			{
+				double h = 0.0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
+				}
+				Specs.CurrentElevation = Game.RouteInitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Game.GetAirTemperature(Specs.CurrentElevation);
+				Specs.CurrentAirPressure = Game.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				Specs.CurrentAirDensity = Game.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
+			}
+
+			/// <summary>If this train is currently non-visible (minimalistic simulation) used to update the position of all cars infrequently</summary>
+			internal void Synchronize()
+			{
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					double s = 0.5 * (Cars[i].FrontAxle.Follower.TrackPosition + Cars[i].RearAxle.Follower.TrackPosition);
+					double d = 0.5 * (Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].RearAxle.Follower.TrackPosition);
+					TrackManager.UpdateTrackFollower(ref Cars[i].FrontAxle.Follower, s + d, false, false);
+					TrackManager.UpdateTrackFollower(ref Cars[i].RearAxle.Follower, s - d, false, false);
+					double b = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position + Cars[i].BeaconReceiverPosition;
+					TrackManager.UpdateTrackFollower(ref Cars[i].BeaconReceiver, b, false, false);
+				}
+			}
+
+			/// <summary>Updates this train's safety system plugin</summary>
+			internal void UpdateSafetySystem()
+			{
+				Game.UpdatePluginSections(this);
+				if (Plugin != null)
+				{
+					Plugin.LastSection = CurrentSectionIndex;
+					Plugin.UpdatePlugin();
 				}
 			}
 		}

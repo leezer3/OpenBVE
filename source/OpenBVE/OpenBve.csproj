@@ -120,6 +120,8 @@
     <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
+    <Compile Include="Simulation\TrainManager\Train.Bogie.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Axle.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Base.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Car.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.CarSounds.cs" />

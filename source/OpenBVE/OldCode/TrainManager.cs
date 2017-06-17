@@ -8,18 +8,6 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-		// axle
-		internal struct Axle
-		{
-			internal TrackManager.TrackFollower Follower;
-			internal bool CurrentWheelSlip;
-			internal double Position;
-			internal CarSound[] PointSounds;
-			/// <summary>The current run index for this axle</summary>
-			internal int currentRunIdx;
-			/// <summary>The current flange index for this axle</summary>
-			internal int currentFlangeIdx;
-		}
 
 		// coupler
 		internal struct Coupler
@@ -128,22 +116,7 @@ namespace OpenBve
 			internal const int MotorB2 = 3;
 		}
 
-		//Using a much cut-down version of the car struct for bogies
-		internal struct Bogie {
-#pragma warning disable 0649
-			internal double Width;
-			internal double Height;
-			internal double Length;
-#pragma warning restore 0649
-			internal Axle FrontAxle;
-			internal Axle RearAxle;
-			internal double FrontAxlePosition;
-			internal double RearAxlePosition;
-			internal Vector3 Up;
-			internal CarSection[] CarSections;
-			internal int CurrentCarSection;
-			internal bool CurrentlyVisible;
-		}
+
 
 		// train
 		
@@ -250,26 +223,10 @@ namespace OpenBve
 
 			}
 		}
-
-		// ================================
-
-		// move car
-		// move car
 		
 
 		// update atmospheric constants
-		internal static void UpdateAtmosphericConstants(Train Train)
-		{
-			double h = 0.0;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				h += Train.Cars[i].FrontAxle.Follower.WorldPosition.Y + Train.Cars[i].RearAxle.Follower.WorldPosition.Y;
-			}
-			Train.Specs.CurrentElevation = Game.RouteInitialElevation + h / (2.0 * (double)Train.Cars.Length);
-			Train.Specs.CurrentAirTemperature = Game.GetAirTemperature(Train.Specs.CurrentElevation);
-			Train.Specs.CurrentAirPressure = Game.GetAirPressure(Train.Specs.CurrentElevation, Train.Specs.CurrentAirTemperature);
-			Train.Specs.CurrentAirDensity = Game.GetAirDensity(Train.Specs.CurrentAirPressure, Train.Specs.CurrentAirTemperature);
-		}
+		
 
 		// get acceleration output
 		internal static double GetAccelerationOutput(Train Train, int CarIndex, int CurveIndex, double Speed)
@@ -1018,7 +975,7 @@ namespace OpenBve
 			{
 				InitializeCar(Train, i);
 			}
-			UpdateAtmosphericConstants(Train);
+			Train.UpdateAtmosphericConstants();
 			UpdateTrain(Train, 0.0);
 		}
 
@@ -2107,32 +2064,12 @@ namespace OpenBve
 			}
 		}
 
-		// synchronize train
-		private static void SynchronizeTrain(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				double s = 0.5 * (Train.Cars[i].FrontAxle.Follower.TrackPosition + Train.Cars[i].RearAxle.Follower.TrackPosition);
-				double d = 0.5 * (Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].RearAxle.Follower.TrackPosition);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, s + d, false, false);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, s - d, false, false);
-				double b = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxle.Position + Train.Cars[i].BeaconReceiverPosition;
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].BeaconReceiver, b, false, false);
-			}
-		}
+		
 
 		
 
 		// update safety system
-		private static void UpdateSafetySystem(Train Train)
-		{
-			Game.UpdatePluginSections(Train);
-			if (Train.Plugin != null)
-			{
-				Train.Plugin.LastSection = Train.CurrentSectionIndex;
-				Train.Plugin.UpdatePlugin();
-			}
-		}
+		
 
 		// apply notch
 		internal static void ApplyNotch(Train Train, int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative)
@@ -2260,7 +2197,6 @@ namespace OpenBve
 			}
 		}	
 
-		// update train passengers
 		
 
 		// update speeds
@@ -3170,7 +3106,7 @@ namespace OpenBve
 			// safety system
 			if (!Game.MinimalisticSimulation | Train != PlayerTrain)
 			{
-				UpdateSafetySystem(Train);
+				Train.UpdateSafetySystem();
 			}
 			{
 				// breaker sound
@@ -3229,8 +3165,8 @@ namespace OpenBve
 			if (Train.InternalTimerTimeElapsed > 10.0)
 			{
 				Train.InternalTimerTimeElapsed -= 10.0;
-				SynchronizeTrain(Train);
-				UpdateAtmosphericConstants(Train);
+				Train.Synchronize();
+				Train.UpdateAtmosphericConstants();
 			}
 		}
 
