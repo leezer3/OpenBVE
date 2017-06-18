@@ -41,10 +41,18 @@ namespace OpenBve
 				var c = TextualMessages[i] as GameMessage;
 				if (m != null && c != null)
 				{
-					if (m.Depencency == c.Depencency)
+					if (m.Depencency == c.Depencency && m.Depencency != Game.MessageDependency.None)
 					{
-						//Game messages should only display one of any given type
-						return;
+						if (c.Depencency == Game.MessageDependency.PointOfInterest)
+						{
+							//Only display a single POI at once (station name etc.)
+							c.QueueForRemoval = true;
+						}
+						else
+						{
+							//Game messages should only display one of any given type
+							return;
+						}
 					}
 				}
 				else

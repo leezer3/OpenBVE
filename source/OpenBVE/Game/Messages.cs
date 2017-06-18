@@ -16,7 +16,8 @@ namespace OpenBve
 			None = 0,
 			RouteLimit = 1,
 			SectionLimit = 2,
-			Station = 3
+			Station = 3,
+			PointOfInterest = 4
 		}
 
 		/// <summary>The current size of the plane upon which messages are rendered</summary>
