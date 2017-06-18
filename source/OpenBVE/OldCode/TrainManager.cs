@@ -3134,8 +3134,11 @@ namespace OpenBve
 		// update train physics and controls
 		private static void UpdateTrainPhysicsAndControls(Train Train, double TimeElapsed)
 		{
-			if (TimeElapsed == 0.0)
+			if (TimeElapsed == 0.0 || TimeElapsed > 1000)
 			{
+				//HACK: The physics engine really does not like update times above 1000ms
+				//This works around a bug experienced when jumping to a station on a steep hill
+				//causing exessive acceleration
 				return;
 			}
 			// move cars
