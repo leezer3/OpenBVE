@@ -37,21 +37,27 @@ namespace OpenBve
 			var m = message as GameMessage;
 			for (int i = 0; i < TextualMessages.Count; i++)
 			{
-
 				var c = TextualMessages[i] as GameMessage;
 				if (m != null && c != null)
 				{
-					if (m.Depencency == c.Depencency && m.Depencency != Game.MessageDependency.None)
+					if (m.Depencency == c.Depencency)
 					{
-						if (c.Depencency == Game.MessageDependency.PointOfInterest)
+						switch (m.Depencency)
 						{
-							//Only display a single POI at once (station name etc.)
-							c.QueueForRemoval = true;
-						}
-						else
-						{
-							//Game messages should only display one of any given type
-							return;
+							case MessageDependency.None:
+							case MessageDependency.Plugin:
+								//Continue down the logic tree, multiple messages allowed
+								break;
+							case MessageDependency.PointOfInterest:
+							case MessageDependency.StationArrival:
+							case MessageDependency.CameraView:
+								//Show only the latest message of these types
+								c.QueueForRemoval = true;
+								break;
+							default:
+								//Show only the current message for all other types
+								return;
+
 						}
 					}
 				}

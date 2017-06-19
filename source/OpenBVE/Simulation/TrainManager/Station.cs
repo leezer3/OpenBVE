@@ -13,7 +13,9 @@ namespace OpenBve
 			/// <summary>The train is currrently stopped and passengers are boarding</summary>
 			Boarding = 1, 
 			/// <summary>The stop has been completed, and the train is preparing to depart</summary>
-			Completed = 2
+			Completed = 2,
+			/// <summary>The train is jumping between stations, and all stops should be ignored</summary>
+			Jumping = 3
 		}
 
 		/// <summary>Is called once a frame to update the station state for the given train</summary>
@@ -176,11 +178,11 @@ namespace OpenBve
 									s = s.Replace("[name]", Game.Stations[i].Name);
 									s = s.Replace("[time]", b);
 									s = s.Replace("[difference]", c);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 10.0, null);
+									Game.AddMessage(s, MessageManager.MessageDependency.StationArrival, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 10.0, null);
 									if (Game.Stations[i].StationType == Game.StationType.Normal)
 									{
 										s = Interface.GetInterfaceString("message_station_deadline");
-										Game.AddMessage(s, Game.MessageDependency.Station, Interface.GameMode.Normal, MessageColor.Blue, double.PositiveInfinity, null);
+										Game.AddMessage(s, MessageManager.MessageDependency.StationDeparture, Interface.GameMode.Normal, MessageColor.Blue, double.PositiveInfinity, null);
 									}
 									Timetable.UpdateCustomTimetable(Game.Stations[i].TimetableDaytimeTexture, Game.Stations[i].TimetableNighttimeTexture);
 								}
@@ -226,7 +228,7 @@ namespace OpenBve
 									}
 									if (Train == TrainManager.PlayerTrain)
 									{
-										Game.AddMessage(Interface.GetInterfaceString("message_station_correct"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0, null);
+										Game.AddMessage(Interface.GetInterfaceString("message_station_correct"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0, null);
 									}
 									Train.StationAdjust = true;
 								}
@@ -323,16 +325,16 @@ namespace OpenBve
 							{
 								if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
 								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
+									Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
 								}
 								else
 								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
+									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
 								}
 							}
 							else if (Game.Stations[i].StationType == Game.StationType.ChangeEnds)
 							{
-								//Game.AddMessage("CHANGE ENDS", Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
+								//Game.AddMessage("CHANGE ENDS", MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
 								JumpTrain(Train, i + 1);
 							}
 						}
@@ -359,7 +361,7 @@ namespace OpenBve
 						Train.StationState = TrainStopState.Completed;
 						if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
 						{
-							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), Game.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
+							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Blue, Game.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 					// departure sound

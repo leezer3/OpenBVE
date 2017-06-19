@@ -109,6 +109,7 @@
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.ImageMessage.cs" />
+    <Compile Include="Game\MessageManager.MessageDependency.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs" />
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\MessageManager.Message.cs" />
@@ -371,7 +372,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
-	<!-- Finally, set LBA flag & cleanup -->	
+    <!-- Finally, set LBA flag & cleanup -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
 "$(TargetDir)LBAHeader.exe" OpenBve.exe 
