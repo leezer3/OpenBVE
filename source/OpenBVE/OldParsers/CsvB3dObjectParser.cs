@@ -108,6 +108,11 @@ namespace OpenBve {
 					int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
 					if (k >= 0)
 					{
+						if (IsPotentialPath(Lines[i]))
+						{
+							//HACK: Handles malformed potential paths
+							continue;
+						}
 						Lines[i] = Lines[i].Substring(0, k);
 					}
 					//Strip star backslash comments
@@ -981,6 +986,19 @@ namespace OpenBve {
 			ApplyMeshBuilder(ref Object, Builder);
 			World.CreateNormals(ref Object.Mesh);
 			return Object;
+		}
+
+		private static bool IsPotentialPath(string Line)
+		{
+			string[] Images = {".bmp", ".gif" ,".jpg", ".jpeg", ".png"};
+			for (int i = 0; i < Images.Length; i++)
+			{
+				if (Line.IndexOf(Images[i], StringComparison.OrdinalIgnoreCase) >= 0)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		// create cube
