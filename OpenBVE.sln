@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -34,7 +34,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectViewer", "source\Obje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectBender", "source\ObjectBender\ObjectBender.csproj", "{BD5997E4-736B-4FDC-9837-752BA446F78A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBAHeader", "source\LBAHeader\LBAHeader.csproj", "{E9B64673-65B7-4D77-A4DB-4B441A7C9197}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBAHeader", "source\DevTools\LBAHeader\LBAHeader.csproj", "{E9B64673-65B7-4D77-A4DB-4B441A7C9197}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevTools", "DevTools", "{3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -192,5 +194,6 @@ Global
 		{4B775819-3574-443E-95AD-B40BC6EA6469} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{15142E7B-35F5-4E81-AA18-79C4D60B4C26} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197} = {3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}
 	EndGlobalSection
 EndGlobal
