@@ -14,7 +14,7 @@ namespace OpenBve
 			/// <summary>The internal (non-translated) string</summary>
 			internal string InternalText;
 			/// <summary>The action which triggered this message (route, speed limit etc.)</summary>
-			internal Game.MessageDependency Depencency;
+			internal MessageDependency Depencency;
 
 			/// <summary>The font used for this message</summary>
 			internal Fonts.OpenGlFont Font;
@@ -34,7 +34,7 @@ namespace OpenBve
 
 				switch (Depencency)
 				{
-					case Game.MessageDependency.RouteLimit:
+					case MessageDependency.RouteLimit:
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
@@ -55,7 +55,7 @@ namespace OpenBve
 						s = s.Replace("[unit]", Game.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;
-					case Game.MessageDependency.SectionLimit:
+					case MessageDependency.SectionLimit:
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentSectionLimit;
@@ -75,7 +75,8 @@ namespace OpenBve
 						s = s.Replace("[unit]", Game.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;
-					case Game.MessageDependency.Station:
+					case MessageDependency.StationArrival:
+					case MessageDependency.StationDeparture:
 					{
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)

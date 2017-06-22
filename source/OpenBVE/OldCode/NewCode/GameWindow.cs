@@ -629,7 +629,7 @@ namespace OpenBve
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
-					Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"),Game.MessageDependency.None, Interface.GameMode.Expert,
+					Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"),MessageManager.MessageDependency.None, Interface.GameMode.Expert,
 						OpenBveApi.Colors.MessageColor.Blue, Game.SecondsSinceMidnight + 10.0, null);
 				}
 			}
@@ -660,23 +660,23 @@ namespace OpenBve
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";
-					Game.AddMessage(NotFound, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(NotFound, MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
 					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
 					Messages = errors.ToString() + " error(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
 					Messages = warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, Game.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
 				}
 				Game.RouteInformation.FilesNotFound = NotFound;
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
@@ -684,8 +684,8 @@ namespace OpenBve
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
 				if (Loading.PluginError != null)
 				{
-					Game.AddMessage(Loading.PluginError, Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
-					Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), Game.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+					Game.AddMessage(Loading.PluginError, MessageManager.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+					Game.AddMessage(Interface.GetInterfaceString("errors_plugin_failure2"), MessageManager.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;

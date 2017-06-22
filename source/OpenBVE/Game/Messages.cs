@@ -11,17 +11,8 @@ namespace OpenBve
 	 */
 	internal static partial class Game
 	{
-		internal enum MessageDependency
-		{
-			None = 0,
-			RouteLimit = 1,
-			SectionLimit = 2,
-			Station = 3
-		}
+		
 
-
-		/// <summary>The current in-game messages</summary>
-		//internal static Message[] Messages = new Message[] { };
 		/// <summary>The current size of the plane upon which messages are rendered</summary>
 		internal static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
 
@@ -32,7 +23,7 @@ namespace OpenBve
 		/// <param name="Color">The color of the message text</param>
 		/// <param name="Timeout">The time this message will display for</param>
 		/// <param name="key">The textual key identifiying this message</param>
-		internal static void AddMessage(string Text, MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout, string key)
+		internal static void AddMessage(string Text, MessageManager.MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout, string key)
 		{
 			
 			

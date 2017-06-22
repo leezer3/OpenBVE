@@ -16,6 +16,7 @@ namespace OpenBve
 			internal object MessageToDisplay;
 			/// <summary>The track position at which this message is placed</summary>
 			internal double TrackPosition;
+			/// <summary>The timeout in seconds for this message</summary>
 			internal double Timeout;
 			/// <summary>Whether this message will trigger once, or repeatedly (If reversed over etc.)</summary>
 			internal bool TriggerOnce;

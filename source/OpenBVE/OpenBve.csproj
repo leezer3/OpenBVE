@@ -109,6 +109,7 @@
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.ImageMessage.cs" />
+    <Compile Include="Game\MessageManager.MessageDependency.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs" />
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\MessageManager.Message.cs" />

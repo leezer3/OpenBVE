@@ -39,7 +39,7 @@ openBVE supports two distinct types of markers:<br><br>
 Each individual marker should be setup using a custom XML file, as per the examples below.
 <br>
 <br><b>Image Based Markers:</b><br>
-<textarea rows="16" cols="110" style="border:2;">
+<textarea rows="18" cols="110" style="border:2;">
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ImageMarker>
@@ -47,11 +47,13 @@ Each individual marker should be setup using a custom XML file, as per the examp
 			<Time>12:00</Time>
 			<Image>Early.png</Image>
 		</Early>
+		<OnTime>
+			<Image>Marker.png</Image>
+		</OnTime>
 		<Late>
 			<Time>12:10</Time>
 			<Image>Late.png</Image>
 		</Late>
-		<Image>Marker.png</Image>
 		<Distance>200</Distance>
 		<trains>81xx_2DCab</trains>
   </ImageMarker>
@@ -59,7 +61,7 @@ Each individual marker should be setup using a custom XML file, as per the examp
 </textarea>
 <br>
 <br><b>Text Based Markers:</b><br>
-<textarea rows="16" cols="110" style="border:2;">
+<textarea rows="18" cols="110" style="border:2;">
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TextMarker>
@@ -67,11 +69,13 @@ Each individual marker should be setup using a custom XML file, as per the examp
 			<Time>12:00</Time>
 			<Text>Early!</Text>
 		</Early>
-		<Late>
+		<OnTime>
 			<Time>12:10</Time>
 			<Text>Late...</Text>
+		</OnTime>
+		<Late>
+			<Text>Late...</Text>
 		</Late>
-		<Text>On time.</Text>
 		<Distance>200</Distance>
 		<trains>81xx_2DCab</trains>
   </TextMarker>
@@ -95,6 +99,12 @@ The following attributes are supported by both image and text markers:<br>
 </table>
 Defines the marker used when the player is early.<br>
 This must contain a <b>time</b> and either an <b>image</b> or a <b>textual string</b> (See below).<br><br>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;OnTime&gt;</b> <em>....</em> <b>&lt;&#47;OnTime&gt;</b></font></td></tr>
+</table>
+Defines the marker used when the player is early.<br>
+This must contain an <b>image</b> or a <b>textual string</b> (See below).<br><br>
 <table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;Late&gt;</b> <em>....</em> <b>&lt;&#47;Late&gt;</b></font></td></tr>
