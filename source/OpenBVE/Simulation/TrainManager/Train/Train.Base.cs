@@ -40,7 +40,7 @@ namespace OpenBve
 			internal double InternalTimerTimeElapsed;
 			internal bool Derailed;
 
-			/// <summary>Call this method to derail a car</summary>
+			/// <summary>Call this method to derail a single car within the train</summary>
 			/// <param name="CarIndex">The car index to derail</param>
 			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
 			internal void Derail(int CarIndex, double ElapsedTime)
@@ -52,6 +52,20 @@ namespace OpenBve
 					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
+
+		    /// <summary>Call this method to derail the entire train</summary>
+		    /// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
+		    internal void Derail(double ElapsedTime)
+		    {
+		        if (Program.GenerateDebugLogging)
+		        {
+		            Program.AppendToLogFile("Train " + TrainIndex + ", derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+		        }
+                for (int i = 0; i < Cars.Length; i++)
+		        {
+		            Cars[i].Derailed = true;
+		        }
+		    }
 
 			/// <summary>Call this method to topple a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>
@@ -65,11 +79,25 @@ namespace OpenBve
 				}
 			}
 
-			/// <summary>Call this method to move a car</summary>
-			/// <param name="CarIndex">The car index to move</param>
-			/// <param name="Delta">The length to move</param>
-			/// <param name="TimeElapsed">The elapsed time</param>
-			internal void MoveCar(int CarIndex, double Delta, double TimeElapsed)
+		    /// <summary>Call this method to topple the entire train</summary>
+		    /// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
+		    internal void Topple(double ElapsedTime)
+		    {
+		        if (Program.GenerateDebugLogging)
+		        {
+		            Program.AppendToLogFile("Train " + TrainIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+		        }
+                for (int i = 0; i < Cars.Length; i++)
+		        {
+		            Cars[i].Topples = true;
+		        }
+		    }
+
+            /// <summary>Call this method to move a car</summary>
+            /// <param name="CarIndex">The car index to move</param>
+            /// <param name="Delta">The length to move</param>
+            /// <param name="TimeElapsed">The elapsed time</param>
+            internal void MoveCar(int CarIndex, double Delta, double TimeElapsed)
 			{
 				if (State != TrainState.Disposed)
 				{
