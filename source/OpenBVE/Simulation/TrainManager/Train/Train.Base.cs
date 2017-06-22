@@ -143,6 +143,9 @@ namespace OpenBve
 				}
 			}
 
+            /// <summary>Call this method to load the exterior for a train</summary>
+            /// <param name="exteriorFolder">The absolute on-disk path of the exterior folder</param>
+            /// <param name="textEncoding"></param>
 			internal void LoadExterior(string exteriorFolder, System.Text.Encoding textEncoding)
 			{
 				ObjectManager.UnifiedObject[] CarObjects;
