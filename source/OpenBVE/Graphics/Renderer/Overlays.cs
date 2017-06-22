@@ -136,9 +136,9 @@ namespace OpenBve
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
 			//Fade to black on change ends
-			if (TrainManager.PlayerTrain.Station >= 0 && Game.Stations[TrainManager.PlayerTrain.Station].StationType == Game.StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+			if (TrainManager.PlayerTrain.StationInfo.NextStation >= 0 && Game.Stations[TrainManager.PlayerTrain.StationInfo.NextStation].StationType == Game.StationType.ChangeEnds && TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding)
 			{
-				double time = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight;
+				double time = TrainManager.PlayerTrain.StationInfo.ExpectedDepartureTime - Game.SecondsSinceMidnight;
 				if (time < 1.0)
 				{
 					FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
@@ -1003,7 +1003,7 @@ namespace OpenBve
 				case "stopright":
 				case "stopnone":
 				{
-					int s = TrainManager.PlayerTrain.Station;
+					int s = TrainManager.PlayerTrain.StationInfo.NextStation;
 					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
 						bool cond;
@@ -1019,7 +1019,7 @@ namespace OpenBve
 						{
 							cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
 						}
-						if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+						if (TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Pending & cond)
 						{
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -1041,7 +1041,7 @@ namespace OpenBve
 				case "stoprighttick":
 				case "stopnonetick":
 				{
-					int s = TrainManager.PlayerTrain.Station;
+					int s = TrainManager.PlayerTrain.StationInfo.NextStation;
 					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
 						int c = Game.GetStopIndex(s, TrainManager.PlayerTrain.Cars.Length);
@@ -1060,7 +1060,7 @@ namespace OpenBve
 							{
 								cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
 							}
-							if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+							if (TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Pending & cond)
 							{
 								Element.TransitionState -= speed * TimeElapsed;
 								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -1070,7 +1070,7 @@ namespace OpenBve
 								Element.TransitionState += speed * TimeElapsed;
 								if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 							}
-							double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
+							double d = TrainManager.PlayerTrain.StationInfo.DistanceToStopPosition;
 							double r;
 							if (d > 0.0)
 							{

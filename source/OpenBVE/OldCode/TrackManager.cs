@@ -201,19 +201,19 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.TrainFront) {
 					if (Direction < 0) {
-						Train.Station = -1;
-						Train.StationFrontCar = false;
+						Train.StationInfo.NextStation = -1;
+						Train.Cars[CarIndex].CurrentlyInStation = false;
 					} else if (Direction > 0) {
-						Train.Station = StationIndex;
-						Train.StationFrontCar = true;
-						Train.StationState = TrainManager.TrainStopState.Pending;
-						Train.LastStation = this.StationIndex;
+						Train.StationInfo.NextStation = StationIndex;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
+						Train.StationInfo.CurrentStopState = TrainManager.TrainStopState.Pending;
+						Train.StationInfo.PreviousStation = this.StationIndex;
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 					if (Direction < 0) {
-						Train.StationRearCar = false;
+						Train.Cars[CarIndex].CurrentlyInStation = false;
 					} else {
-						Train.StationRearCar = true;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
 					}
 				}
 			}
@@ -229,34 +229,34 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction < 0) {
-						Train.StationFrontCar = true;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
 					} else if (Direction > 0) {
-						Train.StationFrontCar = false;
+						Train.Cars[CarIndex].CurrentlyInStation = false;
 						if (Train == TrainManager.PlayerTrain) {
 							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
 						}
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 					if (Direction < 0) {
-						Train.Station = this.StationIndex;
-						Train.StationRearCar = true;
-						Train.LastStation = this.StationIndex;
+						Train.StationInfo.NextStation = this.StationIndex;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
+						Train.StationInfo.PreviousStation = this.StationIndex;
 					} else if (Direction > 0) {
-						if (Train.Station == StationIndex) {
+						if (Train.StationInfo.NextStation == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {
-								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending) {
+								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Pending) {
 									string s = Interface.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0, null);
-								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
+								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding) {
 									string s = Interface.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 10.0, null);
 								}
 							}
-							Train.Station = -1;
-							Train.StationRearCar = false;
-							Train.StationState = TrainManager.TrainStopState.Pending;
+							Train.StationInfo.NextStation = -1;
+							Train.Cars[CarIndex].CurrentlyInStation = false;
+							Train.StationInfo.CurrentStopState = TrainManager.TrainStopState.Pending;
 							int d = Train.DriverCar;
 							Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}
@@ -624,7 +624,7 @@ namespace OpenBve {
 				if (TriggerType == EventTriggerType.RearCarRearAxle & Train != TrainManager.PlayerTrain) {
 					TrainManager.DisposeTrain(Train);
 				} else if (Train == TrainManager.PlayerTrain) {
-                    //This derails each car as they pass the end of the track
+					//This derails each car as they pass the end of the track
 					Train.Derail(CarIndex, 0.0);
 				}
 			}

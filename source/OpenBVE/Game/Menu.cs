@@ -187,7 +187,7 @@ namespace OpenBve
 							Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
 							// if no preferred jump-to-station found yet and this station is
 							// after the last station the user stopped at, select this item
-							if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)
+							if (jump == 0 && i > TrainManager.PlayerTrain.StationInfo.PreviousStation)
 							{
 								jump		= i;
 								Selection	= menuItem;

@@ -182,7 +182,7 @@ namespace OpenBve {
 				bool bad;
 				if (leftopen | rightopen) {
 					bad = true;
-					int j = TrainManager.PlayerTrain.Station;
+					int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 					if (j >= 0) {
 						int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
 						if (p >= 0) {
@@ -278,9 +278,9 @@ namespace OpenBve {
 			}
 			// arrival
 			{
-				int j = TrainManager.PlayerTrain.Station;
+				int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 				if (j >= 0 & j < Stations.Length) {
-					if (j >= CurrentScore.ArrivalStation & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
+					if (j >= CurrentScore.ArrivalStation & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding) {
 						if (j == 0 || Stations[j - 1].StationType != StationType.ChangeEnds) {
 							// arrival
 							int xa = ScoreValueStationArrival;
@@ -312,7 +312,7 @@ namespace OpenBve {
 							int xc;
 							int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
 							if (p >= 0) {
-								double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
+								double d = TrainManager.PlayerTrain.StationInfo.DistanceToStopPosition;
 								double r;
 								if (d >= 0) {
 									double t = Stations[j].Stops[p].BackwardTolerance;
@@ -366,16 +366,16 @@ namespace OpenBve {
 			}
 			// departure
 			{
-				int j = TrainManager.PlayerTrain.Station;
+				int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 				if (j >= 0 & j < Stations.Length & j == CurrentScore.DepartureStation) {
 					bool q;
 					if (Stations[j].OpenLeftDoors | Stations[j].OpenRightDoors) {
-						q = TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Completed;
+						q = TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Completed;
 					} else {
-						q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
+						q = TrainManager.PlayerTrain.StationInfo.CurrentStopState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
 					}
 					if (q) {
-						double r = TrainManager.PlayerTrain.StationDepartureTime - SecondsSinceMidnight;
+						double r = TrainManager.PlayerTrain.StationInfo.ExpectedDepartureTime - SecondsSinceMidnight;
 						if (r > 0.0) {
 							int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
 							CurrentScore.Value += x;

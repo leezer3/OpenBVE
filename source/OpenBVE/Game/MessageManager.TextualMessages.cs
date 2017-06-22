@@ -78,10 +78,10 @@ namespace OpenBve
 					case MessageDependency.StationArrival:
 					case MessageDependency.StationDeparture:
 					{
-						int j = TrainManager.PlayerTrain.Station;
-						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+						int j = TrainManager.PlayerTrain.StationInfo.NextStation;
+						if (j >= 0 & TrainManager.PlayerTrain.StationInfo.CurrentStopState != TrainManager.TrainStopState.Completed)
 						{
-							double d = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight + 1.0;
+							double d = TrainManager.PlayerTrain.StationInfo.ExpectedDepartureTime - Game.SecondsSinceMidnight + 1.0;
 							if (d < 0.0) d = 0.0;
 							string s = InternalText;
 							TimeSpan a = TimeSpan.FromSeconds(d);

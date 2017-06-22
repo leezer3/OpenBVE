@@ -166,7 +166,7 @@ namespace OpenBve
 		{
 			if ((GetDoorsState(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
 			{
-					if (Train.StationDistanceToStopPoint < BackwardsTolerance & -Train.StationDistanceToStopPoint < ForwardsTolerance)
+					if (Train.StationInfo.DistanceToStopPosition < BackwardsTolerance & -Train.StationInfo.DistanceToStopPosition < ForwardsTolerance)
 					{
 						OpenTrainDoors(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors);
 					}
@@ -176,7 +176,7 @@ namespace OpenBve
 
 		internal static void AttemptToCloseDoors(Train Train)
 		{
-			if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
+			if (Game.SecondsSinceMidnight >= Train.StationInfo.ExpectedDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
 			{
 				if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
 				{

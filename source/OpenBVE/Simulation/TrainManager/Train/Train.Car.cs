@@ -55,6 +55,9 @@ namespace OpenBve
 			internal double BeaconReceiverPosition;
 			/// <summary>The beacon reciever track follower</summary>
 			internal TrackManager.TrackFollower BeaconReceiver;
+			/// <summary>Whether this car is currently in a station</summary>
+			/// TODO: This appears only to be set by the station start/ end events and not checked elsewhere, why???
+			internal bool CurrentlyInStation;
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace OpenBve
 				 
 				}
 			}
-			train.StationState = TrainStopState.Jumping;
+			train.StationInfo.CurrentStopState = TrainStopState.Jumping;
 			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
 			if (stopIndex >= 0)
 			{
@@ -144,7 +144,7 @@ namespace OpenBve
 						train.Plugin.EndJump();
 					}
 				}
-				train.StationState = TrainStopState.Pending;
+				train.StationInfo.CurrentStopState = TrainStopState.Pending;
 			}
 		}
 	}

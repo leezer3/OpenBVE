@@ -21,16 +21,8 @@ namespace OpenBve
 			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
-			internal int LastStation;
-			internal int Station;
-			internal bool StationFrontCar;
-			internal bool StationRearCar;
-			internal TrainStopState StationState;
-			internal double StationArrivalTime;
-			internal double StationDepartureTime;
-			internal bool StationDepartureSoundPlayed;
-			internal bool StationAdjust;
-			internal double StationDistanceToStopPoint;
+			/// <summary>Holds various information on the previous & next stations</summary>
+			internal StationInformation StationInfo;
 			internal double[] RouteLimits;
 			internal double CurrentRouteLimit;
 			internal double CurrentSectionLimit;
@@ -38,6 +30,7 @@ namespace OpenBve
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
 			internal double InternalTimerTimeElapsed;
+			/// <summary>Stores whether any car in the train has derailed</summary>
 			internal bool Derailed;
 
 			/// <summary>Call this method to derail a single car within the train</summary>
