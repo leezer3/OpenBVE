@@ -174,6 +174,7 @@ namespace OpenBve
 						// add object
 						int j = Cars[i].CarSections.Length;
 						Array.Resize<TrainManager.CarSection>(ref Cars[i].CarSections, j + 1);
+                        Cars[i].CarSections[j] = new CarSection();
 						if (CarObjects[i] is ObjectManager.StaticObject)
 						{
 							ObjectManager.StaticObject s = (ObjectManager.StaticObject)CarObjects[i];
@@ -204,6 +205,7 @@ namespace OpenBve
 					{
 						int j = Cars[i].FrontBogie.CarSections.Length;
 						Array.Resize<TrainManager.CarSection>(ref Cars[i].FrontBogie.CarSections, j + 1);
+                        Cars[i].FrontBogie.CarSections[j] = new CarSection();
 						if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
 						{
 							ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
@@ -232,6 +234,7 @@ namespace OpenBve
 					{
 						int j = Cars[i].RearBogie.CarSections.Length;
 						Array.Resize<TrainManager.CarSection>(ref Cars[i].RearBogie.CarSections, j + 1);
+                        Cars[i].RearBogie.CarSections[j] = new CarSection();
 						if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
 						{
 							ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
@@ -367,8 +370,19 @@ namespace OpenBve
 				}
 			}
 
+
+		    internal void Initialize()
+		    {
+		        for (int i = 0; i < Cars.Length; i++)
+		        {
+		            Cars[i].Initialize();
+		        }
+		        UpdateAtmosphericConstants();
+		        UpdateTrain(this, 0.0);
+		    }
+
             /// <summary>Disposes of this train</summary>
-		    internal void Dispose()
+            internal void Dispose()
 		    {
 		        State = TrainState.Disposed;
 		        for (int i = 0; i < Cars.Length; i++)

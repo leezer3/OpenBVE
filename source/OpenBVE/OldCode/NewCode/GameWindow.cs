@@ -477,8 +477,9 @@ namespace OpenBve
 			// initialize trains
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
-				TrainManager.InitializeTrain(TrainManager.Trains[i]);
-				int s = i == TrainManager.PlayerTrain.TrainIndex ? PlayerFirstStationIndex : OtherFirstStationIndex;
+			    TrainManager.Trains[i].Initialize();
+
+                int s = i == TrainManager.PlayerTrain.TrainIndex ? PlayerFirstStationIndex : OtherFirstStationIndex;
 				if (s >= 0)
 				{
 					if (Game.Stations[s].OpenLeftDoors)

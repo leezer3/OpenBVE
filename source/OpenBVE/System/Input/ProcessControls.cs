@@ -559,26 +559,19 @@ namespace OpenBve
 										RestoreCameraSettings();
 										for (int j = 0; j <= TrainManager.PlayerTrain.DriverCar; j++)
 										{
-											if (TrainManager.PlayerTrain.Cars[j].CarSections.Length != 0)
-											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, 0);
-											}
-											else
-											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-											}
-										}
+										    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
+                                        }
 										for (int j = TrainManager.PlayerTrain.DriverCar + 1;
 											j < TrainManager.PlayerTrain.Cars.Length;
 											j++)
 										{
-											TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-										}
+										    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
+                                        }
 										//Hide bogies
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
-											TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
+                                            TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeCarSection(-1);
+										    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeCarSection(-1);
 										}
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
@@ -606,46 +599,22 @@ namespace OpenBve
 										RestoreCameraSettings();
 										if (TrainManager.PlayerTrain.Cars.Length >= 1 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.Length >= 2)
 										{
-											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, 1);
+										    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
 										}
 										else
 										{
-											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,TrainManager.PlayerTrain.DriverCar, -1);
-										}
+										    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
+                                        }
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
 											if (j != TrainManager.PlayerTrain.DriverCar)
 											{
-												if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-												{
-													TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-												}
-											}
-										}
-										//Make bogies visible
-										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-										{
-											if (TrainManager.PlayerTrain.Cars[j].FrontBogie.CarSections.Length >= 1)
-											{
-												TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, 0);
-											}
-											else
-											{
-												TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
-											}
-											if (TrainManager.PlayerTrain.Cars[j].RearBogie.CarSections.Length >= 1)
-											{
-												TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, 0);
-											}
-											else
-											{
-												TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
-											}
-										}
+											    TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
+                                            }
+										    //Make bogies visible
+                                            TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeCarSection(0);
+										    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeCarSection(0);
+                                        }
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
 										UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
@@ -688,48 +657,26 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
 												.CarSections.Length >= 2)
 										{
-											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-												TrainManager.PlayerTrain.DriverCar, 1);
+                                                TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
 										}
 										else
 										{
-											TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-												TrainManager.PlayerTrain.DriverCar, -1);
-										}
-										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+										    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
+
+                                        }
+                                        for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
 											if (j != TrainManager.PlayerTrain.DriverCar)
 											{
-												if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-												{
-													TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-												}
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
 											}
 										}
 
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											if (TrainManager.PlayerTrain.Cars[j].FrontBogie.CarSections.Length >= 1)
-											{
-												TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, 0);
-											}
-											else
-											{
-												TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
-											}
-											if (TrainManager.PlayerTrain.Cars[j].RearBogie.CarSections.Length >= 1)
-											{
-												TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, 0);
-											}
-											else
-											{
-												TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
-											}
-										}
+										    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeCarSection(0);
+										    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeCarSection(0);
+                                        }
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
 										UpdateViewport(ViewPortChangeMode.NoChange);
@@ -772,49 +719,27 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
 													.CarSections.Length >= 2)
 											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-													TrainManager.PlayerTrain.DriverCar, 1);
-											}
-											else
+											    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
+
+                                            }
+                                            else
 											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-													TrainManager.PlayerTrain.DriverCar, -1);
-											}
-											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+											    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
+
+                                            }
+                                            for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
 												if (j != TrainManager.PlayerTrain.DriverCar)
 												{
-													if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-													{
-														TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, 0);
-													}
-													else
-													{
-														TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-
-													}
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
 												}
 											}
 
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (TrainManager.PlayerTrain.Cars[j].FrontBogie.CarSections.Length >= 1)
-												{
-													TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
-												}
-												if (TrainManager.PlayerTrain.Cars[j].RearBogie.CarSections.Length >= 1)
-												{
-													TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
-												}
-											}
+											    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeCarSection(0);
+											    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeCarSection(0);
+                                            }
 											TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
 												World.CameraTrackFollower.TrackPosition + z, true, false);
 											World.CameraCurrentAlignment.TrackPosition =
@@ -860,48 +785,26 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
 													.CarSections.Length >= 2)
 											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-													TrainManager.PlayerTrain.DriverCar, 1);
-											}
-											else
+											    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
+
+                                            }
+                                            else
 											{
-												TrainManager.ChangeCarSection(TrainManager.PlayerTrain,
-													TrainManager.PlayerTrain.DriverCar, -1);
-											}
-											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+											    TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
+
+                                            }
+                                            for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
 												if (j != TrainManager.PlayerTrain.DriverCar)
 												{
-													if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-													{
-														TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, 0);
-
-													}
-													else
-													{
-														TrainManager.ChangeCarSection(TrainManager.PlayerTrain, j, -1);
-													}
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
 												}
 											}
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (TrainManager.PlayerTrain.Cars[j].FrontBogie.CarSections.Length >= 1)
-												{
-													TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeFrontBogieSection(TrainManager.PlayerTrain, j, -1);
-												}
-												if (TrainManager.PlayerTrain.Cars[j].RearBogie.CarSections.Length >= 1)
-												{
-													TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, 0);
-												}
-												else
-												{
-													TrainManager.ChangeRearBogieSection(TrainManager.PlayerTrain, j, -1);
-												}
-											}
+											    TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeCarSection(0);
+											    TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeCarSection(0);
+                                            }
 											TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
 												World.CameraTrackFollower.TrackPosition + z, true, false);
 											World.CameraCurrentAlignment.TrackPosition =
