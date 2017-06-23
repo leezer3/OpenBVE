@@ -366,6 +366,49 @@ namespace OpenBve
 					Plugin.UpdatePlugin();
 				}
 			}
-		}
+
+            /// <summary>Disposes of this train</summary>
+		    internal void Dispose()
+		    {
+		        State = TrainState.Disposed;
+		        for (int i = 0; i < Cars.Length; i++)
+		        {
+		            int s = Cars[i].CurrentCarSection;
+		            if (s >= 0)
+		            {
+		                for (int j = 0; j < Cars[i].CarSections[s].Elements.Length; j++)
+		                {
+		                    Renderer.HideObject(Cars[i].CarSections[s].Elements[j].ObjectIndex);
+		                }
+		            }
+		            s = Cars[i].FrontBogie.CurrentCarSection;
+		            if (s >= 0)
+		            {
+		                for (int j = 0; j < Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
+		                {
+		                    Renderer.HideObject(Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
+		                }
+		            }
+		            s = Cars[i].RearBogie.CurrentCarSection;
+		            if (s >= 0)
+		            {
+		                for (int j = 0; j < Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
+		                {
+		                    Renderer.HideObject(Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
+		                }
+		            }
+		        }
+		        Sounds.StopAllSounds(this);
+
+		        for (int i = 0; i < Game.Sections.Length; i++)
+		        {
+		            Game.Sections[i].Leave(this);
+		        }
+		        if (Game.Sections.Length != 0)
+		        {
+		            Game.UpdateSection(Game.Sections.Length - 1);
+		        }
+		    }
+        }
 	}
 }

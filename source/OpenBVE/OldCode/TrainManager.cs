@@ -1913,47 +1913,7 @@ namespace OpenBve
 		}
 
 		// dispose train
-		internal static void DisposeTrain(Train Train)
-		{
-			Train.State = TrainState.Disposed;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				int s = Train.Cars[i].CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-				s = Train.Cars[i].FrontBogie.CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-				s = Train.Cars[i].RearBogie.CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-			}
-			Sounds.StopAllSounds(Train);
-
-			for (int i = 0; i < Game.Sections.Length; i++)
-			{
-				Game.Sections[i].Leave(Train);
-			}
-			if (Game.Sections.Length != 0)
-			{
-				Game.UpdateSection(Game.Sections.Length - 1);
-			}
-		}
+		
 
 		
 

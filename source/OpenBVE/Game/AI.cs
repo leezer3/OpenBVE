@@ -896,7 +896,7 @@ namespace OpenBve
 					}
 					else
 					{
-						TrainManager.DisposeTrain(Train);
+						Train.Dispose();
 					}
 				}
 			}
