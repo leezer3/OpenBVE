@@ -34,6 +34,109 @@ namespace OpenBve
 		        this.Train = train;
 		    }
 
+		    internal void UpdateTopplingCantAndSpring(double TimeElapsed)
+		    {
+		        if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+		        {
+		            return;
+		        }
+		        if (CarSections.Length != 0)
+		        {
+		            // get direction, up and side vectors
+		            double dx, dy, dz;
+		            double ux, uy, uz;
+		            double sx, sy, sz;
+		            {
+		                dx = FrontAxle.Follower.WorldPosition.X -
+		                     RearAxle.Follower.WorldPosition.X;
+		                dy = FrontAxle.Follower.WorldPosition.Y -
+		                     RearAxle.Follower.WorldPosition.Y;
+		                dz = FrontAxle.Follower.WorldPosition.Z -
+		                     RearAxle.Follower.WorldPosition.Z;
+		                double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+		                dx *= t;
+		                dy *= t;
+		                dz *= t;
+		                t = 1.0 / Math.Sqrt(dx * dx + dz * dz);
+		                double ex = dx * t;
+		                double ez = dz * t;
+		                sx = ez;
+		                sy = 0.0;
+		                sz = -ex;
+		                World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
+		            }
+		            // cant and radius
+
+
+
+		            //TODO: Hopefully we can apply the base toppling and roll figures from the car itself
+		            // apply position due to cant/toppling
+		            {
+		                double a = Car.Specs.CurrentRollDueToTopplingAngle +
+		                           Car.Specs.CurrentRollDueToCantAngle;
+		                double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
+		                double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+		                double cx = sx * x + ux * y;
+		                double cy = sy * x + uy * y;
+		                double cz = sz * x + uz * y;
+		                FrontAxle.Follower.WorldPosition.X += cx;
+		                FrontAxle.Follower.WorldPosition.Y += cy;
+		                FrontAxle.Follower.WorldPosition.Z += cz;
+		                RearAxle.Follower.WorldPosition.X += cx;
+		                RearAxle.Follower.WorldPosition.Y += cy;
+		                RearAxle.Follower.WorldPosition.Z += cz;
+		            }
+		            // apply rolling
+		            {
+		                double a = -Car.Specs.CurrentRollDueToTopplingAngle -
+		                           Car.Specs.CurrentRollDueToCantAngle;
+		                double cosa = Math.Cos(a);
+		                double sina = Math.Sin(a);
+		                World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+		                World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
+		                Up.X = ux;
+		                Up.Y = uy;
+		                Up.Z = uz;
+		            }
+		            // apply pitching
+		            if (CurrentCarSection >= 0 &&
+		                CarSections[CurrentCarSection].Overlay)
+		            {
+		                double a = Car.Specs.CurrentPitchDueToAccelerationAngle;
+		                double cosa = Math.Cos(a);
+		                double sina = Math.Sin(a);
+		                World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
+		                World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+		                double cx = 0.5 *
+		                            (FrontAxle.Follower.WorldPosition.X +
+		                             RearAxle.Follower.WorldPosition.X);
+		                double cy = 0.5 *
+		                            (FrontAxle.Follower.WorldPosition.Y +
+		                             RearAxle.Follower.WorldPosition.Y);
+		                double cz = 0.5 *
+		                            (FrontAxle.Follower.WorldPosition.Z +
+		                             RearAxle.Follower.WorldPosition.Z);
+		                FrontAxle.Follower.WorldPosition.X -= cx;
+		                FrontAxle.Follower.WorldPosition.Y -= cy;
+		                FrontAxle.Follower.WorldPosition.Z -= cz;
+		                RearAxle.Follower.WorldPosition.X -= cx;
+		                RearAxle.Follower.WorldPosition.Y -= cy;
+		                RearAxle.Follower.WorldPosition.Z -= cz;
+		                World.Rotate(ref FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+		                World.Rotate(ref RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+		                FrontAxle.Follower.WorldPosition.X += cx;
+		                FrontAxle.Follower.WorldPosition.Y += cy;
+		                FrontAxle.Follower.WorldPosition.Z += cz;
+		                RearAxle.Follower.WorldPosition.X += cx;
+		                RearAxle.Follower.WorldPosition.Y += cy;
+		                RearAxle.Follower.WorldPosition.Z += cz;
+		                Up.X = ux;
+		                Up.Y = uy;
+		                Up.Z = uz;
+		            }
+		        }
+            }
+
 		    internal void ChangeCarSection(int SectionIndex)
 		    {
 		        if (CarSections.Length == 0)
@@ -143,9 +246,7 @@ namespace OpenBve
 		        }
 		    }
 
-
-
-		    private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+            private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
 		    {
 		        {
 		            Vector3 p = Position;

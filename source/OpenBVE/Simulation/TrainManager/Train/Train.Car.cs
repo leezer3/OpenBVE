@@ -102,7 +102,465 @@ namespace OpenBve
 		        return 0.0;
 		    }
 
-		    internal void Initialize()
+		    internal void UpdateTopplingCantAndSpring(double TimeElapsed)
+		    {
+		        if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+		        {
+		            return;
+		        }
+		        // get direction, up and side vectors
+		        double dx, dy, dz;
+		        double ux, uy, uz;
+		        double sx, sy, sz;
+		        {
+		            dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+		            dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+		            dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+		            double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+		            dx *= t; dy *= t; dz *= t;
+		            t = 1.0 / Math.Sqrt(dx * dx + dz * dz);
+		            double ex = dx * t;
+		            double ez = dz * t;
+		            sx = ez;
+		            sy = 0.0;
+		            sz = -ex;
+		            World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
+		        }
+		        // cant and radius
+		        double c;
+		        {
+		            double ca = FrontAxle.Follower.CurveCant;
+		            double cb = RearAxle.Follower.CurveCant;
+		            c = Math.Tan(0.5 * (Math.Atan(ca) + Math.Atan(cb)));
+		        }
+		        double r, rs;
+		        if (FrontAxle.Follower.CurveRadius != 0.0 & RearAxle.Follower.CurveRadius != 0.0)
+		        {
+		            r = Math.Sqrt(Math.Abs(FrontAxle.Follower.CurveRadius * RearAxle.Follower.CurveRadius));
+		            rs = (double)Math.Sign(FrontAxle.Follower.CurveRadius + RearAxle.Follower.CurveRadius);
+		        }
+		        else if (FrontAxle.Follower.CurveRadius != 0.0)
+		        {
+		            r = Math.Abs(FrontAxle.Follower.CurveRadius);
+		            rs = (double)Math.Sign(FrontAxle.Follower.CurveRadius);
+		        }
+		        else if (RearAxle.Follower.CurveRadius != 0.0)
+		        {
+		            r = Math.Abs(RearAxle.Follower.CurveRadius);
+		            rs = (double)Math.Sign(RearAxle.Follower.CurveRadius);
+		        }
+		        else
+		        {
+		            r = 0.0;
+		            rs = 0.0;
+		        }
+		        // roll due to shaking
+		        {
+
+		            double a0 = Specs.CurrentRollDueToShakingAngle;
+		            double a1;
+		            if (Specs.CurrentRollShakeDirection != 0.0)
+		            {
+		                const double c0 = 0.03;
+		                const double c1 = 0.15;
+		                a1 = c1 * Math.Atan(c0 * Specs.CurrentRollShakeDirection);
+		                double d = 0.5 + Specs.CurrentRollShakeDirection * Specs.CurrentRollShakeDirection;
+		                if (Specs.CurrentRollShakeDirection < 0.0)
+		                {
+		                    Specs.CurrentRollShakeDirection += d * TimeElapsed;
+		                    if (Specs.CurrentRollShakeDirection > 0.0) Specs.CurrentRollShakeDirection = 0.0;
+		                }
+		                else
+		                {
+		                    Specs.CurrentRollShakeDirection -= d * TimeElapsed;
+		                    if (Specs.CurrentRollShakeDirection < 0.0) Specs.CurrentRollShakeDirection = 0.0;
+		                }
+		            }
+		            else
+		            {
+		                a1 = 0.0;
+		            }
+		            double SpringAcceleration;
+		            if (!Derailed)
+		            {
+		                SpringAcceleration = 15.0 * Math.Abs(a1 - a0);
+		            }
+		            else
+		            {
+		                SpringAcceleration = 1.5 * Math.Abs(a1 - a0);
+		            }
+		            double SpringDeceleration = 0.25 * SpringAcceleration;
+		            Specs.CurrentRollDueToShakingAngularSpeed += (double)Math.Sign(a1 - a0) * SpringAcceleration * TimeElapsed;
+		            double x = (double)Math.Sign(Specs.CurrentRollDueToShakingAngularSpeed) * SpringDeceleration * TimeElapsed;
+		            if (Math.Abs(x) < Math.Abs(Specs.CurrentRollDueToShakingAngularSpeed))
+		            {
+		                Specs.CurrentRollDueToShakingAngularSpeed -= x;
+		            }
+		            else
+		            {
+		                Specs.CurrentRollDueToShakingAngularSpeed = 0.0;
+		            }
+		            a0 += Specs.CurrentRollDueToShakingAngularSpeed * TimeElapsed;
+		            Specs.CurrentRollDueToShakingAngle = a0;
+		        }
+		        // roll due to cant (incorporates shaking)
+		        {
+		            double cantAngle = Math.Atan(c / Game.RouteRailGauge);
+		            Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
+		        }
+		        // pitch due to acceleration
+		        {
+		            for (int i = 0; i < 3; i++)
+		            {
+		                double a, v, j;
+		                if (i == 0)
+		                {
+		                    a = Specs.CurrentAcceleration;
+		                    v = Specs.CurrentPitchDueToAccelerationFastValue;
+		                    j = 1.8;
+		                }
+		                else if (i == 1)
+		                {
+		                    a = Specs.CurrentPitchDueToAccelerationFastValue;
+		                    v = Specs.CurrentPitchDueToAccelerationMediumValue;
+		                    j = 1.2;
+		                }
+		                else
+		                {
+		                    a = Specs.CurrentPitchDueToAccelerationFastValue;
+		                    v = Specs.CurrentPitchDueToAccelerationSlowValue;
+		                    j = 1.0;
+		                }
+		                double d = a - v;
+		                if (d < 0.0)
+		                {
+		                    v -= j * TimeElapsed;
+		                    if (v < a) v = a;
+		                }
+		                else
+		                {
+		                    v += j * TimeElapsed;
+		                    if (v > a) v = a;
+		                }
+		                if (i == 0)
+		                {
+		                    Specs.CurrentPitchDueToAccelerationFastValue = v;
+		                }
+		                else if (i == 1)
+		                {
+		                    Specs.CurrentPitchDueToAccelerationMediumValue = v;
+		                }
+		                else
+		                {
+		                    Specs.CurrentPitchDueToAccelerationSlowValue = v;
+		                }
+		            }
+		            {
+		                double d = Specs.CurrentPitchDueToAccelerationSlowValue - Specs.CurrentPitchDueToAccelerationFastValue;
+		                Specs.CurrentPitchDueToAccelerationTargetAngle = 0.03 * Math.Atan(d);
+		            }
+		            {
+		                double a = 3.0 * (double)Math.Sign(Specs.CurrentPitchDueToAccelerationTargetAngle - Specs.CurrentPitchDueToAccelerationAngle);
+		                Specs.CurrentPitchDueToAccelerationAngularSpeed += a * TimeElapsed;
+		                double s = Math.Abs(Specs.CurrentPitchDueToAccelerationTargetAngle - Specs.CurrentPitchDueToAccelerationAngle);
+		                if (Math.Abs(Specs.CurrentPitchDueToAccelerationAngularSpeed) > s)
+		                {
+		                    Specs.CurrentPitchDueToAccelerationAngularSpeed = s * (double)Math.Sign(Specs.CurrentPitchDueToAccelerationAngularSpeed);
+		                }
+		                Specs.CurrentPitchDueToAccelerationAngle += Specs.CurrentPitchDueToAccelerationAngularSpeed * TimeElapsed;
+		            }
+		        }
+		        // derailment
+		        if (Interface.CurrentOptions.Derailments & !Derailed)
+		        {
+		            double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+		            double sa = (double)Math.Sign(a);
+		            double tc = Specs.CriticalTopplingAngle;
+		            if (a * sa > tc)
+		            {
+		                Train.Derail(Index, TimeElapsed);
+		            }
+		        }
+		        // toppling roll
+		        if (Interface.CurrentOptions.Toppling | Derailed)
+		        {
+		            double a = Specs.CurrentRollDueToTopplingAngle;
+		            double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+		            double h = Specs.CenterOfGravityHeight;
+		            double s = Math.Abs(Specs.CurrentSpeed);
+		            double rmax = 2.0 * h * s * s / (Game.RouteAccelerationDueToGravity * Game.RouteRailGauge);
+		            double ta;
+		            Topples = false;
+		            if (Derailed)
+		            {
+		                double sab = (double)Math.Sign(ab);
+		                ta = 0.5 * Math.PI * (sab == 0.0 ? Program.RandomNumberGenerator.NextDouble() < 0.5 ? -1.0 : 1.0 : sab);
+		            }
+		            else
+		            {
+		                if (r != 0.0)
+		                {
+		                    if (r < rmax)
+		                    {
+		                        double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * Game.RouteRailGauge / (2.0 * h));
+		                        const double fac = 0.25; // arbitrary coefficient
+		                        ta = -fac * (s - s0) * rs;
+		                        Train.Topple(Index, TimeElapsed);
+		                    }
+		                    else
+		                    {
+		                        ta = 0.0;
+		                    }
+		                }
+		                else
+		                {
+		                    ta = 0.0;
+		                }
+		            }
+		            double td;
+		            if (Derailed)
+		            {
+		                td = Math.Abs(ab);
+		                if (td < 0.1) td = 0.1;
+		            }
+		            else
+		            {
+		                td = 1.0;
+		            }
+		            if (a > ta)
+		            {
+		                double d = a - ta;
+		                if (td > d) td = d;
+		                a -= td * TimeElapsed;
+		            }
+		            else if (a < ta)
+		            {
+		                double d = ta - a;
+		                if (td > d) td = d;
+		                a += td * TimeElapsed;
+		            }
+		            Specs.CurrentRollDueToTopplingAngle = a;
+		        }
+		        else
+		        {
+		            Specs.CurrentRollDueToTopplingAngle = 0.0;
+		        }
+		        // apply position due to cant/toppling
+		        {
+		            double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
+		            double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
+		            double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+		            double cx = sx * x + ux * y;
+		            double cy = sy * x + uy * y;
+		            double cz = sz * x + uz * y;
+		            FrontAxle.Follower.WorldPosition.X += cx;
+		            FrontAxle.Follower.WorldPosition.Y += cy;
+		            FrontAxle.Follower.WorldPosition.Z += cz;
+		            RearAxle.Follower.WorldPosition.X += cx;
+		            RearAxle.Follower.WorldPosition.Y += cy;
+		            RearAxle.Follower.WorldPosition.Z += cz;
+		        }
+		        // apply rolling
+		        {
+		            double a = -Specs.CurrentRollDueToTopplingAngle - Specs.CurrentRollDueToCantAngle;
+		            double cosa = Math.Cos(a);
+		            double sina = Math.Sin(a);
+		            World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+		            World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
+		            Up.X = ux;
+		            Up.Y = uy;
+		            Up.Z = uz;
+		        }
+		        // apply pitching
+		        if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Overlay)
+		        {
+		            double a = Specs.CurrentPitchDueToAccelerationAngle;
+		            double cosa = Math.Cos(a);
+		            double sina = Math.Sin(a);
+		            World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
+		            World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+		            double cx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+		            double cy = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+		            double cz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+		            FrontAxle.Follower.WorldPosition.X -= cx;
+		            FrontAxle.Follower.WorldPosition.Y -= cy;
+		            FrontAxle.Follower.WorldPosition.Z -= cz;
+		            RearAxle.Follower.WorldPosition.X -= cx;
+		            RearAxle.Follower.WorldPosition.Y -= cy;
+		            RearAxle.Follower.WorldPosition.Z -= cz;
+		            World.Rotate(ref FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+		            World.Rotate(ref RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+		            FrontAxle.Follower.WorldPosition.X += cx;
+		            FrontAxle.Follower.WorldPosition.Y += cy;
+		            FrontAxle.Follower.WorldPosition.Z += cz;
+		            RearAxle.Follower.WorldPosition.X += cx;
+		            RearAxle.Follower.WorldPosition.Y += cy;
+		            RearAxle.Follower.WorldPosition.Z += cz;
+		            Up.X = ux;
+		            Up.Y = uy;
+		            Up.Z = uz;
+		        }
+		        // spring sound
+		        {
+		            double a = Specs.CurrentRollDueToShakingAngle;
+		            double diff = a - Sounds.SpringPlayedAngle;
+		            const double angleTolerance = 0.001;
+		            if (diff < -angleTolerance)
+		            {
+		                Sounds.SoundBuffer buffer = Sounds.SpringL.Buffer;
+		                if (buffer != null)
+		                {
+		                    if (!OpenBve.Sounds.IsPlaying(Sounds.SpringL.Source))
+		                    {
+		                        OpenBveApi.Math.Vector3 pos = Sounds.SpringL.Position;
+		                        Sounds.SpringL.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Index, false);
+		                    }
+		                }
+		                Sounds.SpringPlayedAngle = a;
+		            }
+		            else if (diff > angleTolerance)
+		            {
+		                Sounds.SoundBuffer buffer = Sounds.SpringR.Buffer;
+		                if (buffer != null)
+		                {
+		                    if (!OpenBve.Sounds.IsPlaying(Sounds.SpringR.Source))
+		                    {
+		                        OpenBveApi.Math.Vector3 pos = Sounds.SpringR.Position;
+		                        Sounds.SpringR.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Index, false);
+		                    }
+		                }
+		                Sounds.SpringPlayedAngle = a;
+		            }
+		        }
+		        // flange sound
+		        {
+		            /*
+                     * This determines the amount of flange noise as a result of the angle at which the
+                     * line that forms between the axles hits the rail, i.e. the less perpendicular that
+                     * line is to the rails, the more flange noise there will be.
+                     * */
+		            Vector3 d = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
+		            World.Normalize(ref d.X, ref d.Y, ref d.Z);
+		            double b0 = d.X * RearAxle.Follower.WorldSide.X + d.Y * RearAxle.Follower.WorldSide.Y + d.Z * RearAxle.Follower.WorldSide.Z;
+		            double b1 = d.X * FrontAxle.Follower.WorldSide.X + d.Y * FrontAxle.Follower.WorldSide.Y + d.Z * FrontAxle.Follower.WorldSide.Z;
+		            double spd = Math.Abs(Specs.CurrentSpeed);
+		            double pitch = 0.5 + 0.04 * spd;
+		            double b2 = Math.Abs(b0) + Math.Abs(b1);
+		            double basegain = 0.5 * b2 * b2 * spd * spd;
+		            /*
+                     * This determines additional flange noise as a result of the roll angle of the car
+                     * compared to the roll angle of the rails, i.e. if the car bounces due to inaccuracies,
+                     * there will be additional flange noise.
+                     * */
+		            double cdti = Math.Abs(FrontAxle.Follower.CantDueToInaccuracy) + Math.Abs(RearAxle.Follower.CantDueToInaccuracy);
+		            basegain += 0.2 * spd * spd * cdti * cdti;
+		            /*
+                     * This applies the settings.
+                     * */
+		            if (basegain < 0.0) basegain = 0.0;
+		            if (basegain > 0.75) basegain = 0.75;
+		            if (pitch > Sounds.FlangePitch)
+		            {
+		                Sounds.FlangePitch += TimeElapsed;
+		                if (Sounds.FlangePitch > pitch) Sounds.FlangePitch = pitch;
+		            }
+		            else
+		            {
+		                Sounds.FlangePitch -= TimeElapsed;
+		                if (Sounds.FlangePitch < pitch) Sounds.FlangePitch = pitch;
+		            }
+		            pitch = Sounds.FlangePitch;
+		            for (int i = 0; i < Sounds.Flange.Length; i++)
+		            {
+		                if (i == FrontAxle.currentFlangeIdx | i == RearAxle.currentFlangeIdx)
+		                {
+		                    Sounds.FlangeVolume[i] += TimeElapsed;
+		                    if (Sounds.FlangeVolume[i] > 1.0) Sounds.FlangeVolume[i] = 1.0;
+		                }
+		                else
+		                {
+		                    Sounds.FlangeVolume[i] -= TimeElapsed;
+		                    if (Sounds.FlangeVolume[i] < 0.0) Sounds.FlangeVolume[i] = 0.0;
+		                }
+		                double gain = basegain * Sounds.FlangeVolume[i];
+		                if (OpenBve.Sounds.IsPlaying(Sounds.Flange[i].Source))
+		                {
+		                    if (pitch > 0.01 & gain > 0.0001)
+		                    {
+		                        Sounds.Flange[i].Source.Pitch = pitch;
+		                        Sounds.Flange[i].Source.Volume = gain;
+		                    }
+		                    else
+		                    {
+		                        Sounds.Flange[i].Source.Stop();
+		                    }
+		                }
+		                else if (pitch > 0.02 & gain > 0.01)
+		                {
+		                    Sounds.SoundBuffer buffer = Sounds.Flange[i].Buffer;
+		                    if (buffer != null)
+		                    {
+		                        OpenBveApi.Math.Vector3 pos = Sounds.Flange[i].Position;
+		                        Sounds.Flange[i].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, Train, Index, true);
+		                    }
+		                }
+		            }
+		        }
+		    }
+
+		    internal double GetResistance(bool frontAxle)
+		    {
+		        double t;
+		        if (Index == 0 & Specs.CurrentSpeed >= 0.0 || Index == Train.Cars.Length - 1 & Specs.CurrentSpeed <= 0.0)
+		        {
+		            t = Specs.ExposedFrontalArea;
+		        }
+		        else
+		        {
+		            t = Specs.UnexposedFrontalArea;
+		        }
+		        double f = t * Specs.AerodynamicDragCoefficient * Train.Specs.CurrentAirDensity / (2.0 * Specs.MassCurrent);
+		        double a = Game.RouteAccelerationDueToGravity * Specs.CoefficientOfRollingResistance + f * Specs.CurrentSpeed * Specs.CurrentSpeed;
+		        return a;
+		    }
+
+		    internal double GetCriticalWheelSlipAccelerationForElectricMotor(bool frontAxle)
+		    {
+		        if (frontAxle)
+		        {
+		            double NormalForceAcceleration = FrontAxle.Follower.WorldUp.Y * Game.RouteAccelerationDueToGravity;
+		            // TODO: Implement formula that depends on speed here.
+		            double coefficient = Specs.CoefficientOfStaticFriction;
+		            return coefficient * FrontAxle.Follower.AdhesionMultiplier * NormalForceAcceleration;
+		        }
+		        else
+		        {
+		            double NormalForceAcceleration = RearAxle.Follower.WorldUp.Y * Game.RouteAccelerationDueToGravity;
+		            // TODO: Implement formula that depends on speed here.
+		            double coefficient = Specs.CoefficientOfStaticFriction;
+		            return coefficient * RearAxle.Follower.AdhesionMultiplier * NormalForceAcceleration;
+                }
+		    }
+
+		    internal double GetCriticalWheelSlipAccelerationForFrictionBrake(bool frontAxle)
+		    {
+		        if (frontAxle)
+		        {
+		            double NormalForceAcceleration = FrontAxle.Follower.WorldUp.Y * Game.RouteAccelerationDueToGravity;
+		            // TODO: Implement formula that depends on speed here.
+		            double coefficient = Specs.CoefficientOfStaticFriction;
+		            return coefficient * FrontAxle.Follower.AdhesionMultiplier * NormalForceAcceleration;
+		        }
+		        else
+		        {
+		            double NormalForceAcceleration = RearAxle.Follower.WorldUp.Y * Game.RouteAccelerationDueToGravity;
+		            // TODO: Implement formula that depends on speed here.
+		            double coefficient = Specs.CoefficientOfStaticFriction;
+		            return coefficient * RearAxle.Follower.AdhesionMultiplier * NormalForceAcceleration;
+		        }
+            }
+
+            internal void Initialize()
 		    {
 		        for (int i = 0; i < CarSections.Length; i++)
 		        {

@@ -614,7 +614,7 @@ namespace OpenBve
 			//HACK: This function calls a single update on all objects attached to the player's train
 			//      but ignores any specified damping so that all needles etc. are in the correct place
 			//      for the first frame, rather than spinning wildly to get to the starting point.
-			TrainManager.UpdateCabObjects(TrainManager.PlayerTrain);
+			TrainManager.PlayerTrain.UpdateCabObjects();
 			// timetable
 			if (TrainManager.PlayerTrain.StationInfo.NextStation >= 0)
 			{

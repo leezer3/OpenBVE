@@ -87,6 +87,23 @@ namespace OpenBve
 		        }
 		    }
 
+		    internal void UpdateCabObjects()
+		    {
+		        Cars[0].UpdateObjects(0.0, true, false);
+		    }
+		    internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+		    {
+		        if (!Game.MinimalisticSimulation)
+		        {
+		            for (int i = 0; i < Cars.Length; i++)
+		            {
+		                Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
+		                Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+		                Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+		            }
+		        }
+		    }
+
             /// <summary>Call this method to move a car</summary>
             /// <param name="CarIndex">The car index to move</param>
             /// <param name="Delta">The length to move</param>
