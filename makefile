@@ -177,19 +177,19 @@ endif
 print_csc_type:
 	@echo $(COLOR_RED)Using $(CSC_NAME) as c\# compiler$(COLOR_END)
 
-$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins
-$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins
+$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/DevTools
+$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/DevTools
 
 $(DEBUG_DEPEND) $(RELEASE_DEPEND):
 	@echo $(COLOR_BLUE)Copying dependency $(COLOR_CYAN)$@$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) $(patsubst $(OUTPUT_DIR)/%,dependencies/%,$@) $(OUTPUT_DIR)/
 
 $(DEBUG_DIR) $(RELEASE_DIR): 
-	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
 
 $(DEBUG_DIR)/DevTools $(RELEASE_DIR)/DevTools: 
-	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/DevTools$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/DevTools
 
 $(DEBUG_DIR)/Data $(RELEASE_DIR)/Data:
@@ -563,9 +563,6 @@ LBAHEADER_FOLDERS  := .
 LBAHEADER_FOLDERS  := $(addprefix $(LBAHEADER_ROOT)/, $(LBAHEADER_FOLDERS))
 LBAHEADER_SRC      := $(foreach sdir, $(LBAHEADER_FOLDERS), $(wildcard $(sdir)/*.cs))
 LBAHEADER_OUT       =$(OUTPUT_DIR)/$(LBAHEADER_FILE)
-
-$(DEBUG_DIR)/$(LBAHEADER_FILE): $(DEBUG_DIR)/DevTools
-$(RELEASE_DIR)/$(LBAHEADER_FILE): $(RELEASE_DIR)/DevTools
 
 $(DEBUG_DIR)/$(LBAHEADER_FILE) $(RELEASE_DIR)/$(LBAHEADER_FILE): $(LBAHEADER_SRC)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LBAHEADER_OUT)$(COLOR_END)
