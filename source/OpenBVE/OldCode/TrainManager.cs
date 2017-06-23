@@ -147,34 +147,7 @@ namespace OpenBve
 		
 
 		// get acceleration output
-		internal static double GetAccelerationOutput(Train Train, int CarIndex, int CurveIndex, double Speed)
-		{
-			if (CurveIndex < Train.Cars[CarIndex].Specs.AccelerationCurves.Length)
-			{
-				double a0 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageZeroAcceleration;
-				double s1 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageOneSpeed;
-				double a1 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageOneAcceleration;
-				double s2 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageTwoSpeed;
-				double e2 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageTwoExponent;
-				double f = Train.Cars[CarIndex].Specs.AccelerationCurvesMultiplier;
-				if (Speed <= 0.0)
-				{
-					return f * a0;
-				}
-				if (Speed < s1)
-				{
-					double t = Speed / s1;
-					return f * (a0 * (1.0 - t) + a1 * t);
-				}
-				if (Speed < s2)
-				{
-					return f * s1 * a1 / Speed;
-				}
-				return f * s1 * a1 * Math.Pow(s2, e2 - 1.0) * Math.Pow(Speed, -e2);
-
-			}
-			return 0.0;
-		}
+		
 
 		// get resistance
 		private static double GetResistance(Train Train, int CarIndex, ref Axle Axle, double Speed)
@@ -2182,7 +2155,7 @@ namespace OpenBve
 							if (Train.Specs.CurrentReverser.Actual != 0 & Train.Specs.CurrentPowerNotch.Actual > 0 & !Train.Specs.CurrentHoldBrake.Actual & !Train.Specs.CurrentEmergencyBrake.Actual)
 							{
 								// target acceleration
-								a = GetAccelerationOutput(Train, i, Train.Specs.CurrentPowerNotch.Actual - 1, (double)Train.Specs.CurrentReverser.Actual * Train.Cars[i].Specs.CurrentSpeed);
+							    a = Train.Cars[i].GetAccelerationOutput(Train.Specs.CurrentPowerNotch.Actual - 1, (double)Train.Specs.CurrentReverser.Actual * Train.Cars[i].Specs.CurrentSpeed);
 								// readhesion device
 								if (a > Train.Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput)
 								{

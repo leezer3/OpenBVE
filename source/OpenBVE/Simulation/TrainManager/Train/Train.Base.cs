@@ -22,7 +22,7 @@ namespace OpenBve
 			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
-			/// <summary>Holds various information on the previous & next stations</summary>
+			/// <summary>Holds various information on the previous and next stations</summary>
 			internal StationInformation StationInfo;
 			internal double[] RouteLimits;
 			internal double CurrentRouteLimit;

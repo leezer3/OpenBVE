@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -58,6 +59,39 @@ namespace OpenBve
 			/// <summary>Whether this car is currently in a station</summary>
 			/// TODO: This appears only to be set by the station start/ end events and not checked elsewhere, why???
 			internal bool CurrentlyInStation;
-		}
+
+            /// <summary>Gets the current acceleration output for this car</summary>
+            /// <param name="CurveIndex">The acceleration curve to use</param>
+            /// <param name="Speed">The speed in km/h</param>
+            /// <returns>The acceleration output in m/s</returns>
+		    internal double GetAccelerationOutput(int CurveIndex, double Speed)
+		    {
+		        if (CurveIndex < Specs.AccelerationCurves.Length)
+		        {
+		            double a0 = Specs.AccelerationCurves[CurveIndex].StageZeroAcceleration;
+		            double s1 = Specs.AccelerationCurves[CurveIndex].StageOneSpeed;
+		            double a1 = Specs.AccelerationCurves[CurveIndex].StageOneAcceleration;
+		            double s2 = Specs.AccelerationCurves[CurveIndex].StageTwoSpeed;
+		            double e2 = Specs.AccelerationCurves[CurveIndex].StageTwoExponent;
+		            double f = Specs.AccelerationCurvesMultiplier;
+		            if (Speed <= 0.0)
+		            {
+		                return f * a0;
+		            }
+		            if (Speed < s1)
+		            {
+		                double t = Speed / s1;
+		                return f * (a0 * (1.0 - t) + a1 * t);
+		            }
+		            if (Speed < s2)
+		            {
+		                return f * s1 * a1 / Speed;
+		            }
+		            return f * s1 * a1 * Math.Pow(s2, e2 - 1.0) * Math.Pow(Speed, -e2);
+
+		        }
+		        return 0.0;
+		    }
+        }
 	}
 }
