@@ -294,7 +294,7 @@ namespace OpenBve {
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Overlay = true;
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
-					TrainManager.ParsePanelConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+				    TrainManager.Trains[k].ParsePanelConfig(CurrentTrainFolder, CurrentTrainEncoding);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					Program.AppendToLogFile("Train panel loaded sucessfully.");

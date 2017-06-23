@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -259,8 +260,76 @@ namespace OpenBve
 				}
 			}
 
-			/// <summary>Updates the atmospheric constants applying to this train (Effects brake pressure speeds etc.)</summary>
-			internal void UpdateAtmosphericConstants()
+		    /// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
+		    /// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
+		    /// <param name="Encoding">The automatically detected or manually set encoding of the panel configuration file.</param>
+		    internal void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding)
+		    {
+		        string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
+		        if (System.IO.File.Exists(File))
+		        {
+		            Program.AppendToLogFile("Loading train panel: " + File);
+		            ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
+		            try
+		            {
+		                for (int i = 0; i < a.Objects.Length; i++)
+		                {
+		                    a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+		                }
+		                Cars[DriverCar].CarSections[0].Elements = a.Objects;
+		                World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+		            }
+		            catch
+		            {
+		                var currentError = Interface.GetInterfaceString("error_critical_file");
+		                currentError = currentError.Replace("[file]", "panel.animated");
+		                MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+		                Program.RestartArguments = " ";
+		                Loading.Cancel = true;
+		            }
+		        }
+		        else
+		        {
+		            var Panel2 = false;
+		            try
+		            {
+		                File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+		                if (System.IO.File.Exists(File))
+		                {
+		                    Program.AppendToLogFile("Loading train panel: " + File);
+		                    Panel2 = true;
+		                    Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, this);
+		                    World.CameraRestriction = World.CameraRestrictionMode.On;
+		                }
+		                else
+		                {
+		                    File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
+		                    if (System.IO.File.Exists(File))
+		                    {
+		                        Program.AppendToLogFile("Loading train panel: " + File);
+		                        PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, this);
+		                        World.CameraRestriction = World.CameraRestrictionMode.On;
+		                    }
+		                    else
+		                    {
+		                        World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+		                    }
+		                }
+		            }
+		            catch
+		            {
+		                var currentError = Interface.GetInterfaceString("errors_critical_file");
+		                currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+		                MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+		                Program.RestartArguments = " ";
+		                Loading.Cancel = true;
+		            }
+
+		        }
+		    }
+
+            /// <summary>Updates the atmospheric constants applying to this train (Effects brake pressure speeds etc.)</summary>
+            internal void UpdateAtmosphericConstants()
 			{
 				double h = 0.0;
 				for (int i = 0; i < Cars.Length; i++)

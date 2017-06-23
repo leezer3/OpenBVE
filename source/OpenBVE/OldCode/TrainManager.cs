@@ -8,21 +8,6 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-
-		// coupler
-		internal struct Coupler
-		{
-			internal double MinimumDistanceBetweenCars;
-			internal double MaximumDistanceBetweenCars;
-		}
-
-		// sections
-		internal struct CarSection
-		{
-			internal ObjectManager.AnimatedObject[] Elements;
-			internal bool Overlay;
-		}
-
 		// cars
 		
 		internal struct AccelerationCurve
@@ -155,74 +140,7 @@ namespace OpenBve
 
 
 
-		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
-		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
-		/// <param name="Encoding">The automatically detected or manually set encoding of the panel configuration file.</param>
-		/// <param name="Train">The base train on which to apply the panel configuration.</param>
-		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
-		{
-			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
-			if (System.IO.File.Exists(File))
-			{
-				Program.AppendToLogFile("Loading train panel: " + File);
-				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
-				try
-				{
-					for (int i = 0; i < a.Objects.Length; i++)
-					{
-						a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
-					}
-					Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-					World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("error_critical_file");
-					currentError = currentError.Replace("[file]", "panel.animated");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
-				}
-			}
-			else
-			{
-				var Panel2 = false;
-				try
-				{
-					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
-					if (System.IO.File.Exists(File))
-					{
-						Program.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
-						World.CameraRestriction = World.CameraRestrictionMode.On;
-					}
-					else
-					{
-						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							Program.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-							World.CameraRestriction = World.CameraRestrictionMode.On;
-						}
-						else
-						{
-							World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-						}
-					}
-				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
-				}
-
-			}
-		}
+		
 		
 
 		// update atmospheric constants
