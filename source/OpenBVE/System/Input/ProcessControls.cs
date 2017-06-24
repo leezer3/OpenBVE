@@ -1260,6 +1260,7 @@ namespace OpenBve
 									case Interface.Command.EngineStart:
 									case Interface.Command.EngineStop:
 									case Interface.Command.GearUp:
+                                    case Interface.Command.GearDown:
 									case Interface.Command.RaisePantograph:
 									case Interface.Command.LowerPantograph:
 									case Interface.Command.MainBreaker:
@@ -1586,7 +1587,8 @@ namespace OpenBve
 									case Interface.Command.EngineStart:
 									case Interface.Command.EngineStop:
 									case Interface.Command.GearUp:
-									case Interface.Command.RaisePantograph:
+									case Interface.Command.GearDown:
+                                    case Interface.Command.RaisePantograph:
 									case Interface.Command.LowerPantograph:
 									case Interface.Command.MainBreaker:
 										if (TrainManager.PlayerTrain.Plugin != null)

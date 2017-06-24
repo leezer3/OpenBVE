@@ -117,7 +117,6 @@ namespace OpenBve {
 			internal Damping RotateXDamping;
 			internal Damping RotateYDamping;
 			internal Damping RotateZDamping;
-			internal bool EnableDamping;
 			internal Vector2 TextureShiftXDirection;
 			internal Vector2 TextureShiftYDirection;
 			internal FunctionScripts.FunctionScript TextureShiftXFunction;

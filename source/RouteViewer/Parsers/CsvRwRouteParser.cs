@@ -1663,7 +1663,6 @@ namespace OpenBve {
 									{
 										Interface.AddMessage(Interface.MessageType.Information, false, "" + Command + " is not supported when using RouteViewer at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} break;
-									break;
 								case "route.change":
 									if (!PreviewOnly) {
 										int change = 0;

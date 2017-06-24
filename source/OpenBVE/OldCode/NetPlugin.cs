@@ -338,8 +338,8 @@ namespace OpenBve {
 		{
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < this.Train.Cars.Length && CarIndex >= 0)
 			{
-				Sounds.SoundBuffer buffer = this.Train.Cars[CarIndex].Sounds.Plugin[index].Buffer;
-				OpenBveApi.Math.Vector3 position = this.Train.Cars[CarIndex].Sounds.Plugin[index].Position;
+				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
+				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
 				Sounds.SoundSource source = Sounds.PlaySound(buffer, pitch, volume, position, this.Train, CarIndex, looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length)
 				{

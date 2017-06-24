@@ -103,8 +103,8 @@ OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 TRAIN_EDITOR_ROOT     :=source/TrainEditor
 TRAIN_EDITOR_FILE     :=TrainEditor.exe
 
-LBAHEADER_ROOT        :=source/LBAHeader
-LBAHEADER_FILE        :=LBAHeader.exe
+LBAHEADER_ROOT        :=source/DevTools/LBAHeader
+LBAHEADER_FILE        :=DevTools/LBAHeader.exe
 
 # Dependences 
 DEBUG_DEPEND := $(patsubst dependencies/%,$(DEBUG_DIR)/%,$(wildcard dependencies/*))
@@ -130,7 +130,6 @@ RELEASE_ASSETS := $(patsubst assets/%,$(DEBUG_DIR)/Data/%,$(wildcard assets/*))
 .PHONY: publish
 .PHONY: debian
 .PHONY: print_csc_type
-.PHONY: fix_header
 
 debug: openbve-debug
 release: openbve-release
@@ -156,7 +155,6 @@ all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
 all-debug: $(DEBUG_DIR)/$(LBAHEADER_FILE)
 all-debug: copy_depends
-all-debug: fix_header
 
 all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
@@ -168,7 +166,6 @@ all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
 all-release: $(RELEASE_DIR)/$(LBAHEADER_FILE)
 all-release: copy_release_depends
-all-release: fix_header
 
 CP_UPDATE_FLAG = -u
 CP_RECURSE = -r
@@ -180,16 +177,20 @@ endif
 print_csc_type:
 	@echo $(COLOR_RED)Using $(CSC_NAME) as c\# compiler$(COLOR_END)
 
-$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins
-$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins
+$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/DevTools
+$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/DevTools
 
 $(DEBUG_DEPEND) $(RELEASE_DEPEND):
 	@echo $(COLOR_BLUE)Copying dependency $(COLOR_CYAN)$@$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) $(patsubst $(OUTPUT_DIR)/%,dependencies/%,$@) $(OUTPUT_DIR)/
 
 $(DEBUG_DIR) $(RELEASE_DIR): 
-	@echo $(COLOR_BLUE)Prepping $(OUTPUT_DIR)...$(COLOR_END)
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)
+
+$(DEBUG_DIR)/DevTools $(RELEASE_DIR)/DevTools: 
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/DevTools$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)/DevTools
 
 $(DEBUG_DIR)/Data $(RELEASE_DIR)/Data:
 	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/$(COLOR_END)
@@ -205,11 +206,6 @@ copy_release_depends: $(RELEASE_DIR)/Data
 copy_depends copy_release_depends:
 	@echo $(COLOR_BLUE)Copying $(COLOR_CYAN)assets/*$(COLOR_BLUE) to $(COLOR_CYAN)$(OUTPUT_DIR)/Data/*$(COLOR_END)
 	@cp -r $(CP_UPDATE_FLAG) assets/* $(OUTPUT_DIR)/Data
-
-fix_header:
-	@echo $(COLOR_BLUE)Fixing executable LBA Header$(COLOR_END)
-	@mono $(OUTPUT_DIR)/LBAHeader.exe $(OUTPUT_DIR)/OpenBve.exe
-	@rm -f $(OUTPUT_DIR)/LBAHeader.exe
 
 clean: 
 	# Executables
@@ -238,6 +234,9 @@ clean:
 	rm -f $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs
 
 clean-all: clean
+	# DevTools
+	rm -f bin*/DevTools/LBAHeader.exe* bin*/DevTools/LBAHeader.pdb
+
 	# Everything else
 	rm -rf bin*/
 
@@ -314,6 +313,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
@@ -321,6 +321,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
@@ -330,6 +331,8 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
+	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
+	@mono $(LBAHEADER_OUT) ${OPEN_BVE_OUT} > /dev/null
 
 
 ##############
@@ -552,15 +555,15 @@ $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_E
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
 
-################
-# LBAHeader    #
-################
+#############
+# LBAHeader #
+#############
 
 LBAHEADER_FOLDERS  := .
 LBAHEADER_FOLDERS  := $(addprefix $(LBAHEADER_ROOT)/, $(LBAHEADER_FOLDERS))
 LBAHEADER_SRC      := $(foreach sdir, $(LBAHEADER_FOLDERS), $(wildcard $(sdir)/*.cs))
 LBAHEADER_OUT       =$(OUTPUT_DIR)/$(LBAHEADER_FILE)
 
-$(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(LBAHEADER_FILE): $(LBAHEADER_SRC)
+$(DEBUG_DIR)/$(LBAHEADER_FILE) $(RELEASE_DIR)/$(LBAHEADER_FILE): $(LBAHEADER_SRC)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LBAHEADER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(LBAHEADER_OUT) /target:winexe /main:LBAHeader.FixLBAHeader $(LBAHEADER_SRC) $(ARGS)
