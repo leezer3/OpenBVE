@@ -651,7 +651,7 @@ namespace OpenBve
 			Train.Cars = new TrainManager.Car[Cars];
 		    for (int i = 0; i < Train.Cars.Length; i++)
 		    {
-		        Train.Cars[i] = new TrainManager.Car(Train);
+		        Train.Cars[i] = new TrainManager.Car(Train, i);
                 Train.Cars[i].FrontBogie = new TrainManager.Bogie(Train.Cars[i], Train);
 		        Train.Cars[i].RearBogie = new TrainManager.Bogie(Train.Cars[i], Train);
             }

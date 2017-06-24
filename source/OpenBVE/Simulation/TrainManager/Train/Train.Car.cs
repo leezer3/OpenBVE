@@ -64,9 +64,10 @@ namespace OpenBve
 
 		    internal Train Train;
 
-		    internal Car(Train train)
+		    internal Car(Train train, int index)
 		    {
 		        this.Train = train;
+		        this.Index = index;
 		    }
 
             /// <summary>Gets the current acceleration output for this car</summary>
