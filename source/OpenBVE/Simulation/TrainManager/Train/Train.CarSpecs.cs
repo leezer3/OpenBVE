@@ -60,8 +60,8 @@ namespace OpenBve
 			internal double CurrentPitchDueToAccelerationSlowValue;
 			/// systems
 			internal CarHoldBrake HoldBrake;
-			internal CarConstSpeed ConstSpeed;
-			internal CarReAdhesionDevice ReAdhesionDevice;
+			//internal CarConstSpeed ConstSpeed;
+			//internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal AirBrake.CarAirBrake AirBrake;

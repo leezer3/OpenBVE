@@ -960,8 +960,11 @@ namespace OpenBve
 				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
 				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
 				Train.Cars[i].Specs.HoldBrake.UpdateInterval = 0.5;
-				Train.Cars[i].Specs.ConstSpeed.UpdateInterval = 0.5;
-				Train.Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput = double.PositiveInfinity;
+			    Train.Cars[i].constantSpeedDevice = new TrainManager.ConstantSpeedDevice(Train.Cars[i])
+			    {
+			        UpdateInterval = 0.5
+			    };
+			    Train.Cars[i].reAdhesionDevice = new TrainManager.ReAdhesionDevice(Train.Cars[i]);
 				Train.Cars[i].Width = CarWidth;
 				Train.Cars[i].Height = CarHeight;
 				Train.Cars[i].Length = CarLength;
@@ -1049,34 +1052,34 @@ namespace OpenBve
 					switch (ReAdhesionDevice)
 					{
 						case 0: // type a:
-							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 8.0;
+							Train.Cars[i].reAdhesionDevice.UpdateInterval = 1.0;
+							Train.Cars[i].reAdhesionDevice.ApplicationFactor = 0.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseInterval = 1.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseFactor = 8.0;
 							break;
 						case 1: // type b:
-							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
-							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.9935;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 4.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 1.125;
+							Train.Cars[i].reAdhesionDevice.UpdateInterval = 0.1;
+							Train.Cars[i].reAdhesionDevice.ApplicationFactor = 0.9935;
+							Train.Cars[i].reAdhesionDevice.ReleaseInterval = 4.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseFactor = 1.125;
 							break;
 						case 2: // type c:
-							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
-							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.965;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 2.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 1.5;
+							Train.Cars[i].reAdhesionDevice.UpdateInterval = 0.1;
+							Train.Cars[i].reAdhesionDevice.ApplicationFactor = 0.965;
+							Train.Cars[i].reAdhesionDevice.ReleaseInterval = 2.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseFactor = 1.5;
 							break;
 						case 3: // type d:
-							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.05;
-							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.935;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 0.3;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 2.0;
+							Train.Cars[i].reAdhesionDevice.UpdateInterval = 0.05;
+							Train.Cars[i].reAdhesionDevice.ApplicationFactor = 0.935;
+							Train.Cars[i].reAdhesionDevice.ReleaseInterval = 0.3;
+							Train.Cars[i].reAdhesionDevice.ReleaseFactor = 2.0;
 							break;
 						default: // no readhesion device
-							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 1.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
-							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 99.0;
+							Train.Cars[i].reAdhesionDevice.UpdateInterval = 1.0;
+							Train.Cars[i].reAdhesionDevice.ApplicationFactor = 1.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseInterval = 1.0;
+							Train.Cars[i].reAdhesionDevice.ReleaseFactor = 99.0;
 							break;
 					}
 					// motor sound
@@ -1100,7 +1103,7 @@ namespace OpenBve
 					Train.Cars[i].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 					Train.Cars[i].Specs.AccelerationCurvesMultiplier = 0.0;
 					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
-					Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
+					Train.Cars[i].reAdhesionDevice.ApplicationFactor = 0.0;
 					Train.Cars[i].Sounds.Motor.SpeedConversionFactor = 18.0;
 					Train.Cars[i].Sounds.Motor.Tables = new TrainManager.MotorSoundTable[4];
 					for (int j = 0; j < 4; j++)
