@@ -61,7 +61,7 @@ namespace OpenBve
 			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure;
 			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
 			// deceleration provided by motor
-			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.Specs.CurrentEmergencyBrake.Actual)
+			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.EmergencyBrake.Applied)
 			{
 				double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 				double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
@@ -129,64 +129,7 @@ namespace OpenBve
 		}
 
 
-		/// <summary>Applies the emergency brake</summary>
-		/// <param name="Train">The train</param>
-		internal static void ApplyEmergencyBrake(Train Train)
-		{
-			// sound
-			if (!Train.Specs.CurrentEmergencyBrake.Driver)
-			{
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMax.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleMax.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					buffer = Train.Cars[Train.DriverCar].Sounds.EmrBrake.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.EmrBrake.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-					}
-				}
-			}
-			// apply
-			ApplyNotch(Train, 0, !Train.Specs.SingleHandle, Train.Specs.MaximumBrakeNotch, true);
-			ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
-			Train.Specs.CurrentEmergencyBrake.Driver = true;
-			Train.Specs.CurrentHoldBrake.Driver = false;
-			Train.Specs.CurrentConstSpeed = false;
-			// plugin
-			if (Train.Plugin == null) return;
-			Train.Plugin.UpdatePower();
-			Train.Plugin.UpdateBrake();
-		}
 
-		/// <summary>Releases the emergency brake</summary>
-		/// <param name="Train">The train</param>
-		internal static void UnapplyEmergencyBrake(Train Train)
-		{
-			if (Train.Specs.CurrentEmergencyBrake.Driver)
-			{
-				// sound
-				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.BrakeHandleRelease.Position;
-					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
-				}
-				// apply
-				ApplyNotch(Train, 0, !Train.Specs.SingleHandle, Train.Specs.MaximumBrakeNotch, true);
-				ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
-				Train.Specs.CurrentEmergencyBrake.Driver = false;
-				// plugin
-				if (Train.Plugin == null) return;
-				Train.Plugin.UpdatePower();
-				Train.Plugin.UpdateBrake();
-			}
-		}
 
 		/// <summary>Applies or releases the hold brake</summary>
 		/// <param name="Train">The train</param>

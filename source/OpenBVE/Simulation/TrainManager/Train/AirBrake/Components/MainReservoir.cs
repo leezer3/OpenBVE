@@ -33,7 +33,7 @@
 				if (AirBrake.BrakePipe.CurrentPressure > AirBrake.EqualizingReservoir.CurrentPressure + CarAirBrake.Tolerance)
 				{
 					// brake pipe exhaust valve
-					double r = Train.Specs.CurrentEmergencyBrake.Actual ? AirBrake.BrakePipe.EmergencyRate : AirBrake.BrakePipe.ServiceRate;
+					double r = Train.EmergencyBrake.Applied ? AirBrake.BrakePipe.EmergencyRate : AirBrake.BrakePipe.ServiceRate;
 					double d = AirBrake.BrakePipe.CurrentPressure - AirBrake.EqualizingReservoir.CurrentPressure;
 					double m = AirBrake.EqualizingReservoir.NormalPressure;
 					r = (0.5 + 1.5 * d / m) * r * TimeElapsed;

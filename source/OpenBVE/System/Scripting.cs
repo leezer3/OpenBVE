@@ -549,7 +549,7 @@ namespace OpenBve
                 if (Train == null) return 0;
                 if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
                 {
-                    if (Train.Specs.CurrentEmergencyBrake.Driver)
+                    if (Train.EmergencyBrake.DriverApplied)
                     {
                         return 3;
                     }
@@ -557,7 +557,7 @@ namespace OpenBve
                 }
                 if (Train.Specs.HasHoldBrake)
                 {
-                    if (Train.Specs.CurrentEmergencyBrake.Driver)
+                    if (Train.EmergencyBrake.DriverApplied)
                     {
                         return (int) Train.Specs.MaximumBrakeNotch + 2;
                     }
@@ -567,7 +567,7 @@ namespace OpenBve
                     }
                     return Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
                 }
-                if (Train.Specs.CurrentEmergencyBrake.Driver)
+                if (Train.EmergencyBrake.DriverApplied)
                 {
                     return (int) Train.Specs.MaximumBrakeNotch + 1;
                 }
@@ -597,7 +597,7 @@ namespace OpenBve
             public static bool emergencyBrake(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                return Train.Specs.CurrentEmergencyBrake.Driver;
+                return Train.EmergencyBrake.DriverApplied;
             }
 
             /// <summary>Whether the selected train has an automatic air brake</summary>

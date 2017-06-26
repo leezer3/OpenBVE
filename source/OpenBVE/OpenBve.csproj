@@ -122,6 +122,7 @@
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train.Bogie.cs" />
+    <Compile Include="Simulation\TrainManager\Train\EmergencyBrake\EmergencyBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\GenericDevices\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Train\GenericDevices\ReadheasionDevice.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Axle.cs" />

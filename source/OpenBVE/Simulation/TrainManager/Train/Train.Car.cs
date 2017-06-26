@@ -152,7 +152,7 @@ namespace OpenBve
 		                if (DecelerationDueToMotor == 0.0)
 		                {
 		                    //Check if our current power, reverser and brake settings allow acceleration
-		                    if (Train.Specs.CurrentReverser.Actual != 0 & Train.Specs.CurrentPowerNotch.Actual > 0 & !Train.Specs.CurrentHoldBrake.Actual & !Train.Specs.CurrentEmergencyBrake.Actual)
+		                    if (Train.Specs.CurrentReverser.Actual != 0 & Train.Specs.CurrentPowerNotch.Actual > 0 & !Train.Specs.CurrentHoldBrake.Actual & !Train.EmergencyBrake.Applied)
 		                    {
 		                        // target acceleration
 		                        a = GetAccelerationOutput(Train.Specs.CurrentPowerNotch.Actual - 1, (double)Train.Specs.CurrentReverser.Actual * Specs.CurrentSpeed);
@@ -1031,7 +1031,7 @@ namespace OpenBve
 		                if (buffer != null)
 		                {
 		                    Vector3 pos = Sounds.Run[j].Position;
-		                    Sounds.Run[j].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, Train, i, true);
+		                    Sounds.Run[j].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, Train, Index, true);
 		                }
 		            }
 		        }

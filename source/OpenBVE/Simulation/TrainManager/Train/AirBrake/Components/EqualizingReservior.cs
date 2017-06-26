@@ -37,7 +37,7 @@
 			internal void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				//Check if we are in EB or normal braking
-				if (Train.Specs.CurrentEmergencyBrake.Actual)
+				if (Train.EmergencyBrake.Applied)
 				{
 					double r = EmergencyRate;
 					double d = CurrentPressure;

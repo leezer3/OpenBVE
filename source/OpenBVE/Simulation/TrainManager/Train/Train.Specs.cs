@@ -35,7 +35,7 @@
 			internal PowerHandle CurrentPowerNotch;
 			internal int MaximumBrakeNotch;
 			internal BrakeHandle CurrentBrakeNotch;
-			internal EmergencyHandle CurrentEmergencyBrake;
+			//internal EmergencyHandle CurrentEmergencyBrake;
 			internal bool HasHoldBrake;
 			internal HoldBrakeHandle CurrentHoldBrake;
 			internal DefaultSafetySystems DefaultSafetySystems;

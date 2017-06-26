@@ -30,7 +30,7 @@
 			{
 				if (CarAirBrake is ElectromagneticStraightAirBrake & CarAirBrake.Type == BrakeType.Main)
 				{
-					double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
+					double p; if (Train.EmergencyBrake.Applied)
 					{
 						p = 0.0;
 					}
@@ -42,7 +42,7 @@
 					if (p + CarAirBrake.Tolerance < CurrentPressure)
 					{
 						double r;
-						if (Train.Specs.CurrentEmergencyBrake.Actual)
+						if (Train.EmergencyBrake.Applied)
 						{
 							r = EmergencyRate;
 						}
@@ -68,7 +68,7 @@
 				}
 				else if (Train.Cars[CarIndex].Specs.BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake)
 				{
-					double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
+					double p; if (Train.EmergencyBrake.Applied)
 					{
 						p = CarAirBrake.BrakeCylinder.EmergencyMaximumPressure;
 					}

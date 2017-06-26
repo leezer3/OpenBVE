@@ -852,7 +852,7 @@ namespace OpenBve
 			Train.Specs.CurrentBrakeNotch.Safety = 0;
 			Train.Specs.CurrentBrakeNotch.Actual = 0;
 			Train.Specs.CurrentBrakeNotch.DelayedChanges = new TrainManager.HandleChange[] { };
-			Train.Specs.CurrentEmergencyBrake.ApplicationTime = double.MaxValue;
+			Train.EmergencyBrake = new EmergencyBrake(Train);
 			if (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 			{
 				Train.Specs.SingleHandle = false;
@@ -876,9 +876,9 @@ namespace OpenBve
 				Train.Specs.CurrentBrakeNotch.Driver = notch;
 				Train.Specs.CurrentBrakeNotch.Safety = notch;
 				Train.Specs.CurrentBrakeNotch.Actual = notch;
-				Train.Specs.CurrentEmergencyBrake.Driver = false;
-				Train.Specs.CurrentEmergencyBrake.Safety = false;
-				Train.Specs.CurrentEmergencyBrake.Actual = false;
+				Train.EmergencyBrake.SafetySystemApplied = false;
+				Train.EmergencyBrake.DriverApplied = false;
+				Train.EmergencyBrake.Applied = false;
 				Train.Specs.CurrentReverser.Driver = 1;
 				Train.Specs.CurrentReverser.Actual = 1;
 			}
@@ -898,10 +898,10 @@ namespace OpenBve
 				Train.Specs.CurrentBrakeNotch.Driver = Train.Specs.MaximumBrakeNotch;
 				Train.Specs.CurrentBrakeNotch.Safety = Train.Specs.MaximumBrakeNotch;
 				Train.Specs.CurrentBrakeNotch.Actual = Train.Specs.MaximumBrakeNotch;
-				Train.Specs.CurrentEmergencyBrake.Driver = true;
-				Train.Specs.CurrentEmergencyBrake.Safety = true;
-				Train.Specs.CurrentEmergencyBrake.Actual = true;
-			}
+			    Train.EmergencyBrake.SafetySystemApplied = true;
+			    Train.EmergencyBrake.DriverApplied = true;
+			    Train.EmergencyBrake.Applied = true;
+            }
 			else
 			{
 				for (int i = 0; i < Cars; i++)
@@ -918,9 +918,9 @@ namespace OpenBve
 				Train.Specs.CurrentBrakeNotch.Driver = Train.Specs.MaximumBrakeNotch;
 				Train.Specs.CurrentBrakeNotch.Safety = Train.Specs.MaximumBrakeNotch;
 				Train.Specs.CurrentBrakeNotch.Actual = Train.Specs.MaximumBrakeNotch;
-				Train.Specs.CurrentEmergencyBrake.Driver = true;
-				Train.Specs.CurrentEmergencyBrake.Safety = true;
-				Train.Specs.CurrentEmergencyBrake.Actual = true;
+				Train.EmergencyBrake.DriverApplied = true;
+				Train.EmergencyBrake.SafetySystemApplied = true;
+				Train.EmergencyBrake.Applied = true;
 			}
 			// apply other attributes for all cars
 			double AxleDistance = 0.4 * CarLength;

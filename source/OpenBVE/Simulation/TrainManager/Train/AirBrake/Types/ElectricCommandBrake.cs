@@ -8,7 +8,7 @@ namespace OpenBve.BrakeSystems
 		{
 			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
-				double p; if (Train.Specs.CurrentEmergencyBrake.Actual)
+				double p; if (Train.EmergencyBrake.Applied)
 				{
 					p = BrakeCylinder.EmergencyMaximumPressure;
 				}
@@ -17,7 +17,7 @@ namespace OpenBve.BrakeSystems
 					p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 					p *= BrakeCylinder.ServiceMaximumPressure;
 				}
-				if (!Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
+				if (!Train.EmergencyBrake.Applied & Train.Specs.CurrentReverser.Actual != 0)
 				{
 					// brake control system
 					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
@@ -70,7 +70,7 @@ namespace OpenBve.BrakeSystems
 				{
 					// fill brake cylinder from main reservoir
 					double r;
-					if (Train.Specs.CurrentEmergencyBrake.Actual)
+					if (Train.EmergencyBrake.Applied)
 					{
 						r = 2.0 * BrakeCylinder.EmergencyChargeRate;
 					}

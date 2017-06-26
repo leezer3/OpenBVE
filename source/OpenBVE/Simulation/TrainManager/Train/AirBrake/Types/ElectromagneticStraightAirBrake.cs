@@ -49,7 +49,7 @@ namespace OpenBve.BrakeSystems
 					}
 					else
 					{
-						emergency = Train.Specs.CurrentEmergencyBrake.Actual;
+						emergency = Train.EmergencyBrake.Applied;
 					}
 					double p; if (emergency)
 					{
@@ -60,7 +60,7 @@ namespace OpenBve.BrakeSystems
 						p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 						p *= BrakeCylinder.ServiceMaximumPressure;
 					}
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
+					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.EmergencyBrake.Applied & Train.Specs.CurrentReverser.Actual != 0)
 					{
 						// brake control system
 						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)

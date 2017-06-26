@@ -157,8 +157,8 @@ namespace OpenBve
 				if (Train.CurrentSectionLimit == 0.0)
 				{
 					// passing red signal
-					TrainManager.ApplyEmergencyBrake(Train);
-					TrainManager.ApplyNotch(Train, -1, true, 1, true);
+					Train.EmergencyBrake.Apply();
+					Train.ApplyNotch(-1, true, 1, true);
 					CurrentInterval = 0.5;
 				}
 				else if (doorsopen | Train.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding)
@@ -169,15 +169,15 @@ namespace OpenBve
 					{
 						// player's terminal station
 						TrainManager.ApplyReverser(Train, 0, false);
-						TrainManager.ApplyNotch(Train, -1, true, 1, true);
+						Train.ApplyNotch(-1, true, 1, true);
 						TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
-						TrainManager.ApplyEmergencyBrake(Train);
+						Train.EmergencyBrake.Apply();
 						CurrentInterval = 1.0;
 					}
 					else
 					{
 						CurrentInterval = 1.0;
-						TrainManager.ApplyNotch(Train, -1, true, 0, true);
+						Train.ApplyNotch(-1, true, 0, true);
 						if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 						{
 							if (Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure)
@@ -207,14 +207,14 @@ namespace OpenBve
 							}
 							if (Train.Specs.CurrentBrakeNotch.Driver < b)
 							{
-								TrainManager.ApplyNotch(Train, 0, true, 1, true);
+								Train.ApplyNotch(0, true, 1, true);
 							}
 							else if (Train.Specs.CurrentBrakeNotch.Driver > b)
 							{
-								TrainManager.ApplyNotch(Train, 0, true, -1, true);
+								Train.ApplyNotch(0, true, -1, true);
 							}
 						}
-						TrainManager.UnapplyEmergencyBrake(Train);
+						Train.EmergencyBrake.Release();
 						if (Train.StationInfo.NextStation >= 0 & Train.StationInfo.CurrentStopState == TrainManager.TrainStopState.Completed)
 						{
 							// ready for departure - close doors
@@ -249,9 +249,9 @@ namespace OpenBve
 				{
 					// player's terminal station (not boarding any longer)
 					TrainManager.ApplyReverser(Train, 0, false);
-					TrainManager.ApplyNotch(Train, -1, true, 1, true);
+					Train.ApplyNotch(-1, true, 1, true);
 					TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
-					TrainManager.ApplyEmergencyBrake(Train);
+					Train.EmergencyBrake.Apply();
 					CurrentInterval = 10.0;
 				}
 				else
@@ -264,7 +264,7 @@ namespace OpenBve
 						if (Train.Specs.CurrentPowerNotch.Driver > 1)
 						{
 							this.PowerNotchAtWhichWheelSlipIsObserved = Train.Specs.CurrentPowerNotch.Driver;
-							TrainManager.ApplyNotch(Train, -1, true, -1, true);
+							Train.ApplyNotch(-1, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							this.CurrentInterval = 2.5;
 							return;
@@ -565,16 +565,16 @@ namespace OpenBve
 								}
 								else if (dist >= 5.0)
 								{
-									TrainManager.ApplyNotch(Train, -1, true, 1, true);
+									Train.ApplyNotch(-1, true, 1, true);
 									TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 									this.CurrentInterval = 0.1;
 									return;
 								}
 								else
 								{
-									TrainManager.ApplyNotch(Train, -1, true, 1, true);
+									Train.ApplyNotch(-1, true, 1, true);
 									TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
-									TrainManager.ApplyEmergencyBrake(Train);
+									Train.EmergencyBrake.Apply();
 									this.CurrentInterval = 10.0;
 									return;
 								}
@@ -604,16 +604,16 @@ namespace OpenBve
 								}
 								else if (dist > 0.5 * minDistance)
 								{
-									TrainManager.ApplyNotch(Train, -1, true, 1, true);
+									Train.ApplyNotch(-1, true, 1, true);
 									TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 									this.CurrentInterval = 0.1;
 									return;
 								}
 								else
 								{
-									TrainManager.ApplyNotch(Train, -1, true, 1, true);
+									Train.ApplyNotch(-1, true, 1, true);
 									TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
-									TrainManager.ApplyEmergencyBrake(Train);
+									Train.EmergencyBrake.Apply();
 									this.CurrentInterval = 1.0;
 									return;
 								}
@@ -625,7 +625,7 @@ namespace OpenBve
 							}
 						}
 					}
-					TrainManager.UnapplyEmergencyBrake(Train);
+					Train.EmergencyBrake.Release();
 					// current station
 					if (Train.StationInfo.NextStation >= 0 & Train.StationInfo.CurrentStopState == TrainManager.TrainStopState.Pending)
 					{
@@ -672,12 +672,12 @@ namespace OpenBve
 							// brake start
 							if (Train.Specs.CurrentPowerNotch.Driver == 0)
 							{
-								TrainManager.ApplyNotch(Train, 0, true, 1, true);
+								Train.ApplyNotch(0, true, 1, true);
 								TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 							}
 							else
 							{
-								TrainManager.ApplyNotch(Train, -1, true, 0, true);
+								Train.ApplyNotch(-1, true, 0, true);
 							}
 							CurrentInterval *= 0.4;
 							if (CurrentInterval < 0.3) CurrentInterval = 0.3;
@@ -685,7 +685,7 @@ namespace OpenBve
 						else if (decdiff > decelerationStep)
 						{
 							// brake stop
-							TrainManager.ApplyNotch(Train, -1, true, -1, true);
+							Train.ApplyNotch(-1, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							CurrentInterval *= 0.4;
 							if (CurrentInterval < 0.3) CurrentInterval = 0.3;
@@ -693,7 +693,7 @@ namespace OpenBve
 						else
 						{
 							// keep brake
-							TrainManager.ApplyNotch(Train, -1, true, 0, true);
+							Train.ApplyNotch(-1, true, 0, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Lap);
 							CurrentInterval *= 1.2;
 							if (CurrentInterval > 1.0) CurrentInterval = 1.0;
@@ -711,7 +711,7 @@ namespace OpenBve
 					{
 						// cut power/brake
 						BrakeMode = false;
-						TrainManager.ApplyNotch(Train, -1, true, -1, true);
+						Train.ApplyNotch(-1, true, -1, true);
 						TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 						if (Train.Specs.CurrentPowerNotch.Driver == 0 & Train.Specs.CurrentBrakeNotch.Driver == 0)
 						{
@@ -748,12 +748,12 @@ namespace OpenBve
 							{
 								if (Train.Specs.CurrentPowerNotch.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
 								{
-									TrainManager.ApplyNotch(Train, 1, true, 0, true);
+									Train.ApplyNotch(1, true, 0, true);
 								}
 							}
 							else
 							{
-								TrainManager.ApplyNotch(Train, 0, true, -1, true);
+								Train.ApplyNotch(0, true, -1, true);
 							}
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							if (double.IsPositiveInfinity(powerstart))
@@ -770,7 +770,7 @@ namespace OpenBve
 						else if (spd > powerend)
 						{
 							// power end (over-speed)
-							TrainManager.ApplyNotch(Train, -1, true, -1, true);
+							Train.ApplyNotch(-1, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							CurrentInterval *= 0.3;
 							if (CurrentInterval < 0.2) CurrentInterval = 0.2;
@@ -784,13 +784,13 @@ namespace OpenBve
 								{
 									if (Train.Specs.CurrentPowerNotch.Driver == Train.Specs.CurrentPowerNotch.Actual)
 									{
-										TrainManager.ApplyNotch(Train, 1, true, 0, true);
+										Train.ApplyNotch(1, true, 0, true);
 									}
 								}
 							}
 							else
 							{
-								TrainManager.ApplyNotch(Train, 0, true, -1, true);
+								Train.ApplyNotch(0, true, -1, true);
 							}
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							CurrentInterval = 1.3;
@@ -798,7 +798,7 @@ namespace OpenBve
 						else
 						{
 							// keep power
-							TrainManager.ApplyNotch(Train, 0, true, -1, true);
+							Train.ApplyNotch(0, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							if (Train.Specs.CurrentPowerNotch.Driver != 0)
 							{
