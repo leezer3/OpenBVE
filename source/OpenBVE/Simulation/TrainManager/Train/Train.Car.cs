@@ -841,6 +841,202 @@ namespace OpenBve
 		        return a;
 		    }
 
+            /// <summary>Updates the BVE motor sounds for this car</summary>
+		    internal void UpdateBVEMotorSounds()
+		    {
+		        Vector3 pos = Sounds.Motor.Position;
+		        double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
+		        int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
+		        int odir = Sounds.Motor.CurrentAccelerationDirection;
+		        int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
+		        for (int h = 0; h < 2; h++)
+		        {
+		            int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
+		            int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+		            if (odir > 0 & ndir <= 0)
+		            {
+		                if (j < Sounds.Motor.Tables.Length)
+		                {
+		                    OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+		                    Sounds.Motor.Tables[j].Source = null;
+		                    Sounds.Motor.Tables[j].Buffer = null;
+		                }
+		            }
+		            else if (odir < 0 & ndir >= 0)
+		            {
+		                if (k < Sounds.Motor.Tables.Length)
+		                {
+		                    OpenBve.Sounds.StopSound(Sounds.Motor.Tables[k].Source);
+		                    Sounds.Motor.Tables[k].Source = null;
+		                    Sounds.Motor.Tables[k].Buffer = null;
+		                }
+		            }
+		            if (ndir != 0)
+		            {
+		                if (ndir < 0) j = k;
+		                if (j < Sounds.Motor.Tables.Length)
+		                {
+		                    int idx2 = idx;
+		                    if (idx2 >= Sounds.Motor.Tables[j].Entries.Length)
+		                    {
+		                        idx2 = Sounds.Motor.Tables[j].Entries.Length - 1;
+		                    }
+		                    if (idx2 >= 0)
+		                    {
+		                        Sounds.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
+		                        Sounds.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
+		                        double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
+		                        double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
+		                        if (ndir == 1)
+		                        {
+		                            // power
+		                            double max = Specs.AccelerationCurveMaximum;
+		                            if (max != 0.0)
+		                            {
+		                                double cur = Specs.CurrentAccelerationOutput;
+		                                if (cur < 0.0) cur = 0.0;
+		                                gain *= Math.Pow(cur / max, 0.25);
+		                            }
+		                        }
+		                        else if (ndir == -1)
+		                        {
+		                            // brake
+		                            double max = Specs.BrakeDecelerationAtServiceMaximumPressure;
+		                            if (max != 0.0)
+		                            {
+		                                double cur = -Specs.CurrentAccelerationOutput;
+		                                if (cur < 0.0) cur = 0.0;
+		                                gain *= Math.Pow(cur / max, 0.25);
+		                            }
+		                        }
+		                        if (obuf != nbuf)
+		                        {
+		                            OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+		                            if (nbuf != null)
+		                            {
+		                                Sounds.Motor.Tables[j].Source = OpenBve.Sounds.PlaySound(nbuf, pitch, gain, pos, Train, Index, true);
+		                                Sounds.Motor.Tables[j].Buffer = nbuf;
+		                            }
+		                            else
+		                            {
+		                                Sounds.Motor.Tables[j].Source = null;
+		                                Sounds.Motor.Tables[j].Buffer = null;
+		                            }
+		                        }
+		                        else if (nbuf != null)
+		                        {
+		                            if (Sounds.Motor.Tables[j].Source != null)
+		                            {
+		                                Sounds.Motor.Tables[j].Source.Pitch = pitch;
+		                                Sounds.Motor.Tables[j].Source.Volume = gain;
+		                            }
+		                        }
+		                        else
+		                        {
+		                            OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+		                            Sounds.Motor.Tables[j].Source = null;
+		                            Sounds.Motor.Tables[j].Buffer = null;
+		                        }
+		                    }
+		                    else
+		                    {
+		                        OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+		                        Sounds.Motor.Tables[j].Source = null;
+		                        Sounds.Motor.Tables[j].Buffer = null;
+		                    }
+		                }
+		            }
+		        }
+		        Sounds.Motor.CurrentAccelerationDirection = ndir;
+		    }
+
+            /// <summary>Updates the BVE run sounds for this car</summary>
+            /// <param name="TimeElapsed">The elapsed time for this frame</param>
+		    internal void UpdateBVERunSounds(double TimeElapsed)
+		    {
+		        const double factor = 0.04; // 90 km/h -> m/s -> 1/x
+		        double speed = Math.Abs(Specs.CurrentSpeed);
+		        if (Derailed)
+		        {
+		            speed = 0.0;
+		        }
+		        double pitch = speed * factor;
+		        double basegain;
+		        if (Specs.CurrentSpeed == 0.0)
+		        {
+		            if (Index != 0)
+		            {
+		                Sounds.RunNextReasynchronizationPosition = Train.Cars[0].FrontAxle.Follower.TrackPosition;
+		            }
+		        }
+		        else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.currentRunIdx >= 0)
+		        {
+		            double distance = Math.Abs(FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
+		            const double minDistance = 150.0;
+		            const double maxDistance = 750.0;
+		            if (distance > minDistance)
+		            {
+		                if (FrontAxle.currentRunIdx < Sounds.Run.Length)
+		                {
+		                    Sounds.SoundBuffer buffer = Sounds.Run[FrontAxle.currentRunIdx].Buffer;
+		                    if (buffer != null)
+		                    {
+		                        double duration = OpenBve.Sounds.GetDuration(buffer);
+		                        if (duration > 0.0)
+		                        {
+		                            double offset = distance > maxDistance ? 25.0 : 300.0;
+		                            Sounds.RunNextReasynchronizationPosition = duration * Math.Ceiling((Train.Cars[0].FrontAxle.Follower.TrackPosition + offset) / duration);
+		                        }
+		                    }
+		                }
+		            }
+		        }
+		        if (FrontAxle.Follower.TrackPosition >= Sounds.RunNextReasynchronizationPosition)
+		        {
+		            Sounds.RunNextReasynchronizationPosition = double.MaxValue;
+		            basegain = 0.0;
+		        }
+		        else
+		        {
+		            basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
+		        }
+		        for (int j = 0; j < Sounds.Run.Length; j++)
+		        {
+		            if (j == FrontAxle.currentRunIdx | j == RearAxle.currentRunIdx)
+		            {
+		                Sounds.RunVolume[j] += 3.0 * TimeElapsed;
+		                if (Sounds.RunVolume[j] > 1.0) Sounds.RunVolume[j] = 1.0;
+		            }
+		            else
+		            {
+		                Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
+		                if (Sounds.RunVolume[j] < 0.0) Sounds.RunVolume[j] = 0.0;
+		            }
+		            double gain = basegain * Sounds.RunVolume[j];
+		            if (OpenBve.Sounds.IsPlaying(Sounds.Run[j].Source))
+		            {
+		                if (pitch > 0.01 & gain > 0.001)
+		                {
+		                    Sounds.Run[j].Source.Pitch = pitch;
+		                    Sounds.Run[j].Source.Volume = gain;
+		                }
+		                else
+		                {
+		                    OpenBve.Sounds.StopSound(Sounds.Run[j].Source);
+		                }
+		            }
+		            else if (pitch > 0.02 & gain > 0.01)
+		            {
+		                Sounds.SoundBuffer buffer = Sounds.Run[j].Buffer;
+		                if (buffer != null)
+		                {
+		                    Vector3 pos = Sounds.Run[j].Position;
+		                    Sounds.Run[j].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, Train, i, true);
+		                }
+		            }
+		        }
+            }
+
 		    internal double GetCriticalWheelSlipAccelerationForElectricMotor(bool frontAxle)
 		    {
 		        if (frontAxle)
