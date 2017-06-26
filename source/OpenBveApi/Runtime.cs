@@ -858,7 +858,11 @@ namespace OpenBveApi.Runtime {
 		/// <summary>Lowers the pantograph. The default assignment is [N/A]. The numerical value of this constant is 33.</summary>
 		LowerPantograph= 33,
 		/// <summary>Toggles the main breaker. The default assignment is [N/A]. The numerical value of this constant is 34.</summary>
-		MainBreaker= 34
+		MainBreaker= 34,
+		/// <summary>Called when the driver presses the left door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		LeftDoors = 35,
+		/// <summary>Called when the driver presses the right door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		RightDoors = 36
 
 	}
 	

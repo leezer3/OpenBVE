@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -1300,6 +1301,10 @@ namespace OpenBve
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
 										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.LeftDoors);
+										}
 										break;
 									case Interface.Command.DoorsRight:
 										// doors: right
@@ -1321,6 +1326,10 @@ namespace OpenBve
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
+										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.RightDoors);
 										}
 										break;
 //We only want to mark these as obsolete for new users of the API
