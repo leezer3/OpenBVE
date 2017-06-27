@@ -1028,6 +1028,12 @@ namespace OpenBve {
 					return "if[EqualizingReservoir < " + Maximum + ", if[EqualizingReservoir >  " + Minimum + ", (EqualizingReservoir * .001) " + " * " + range + ", 0]," + ftc + "]";
 				case "doors":
 					return "if[Doors < " + Maximum + ", if[Doors >  " + Minimum + ", Doors " + " * " + range + ", 0]," + ftc + "]";
+				case "doorbuttonl":
+				case "doorbuttonleft":
+					return "if[leftdoorbuttom < " + Maximum + ", if[leftdoorbutton >  " + Minimum + ", leftdoorbutton " + " * " + range + ", 0]," + ftc + "]";
+				case "doorbuttonr":
+				case "doorbuttonright":
+					return "if[rightdoorbuttom < " + Maximum + ", if[rightdoorbutton >  " + Minimum + ", rightdoorbutton " + " * " + range + ", 0]," + ftc + "]";
 				case "power":
 					return "if[PowerNotch < " + Maximum + ", if[PowerNotch >  " + Minimum + ", PowerNotch " + " * " + range + ", 0]," + ftc + "]";
 				case "brake":
@@ -1197,6 +1203,12 @@ namespace OpenBve {
 				case "secondaryklaxon":
 				case "secondaryhorn":
 					Code = "secondaryklaxon";
+					break;
+				case "doorbuttonl":
+					Code = "leftdoorbutton";
+					break;
+				case "doorbuttonr":
+					Code = "rightdoorbutton";
 					break;
 				default:
 					{
