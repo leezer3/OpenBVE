@@ -1034,7 +1034,7 @@ namespace OpenBve {
 			try
 			{
 #endif
-				Interface.SaveControls(null);
+				Interface.SaveControls(null, Interface.CurrentControls);
 #if !DEBUG
 			}
 			catch (Exception ex)
@@ -1410,7 +1410,7 @@ namespace OpenBve {
 					int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
 					for (int i = 0; i < buttons; i++)
 					{
-						if (OpenTK.Input.Joystick.GetState(k).GetButton((JoystickButton)i) == ButtonState.Pressed)
+						if (OpenTK.Input.Joystick.GetState(k).GetButton(i) == ButtonState.Pressed)
 						{
 							Interface.CurrentControls[j].Device = k;
 							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;

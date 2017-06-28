@@ -418,7 +418,7 @@ namespace OpenBve {
 			};
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
-					Interface.SaveControls(Dialog.FileName);
+					Interface.SaveControls(Dialog.FileName, Interface.CurrentControls);
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
@@ -674,7 +674,7 @@ namespace OpenBve {
 							int n = capabilities.ButtonCount;
 							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
-								bool q = state.GetButton((JoystickButton)j) != 0;
+								bool q = state.GetButton(j) != 0;
 								float dv = (float)(j & 1) * (g + 8.0f);
 								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 								if (device == i & component == Interface.JoystickComponent.Button & element == j) {

@@ -85,7 +85,7 @@ namespace OpenBve {
 			Stations = new Station[] { };
 			Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			Messages = new Message[] { };
+			//Messages = new Message[] { };
 			MarkerTextures = new Textures.Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };

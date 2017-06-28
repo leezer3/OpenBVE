@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -33,6 +33,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectViewer", "source\ObjectViewer\ObjectViewer.csproj", "{F1E0F444-D09A-487E-8AFA-B8223E0D8671}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectBender", "source\ObjectBender\ObjectBender.csproj", "{BD5997E4-736B-4FDC-9837-752BA446F78A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBAHeader", "source\DevTools\LBAHeader\LBAHeader.csproj", "{E9B64673-65B7-4D77-A4DB-4B441A7C9197}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevTools", "DevTools", "{3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +174,16 @@ Global
 		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BD5997E4-736B-4FDC-9837-752BA446F78A}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,5 +194,6 @@ Global
 		{4B775819-3574-443E-95AD-B40BC6EA6469} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{15142E7B-35F5-4E81-AA18-79C4D60B4C26} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{E9B64673-65B7-4D77-A4DB-4B441A7C9197} = {3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}
 	EndGlobalSection
 EndGlobal

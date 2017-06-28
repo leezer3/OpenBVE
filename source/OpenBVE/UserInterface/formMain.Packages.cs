@@ -1084,10 +1084,9 @@ namespace OpenBve
 					};
 					textBoxGUID.Text = currentPackage.GUID;
 					SaveFileNameButton.Enabled = true;
+					panelNewPackage.Enabled = true;
 				}
 			}
-
-
 		}
 
 

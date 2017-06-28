@@ -2009,7 +2009,49 @@ This command marks a point which affects the brightness in the cab. <em>Value</e
 <em>negative value</em>: The marker image starts to display at the Track.Marker command, and ends -<em>Distance</em> meters after the Track.Marker command.<br />
 <em>positive value</em>: The marker image starts to display <em>Distance</em> meters before the Track.Marker command, and ends at the Track.Marker command.
 </font></td></tr></table>
-This command shows a so-called marker image, which is displayed in the top-right corner of the screen. You can use these images for advisory or informational purposes. The RGB color of 64,64,64 inside the image is made transparent.<br /><br /><hr />
+This command shows a so-called marker image, which is displayed in the top-right corner of the screen. You can use these images for advisory or informational purposes. The RGB color of 64,64,64 inside the image is made transparent.<br /><br />
+
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.Marker</b> <em>FileName.xml</em></font></td></tr>
+</table><br>
+A <em>Track.Marker</em> command, linking to a single XML file is also supported. <br>
+These allow more control over markers than is available in the routefile commands. <br><br>
+These are fully described on the <a href="route_marker.html">the XML Markers page...</a><br />
+
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.TextMarker</b> <em>Text</em>; <font color="green"><em>Distance</em>; <font color="#C00000"><em>FontColor</em></font></font></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Text</em></b>: The marker text to display. (No special characters supported).<br />
+<font color="green"><b><em>Distance</em></b></font>: A non-zero floating-point number indicating the length for which the text is displayed, <b>by default</b> measured in <b>meters</b>.<br>
+<b><em>FontColor</em></b>: The font color for this marker text</font>
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Behavior for <em>Distance</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<em>negative value</em>: The marker image starts to display at the Track.Marker command, and ends -<em>Distance</em> meters after the Track.Marker command.<br />
+<em>positive value</em>: The marker image starts to display <em>Distance</em> meters before the Track.Marker command, and ends at the Track.Marker command.
+</font></td></tr></table>
+<tr><td>▸ Available options for <em>FontColor</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<em>1</em>: Black.<br />
+<em>2</em>: Gray.<br />
+<em>3</em>: White.<br />
+<em>4</em>: Red.<br />
+<em>5</em>: Orange.<br />
+<em>6</em>: Green.<br />
+<em>7</em>: Blue.<br />
+<em>8</em>: Magenta.<br />
+</font></td></tr></table>
+
+This command creates a simple textual marker, which is added to the list of messages in the upper left-hand corner of the screen.<br /><br />
+
+<hr />
 <table border="0"><tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.PointOfInterest</b> <em>RailIndex</em>; <font color="green"><em>X</em></font>; <font color="green"><em>Y</em></font>; <em>Yaw</em>; <em>Pitch</em>; <em>Roll</em>; <em>Text</em><br />
 <b>Track.POI</b> <em>RailIndex</em>; <font color="green"><em>X</em></font>; <font color="green"><em>Y</em></font>; <em>Yaw</em>; <em>Pitch</em>; <em>Roll</em>; <em>Text</em></font></td></tr></table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">

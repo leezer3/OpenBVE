@@ -280,7 +280,7 @@ namespace OpenBve {
 		/// <param name="Time">The time in seconds for which to display the message</param>
 		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
 		{
-			Game.AddMessage(Message, Game.MessageDependency.None, Interface.GameMode.Expert, Color, Game.SecondsSinceMidnight + Time);
+			Game.AddMessage(Message, MessageManager.MessageDependency.Plugin, Interface.GameMode.Expert, Color, Game.SecondsSinceMidnight + Time, null);
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>
@@ -338,8 +338,8 @@ namespace OpenBve {
 		{
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < this.Train.Cars.Length && CarIndex >= 0)
 			{
-				Sounds.SoundBuffer buffer = this.Train.Cars[CarIndex].Sounds.Plugin[index].Buffer;
-				OpenBveApi.Math.Vector3 position = this.Train.Cars[CarIndex].Sounds.Plugin[index].Position;
+				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
+				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
 				Sounds.SoundSource source = Sounds.PlaySound(buffer, pitch, volume, position, this.Train, CarIndex, looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length)
 				{

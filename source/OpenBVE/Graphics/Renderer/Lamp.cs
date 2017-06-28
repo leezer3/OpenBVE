@@ -97,6 +97,8 @@ namespace OpenBve
             internal float Width;
         }
         private static LampCollection CurrentLampCollection;
+
+		/// <summary>Initialises the ATS lamps for train using one of the default safety systems</summary>
         private static void InitializeLamps()
         {
             bool atsSn = (TrainManager.PlayerTrain.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsSn) != 0;

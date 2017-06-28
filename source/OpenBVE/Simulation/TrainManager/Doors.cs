@@ -15,6 +15,8 @@ namespace OpenBve
 			internal double DoorLockState;
 			/// <summary>The duration of the scheduled door lock simulation.</summary>
 			internal double DoorLockDuration;
+			/// <summary>Stores whether the doors button is currently pressed</summary>
+			internal bool ButtonPressed;
 		}
 
 		/// <summary>The states of the door lock.</summary>

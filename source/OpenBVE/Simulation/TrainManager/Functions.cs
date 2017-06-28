@@ -44,7 +44,7 @@ namespace OpenBve
 				 
 				}
 			}
-			train.StationState = TrainStopState.Pending;
+			train.StationState = TrainStopState.Jumping;
 			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
 			if (stopIndex >= 0)
 			{
@@ -133,7 +133,7 @@ namespace OpenBve
 				{
 					Game.CurrentScore.DepartureStation = stationIndex;
 					Game.CurrentInterface = Game.InterfaceType.Normal;
-					Game.Messages = new Game.Message[] { };
+					//Game.Messages = new Game.Message[] { };
 				}
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				TrainManager.UpdateTrainObjects(0.0, true);
@@ -144,6 +144,7 @@ namespace OpenBve
 						train.Plugin.EndJump();
 					}
 				}
+				train.StationState = TrainStopState.Pending;
 			}
 		}
 	}

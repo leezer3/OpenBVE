@@ -107,7 +107,12 @@
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
     <Compile Include="Game\Markers.cs" />
+    <Compile Include="Game\MessageManager.cs" />
+    <Compile Include="Game\MessageManager.ImageMessage.cs" />
+    <Compile Include="Game\MessageManager.MessageDependency.cs" />
+    <Compile Include="Game\MessageManager.TextualMessages.cs" />
     <Compile Include="Game\Messages.cs" />
+    <Compile Include="Game\MessageManager.Message.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
@@ -124,6 +129,7 @@
     <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
+    <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.CompatibilityObjects.cs" />
@@ -132,6 +138,7 @@
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
     <Compile Include="Parsers\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\DynamicLightParser.cs" />
+    <Compile Include="Parsers\MarkerScriptParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -360,17 +367,20 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-  <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Copy in dependancies and child projects -->
+    <!-- Finally, set LBA flag & cleanup -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C 
+		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
+"$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
 	</PostBuildEvent>
     <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
+mono "$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
 	</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

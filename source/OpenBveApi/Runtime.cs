@@ -67,14 +67,15 @@ namespace OpenBveApi.Runtime {
 	/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
 	public delegate SoundHandle PlaySoundDelegate(int index, double volume, double pitch, bool looped);
 
-	/// <summary>Plays a sound.</summary>
-	/// <param name="index">The index to the sound to be played.</param>
-	/// <param name="volume">The initial volume of the sound. A value of 1.0 represents nominal volume.</param>
-	/// <param name="pitch">The initial pitch of the sound. A value of 1.0 represents nominal pitch.</param>
-	/// <param name="looped">Whether the sound should be played in an indefinate loop.</param>
-	/// <returns>The handle to the sound, or a null reference if the sound could not be played.</returns>
-	/// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
-	public delegate SoundHandle PlayCarSoundDelegate(int index, double volume, double pitch, bool looped, int carIndex);
+    /// <summary>Plays a sound.</summary>
+    /// <param name="index">The index to the sound to be played.</param>
+    /// <param name="volume">The initial volume of the sound. A value of 1.0 represents nominal volume.</param>
+    /// <param name="pitch">The initial pitch of the sound. A value of 1.0 represents nominal pitch.</param>
+    /// <param name="looped">Whether the sound should be played in an indefinate loop.</param>
+    /// <param name="carIndex">The index of the car this sound is to be attached to</param>
+    /// <returns>The handle to the sound, or a null reference if the sound could not be played.</returns>
+    /// <exception cref="System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+    public delegate SoundHandle PlayCarSoundDelegate(int index, double volume, double pitch, bool looped, int carIndex);
 	
 	/// <summary>Adds a message to the in-game display</summary>
 	/// <param name="Message">The message to display</param>
@@ -83,7 +84,7 @@ namespace OpenBveApi.Runtime {
 	public delegate void AddInterfaceMessageDelegate(string Message, MessageColor Color, double Time);
 
 	/// <summary>Adds a score to the after game log</summary>
-	/// <param name="Message">The score to add or subtract</param>
+	/// <param name="Score">The score to add or subtract</param>
 	/// <param name="Message">The message to be displayed in the post-game log</param>
 	/// /// <param name="Color">The color in which to display the message</param>
 	/// <param name="Time">The time in seconds for which to display the message</param>
@@ -857,7 +858,11 @@ namespace OpenBveApi.Runtime {
 		/// <summary>Lowers the pantograph. The default assignment is [N/A]. The numerical value of this constant is 33.</summary>
 		LowerPantograph= 33,
 		/// <summary>Toggles the main breaker. The default assignment is [N/A]. The numerical value of this constant is 34.</summary>
-		MainBreaker= 34
+		MainBreaker= 34,
+		/// <summary>Called when the driver presses the left door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		LeftDoors = 35,
+		/// <summary>Called when the driver presses the right door button [NOTE: This is called whether or not opening succeeds/ is blocked]</summary>
+		RightDoors = 36
 
 	}
 	
@@ -893,7 +898,8 @@ namespace OpenBveApi.Runtime {
 
 	/// <summary>Represents the states of the door interlock.</summary>
 	public enum DoorInterlockStates
-	{		/// <summary>The train doors are fully unlocked.</summary>
+	{
+		/// <summary>The train doors are fully unlocked.</summary>
 		Unlocked = 0,
 		/// <summary>The train doors are unlocked only on the left side.</summary>
 		Left = 1,
