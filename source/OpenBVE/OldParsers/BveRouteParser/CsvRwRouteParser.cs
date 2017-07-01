@@ -745,7 +745,7 @@ namespace OpenBve {
 										Expression[] expr;
 										//Get the text encoding of our $Include file
 										System.Text.Encoding includeEncoding = TextEncoding.GetSystemEncodingFromFile(files[chosenIndex]);
-										if (!includeEncoding.Equals(Encoding))
+										if (!includeEncoding.Equals(Encoding) && includeEncoding.WindowsCodePage != Encoding.WindowsCodePage)
 										{
 											//If the encodings do not match, add a warning
 											//This is not critical, but it's a bad idea to mix and match character encodings within a routefile, as the auto-detection may sometimes be wrong
