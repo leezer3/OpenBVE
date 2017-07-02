@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -1184,12 +1185,16 @@ namespace OpenBve
 										break;
 									case Interface.Command.DoorsLeft:
 										// doors: left
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed)
+										{
+											return;
+										}
 										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic 
-											    & (TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked
-											       | TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Left))
+												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked
+												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Left))
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1203,15 +1208,25 @@ namespace OpenBve
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
 										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.LeftDoors);
+										}
+										//Set door button to pressed in the driver's car
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = true;
 										break;
 									case Interface.Command.DoorsRight:
 										// doors: right
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed)
+										{
+											return;
+										}
 										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
 												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked
-											       | TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Right))
+												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Right))
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
@@ -1225,6 +1240,11 @@ namespace OpenBve
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
 										}
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.RightDoors);
+										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = true;
 										break;
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
@@ -1260,7 +1280,7 @@ namespace OpenBve
 									case Interface.Command.EngineStart:
 									case Interface.Command.EngineStop:
 									case Interface.Command.GearUp:
-                                    case Interface.Command.GearDown:
+									case Interface.Command.GearDown:
 									case Interface.Command.RaisePantograph:
 									case Interface.Command.LowerPantograph:
 									case Interface.Command.MainBreaker:
@@ -1588,7 +1608,7 @@ namespace OpenBve
 									case Interface.Command.EngineStop:
 									case Interface.Command.GearUp:
 									case Interface.Command.GearDown:
-                                    case Interface.Command.RaisePantograph:
+									case Interface.Command.RaisePantograph:
 									case Interface.Command.LowerPantograph:
 									case Interface.Command.MainBreaker:
 										if (TrainManager.PlayerTrain.Plugin != null)
@@ -1610,6 +1630,20 @@ namespace OpenBve
 										{
 											//Required for detecting the end of the loop and triggering the stop sound
 											TrainManager.PlayerTrain.Cars[d].Horns[j].Stop();
+										}
+										break;
+									case Interface.Command.DoorsLeft:
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = false;
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.LeftDoors);
+										}
+										break;
+									case Interface.Command.DoorsRight:
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = false;
+										if (TrainManager.PlayerTrain.Plugin != null)
+										{
+											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.RightDoors);
 										}
 										break;
 								}

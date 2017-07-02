@@ -28,6 +28,7 @@ namespace OpenBve {
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
+			LeftDoorButton, RightDoorButton,
 			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
@@ -752,6 +753,26 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.LeftDoorButton:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.Doors[0].ButtonPressed ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.RightDoorButton:
+						if (Train != null)
+						{
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.Doors[1].ButtonPressed ? 1.0 : 0.0;
+						}
+						else
+						{
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {
@@ -2529,6 +2550,14 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.RightDoorsTargetIndex;
 							n++; break;
+						case "leftdoorbutton":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.LeftDoorButton;
+							n++; s++; if (s >= m) m = s; break;
+						case "rightdoorbutton":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.RightDoorButton;
+							n++; s++; if (s >= m) m = s; break;
 							// train: handles
 						case "reversernotch":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);

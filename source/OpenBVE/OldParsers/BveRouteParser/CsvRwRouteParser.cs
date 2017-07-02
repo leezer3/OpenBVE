@@ -745,7 +745,7 @@ namespace OpenBve {
 										Expression[] expr;
 										//Get the text encoding of our $Include file
 										System.Text.Encoding includeEncoding = TextEncoding.GetSystemEncodingFromFile(files[chosenIndex]);
-										if (!includeEncoding.Equals(Encoding))
+										if (!includeEncoding.Equals(Encoding) && includeEncoding.WindowsCodePage != Encoding.WindowsCodePage)
 										{
 											//If the encodings do not match, add a warning
 											//This is not critical, but it's a bad idea to mix and match character encodings within a routefile, as the auto-detection may sometimes be wrong
@@ -3343,8 +3343,33 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is required in " + Command + "at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												int[] aspects = new int[Arguments.Length];
+												for (int i = 0; i < Arguments.Length; i++)
+												{
+													int p = Arguments[i].IndexOf('.');
+													if (p != -1)
+													{
+														//HACK: If we encounter a decimal followed by a non numerical character
+														// we can assume that we are missing a comma and hence the section declaration has ended
+														int pp = p;
+														while (pp < Arguments[i].Length)
+														{
+															pp++;
+															if (char.IsLetter(Arguments[i][pp]))
+															{
+																Arguments[i] = Arguments[i].Substring(0, p);
+																Array.Resize(ref Arguments, i +1);
+																Array.Resize(ref aspects, i + 1);
+																break;
+															}
+														}
+													}
+												}
 												for (int i = 0; i < Arguments.Length; i++) {
-													if (!NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i])) {
+													if (string.IsNullOrEmpty(Arguments[i]))
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + "at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+														aspects[i] = -1;
+													} else if (!NumberFormats.TryParseIntVb6(Arguments[i], out aspects[i])) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Aspect" + i.ToString(Culture) + " is invalid in " + Command + "at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														aspects[i] = -1;
 													} else if (aspects[i] < 0) {

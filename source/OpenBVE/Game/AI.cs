@@ -168,8 +168,11 @@ namespace OpenBve
 					if (Train.StationInfo.NextStation >= 0 && Stations[Train.StationInfo.NextStation].StationType != StationType.Normal && Train == TrainManager.PlayerTrain)
 					{
 						// player's terminal station
-						TrainManager.ApplyReverser(Train, 0, false);
-						Train.ApplyNotch(-1, true, 1, true);
+	                    if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
+	                    {
+							TrainManager.ApplyReverser(Train, 0, false);
+	                    }
+	                    Train.ApplyNotch(-1, true, 1, true);
 						TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 						Train.EmergencyBrake.Apply();
 						CurrentInterval = 1.0;
@@ -248,8 +251,11 @@ namespace OpenBve
 				else if (Train.StationInfo.NextStation >= 0 && stopIndex >= 0 && Stations[Train.StationInfo.NextStation].StationType != StationType.Normal && Train == TrainManager.PlayerTrain && Train.StationInfo.DistanceToStopPosition < Stations[Train.StationInfo.NextStation].Stops[stopIndex].BackwardTolerance && -Train.StationInfo.DistanceToStopPosition < Stations[Train.StationInfo.NextStation].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
-					TrainManager.ApplyReverser(Train, 0, false);
-					Train.ApplyNotch(-1, true, 1, true);
+	                if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
+	                {
+		                TrainManager.ApplyReverser(Train, 0, false);
+			}
+			                Train.ApplyNotch(-1, true, 1, true);
 					TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 					Train.EmergencyBrake.Apply();
 					CurrentInterval = 10.0;
