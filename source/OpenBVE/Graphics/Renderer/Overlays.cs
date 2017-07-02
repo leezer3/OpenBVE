@@ -906,11 +906,11 @@ namespace OpenBve
 						{
 							sc = MessageColor.Red; t = Interface.QuickReferences.HandleEmergency;
 						}
-						else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Release)
+						else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray; t = Interface.QuickReferences.HandleRelease;
 						}
-						else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap)
+						else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue; t = Interface.QuickReferences.HandleLap;
 						}
@@ -1305,7 +1305,7 @@ namespace OpenBve
 				else if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Actual != 0 ? "P" + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Actual.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.Applied ? "EMG" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Actual == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Actual == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.Applied ? "EMG" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Actual == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Actual == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{
@@ -1324,7 +1324,7 @@ namespace OpenBve
 				else if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Safety != 0 ? "P" + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Safety.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.SafetySystemApplied ? "EMG" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Safety == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Safety == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.SafetySystemApplied ? "EMG" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Safety == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Safety == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{
@@ -1343,7 +1343,7 @@ namespace OpenBve
 				else if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 				{
 					t += " - " + (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver != 0 ? "P" + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture) : "N");
-					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.DriverApplied ? "EMG" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+					t += " - " + (TrainManager.PlayerTrain.EmergencyBrake.DriverApplied ? "EMG" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
 				}
 				else
 				{

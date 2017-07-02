@@ -798,7 +798,7 @@ namespace OpenBve {
 					case Instructions.BrakeNotch:
 						if (Train != null) {
 							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-								Function.Stack[s] = (double)Train.Specs.AirBrake.Handle.Driver;
+								Function.Stack[s] = (double)Train.Specs.CurrentAirBrakeHandle.Driver;
 							} else {
 								Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver;
 							}
@@ -823,7 +823,7 @@ namespace OpenBve {
 								if (Train.EmergencyBrake.DriverApplied) {
 									Function.Stack[s] = 3.0;
 								} else {
-									Function.Stack[s] = (double)Train.Specs.AirBrake.Handle.Driver;
+									Function.Stack[s] = (double)Train.Specs.CurrentAirBrakeHandle.Driver;
 								}
 							} else if (Train.Specs.HasHoldBrake) {
 								if (Train.EmergencyBrake.DriverApplied) {

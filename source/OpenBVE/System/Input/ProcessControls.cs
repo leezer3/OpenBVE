@@ -1029,7 +1029,7 @@ namespace OpenBve
 												TrainManager.CarBrakeType.AutomaticAirBrake)
 											{
 												if (TrainManager.PlayerTrain.Specs.HasHoldBrake &
-													TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+													TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 													TrainManager.AirBrakeHandleState.Release &
 													!TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver)
 												{
@@ -1041,13 +1041,13 @@ namespace OpenBve
 														TrainManager.AirBrakeHandleState.Lap);
 													TrainManager.ApplyHoldBrake(TrainManager.PlayerTrain, false);
 												}
-												else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+												else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 														 TrainManager.AirBrakeHandleState.Lap)
 												{
 													TrainManager.ApplyAirBrakeHandle(TrainManager.PlayerTrain,
 														TrainManager.AirBrakeHandleState.Service);
 												}
-												else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+												else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 														 TrainManager.AirBrakeHandleState.Release)
 												{
 													TrainManager.ApplyAirBrakeHandle(TrainManager.PlayerTrain,
@@ -1083,7 +1083,7 @@ namespace OpenBve
 													TrainManager.PlayerTrain.EmergencyBrake.Release();
 												}
 												else if (TrainManager.PlayerTrain.Specs.HasHoldBrake &
-														 TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+														 TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 														 TrainManager.AirBrakeHandleState.Lap &
 														 !TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver)
 												{
@@ -1095,13 +1095,13 @@ namespace OpenBve
 														TrainManager.AirBrakeHandleState.Release);
 													TrainManager.ApplyHoldBrake(TrainManager.PlayerTrain, false);
 												}
-												else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+												else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 														 TrainManager.AirBrakeHandleState.Lap)
 												{
 													TrainManager.ApplyAirBrakeHandle(TrainManager.PlayerTrain,
 														TrainManager.AirBrakeHandleState.Release);
 												}
-												else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver ==
+												else if (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver ==
 														 TrainManager.AirBrakeHandleState.Service)
 												{
 													TrainManager.ApplyAirBrakeHandle(

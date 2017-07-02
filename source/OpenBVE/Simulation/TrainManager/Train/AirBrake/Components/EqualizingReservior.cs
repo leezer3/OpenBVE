@@ -51,7 +51,7 @@
 					if (AirBrake is AutomaticAirBrake)
 					{
 						// automatic air brake
-						if (Train.Specs.AirBrake.Handle.Actual == TrainManager.AirBrakeHandleState.Service)
+						if (Train.Specs.CurrentAirBrakeHandle.Actual == TrainManager.AirBrakeHandleState.Service)
 						{
 							double r = ServiceRate; //50000
 							double d = CurrentPressure;
@@ -60,7 +60,7 @@
 							if (r > CurrentPressure) r = CurrentPressure;
 							CurrentPressure -= r;
 						}
-						else if (Train.Specs.AirBrake.Handle.Actual == TrainManager.AirBrakeHandleState.Release)
+						else if (Train.Specs.CurrentAirBrakeHandle.Actual == TrainManager.AirBrakeHandleState.Release)
 						{
 							double r = ChargeRate;
 							double d = NormalPressure - CurrentPressure;

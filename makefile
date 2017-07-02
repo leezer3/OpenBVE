@@ -293,7 +293,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Train Simulation/TrainManager/Train/AirBrake Simulation/TrainManager/Train/AirBrake/Components Simulation/TrainManager/Train/AirBrake/Types Simulation/TrainManager/Train/GenericDevices Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
+OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Properties OldParsers OldParsers/BveRouteParser Simulation Simulation/TrainManager Simulation/TrainManager/Train Simulation/TrainManager/Train/AirBrake Simulation/TrainManager/Train/AirBrake/Components Simulation/TrainManager/Train/AirBrake/Types Simulation/TrainManager/Train/EmergencyBrake Simulation/TrainManager/Train/GenericDevices Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
 OPEN_BVE_SRC      := $(filter-out "$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs",$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))

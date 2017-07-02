@@ -157,7 +157,7 @@ namespace OpenBve
 		        else if (State == TrainState.Available)
 		        {
 		            // available train
-		            UpdateTrainPhysicsAndControls(this, TimeElapsed);
+		            UpdatePhysicsAndControls(TimeElapsed);
 		            if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 		            {
 		                if (Specs.CurrentAverageSpeed > CurrentRouteLimit)
@@ -622,8 +622,326 @@ namespace OpenBve
 				}
 			}
 
+			private void UpdateSpeeds(double TimeElapsed)
+			{
+				if (Game.MinimalisticSimulation & this == PlayerTrain)
+				{
+					// hold the position of the player's train during startup
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						Cars[i].Specs.CurrentSpeed = 0.0;
+						Cars[i].Specs.CurrentAccelerationOutput = 0.0;
+					}
+					return;
+				}
+				// update brake system
+				double[] DecelerationDueToBrake, DecelerationDueToMotor;
+				UpdateBrakeSystem(this, TimeElapsed, out DecelerationDueToBrake, out DecelerationDueToMotor);
+				// calculate new car speeds
+				double[] NewSpeeds = new double[Cars.Length];
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					NewSpeeds[i] = Cars[i].GetSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i]);
+				}
+				// calculate center of mass position
+				double[] CenterOfCarPositions = new double[Cars.Length];
+				double CenterOfMassPosition = 0.0;
+				double TrainMass = 0.0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
+					double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
+					CenterOfCarPositions[i] = 0.5 * (pr + pf);
+					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].Specs.MassCurrent;
+					TrainMass += Cars[i].Specs.MassCurrent;
+				}
+				if (TrainMass != 0.0)
+				{
+					CenterOfMassPosition /= TrainMass;
+				}
+				{ // coupler
+					// determine closest cars
+					int p = -1; // primary car index
+					int s = -1; // secondary car index
+					{
+						double PrimaryDistance = double.MaxValue;
+						for (int i = 0; i < Cars.Length; i++)
+						{
+							double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
+							if (d < PrimaryDistance)
+							{
+								PrimaryDistance = d;
+								p = i;
+							}
+						}
+						double SecondDistance = double.MaxValue;
+						for (int i = p - 1; i <= p + 1; i++)
+						{
+							if (i >= 0 & i < Cars.Length & i != p)
+							{
+								double d = Math.Abs(CenterOfCarPositions[i] - CenterOfMassPosition);
+								if (d < SecondDistance)
+								{
+									SecondDistance = d;
+									s = i;
+								}
+							}
+						}
+						if (s >= 0 && PrimaryDistance <= 0.25 * (PrimaryDistance + SecondDistance))
+						{
+							s = -1;
+						}
+					}
+					// coupler
+					bool[] CouplerCollision = new bool[Couplers.Length];
+					int cf, cr;
+					if (s >= 0)
+					{
+						// use two cars as center of mass
+						if (p > s)
+						{
+							int t = p; p = s; s = t;
+						}
+						double min = Couplers[p].MinimumDistanceBetweenCars;
+						double max = Couplers[p].MaximumDistanceBetweenCars;
+						double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
+						if (d < min)
+						{
+							double t = (min - d) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
+							double tp = t * Cars[s].Specs.MassCurrent;
+							double ts = t * Cars[p].Specs.MassCurrent;
+							TrackManager.UpdateCarFollowers(ref Cars[p], tp, false, false);
+							TrackManager.UpdateCarFollowers(ref Cars[s], -ts, false, false);
+							CenterOfCarPositions[p] += tp;
+							CenterOfCarPositions[s] -= ts;
+							CouplerCollision[p] = true;
+						}
+						else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
+						{
+							double t = (d - max) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
+							double tp = t * Cars[s].Specs.MassCurrent;
+							double ts = t * Cars[p].Specs.MassCurrent;
 
-		    internal void Initialize()
+							TrackManager.UpdateCarFollowers(ref Cars[p], -tp, false, false);
+							TrackManager.UpdateCarFollowers(ref Cars[s], ts, false, false);
+							CenterOfCarPositions[p] -= tp;
+							CenterOfCarPositions[s] += ts;
+							CouplerCollision[p] = true;
+						}
+						cf = p;
+						cr = s;
+					}
+					else
+					{
+						// use one car as center of mass
+						cf = p;
+						cr = p;
+					}
+					// front cars
+					for (int i = cf - 1; i >= 0; i--)
+					{
+						double min = Couplers[i].MinimumDistanceBetweenCars;
+						double max = Couplers[i].MaximumDistanceBetweenCars;
+						double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
+						if (d < min)
+						{
+							double t = min - d + 0.0001;
+							TrackManager.UpdateCarFollowers(ref Cars[i], t, false, false);
+							CenterOfCarPositions[i] += t;
+							CouplerCollision[i] = true;
+						}
+						else if (d > max & !Cars[i].Derailed & !Cars[i + 1].Derailed)
+						{
+							double t = d - max + 0.0001;
+							TrackManager.UpdateCarFollowers(ref Cars[i], -t, false, false);
+							CenterOfCarPositions[i] -= t;
+							CouplerCollision[i] = true;
+						}
+					}
+					// rear cars
+					for (int i = cr + 1; i < Cars.Length; i++)
+					{
+						double min = Couplers[i - 1].MinimumDistanceBetweenCars;
+						double max = Couplers[i - 1].MaximumDistanceBetweenCars;
+						double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
+						if (d < min)
+						{
+							double t = min - d + 0.0001;
+							TrackManager.UpdateCarFollowers(ref Cars[i], -t, false, false);
+							CenterOfCarPositions[i] -= t;
+							CouplerCollision[i - 1] = true;
+						}
+						else if (d > max & !Cars[i].Derailed & !Cars[i - 1].Derailed)
+						{
+							double t = d - max + 0.0001;
+							TrackManager.UpdateCarFollowers(ref Cars[i], t, false, false);
+
+							CenterOfCarPositions[i] += t;
+							CouplerCollision[i - 1] = true;
+						}
+					}
+					// update speeds
+					for (int i = 0; i < Couplers.Length; i++)
+					{
+						if (CouplerCollision[i])
+						{
+							int j;
+							for (j = i + 1; j < Couplers.Length; j++)
+							{
+								if (!CouplerCollision[j])
+								{
+									break;
+								}
+							}
+							double v = 0.0;
+							double m = 0.0;
+							for (int k = i; k <= j; k++)
+							{
+								v += NewSpeeds[k] * Cars[k].Specs.MassCurrent;
+								m += Cars[k].Specs.MassCurrent;
+							}
+							if (m != 0.0)
+							{
+								v /= m;
+							}
+							for (int k = i; k <= j; k++)
+							{
+								if (Interface.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * Game.CriticalCollisionSpeedDifference)
+								{
+									Derail(k, TimeElapsed);
+								}
+								NewSpeeds[k] = v;
+							}
+							i = j - 1;
+						}
+					}
+				}
+				// update average data
+				Specs.CurrentAverageSpeed = 0.0;
+				Specs.CurrentAverageAcceleration = 0.0;
+				Specs.CurrentAverageJerk = 0.0;
+				double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].Specs.CurrentAcceleration = (NewSpeeds[i] - Cars[i].Specs.CurrentSpeed) * invtime;
+					Cars[i].Specs.CurrentSpeed = NewSpeeds[i];
+					Specs.CurrentAverageSpeed += NewSpeeds[i];
+					Specs.CurrentAverageAcceleration += Cars[i].Specs.CurrentAcceleration;
+				}
+				double invcarlen = 1.0 / (double)Cars.Length;
+				Specs.CurrentAverageSpeed *= invcarlen;
+				Specs.CurrentAverageAcceleration *= invcarlen;
+			}
+
+			// update train physics and controls
+			private void UpdatePhysicsAndControls(double TimeElapsed)
+			{
+				if (TimeElapsed == 0.0 || TimeElapsed > 1000)
+				{
+					//HACK: The physics engine really does not like update times above 1000ms
+					//This works around a bug experienced when jumping to a station on a steep hill
+					//causing exessive acceleration
+					return;
+				}
+				// move cars
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					MoveCar(i, Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
+					if (State == TrainState.Disposed)
+					{
+						//If our train has been disposed of, we need to do no further processing
+						return;
+					}
+				}
+				// Update station and associated door states
+				UpdateTrainStation(this, TimeElapsed);
+				UpdateTrainDoors(this, TimeElapsed);
+				// Update the delayed handles
+				Specs.CurrentPowerNotch.Update();
+				Specs.CurrentBrakeNotch.Update();
+				Specs.CurrentAirBrakeHandle.Update();
+				EmergencyBrake.Update();
+				Specs.CurrentHoldBrake.Actual = Specs.CurrentHoldBrake.Driver;
+				// Update speeds and physics
+				UpdateSpeeds(TimeElapsed);
+				// Update run & motor sounds for all cars
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].UpdateBVERunSounds(TimeElapsed);
+					if (Cars[i].Specs.IsMotorCar)
+					{
+						Cars[i].UpdateBVEMotorSounds();
+					}
+				}
+				// safety system
+				if (!Game.MinimalisticSimulation | this != PlayerTrain)
+				{
+					UpdateSafetySystem();
+				}
+				{
+					// breaker sound
+					bool breaker;
+					if (Cars[DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+					{
+						breaker = Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Safety >= 1 & Specs.CurrentAirBrakeHandle.Safety == AirBrakeHandleState.Release & !EmergencyBrake.SafetySystemApplied & !Specs.CurrentHoldBrake.Actual;
+					}
+					else
+					{
+						breaker = Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Safety >= 1 & Specs.CurrentBrakeNotch.Safety == 0 & !EmergencyBrake.SafetySystemApplied & !Specs.CurrentHoldBrake.Actual;
+					}
+					if (breaker & !Cars[DriverCar].Sounds.BreakerResumed)
+					{
+						// resume
+						if (Cars[DriverCar].Sounds.BreakerResume.Buffer != null)
+						{
+							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, this, DriverCar, false);
+						}
+						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
+						{
+							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+						}
+						Cars[DriverCar].Sounds.BreakerResumed = true;
+					}
+					else if (!breaker & Cars[DriverCar].Sounds.BreakerResumed)
+					{
+						// interrupt
+						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
+						{
+							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+						}
+						Cars[DriverCar].Sounds.BreakerResumed = false;
+					}
+				}
+				// passengers
+				UpdateTrainPassengers(this, TimeElapsed);
+				// signals
+				if (CurrentSectionLimit == 0.0)
+				{
+					if (EmergencyBrake.DriverApplied & Specs.CurrentAverageSpeed > -0.03 & Specs.CurrentAverageSpeed < 0.03)
+					{
+						CurrentSectionLimit = 6.94444444444444;
+						if (this == PlayerTrain)
+						{
+							string s = Interface.GetInterfaceString("message_signal_proceed");
+							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
+							s = s.Replace("[speed]", a.ToString("0", System.Globalization.CultureInfo.InvariantCulture));
+							s = s.Replace("[unit]", Game.UnitOfSpeed);
+							Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+						}
+					}
+				}
+				// infrequent updates
+				InternalTimerTimeElapsed += TimeElapsed;
+				if (InternalTimerTimeElapsed > 10.0)
+				{
+					InternalTimerTimeElapsed -= 10.0;
+					Synchronize();
+					UpdateAtmosphericConstants();
+				}
+			}
+
+
+			internal void Initialize()
 		    {
 		        for (int i = 0; i < Cars.Length; i++)
 		        {

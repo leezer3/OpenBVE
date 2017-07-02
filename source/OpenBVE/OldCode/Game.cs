@@ -555,7 +555,7 @@ namespace OpenBve {
 				} else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.HoldBrake;
 				} else if (TrainManager.PlayerTrain.Cars[d].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					switch (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver) {
+					switch (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver) {
 							case TrainManager.AirBrakeHandleState.Release: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Release; break;
 							case TrainManager.AirBrakeHandleState.Lap: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Lap; break;
 							case TrainManager.AirBrakeHandleState.Service: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Service; break;
@@ -569,7 +569,7 @@ namespace OpenBve {
 				} else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Actual) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.HoldBrake;
 				} else if (TrainManager.PlayerTrain.Cars[d].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					switch (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Safety) {
+					switch (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Safety) {
 							case TrainManager.AirBrakeHandleState.Release: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Release; break;
 							case TrainManager.AirBrakeHandleState.Lap: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Lap; break;
 							case TrainManager.AirBrakeHandleState.Service: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Service; break;
