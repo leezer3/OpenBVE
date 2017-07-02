@@ -553,7 +553,7 @@ namespace OpenBve
                     {
                         return 3;
                     }
-                    return (int) Train.Specs.AirBrake.Handle.Driver;
+                    return (int) Train.Specs.CurrentAirBrakeHandle.Driver;
                 }
                 if (Train.Specs.HasHoldBrake)
                 {

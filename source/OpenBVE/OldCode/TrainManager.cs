@@ -750,120 +750,20 @@ namespace OpenBve
 				Train.MoveCar(i, Train.Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
 				if (Train.State == TrainState.Disposed)
 				{
+					//If our train has been disposed of, we need to do no further processing
 					return;
 				}
 			}
-			// update station and doors
+			// Update station and associated door states
 			UpdateTrainStation(Train, TimeElapsed);
 			UpdateTrainDoors(Train, TimeElapsed);
-			// delayed handles
-			{
-				// power notch
-				if (Train.Specs.CurrentPowerNotch.DelayedChanges.Length == 0)
-				{
-					if (Train.Specs.CurrentPowerNotch.Safety < Train.Specs.CurrentPowerNotch.Actual)
-					{
-						if (Train.Specs.PowerNotchReduceSteps <= 1)
-						{
-							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual - 1, Train.Specs.DelayPowerDown);
-						}
-						else if (Train.Specs.CurrentPowerNotch.Safety + Train.Specs.PowerNotchReduceSteps <= Train.Specs.CurrentPowerNotch.Actual | Train.Specs.CurrentPowerNotch.Safety == 0)
-						{
-							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerDown);
-						}
-					}
-					else if (Train.Specs.CurrentPowerNotch.Safety > Train.Specs.CurrentPowerNotch.Actual)
-					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual + 1, Train.Specs.DelayPowerUp);
-					}
-				}
-				else
-				{
-					int m = Train.Specs.CurrentPowerNotch.DelayedChanges.Length - 1;
-					if (Train.Specs.CurrentPowerNotch.Safety < Train.Specs.CurrentPowerNotch.DelayedChanges[m].Value)
-					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerDown);
-					}
-					else if (Train.Specs.CurrentPowerNotch.Safety > Train.Specs.CurrentPowerNotch.DelayedChanges[m].Value)
-					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerUp);
-					}
-				}
-				if (Train.Specs.CurrentPowerNotch.DelayedChanges.Length >= 1)
-				{
-					if (Train.Specs.CurrentPowerNotch.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
-					{
-						Train.Specs.CurrentPowerNotch.Actual = Train.Specs.CurrentPowerNotch.DelayedChanges[0].Value;
-						Train.Specs.CurrentPowerNotch.RemoveChanges(1);
-					}
-				}
-			}
-			{
-				// brake notch
-				int sec = Train.EmergencyBrake.SafetySystemApplied ? Train.Specs.MaximumBrakeNotch : Train.Specs.CurrentBrakeNotch.Safety;
-				if (Train.Specs.CurrentBrakeNotch.DelayedChanges.Length == 0)
-				{
-					if (sec < Train.Specs.CurrentBrakeNotch.Actual)
-					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual - 1, Train.Specs.DelayBrakeDown);
-					}
-					else if (sec > Train.Specs.CurrentBrakeNotch.Actual)
-					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual + 1, Train.Specs.DelayBrakeUp);
-					}
-				}
-				else
-				{
-					int m = Train.Specs.CurrentBrakeNotch.DelayedChanges.Length - 1;
-					if (sec < Train.Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
-					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, Train.Specs.DelayBrakeDown);
-					}
-					else if (sec > Train.Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
-					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, Train.Specs.DelayBrakeUp);
-					}
-				}
-				if (Train.Specs.CurrentBrakeNotch.DelayedChanges.Length >= 1)
-				{
-					if (Train.Specs.CurrentBrakeNotch.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
-					{
-						Train.Specs.CurrentBrakeNotch.Actual = Train.Specs.CurrentBrakeNotch.DelayedChanges[0].Value;
-						Train.Specs.CurrentBrakeNotch.RemoveChanges(1);
-					}
-				}
-			}
-			{
-				// air brake handle
-				if (Train.Specs.AirBrake.Handle.DelayedValue != AirBrakeHandleState.Invalid)
-				{
-					if (Train.Specs.AirBrake.Handle.DelayedTime <= Game.SecondsSinceMidnight)
-					{
-						Train.Specs.AirBrake.Handle.Actual = Train.Specs.AirBrake.Handle.DelayedValue;
-						Train.Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Invalid;
-					}
-				}
-				else
-				{
-					if (Train.Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Release & Train.Specs.AirBrake.Handle.Actual != AirBrakeHandleState.Release)
-					{
-						Train.Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Release;
-						Train.Specs.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
-					}
-					else if (Train.Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Service & Train.Specs.AirBrake.Handle.Actual != AirBrakeHandleState.Service)
-					{
-						Train.Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Service;
-						Train.Specs.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
-					}
-					else if (Train.Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Lap)
-					{
-						Train.Specs.AirBrake.Handle.Actual = AirBrakeHandleState.Lap;
-					}
-				}
-			}
+			// Update the delayed handles
+			Train.Specs.CurrentPowerNotch.Update();
+			Train.Specs.CurrentBrakeNotch.Update();
+			Train.Specs.CurrentAirBrakeHandle.Update();
 			Train.EmergencyBrake.Update();
 			Train.Specs.CurrentHoldBrake.Actual = Train.Specs.CurrentHoldBrake.Driver;
-			// update speeds
+			// Update speeds and physics
 			UpdateSpeeds(Train, TimeElapsed);
 			// Update run & motor sounds for all cars
 			for (int i = 0; i < Train.Cars.Length; i++)
@@ -884,7 +784,7 @@ namespace OpenBve
 				bool breaker;
 				if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
 				{
-					breaker = Train.Specs.CurrentReverser.Actual != 0 & Train.Specs.CurrentPowerNotch.Safety >= 1 & Train.Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Release & !Train.EmergencyBrake.SafetySystemApplied & !Train.Specs.CurrentHoldBrake.Actual;
+					breaker = Train.Specs.CurrentReverser.Actual != 0 & Train.Specs.CurrentPowerNotch.Safety >= 1 & Train.Specs.CurrentAirBrakeHandle.Safety == AirBrakeHandleState.Release & !Train.EmergencyBrake.SafetySystemApplied & !Train.Specs.CurrentHoldBrake.Actual;
 				}
 				else
 				{
