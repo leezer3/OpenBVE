@@ -201,9 +201,20 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.TrainFront) {
 					if (Direction < 0) {
-						Train.Station = -1;
 						Train.StationFrontCar = false;
-					} else if (Direction > 0) {
+						if (Train.Specs.CurrentReverser.Actual == 1 && Train.Specs.CurrentPowerNotch.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.Station)
+						{
+							//Our reverser and power are in F, but we are rolling backwards
+							//Leave the station index alone, and we won't trigger again when we actually move forwards
+							return;
+						}
+						Train.Station = -1;
+					} else if (Direction > 0)
+					{
+						if (Train.Station == StationIndex)
+						{
+							return;
+						}
 						Train.Station = StationIndex;
 						Train.StationFrontCar = true;
 						Train.StationState = TrainManager.TrainStopState.Pending;
