@@ -934,7 +934,7 @@ namespace OpenBve {
 			GL.LoadIdentity();
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
-			//GL.LoadIdentity();
+			GL.LoadIdentity();
 			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// marker
