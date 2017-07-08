@@ -1,0 +1,447 @@
+﻿using System;
+using System.Xml;
+using OpenBveApi.Math;
+
+namespace OpenBve
+{
+	class SoundXmlParser
+	{
+		internal static string currentPath;
+		internal static bool Parse(string fileName, TrainManager.Car car)
+		{
+			//3D center of the car
+			Vector3 center = new Vector3(0.0, 0.0, 0.0);
+			//Positioned to the left of the car, but centered Y & Z
+			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
+			//Positioned to the right of the car, but centered Y & Z
+			Vector3 right = new Vector3(1.3, 0.0, 0.0);
+			//Positioned at the front of the car, centered X and Y
+			Vector3 front = new Vector3(0.0, 0.0, 0.5 * car.Length);
+			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
+			Vector3 panel = new Vector3(car.DriverX, car.DriverY, car.DriverZ + 1.0);
+
+
+
+			//The current XML file to load
+			XmlDocument currentXML = new XmlDocument();
+			//Load the marker's XML file 
+			currentXML.Load(fileName);
+			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			if (currentXML.DocumentElement != null)
+			{
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CarSounds");
+				if (DocumentNodes == null || DocumentNodes.Count == 0)
+				{
+					Interface.AddMessage(Interface.MessageType.Error, false, "No car sound nodes defined in XML file " + fileName);
+					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
+					return false;
+				}
+				foreach (XmlNode n in DocumentNodes)
+				{
+					if (n.HasChildNodes)
+					{
+						foreach (XmlNode c in n.ChildNodes)
+						{
+							switch (c.Name.ToLowerInvariant())
+							{
+								case "ats":
+								case "plugin":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
+									break;
+								case "brake":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "releasehigh":
+												//Release brakes from high pressure
+												ParseNode(cc, out car.Sounds.AirHigh, center, SoundCfgParser.smallRadius);
+												break;
+											case "release":
+												//Release brakes from normal pressure
+												ParseNode(cc, out car.Sounds.Air, center, SoundCfgParser.smallRadius);
+												break;
+											case "releasefull":
+												//Release brakes from full pressure
+												ParseNode(cc, out car.Sounds.AirZero, center, SoundCfgParser.smallRadius);
+												break;
+											case "emergency":
+												//Apply EB
+												ParseNode(cc, out car.Sounds.EmrBrake, center, SoundCfgParser.smallRadius);
+												break;
+											case "application":
+												//Standard application
+												ParseNode(cc, out car.Sounds.Brake, center, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "compressor":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "attack":
+											case "start":
+												//Compressor starting sound
+												ParseNode(cc, out car.Sounds.CpStart, center, SoundCfgParser.mediumRadius);
+												break;
+											case "loop":
+												//Compressor loop sound
+												ParseNode(cc, out car.Sounds.CpLoop, center, SoundCfgParser.mediumRadius);
+												break;
+											case "release":
+											case "stop":
+											case "end":
+												//Compressor end sound
+												ParseNode(cc, out car.Sounds.CpEnd, center, SoundCfgParser.mediumRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "door":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "openleft":
+											case "leftopen":
+												ParseNode(cc, out car.Sounds.DoorOpenL, left, SoundCfgParser.smallRadius);
+												break;
+											case "openright":
+											case "rightopen":
+												ParseNode(cc, out car.Sounds.DoorOpenR, right, SoundCfgParser.smallRadius);
+												break;
+											case "closeleft":
+											case "leftclose":
+												ParseNode(cc, out car.Sounds.DoorCloseL, left, SoundCfgParser.smallRadius);
+												break;
+											case "closeright":
+											case "rightclose":
+												//Compressor end sound
+												ParseNode(cc, out car.Sounds.DoorCloseR, right, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "flange":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
+									break;
+								case "horn":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "primary":
+												//Primary horn
+												ParseHornNode(cc, out car.Sounds.Horns[0], front, SoundCfgParser.largeRadius);
+												break;
+											case "secondary":
+												//Secondary horn
+												ParseHornNode(cc, out car.Sounds.Horns[1], front, SoundCfgParser.largeRadius);
+												break;
+											case "music":
+												//Music horn
+												ParseHornNode(cc, out car.Sounds.Horns[2], front, SoundCfgParser.largeRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "pointfrontaxle":
+								case "switchfrontaxle":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.PointFrontAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
+									break;
+								case "pointrearaxle":
+								case "switchrearaxle":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
+									break;
+								case "run":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
+									break;
+								case "suspension":
+								case "spring":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "left":
+												//Left suspension springs
+												ParseNode(cc, out car.Sounds.SpringL, left, SoundCfgParser.smallRadius);
+												break;
+											case "right":
+												//right suspension springs
+												ParseNode(cc, out car.Sounds.SpringR, right, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+							}
+						}
+					}
+				}
+			}
+			return true;
+		}
+
+		private static void ParseHornNode(XmlNode node, out TrainManager.Horn Horn, Vector3 Position, double Radius)
+		{
+			Horn = new TrainManager.Horn();
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				switch (c.Name)
+				{
+					case "start":
+						ParseNode(c, out Horn.StartSound, ref Position, Radius);
+						break;
+					case "loop":
+						ParseNode(c, out Horn.LoopSound, ref Position, Radius);
+						break;
+					case "end":
+					case "release":
+					case "stop":
+						ParseNode(c, out Horn.EndSound, ref Position, Radius);
+						break;
+				}
+			}
+			
+		}
+
+		/// <summary>Parses a single XML node into a sound buffer and position reference</summary>
+		/// <param name="node">The node to parse</param>
+		/// <param name="Sound">The car sound</param>
+		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
+		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
+		private static void ParseNode(XmlNode node, out Sounds.SoundBuffer Sound, ref Vector3 Position, double Radius)
+		{
+			string fileName = null;
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				switch (c.Name.ToLowerInvariant())
+				{
+					case "filename":
+						try
+						{
+							fileName = OpenBveApi.Path.CombineFile(c.InnerText, currentPath);
+							if (!System.IO.File.Exists(fileName))
+							{
+								//Valid path, but the file does not exist
+								Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
+								Sound = null;
+								return;
+							}
+						}
+						catch
+						{
+							//Probably invalid filename characters
+							Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Sound = null;
+							return;
+						}
+						break;
+					case "position":
+						string[] Arguments = c.InnerText.Split(',');
+						double x = 0.0, y = 0.0, z = 0.0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
+							x = 0.0;
+						}
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
+							y = 0.0;
+						}
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
+							z = 0.0;
+						}
+						Position = new Vector3(x, y, z);
+						break;
+					case "radius":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+						}
+						break;
+
+				}
+			}
+			if (fileName == null)
+			{
+				//No valid filename node specified
+				Interface.AddMessage(Interface.MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
+				Sound = null;
+				return;
+			}
+			Sound = Sounds.SoundBuffer.TryToLoad(fileName, Radius);
+		}
+
+		/// <summary>Parses a single XML node into a car sound</summary>
+		/// <param name="node">The node to parse</param>
+		/// <param name="Sound">The car sound</param>
+		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
+		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
+		private static void ParseNode(XmlNode node, out TrainManager.CarSound Sound, Vector3 Position, double Radius)
+		{
+			string fileName = null;
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				switch (c.Name.ToLowerInvariant())
+				{
+					case "filename":
+						try
+						{
+							fileName = OpenBveApi.Path.CombineFile(c.InnerText, currentPath);
+							if (!System.IO.File.Exists(fileName))
+							{
+								//Valid path, but the file does not exist
+								Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
+								Sound = TrainManager.CarSound.Empty;
+								return;
+							}
+						}
+						catch
+						{
+							//Probably invalid filename characters
+							Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Sound = TrainManager.CarSound.Empty;
+							return;
+						}
+						break;
+					case "position":
+						string[] Arguments = c.InnerText.Split(',');
+						double x = 0.0, y = 0.0, z = 0.0;
+						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
+							x = 0.0;
+						}
+						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
+							y = 0.0;
+						}
+						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
+							z = 0.0;
+						}
+						Position = new Vector3(x,y,z);
+						break;
+					case "radius":
+						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
+						{
+							Interface.AddMessage(Interface.MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+						}
+						break;
+					
+				}
+			}
+			if (fileName == null)
+			{
+				//No valid filename node specified
+				Interface.AddMessage(Interface.MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
+				Sound = TrainManager.CarSound.Empty;
+				return;
+			}
+			Sound = new TrainManager.CarSound(fileName, Position, Radius);
+		}
+
+		/// <summary>Parses an XML node containing a list of sounds into a car sound array</summary>
+		/// <param name="node">The node to parse</param>
+		/// <param name="Sounds">The car sound array</param>
+		/// <param name="Position">The default position of the sound (May be overriden by any node)</param>
+		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
+		private static void ParseArrayNode(XmlNode node, out TrainManager.CarSound[] Sounds, Vector3 Position, double Radius)
+		{
+			Sounds = new TrainManager.CarSound[1];
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				int idx;
+				if (!NumberFormats.TryParseIntVb6(c.Name, out idx))
+				{
+					Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+				}
+				else
+				{
+					if (idx >= 0)
+					{
+						Array.Resize(ref Sounds, idx + 1);
+						ParseNode(c, out Sounds[idx], Position, Radius);
+					}
+					else
+					{
+						Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+					}
+				}
+			}
+			
+		}
+	}
+}

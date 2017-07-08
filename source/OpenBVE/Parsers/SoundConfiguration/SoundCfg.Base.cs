@@ -11,7 +11,18 @@ namespace OpenBve
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
 		internal static void ParseSoundConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
 		{
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
+			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.xml");
+			/*
+			 * NOT FULLY IMPLEMENTED YET....
+			if (System.IO.File.Exists(FileName))
+			{
+				if (SoundXmlParser.Parse(FileName, Train.Cars[0]))
+				{
+					return;
+				}
+			}
+			*/
+			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{
 				LoadBve4Sounds(FileName, TrainPath, Encoding, Train);
@@ -23,14 +34,10 @@ namespace OpenBve
 		}
 
 		//Default sound radii
-		const double largeRadius = 30.0;
-		const double mediumRadius = 10.0;
-		const double smallRadius = 5.0;
+		internal const double largeRadius = 30.0;
+		internal const double mediumRadius = 10.0;
+		internal const double smallRadius = 5.0;
 		const double tinyRadius = 2.0;
-
-		/*
-		 * NOT USED, CHECK IF EVER???
-		 */
 
 		/// <summary>Attempts to load an array of sound files into a car-sound array</summary>
 		/// <param name="Folder">The folder the sound files are located in</param>
