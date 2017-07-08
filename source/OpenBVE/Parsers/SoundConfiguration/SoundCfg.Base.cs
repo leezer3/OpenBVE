@@ -22,62 +22,7 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
-		/// <param name="train">The train</param>
-		internal static void InitializeCarSounds(TrainManager.Train train)
-		{
-			// initialize
-			for (int i = 0; i < train.Cars.Length; i++)
-			{
-				train.Cars[i].Sounds.Run = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.Adjust = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Air = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.AirHigh = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.AirZero = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Brake = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BrakeHandleApply = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BrakeHandleMin = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BrakeHandleMax = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BrakeHandleRelease = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BreakerResume = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.BreakerResumeOrInterrupt = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.CpEnd = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.CpLoop = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.CpStart = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.DoorCloseL = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.DoorCloseR = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.DoorOpenL = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.DoorOpenR = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.EmrBrake = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.FlangeVolume = new double[] { };
-				train.Cars[i].Sounds.Halt = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Horns = new TrainManager.Horn[]
-				{
-					new TrainManager.Horn(),
-					new TrainManager.Horn(),
-					new TrainManager.Horn()
-				};
-				train.Cars[i].Sounds.Loop = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.MasterControllerUp = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.MasterControllerDown = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.MasterControllerMin = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.MasterControllerMax = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.PilotLampOn = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.PointFrontAxle = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.ReverserOn = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.ReverserOff = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Rub = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Run = new TrainManager.CarSound[] { };
-				train.Cars[i].Sounds.RunVolume = new double[] { };
-				train.Cars[i].Sounds.SpringL = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.SpringR = TrainManager.CarSound.Empty;
-				train.Cars[i].Sounds.Plugin = new TrainManager.CarSound[] { };
-			}
-		}
+		
 
 		/// <summary>Loads a sound file into a sound buffer</summary>
 		/// <param name="FileName">The sound to load</param>

@@ -33,7 +33,7 @@ namespace OpenBve
 			double small = 5.0;
 			double tiny = 2.0;
 
-			InitializeCarSounds(train);
+			train.InitializeCarSounds();
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);

@@ -20,7 +20,7 @@ namespace OpenBve
 			const double medium = 10.0;
 			const double small = 5.0;
 			const double tiny = 2.0;
-			InitializeCarSounds(train);
+			train.InitializeCarSounds();
 			// load sounds for driver's car
 			train.Cars[train.DriverCar].Sounds.Adjust = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Adjust.wav"), panel, tiny);
 			train.Cars[train.DriverCar].Sounds.Brake = TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "Brake.wav"), center, small);
