@@ -22,50 +22,9 @@ namespace OpenBve
 			}
 		}
 
-		
-
-		/// <summary>Loads a sound file into a sound buffer</summary>
-		/// <param name="FileName">The sound to load</param>
-		/// <param name="Radius">The sound radius</param>
-		/// <returns>The new sound buffer</returns>
-		private static Sounds.SoundBuffer TryLoadSoundBuffer(string FileName, double Radius)
-		{
-			if (FileName != null)
-			{
-				if (System.IO.File.Exists(FileName))
-				{
-					try
-					{
-						return Sounds.RegisterBuffer(FileName, Radius);
-					}
-					catch
-					{
-						return null;
-					}
-				}
-			}
-			return null;
-		}
-
-		/// <summary>Attempts to load a sound file into a car-sound</summary>
-		/// <param name="FileName">The sound to load</param>
-		/// <param name="Position">The position that the sound is emitted from within the car</param>
-		/// <param name="Radius">The sound radius</param>
-		/// <returns>The new car sound, or an empty car sound if load fails</returns>
-		private static TrainManager.CarSound TryLoadSound(string FileName, Vector3 Position, double Radius)
-		{
-			TrainManager.CarSound s = TrainManager.CarSound.Empty;
-			s.Position = Position;
-			s.Source = null;
-			if (FileName != null)
-			{
-				if (System.IO.File.Exists(FileName))
-				{
-					s.Buffer = Sounds.RegisterBuffer(FileName, Radius);
-				}
-			}
-			return s;
-		}
+		/*
+		 * NOT USED, CHECK IF EVER???
+		 */
 
 		/// <summary>Attempts to load an array of sound files into a car-sound array</summary>
 		/// <param name="Folder">The folder the sound files are located in</param>
@@ -107,7 +66,7 @@ namespace OpenBve
 										Sounds[j].Source = null;
 									}
 								}
-								Sounds[n] = TryLoadSound(Files[i], Position, Radius);
+								Sounds[n] = new TrainManager.CarSound(Files[i], Position, Radius);
 							}
 						}
 					}
