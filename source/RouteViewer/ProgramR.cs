@@ -280,6 +280,16 @@ namespace OpenBve {
 			}
 		}
 
+		internal static void FileDrop(object sender, FileDropEventArgs e)
+		{
+			CurrentlyLoading = true;
+			CurrentRoute = e.FileName;
+			LoadRoute();
+			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+			CurrentlyLoading = false;
+			UpdateCaption();
+		}
+
 		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
 			double speedModified = (ShiftPressed ? 2.0 : 1.0) * (ControlPressed ? 4.0 : 1.0) * (AltPressed ? 8.0 : 1.0);
