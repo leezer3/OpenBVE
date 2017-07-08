@@ -22,6 +22,12 @@ namespace OpenBve
 			}
 		}
 
+		//Default sound radii
+		const double largeRadius = 30.0;
+		const double mediumRadius = 10.0;
+		const double smallRadius = 5.0;
+		const double tinyRadius = 2.0;
+
 		/*
 		 * NOT USED, CHECK IF EVER???
 		 */
