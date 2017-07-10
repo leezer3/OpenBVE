@@ -25,11 +25,11 @@ namespace OpenBve
 			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{
-				LoadBve4Sounds(FileName, TrainPath, Encoding, Train);
+				BVE4SoundParser.Parse(FileName, TrainPath, Encoding, Train);
 			}
 			else
 			{
-				LoadBve2Sounds(TrainPath, Train);
+				BVE2SoundParser.Parse(TrainPath, Train);
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace OpenBve
 		/// <param name="Position">The position the sound is to be emitted from within the car</param>
 		/// <param name="Radius">The sound radius</param>
 		/// <returns>The new car sound array</returns>
-		private static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		internal static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			TrainManager.CarSound[] Sounds = { };
