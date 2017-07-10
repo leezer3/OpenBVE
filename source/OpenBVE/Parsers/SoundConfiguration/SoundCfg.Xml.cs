@@ -51,7 +51,6 @@ namespace OpenBve
 					Interface.AddMessage(Interface.MessageType.Error, false, "No car sound nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty sound.xml file");
-					return;
 				}
 				foreach (XmlNode n in DocumentNodes)
 				{
@@ -654,13 +653,25 @@ namespace OpenBve
 			Sounds = new TrainManager.CarSound[1];
 			foreach (XmlNode c in node.ChildNodes)
 			{
-				int idx;
-				if (!NumberFormats.TryParseIntVb6(c.Name, out idx))
+				int idx = -1;
+				if (c.Name.ToLowerInvariant() != "sound")
 				{
-					Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+					Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
 				}
 				else
 				{
+					for (int i = 0; i > c.ChildNodes.Count; i++)
+					{
+						if (c.ChildNodes[i].Name.ToLowerInvariant() == "index")
+						{
+							if (!NumberFormats.TryParseIntVb6(c.ChildNodes[i].InnerText.ToLowerInvariant(), out idx))
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+								return;
+							}
+							break;
+						}
+					}
 					if (idx >= 0)
 					{
 						Array.Resize(ref Sounds, idx + 1);
