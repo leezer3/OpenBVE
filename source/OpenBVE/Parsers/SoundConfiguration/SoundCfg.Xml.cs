@@ -89,6 +89,61 @@ namespace OpenBve
 										}
 									}
 									break;
+								case "brakehandle":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "apply":
+												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "release":
+												ParseNode(cc, out car.Sounds.BrakeHandleRelease, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "min":
+											case "minimum":
+												ParseNode(cc, out car.Sounds.BrakeHandleMin, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "max":
+											case "maximum":
+												ParseNode(cc, out car.Sounds.BrakeHandleMax, panel, SoundCfgParser.tinyRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "breaker":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "on":
+												ParseNode(cc, out car.Sounds.BreakerResume, panel, SoundCfgParser.smallRadius);
+												break;
+											case "off":
+												ParseNode(cc, out car.Sounds.BreakerResumeOrInterrupt, panel, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "buzzer":
+									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
+									break;
 								case "compressor":
 									if (!c.HasChildNodes)
 									{
@@ -144,7 +199,6 @@ namespace OpenBve
 												break;
 											case "closeright":
 											case "rightclose":
-												//Compressor end sound
 												ParseNode(cc, out car.Sounds.DoorCloseR, right, SoundCfgParser.smallRadius);
 												break;
 											default:
@@ -189,6 +243,72 @@ namespace OpenBve
 										}
 									}
 									break;
+								case "loop":
+								case "noise":
+									ParseNode(c, out car.Sounds.Loop, center, SoundCfgParser.mediumRadius);
+									break;
+								case "mastercontroller":
+								case "powerhandle":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "up":
+											case "increase":
+												ParseNode(cc, out car.Sounds.MasterControllerUp, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "down":
+											case "decrease":
+												ParseNode(cc, out car.Sounds.MasterControllerDown, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "min":
+											case "minimum":
+												ParseNode(cc, out car.Sounds.MasterControllerMin, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "max":
+											case "maximum":
+												ParseNode(cc, out car.Sounds.MasterControllerMax, panel, SoundCfgParser.tinyRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
+								case "motor":
+									if (!car.Specs.IsMotorCar)
+									{
+										break;
+									}
+									ParseMotorSoundTableNode(c, ref car.Sounds.Motor.Tables, center, SoundCfgParser.mediumRadius);
+									break;
+								case "pilotlamp":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "on":
+												ParseNode(cc, out car.Sounds.PilotLampOn, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "off":
+												ParseNode(cc, out car.Sounds.PilotLampOff, panel, SoundCfgParser.tinyRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
 								case "pointfrontaxle":
 								case "switchfrontaxle":
 									if (!c.HasChildNodes)
@@ -207,6 +327,28 @@ namespace OpenBve
 									}
 									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
 									break;
+								case "reverser":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name)
+										{
+											case "on":
+												ParseNode(cc, out car.Sounds.ReverserOn, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "off":
+												ParseNode(cc, out car.Sounds.ReverserOff, panel, SoundCfgParser.tinyRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
 								case "run":
 									if (!c.HasChildNodes)
 									{
@@ -214,6 +356,10 @@ namespace OpenBve
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
+									break;
+								case "shoe":
+								case "rub":
+									ParseNode(c, out car.Sounds.Rub, center, SoundCfgParser.mediumRadius);
 									break;
 								case "suspension":
 								case "spring":
@@ -248,6 +394,11 @@ namespace OpenBve
 			return true;
 		}
 
+		/// <summary>Parses an XML horn node</summary>
+		/// <param name="node">The node to parse</param>
+		/// <param name="Horn">The horn to apply this node's contents to</param>
+		/// <param name="Position">The default sound position</param>
+		/// <param name="Radius">The default sound radius</param>
 		private static void ParseHornNode(XmlNode node, out TrainManager.Horn Horn, Vector3 Position, double Radius)
 		{
 			Horn = new TrainManager.Horn();
@@ -268,7 +419,35 @@ namespace OpenBve
 						break;
 				}
 			}
-			
+		}
+
+		/// <summary>Parses an XML motor table node</summary>
+		/// <param name="node">The node</param>
+		/// <param name="Tables">The motor sound tables to assign this node's contents to</param>
+		/// <param name="Position">The default sound position</param>
+		/// <param name="Radius">The default sound radius</param>
+		private static void ParseMotorSoundTableNode(XmlNode node, ref TrainManager.MotorSoundTable[] Tables, Vector3 Position, double Radius)
+		{
+			foreach (XmlNode c in node.ChildNodes)
+			{
+				int idx;
+				if (!NumberFormats.TryParseIntVb6(c.Name, out idx))
+				{
+					continue;
+				}
+				for (int i = 0; i > Tables.Length; i++)
+				{
+					Tables[i].Buffer = null;
+					Tables[i].Source = null;
+					for (int j = 0; j > Tables[i].Entries.Length; j++)
+					{
+						if (idx == Tables[i].Entries[j].SoundIndex)
+						{
+							ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>Parses a single XML node into a sound buffer and position reference</summary>

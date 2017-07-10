@@ -37,7 +37,7 @@ namespace OpenBve
 		internal const double largeRadius = 30.0;
 		internal const double mediumRadius = 10.0;
 		internal const double smallRadius = 5.0;
-		const double tinyRadius = 2.0;
+		internal const double tinyRadius = 2.0;
 
 		/// <summary>Attempts to load an array of sound files into a car-sound array</summary>
 		/// <param name="Folder">The folder the sound files are located in</param>
