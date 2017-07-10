@@ -8,11 +8,12 @@ namespace OpenBve
 	{
 		internal static bool ParseTrain(string fileName, TrainManager.Train train)
 		{
+			train.InitializeCarSounds();
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
 				try
 				{
-					Parse(fileName, train.Cars[i]);
+					Parse(fileName, ref train.Cars[i]);
 				}
 				catch
 				{
@@ -23,7 +24,7 @@ namespace OpenBve
 		}
 
 		internal static string currentPath;
-		internal static void Parse(string fileName, TrainManager.Car car)
+		internal static void Parse(string fileName, ref TrainManager.Car car)
 		{
 			//3D center of the car
 			Vector3 center = new Vector3(0.0, 0.0, 0.0);
@@ -81,7 +82,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
@@ -121,7 +122,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "apply":
 												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
@@ -155,7 +156,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
 												ParseNode(cc, out car.Sounds.BreakerResume, panel, SoundCfgParser.smallRadius);
@@ -188,7 +189,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "attack":
 											case "start":
@@ -219,7 +220,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "openleft":
 											case "leftopen":
@@ -263,7 +264,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "primary":
 												//Primary horn
@@ -300,7 +301,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "up":
 											case "increase":
@@ -343,7 +344,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
 												ParseNode(cc, out car.Sounds.PilotLampOn, panel, SoundCfgParser.tinyRadius);
@@ -387,7 +388,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
 												ParseNode(cc, out car.Sounds.ReverserOn, panel, SoundCfgParser.tinyRadius);
@@ -422,7 +423,7 @@ namespace OpenBve
 									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
-										switch (cc.Name)
+										switch (cc.Name.ToLowerInvariant())
 										{
 											case "left":
 												//Left suspension springs
@@ -442,6 +443,8 @@ namespace OpenBve
 						}
 					}
 				}
+				car.Sounds.RunVolume = new double[car.Sounds.Run.Length];
+				car.Sounds.FlangeVolume = new double[car.Sounds.FlangeVolume.Length];
 			}
 		}
 
@@ -455,7 +458,7 @@ namespace OpenBve
 			Horn = new TrainManager.Horn();
 			foreach (XmlNode c in node.ChildNodes)
 			{
-				switch (c.Name)
+				switch (c.Name.ToLowerInvariant())
 				{
 					case "start":
 						ParseNode(c, out Horn.StartSound, ref Position, Radius);
@@ -587,7 +590,7 @@ namespace OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(c.InnerText, currentPath);
+							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
@@ -650,7 +653,7 @@ namespace OpenBve
 		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
 		private static void ParseArrayNode(XmlNode node, out TrainManager.CarSound[] Sounds, Vector3 Position, double Radius)
 		{
-			Sounds = new TrainManager.CarSound[1];
+			Sounds = new TrainManager.CarSound[0];
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				int idx = -1;
@@ -660,7 +663,7 @@ namespace OpenBve
 				}
 				else
 				{
-					for (int i = 0; i > c.ChildNodes.Count; i++)
+					for (int i = 0; i < c.ChildNodes.Count; i++)
 					{
 						if (c.ChildNodes[i].Name.ToLowerInvariant() == "index")
 						{
@@ -674,7 +677,13 @@ namespace OpenBve
 					}
 					if (idx >= 0)
 					{
+						int l = Sounds.Length;
 						Array.Resize(ref Sounds, idx + 1);
+						while (l < Sounds.Length)
+						{
+							Sounds[l] = TrainManager.CarSound.Empty;
+							l++;
+						}
 						ParseNode(c, out Sounds[idx], Position, Radius);
 					}
 					else
