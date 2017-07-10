@@ -12,16 +12,13 @@ namespace OpenBve
 		internal static void ParseSoundConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
 		{
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.xml");
-			/*
-			 * NOT FULLY IMPLEMENTED YET....
 			if (System.IO.File.Exists(FileName))
 			{
-				if (SoundXmlParser.Parse(FileName, Train.Cars[0]))
+				if (SoundXmlParser.ParseTrain(FileName, Train))
 				{
 					return;
 				}
 			}
-			*/
 			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{

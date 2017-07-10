@@ -6,8 +6,24 @@ namespace OpenBve
 {
 	class SoundXmlParser
 	{
+		internal static bool ParseTrain(string fileName, TrainManager.Train train)
+		{
+			for (int i = 0; i < train.Cars.Length; i++)
+			{
+				try
+				{
+					Parse(fileName, train.Cars[i]);
+				}
+				catch
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
 		internal static string currentPath;
-		internal static bool Parse(string fileName, TrainManager.Car car)
+		internal static void Parse(string fileName, TrainManager.Car car)
 		{
 			//3D center of the car
 			Vector3 center = new Vector3(0.0, 0.0, 0.0);
@@ -34,7 +50,8 @@ namespace OpenBve
 				{
 					Interface.AddMessage(Interface.MessageType.Error, false, "No car sound nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
-					return false;
+					throw new Exception("Empty sound.xml file");
+					return;
 				}
 				foreach (XmlNode n in DocumentNodes)
 				{
@@ -49,6 +66,10 @@ namespace OpenBve
 									if (!c.HasChildNodes)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (!car.Specs.IsDriverCar)
+									{
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
@@ -95,6 +116,10 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
 										break;
 									}
+									if (!car.Specs.IsDriverCar)
+									{
+										break;
+									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name)
@@ -125,6 +150,10 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
 										break;
 									}
+									if (!car.Specs.IsDriverCar)
+									{
+										break;
+									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name)
@@ -142,12 +171,20 @@ namespace OpenBve
 									}
 									break;
 								case "buzzer":
+									if (!car.Specs.IsDriverCar)
+									{
+										break;
+									}
 									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
 									break;
 								case "compressor":
 									if (!c.HasChildNodes)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (car.Specs.AirBrake.Type != TrainManager.AirBrakeType.Main)
+									{
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -221,6 +258,10 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
 										break;
 									}
+									if (!car.Specs.IsDriverCar)
+									{
+										break;
+									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name)
@@ -252,6 +293,10 @@ namespace OpenBve
 									if (!c.HasChildNodes)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (!car.Specs.IsDriverCar)
+									{
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -291,6 +336,10 @@ namespace OpenBve
 									if (!c.HasChildNodes)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (!car.Specs.IsDriverCar)
+									{
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -333,6 +382,10 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
 										break;
 									}
+									if (!car.Specs.IsDriverCar)
+									{
+										break;
+									}
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name)
@@ -352,7 +405,7 @@ namespace OpenBve
 								case "run":
 									if (!c.HasChildNodes)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
@@ -391,7 +444,6 @@ namespace OpenBve
 					}
 				}
 			}
-			return true;
 		}
 
 		/// <summary>Parses an XML horn node</summary>
