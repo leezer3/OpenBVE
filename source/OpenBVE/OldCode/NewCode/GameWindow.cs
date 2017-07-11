@@ -629,7 +629,7 @@ namespace OpenBve
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
 					Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"),MessageManager.MessageDependency.None, Interface.GameMode.Expert,
-						OpenBveApi.Colors.MessageColor.Blue, Game.SecondsSinceMidnight + 10.0, null);
+						OpenBveApi.Colors.MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 				}
 			}
 			

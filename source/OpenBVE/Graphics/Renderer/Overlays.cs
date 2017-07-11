@@ -872,7 +872,7 @@ namespace OpenBve
 					}
 					else if (TrainManager.PlayerTrain.Specs.CurrentReverser.Driver > 0)
 					{
-						sc = MessageColor.Blue; t = Interface.QuickReferences.HandleForward;
+						sc = MessageColor.White; t = Interface.QuickReferences.HandleForward;
 					}
 					else
 					{
@@ -891,7 +891,7 @@ namespace OpenBve
 					}
 					else
 					{
-						sc = MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
+						sc = MessageColor.White; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
 					}
 					Element.TransitionState = 0.0;
 					break;
@@ -912,7 +912,7 @@ namespace OpenBve
 						}
 						else if (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap)
 						{
-							sc = MessageColor.Blue; t = Interface.QuickReferences.HandleLap;
+							sc = MessageColor.White; t = Interface.QuickReferences.HandleLap;
 						}
 						else
 						{
@@ -959,7 +959,7 @@ namespace OpenBve
 					}
 					else if (TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver > 0)
 					{
-						sc = MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
+						sc = MessageColor.White; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
 					}
 					else
 					{
@@ -995,7 +995,7 @@ namespace OpenBve
 					}
 					else
 					{
-						sc = MessageColor.Blue;
+						sc = MessageColor.White;
 					}
 					t = Command == "doorsleft" ? Interface.QuickReferences.DoorsLeft : Interface.QuickReferences.DoorsRight;
 				} break;
