@@ -977,16 +977,20 @@ namespace OpenBve {
 							} break;
 						default:
 							if (Command.Length != 0) {
-								Interface.AddMessage(Interface.MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								if (TextEncoding.IsUtf(Encoding))
 								{
 									//CreateMeshBuilder misinterpreted as UTF
 									//As this character sequence is gibberish, we can assume our file is NOT actually UTF
 									//so re-read with the default ANSI charset
-									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1)
+									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1)
 									{
 										Object = ReadObject(FileName, Encoding.Default, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 										return Object;
+									}
+									else
+									{
+										//Don't log the error message if we figure out it's misdetected
+										Interface.AddMessage(Interface.MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							}
