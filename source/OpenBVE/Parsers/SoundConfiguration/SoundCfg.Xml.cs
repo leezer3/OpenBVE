@@ -65,7 +65,7 @@ namespace OpenBve
 								case "plugin":
 									if (!c.HasChildNodes)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!car.Specs.IsDriverCar)
@@ -247,7 +247,7 @@ namespace OpenBve
 								case "flange":
 									if (!c.HasChildNodes)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
@@ -255,7 +255,7 @@ namespace OpenBve
 								case "horn":
 									if (!c.HasChildNodes)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!car.Specs.IsDriverCar)
