@@ -377,6 +377,7 @@ namespace OpenBve
 									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
 									break;
 								case "reverser":
+								case "reverserhandle":
 									if (!c.HasChildNodes)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
