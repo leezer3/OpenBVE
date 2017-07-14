@@ -97,6 +97,9 @@ ROUTE_VIEWER_FILE     :=RouteViewer.exe
 OBJECT_BENDER_ROOT    :=source/ObjectBender
 OBJECT_BENDER_FILE    :=ObjectBender.exe
 
+CAR_XML_ROOT    :=source/CarXMLConvertor
+CAR_XML_FILE    :=CarXMLConvertor.exe
+
 OBJECT_VIEWER_ROOT    :=source/ObjectViewer
 OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 
@@ -150,6 +153,7 @@ all: all-debug
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
+all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
@@ -161,6 +165,7 @@ all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
+all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
@@ -293,7 +298,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
+OPEN_BVE_FOLDERS  := . Audio Game Graphics Graphics/Renderer Interface OldCode OldCode/NewCode Parsers Parsers/SoundConfiguration Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
 OPEN_BVE_SRC      := $(filter-out "$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs",$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
@@ -512,6 +517,25 @@ $(DEBUG_DIR)/$(OBJECT_BENDER_FILE) $(RELEASE_DIR)/$(OBJECT_BENDER_FILE): $(OBJEC
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_BENDER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_BENDER_OUT) /target:winexe /main:ObjectBender.Program $(OBJECT_BENDER_SRC) $(ARGS) $(OBJECT_BENDER_DOC) \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_BENDER_RESOURCE))
+	
+###################
+# CarXMLConvertor #
+###################
+
+CAR_XML_FOLDERS  := . Properties
+CAR_XML_FOLDERS  := $(addprefix $(CAR_XML_ROOT)/, $(CAR_XML_FOLDERS))
+CAR_XML_SRC      := $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.cs))
+CAR_XML_DOC      := $(addprefix /doc:, $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.xml)))
+CAR_XML_RESX     := $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.resx))
+CAR_XML_RESOURCE := $(addprefix $(CAR_XML_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(CAR_XML_ROOT))%.resx, %.resources, $(CAR_XML_RESX)))))
+CAR_XML_OUT       =$(OUTPUT_DIR)/$(CAR_XML_FILE)
+
+$(call create_resource, $(CAR_XML_RESOURCE), $(CAR_XML_RESX))
+
+$(DEBUG_DIR)/$(CAR_XML_FILE) $(RELEASE_DIR)/$(CAR_XML_FILE): $(CAR_XML_SRC) $(CAR_XML_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(CAR_XML_OUT)$(COLOR_END)
+	@$(CSC) /out:$(CAR_XML_OUT) /target:winexe /main:CarXmlConvertor.Program $(CAR_XML_SRC) $(ARGS) $(CAR_XML_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /win32icon:$(ICON) $(addprefix /resource:, $(CAR_XML_RESOURCE))
 
 ################
 # ObjectViewer #

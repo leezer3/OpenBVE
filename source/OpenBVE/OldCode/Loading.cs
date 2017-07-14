@@ -213,7 +213,7 @@ namespace OpenBve {
 					string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
 					TrainDatParser.ParseTrainData(TrainData, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
-					SoundCfgParser.InitializeCarSounds(TrainManager.Trains[k]);
+					TrainManager.Trains[k].InitializeCarSounds();
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.3 / TrainProgressMaximum;
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
