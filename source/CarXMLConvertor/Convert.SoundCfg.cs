@@ -333,7 +333,7 @@ namespace CarXmlConvertor
                                     case "primarystart":
                                         primary.Add("<Start>");
                                         primary.Add("<FileName>" + b + "</FileName>");
-                                        primary.Add("<Position>0,0,0</Position>");
+                                        primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>5.0</Radius>");
                                         primary.Add("</Start>");
                                         break;
@@ -341,7 +341,7 @@ namespace CarXmlConvertor
                                     case "primaryrelease":
                                         primary.Add("<End>");
                                         primary.Add("<FileName>" + b + "</FileName>");
-                                        primary.Add("<Position>0,0,0</Position>");
+                                        primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>5.0</Radius>");
                                         primary.Add("</End>");
                                         break;
@@ -349,7 +349,7 @@ namespace CarXmlConvertor
                                     case "primary":
                                         primary.Add("<Loop>");
                                         primary.Add("<FileName>" + b + "</FileName>");
-                                        primary.Add("<Position>0,0,0</Position>");
+                                        primary.Add("<Position>" + front + "</Position>");
                                         primary.Add("<Radius>5.0</Radius>");
                                         primary.Add("</Loop>");
                                         break;
@@ -357,7 +357,7 @@ namespace CarXmlConvertor
                                     case "secondarystart":
                                         secondary.Add("<Start>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
-                                        secondary.Add("<Position>0,0,0</Position>");
+                                        secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>5.0</Radius>");
                                         secondary.Add("</Start>");
                                         break;
@@ -365,7 +365,7 @@ namespace CarXmlConvertor
                                     case "secondaryrelease":
                                         secondary.Add("<End>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
-                                        secondary.Add("<Position>0,0,0</Position>");
+                                        secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>5.0</Radius>");
                                         secondary.Add("</End>");
                                         break;
@@ -373,7 +373,7 @@ namespace CarXmlConvertor
                                     case "secondary":
                                         secondary.Add("<Loop>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
-                                        secondary.Add("<Position>0,0,0</Position>");
+                                        secondary.Add("<Position>" + front + "</Position>");
                                         secondary.Add("<Radius>5.0</Radius>");
                                         secondary.Add("</Loop>");
                                         break;
@@ -381,7 +381,7 @@ namespace CarXmlConvertor
                                     case "musicstart":
                                         music.Add("<Start>");
                                         music.Add("<FileName>" + b + "</FileName>");
-                                        music.Add("<Position>0,0,0</Position>");
+                                        music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>5.0</Radius>");
                                         music.Add("</Start>");
                                         break;
@@ -389,7 +389,7 @@ namespace CarXmlConvertor
                                     case "musicrelease":
                                         music.Add("<End>");
                                         music.Add("<FileName>" + b + "</FileName>");
-                                        music.Add("<Position>0,0,0</Position>");
+                                        music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>5.0</Radius>");
                                         music.Add("</End>");
                                         break;
@@ -397,7 +397,7 @@ namespace CarXmlConvertor
                                     case "music":
                                         music.Add("<Loop>");
                                         music.Add("<FileName>" + b + "</FileName>");
-                                        music.Add("<Position>0,0,0</Position>");
+                                        music.Add("<Position>" + front + "</Position>");
                                         music.Add("<Radius>5.0</Radius>");
                                         music.Add("</Loop>");
                                         break;
@@ -496,7 +496,7 @@ namespace CarXmlConvertor
                                     case "correct":
                                         newLines.Add("<Buzzer>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Buzzer>");
                                         break;
@@ -523,14 +523,14 @@ namespace CarXmlConvertor
                                     case "on":
                                         newLines.Add("<On>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</On>");
                                         break;
                                     case "off":
                                         newLines.Add("<Off>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Off>");
                                         break;
@@ -559,28 +559,28 @@ namespace CarXmlConvertor
                                     case "apply":
                                         newLines.Add("<Apply>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Apply>");
                                         break;
                                     case "release":
                                         newLines.Add("<Release>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Release>");
                                         break;
                                     case "min":
                                         newLines.Add("<Minimum>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Minimum>");
                                         break;
                                     case "max":
                                         newLines.Add("<Maximum>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Maximum>");
                                         break;
@@ -611,28 +611,28 @@ namespace CarXmlConvertor
                                         case "up":
                                             newLines.Add("<Increase>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Increase>");
                                             break;
                                         case "down":
                                             newLines.Add("<Decrease>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Decrease>");
                                             break;
                                         case "min":
                                             newLines.Add("<Minimum>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Minimum>");
                                             break;
                                         case "max":
                                             newLines.Add("<Maximum>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Maximum>");
                                             break;
@@ -663,14 +663,14 @@ namespace CarXmlConvertor
                                     case "on":
                                         newLines.Add("<On>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</On>");
                                         break;
                                     case "off":
                                         newLines.Add("<Off>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
-                                        newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                        newLines.Add("<Position>" + panel + "</Position>");
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Off>");
                                         break;
@@ -701,14 +701,14 @@ namespace CarXmlConvertor
                                         case "on":
                                             newLines.Add("<On>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</On>");
                                             break;
                                         case "off":
                                             newLines.Add("<Off>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
-                                            newLines.Add("<Position>" + DriverPosition.X + "," + DriverPosition.Y + "," + DriverPosition.Z + "</Position>");
+                                            newLines.Add("<Position>" + panel + "</Position>");
                                             newLines.Add("<Radius>5.0</Radius>");
                                             newLines.Add("</Off>");
                                             break;
