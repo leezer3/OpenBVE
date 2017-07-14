@@ -23,6 +23,7 @@ namespace CarXmlConvertor
 
         private void process_Click(object sender, EventArgs e)
         {
+	        ConvertTrainDat.Process();
             ConvertSoundCfg.Process();
         }
         
@@ -32,11 +33,12 @@ namespace CarXmlConvertor
             folderBrowserDialog = new FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                ConvertSoundCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "sound.cfg");
-                //TODO:
-                //Check for all train components when the above is complete
-                //Error checking??
-                if (!System.IO.File.Exists(ConvertSoundCfg.FileName))
+	            ConvertTrainDat.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "train.dat");
+				ConvertSoundCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "sound.cfg");
+				//TODO:
+				//Check for all train components when the above is complete
+				//Error checking??
+				if (!System.IO.File.Exists(ConvertSoundCfg.FileName))
                 {
                     return;
                 }

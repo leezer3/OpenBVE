@@ -10,12 +10,24 @@ namespace CarXmlConvertor
 {
     class ConvertSoundCfg
     {
-        internal static string FileName;
+	    internal static double length = 20.0;
+	    internal static Vector3 DriverPosition = new Vector3(0, 1, 0);
+	    //3D center of the car
+	    internal static Vector3 center = new Vector3(0.0, 0.0, 0.0);
+		//Positioned to the left of the car, but centered Y & Z
+	    internal static Vector3 left = new Vector3(-1.3, 0.0, 0.0);
+		//Positioned to the right of the car, but centered Y & Z
+	    internal static Vector3 right = new Vector3(1.3, 0.0, 0.0);
+		//Positioned at the front of the car, centered X and Y
+	    internal static Vector3 front = new Vector3(0.0, 0.0, 0.5 * length);
+		//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
+	    internal static Vector3 panel;
+		internal static string FileName;
         internal static void Process()
         {
             if (!System.IO.File.Exists(FileName))
             {
-                MessageBox.Show("The selected folder does not appear to be a valid train. \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("The selected folder does not contain a valid sound.cfg \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "sound.xml")))
             {
@@ -24,23 +36,8 @@ namespace CarXmlConvertor
                     return;
                 }
             }
-            double length = 20.0;
-            Vector3 DriverPosition = new Vector3(0, 1, 0);
-            //TODO: Parse train.dat for car length
-
-            //Assign default sound positions
-
-            //3D center of the car
-            Vector3 center = new Vector3(0.0, 0.0, 0.0);
-            //Positioned to the left of the car, but centered Y & Z
-            Vector3 left = new Vector3(-1.3, 0.0, 0.0);
-            //Positioned to the right of the car, but centered Y & Z
-            Vector3 right = new Vector3(1.3, 0.0, 0.0);
-            //Positioned at the front of the car, centered X and Y
-            Vector3 front = new Vector3(0.0, 0.0, 0.5 * length);
-            //Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
-            Vector3 panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
-            string[] Lines = System.IO.File.ReadAllLines(FileName);
+            panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
+			string[] Lines = System.IO.File.ReadAllLines(FileName);
             List<string> newLines = new List<string>();
             for (int i = 0; i < Lines.Length; i++)
             {

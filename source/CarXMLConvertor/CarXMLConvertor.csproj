@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert.TrainDat.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>
