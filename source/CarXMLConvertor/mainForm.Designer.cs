@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CarXmlConvertor));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.labelSelectTrain = new System.Windows.Forms.Label();
             this.buttonSelectFolder = new System.Windows.Forms.Button();
@@ -86,12 +87,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 261);
+            this.ClientSize = new System.Drawing.Size(298, 166);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonSelectFolder);
             this.Controls.Add(this.labelSelectTrain);
             this.Controls.Add(this.textBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CarXmlConvertor";
             this.Text = "Car XML Convertor";
             this.ResumeLayout(false);
