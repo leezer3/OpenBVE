@@ -872,7 +872,7 @@ namespace OpenBve
 					}
 					else if (TrainManager.PlayerTrain.Specs.CurrentReverser.Driver > 0)
 					{
-						sc = MessageColor.White; t = Interface.QuickReferences.HandleForward;
+						sc = MessageColor.Blue; t = Interface.QuickReferences.HandleForward;
 					}
 					else
 					{
@@ -891,7 +891,7 @@ namespace OpenBve
 					}
 					else
 					{
-						sc = MessageColor.White; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
+						sc = MessageColor.Blue; t = Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver.ToString(Culture);
 					}
 					Element.TransitionState = 0.0;
 					break;
