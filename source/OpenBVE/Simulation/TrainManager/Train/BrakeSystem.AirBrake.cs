@@ -7,7 +7,7 @@
 		/// <param name="RelativeDirection">The direction: -1 for decrease, 1 for increase</param>
 		internal static void ApplyAirBrakeHandle(Train Train, int RelativeDirection)
 		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+			if (Train.Cars[Train.DriverCar].BrakeType == CarBrakeType.AutomaticAirBrake)
 			{
 				if (RelativeDirection == -1)
 				{
@@ -40,7 +40,7 @@
 		/// <param name="State">The state</param>
 		internal static void ApplyAirBrakeHandle(Train Train, AirBrakeHandleState State)
 		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+			if (Train.Cars[Train.DriverCar].BrakeType == CarBrakeType.AutomaticAirBrake)
 			{
 				if (State != Train.Specs.CurrentAirBrakeHandle.Driver)
 				{

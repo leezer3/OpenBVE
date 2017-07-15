@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -30,8 +31,18 @@ namespace OpenBve
 		    internal ReAdhesionDevice reAdhesionDevice;
             /// <summary>The car constant speed device</summary>
 		    internal ConstantSpeedDevice constantSpeedDevice;
+			/// <summary>The car's hold brake</summary>
+			internal CarHoldBrake HoldBrake;
+			/// <summary>The car's brake type</summary>
+			internal CarBrakeType BrakeType;
+			/// <summary>The car's electropnuematic brake type</summary>
+			internal EletropneumaticBrakeType ElectropneumaticType;
+			/// <summary>The car's air brake</summary>
+			internal AirBrake.CarAirBrake AirBrake;
+			/// doors
+			internal Door[] Doors;
 			/// <summary>The car index within the train</summary>
-		    internal int Index;
+			internal int Index;
 
 			internal Horn[] Horns;
 
@@ -937,7 +948,7 @@ namespace OpenBve
 		                        else if (ndir == -1)
 		                        {
 		                            // brake
-		                            double max = Specs.AirBrake.DecelerationAtServiceMaximumPressure;
+		                            double max = AirBrake.DecelerationAtServiceMaximumPressure;
 		                            if (max != 0.0)
 		                            {
 		                                double cur = -Specs.CurrentAccelerationOutput;

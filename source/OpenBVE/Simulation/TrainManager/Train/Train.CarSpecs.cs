@@ -58,13 +58,7 @@ namespace OpenBve
 			internal double CurrentPitchDueToAccelerationFastValue;
 			internal double CurrentPitchDueToAccelerationMediumValue;
 			internal double CurrentPitchDueToAccelerationSlowValue;
-			/// systems
-			internal CarHoldBrake HoldBrake;
-			internal CarBrakeType BrakeType;
-			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal AirBrake.CarAirBrake AirBrake;
-			/// doors
-			internal Door[] Doors;
+			
 			internal double DoorOpenFrequency;
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;

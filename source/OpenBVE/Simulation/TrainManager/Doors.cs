@@ -62,18 +62,18 @@ namespace OpenBve
 			OpenBveApi.Runtime.DoorStates newState = OpenBveApi.Runtime.DoorStates.None;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				bool ld = Train.Cars[i].Specs.Doors[0].AnticipatedOpen;
-				bool rd = Train.Cars[i].Specs.Doors[1].AnticipatedOpen;
+				bool ld = Train.Cars[i].Doors[0].AnticipatedOpen;
+				bool rd = Train.Cars[i].Doors[1].AnticipatedOpen;
 				double os = Train.Cars[i].Specs.DoorOpenFrequency;
 				double cs = Train.Cars[i].Specs.DoorCloseFrequency;
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+				for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 				{
-					if (Train.Cars[i].Specs.Doors[j].Direction == -1 | Train.Cars[i].Specs.Doors[j].Direction == 1)
+					if (Train.Cars[i].Doors[j].Direction == -1 | Train.Cars[i].Doors[j].Direction == 1)
 					{
-						bool shouldBeOpen = Train.Cars[i].Specs.Doors[j].Direction == -1 ? ld : rd;
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
+						bool shouldBeOpen = Train.Cars[i].Doors[j].Direction == -1 ? ld : rd;
+						if (Train.Cars[i].Doors[j].State > 0.0)
 						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
+							if (Train.Cars[i].Doors[j].Direction == -1)
 							{
 								oldState |= OpenBveApi.Runtime.DoorStates.Left;
 							}
@@ -85,43 +85,43 @@ namespace OpenBve
 						if (shouldBeOpen)
 						{
 							// open
-							Train.Cars[i].Specs.Doors[j].State += os * TimeElapsed;
-							if (Train.Cars[i].Specs.Doors[j].State > 1.0)
+							Train.Cars[i].Doors[j].State += os * TimeElapsed;
+							if (Train.Cars[i].Doors[j].State > 1.0)
 							{
-								Train.Cars[i].Specs.Doors[j].State = 1.0;
+								Train.Cars[i].Doors[j].State = 1.0;
 							}
 						}
 						else
 						{
 							// close
-							if (Train.Cars[i].Specs.Doors[j].DoorLockDuration > 0.0)
+							if (Train.Cars[i].Doors[j].DoorLockDuration > 0.0)
 							{
-								if (Train.Cars[i].Specs.Doors[j].State > Train.Cars[i].Specs.Doors[j].DoorLockState)
+								if (Train.Cars[i].Doors[j].State > Train.Cars[i].Doors[j].DoorLockState)
 								{
-									Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
+									Train.Cars[i].Doors[j].State -= cs * TimeElapsed;
 								}
-								if (Train.Cars[i].Specs.Doors[j].State < Train.Cars[i].Specs.Doors[j].DoorLockState)
+								if (Train.Cars[i].Doors[j].State < Train.Cars[i].Doors[j].DoorLockState)
 								{
-									Train.Cars[i].Specs.Doors[j].State = Train.Cars[i].Specs.Doors[j].DoorLockState;
+									Train.Cars[i].Doors[j].State = Train.Cars[i].Doors[j].DoorLockState;
 								}
-								Train.Cars[i].Specs.Doors[j].DoorLockDuration -= TimeElapsed;
-								if (Train.Cars[i].Specs.Doors[j].DoorLockDuration < 0.0)
+								Train.Cars[i].Doors[j].DoorLockDuration -= TimeElapsed;
+								if (Train.Cars[i].Doors[j].DoorLockDuration < 0.0)
 								{
-									Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
+									Train.Cars[i].Doors[j].DoorLockDuration = 0.0;
 								}
 							}
 							else
 							{
-								Train.Cars[i].Specs.Doors[j].State -= cs * TimeElapsed;
+								Train.Cars[i].Doors[j].State -= cs * TimeElapsed;
 							}
-							if (Train.Cars[i].Specs.Doors[j].State < 0.0)
+							if (Train.Cars[i].Doors[j].State < 0.0)
 							{
-								Train.Cars[i].Specs.Doors[j].State = 0.0;
+								Train.Cars[i].Doors[j].State = 0.0;
 							}
 						}
-						if (Train.Cars[i].Specs.Doors[j].State > 0.0)
+						if (Train.Cars[i].Doors[j].State > 0.0)
 						{
-							if (Train.Cars[i].Specs.Doors[j].Direction == -1)
+							if (Train.Cars[i].Doors[j].Direction == -1)
 							{
 								newState |= OpenBveApi.Runtime.DoorStates.Left;
 							}
@@ -199,14 +199,14 @@ namespace OpenBve
 			bool sl = false, sr = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				if (Left & !Train.Cars[i].Specs.Doors[0].AnticipatedOpen)
+				if (Left & !Train.Cars[i].Doors[0].AnticipatedOpen)
 				{
-					Train.Cars[i].Specs.Doors[0].AnticipatedOpen = true;
+					Train.Cars[i].Doors[0].AnticipatedOpen = true;
 					sl = true;
 				}
-				if (Right & !Train.Cars[i].Specs.Doors[1].AnticipatedOpen)
+				if (Right & !Train.Cars[i].Doors[1].AnticipatedOpen)
 				{
-					Train.Cars[i].Specs.Doors[1].AnticipatedOpen = true;
+					Train.Cars[i].Doors[1].AnticipatedOpen = true;
 					sr = true;
 				}
 			}
@@ -220,11 +220,11 @@ namespace OpenBve
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenL.Position;
 						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
 					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == -1)
+						if (Train.Cars[i].Doors[j].Direction == -1)
 						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
+							Train.Cars[i].Doors[j].DoorLockDuration = 0.0;
 						}
 					}
 				}
@@ -239,11 +239,11 @@ namespace OpenBve
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenR.Position;
 						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
 					}
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
-						if (Train.Cars[i].Specs.Doors[j].Direction == 1)
+						if (Train.Cars[i].Doors[j].Direction == 1)
 						{
-							Train.Cars[i].Specs.Doors[j].DoorLockDuration = 0.0;
+							Train.Cars[i].Doors[j].DoorLockDuration = 0.0;
 						}
 					}
 				}
@@ -259,14 +259,14 @@ namespace OpenBve
 			bool sl = false, sr = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				if (Left & Train.Cars[i].Specs.Doors[0].AnticipatedOpen)
+				if (Left & Train.Cars[i].Doors[0].AnticipatedOpen)
 				{
-					Train.Cars[i].Specs.Doors[0].AnticipatedOpen = false;
+					Train.Cars[i].Doors[0].AnticipatedOpen = false;
 					sl = true;
 				}
-				if (Right & Train.Cars[i].Specs.Doors[1].AnticipatedOpen)
+				if (Right & Train.Cars[i].Doors[1].AnticipatedOpen)
 				{
-					Train.Cars[i].Specs.Doors[1].AnticipatedOpen = false;
+					Train.Cars[i].Doors[1].AnticipatedOpen = false;
 					sr = true;
 				}
 			}
@@ -307,15 +307,15 @@ namespace OpenBve
 			bool opened = false, closed = false, mixed = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+				for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 				{
-					if (Left & Train.Cars[i].Specs.Doors[j].Direction == -1 | Right & Train.Cars[i].Specs.Doors[j].Direction == 1)
+					if (Left & Train.Cars[i].Doors[j].Direction == -1 | Right & Train.Cars[i].Doors[j].Direction == 1)
 					{
-						if (Train.Cars[i].Specs.Doors[j].State == 0.0)
+						if (Train.Cars[i].Doors[j].State == 0.0)
 						{
 							closed = true;
 						}
-						else if (Train.Cars[i].Specs.Doors[j].State == 1.0)
+						else if (Train.Cars[i].Doors[j].State == 1.0)
 						{
 							opened = true;
 						}

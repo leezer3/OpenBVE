@@ -175,17 +175,6 @@ namespace OpenBve
 				this.Train = train;
 			}
 		}
-		/// <summary>Represents an emergency brake handle</summary>
-		internal struct EmergencyHandle
-		{
-			/// <summary>The notch set by the driver</summary>
-			internal bool Driver;
-			/// <summary>The notch set by the safety system (Train plugin)</summary>
-			internal bool Safety;
-			/// <summary>The actual notch</summary>
-			internal bool Actual;
-			internal double ApplicationTime;
-		}
 		/// <summary>Represnts a reverser handle</summary>
 		internal struct ReverserHandle
 		{

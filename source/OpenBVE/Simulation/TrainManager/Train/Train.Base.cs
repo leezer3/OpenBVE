@@ -352,12 +352,12 @@ namespace OpenBve
 					Cars[i].FrontAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
 					//Bogie for front axle
 					Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.FrontAxle.Position;
-					Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.RearAxlePosition;
+					Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.RearAxle.Position;
 					//Rear axle track position
 					Cars[i].RearAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
 					//Bogie for rear axle
 					Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.FrontAxle.Position;
-					Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxlePosition;
+					Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
 					//Beacon reciever (AWS, ATC etc.)
 					Cars[i].BeaconReceiver.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
 					TrackPosition -= Cars[i].Length;
@@ -863,7 +863,7 @@ namespace OpenBve
 				{
 					// breaker sound
 					bool breaker;
-					if (Cars[DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+					if (Cars[DriverCar].BrakeType == CarBrakeType.AutomaticAirBrake)
 					{
 						breaker = Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Safety >= 1 & Specs.CurrentAirBrakeHandle.Safety == AirBrakeHandleState.Release & !EmergencyBrake.SafetySystemApplied & !Specs.CurrentHoldBrake.Actual;
 					}

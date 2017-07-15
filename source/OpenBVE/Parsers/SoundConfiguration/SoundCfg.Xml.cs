@@ -81,22 +81,22 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
 										break;
 									}
-									car.Specs.AirBrake.AirSoundPosition = center;
+									car.AirBrake.AirSoundPosition = center;
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
-												ParseNode(cc, out car.Specs.AirBrake.AirHigh, ref car.Specs.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirHigh, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "release":
 												//Release brakes from normal pressure
-												ParseNode(cc, out car.Specs.AirBrake.AirNormal, ref car.Specs.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirNormal, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "releasefull":
 												//Release brakes from full pressure
-												ParseNode(cc, out car.Specs.AirBrake.AirHigh, ref car.Specs.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirHigh, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "emergency":
 												//Apply EB
@@ -185,7 +185,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.Specs.AirBrake.Type != AirBrake.BrakeType.Main)
+									if (car.AirBrake.Type != AirBrake.BrakeType.Main)
 									{
 										break;
 									}
@@ -196,17 +196,17 @@ namespace OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.Specs.AirBrake.Compressor.StartSound, ref center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.StartSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.Specs.AirBrake.Compressor.LoopSound, ref center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.LoopSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.Specs.AirBrake.Compressor.EndSound, ref center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.EndSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

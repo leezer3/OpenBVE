@@ -42,16 +42,16 @@ namespace OpenBve
 			{
 				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxle.Position);
 				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxle.Position);
-				train.Cars[i].Specs.AirBrake.AirSoundPosition = center;
-				train.Cars[i].Specs.AirBrake.AirNormal = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius);
-				train.Cars[i].Specs.AirBrake.AirHigh = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius);
-				train.Cars[i].Specs.AirBrake.AirZero = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius);
-				if (train.Cars[i].Specs.AirBrake.Type == AirBrake.BrakeType.Main)
+				train.Cars[i].AirBrake.AirSoundPosition = center;
+				train.Cars[i].AirBrake.AirNormal = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius);
+				train.Cars[i].AirBrake.AirHigh = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius);
+				train.Cars[i].AirBrake.AirZero = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius);
+				if (train.Cars[i].AirBrake.Type == AirBrake.BrakeType.Main)
 				{
-					train.Cars[i].Specs.AirBrake.Compressor.EndSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), SoundCfgParser.mediumRadius);
-					train.Cars[i].Specs.AirBrake.Compressor.LoopSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), SoundCfgParser.mediumRadius);
-					train.Cars[i].Specs.AirBrake.Compressor.StartSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpStart.wav"), SoundCfgParser.mediumRadius);
-					train.Cars[i].Specs.AirBrake.Compressor.SoundPosition = center;
+					train.Cars[i].AirBrake.Compressor.EndSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), SoundCfgParser.mediumRadius);
+					train.Cars[i].AirBrake.Compressor.LoopSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), SoundCfgParser.mediumRadius);
+					train.Cars[i].AirBrake.Compressor.StartSound = SoundCfgParser.TryLoadSoundBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpStart.wav"), SoundCfgParser.mediumRadius);
+					train.Cars[i].AirBrake.Compressor.SoundPosition = center;
 				}
 				train.Cars[i].Sounds.BreakerResume = TrainManager.CarSound.Empty;
 				train.Cars[i].Sounds.BreakerResumeOrInterrupt = TrainManager.CarSound.Empty;

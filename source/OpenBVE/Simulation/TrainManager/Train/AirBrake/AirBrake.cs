@@ -46,8 +46,8 @@ namespace OpenBve.BrakeSystems
 				//If we are in a car with a compressor & equalizing reservoir, update them
 				if (Type == BrakeType.Main)
 				{
-					Train.Cars[CarIndex].Specs.AirBrake.Compressor.Update(Train, CarIndex, TimeElapsed);
-					Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoir.Update(Train, CarIndex, TimeElapsed);
+					Train.Cars[CarIndex].AirBrake.Compressor.Update(Train, CarIndex, TimeElapsed);
+					Train.Cars[CarIndex].AirBrake.EqualizingReservoir.Update(Train, CarIndex, TimeElapsed);
 				}
 				AirSound = AirSound.None;
 				//Update the abstract brake system method

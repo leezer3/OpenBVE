@@ -140,9 +140,9 @@ namespace OpenBve
 				bool doorsopen = false;
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
-					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
-						if (Train.Cars[i].Specs.Doors[j].State != 0.0)
+						if (Train.Cars[i].Doors[j].State != 0.0)
 						{
 							doorsopen = true;
 							break;
@@ -181,13 +181,13 @@ namespace OpenBve
 					{
 						CurrentInterval = 1.0;
 						Train.ApplyNotch(-1, true, 0, true);
-						if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+						if (Train.Cars[Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 						{
-							if (Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure)
+							if (Train.Cars[Train.DriverCar].AirBrake.BrakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].AirBrake.BrakeCylinder.ServiceMaximumPressure)
 							{
 								TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
 							}
-							else if (Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].Specs.AirBrake.BrakeCylinder.EmergencyMaximumPressure)
+							else if (Train.Cars[Train.DriverCar].AirBrake.BrakeCylinder.CurrentPressure > 0.9 * Train.Cars[Train.DriverCar].AirBrake.BrakeCylinder.EmergencyMaximumPressure)
 							{
 								TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							}
@@ -320,7 +320,7 @@ namespace OpenBve
 					double decelerationCruise;   /* power below this deceleration, cruise above */
 					double decelerationStart;    /* brake above this deceleration, cruise below */
 					double decelerationStep;     /* the deceleration step per brake notch */
-					double BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
+					double BrakeDeceleration = Train.Cars[Train.DriverCar].AirBrake.DecelerationAtServiceMaximumPressure;
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
@@ -332,7 +332,7 @@ namespace OpenBve
 							break;
 						}
 					}
-					if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake | Train.Specs.MaximumBrakeNotch <= 0)
+					if (Train.Cars[Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake | Train.Specs.MaximumBrakeNotch <= 0)
 					{
 						decelerationCruise = 0.3 * BrakeDeceleration;
 						decelerationStart = 0.5 * BrakeDeceleration;
@@ -708,7 +708,7 @@ namespace OpenBve
 						{
 							TrainManager.ApplyHoldBrake(Train, Train.Specs.HasHoldBrake);
 						}
-						if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+						if (Train.Cars[Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
 						{
 							CurrentInterval = 0.1;
 						}

@@ -117,10 +117,7 @@ namespace OpenBve
 			Single = 1,
 			Loop = 2
 		}
-		internal struct TrainAirBrake
-		{
-			internal AirBrakeHandle Handle;
-		}
+
 		internal enum DoorMode
 		{
 			AutomaticManualOverride = 0,

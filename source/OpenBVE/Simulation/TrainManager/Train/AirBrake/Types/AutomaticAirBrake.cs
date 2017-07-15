@@ -8,12 +8,11 @@
 			/// <param name="Train">The train</param>
 			/// <param name="CarIndex">The car index</param>
 			/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
-			/// <param name="Sound">The air sound to be played</param>
 			internal override void Update(TrainManager.Train Train, int CarIndex, double TimeElapsed)
 			{
 				if (Type == BrakeType.Main)
 				{
-					Train.Cars[CarIndex].Specs.AirBrake.MainReservoir.UpdateBrakePipe(Train, CarIndex, TimeElapsed);
+					Train.Cars[CarIndex].AirBrake.MainReservoir.UpdateBrakePipe(Train, CarIndex, TimeElapsed);
 				}
 				if (BrakePipe.CurrentPressure + Tolerance < AuxillaryReservoir.CurrentPressure)
 				{

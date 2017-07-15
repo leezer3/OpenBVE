@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace OpenBve.BrakeSystems
+﻿namespace OpenBve.BrakeSystems
 {
+	/// <summary>Defines an emergency brake fitted to a complete train</summary>
     public class EmergencyBrake
     {
         /// <summary>The time of the last EB application in seconds since midnight</summary>
@@ -15,12 +14,15 @@ namespace OpenBve.BrakeSystems
         /// <summary>A reference to the base train</summary>
         private readonly TrainManager.Train Train;
 
+		/// <summary>Create a new emergency brake</summary>
+		/// <param name="train">The base train</param>
         internal EmergencyBrake(TrainManager.Train train)
         {
             Train = train;
             ApplicationTime = double.MaxValue;
         }
 
+		/// <summary>Called once a frame to update the state of the emergency brake</summary>
         internal void Update()
         {
             if (SafetySystemApplied & !Applied)

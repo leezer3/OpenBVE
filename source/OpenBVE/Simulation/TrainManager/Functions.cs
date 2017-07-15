@@ -126,8 +126,8 @@ namespace OpenBve
 				}
 				for (int i = 0; i < train.Cars.Length; i++)
 				{
-					train.Cars[i].Specs.Doors[0].AnticipatedOpen = Game.Stations[stationIndex].OpenLeftDoors;
-					train.Cars[i].Specs.Doors[1].AnticipatedOpen = Game.Stations[stationIndex].OpenRightDoors;
+					train.Cars[i].Doors[0].AnticipatedOpen = Game.Stations[stationIndex].OpenLeftDoors;
+					train.Cars[i].Doors[1].AnticipatedOpen = Game.Stations[stationIndex].OpenRightDoors;
 				}
 				if (train == PlayerTrain)
 				{

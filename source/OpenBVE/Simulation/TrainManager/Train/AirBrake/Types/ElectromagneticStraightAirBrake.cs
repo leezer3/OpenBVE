@@ -63,25 +63,25 @@ namespace OpenBve.BrakeSystems
 					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.EmergencyBrake.Applied & Train.Specs.CurrentReverser.Actual != 0)
 					{
 						// brake control system
-						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.AirBrake.ControlSpeed)
+						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].AirBrake.ControlSpeed)
 						{
-							if (Train.Cars[CarIndex].Specs.ElectropneumaticType == TrainManager.EletropneumaticBrakeType.ClosingElectromagneticValve)
+							if (Train.Cars[CarIndex].ElectropneumaticType == TrainManager.EletropneumaticBrakeType.ClosingElectromagneticValve)
 							{
 								// closing electromagnetic valve (lock-out valve)
 								p = 0.0;
 							}
-							else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == TrainManager.EletropneumaticBrakeType.DelayFillingControl)
+							else if (Train.Cars[CarIndex].ElectropneumaticType == TrainManager.EletropneumaticBrakeType.DelayFillingControl)
 							{
 								// delay-filling control
 								//Variable f is never used, so don't calculate it
 								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 								double pr = p / BrakeCylinder.ServiceMaximumPressure;
-								double b = pr * Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
+								double b = pr * Train.Cars[CarIndex].AirBrake.DecelerationAtServiceMaximumPressure;
 								double d = b - a;
 								if (d > 0.0)
 								{
-									p = d / Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
+									p = d / Train.Cars[CarIndex].AirBrake.DecelerationAtServiceMaximumPressure;
 									if (p > 1.0) p = 1.0;
 									p *= BrakeCylinder.ServiceMaximumPressure;
 								}

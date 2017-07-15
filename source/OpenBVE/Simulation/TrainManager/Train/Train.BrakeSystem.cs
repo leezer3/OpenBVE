@@ -26,24 +26,24 @@ namespace OpenBve
 				{
 					if (Train.Cars[i - 1].Derailed | Train.Cars[i].Derailed)
 					{
-						Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = 0.0;
+						Train.Cars[i].AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+						if (Train.Cars[i].AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].AirBrake.BrakePipe.CurrentPressure = 0.0;
 					}
 				}
 				if (i < Train.Cars.Length - 1)
 				{
 					if (Train.Cars[i].Derailed | Train.Cars[i + 1].Derailed)
 					{
-						Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
-						if (Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = 0.0;
+						Train.Cars[i].AirBrake.BrakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+						if (Train.Cars[i].AirBrake.BrakePipe.CurrentPressure < 0.0) Train.Cars[i].AirBrake.BrakePipe.CurrentPressure = 0.0;
 					}
 				}
-				TotalPressure += Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure;
+				TotalPressure += Train.Cars[i].AirBrake.BrakePipe.CurrentPressure;
 			}
 			double AveragePressure = TotalPressure / (double)Train.Cars.Length;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i].Specs.AirBrake.BrakePipe.CurrentPressure = AveragePressure;
+				Train.Cars[i].AirBrake.BrakePipe.CurrentPressure = AveragePressure;
 			}
 		}
 
@@ -55,13 +55,13 @@ namespace OpenBve
 		/// <param name="DecelerationDueToMotor">The total motor deceleration this car provides</param>
 		private static void UpdateBrakeSystem(Train Train, int CarIndex, double TimeElapsed, out double DecelerationDueToBrake, out double DecelerationDueToMotor)
 		{
-			Train.Cars[CarIndex].Specs.AirBrake.UpdateSystem(Train, CarIndex, TimeElapsed);
+			Train.Cars[CarIndex].AirBrake.UpdateSystem(Train, CarIndex, TimeElapsed);
 
 			// deceleration provided by brake
-			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure;
-			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
+			double pressureratio = Train.Cars[CarIndex].AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].AirBrake.BrakeCylinder.ServiceMaximumPressure;
+			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].AirBrake.DecelerationAtServiceMaximumPressure;
 			// deceleration provided by motor
-			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.AirBrake.ControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.EmergencyBrake.Applied)
+			if (Train.Cars[CarIndex].BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].AirBrake.ControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.EmergencyBrake.Applied)
 			{
 				double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 				double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
@@ -74,19 +74,19 @@ namespace OpenBve
 			// hold brake
 			if (Train.Specs.CurrentHoldBrake.Actual & DecelerationDueToMotor == 0.0)
 			{
-				if (Game.SecondsSinceMidnight >= Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime)
+				if (Game.SecondsSinceMidnight >= Train.Cars[CarIndex].HoldBrake.NextUpdateTime)
 				{
-					Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime = Game.SecondsSinceMidnight + Train.Cars[CarIndex].Specs.HoldBrake.UpdateInterval;
-					Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput += 0.8 * Train.Cars[CarIndex].Specs.CurrentAcceleration * (double)Math.Sign(Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed);
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput < 0.0) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
+					Train.Cars[CarIndex].HoldBrake.NextUpdateTime = Game.SecondsSinceMidnight + Train.Cars[CarIndex].HoldBrake.UpdateInterval;
+					Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput += 0.8 * Train.Cars[CarIndex].Specs.CurrentAcceleration * (double)Math.Sign(Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed);
+					if (Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput < 0.0) Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput = 0.0;
 					double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput > a) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = a;
+					if (Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput > a) Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput = a;
 				}
-				DecelerationDueToMotor = Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput;
+				DecelerationDueToMotor = Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput;
 			}
 			else
 			{
-				Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
+				Train.Cars[CarIndex].HoldBrake.CurrentAccelerationOutput = 0.0;
 			}
 			{ // rub sound
 				Sounds.SoundBuffer buffer;

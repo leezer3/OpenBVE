@@ -17,8 +17,6 @@ namespace OpenBve
 #pragma warning restore 0649
 			internal Axle FrontAxle;
 			internal Axle RearAxle;
-			internal double FrontAxlePosition;
-			internal double RearAxlePosition;
 			internal Vector3 Up;
 			internal CarSection[] CarSections;
 			internal int CurrentCarSection;
@@ -197,7 +195,7 @@ namespace OpenBve
 		        double px = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 		        double py = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 		        double pz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-		        double d = 0.5 * (FrontAxle.Position + RearAxlePosition);
+		        double d = 0.5 * (FrontAxle.Position + RearAxle.Position);
 		        px -= dx * d;
 		        py -= dy * d;
 		        pz -= dz * d;

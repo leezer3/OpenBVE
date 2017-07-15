@@ -66,7 +66,7 @@
 						CurrentPressure += r;
 					}
 				}
-				else if (Train.Cars[CarIndex].Specs.BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake)
+				else if (Train.Cars[CarIndex].BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake)
 				{
 					double p; if (Train.EmergencyBrake.Applied)
 					{
