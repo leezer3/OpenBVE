@@ -87,7 +87,7 @@ namespace OpenBve
 						R = 0.3f; G = 1.0f; B = 0.0f;
 						break;
 					case MessageColor.Blue:
-						R = 1.0f; G = 1.0f; B = 1.0f;
+						R = 0.0f; G = 0.0f; B = 1.0f;
 						break;
 					case MessageColor.Magenta:
 						R = 1.0f; G = 0.0f; B = 0.7f;

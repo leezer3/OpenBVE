@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Text;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
@@ -192,7 +193,46 @@ namespace OpenBve {
             previousMouseState = Mouse.GetState();
 	    }
 
-	    internal static MouseState currentMouseState;
+		internal static void DragFile(object sender, FileDropEventArgs e)
+		{
+			int n = Files.Length;
+			Array.Resize<string>(ref Files, n + 1);
+			Files[n] = e.FileName;
+			// reset
+			ReducedMode = false;
+			LightingRelative = -1.0;
+			Game.Reset();
+			TextureManager.UnuseAllTextures();
+			Fonts.Initialize();
+			Interface.ClearMessages();
+			for (int i = 0; i < Files.Length; i++)
+			{
+#if !DEBUG
+				            try
+				            {
+#endif
+				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
+					ObjectManager.ObjectLoadMode.Normal, false, false, false, 0, 0, 0);
+				ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+					new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+					0.0);
+#if !DEBUG
+				            }
+				            catch (Exception ex)
+				            {
+					            Interface.AddMessage(Interface.MessageType.Critical, false,
+						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
+						            Files[i] + ".");
+				            }
+#endif
+			}
+			ObjectManager.InitializeVisibility();
+			ObjectManager.FinishCreatingObjects();
+			ObjectManager.UpdateVisibility(0.0, true);
+			ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+		}
+
+		internal static MouseState currentMouseState;
 	    internal static MouseState previousMouseState;
 
 	    internal static void MouseMovement()

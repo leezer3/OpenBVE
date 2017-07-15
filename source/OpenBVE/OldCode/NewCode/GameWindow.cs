@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -275,12 +276,11 @@ namespace OpenBve
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons
 			//Do this after the renderer has init and the loop has started to prevent timing issues
-			Keyboard.KeyDown	+= MainLoop.keyDownEvent;
-			Keyboard.KeyUp		+= MainLoop.keyUpEvent;
-			Keyboard.KeyRepeat	 = false;
-			Mouse.ButtonDown	+= MainLoop.mouseDownEvent;
-			Mouse.Move			+= MainLoop.mouseMoveEvent;
-			Mouse.WheelChanged  += MainLoop.mouseWheelEvent;
+			KeyDown	+= MainLoop.keyDownEvent;
+			KeyUp	+= MainLoop.keyUpEvent;
+			MouseDown	+= MainLoop.mouseDownEvent;
+			MouseMove	+= MainLoop.mouseMoveEvent;
+			MouseWheel  += MainLoop.mouseWheelEvent;
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -631,7 +631,7 @@ namespace OpenBve
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
 					Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"),MessageManager.MessageDependency.None, Interface.GameMode.Expert,
-						OpenBveApi.Colors.MessageColor.Blue, Game.SecondsSinceMidnight + 10.0, null);
+						OpenBveApi.Colors.MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 				}
 			}
 			

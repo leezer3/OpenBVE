@@ -61,6 +61,25 @@ namespace OpenBve
 				this.Position = position;
 			}
 			internal static readonly CarSound Empty = new CarSound(null, null, new Vector3(0.0, 0.0, 0.0));
+
+			/// <summary>Attempts to load a sound file into a car-sound</summary>
+			/// <param name="FileName">The sound to load</param>
+			/// <param name="Position">The position that the sound is emitted from within the car</param>
+			/// <param name="Radius">The sound radius</param>
+			/// <returns>The new car sound, or an empty car sound if load fails</returns>
+			internal CarSound(string FileName, Vector3 Position, double Radius)
+			{
+				this = TrainManager.CarSound.Empty;
+				this.Position = Position;
+				this.Source = null;
+				if (FileName != null)
+				{
+					if (System.IO.File.Exists(FileName))
+					{
+						this.Buffer = Sounds.RegisterBuffer(FileName, Radius);
+					}
+				}
+			}
 		}
 		internal struct MotorSoundTableEntry
 		{
