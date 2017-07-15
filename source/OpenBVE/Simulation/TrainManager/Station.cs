@@ -92,7 +92,7 @@ namespace OpenBve
 								left = false;
 								for (int j = 0; j < Train.Cars.Length; j++)
 								{
-									if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
+									if (Train.Cars[j].Specs.Doors[0].AnticipatedOpen)
 									{
 										left = true; break;
 									}
@@ -107,7 +107,7 @@ namespace OpenBve
 								right = false;
 								for (int j = 0; j < Train.Cars.Length; j++)
 								{
-									if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
+									if (Train.Cars[j].Specs.Doors[1].AnticipatedOpen)
 									{
 										right = true; break;
 									}

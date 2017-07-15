@@ -432,7 +432,7 @@ namespace OpenBve
                 {
                     for (int k = 0; k < Train.Cars.Length; k++)
                     {
-                        if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
+                        if (Train.Cars[j].Specs.Doors[0].AnticipatedOpen)
                         {
                             return true;
                         }
@@ -450,7 +450,7 @@ namespace OpenBve
                 if (Train == null) return false;
                 if (Train.Cars.Length <= CarIndex)
                 {
-                    if (Train.Cars[CarIndex].Specs.AnticipatedLeftDoorsOpened)
+                    if (Train.Cars[CarIndex].Specs.Doors[0].AnticipatedOpen)
                     {
                         return true;
                     }
@@ -469,7 +469,7 @@ namespace OpenBve
                 {
                     for (int k = 0; k < Train.Cars.Length; k++)
                     {
-                        if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
+                        if (Train.Cars[j].Specs.Doors[1].AnticipatedOpen)
                         {
                             return true;
                         }
@@ -487,7 +487,7 @@ namespace OpenBve
                 if (Train == null) return false;
                 if (Train.Cars.Length <= CarIndex)
                 {
-                    if (Train.Cars[CarIndex].Specs.AnticipatedRightDoorsOpened)
+                    if (Train.Cars[CarIndex].Specs.Doors[1].AnticipatedOpen)
                     {
                         return true;
                     }

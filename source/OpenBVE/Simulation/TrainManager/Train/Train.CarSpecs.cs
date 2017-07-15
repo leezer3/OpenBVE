@@ -62,8 +62,6 @@ namespace OpenBve
 			internal double CurrentPitchDueToAccelerationSlowValue;
 			/// systems
 			internal CarHoldBrake HoldBrake;
-			//internal CarConstSpeed ConstSpeed;
-			//internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal AirBrake.CarAirBrake AirBrake;
@@ -73,8 +71,8 @@ namespace OpenBve
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
-			internal bool AnticipatedLeftDoorsOpened;
-			internal bool AnticipatedRightDoorsOpened;
+			//internal bool Doors[0].AnticipatedOpen;
+			//internal bool Doors[1].AnticipatedOpen;
 		}
 	}
 }

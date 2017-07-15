@@ -601,6 +601,8 @@ namespace OpenBve
 				}
 			}
 
+			/// <summary>Called once a frame to update the speeds of all cars</summary>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
 			private void UpdateSpeeds(double TimeElapsed)
 			{
 				if (Game.MinimalisticSimulation & this == PlayerTrain)
@@ -812,7 +814,8 @@ namespace OpenBve
 				Specs.CurrentAverageAcceleration *= invcarlen;
 			}
 
-			// update train physics and controls
+			/// <summary>Called once a frame to update the train's physics and controls</summary>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
 			private void UpdatePhysicsAndControls(double TimeElapsed)
 			{
 				if (TimeElapsed == 0.0 || TimeElapsed > 1000)
@@ -919,7 +922,7 @@ namespace OpenBve
 				}
 			}
 
-
+			/// <summary>Call once to initialize the train when it is introduced</summary>
 			internal void Initialize()
 		    {
 		        for (int i = 0; i < Cars.Length; i++)

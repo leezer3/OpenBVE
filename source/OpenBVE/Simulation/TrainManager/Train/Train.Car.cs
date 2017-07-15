@@ -30,7 +30,7 @@ namespace OpenBve
 		    internal ReAdhesionDevice reAdhesionDevice;
             /// <summary>The car constant speed device</summary>
 		    internal ConstantSpeedDevice constantSpeedDevice;
-
+			/// <summary>The car index within the train</summary>
 		    internal int Index;
 
 			internal Horn[] Horns;
@@ -65,9 +65,12 @@ namespace OpenBve
 			/// <summary>Whether this car is currently in a station</summary>
 			/// TODO: This appears only to be set by the station start/ end events and not checked elsewhere, why???
 			internal bool CurrentlyInStation;
-
+			/// <summary>Holds a reference to the base train</summary>
 		    internal Train Train;
 
+			/// <summary>Creates a new car</summary>
+			/// <param name="train">The base train</param>
+			/// <param name="index">The car index within the train</param>
 		    internal Car(Train train, int index)
 		    {
 		        this.Train = train;
@@ -75,7 +78,6 @@ namespace OpenBve
 		    }
 
 			/// <summary>Call this method to move a car</summary>
-			/// <param name="CarIndex">The car index to move</param>
 			/// <param name="Delta">The length to move</param>
 			/// <param name="TimeElapsed">The elapsed time</param>
 			internal void Move(double Delta, double TimeElapsed)
@@ -131,6 +133,11 @@ namespace OpenBve
 		        return 0.0;
 		    }
 
+			/// <summary>Is called once a frame to get the new speed for the car</summary>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
+			/// <param name="DecelerationDueToMotor">The decelleration applied by the regeneretive braking of the electric motor</param>
+			/// <param name="DecelerationDueToBrake">The deceleration applied by the brakes</param>
+			/// <returns>The new speed</returns>
 		    internal double GetSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake)
 		    {
 		        double newSpeed = 0.0;
@@ -443,6 +450,8 @@ namespace OpenBve
 		        return newSpeed;
 		    }
 
+			/// <summary>Is called once a frame to update the toppling, cant and spring angles for the car</summary>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
 		    internal void UpdateTopplingCantAndSpring(double TimeElapsed)
 		    {
 		        if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
@@ -849,6 +858,9 @@ namespace OpenBve
 		        }
 		    }
 
+			/// <summary>Gets the aerodynamic resistance for this car</summary>
+			/// <param name="frontAxle">NOT USED</param>
+			/// <returns>The aerodynamic resistance value</returns>
 		    internal double GetResistance(bool frontAxle)
 		    {
 		        double t;
@@ -1097,6 +1109,7 @@ namespace OpenBve
 		        }
             }
 
+			/// <summary>Call once to initialize the car</summary>
             internal void Initialize()
 		    {
 		        for (int i = 0; i < CarSections.Length; i++)
@@ -1115,6 +1128,7 @@ namespace OpenBve
 		        Brightness.NextBrightness = 1.0f;
 		    }
 
+			/// <summary>Call once to initialize the car sounds</summary>
 			internal void InitializeSounds()
 			{
 				Sounds.Run = new TrainManager.CarSound[] { };
@@ -1159,7 +1173,8 @@ namespace OpenBve
 				Sounds.Plugin = new TrainManager.CarSound[] { };
 			}
 
-		    // change car section
+		    /// <summary>Changes the currently visible car section</summary>
+			/// <param name="SectionIndex">The new car section to show</param>
 		    internal void ChangeCarSection(int SectionIndex)
 		    {
 		        if (CarSections.Length == 0)
@@ -1196,6 +1211,10 @@ namespace OpenBve
 		        UpdateObjects(0.0, true, false);
 		    }
 
+			/// <summary>Is called to update any animated objects attached to the car</summary>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
+			/// <param name="ForceUpdate">Whether this is a forced update (camera change etc.)</param>
+			/// <param name="EnableDamping">Whether to enable daming</param>
 		    internal void UpdateObjects(double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		    {
 		        // calculate positions and directions for section element update
@@ -1279,6 +1298,17 @@ namespace OpenBve
 		        }
 		    }
 
+			/// <summary>Is called to update a car section element</summary>
+			/// <param name="SectionIndex">The car section</param>
+			/// <param name="ElementIndex">The element index</param>
+			/// <param name="Position">The camera position</param>
+			/// <param name="Direction">The camera direction</param>
+			/// <param name="Up">The up vector</param>
+			/// <param name="Side">The side vector</param>
+			/// <param name="Show">Whether we are showing or hiding this object</param>
+			/// <param name="TimeElapsed">The frame time elapsed</param>
+			/// <param name="ForceUpdate">Whether this is a forced update</param>
+			/// <param name="EnableDamping">Whether to enable damping</param>
 		    private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 		    {
 		        Vector3 p;
