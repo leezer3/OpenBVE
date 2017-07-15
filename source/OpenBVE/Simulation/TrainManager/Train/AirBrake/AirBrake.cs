@@ -34,6 +34,10 @@ namespace OpenBve.BrakeSystems
 			internal Vector3 AirSoundPosition;
 			/// <summary>The current Air Sound to be played</summary>
 			internal AirSound AirSound = AirSound.None;
+			/// <summary>The deceleration this brake system provides at maximum service pressure</summary>
+			internal double DecelerationAtServiceMaximumPressure;
+			/// <summary>The speed at which the electric regenerative brake behaviour changes (Dependant on brake type)</summary>
+			internal double ControlSpeed;
 
 			internal const double Tolerance = 5000.0;
 

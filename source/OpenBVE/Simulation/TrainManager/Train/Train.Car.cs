@@ -937,7 +937,7 @@ namespace OpenBve
 		                        else if (ndir == -1)
 		                        {
 		                            // brake
-		                            double max = Specs.BrakeDecelerationAtServiceMaximumPressure;
+		                            double max = Specs.AirBrake.DecelerationAtServiceMaximumPressure;
 		                            if (max != 0.0)
 		                            {
 		                                double cur = -Specs.CurrentAccelerationOutput;

@@ -767,8 +767,8 @@ namespace OpenBve
 						break;
 				}
 				Train.Cars[i].Specs.ElectropneumaticType = ElectropneumaticType;
-				Train.Cars[i].Specs.BrakeControlSpeed = BrakeControlSpeed;
-				Train.Cars[i].Specs.BrakeDecelerationAtServiceMaximumPressure = BrakeDeceleration;
+				Train.Cars[i].Specs.AirBrake.ControlSpeed = BrakeControlSpeed;
+				Train.Cars[i].Specs.AirBrake.DecelerationAtServiceMaximumPressure = BrakeDeceleration;
 				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
 				/*
 				* Rate values are all constants, and are expressed in pascals per second

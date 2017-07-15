@@ -320,7 +320,7 @@ namespace OpenBve
 					double decelerationCruise;   /* power below this deceleration, cruise above */
 					double decelerationStart;    /* brake above this deceleration, cruise below */
 					double decelerationStep;     /* the deceleration step per brake notch */
-					double BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.BrakeDecelerationAtServiceMaximumPressure;
+					double BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)

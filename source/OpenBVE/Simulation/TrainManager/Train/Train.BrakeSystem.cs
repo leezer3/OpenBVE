@@ -59,9 +59,9 @@ namespace OpenBve
 
 			// deceleration provided by brake
 			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.CurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinder.ServiceMaximumPressure;
-			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
 			// deceleration provided by motor
-			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.EmergencyBrake.Applied)
+			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.AirBrake.ControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.EmergencyBrake.Applied)
 			{
 				double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 				double a = Train.Cars[CarIndex].Specs.MotorDeceleration;

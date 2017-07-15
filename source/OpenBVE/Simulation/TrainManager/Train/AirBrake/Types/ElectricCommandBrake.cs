@@ -20,7 +20,7 @@ namespace OpenBve.BrakeSystems
 				if (!Train.EmergencyBrake.Applied & Train.Specs.CurrentReverser.Actual != 0)
 				{
 					// brake control system
-					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
+					if (Train.Cars[CarIndex].Specs.IsMotorCar & Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.AirBrake.ControlSpeed)
 					{
 						if (Train.Cars[CarIndex].Specs.ElectropneumaticType == TrainManager.EletropneumaticBrakeType.ClosingElectromagneticValve)
 						{
@@ -34,11 +34,11 @@ namespace OpenBve.BrakeSystems
 							//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 							double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 							double pr = p / BrakeCylinder.ServiceMaximumPressure;
-							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+							double b = pr * Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
 							double d = b - a;
 							if (d > 0.0)
 							{
-								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+								p = d / Train.Cars[CarIndex].Specs.AirBrake.DecelerationAtServiceMaximumPressure;
 								if (p > 1.0) p = 1.0;
 								p *= BrakeCylinder.ServiceMaximumPressure;
 							}

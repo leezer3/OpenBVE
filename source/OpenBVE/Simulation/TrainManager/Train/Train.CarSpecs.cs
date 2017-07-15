@@ -26,8 +26,6 @@ namespace OpenBve
 			internal double JerkBrakeUp;
 			internal double JerkBrakeDown;
 			/// brake
-			internal double BrakeDecelerationAtServiceMaximumPressure;
-			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
 			/// physical properties
 			
@@ -71,8 +69,6 @@ namespace OpenBve
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
-			//internal bool Doors[0].AnticipatedOpen;
-			//internal bool Doors[1].AnticipatedOpen;
 		}
 	}
 }
