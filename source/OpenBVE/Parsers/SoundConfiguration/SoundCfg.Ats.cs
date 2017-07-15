@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
 		internal static void LoadDefaultATSSounds(TrainManager.Train train, string trainFolder)
 		{
-			Vector3 position = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3 position = new Vector3(train.Cars[train.DriverCar].DriverPosition.X, train.Cars[train.DriverCar].DriverPosition.Y, train.Cars[train.DriverCar].DriverPosition.Z + 1.0);
 			const double radius = 2.0;
 			train.Cars[train.DriverCar].Sounds.Plugin = new TrainManager.CarSound[] {
 				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), position, radius),

@@ -865,7 +865,7 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.Klaxon:
-						if (Train != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns != null)
+						if (Train != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns != null)
 						{
 							for (int j = 0; j < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns.Length; j++)
 							{

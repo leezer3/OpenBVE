@@ -74,11 +74,35 @@ namespace OpenBve
 		        this.Index = index;
 		    }
 
-            /// <summary>Gets the current acceleration output for this car</summary>
-            /// <param name="CurveIndex">The acceleration curve to use</param>
-            /// <param name="Speed">The speed in km/h</param>
-            /// <returns>The acceleration output in m/s</returns>
-		    internal double GetAccelerationOutput(int CurveIndex, double Speed)
+			/// <summary>Call this method to move a car</summary>
+			/// <param name="CarIndex">The car index to move</param>
+			/// <param name="Delta">The length to move</param>
+			/// <param name="TimeElapsed">The elapsed time</param>
+			internal void Move(double Delta, double TimeElapsed)
+			{
+				if (Train.State != TrainState.Disposed)
+				{
+					TrackManager.UpdateTrackFollower(ref FrontAxle.Follower, FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref FrontBogie.FrontAxle.Follower, FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref FrontBogie.RearAxle.Follower, FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					if (Train.State != TrainState.Disposed)
+					{
+						TrackManager.UpdateTrackFollower(ref RearAxle.Follower, RearAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref RearBogie.FrontAxle.Follower, RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref RearBogie.RearAxle.Follower, RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						if (Train.State != TrainState.Disposed)
+						{
+							TrackManager.UpdateTrackFollower(ref BeaconReceiver, BeaconReceiver.TrackPosition + Delta, true, true);
+						}
+					}
+				}
+			}
+
+			/// <summary>Gets the current acceleration output for this car</summary>
+			/// <param name="CurveIndex">The acceleration curve to use</param>
+			/// <param name="Speed">The speed in km/h</param>
+			/// <returns>The acceleration output in m/s</returns>
+			internal double GetAccelerationOutput(int CurveIndex, double Speed)
 		    {
 		        if (CurveIndex < Specs.AccelerationCurves.Length)
 		        {
@@ -1090,6 +1114,50 @@ namespace OpenBve
 		        Brightness.PreviousBrightness = 1.0f;
 		        Brightness.NextBrightness = 1.0f;
 		    }
+
+			internal void InitializeSounds()
+			{
+				Sounds.Run = new TrainManager.CarSound[] { };
+				Sounds.Flange = new TrainManager.CarSound[] { };
+				Sounds.Adjust = TrainManager.CarSound.Empty;
+				Sounds.BrakeHandleApply = TrainManager.CarSound.Empty;
+				Sounds.BrakeHandleMin = TrainManager.CarSound.Empty;
+				Sounds.BrakeHandleMax = TrainManager.CarSound.Empty;
+				Sounds.BrakeHandleRelease = TrainManager.CarSound.Empty;
+				Sounds.BreakerResume = TrainManager.CarSound.Empty;
+				Sounds.BreakerResumeOrInterrupt = TrainManager.CarSound.Empty;
+				Sounds.DoorCloseL = TrainManager.CarSound.Empty;
+				Sounds.DoorCloseR = TrainManager.CarSound.Empty;
+				Sounds.DoorOpenL = TrainManager.CarSound.Empty;
+				Sounds.DoorOpenR = TrainManager.CarSound.Empty;
+				Sounds.EmrBrake = TrainManager.CarSound.Empty;
+				Sounds.Flange = new TrainManager.CarSound[] { };
+				Sounds.FlangeVolume = new double[] { };
+				Sounds.Halt = TrainManager.CarSound.Empty;
+				Horns = new TrainManager.Horn[]
+				{
+					new TrainManager.Horn(),
+					new TrainManager.Horn(),
+					new TrainManager.Horn()
+				};
+				Sounds.Loop = TrainManager.CarSound.Empty;
+				Sounds.MasterControllerUp = TrainManager.CarSound.Empty;
+				Sounds.MasterControllerDown = TrainManager.CarSound.Empty;
+				Sounds.MasterControllerMin = TrainManager.CarSound.Empty;
+				Sounds.MasterControllerMax = TrainManager.CarSound.Empty;
+				Sounds.PilotLampOn = TrainManager.CarSound.Empty;
+				Sounds.PilotLampOff = TrainManager.CarSound.Empty;
+				FrontAxle.PointSounds = new TrainManager.CarSound[] { };
+				RearAxle.PointSounds = new TrainManager.CarSound[] { };
+				Sounds.ReverserOn = TrainManager.CarSound.Empty;
+				Sounds.ReverserOff = TrainManager.CarSound.Empty;
+				Sounds.Rub = TrainManager.CarSound.Empty;
+				Sounds.Run = new TrainManager.CarSound[] { };
+				Sounds.RunVolume = new double[] { };
+				Sounds.SpringL = TrainManager.CarSound.Empty;
+				Sounds.SpringR = TrainManager.CarSound.Empty;
+				Sounds.Plugin = new TrainManager.CarSound[] { };
+			}
 
 		    // change car section
 		    internal void ChangeCarSection(int SectionIndex)

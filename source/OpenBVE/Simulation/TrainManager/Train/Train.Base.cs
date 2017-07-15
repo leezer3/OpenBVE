@@ -339,34 +339,13 @@ namespace OpenBve
 		        }
 		    }
 
-            /// <summary>Call this method to move a car</summary>
-            /// <param name="CarIndex">The car index to move</param>
-            /// <param name="Delta">The length to move</param>
-            /// <param name="TimeElapsed">The elapsed time</param>
-            internal void MoveCar(int CarIndex, double Delta, double TimeElapsed)
-			{
-				if (State != TrainState.Disposed)
-				{
-					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontAxle.Follower, Cars[CarIndex].FrontAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontBogie.FrontAxle.Follower, Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref Cars[CarIndex].FrontBogie.RearAxle.Follower, Cars[CarIndex].FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
-					if (State != TrainState.Disposed)
-					{
-						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearAxle.Follower, Cars[CarIndex].RearAxle.Follower.TrackPosition + Delta, true, true);
-						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearBogie.FrontAxle.Follower, Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-						TrackManager.UpdateTrackFollower(ref Cars[CarIndex].RearBogie.RearAxle.Follower, Cars[CarIndex].RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
-						if (State != TrainState.Disposed)
-						{
-							TrackManager.UpdateTrackFollower(ref Cars[CarIndex].BeaconReceiver, Cars[CarIndex].BeaconReceiver.TrackPosition + Delta, true, true);
-						}
-					}
-				}
-			}
+            
 
 			/// <summary>Call this method to place the cars of a train</summary>
 			/// <param name="TrackPosition">The track position to start from</param>
 			internal void PlaceCars(double TrackPosition)
 			{
+				//This method cannot be diluted down to the car level, as we need to adjust for couplers between cars
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					//Front axle track position
@@ -846,7 +825,7 @@ namespace OpenBve
 				// move cars
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					MoveCar(i, Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
+					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
 					if (State == TrainState.Disposed)
 					{
 						//If our train has been disposed of, we need to do no further processing
@@ -951,8 +930,18 @@ namespace OpenBve
 		        Update(0.0);
 		    }
 
-            /// <summary>Disposes of this train</summary>
-            internal void Dispose()
+			/// <summary>Initializes a train with the default (empty) set of car sounds</summary> 
+			internal void InitializeCarSounds()
+			{
+				// initialize 
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].InitializeSounds();
+				}
+			}
+
+			/// <summary>Disposes of this train</summary>
+			internal void Dispose()
 		    {
 		        State = TrainState.Disposed;
 		        for (int i = 0; i < Cars.Length; i++)

@@ -15,6 +15,8 @@ namespace OpenBve
 			
 			///<summary>Whether this is a motor car</summary>
 			internal bool IsMotorCar;
+
+			internal bool IsDriverCar;
 			/// <summary>The array of acceleration curve data</summary>
 			internal AccelerationCurve[] AccelerationCurves;
 			internal double AccelerationCurvesMultiplier;
