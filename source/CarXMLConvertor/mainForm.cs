@@ -4,9 +4,9 @@ using Path = OpenBveApi.Path;
 
 namespace CarXmlConvertor
 {
-    public partial class CarXmlConvertor : Form
+    public partial class MainForm : Form
     {
-        public CarXmlConvertor()
+        public MainForm()
         {
             InitializeComponent();
         }

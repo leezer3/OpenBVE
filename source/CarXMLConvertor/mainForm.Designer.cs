@@ -1,6 +1,6 @@
 ﻿namespace CarXmlConvertor
 {
-    partial class CarXmlConvertor
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CarXmlConvertor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.labelSelectTrain = new System.Windows.Forms.Label();
             this.buttonSelectFolder = new System.Windows.Forms.Button();

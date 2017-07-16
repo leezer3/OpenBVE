@@ -13,7 +13,7 @@ namespace CarXmlConvertor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CarXmlConvertor());
+            Application.Run(new MainForm());
         }
     }
 }
