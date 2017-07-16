@@ -318,7 +318,7 @@ namespace OpenBve
 					if (left | right)
 					{
 						// departure message
-						if (Game.SecondsSinceMidnight > Train.StationDepartureTime && Game.Stations[i].StationType != Game.StationType.Terminal)
+						if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].StationType != Game.StationType.Terminal || Train != PlayerTrain))
 						{
 							Train.StationState = TrainStopState.Completed;
 							if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
