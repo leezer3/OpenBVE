@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using GLPixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;

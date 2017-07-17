@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Xml;
 
 namespace OpenBve
@@ -30,9 +31,64 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch
+			catch(Exception ex)
 			{
-				return null;
+				//The XML is not strictly valid
+				string[] Lines = File.ReadAllLines(FileName);
+				using (var stringReader = new StringReader(Lines[0]))
+				{
+					var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+					using (var xmlReader = XmlReader.Create(stringReader, settings))
+					{
+						if (xmlReader.Read())
+						{
+							//Attempt to find the text encoding and re-read the file
+							var result = xmlReader.GetAttribute("encoding");
+							var e = System.Text.Encoding.GetEncoding(result);
+							Lines = File.ReadAllLines(FileName, e);
+							//Turf out the old encoding, as our string array should now be UTF-8
+							Lines[0] = "<?xml version=\"1.0\"?>";
+						}
+					}
+				}
+				for (int i = 0; i < Lines.Length; i++)
+				{
+					while (Lines[i].IndexOf("\"\"") != -1)
+					{
+						//Loksim parser tolerates multiple quotes, strict XML does not
+						Lines[i] = Lines[i].Replace("\"\"", "\"");
+					}
+					
+				}
+				bool tryLoad = false;
+				try
+				{
+					//Horrible hack: Write out our string array to a new memory stream, then load from this stream
+					//Why can't XmlDocument.Load() just take a string array......
+					using (var stream = new MemoryStream())
+					{
+						var sw = new StreamWriter(stream);
+						foreach (var line in Lines)
+						{
+							sw.Write(line);
+							sw.Flush();
+						}
+						sw.Flush();
+						stream.Position = 0;
+						currentXML.Load(stream);
+						tryLoad = true;
+					}
+				}
+				catch
+				{
+					//Generic catch-all clause
+				}
+				if (!tryLoad)
+				{
+					//Pass out the *original* XML error, not anything generated when we've tried to correct it
+					Interface.AddMessage(Interface.MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
+					return null;
+				}
 			}
 			
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
@@ -64,8 +120,46 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
 														
+														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
+														if (!System.IO.File.Exists(ObjectFile))
+														{
+															if (attribute.Value.StartsWith("\\Objekte"))
+															{
+																//This is a reference to the base Loksim3D object directory
+																bool LoksimRootFound = false;
+																DirectoryInfo d = new DirectoryInfo(BaseDir);
+																while (d.Parent != null)
+																{
+																	//Recurse upwards and try to see if we're in the Loksim directory
+																	d = d.Parent;
+																	if (d.ToString().ToLowerInvariant() == "objekte")
+																	{
+																		d = d.Parent;
+																		LoksimRootFound = true;
+																		ObjectFile = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
+																		break;
+																	}
+																}
+															}
+															if (!System.IO.File.Exists(ObjectFile))
+															{
+																//Last-ditch attempt: Check User & Public for the Loksim object directory
+																if (!Program.CurrentlyRunOnMono)
+																{
+																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
+																	if (!System.IO.File.Exists(ObjectFile))
+																	{
+																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
+																	}
+																}
+															}
+															if (!System.IO.File.Exists(ObjectFile))
+															{
+																Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
+																break;
+															}
+														}
 														Object.Name = ObjectFile;
 														ObjectCount++;
 														break;
@@ -95,6 +189,10 @@ namespace OpenBve
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
+						if(string.IsNullOrEmpty(CurrentObjects[i].Name))
+						{
+							continue;
+						}
 						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].RotationX, CurrentObjects[i].RotationY, CurrentObjects[i].RotationZ);
 						if (Object != null)
 						{

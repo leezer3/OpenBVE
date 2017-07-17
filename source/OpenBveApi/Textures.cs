@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0659, 0661
 
 using System;
+using System.Runtime.Remoting.Messaging;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures {
@@ -33,7 +34,25 @@ namespace OpenBveApi.Textures {
 		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		private readonly byte[] MyBytes;
-		// --- constructors ---
+
+		/// <summary>Gets the color of the given pixel</summary>
+		/// <param name="X">The X-coordinate of the pixel</param>
+		/// <param name="Y">The Y-coordinate of the pixel</param>
+		/// <returns></returns>
+		public Color24 GetPixel(int X, int Y)
+		{
+			if (X > MyWidth)
+			{
+				throw new ArgumentException("X is outside the bounds of the image");
+			}
+			if (Y > MyWidth)
+			{
+				throw new ArgumentException("Y is outside the bounds of the image");
+			}
+			int firstByte = 4 * X * Y;
+			return new Color24(MyBytes[firstByte],MyBytes[firstByte + 1],MyBytes[firstByte + 2]);
+		}
+
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="width">The width of the texture in pixels.</param>
 		/// <param name="height">The height of the texture in pixels.</param>

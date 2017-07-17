@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Windows.Forms;
+using System.Linq;
 using System.Xml;
 
 namespace OpenBve
@@ -15,6 +16,7 @@ namespace OpenBve
             internal World.ColorRGBA Color;
             internal World.ColorRGB EmissiveColor;
             internal bool EmissiveColorUsed;
+	        internal bool FirstPixelTransparent;
             internal World.ColorRGB TransparentColor;
             internal bool TransparentColorUsed;
             internal string DaytimeTexture;
@@ -58,15 +60,18 @@ namespace OpenBve
                 this.Materials = new Material[] { new Material() };
             }
         }
-        // read object
-        /// <summary>Loads a Loksim3D object from a file.</summary>
-        /// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-        /// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-        /// <param name="LoadMode">The texture load mode.</param>
-        /// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
-        /// /// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
-        /// <returns>The object loaded.</returns>
-        internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, double RotationX, double RotationY, double RotationZ)
+		// read object
+		/// <summary>Loads a Loksim3D object from a file.</summary>
+		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
+		/// <param name="LoadMode">The texture load mode.</param>
+		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
+		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
+		/// <param name="RotationX">The X-axis rotation to be applied</param>
+		/// <param name="RotationY">The Y-axis rotation to be applied</param>
+		/// <param name="RotationZ">The Y-axis rotation to be applied</param>
+		/// <returns>The object loaded.</returns>
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, double RotationX, double RotationY, double RotationZ)
         {
             XmlDocument currentXML = new XmlDocument();
             //May need to be changed to use de-DE
@@ -86,6 +91,9 @@ namespace OpenBve
             string tday = null;
             string tnight = null;
             bool TransparencyUsed = false;
+	        bool TransparentTypSet = false;
+	        bool FirstPxTransparent = false;
+	        World.ColorRGB FirstPxColor = new World.ColorRGB();
             bool Face2 = false;
             int TextureWidth = 0;
             int TextureHeight = 0;
@@ -137,21 +145,23 @@ namespace OpenBve
                                                     tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), attribute.Value);
                                                     if (File.Exists(tday))
                                                     {
-                                                        try
-                                                        {
-                                                            using (Bitmap TextureInformation = new Bitmap(tday))
-                                                            {
-                                                                TextureWidth = TextureInformation.Width;
-                                                                TextureHeight = TextureInformation.Height;
-                                                                Color color = TextureInformation.GetPixel(1, 1);
-                                                                transparentColor = new World.ColorRGB((byte) color.R, (byte) color.G, (byte) color.B);
-                                                            }
-                                                        }
-                                                        catch
-                                                        {
-                                                            Interface.AddMessage(Interface.MessageType.Error, true, "An error occured loading daytime texture " + tday + " in file " + FileName);
-                                                            tday = null;
-                                                        }
+	                                                    try
+	                                                    {
+		                                                    using (Bitmap TextureInformation = new Bitmap(tday))
+		                                                    {
+			                                                    TextureWidth = TextureInformation.Width;
+			                                                    TextureHeight = TextureInformation.Height;
+			                                                    Color color = TextureInformation.GetPixel(0, 0);
+			                                                    FirstPxColor = new World.ColorRGB(color.R, color.G, color.B);
+		                                                    }
+	                                                    }
+	                                                    catch
+	                                                    {
+		                                                    Interface.AddMessage(Interface.MessageType.Error, true,
+			                                                    "An error occured loading daytime texture " + tday +
+			                                                    " in file " + FileName);
+		                                                    tday = null;
+	                                                    }
                                                     }
                                                     else
                                                     {
@@ -161,17 +171,20 @@ namespace OpenBve
                                                 //Defines whether the texture uses transparency
                                                 //May be omitted
                                                 case "Transparent":
-                                                    if (attribute.Value == "TRUE")
-                                                    {
-                                                        TransparencyUsed = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        TransparencyUsed = false;
-                                                    }
+													if (TransparentTypSet)
+													{
+														//Appears to be ignored with TransparentTyp set
+														continue;
+													}
+													if (attribute.Value == "TRUE")
+													{
+														TransparencyUsed = true;
+														transparentColor = new World.ColorRGB(0,0,0);
+													}
                                                     break;
                                                 //Sets the transparency type
                                                 case "TransparentTyp":
+	                                                TransparentTypSet = true;
                                                     switch (attribute.Value)
                                                     {
                                                         case "0":
@@ -182,15 +195,18 @@ namespace OpenBve
                                                             //Transparency is solid black
                                                             TransparencyUsed = true;
                                                             transparentColor = new World.ColorRGB(0,0,0);
+	                                                        FirstPxTransparent = false;
                                                             break;
                                                         case "2":
                                                             //Transparency is the color at Pixel 1,1
                                                             TransparencyUsed = true;
+	                                                        FirstPxTransparent = true;
                                                             break;
                                                         case "3":
                                                             //This is used when transparency is used with an alpha bitmap
                                                             //Not currently supported
                                                             TransparencyUsed = false;
+	                                                        FirstPxTransparent = false;
                                                             break;
                                                     }
                                                     break;
@@ -199,7 +215,7 @@ namespace OpenBve
                                                     Face2 = true;
                                                     break;
 
-                                                /*
+                                        /*
                                          * MISSING PROPERTIES:
                                          * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
                                          * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
@@ -266,7 +282,7 @@ namespace OpenBve
                                 //The Flaeche command creates a face
                                 else if (node.Name == "Flaeche" && node.HasChildNodes)
                                 {
-                                    foreach (XmlNode childNode in node.ChildNodes)
+									foreach (XmlNode childNode in node.ChildNodes)
                                     {
                                         if (childNode.Name == "Props" && childNode.Attributes != null)
                                         {
@@ -287,6 +303,9 @@ namespace OpenBve
                                                         Normals.Length << 1);
                                                 }
                                                 //Run through the vertices list and grab from the temp array
+
+	                                            int smallestX = TextureWidth;
+	                                            int smallestY = TextureHeight;
                                                 for (int j = 0; j < Verticies.Length; j++)
                                                 {
                                                     //This is the position of the vertex in the temp array
@@ -311,10 +330,16 @@ namespace OpenBve
                                                         string[] splitCoords = TextureCoords[j].Split(',');
                                                         float.TryParse(splitCoords[0], out OpenBVEWidth);
                                                         float.TryParse(splitCoords[1], out OpenBVEHeight);
-                                                        if (TextureWidth != 0 && TextureHeight != 0)
+														if (OpenBVEWidth <= smallestX && OpenBVEHeight <= smallestY)
+														{
+															smallestX = (int)OpenBVEWidth;
+															smallestY = (int)OpenBVEHeight;
+														}
+														if (TextureWidth != 0 && TextureHeight != 0)
                                                         {
                                                             currentCoords.X = (OpenBVEWidth / TextureWidth);
                                                             currentCoords.Y = (OpenBVEHeight / TextureHeight);
+
                                                         }
                                                         else
                                                         {
@@ -322,13 +347,15 @@ namespace OpenBve
                                                             currentCoords.Y = 0;
                                                         }
                                                         Builder.Vertices[Builder.Vertices.Length - 1].TextureCoordinates = currentCoords;
-                                                    }
-                                                    if (Face2)
-                                                    {
-                                                        Builder.Faces[f].Flags = (byte) World.MeshFace.Face2Mask;
+	                                                    
+	                                                    
                                                     }
                                                 }
-                                            }
+	                                            if (Face2)
+	                                            {
+		                                            Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+	                                            }
+											}
 
                                         }
                                     }
@@ -385,8 +412,8 @@ namespace OpenBve
                 {
                     for (int j = 0; j < Builder.Materials.Length; j++)
                     {
-                        Builder.Materials[j].TransparentColor = transparentColor;
-                        Builder.Materials[j].TransparentColorUsed = true;
+	                    Builder.Materials[j].TransparentColor = FirstPxTransparent ? FirstPxColor : transparentColor;
+	                    Builder.Materials[j].TransparentColorUsed = true;
                     }
                 }
                  
@@ -456,7 +483,9 @@ namespace OpenBve
                     }
                     if (Builder.Materials[i].DaytimeTexture != null)
                     {
-                        int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+	                    
+						int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+						
                         Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
                     }
                     else
@@ -466,8 +495,31 @@ namespace OpenBve
                     Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
                     if (Builder.Materials[i].NighttimeTexture != null)
                     {
-                        int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
-                        Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
+						Color? tempColor = null;
+	                    if (Builder.Materials[i].FirstPixelTransparent == true)
+	                    {
+		                    try
+		                    {
+			                    using (Bitmap Bitmap = (Bitmap)Image.FromFile(Builder.Materials[i].DaytimeTexture))
+			                    {
+				                    tempColor = Bitmap.GetPixel(0, 0);
+			                    }
+		                    }
+		                    catch
+		                    {
+			                    tempColor = null;
+		                    }
+	                    }
+	                    int tnight;
+	                    if (tempColor != null)
+	                    {
+		                    tnight = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, new World.ColorRGB(tempColor.Value.R, tempColor.Value.G, tempColor.Value.B), Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+	                    }
+	                    else
+	                    {
+		                    tnight = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+	                    }
+						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
                     }
                     else
                     {
