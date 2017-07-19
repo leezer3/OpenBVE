@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -165,7 +166,7 @@ namespace OpenBve {
 		internal struct CarSound {
 			internal int SoundBufferIndex;
 			internal int SoundSourceIndex;
-			internal World.Vector3D Position;
+			internal Vector3 Position;
 		}
 		internal struct MotorSoundTableEntry {
 			internal int SoundBufferIndex;
@@ -179,7 +180,7 @@ namespace OpenBve {
 		}
 		internal struct MotorSound {
 			internal MotorSoundTable[] Tables;
-			internal World.Vector3D Position;
+			internal Vector3 Position;
 			internal double SpeedConversionFactor;
 			internal int SpeedDirection;
 			internal const int MotorP1 = 0;
@@ -250,7 +251,7 @@ namespace OpenBve {
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
-			internal World.Vector3D Up;
+			internal Vector3 Up;
 			internal Section[] Sections;
 			internal int CurrentSection;
 			internal double DriverX;

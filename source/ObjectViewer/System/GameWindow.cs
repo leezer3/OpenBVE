@@ -317,7 +317,7 @@ namespace OpenBve
             //             {
             //                 ObjectManager.UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
             //                     System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false,0,0,0);
-            //                 ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+            //                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
             //                     new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true,
             //                     0.0, 0.0, 25.0, 0.0);
             //             }

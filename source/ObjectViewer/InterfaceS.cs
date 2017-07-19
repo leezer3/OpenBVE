@@ -6,6 +6,7 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 
@@ -76,10 +77,10 @@ namespace OpenBve {
 	internal static class TrackManager {
 		internal struct TrackFollower {
 			internal double TrackPosition;
-			internal World.Vector3D WorldPosition;
-			internal World.Vector3D WorldDirection;
-			internal World.Vector3D WorldUp;
-			internal World.Vector3D WorldSide;
+			internal Vector3 WorldPosition;
+			internal Vector3 WorldDirection;
+			internal Vector3 WorldUp;
+			internal Vector3 WorldSide;
             internal double CurveRadius;
             internal double CurveCant;
             internal double CantDueToInaccuracy;

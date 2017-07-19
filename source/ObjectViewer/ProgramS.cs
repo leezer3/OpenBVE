@@ -14,6 +14,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using MouseEventArgs = OpenTK.Input.MouseEventArgs;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
 	internal static class Program {
@@ -32,10 +33,10 @@ namespace OpenBve {
 	    internal static bool[] SkipArgs;
 
 		// mouse
-		internal static World.Vector3D MouseCameraPosition = new World.Vector3D(0.0, 0.0, 0.0);
-		internal static World.Vector3D MouseCameraDirection = new World.Vector3D(0.0, 0.0, 1.0);
-		internal static World.Vector3D MouseCameraUp = new World.Vector3D(0.0, 1.0, 0.0);
-		internal static World.Vector3D MouseCameraSide = new World.Vector3D(1.0, 0.0, 0.0);
+		internal static Vector3 MouseCameraPosition = new Vector3(0.0, 0.0, 0.0);
+		internal static Vector3 MouseCameraDirection = new Vector3(0.0, 0.0, 1.0);
+		internal static Vector3 MouseCameraUp = new Vector3(0.0, 1.0, 0.0);
+		internal static Vector3 MouseCameraSide = new Vector3(1.0, 0.0, 0.0);
 	    internal static int MouseButton;
 
 	    internal static int MoveX = 0;
@@ -136,9 +137,9 @@ namespace OpenBve {
 
 	    // reset camera
 	    internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new World.Vector3D(-5.0, 2.5, -25.0);
-			World.AbsoluteCameraDirection = new World.Vector3D(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new World.Vector3D(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
+			World.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
+			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
+			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
 			World.Normalize(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z);
 			World.Normalize(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z);
 			World.AbsoluteCameraUp = World.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
@@ -212,8 +213,8 @@ namespace OpenBve {
 				            {
 #endif
 				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-					ObjectManager.ObjectLoadMode.Normal, false, false, false, 0, 0, 0);
-				ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+					ObjectManager.ObjectLoadMode.Normal, false, false, false, new Vector3());
+				ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 					new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
 #if !DEBUG
@@ -316,8 +317,8 @@ namespace OpenBve {
 									try {
 										#endif
 	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-	                        ObjectManager.ObjectLoadMode.Normal, false, false, false,0,0,0);
-	                    ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+	                        ObjectManager.ObjectLoadMode.Normal, false, false, false, new Vector3());
+	                    ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 	                        new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
@@ -360,8 +361,8 @@ namespace OpenBve {
 				            {
 #endif
 					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-						            ObjectManager.ObjectLoadMode.Normal, false, false, false, 0, 0, 0);
-					            ObjectManager.CreateObject(o, new World.Vector3D(0.0, 0.0, 0.0),
+						            ObjectManager.ObjectLoadMode.Normal, false, false, false, new Vector3());
+					            ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 						            new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);
 #if !DEBUG

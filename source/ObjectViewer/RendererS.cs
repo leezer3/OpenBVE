@@ -8,6 +8,8 @@
 using System;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenBveApi.Math;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -82,7 +84,7 @@ namespace OpenBve
         internal static bool OptionLighting = true;
         internal static World.ColorRGB OptionAmbientColor = new World.ColorRGB(160, 160, 160);
         internal static World.ColorRGB OptionDiffuseColor = new World.ColorRGB(159, 159, 159);
-        internal static World.Vector3Df OptionLightPosition = new World.Vector3Df(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+        internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
         internal static float OptionLightingResultingAmount = 1.0f;
         internal static bool OptionFauxNighttime = true;
         internal static bool OptionNormals = false;
@@ -151,7 +153,7 @@ namespace OpenBve
             OptionLighting = true;
             OptionAmbientColor = new World.ColorRGB(160, 160, 160);
             OptionDiffuseColor = new World.ColorRGB(160, 160, 160);
-            OptionLightPosition = new World.Vector3Df(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+            OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
             OptionLightingResultingAmount = 1.0f;
             GL.Disable(EnableCap.Fog); FogEnabled = false;
         }
@@ -246,7 +248,7 @@ namespace OpenBve
             GL.MultMatrix(ref mat);
             if (OptionLighting)
             {
-                GL.Light(LightName.Light0, LightParameter.Position, new float[] { OptionLightPosition.X, OptionLightPosition.Y, OptionLightPosition.Z, 0.0f });
+                GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
             }
             // render polygons
             GL.Disable(EnableCap.DepthTest);
@@ -276,11 +278,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 1.0, 0.0);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 0.0, 1.0);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
                 if (LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -369,11 +371,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                RenderBox(new World.Vector3D(0.0, 0.0, 0.0), new World.Vector3D(0.0, 0.0, 1.0), new World.Vector3D(0.0, 1.0, 0.0), new World.Vector3D(1.0, 0.0, 0.0), new World.Vector3D(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
             }
             RenderOverlays();
             // finalize rendering
@@ -679,22 +681,22 @@ namespace OpenBve
         }
 
         // render cube
-        private static void RenderBox(World.Vector3D Position, World.Vector3D Direction, World.Vector3D Up, World.Vector3D Side, World.Vector3D Size, double CameraX, double CameraY, double CameraZ)
+        private static void RenderBox(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, double CameraX, double CameraY, double CameraZ)
         {
             if (TexturingEnabled)
             {
                 GL.Disable(EnableCap.Texture2D);
                 TexturingEnabled = false;
             }
-            World.Vector3D[] v = new World.Vector3D[8];
-            v[0] = new World.Vector3D(Size.X, Size.Y, -Size.Z);
-            v[1] = new World.Vector3D(Size.X, -Size.Y, -Size.Z);
-            v[2] = new World.Vector3D(-Size.X, -Size.Y, -Size.Z);
-            v[3] = new World.Vector3D(-Size.X, Size.Y, -Size.Z);
-            v[4] = new World.Vector3D(Size.X, Size.Y, Size.Z);
-            v[5] = new World.Vector3D(Size.X, -Size.Y, Size.Z);
-            v[6] = new World.Vector3D(-Size.X, -Size.Y, Size.Z);
-            v[7] = new World.Vector3D(-Size.X, Size.Y, Size.Z);
+            Vector3[] v = new Vector3[8];
+            v[0] = new Vector3(Size.X, Size.Y, -Size.Z);
+            v[1] = new Vector3(Size.X, -Size.Y, -Size.Z);
+            v[2] = new Vector3(-Size.X, -Size.Y, -Size.Z);
+            v[3] = new Vector3(-Size.X, Size.Y, -Size.Z);
+            v[4] = new Vector3(Size.X, Size.Y, Size.Z);
+            v[5] = new Vector3(Size.X, -Size.Y, Size.Z);
+            v[6] = new Vector3(-Size.X, -Size.Y, Size.Z);
+            v[7] = new Vector3(-Size.X, Size.Y, Size.Z);
             for (int i = 0; i < 8; i++)
             {
                 World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);

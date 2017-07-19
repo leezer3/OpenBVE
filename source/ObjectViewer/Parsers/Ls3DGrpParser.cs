@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -11,11 +12,15 @@ namespace OpenBve
 		{
 			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
 			internal string Name;
-			internal World.Vector3D Position;
+			internal Vector3 Position;
+			internal Vector3 Rotation;
 
-			internal double RotationX;
-			internal double RotationY;
-			internal double RotationZ;
+			internal GruppenObject()
+			{
+				Name = string.Empty;
+				Position = new Vector3();
+				Rotation = new Vector3();
+			}
 		}
 
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
@@ -172,9 +177,9 @@ namespace OpenBve
 													case "Rotation":
 														string[] SplitRotation = attribute.Value.Split(';');
 
-														double.TryParse(SplitRotation[0], out Object.RotationX);
-														double.TryParse(SplitRotation[1], out Object.RotationY);
-														double.TryParse(SplitRotation[2], out Object.RotationZ);
+														double.TryParse(SplitRotation[0], out Object.Rotation.X);
+														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
+														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
 														break;
 												}
 											}
@@ -193,7 +198,7 @@ namespace OpenBve
 						{
 							continue;
 						}
-						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].RotationX, CurrentObjects[i].RotationY, CurrentObjects[i].RotationZ);
+						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length +1);
@@ -225,6 +230,7 @@ namespace OpenBve
 									(ObjectManager.AnimatedObjectCollection) obj[j];
 								for (int k = 0; k < a.Objects.Length; k++)
 								{
+									
 									for (int h = 0; h < a.Objects[k].States.Length; h++)
 									{
 										a.Objects[k].States[h].Position.X += CurrentObjects[j].Position.X;
