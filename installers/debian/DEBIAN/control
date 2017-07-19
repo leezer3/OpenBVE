@@ -4,9 +4,9 @@ Section: universe/games
 Installed-Size: 14950
 Maintainer: leezer3 <leezer3@gmail.com>
 Architecture: all
-Version: 1.5.0.10
+Version: 1.5.1.5
 Provides: bve-engine
-Depends: mono-runtime (>= 3.2.8), libmono-corlib4.0-cil (>= 3.2.8), libmono-system-drawing4.0-cil (>= 1.0), libmono-system-windows-forms4.0-cil (>= 1.0), libmono-system4.0-cil (>= 3.2.8), libmono-i18n4.0-all, openbve-data (>= 1.4.0.0)
+Depends: mono-runtime (>= 3.2.8), libmono-corlib4.5-cil (>= 3.2.8), libmono-system-drawing4.0-cil (>= 1.0), libmono-system-windows-forms4.0-cil (>= 1.0), libmono-system4.0-cil (>= 3.2.8), libmono-i18n4.0-all
 Recommends: bve-route, bve-train
 Description: realistic 3D train/railway simulator (main program)
 Homepage: http://openbve-project.net
