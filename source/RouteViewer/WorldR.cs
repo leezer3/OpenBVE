@@ -6,39 +6,11 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
 	public static class World {
-
-		
-
-		// colors
-		/// <summary>Represents an RGB color with 8-bit precision per channel.</summary>
-		internal struct ColorRGB {
-			internal byte R;
-			internal byte G;
-			internal byte B;
-			internal ColorRGB(byte R, byte G, byte B) {
-				this.R = R;
-				this.G = G;
-				this.B = B;
-			}
-		}
-		/// <summary>Represents an RGBA color with 8-bit precision per channel.</summary>
-		internal struct ColorRGBA {
-			internal byte R;
-			internal byte G;
-			internal byte B;
-			internal byte A;
-			internal ColorRGBA(byte R, byte G, byte B, byte A) {
-				this.R = R;
-				this.G = G;
-				this.B = B;
-				this.A = A;
-			}
-		}
-
 		// vertices
 		/// <summary>Represents a vertex consisting of 3D coordinates and 2D texture coordinates.</summary>
 		internal struct Vertex {
@@ -81,9 +53,9 @@ namespace OpenBve {
 		internal struct MeshMaterial {
 			/// <summary>A bit mask combining constants of the MeshMaterial structure.</summary>
 			internal byte Flags;
-			internal ColorRGBA Color;
-			internal ColorRGB TransparentColor;
-			internal ColorRGB EmissiveColor;
+			internal Color32 Color;
+			internal Color24 TransparentColor;
+			internal Color24 EmissiveColor;
 			internal int DaytimeTextureIndex;
 			internal int NighttimeTextureIndex;
 			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
@@ -216,7 +188,7 @@ namespace OpenBve {
 			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 			/// <param name="Vertices">The vertices that make up one face.</param>
 			/// <param name="Color">The color to be applied on the face.</param>
-			internal Mesh(Vertex[] Vertices, ColorRGBA Color) {
+			internal Mesh(Vertex[] Vertices, Color32 Color) {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
@@ -233,7 +205,7 @@ namespace OpenBve {
 			/// <param name="Vertices">The vertices used.</param>
 			/// <param name="FaceVertices">A list of faces represented by a list of references to vertices.</param>
 			/// <param name="Color">The color to be applied on all of the faces.</param>
-			internal Mesh(Vertex[] Vertices, int[][] FaceVertices, ColorRGBA Color) {
+			internal Mesh(Vertex[] Vertices, int[][] FaceVertices, Color32 Color) {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;

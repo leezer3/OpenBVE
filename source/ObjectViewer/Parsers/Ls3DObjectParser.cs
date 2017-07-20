@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Xml;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -12,10 +13,10 @@ namespace OpenBve
         // structures
         private class Material
         {
-            internal World.ColorRGBA Color;
-            internal World.ColorRGB EmissiveColor;
+            internal Color32 Color;
+            internal Color24 EmissiveColor;
             internal bool EmissiveColorUsed;
-            internal World.ColorRGB TransparentColor;
+            internal Color24 TransparentColor;
             internal bool TransparentColorUsed;
             internal string DaytimeTexture;
             internal string NighttimeTexture;
@@ -23,10 +24,10 @@ namespace OpenBve
             internal ushort GlowAttenuationData;
             internal Material()
             {
-                this.Color = new World.ColorRGBA(255, 255, 255, 255);
-                this.EmissiveColor = new World.ColorRGB(0, 0, 0);
+                this.Color = new Color32(255, 255, 255, 255);
+                this.EmissiveColor = new Color24(0, 0, 0);
                 this.EmissiveColorUsed = false;
-                this.TransparentColor = new World.ColorRGB(0, 0, 0);
+                this.TransparentColor = new Color24(0, 0, 0);
                 this.TransparentColorUsed = false;
                 this.DaytimeTexture = null;
                 this.NighttimeTexture = null;
@@ -86,13 +87,13 @@ namespace OpenBve
 
             World.Vertex[] tempVertices = new World.Vertex[0];
             Vector3[] tempNormals = new Vector3[0];
-            World.ColorRGB transparentColor = new World.ColorRGB();
+            Color24 transparentColor = new Color24();
             string tday = null;
             string tnight = null;
             bool TransparencyUsed = false;
 	        bool TransparentTypSet = false;
 	        bool FirstPxTransparent = false;
-	        World.ColorRGB FirstPxColor = new World.ColorRGB();
+	        Color24 FirstPxColor = new Color24();
             bool Face2 = false;
             int TextureWidth = 0;
             int TextureHeight = 0;
@@ -189,7 +190,7 @@ namespace OpenBve
 			                                                TextureWidth = TextureInformation.Width;
 			                                                TextureHeight = TextureInformation.Height;
 			                                                Color color = TextureInformation.GetPixel(0, 0);
-			                                                FirstPxColor = new World.ColorRGB(color.R, color.G, color.B);
+			                                                FirstPxColor = new Color24(color.R, color.G, color.B);
 		                                                }
 	                                                }
 	                                                catch
@@ -211,7 +212,7 @@ namespace OpenBve
 													if (attribute.Value == "TRUE")
 													{
 														TransparencyUsed = true;
-														transparentColor = new World.ColorRGB(0,0,0);
+														transparentColor = new Color24(0,0,0);
 													}
                                                     break;
                                                 //Sets the transparency type
@@ -226,7 +227,7 @@ namespace OpenBve
                                                         case "1":
                                                             //Transparency is solid black
                                                             TransparencyUsed = true;
-                                                            transparentColor = new World.ColorRGB(0,0,0);
+                                                            transparentColor = new Color24(0,0,0);
 	                                                        FirstPxTransparent = false;
                                                             break;
                                                         case "2":

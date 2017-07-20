@@ -93,8 +93,8 @@ namespace OpenBve {
 
 		// options
 		internal static bool OptionLighting = true;
-		internal static World.ColorRGB OptionAmbientColor = new World.ColorRGB(160, 160, 160);
-		internal static World.ColorRGB OptionDiffuseColor = new World.ColorRGB(160, 160, 160);
+		internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
+		internal static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
 		internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
 		internal static float OptionLightingResultingAmount = 1.0f;
 		internal static bool OptionNormals = false;
@@ -123,8 +123,8 @@ namespace OpenBve {
 			OverlayListDistance = new double[256];
 			OverlayListCount = 0;
 			OptionLighting = true;
-			OptionAmbientColor = new World.ColorRGB(160, 160, 160);
-			OptionDiffuseColor = new World.ColorRGB(160, 160, 160);
+			OptionAmbientColor = new Color24(160, 160, 160);
+			OptionDiffuseColor = new Color24(160, 160, 160);
 			OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
 			OptionLightingResultingAmount = 1.0f;
 			GL.Disable(EnableCap.Fog); FogEnabled = false;

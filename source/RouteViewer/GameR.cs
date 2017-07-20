@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -32,18 +33,18 @@ namespace OpenBve {
 		internal struct Fog {
 			internal float Start;
 			internal float End;
-			internal World.ColorRGB Color;
+			internal Color24 Color;
 			internal double TrackPosition;
-			internal Fog(float Start, float End, World.ColorRGB Color, double TrackPosition) {
+			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
 				this.Start = Start;
 				this.End = End;
 				this.Color = Color;
 				this.TrackPosition = TrackPosition;
 			}
 		}
-		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 0.0);
-		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 0.5);
-		internal static Fog NextFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 1.0);
+		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
+		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
+		internal static Fog NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
 		internal static float NoFogStart = 800.0f;
 		internal static float NoFogEnd = 1600.0f;
 
@@ -161,9 +162,9 @@ namespace OpenBve {
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			PreviousFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 0.0);
-			CurrentFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 0.5);
-			NextFog = new Fog(0.0f, 0.0f, new World.ColorRGB(128, 128, 128), 1.0);
+			PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
+			CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
+			NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
 			NoFogStart = (float)World.BackgroundImageDistance + 200.0f;
 			NoFogEnd = 2.0f * NoFogStart;
 			InfoTotalTriangles = 0;
