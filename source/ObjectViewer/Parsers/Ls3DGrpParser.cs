@@ -14,6 +14,7 @@ namespace OpenBve
 			internal string Name;
 			internal Vector3 Position;
 			internal Vector3 Rotation;
+			internal string FunctionScript;
 
 			internal GruppenObject()
 			{
@@ -114,6 +115,7 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.HasChildNodes)
 								{
+									
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
@@ -125,7 +127,6 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														
 														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
 														if (!System.IO.File.Exists(ObjectFile))
 														{
@@ -181,6 +182,64 @@ namespace OpenBve
 														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
 														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
 														break;
+													case "ShowOn":
+														//Defines when the object should be shown
+														if (attribute.Value.StartsWith("Tür") && attribute.Value.EndsWith("offen"))
+														{
+															//Shown when a door is open
+															//HACK: Assume even doors are left
+															switch (attribute.Value[3])
+															{
+																case '0':
+																case '2':
+																case '4':
+																case '6':
+																case '8':
+																	//Left doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("leftdoors != 0");
+																	break;
+																case '1':
+																case '3':
+																case '5':
+																case '7':
+																case '9':
+																	//Right doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("rightdoors != 0");
+																	break;
+															}
+															break;
+														}
+														Object.FunctionScript = "1";
+														break;
+													case "HideOn":
+														//Defines when the object should be shown
+														if (attribute.Value.StartsWith("Tür") && attribute.Value.EndsWith("offen"))
+														{
+															//Shown when a door is closed
+															//HACK: Assume odd doors are right
+															switch (attribute.Value[3])
+															{
+																case '0':
+																case '2':
+																case '4':
+																case '6':
+																case '8':
+																	//Left doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("leftdoors == 0");
+																	break;
+																case '1':
+																case '3':
+																case '5':
+																case '7':
+																case '9':
+																	//Right doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("rightdoors == 0");
+																	break;
+															}
+															break;
+														}
+														Object.FunctionScript = "1";
+														break;
 												}
 											}
 											CurrentObjects[CurrentObjects.Length - 1] = Object;
@@ -194,7 +253,7 @@ namespace OpenBve
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
-						if(string.IsNullOrEmpty(CurrentObjects[i].Name))
+						if(CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
@@ -218,10 +277,15 @@ namespace OpenBve
 								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
 								{
 									Object = s,
-									Position = CurrentObjects[j].Position
+									Position = CurrentObjects[j].Position,
 								};
 								a.States = new ObjectManager.AnimatedObjectState[] {aos};
 								Result.Objects[j] = a;
+								if (!string.IsNullOrEmpty(CurrentObjects[j].FunctionScript))
+								{
+									Result.Objects[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[j].FunctionScript + " 1 == --");
+								}
+								
 								ObjectCount++;
 							}
 							else if (obj[j] is ObjectManager.AnimatedObjectCollection)
