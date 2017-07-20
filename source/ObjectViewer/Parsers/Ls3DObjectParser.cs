@@ -438,14 +438,24 @@ namespace OpenBve
                     }
                 }
 
-                //Apply rotation
-                /*
+				//Apply rotation
+				/*
                  * NOTES:
                  * No rotation order is specified
                  * The rotation string in a .l3dgrp file is ordered Y, Z, X    ??? Can't find a good reason for this ???
                  * Rotations must still be performed in X,Y,Z order to produce correct results
                  */
-                if (Rotation.X != 0.0)
+
+				if (Rotation.Z != 0.0)
+				{
+					//Convert to radians
+					Rotation.Z *= 0.0174532925199433;
+					//Apply rotation
+					ApplyRotation(Builder, 1, 0, 0, Rotation.Z);
+				}
+
+
+				if (Rotation.X != 0.0)
                 {
                     //This is actually the Y-Axis rotation
                     //Convert to radians
@@ -461,13 +471,7 @@ namespace OpenBve
                     //Apply rotation
                     ApplyRotation(Builder, 0, 0, 1, Rotation.Y);
                 }
-                if (Rotation.Z != 0.0)
-                {
-                    //Convert to radians
-                    Rotation.Z *= 0.0174532925199433;
-                    //Apply rotation
-                    ApplyRotation(Builder, 1, 0, 0, Rotation.Z);
-                }
+                
                 
                 //These files appear to only have one texture defined
                 //Therefore import later- May have to change
