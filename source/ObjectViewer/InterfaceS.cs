@@ -172,56 +172,6 @@ namespace OpenBve {
 			return false;
 		}
 
-		// try parse hex color
-		internal static bool TryParseHexColor(string Expression, out Color24 Color) {
-			if (Expression.StartsWith("#")) {
-				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out x)) {
-					int r = (x >> 16) & 0xFF;
-					int g = (x >> 8) & 0xFF;
-					int b = x & 0xFF;
-					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255) {
-						Color = new Color24((byte)r, (byte)g, (byte)b);
-						return true;
-					} else {
-						Color = new Color24(0, 0, 255);
-						return false;
-					}
-				} else {
-					Color = new Color24(0, 0, 255);
-					return false;
-				}
-			} else {
-				Color = new Color24(0, 0, 255);
-				return false;
-			}
-		}
-		internal static bool TryParseHexColor(string Expression, out Color32 Color) {
-			if (Expression.StartsWith("#")) {
-				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out x)) {
-					int r = (x >> 16) & 0xFF;
-					int g = (x >> 8) & 0xFF;
-					int b = x & 0xFF;
-					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255) {
-						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
-						return true;
-					} else {
-						Color = new Color32(0, 0, 255, 255);
-						return false;
-					}
-				} else {
-					Color = new Color32(0, 0, 255, 255);
-					return false;
-				}
-			} else {
-				Color = new Color32(0, 0, 255, 255);
-				return false;
-			}
-		}
-
-
-
 		// trim inside
 		private static string TrimInside(string Expression) {
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);
