@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Input;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -264,7 +264,7 @@ namespace OpenBve
                     World.AbsoluteCameraSide.Y = 0.0;
                     World.Normalize(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z);
                     World.Normalize(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z);
-                    World.AbsoluteCameraUp = World.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
+                    World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
                 }
                 else
                 {

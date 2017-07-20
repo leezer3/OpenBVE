@@ -454,15 +454,6 @@ namespace OpenBve {
 			cy = az * bx - ax * bz;
 			cz = ax * by - ay * bx;
 		}
-		internal static Vector3 Cross(Vector3 A, Vector3 B) {
-			Vector3 C; Cross(A.X, A.Y, A.Z, B.X, B.Y, B.Z, out C.X, out C.Y, out C.Z);
-			return C;
-		}
-
-		// translate
-		internal static Vector3 Translate(Vector3 A, Vector3 B) {
-			return new Vector3(A.X + B.X, A.Y + B.Y, A.Z + B.Z);
-		}
 
 		// transformation
 		internal struct Transformation {
