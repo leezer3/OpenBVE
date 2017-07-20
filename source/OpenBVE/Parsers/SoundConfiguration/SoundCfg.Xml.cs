@@ -520,7 +520,7 @@ namespace OpenBve
 					case "filename":
 						try
 						{
-							fileName = OpenBveApi.Path.CombineFile(c.InnerText, currentPath);
+							fileName = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
