@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -36,7 +37,7 @@ namespace OpenBve {
 			internal double[] Stack;
 			internal double[] Constants;
 			internal double LastResult;
-			internal double Perform(TrainManager.Train Train, int CarIndex, World.Vector3D Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 				return this.LastResult;
 			}
@@ -46,7 +47,7 @@ namespace OpenBve {
 		}
 
 		// execute function script
-		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, World.Vector3D Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.Instructions.Length; i++) {
 				switch (Function.Instructions[i]) {

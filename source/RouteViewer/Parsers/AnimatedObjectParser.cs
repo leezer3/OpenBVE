@@ -1,5 +1,6 @@
 using System;
 using OpenBveApi;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -38,7 +39,7 @@ namespace OpenBve {
 						case "[include]":
 							{
 								i++;
-								World.Vector3D position = new World.Vector3D(0.0, 0.0, 0.0);
+								Vector3 position = new Vector3(0.0, 0.0, 0.0);
 								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
@@ -60,7 +61,7 @@ namespace OpenBve {
 															} else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z)) {
 																Interface.AddMessage(Interface.MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															} else {
-																position = new World.Vector3D(x, y, z);
+																position = new Vector3(x, y, z);
 															}
 														} else {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -134,17 +135,17 @@ namespace OpenBve {
 								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
 								Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
 								Result.Objects[ObjectCount].CurrentState = -1;
-								Result.Objects[ObjectCount].TranslateXDirection = new World.Vector3D(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].TranslateYDirection = new World.Vector3D(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].TranslateZDirection = new World.Vector3D(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].RotateXDirection = new World.Vector3D(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].RotateYDirection = new World.Vector3D(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].RotateZDirection = new World.Vector3D(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].TextureShiftXDirection = new World.Vector2D(1.0, 0.0);
-								Result.Objects[ObjectCount].TextureShiftYDirection = new World.Vector2D(0.0, 1.0);
+								Result.Objects[ObjectCount].TranslateXDirection = new Vector3(1.0, 0.0, 0.0);
+								Result.Objects[ObjectCount].TranslateYDirection = new Vector3(0.0, 1.0, 0.0);
+								Result.Objects[ObjectCount].TranslateZDirection = new Vector3(0.0, 0.0, 1.0);
+								Result.Objects[ObjectCount].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+								Result.Objects[ObjectCount].RotateYDirection = new Vector3(0.0, 1.0, 0.0);
+								Result.Objects[ObjectCount].RotateZDirection = new Vector3(0.0, 0.0, 1.0);
+								Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(1.0, 0.0);
+								Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(0.0, 1.0);
 								Result.Objects[ObjectCount].RefreshRate = 0.0;
 								Result.Objects[ObjectCount].ObjectIndex = -1;
-								World.Vector3D Position = new World.Vector3D(0.0, 0.0, 0.0);
+								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 								bool timetableUsed = false;
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;
@@ -168,7 +169,7 @@ namespace OpenBve {
 															} else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z)) {
 																Interface.AddMessage(Interface.MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															} else {
-																Position = new World.Vector3D(x, y, z);
+																Position = new Vector3(x, y, z);
 															}
 														} else {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -239,13 +240,13 @@ namespace OpenBve {
 															} else {
 																switch (a.ToLowerInvariant()) {
 																	case "translatexdirection":
-																		Result.Objects[ObjectCount].TranslateXDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
 																		break;
 																	case "translateydirection":
-																		Result.Objects[ObjectCount].TranslateYDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
 																		break;
 																	case "translatezdirection":
-																		Result.Objects[ObjectCount].TranslateZDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
 																		break;
 																}
 															}
@@ -307,13 +308,13 @@ namespace OpenBve {
 															} else {
 																switch (a.ToLowerInvariant()) {
 																	case "rotatexdirection":
-																		Result.Objects[ObjectCount].RotateXDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].RotateXDirection = new Vector3(x, y, z);
 																		break;
 																	case "rotateydirection":
-																		Result.Objects[ObjectCount].RotateYDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].RotateYDirection = new Vector3(x, y, z);
 																		break;
 																	case "rotatezdirection":
-																		Result.Objects[ObjectCount].RotateZDirection = new World.Vector3D(x, y, z);
+																		Result.Objects[ObjectCount].RotateZDirection = new Vector3(x, y, z);
 																		break;
 																}
 															}
@@ -402,10 +403,10 @@ namespace OpenBve {
 															} else {
 																switch (a.ToLowerInvariant()) {
 																	case "textureshiftxdirection":
-																		Result.Objects[ObjectCount].TextureShiftXDirection = new World.Vector2D(x, y);
+																		Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(x, y);
 																		break;
 																	case "textureshiftydirection":
-																		Result.Objects[ObjectCount].TextureShiftYDirection = new World.Vector2D(x, y);
+																		Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(x, y);
 																		break;
 																}
 															}
@@ -497,7 +498,7 @@ namespace OpenBve {
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
 										Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++) {
-										Result.Objects[ObjectCount].States[k].Position = new World.Vector3D(0.0, 0.0, 0.0);
+										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
 										if (StateFiles[k] != null) {
 											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
 											if (Result.Objects[ObjectCount].States[k].Object != null) {

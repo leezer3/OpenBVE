@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
 	internal static class SoundManager {
@@ -27,7 +28,7 @@ namespace OpenBve {
 
 		// sound sources
 		internal class SoundSource {
-			internal World.Vector3D Position;
+			internal Vector3 Position;
 			internal float[] OpenAlPosition;
 			internal float[] OpenAlVelocity;
 			internal OpenAlIndex OpenAlSourceIndex;
@@ -429,28 +430,28 @@ namespace OpenBve {
 
 		// play sound
 		internal enum Importance { DontCare, AlwaysPlay }
-		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, World.Vector3D Position, Importance Important, bool Looped) {
+		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, Vector3 Position, Importance Important, bool Looped) {
 			PlaySound(ref SoundSourceIndex, true, SoundBufferIndex, null, -1, Position, Important, Looped, 1.0, 1.0);
 		}
-		internal static void PlaySound(int SoundBufferIndex, World.Vector3D Position, Importance Important, bool Looped) {
+		internal static void PlaySound(int SoundBufferIndex, Vector3 Position, Importance Important, bool Looped) {
 			int a = -1;
 			PlaySound(ref a, false, SoundBufferIndex, null, -1, Position, Important, Looped, 1.0, 1.0);
 		}
-		internal static void PlaySound(int SoundBufferIndex, TrainManager.Train Train, int CarIndex, World.Vector3D Position, Importance Important, bool Looped) {
+		internal static void PlaySound(int SoundBufferIndex, TrainManager.Train Train, int CarIndex, Vector3 Position, Importance Important, bool Looped) {
 			int a = -1;
 			PlaySound(ref a, false, SoundBufferIndex, Train, CarIndex, Position, Important, Looped, 1.0, 1.0);
 		}
-		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, World.Vector3D Position, Importance Important, bool Looped) {
+		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, Vector3 Position, Importance Important, bool Looped) {
 			PlaySound(ref SoundSourceIndex, true, SoundBufferIndex, Train, CarIndex, Position, Important, Looped, 1.0, 1.0);
 		}
-		internal static void PlaySound(int SoundBufferIndex, TrainManager.Train Train, int CarIndex, World.Vector3D Position, Importance Important, bool Looped, double Pitch, double Gain) {
+		internal static void PlaySound(int SoundBufferIndex, TrainManager.Train Train, int CarIndex, Vector3 Position, Importance Important, bool Looped, double Pitch, double Gain) {
 			int a = -1;
 			PlaySound(ref a, false, SoundBufferIndex, Train, CarIndex, Position, Important, Looped, Pitch, Gain);
 		}
-		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, World.Vector3D Position, Importance Important, bool Looped, double Pitch, double Gain) {
+		internal static void PlaySound(ref int SoundSourceIndex, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, Vector3 Position, Importance Important, bool Looped, double Pitch, double Gain) {
 			PlaySound(ref SoundSourceIndex, true, SoundBufferIndex, Train, CarIndex, Position, Important, Looped, Pitch, Gain);
 		}
-		private static void PlaySound(ref int SoundSourceIndex, bool ReturnHandle, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, World.Vector3D Position, Importance Important, bool Looped, double Pitch, double Gain) {
+		private static void PlaySound(ref int SoundSourceIndex, bool ReturnHandle, int SoundBufferIndex, TrainManager.Train Train, int CarIndex, Vector3 Position, Importance Important, bool Looped, double Pitch, double Gain) {
 			if (OpenAlContext != ContextHandle.Zero) {
 				if (Game.MinimalisticSimulation & Important == Importance.DontCare | SoundBufferIndex == -1) {
 					return;

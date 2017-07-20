@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class Game {
@@ -218,7 +219,7 @@ namespace OpenBve {
 			internal double DepartureTime;
 			internal int DepartureSoundIndex;
 			internal double StopTime;
-			internal World.Vector3D SoundOrigin;
+			internal Vector3 SoundOrigin;
 			internal StationStopMode StopMode;
 			internal StationType StationType;
 			internal bool ForceStopSignal;
@@ -421,7 +422,7 @@ namespace OpenBve {
 		// points of interest
 		internal struct PointOfInterest {
 			internal double TrackPosition;
-			internal World.Vector3D TrackOffset;
+			internal Vector3 TrackOffset;
 			internal double TrackYaw;
 			internal double TrackPitch;
 			internal double TrackRoll;
