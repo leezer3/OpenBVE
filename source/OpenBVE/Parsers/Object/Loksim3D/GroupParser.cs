@@ -37,7 +37,7 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				//The XML is not strictly valid
 				string[] Lines = File.ReadAllLines(FileName);
@@ -64,7 +64,12 @@ namespace OpenBve
 						//Loksim parser tolerates multiple quotes, strict XML does not
 						Lines[i] = Lines[i].Replace("\"\"", "\"");
 					}
-					
+					while (Lines[i].IndexOf("  ") != -1)
+					{
+						//Replace double-spaces with singles
+						Lines[i] = Lines[i].Replace("  ", " ");
+					}
+
 				}
 				bool tryLoad = false;
 				try
@@ -96,7 +101,7 @@ namespace OpenBve
 					return null;
 				}
 			}
-			
+
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
@@ -115,7 +120,7 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.HasChildNodes)
 								{
-									
+
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
@@ -127,7 +132,7 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
+														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir, attribute.Value);
 														if (!System.IO.File.Exists(ObjectFile))
 														{
 															if (attribute.Value.StartsWith("\\Objekte"))
@@ -151,7 +156,7 @@ namespace OpenBve
 															if (!System.IO.File.Exists(ObjectFile))
 															{
 																//Last-ditch attempt: Check User & Public for the Loksim object directory
-																if (!Program.CurrentlyRunOnMono)
+																if (Program.CurrentlyRunningOnWindows)
 																{
 																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
 																	if (!System.IO.File.Exists(ObjectFile))
@@ -199,18 +204,18 @@ namespace OpenBve
 							}
 						}
 					}
-					
+
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
-						if(CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
+						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
-						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
-							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length +1);
+							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
 							obj[obj.Length - 1] = Object;
 						}
 					}
@@ -221,7 +226,7 @@ namespace OpenBve
 							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
 							if (obj[j] is ObjectManager.StaticObject)
 							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject) obj[j];
+								ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
 								s.Dynamic = true;
 								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
 								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
@@ -229,22 +234,22 @@ namespace OpenBve
 									Object = s,
 									Position = CurrentObjects[j].Position,
 								};
-								a.States = new ObjectManager.AnimatedObjectState[] {aos};
+								a.States = new ObjectManager.AnimatedObjectState[] { aos };
 								Result.Objects[j] = a;
 								if (!string.IsNullOrEmpty(CurrentObjects[j].FunctionScript))
 								{
 									Result.Objects[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[j].FunctionScript + " 1 == --");
 								}
-								
+
 								ObjectCount++;
 							}
 							else if (obj[j] is ObjectManager.AnimatedObjectCollection)
 							{
 								ObjectManager.AnimatedObjectCollection a =
-									(ObjectManager.AnimatedObjectCollection) obj[j];
+									(ObjectManager.AnimatedObjectCollection)obj[j];
 								for (int k = 0; k < a.Objects.Length; k++)
 								{
-									
+
 									for (int h = 0; h < a.Objects[k].States.Length; h++)
 									{
 										a.Objects[k].States[h].Position.X += CurrentObjects[j].Position.X;

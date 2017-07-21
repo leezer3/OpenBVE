@@ -1164,8 +1164,21 @@ namespace OpenBve {
 						if (System.IO.File.Exists(f))
 						{
 							FileName = f;
+							break;
 						}
-						break;
+						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".l3dgrp");
+						if (System.IO.File.Exists(f))
+						{
+							FileName = f;
+							break;
+						}
+						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".l3dobj");
+						if (System.IO.File.Exists(f))
+						{
+							FileName = f;
+							break;
+						}
+					break;
 					}
 				}
 				UnifiedObject Result;
@@ -1216,6 +1229,9 @@ namespace OpenBve {
 						break;
 					case ".xml":
 						Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						break;
+					case ".l3dgrp":
+						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
 						break;
 					default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
