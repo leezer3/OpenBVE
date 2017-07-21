@@ -864,7 +864,7 @@ namespace OpenBve
 					comboboxRouteEncoding.SelectedIndex = 0;
 					comboboxRouteEncoding.Items[0] = "(UTF-8)";
 					comboboxRouteEncoding.Tag = null;
-					Result.RouteEncoding = System.Text.Encoding.UTF8;
+					Result.RouteEncoding = System.Text.Encoding.Default;
 					switch (TextEncoding.GetEncodingFromFile(Result.RouteFile)) {
 						case TextEncoding.Encoding.Utf7:
 							panelRouteEncoding.Enabled = false;
@@ -960,7 +960,7 @@ namespace OpenBve
 				comboboxTrainEncoding.SelectedIndex = 0;
 				comboboxTrainEncoding.Items[0] = "(UTF-8)";
 				comboboxTrainEncoding.Tag = null;
-				Result.TrainEncoding = System.Text.Encoding.UTF8;
+				Result.TrainEncoding = System.Text.Encoding.Default;
 				switch (TextEncoding.GetEncodingFromFile(Result.TrainFolder, "train.txt")) {
 					case TextEncoding.Encoding.Utf8:
 						comboboxTrainEncoding.SelectedIndex = 0;
