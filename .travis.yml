@@ -53,6 +53,10 @@ after_success:
 #Release build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "linuxbuild.zip" "openBVE-$TRAVIS_TAG.zip"
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.zip" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
+#Create deb and push that too on releases
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && make debian
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && mv "installers/debian.deb" "openBVE-$TRAVIS_TAG.deb" 
+ - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_TAG && test "$TRAVIS_OS_NAME" == "linux" && ./UploadScript.sh sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "openBVE-$TRAVIS_TAG.deb" $DEPLOY_USER@$DEPLOY_HOST:$RELEASE_PATH
 ##OSX Builds##
 #Nightly build
  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && test "$TRAVIS_OS_NAME" == "osx" && mv "macbuild.dmg" "OpenBVE-$(date '+%F').dmg"
