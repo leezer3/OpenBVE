@@ -121,5 +121,19 @@ namespace OpenBve
 		{
 			return GetEncodingFromFile(OpenBveApi.Path.CombineFile(Folder, File));
 		}
+
+		internal static bool IsUtf(System.Text.Encoding Encoding)
+		{
+			switch (Encoding.WindowsCodePage)
+			{
+				//UTF codepage numbers
+				case 1200:
+				case 1201:
+				case 65000:
+				case 65001:
+					return true;
+			}
+			return false;
+		}
 	}
 }

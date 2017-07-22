@@ -502,6 +502,11 @@ namespace OpenBve {
 			if (DriverCar < 0 | DriverCar >= Cars) {
 				Interface.AddMessage(Interface.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
 				DriverCar = 0;
+				Train.Cars[0].Specs.IsDriverCar = true;
+			}
+			else
+			{
+				Train.Cars[DriverCar].Specs.IsDriverCar = true;
 			}
 			// brake system
 			double OperatingPressure;

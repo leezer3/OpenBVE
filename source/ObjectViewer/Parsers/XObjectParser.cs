@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class XObjectParser {
@@ -114,9 +116,9 @@ namespace OpenBve {
 			new Template("Vector", new string[] { "float", "float", "float" }),
 			new Template("MeshFace", new string[] { "DWORD", "DWORD[0]" }),
 			new Template("MeshMaterialList", new string[] { "DWORD", "DWORD", "DWORD[1]", "[...]" }),
-			new Template("Material", new string[] { "ColorRGBA", "float", "ColorRGB", "ColorRGB", "[...]" }),
-			new Template("ColorRGBA", new string[] { "float", "float", "float", "float" }),
-			new Template("ColorRGB", new string[] { "float", "float", "float" }),
+			new Template("Material", new string[] { "Color32", "float", "Color24", "Color24", "[...]" }),
+			new Template("Color32", new string[] { "float", "float", "float", "float" }),
+			new Template("Color24", new string[] { "float", "float", "float" }),
 			new Template("TextureFilename", new string[] { "string" }),
 			new Template("MeshTextureCoords", new string[] { "DWORD", "Coords2d[0]" }),
 			new Template("Coords2d", new string[] { "float", "float" }),
@@ -198,8 +200,8 @@ namespace OpenBve {
 				case "template meshface":
 				case "template vector":
 				case "template mesh":
-				case "template colorrgba":
-				case "template colorrgb":
+				case "template Color32":
+				case "template Color24":
 				case "template material":
 				case "template meshmateriallist":
 				case "template coords2d":
@@ -1048,9 +1050,9 @@ namespace OpenBve {
 
 		// structures
 		private struct Material {
-			internal World.ColorRGBA faceColor;
-			internal World.ColorRGB specularColor;
-			internal World.ColorRGB emissiveColor;
+			internal Color32 faceColor;
+			internal Color24 specularColor;
+			internal Color24 emissiveColor;
 			internal string TextureFilename;
 		}
 
@@ -1130,11 +1132,11 @@ namespace OpenBve {
 								double x = (double)vertices[j].Data[0];
 								double y = (double)vertices[j].Data[1];
 								double z = (double)vertices[j].Data[2];
-								Vertices[j].Coordinates = new World.Vector3D(x, y, z);
+								Vertices[j].Coordinates = new Vector3(x, y, z);
 							}
 							// collect faces
 							int[][] Faces = new int[nFaces][];
-							World.Vector3Df[][] FaceNormals = new World.Vector3Df[nFaces][];
+							Vector3[][] FaceNormals = new Vector3[nFaces][];
 							int[] FaceMaterials = new int[nFaces];
 							for (int j = 0; j < nFaces; j++) {
 								FaceMaterials[j] = -1;
@@ -1164,14 +1166,14 @@ namespace OpenBve {
 									return false;
 								}
 								Faces[j] = new int[nFaceVertexIndices];
-								FaceNormals[j] = new World.Vector3Df[nFaceVertexIndices];
+								FaceNormals[j] = new Vector3[nFaceVertexIndices];
 								for (int k = 0; k < nFaceVertexIndices; k++) {
 									if (faceVertexIndices[k] < 0 | faceVertexIndices[k] >= nVertices) {
 										Interface.AddMessage(Interface.MessageType.Error, false, "faceVertexIndices[" + k.ToString(Culture) + "] does not reference a valid vertex in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 										return false;
 									}
 									Faces[j][k] = faceVertexIndices[k];
-									FaceNormals[j][k] = new World.Vector3Df(0.0f, 0.0f, 0.0f);
+									FaceNormals[j][k] = new Vector3(0.0f, 0.0f, 0.0f);
 								}
 							}
 							// collect additional templates
@@ -1227,9 +1229,9 @@ namespace OpenBve {
 											int mn = Materials.Length;
 											Array.Resize<Material>(ref Materials, mn + nMaterials);
 											for (int k = 0; k < nMaterials; k++) {
-												Materials[mn + k].faceColor = new World.ColorRGBA(255, 255, 255, 255);
-												Materials[mn + k].specularColor = new World.ColorRGB(0, 0, 0);
-												Materials[mn + k].emissiveColor = new World.ColorRGB(0, 0, 0);
+												Materials[mn + k].faceColor = new Color32(255, 255, 255, 255);
+												Materials[mn + k].specularColor = new Color24(0, 0, 0);
+												Materials[mn + k].emissiveColor = new Color24(0, 0, 0);
 												Materials[mn + k].TextureFilename = null;
 											}
 											int MaterialIndex = mn;
@@ -1247,16 +1249,16 @@ namespace OpenBve {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Material is expected to have at least 4 arguments in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (!(h.Data[0] is Structure)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " + FileName);
+														Interface.AddMessage(Interface.MessageType.Error, false, "faceColor is expected to be a Color32 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (!(h.Data[1] is double)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "power is expected to be a float in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (!(h.Data[2] is Structure)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "specularColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " + FileName);
+														Interface.AddMessage(Interface.MessageType.Error, false, "specularColor is expected to be a Color32 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (!(h.Data[3] is Structure)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " + FileName);
+														Interface.AddMessage(Interface.MessageType.Error, false, "emissiveColor is expected to be a Color32 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													}
 													Structure faceColor = (Structure)h.Data[0];
@@ -1264,8 +1266,8 @@ namespace OpenBve {
 													Structure emissiveColor = (Structure)h.Data[3];
 													double red, green, blue, alpha;
 													// collect face color
-													if (faceColor.Name != "ColorRGBA") {
-														Interface.AddMessage(Interface.MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " + FileName);
+													if (faceColor.Name != "Color32") {
+														Interface.AddMessage(Interface.MessageType.Error, false, "faceColor is expected to be a Color32 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (faceColor.Data.Length != 4) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "faceColor is expected to have 4 arguments in Material in MeshMaterialList in Mesh in x object file " + FileName);
@@ -1303,10 +1305,10 @@ namespace OpenBve {
 														Interface.AddMessage(Interface.MessageType.Error, false, "alpha is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														alpha = alpha < 0.5 ? 0.0 : 1.0;
 													}
-													Materials[MaterialIndex].faceColor = new World.ColorRGBA((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue), (byte)Math.Round(255.0 * alpha));
+													Materials[MaterialIndex].faceColor = new Color32((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue), (byte)Math.Round(255.0 * alpha));
 													// collect specular color
-													if (specularColor.Name != "ColorRGB") {
-														Interface.AddMessage(Interface.MessageType.Error, false, "specularColor is expected to be a ColorRGB in Material in MeshMaterialList in Mesh in x object file " + FileName);
+													if (specularColor.Name != "Color24") {
+														Interface.AddMessage(Interface.MessageType.Error, false, "specularColor is expected to be a Color24 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (specularColor.Data.Length != 3) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "specularColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " + FileName);
@@ -1336,10 +1338,10 @@ namespace OpenBve {
 														Interface.AddMessage(Interface.MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														blue = blue < 0.5 ? 0.0 : 1.0;
 													}
-													Materials[MaterialIndex].specularColor = new World.ColorRGB((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue));
+													Materials[MaterialIndex].specularColor = new Color24((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue));
 													// collect emissive color
-													if (emissiveColor.Name != "ColorRGB") {
-														Interface.AddMessage(Interface.MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " + FileName);
+													if (emissiveColor.Name != "Color24") {
+														Interface.AddMessage(Interface.MessageType.Error, false, "emissiveColor is expected to be a Color32 in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													} else if (emissiveColor.Data.Length != 3) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "emissiveColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " + FileName);
@@ -1369,7 +1371,7 @@ namespace OpenBve {
 														Interface.AddMessage(Interface.MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " + FileName);
 														blue = blue < 0.5 ? 0.0 : 1.0;
 													}
-													Materials[MaterialIndex].emissiveColor = new World.ColorRGB((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue));
+													Materials[MaterialIndex].emissiveColor = new Color24((byte)Math.Round(255.0 * red), (byte)Math.Round(255.0 * green), (byte)Math.Round(255.0 * blue));
 													// collect additional templates
 													for (int l = 4; l < h.Data.Length; l++) {
 														Structure e = h.Data[l] as Structure;
@@ -1460,7 +1462,7 @@ namespace OpenBve {
 												}
 												double u = (double)textureCoords[k].Data[0];
 												double v = (double)textureCoords[k].Data[1];
-												Vertices[k].TextureCoordinates = new World.Vector2Df((float)u, (float)v);
+												Vertices[k].TextureCoordinates = new Vector2((float)u, (float)v);
 											}
 										} break;
 									case "MeshNormals":
@@ -1503,7 +1505,7 @@ namespace OpenBve {
 												return false;
 											}
 											// collect normals
-											World.Vector3Df[] Normals = new World.Vector3Df[nNormals];
+											Vector3[] Normals = new Vector3[nNormals];
 											for (int k = 0; k < nNormals; k++) {
 												if (normals[k].Name != "Vector") {
 													Interface.AddMessage(Interface.MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to be of template Vertex in MeshNormals in Mesh in x object file " + FileName);
@@ -1525,7 +1527,7 @@ namespace OpenBve {
 												double y = (double)normals[k].Data[1];
 												double z = (double)normals[k].Data[2];
 												World.Normalize(ref x, ref y, ref z);
-												Normals[k] = new World.Vector3Df((float)x, (float)y, (float)z);
+												Normals[k] = new Vector3((float)x, (float)y, (float)z);
 											}
 											// collect faces
 											for (int k = 0; k < nFaceNormals; k++) {
@@ -1571,9 +1573,9 @@ namespace OpenBve {
 							// default material
 							if (Materials.Length == 0) {
 								Materials = new Material[1];
-								Materials[0].faceColor = new World.ColorRGBA(255, 255, 255, 255);
-								Materials[0].emissiveColor = new World.ColorRGB(0, 0, 0);
-								Materials[0].specularColor = new World.ColorRGB(0, 0, 0);
+								Materials[0].faceColor = new Color32(255, 255, 255, 255);
+								Materials[0].emissiveColor = new Color24(0, 0, 0);
+								Materials[0].specularColor = new Color24(0, 0, 0);
 								Materials[0].TextureFilename = null;
 								for (int j = 0; j < nFaces; j++) {
 									FaceMaterials[j] = 0;
@@ -1613,7 +1615,7 @@ namespace OpenBve {
 											}
 										}
 									}
-									int tday = TextureManager.RegisterTexture(Materials[j].TextureFilename, new World.ColorRGB(0, 0, 0), 1, TextureManager.TextureLoadMode.Normal, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal, 0, 0, 0, 0);
+									int tday = TextureManager.RegisterTexture(Materials[j].TextureFilename, new Color24(0, 0, 0), 1, TextureManager.TextureLoadMode.Normal, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal, 0, 0, 0, 0);
 									Object.Mesh.Materials[mm + j].DaytimeTextureIndex = tday;
 									transparent = true;
 								} else {
@@ -1622,7 +1624,7 @@ namespace OpenBve {
 								}
 								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
-								Object.Mesh.Materials[mm + j].TransparentColor = new World.ColorRGB(0, 0, 0);
+								Object.Mesh.Materials[mm + j].TransparentColor = new Color24(0, 0, 0);
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
 								Object.Mesh.Materials[mm + j].NighttimeTextureIndex = -1;
 								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;

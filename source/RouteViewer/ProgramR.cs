@@ -15,6 +15,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
 	internal static class Program {
@@ -124,12 +125,12 @@ namespace OpenBve {
 
 		// reset camera
 		internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new World.Vector3D(0.0, 2.5, -5.0);
-			World.AbsoluteCameraDirection = new World.Vector3D(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new World.Vector3D(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
+			World.AbsoluteCameraPosition = new Vector3(0.0, 2.5, -5.0);
+			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
+			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
 			World.Normalize(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z);
 			World.Normalize(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z);
-			World.AbsoluteCameraUp = World.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
+			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
 			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
@@ -278,6 +279,16 @@ namespace OpenBve {
 				}
 				
 			}
+		}
+
+		internal static void FileDrop(object sender, FileDropEventArgs e)
+		{
+			CurrentlyLoading = true;
+			CurrentRoute = e.FileName;
+			LoadRoute();
+			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+			CurrentlyLoading = false;
+			UpdateCaption();
 		}
 
 		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
@@ -458,7 +469,7 @@ namespace OpenBve {
 					World.CameraCurrentAlignment.Yaw = 0.0;
 					World.CameraCurrentAlignment.Pitch = 0.0;
 					World.CameraCurrentAlignment.Roll = 0.0;
-					World.CameraCurrentAlignment.Position = new World.Vector3D(0.0, 2.5, 0.0);
+					World.CameraCurrentAlignment.Position = new Vector3(0.0, 2.5, 0.0);
 					World.CameraCurrentAlignment.Zoom = 0.0;
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();

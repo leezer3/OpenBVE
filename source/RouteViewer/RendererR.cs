@@ -10,6 +10,8 @@ using System.Drawing;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
+using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace OpenBve {
 	internal static partial class Renderer {
@@ -91,9 +93,9 @@ namespace OpenBve {
 
 		// options
 		internal static bool OptionLighting = true;
-		internal static World.ColorRGB OptionAmbientColor = new World.ColorRGB(160, 160, 160);
-		internal static World.ColorRGB OptionDiffuseColor = new World.ColorRGB(160, 160, 160);
-		internal static World.Vector3Df OptionLightPosition = new World.Vector3Df(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+		internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
+		internal static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
+		internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
 		internal static float OptionLightingResultingAmount = 1.0f;
 		internal static bool OptionNormals = false;
 		internal static bool OptionWireframe = false;
@@ -121,9 +123,9 @@ namespace OpenBve {
 			OverlayListDistance = new double[256];
 			OverlayListCount = 0;
 			OptionLighting = true;
-			OptionAmbientColor = new World.ColorRGB(160, 160, 160);
-			OptionDiffuseColor = new World.ColorRGB(160, 160, 160);
-			OptionLightPosition = new World.Vector3Df(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+			OptionAmbientColor = new Color24(160, 160, 160);
+			OptionDiffuseColor = new Color24(160, 160, 160);
+			OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
 			OptionLightingResultingAmount = 1.0f;
 			GL.Disable(EnableCap.Fog); FogEnabled = false;
 		}
@@ -241,7 +243,7 @@ namespace OpenBve {
 			GL.LoadMatrix(ref lookat);
 			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			if (OptionLighting) {
-				GL.Light(LightName.Light0, LightParameter.Position, new float[] { OptionLightPosition.X, OptionLightPosition.Y, OptionLightPosition.Z, 0.0f });
+				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
 			}
 			// fog
 			double fd = Game.NextFog.TrackPosition - Game.PreviousFog.TrackPosition;
@@ -681,15 +683,15 @@ namespace OpenBve {
 						y1 = (float)(0.375 * World.BackgroundImageDistance);
 					}
 					const int n = 32;
-					World.Vector3Df[] bottom = new World.Vector3Df[n];
-					World.Vector3Df[] top = new World.Vector3Df[n];
+					Vector3[] bottom = new Vector3[n];
+					Vector3[] top = new Vector3[n];
 					double angleValue = 2.61799387799149 - 3.14159265358979 / (double)n;
 					double angleIncrement = 6.28318530717958 / (double)n;
 					for (int i = 0; i < n; i++) {
 						float x = (float)(World.BackgroundImageDistance * Math.Cos(angleValue));
 						float z = (float)(World.BackgroundImageDistance * Math.Sin(angleValue));
-						bottom[i] = new World.Vector3Df(x, y0, z);
-						top[i] = new World.Vector3Df(x, y1, z);
+						bottom[i] = new Vector3(x, y0, z);
+						top[i] = new Vector3(x, y1, z);
 						angleValue += angleIncrement;
 					}
 					float textureStart = 0.5f * (float)Data.Repetition / (float)n;
@@ -856,7 +858,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void RenderCube(World.Vector3D Position, World.Vector3D Direction, World.Vector3D Up, World.Vector3D Side, double Size, double CameraX, double CameraY, double CameraZ, int TextureIndex) {
+		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, int TextureIndex) {
 			int OpenGlTextureIndex = TextureManager.UseTexture(TextureIndex, TextureManager.UseMode.LoadImmediately);
 			if (OpenGlTextureIndex > 0) {
 				if (!TexturingEnabled) {
@@ -870,15 +872,15 @@ namespace OpenBve {
 					TexturingEnabled = false;
 				}
 			}
-			World.Vector3D[] v = new World.Vector3D[8];
-			v[0] = new World.Vector3D(Size, Size, -Size);
-			v[1] = new World.Vector3D(Size, -Size, -Size);
-			v[2] = new World.Vector3D(-Size, -Size, -Size);
-			v[3] = new World.Vector3D(-Size, Size, -Size);
-			v[4] = new World.Vector3D(Size, Size, Size);
-			v[5] = new World.Vector3D(Size, -Size, Size);
-			v[6] = new World.Vector3D(-Size, -Size, Size);
-			v[7] = new World.Vector3D(-Size, Size, Size);
+			Vector3[] v = new Vector3[8];
+			v[0] = new Vector3(Size, Size, -Size);
+			v[1] = new Vector3(Size, -Size, -Size);
+			v[2] = new Vector3(-Size, -Size, -Size);
+			v[3] = new Vector3(-Size, Size, -Size);
+			v[4] = new Vector3(Size, Size, Size);
+			v[5] = new Vector3(Size, -Size, Size);
+			v[6] = new Vector3(-Size, -Size, Size);
+			v[7] = new Vector3(-Size, Size, Size);
 			for (int i = 0; i < 8; i++) {
 				World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
 				v[i].X += Position.X - CameraX;
@@ -893,13 +895,13 @@ namespace OpenBve {
 			Faces[4] = new int[] { 6, 7, 3, 2 };
 			Faces[5] = new int[] { 6, 2, 1, 5 };
 			if (OpenGlTextureIndex != 0) {
-				World.Vector2D[][] t = new World.Vector2D[6][];
-				t[0] = new World.Vector2D[] { new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0), new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0) };
-				t[1] = new World.Vector2D[] { new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0), new World.Vector2D(0.0, 1.0) };
-				t[2] = new World.Vector2D[] { new World.Vector2D(1.0, 1.0), new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0) };
-				t[3] = new World.Vector2D[] { new World.Vector2D(1.0, 1.0), new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0) };
-				t[4] = new World.Vector2D[] { new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0) };
-				t[5] = new World.Vector2D[] { new World.Vector2D(0.0, 1.0), new World.Vector2D(0.0, 0.0), new World.Vector2D(1.0, 0.0), new World.Vector2D(1.0, 1.0) };
+				Vector2[][] t = new Vector2[6][];
+				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
+				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
+				t[2] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
+				t[3] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
+				t[4] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
+				t[5] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
 				for (int i = 0; i < 6; i++) {
 					GL.Begin(PrimitiveType.Quads);
 					GL.Color3(1.0, 1.0, 1.0);
@@ -934,7 +936,7 @@ namespace OpenBve {
 			GL.LoadIdentity();
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
-			//GL.LoadIdentity();
+			GL.LoadIdentity();
 			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// marker

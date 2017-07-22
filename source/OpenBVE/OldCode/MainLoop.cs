@@ -246,7 +246,7 @@ namespace OpenBve {
 						int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
 						for (int i = 0; i < axes; i++)
 						{
-							double aa = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i);
+							double aa = OpenTK.Input.Joystick.GetState(k).GetAxis(i);
 							if (aa < -0.75)
 							{
 								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Axis, i, -1);
@@ -307,7 +307,7 @@ namespace OpenBve {
 					switch (Interface.CurrentControls[i].Component)
 					{
 						case Interface.JoystickComponent.Axis:
-							var axisState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis((JoystickAxis)Interface.CurrentControls[i].Element);
+							var axisState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis(Interface.CurrentControls[i].Element);
 							if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 							{
 								Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);

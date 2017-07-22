@@ -364,7 +364,7 @@ namespace OpenBve {
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Expression[] Expressions;
 			PreprocessSplitIntoExpressions(FileName, IsRW, Lines, out Expressions, true, 0.0);
-			PreprocessChrRndSub(FileName, IsRW, ref Expressions);
+			PreprocessChrRndSub(FileName, IsRW, Encoding, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
@@ -520,9 +520,8 @@ namespace OpenBve {
 		}
 
 		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
-		private static void PreprocessChrRndSub(string FileName, bool IsRW, ref Expression[] Expressions) {
+		private static void PreprocessChrRndSub(string FileName, bool IsRW, System.Text.Encoding Encoding, ref Expression[] Expressions) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			System.Text.Encoding Encoding = new System.Text.ASCIIEncoding();
 			string[] Subs = new string[16];
 			int openIfs = 0;
 			for (int i = 0; i < Expressions.Length; i++) {

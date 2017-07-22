@@ -159,7 +159,7 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Called once a frame for each train wen arriving at a station, in order to update the automatic doors</summary>
+		/// <summary>Called once a frame for each train when arriving at a station, in order to update the automatic doors</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="StationIndex">The index of the train's next station</param>
 		/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>
@@ -235,7 +235,7 @@ namespace OpenBve
 					if (buffer != null)
 					{
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Sounds.DoorOpenR.Position;
-						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
+						Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
 					}
 					for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
 					{

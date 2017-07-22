@@ -6,6 +6,8 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 
@@ -76,10 +78,10 @@ namespace OpenBve {
 	internal static class TrackManager {
 		internal struct TrackFollower {
 			internal double TrackPosition;
-			internal World.Vector3D WorldPosition;
-			internal World.Vector3D WorldDirection;
-			internal World.Vector3D WorldUp;
-			internal World.Vector3D WorldSide;
+			internal Vector3 WorldPosition;
+			internal Vector3 WorldDirection;
+			internal Vector3 WorldUp;
+			internal Vector3 WorldSide;
             internal double CurveRadius;
             internal double CurveCant;
             internal double CantDueToInaccuracy;
@@ -169,56 +171,6 @@ namespace OpenBve {
 			Value = 0.0;
 			return false;
 		}
-
-		// try parse hex color
-		internal static bool TryParseHexColor(string Expression, out World.ColorRGB Color) {
-			if (Expression.StartsWith("#")) {
-				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out x)) {
-					int r = (x >> 16) & 0xFF;
-					int g = (x >> 8) & 0xFF;
-					int b = x & 0xFF;
-					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255) {
-						Color = new World.ColorRGB((byte)r, (byte)g, (byte)b);
-						return true;
-					} else {
-						Color = new World.ColorRGB(0, 0, 255);
-						return false;
-					}
-				} else {
-					Color = new World.ColorRGB(0, 0, 255);
-					return false;
-				}
-			} else {
-				Color = new World.ColorRGB(0, 0, 255);
-				return false;
-			}
-		}
-		internal static bool TryParseHexColor(string Expression, out World.ColorRGBA Color) {
-			if (Expression.StartsWith("#")) {
-				string a = Expression.Substring(1).TrimStart();
-				int x; if (int.TryParse(a, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out x)) {
-					int r = (x >> 16) & 0xFF;
-					int g = (x >> 8) & 0xFF;
-					int b = x & 0xFF;
-					if (r >= 0 & r <= 255 & g >= 0 & g <= 255 & b >= 0 & b <= 255) {
-						Color = new World.ColorRGBA((byte)r, (byte)g, (byte)b, 255);
-						return true;
-					} else {
-						Color = new World.ColorRGBA(0, 0, 255, 255);
-						return false;
-					}
-				} else {
-					Color = new World.ColorRGBA(0, 0, 255, 255);
-					return false;
-				}
-			} else {
-				Color = new World.ColorRGBA(0, 0, 255, 255);
-				return false;
-			}
-		}
-
-
 
 		// trim inside
 		private static string TrimInside(string Expression) {

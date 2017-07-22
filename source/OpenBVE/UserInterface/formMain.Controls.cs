@@ -640,7 +640,7 @@ namespace OpenBve {
 							int n = capabilities.AxisCount;
 							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
-								float r = state.GetAxis((JoystickAxis)j);
+								float r = state.GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
 								if ((float)Math.Abs((double)r) < threshold) {

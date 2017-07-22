@@ -139,6 +139,11 @@
     <Compile Include="Parsers\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\DynamicLightParser.cs" />
     <Compile Include="Parsers\MarkerScriptParser.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve4.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundCfg.Xml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -287,7 +292,6 @@
     <Compile Include="OldParsers\Panel2CfgParser.cs" />
     <Compile Include="OldParsers\CsvB3dObjectParser.cs" />
     <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.cs" />
-    <Compile Include="OldParsers\SoundCfgParser.cs" />
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />
     <Compile Include="System\Functions\FileSystem.cs" />

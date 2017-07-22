@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Xml;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -10,11 +12,16 @@ namespace OpenBve
 		{
 			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
 			internal string Name;
-			internal World.Vector3D Position;
+			internal Vector3 Position;
+			internal Vector3 Rotation;
+			internal string FunctionScript;
 
-			internal double RotationX;
-			internal double RotationY;
-			internal double RotationZ;
+			internal GruppenObject()
+			{
+				Name = string.Empty;
+				Position = new Vector3();
+				Rotation = new Vector3();
+			}
 		}
 
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
@@ -30,9 +37,64 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch
+			catch(Exception ex)
 			{
-				return null;
+				//The XML is not strictly valid
+				string[] Lines = File.ReadAllLines(FileName);
+				using (var stringReader = new StringReader(Lines[0]))
+				{
+					var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+					using (var xmlReader = XmlReader.Create(stringReader, settings))
+					{
+						if (xmlReader.Read())
+						{
+							//Attempt to find the text encoding and re-read the file
+							var result = xmlReader.GetAttribute("encoding");
+							var e = System.Text.Encoding.GetEncoding(result);
+							Lines = File.ReadAllLines(FileName, e);
+							//Turf out the old encoding, as our string array should now be UTF-8
+							Lines[0] = "<?xml version=\"1.0\"?>";
+						}
+					}
+				}
+				for (int i = 0; i < Lines.Length; i++)
+				{
+					while (Lines[i].IndexOf("\"\"") != -1)
+					{
+						//Loksim parser tolerates multiple quotes, strict XML does not
+						Lines[i] = Lines[i].Replace("\"\"", "\"");
+					}
+					
+				}
+				bool tryLoad = false;
+				try
+				{
+					//Horrible hack: Write out our string array to a new memory stream, then load from this stream
+					//Why can't XmlDocument.Load() just take a string array......
+					using (var stream = new MemoryStream())
+					{
+						var sw = new StreamWriter(stream);
+						foreach (var line in Lines)
+						{
+							sw.Write(line);
+							sw.Flush();
+						}
+						sw.Flush();
+						stream.Position = 0;
+						currentXML.Load(stream);
+						tryLoad = true;
+					}
+				}
+				catch
+				{
+					//Generic catch-all clause
+				}
+				if (!tryLoad)
+				{
+					//Pass out the *original* XML error, not anything generated when we've tried to correct it
+					Interface.AddMessage(Interface.MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
+					return null;
+				}
 			}
 			
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
@@ -53,6 +115,7 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.HasChildNodes)
 								{
+									
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
@@ -65,7 +128,44 @@ namespace OpenBve
 												{
 													case "Name":
 														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
-														
+														if (!System.IO.File.Exists(ObjectFile))
+														{
+															if (attribute.Value.StartsWith("\\Objekte"))
+															{
+																//This is a reference to the base Loksim3D object directory
+																bool LoksimRootFound = false;
+																DirectoryInfo d = new DirectoryInfo(BaseDir);
+																while (d.Parent != null)
+																{
+																	//Recurse upwards and try to see if we're in the Loksim directory
+																	d = d.Parent;
+																	if (d.ToString().ToLowerInvariant() == "objekte")
+																	{
+																		d = d.Parent;
+																		LoksimRootFound = true;
+																		ObjectFile = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
+																		break;
+																	}
+																}
+															}
+															if (!System.IO.File.Exists(ObjectFile))
+															{
+																//Last-ditch attempt: Check User & Public for the Loksim object directory
+																if (!Program.CurrentlyRunOnMono)
+																{
+																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
+																	if (!System.IO.File.Exists(ObjectFile))
+																	{
+																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
+																	}
+																}
+															}
+															if (!System.IO.File.Exists(ObjectFile))
+															{
+																Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
+																break;
+															}
+														}
 														Object.Name = ObjectFile;
 														ObjectCount++;
 														break;
@@ -78,9 +178,67 @@ namespace OpenBve
 													case "Rotation":
 														string[] SplitRotation = attribute.Value.Split(';');
 
-														double.TryParse(SplitRotation[0], out Object.RotationX);
-														double.TryParse(SplitRotation[1], out Object.RotationY);
-														double.TryParse(SplitRotation[2], out Object.RotationZ);
+														double.TryParse(SplitRotation[0], out Object.Rotation.X);
+														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
+														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
+														break;
+													case "ShowOn":
+														//Defines when the object should be shown
+														if (attribute.Value.StartsWith("Tür") && attribute.Value.EndsWith("offen"))
+														{
+															//Shown when a door is open
+															//HACK: Assume even doors are left
+															switch (attribute.Value[3])
+															{
+																case '0':
+																case '2':
+																case '4':
+																case '6':
+																case '8':
+																	//Left doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("leftdoors != 0");
+																	break;
+																case '1':
+																case '3':
+																case '5':
+																case '7':
+																case '9':
+																	//Right doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("rightdoors != 0");
+																	break;
+															}
+															break;
+														}
+														Object.FunctionScript = "1";
+														break;
+													case "HideOn":
+														//Defines when the object should be shown
+														if (attribute.Value.StartsWith("Tür") && attribute.Value.EndsWith("offen"))
+														{
+															//Shown when a door is closed
+															//HACK: Assume odd doors are right
+															switch (attribute.Value[3])
+															{
+																case '0':
+																case '2':
+																case '4':
+																case '6':
+																case '8':
+																	//Left doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("leftdoors == 0");
+																	break;
+																case '1':
+																case '3':
+																case '5':
+																case '7':
+																case '9':
+																	//Right doors
+																	Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation("rightdoors == 0");
+																	break;
+															}
+															break;
+														}
+														Object.FunctionScript = "1";
 														break;
 												}
 											}
@@ -95,7 +253,11 @@ namespace OpenBve
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
-						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].RotationX, CurrentObjects[i].RotationY, CurrentObjects[i].RotationZ);
+						if(CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
+						{
+							continue;
+						}
+						var Object = ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length +1);
@@ -115,10 +277,15 @@ namespace OpenBve
 								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
 								{
 									Object = s,
-									Position = CurrentObjects[j].Position
+									Position = CurrentObjects[j].Position,
 								};
 								a.States = new ObjectManager.AnimatedObjectState[] {aos};
 								Result.Objects[j] = a;
+								if (!string.IsNullOrEmpty(CurrentObjects[j].FunctionScript))
+								{
+									Result.Objects[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[j].FunctionScript + " 1 == --");
+								}
+								
 								ObjectCount++;
 							}
 							else if (obj[j] is ObjectManager.AnimatedObjectCollection)
@@ -127,6 +294,7 @@ namespace OpenBve
 									(ObjectManager.AnimatedObjectCollection) obj[j];
 								for (int k = 0; k < a.Objects.Length; k++)
 								{
+									
 									for (int h = 0; h < a.Objects[k].States.Length; h++)
 									{
 										a.Objects[k].States[h].Position.X += CurrentObjects[j].Position.X;

@@ -89,6 +89,11 @@ namespace OpenBve {
 														string b = Lines[i].Substring(j + 1).TrimStart();
 														switch (a.ToLowerInvariant()) {
 															case "object":
+																if (string.IsNullOrEmpty(b))
+																{
+																	Interface.AddMessage(Interface.MessageType.Error, true, "An empty car object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	break;
+																}
 																if (Path.ContainsInvalidChars(b)) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																} else {
@@ -253,6 +258,11 @@ namespace OpenBve {
 																}
 																else
 																{
+																	if (string.IsNullOrEmpty(b))
+																	{
+																		Interface.AddMessage(Interface.MessageType.Error, true, "An empty bogie object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		break;
+																	}
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 																	if (System.IO.File.Exists(File))
 																	{

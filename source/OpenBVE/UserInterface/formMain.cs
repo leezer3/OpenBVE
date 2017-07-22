@@ -1380,9 +1380,9 @@ namespace OpenBve {
 					int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
 					for (int i = 0; i < axes; i++)
 					{
-						if (OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis) i) != s.GetAxis((JoystickAxis) i))
+						if (OpenTK.Input.Joystick.GetState(k).GetAxis(i) != s.GetAxis(i))
 						{
-							double a = OpenTK.Input.Joystick.GetState(k).GetAxis((JoystickAxis)i);
+							double a = OpenTK.Input.Joystick.GetState(k).GetAxis(i);
 							if (a < -0.75)
 							{
 								Interface.CurrentControls[j].Device = k;
