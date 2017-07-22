@@ -839,7 +839,13 @@ namespace OpenBve {
 					case ".animated":
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
 						break;
-					default:
+					case ".l3dobj":
+						Result = Ls3DObjectParser.ReadObject(FileName, LoadMode, new Vector3());
+						break;
+					case ".l3dgrp":
+						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
+						break;
+				default:
 						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
 				}
