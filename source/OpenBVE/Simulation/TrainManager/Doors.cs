@@ -159,7 +159,7 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Called once a frame for each train wen arriving at a station, in order to update the automatic doors</summary>
+		/// <summary>Called once a frame for each train when arriving at a station, in order to update the automatic doors</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="StationIndex">The index of the train's next station</param>
 		/// <param name="BackwardsTolerance">The backwards tolerance for this stop point</param>

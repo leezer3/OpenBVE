@@ -995,7 +995,7 @@ namespace OpenBve
 					}
 					else
 					{
-						sc = MessageColor.White;
+						sc = MessageColor.Blue;
 					}
 					t = Command == "doorsleft" ? Interface.QuickReferences.DoorsLeft : Interface.QuickReferences.DoorsRight;
 				} break;
