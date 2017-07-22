@@ -7,15 +7,19 @@ namespace OpenBve
 {
 	internal static class Ls3DGrpParser
 	{
-
+		/// <summary>A GruppenObject contains a single textured mesh stored in a separate .ls3dobj file (Roughly equivilant to a MeshBuilder)</summary>
 		internal class GruppenObject
 		{
-			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
+			/// <summary>The on-disk path to the mesh</summary>
 			internal string Name;
+			/// <summary>The position of the mesh within the object</summary>
 			internal Vector3 Position;
+			/// <summary>The rotation to be applied to the mesh (During load, BEFORE position)</summary>
 			internal Vector3 Rotation;
+			/// <summary>The FunctionScript attached to the mesh, controlling it's animations</summary>
 			internal string FunctionScript;
 
+			/// <summary>Creates a new GruppenObject</summary>
 			internal GruppenObject()
 			{
 				Name = string.Empty;
@@ -24,8 +28,12 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
-			ObjectManager.ObjectLoadMode LoadMode)
+		/// <summary>Loads a Loksim3D GruppenObject</summary>
+		/// <param name="FileName">The filename to load</param>
+		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
+		/// <param name="LoadMode">The object load mode</param>
+		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			//May need to be changed to use de-DE
@@ -133,7 +141,6 @@ namespace OpenBve
 															if (attribute.Value.StartsWith("\\Objekte"))
 															{
 																//This is a reference to the base Loksim3D object directory
-																bool LoksimRootFound = false;
 																DirectoryInfo d = new DirectoryInfo(BaseDir);
 																while (d.Parent != null)
 																{
@@ -142,7 +149,6 @@ namespace OpenBve
 																	if (d.ToString().ToLowerInvariant() == "objekte")
 																	{
 																		d = d.Parent;
-																		LoksimRootFound = true;
 																		ObjectFile = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
 																		break;
 																	}
@@ -265,6 +271,10 @@ namespace OpenBve
 			return null;
 		}
 
+		/// <summary>Gets the internal animation function string for the given Loksim3D function</summary>
+		/// <param name="Value">The Loksim3D function</param>
+		/// <param name="Hidden">If set, this function HIDES the object, if not it SHOWS the object</param>
+		/// <returns>The new function string</returns>
 		private static string GetAnimatedFunction(string Value, bool Hidden)
 		{
 			string[] splitStrings = Value.Split(' ');

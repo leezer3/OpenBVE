@@ -64,11 +64,7 @@ namespace OpenBve
 		/// <summary>Loads a Loksim3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
-		/// <param name="RotationX">The X-axis rotation to be applied</param>
-		/// <param name="RotationY">The Y-axis rotation to be applied</param>
-		/// <param name="RotationZ">The Y-axis rotation to be applied</param>
+		/// <param name="Rotation">The rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
@@ -149,7 +145,6 @@ namespace OpenBve
 														if (attribute.Value.StartsWith("\\Objekte"))
 														{
 															//This is a reference to the base Loksim3D object directory
-															bool LoksimRootFound = false;
 															DirectoryInfo d = new DirectoryInfo(BaseDir);
 															while (d.Parent != null)
 															{
@@ -158,7 +153,6 @@ namespace OpenBve
 																if (d.ToString().ToLowerInvariant() == "objekte")
 																{
 																	d = d.Parent;
-																	LoksimRootFound = true;
 																	tday = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
 																	break;
 																}

@@ -149,7 +149,6 @@ namespace OpenBve
 		                                                if (attribute.Value.StartsWith("\\Objekte"))
 		                                                {
 			                                                //This is a reference to the base Loksim3D object directory
-			                                                bool LoksimRootFound = false;
 			                                                DirectoryInfo d = new DirectoryInfo(BaseDir);
 			                                                while (d.Parent != null)
 			                                                {
@@ -158,7 +157,6 @@ namespace OpenBve
 				                                                if (d.ToString().ToLowerInvariant() == "objekte")
 				                                                {
 					                                                d = d.Parent;
-					                                                LoksimRootFound = true;
 					                                                tday = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
 					                                                break;
 				                                                }
