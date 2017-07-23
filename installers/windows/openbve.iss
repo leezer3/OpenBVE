@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.5.0.9"
+#define MyAppVersion "1.5.1.5"
 #define MyAppPublisher "Christopher Lees"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
@@ -62,7 +62,7 @@ Name: "desktopicon2"; Description: "Create a desktop shortcut to the openBVE Add
 
 [Files]
 ;Open BVE Main Folder.
-Source: "..\..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: "..\..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 ;Custom Config File
 Source: "InstallerData\filesystem.cfg"; DestDir: "{app}\UserData\Settings\";
 ;MS .NET 4.0 Full Web Installer.
