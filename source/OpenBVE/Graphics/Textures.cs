@@ -152,11 +152,27 @@ namespace OpenBve
 			return RegisteredTextures[idx];
 		}
 
-		/// <summary>Registeres a texture and returns a handle to the texture.</summary>
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="bitmap">The bitmap that contains the texture.</param>
 		/// <returns>The handle to the texture.</returns>
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
 		internal static Texture RegisterTexture(Bitmap bitmap)
+		{
+			/*
+			 * Register the texture and return the newly created handle.
+			 * */
+			int idx = GetNextFreeTexture();
+			RegisteredTextures[idx] = new Texture(bitmap);
+			RegisteredTexturesCount++;
+			return RegisteredTextures[idx];
+		}
+
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
+		/// <param name="bitmap">The bitmap that contains the texture.</param>
+		/// <param name="alpha">A second bitmap containing the alpha channel for this texture</param>
+		/// <returns>The handle to the texture.</returns>
+		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
+		internal static Texture RegisterTexture(Bitmap bitmap, Bitmap alpha)
 		{
 			/*
 			 * Register the texture and return the newly created handle.

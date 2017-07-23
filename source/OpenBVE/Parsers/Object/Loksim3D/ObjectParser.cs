@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -19,6 +22,7 @@ namespace OpenBve
 			internal bool EmissiveColorUsed;
 			internal Color24 TransparentColor;
 			internal bool TransparentColorUsed;
+			internal string TransparencyTexture;
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
@@ -86,6 +90,7 @@ namespace OpenBve
 			Color24 transparentColor = new Color24();
 			string tday = null;
 			string tnight = null;
+			string transtex = null;
 			bool TransparencyUsed = false;
 			bool TransparentTypSet = false;
 			bool FirstPxTransparent = false;
@@ -207,6 +212,50 @@ namespace OpenBve
 													{
 														TransparencyUsed = true;
 														transparentColor = new Color24(0, 0, 0);
+													}
+													break;
+												case "TransTexture":
+													if (string.IsNullOrEmpty(attribute.Value))
+													{
+														//Empty....
+														continue;
+													}
+													transtex = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), attribute.Value);
+													if (!System.IO.File.Exists(transtex))
+													{
+														if (attribute.Value.StartsWith("\\Objekte"))
+														{
+															//This is a reference to the base Loksim3D object directory
+															DirectoryInfo d = new DirectoryInfo(BaseDir);
+															while (d.Parent != null)
+															{
+																//Recurse upwards and try to see if we're in the Loksim directory
+																d = d.Parent;
+																if (d.ToString().ToLowerInvariant() == "objekte")
+																{
+																	d = d.Parent;
+																	transtex = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
+																	break;
+																}
+															}
+														}
+														if (!System.IO.File.Exists(transtex))
+														{
+															//Last-ditch attempt: Check User & Public for the Loksim object directory
+															if (Program.CurrentlyRunningOnWindows)
+															{
+																transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
+																if (!System.IO.File.Exists(transtex))
+																{
+																	transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
+																}
+															}
+														}
+														if (!System.IO.File.Exists(transtex))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+															break;
+														}
 													}
 													break;
 												//Sets the transparency type
@@ -554,7 +603,25 @@ namespace OpenBve
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
 						Textures.Texture tday;
-						Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture,new TextureParameters(null, Builder.Materials[i].TransparentColor), out tday);
+						if (Builder.Materials[i].TransparencyTexture != null)
+						{
+							Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
+							Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
+							Bitmap Alpha = new Bitmap(Builder.Materials[i].TransparencyTexture);
+							if (Alpha.Size != Main.Size)
+							{
+								Alpha = ResizeImage(Alpha, Main.Size.Width, Main.Size.Height);
+							}
+							Bitmap texture = MergeAlphaBitmap(Main, Alpha);
+							//Dispose of both main and alpha
+							Main.Dispose();
+							Alpha.Dispose();
+							tday = Textures.RegisterTexture(texture);
+						}
+						else
+						{
+							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tday);
+						}
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 					}
 					else
@@ -577,6 +644,74 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
 				}
 			}
+		}
+
+		private static Bitmap ResizeImage(Image image, int width, int height)
+		{
+			var destRect = new Rectangle(0, 0, width, height);
+			var destImage = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+
+			destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+			using (var graphics = Graphics.FromImage(destImage))
+			{
+				graphics.CompositingMode = CompositingMode.SourceCopy;
+				graphics.CompositingQuality = CompositingQuality.HighQuality;
+				graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				graphics.SmoothingMode = SmoothingMode.HighQuality;
+				graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+				using (var wrapMode = new ImageAttributes())
+				{
+					wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+					graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+				}
+			}
+			return destImage;
+		}
+
+		private static Bitmap MergeAlphaBitmap(Bitmap Main, Bitmap Alpha)
+		{
+			Bitmap Output = new Bitmap(Main.Width, Main.Height, PixelFormat.Format32bppArgb);
+
+			Rectangle rect = new Rectangle(0, 0, Main.Width, Main.Height);
+
+			BitmapData bmp1Data = Main.LockBits(rect, ImageLockMode.ReadOnly, Main.PixelFormat);
+			BitmapData bmp2Data = Alpha.LockBits(rect, ImageLockMode.ReadOnly, Alpha.PixelFormat);
+			BitmapData bmp3Data = Output.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+			int size1 = bmp1Data.Stride * bmp1Data.Height;
+			int size2 = bmp2Data.Stride * bmp2Data.Height;
+			int size3 = bmp3Data.Stride * bmp3Data.Height;
+			byte[] data1 = new byte[size1];
+			byte[] data2 = new byte[size2];
+			byte[] data3 = new byte[size3];
+			Marshal.Copy(bmp1Data.Scan0, data1, 0, size1);
+			Marshal.Copy(bmp2Data.Scan0, data2, 0, size2);
+			Marshal.Copy(bmp3Data.Scan0, data3, 0, size3);
+
+			for (int y = 0; y < Main.Height; y++)
+			{
+				for (int x = 0; x < Main.Width; x++)
+				{
+					int index1 = y * bmp1Data.Stride + x * 3;
+					int index2 = y * bmp2Data.Stride + x * 3;
+					int index3 = y * bmp3Data.Stride + x * 4;
+					var c1 = Color.FromArgb(255, data1[index1 + 2], data1[index1 + 1], data1[index1 + 0]);
+					var c2 = Color.FromArgb(255, data2[index2 + 2], data2[index2 + 1], data2[index2 + 0]);
+					byte A = (byte)(255 * c2.GetBrightness());
+					data3[index3 + 0] = c1.B;
+					data3[index3 + 1] = c1.G;
+					data3[index3 + 2] = c1.R;
+					data3[index3 + 3] = A;
+				}
+			}
+
+			Marshal.Copy(data3, 0, bmp3Data.Scan0, data3.Length);
+			Main.UnlockBits(bmp1Data);
+			Alpha.UnlockBits(bmp2Data);
+			Output.UnlockBits(bmp3Data);
+			return Output;
 		}
 
 		private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a)

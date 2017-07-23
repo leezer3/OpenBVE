@@ -250,7 +250,7 @@ namespace OpenBve
 															if (!Program.CurrentlyRunOnMono)
 															{
 																transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
-																if (!System.IO.File.Exists(tday))
+																if (!System.IO.File.Exists(transtex))
 																{
 																	transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
 																}
@@ -258,7 +258,7 @@ namespace OpenBve
 														}
 														if (!System.IO.File.Exists(transtex))
 														{
-															Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture " + tday + " could not be found in file " + FileName);
+															Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
 															break;
 														}
 													}
@@ -621,7 +621,10 @@ namespace OpenBve
 			                    Alpha = ResizeImage(Alpha, Main.Size.Width, Main.Size.Height);
 		                    }
 		                    Bitmap texture = MergeAlphaBitmap(Main, Alpha);
-		                    tday = TextureManager.RegisterTexture(texture, true);
+							//Dispose of main and alpha
+		                    Main.Dispose();
+		                    Alpha.Dispose();
+							tday = TextureManager.RegisterTexture(texture, true);
 	                    }
 	                    else
 	                    {
@@ -637,7 +640,7 @@ namespace OpenBve
                     Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
                     if (Builder.Materials[i].NighttimeTexture != null)
                     {
-		                int tnight = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+		                int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
 	                    Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
                     }
                     else
