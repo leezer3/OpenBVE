@@ -259,6 +259,7 @@ namespace OpenBve
 														if (!System.IO.File.Exists(transtex))
 														{
 															Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+															transtex = null;
 															break;
 														}
 													}
@@ -674,24 +675,47 @@ namespace OpenBve
 		    Marshal.Copy(bmp2Data.Scan0, data2, 0, size2);
 		    Marshal.Copy(bmp3Data.Scan0, data3, 0, size3);
 
-		    for (int y = 0; y < Main.Height; y++)
-		    {
-			    for (int x = 0; x < Main.Width; x++)
-			    {
-				    int index1 = y * bmp1Data.Stride + x * 3;
-				    int index2 = y * bmp2Data.Stride + x * 3;
-				    int index3 = y * bmp3Data.Stride + x * 4;
-				    var c1 = Color.FromArgb(255, data1[index1 + 2], data1[index1 + 1], data1[index1 + 0]);
-					var c2 = Color.FromArgb(255, data2[index2 + 2], data2[index2 + 1], data2[index2 + 0]);
-				    byte A = (byte)(255 * c2.GetBrightness());
-				    data3[index3 + 0] = c1.B;
-				    data3[index3 + 1] = c1.G;
-				    data3[index3 + 2] = c1.R;
-				    data3[index3 + 3] = A;
-			    }
-		    }
+			for (int y = 0; y < Main.Height; y++)
+			{
+				for (int x = 0; x < Main.Width; x++)
+				{
+					int index1 = y * bmp1Data.Stride + x * 3;
+					int index2;
+					int index3 = y * bmp3Data.Stride + x * 4;
+					//Copy alpha pixel data
+					switch (Alpha.PixelFormat)
+					{
+						case PixelFormat.Format1bppIndexed:
+							//Find the index in the bitmap's data
+							var idx = y* bmp2Data.Stride + (x >> 3);
+							var mask = (byte)(0x80 >> (x & 0x7));
+							//Use mask to find whether this pixel is trans (8 pixels per byte)
+							data3[index3 + 3] = (data2[idx] & mask) == 0 ? (byte)0 : (byte)255;
+							break;
+						case PixelFormat.Format8bppIndexed:
+							//Likely 256 color grayscale so just copy the raw bytes
+							index2 = y * bmp2Data.Stride + x;
+							data3[index3 + 3] = data2[index2];
+							break;
+						case PixelFormat.Format24bppRgb:
+							//This is a full-color RGB bitmap, so cast our color to grayscale first
+							index2 = y * bmp2Data.Stride + x * 3;
+							var c2 = Color.FromArgb(255, data2[index2 + 2], data2[index2 + 1], data2[index2 + 0]);
+							data3[index3 + 3] = (byte)(255 * c2.GetBrightness());
+							break;
+						default:
+							//Not supported, so set our bitmap to fully opaque
+							data3[index3 + 3] = 255;
+							break;
+					}
+					var c1 = Color.FromArgb(255, data1[index1 + 2], data1[index1 + 1], data1[index1 + 0]);
+					data3[index3 + 0] = c1.B;
+					data3[index3 + 1] = c1.G;
+					data3[index3 + 2] = c1.R;
+				}
+			}
 
-		    Marshal.Copy(data3, 0, bmp3Data.Scan0, data3.Length);
+			Marshal.Copy(data3, 0, bmp3Data.Scan0, data3.Length);
 		    Main.UnlockBits(bmp1Data);
 		    Alpha.UnlockBits(bmp2Data);
 		    Output.UnlockBits(bmp3Data);
