@@ -275,6 +275,10 @@ $(LINUX_BUILD_RESULT): all-release
 $(DEBIAN_BUILD_RESULT): all-release
 	@echo $(COLOR_RED)Copying build into place....$(COLOR_END)
 	@mkdir -p installers/debian/usr/lib/openbve
+#Generate current dpkg control file
+	@./DebianControl.sh
+#Mark launch script as executable before packaging
+	@chmod +x installers/debian/usr/games/openbve
 	@cp -r -f $(CP_UPDATE_FLAG) $(RELEASE_DIR)/* installers/debian/usr/lib/openbve
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(DEBIAN_BUILD_RESULT)$(COLOR_END)
 	@fakeroot dpkg-deb --build installers/debian

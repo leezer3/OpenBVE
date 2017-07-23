@@ -359,6 +359,7 @@ namespace OpenBve
 			};
 			if (Alpha)
 			{
+				Textures[i].Transparency = TextureTransparencyMode.Alpha;
 				LoadTextureRGBAforData(Bitmap, new Color24(0, 0, 0), 0, i);
 				LoadTextureRGBAforOpenGl(i);
 			}
