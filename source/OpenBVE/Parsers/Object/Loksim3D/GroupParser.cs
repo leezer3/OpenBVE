@@ -69,7 +69,6 @@ namespace OpenBve
 						//Replace double-spaces with singles
 						Lines[i] = Lines[i].Replace("  ", " ");
 					}
-
 				}
 				bool tryLoad = false;
 				try
@@ -156,10 +155,10 @@ namespace OpenBve
 																//Last-ditch attempt: Check User & Public for the Loksim object directory
 																if (Program.CurrentlyRunningOnWindows)
 																{
-																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
+																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Loksim3D", attribute.Value);
 																	if (!System.IO.File.Exists(ObjectFile))
 																	{
-																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
+																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\Loksim3D", attribute.Value);
 																	}
 																}
 															}
@@ -316,6 +315,31 @@ namespace OpenBve
 							case '9':
 								//Right doors (??)
 								script += Hidden ? "leftdoors == 0" : "leftdoors != 0";
+								break;
+						}
+					}
+					if (splitStrings[i].StartsWith("rauch"))
+					{
+						//Smoke (e.g. steam loco)
+						string[] finalStrings = splitStrings[i].Split('_');
+						switch (finalStrings[1])
+						{
+							case "stand":
+								//Standing
+								script += Hidden ? "reversernotch != 0 | powernotch != 0" : "reversernotch == 0 | powernotch == 0";
+								break;
+							case "fahrt":
+								switch (finalStrings[2])
+								{
+									case "vor":
+										//Forwards
+										script += Hidden ? "reversernotch != 1 & powernotch == 0" : "reversernotch == 1 & powernotch > 0";
+										break;
+									case "rueck":
+										//Reverse
+										script += Hidden ? "reversernotch != -1 & powernotch == 0" : "reversernotch == -1 & powernotch > 0";
+										break;
+								}
 								break;
 						}
 					}

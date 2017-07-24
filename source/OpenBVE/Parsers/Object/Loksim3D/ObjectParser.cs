@@ -280,8 +280,8 @@ namespace OpenBve
 															FirstPxTransparent = true;
 															break;
 														case "3":
+														case "4":
 															//This is used when transparency is used with an alpha bitmap
-															//Not currently supported
 															TransparencyUsed = false;
 															FirstPxTransparent = false;
 															break;
@@ -526,6 +526,7 @@ namespace OpenBve
 					{
 						Builder.Materials[j].DaytimeTexture = tday;
 						Builder.Materials[j].NighttimeTexture = tnight;
+						Builder.Materials[j].TransparencyTexture = transtex;
 					}
 				}
 				if (TransparencyUsed == true)

@@ -72,7 +72,11 @@ namespace OpenBve
 						//Loksim parser tolerates multiple quotes, strict XML does not
 						Lines[i] = Lines[i].Replace("\"\"", "\"");
 					}
-					
+					while (Lines[i].IndexOf("  ") != -1)
+					{
+						//Replace double-spaces with singles
+						Lines[i] = Lines[i].Replace("  ", " ");
+					}
 				}
 				bool tryLoad = false;
 				try
@@ -323,6 +327,31 @@ namespace OpenBve
 							case '9':
 								//Right doors (??)
 								script += Hidden ? "leftdoors == 0" : "leftdoors != 0";
+								break;
+						}
+					}
+					if (splitStrings[i].StartsWith("rauch"))
+					{
+						//Smoke (e.g. steam loco)
+						string[] finalStrings = splitStrings[i].Split('_');
+						switch (finalStrings[1])
+						{
+							case "stand":
+								//Standing
+								script += Hidden ? "reversernotch != 0 | powernotch != 0" : "reversernotch == 0 | powernotch == 0";
+								break;
+							case "fahrt":
+								switch (finalStrings[2])
+								{
+									case "vor":
+										//Forwards
+										script += Hidden ? "reversernotch != 1 & powernotch == 0" : "reversernotch == 1 & powernotch > 1";
+										break;
+									case "rueck":
+										//Reverse
+										script += Hidden ? "reversernotch != -1 & powernotch == 0" : "reversernotch == -1 & powernotch > 1";
+										break;
+								}
 								break;
 						}
 					}
