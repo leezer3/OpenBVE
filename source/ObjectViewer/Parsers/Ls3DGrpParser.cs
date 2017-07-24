@@ -132,7 +132,6 @@ namespace OpenBve
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
 										{
-											Array.Resize<GruppenObject>(ref CurrentObjects, CurrentObjects.Length + 1);
 											GruppenObject Object = new GruppenObject();
 											foreach (XmlAttribute attribute in childNode.Attributes)
 											{
@@ -172,6 +171,7 @@ namespace OpenBve
 															}
 															if (!System.IO.File.Exists(ObjectFile))
 															{
+																Object.Name = null;
 																Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
 																break;
 															}
@@ -202,7 +202,11 @@ namespace OpenBve
 														break;
 												}
 											}
-											CurrentObjects[CurrentObjects.Length - 1] = Object;
+											if (Object.Name != null)
+											{
+												Array.Resize<GruppenObject>(ref CurrentObjects, CurrentObjects.Length + 1);
+												CurrentObjects[CurrentObjects.Length - 1] = Object;
+											}
 										}
 									}
 								}
