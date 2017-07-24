@@ -32,7 +32,6 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
 			Result.Objects = new ObjectManager.AnimatedObject[0];
-			int ObjectCount = 0;
 			try
 			{
 				currentXML.Load(FileName);
@@ -169,7 +168,6 @@ namespace OpenBve
 															}
 														}
 														Object.Name = ObjectFile;
-														ObjectCount++;
 														break;
 													case "Position":
 														string[] SplitPosition = attribute.Value.Split(';');
@@ -205,7 +203,6 @@ namespace OpenBve
 							}
 						}
 					}
-
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
@@ -218,51 +215,25 @@ namespace OpenBve
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
 							obj[obj.Length - 1] = Object;
-						}
-					}
-					for (int j = 0; j < obj.Length; j++)
-					{
-						if (obj[j] != null)
-						{
+
 							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-							if (obj[j] is ObjectManager.StaticObject)
+							Object.Dynamic = true;
+							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
 							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
-								s.Dynamic = true;
-								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-								{
-									Object = s,
-									Position = CurrentObjects[j].Position,
-								};
-								a.States = new ObjectManager.AnimatedObjectState[] { aos };
-								Result.Objects[j] = a;
-								if (!string.IsNullOrEmpty(CurrentObjects[j].FunctionScript))
-								{
-									Result.Objects[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[j].FunctionScript + " 1 == --");
-								}
-
-								ObjectCount++;
-							}
-							else if (obj[j] is ObjectManager.AnimatedObjectCollection)
+								Object = Object,
+								Position = CurrentObjects[i].Position,
+							};
+							a.States = new ObjectManager.AnimatedObjectState[] { aos };
+							Result.Objects[i] = a;
+							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
-								ObjectManager.AnimatedObjectCollection a =
-									(ObjectManager.AnimatedObjectCollection)obj[j];
-								for (int k = 0; k < a.Objects.Length; k++)
-								{
-
-									for (int h = 0; h < a.Objects[k].States.Length; h++)
-									{
-										a.Objects[k].States[h].Position.X += CurrentObjects[j].Position.X;
-										a.Objects[k].States[h].Position.Y += CurrentObjects[j].Position.Y;
-										a.Objects[k].States[h].Position.Z += CurrentObjects[j].Position.Z;
-									}
-									Result.Objects[j] = a.Objects[k];
-									ObjectCount++;
-								}
+								Result.Objects[i].StateFunction =
+									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
 							}
 						}
 					}
+					
 				}
 				return Result;
 			}
