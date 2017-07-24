@@ -76,6 +76,7 @@
     <Compile Include="Orientation3.cs" />
     <Compile Include="Packages.cs" />
     <Compile Include="Packages.Database.cs" />
+    <Compile Include="Packages.Loksim3D.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

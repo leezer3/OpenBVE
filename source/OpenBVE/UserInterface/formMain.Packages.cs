@@ -603,6 +603,7 @@ namespace OpenBve
 						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledTrains);
 						break;
 					case PackageType.Other:
+					case PackageType.Loksim3D:
 						UninstallPackage(currentPackage, ref Database.currentDatabase.InstalledOther);
 						break;
 				}
