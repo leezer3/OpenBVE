@@ -300,14 +300,14 @@ namespace Plugin {
 							int value = 0;
 							int counter = 0;
 							for (int x = 0; x < width; x++) {
+								var mask = (byte)(0x80 >> (x & 0x7));
 								if (counter == 0) {
 									value = reader.ReadByte();
 									counter = 7;
 								} else {
 									counter--;
 								}
-								bytes[offset] = (value >> 7) == 0 ? (byte)0 : (byte)255;
-								value <<= 1;
+								bytes[offset] = (value & mask) == 0 ? (byte)0 : (byte)255;
 								offset += 4;
 							}
 							offset -= 3;
