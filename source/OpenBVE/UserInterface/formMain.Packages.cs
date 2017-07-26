@@ -271,7 +271,7 @@ namespace OpenBve
 				}
 				string PackageFiles = "";
 				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, currentDatabaseFolder, ref PackageFiles);
-				if (ProblemEncountered == false)
+				if (ProblemEncountered == false && PackageFiles != string.Empty)
 				{
 					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
 					{
@@ -366,7 +366,7 @@ namespace OpenBve
 			}
 			//Update the text, but don't change the tab- Do this when the worker terminates
 			ProblemEncountered = true;
-			if (creatingPackage)
+			if (!creatingPackage)
 			{
 				labelInstallSuccess1.Text = Interface.GetInterfaceString("packages_install_failure");
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_install_failure_header");
@@ -377,11 +377,10 @@ namespace OpenBve
 				labelInstallSuccess2.Text = Interface.GetInterfaceString("packages_creation_failure_header");
 			}
 			labelListFilesInstalled.Text = Interface.GetInterfaceString("packages_creation_failure_error");
-
 			buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
 			//Non-localised string as this is a specific error message
 			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
-			                             e.CurrentFile + "at " + e.Progress + "% completion.";
+			                             e.CurrentFile + " at " + e.Progress + "% completion.";
 			//Create crash dump file
 			CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
 		}
