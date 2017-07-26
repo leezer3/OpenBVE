@@ -118,8 +118,13 @@ namespace OpenBveApi {
 								            }
 							            }
 						            }
-						            catch
+						            catch (Exception e)
 						            {
+										if (e is UnauthorizedAccessException)
+										{
+											//If we don't have access to the path, this causes an infinite recursion loop...
+											throw;
+										}
 						            }
 					            }
 					            if (!found) {
