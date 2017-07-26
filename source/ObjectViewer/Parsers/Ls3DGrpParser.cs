@@ -137,45 +137,16 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir,attribute.Value);
-														if (!System.IO.File.Exists(ObjectFile))
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir,attribute.Value, string.Empty);
+														if (!File.Exists(ObjectFile))
 														{
-															if (attribute.Value.StartsWith("\\Objekte"))
-															{
-																//This is a reference to the base Loksim3D object directory
-																DirectoryInfo d = new DirectoryInfo(BaseDir);
-																while (d.Parent != null)
-																{
-																	//Recurse upwards and try to see if we're in the Loksim directory
-																	d = d.Parent;
-																	if (d.ToString().ToLowerInvariant() == "objekte")
-																	{
-																		d = d.Parent;
-																		ObjectFile = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
-																		break;
-																	}
-																}
-															}
-															if (!System.IO.File.Exists(ObjectFile))
-															{
-																//Last-ditch attempt: Check User & Public for the Loksim object directory
-																if (!Program.CurrentlyRunOnMono)
-																{
-																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
-																	if (!System.IO.File.Exists(ObjectFile))
-																	{
-																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
-																	}
-																}
-															}
-															if (!System.IO.File.Exists(ObjectFile))
-															{
-																Object.Name = null;
-																Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
-																break;
-															}
+															Object.Name = null;
+															Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
 														}
-														Object.Name = ObjectFile;
+														else
+														{
+															Object.Name = ObjectFile;
+														}
 														break;
 													case "Position":
 														string[] SplitPosition = attribute.Value.Split(';');

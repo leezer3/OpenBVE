@@ -144,44 +144,12 @@ namespace OpenBve
 												//Sets the texture
 												//Loksim3D objects only support daytime textures
 												case "Texture":
-													tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), attribute.Value);
-													if (!System.IO.File.Exists(tday))
+													tday = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+													if (!File.Exists(tday))
 													{
-														if (attribute.Value.StartsWith("\\Objekte"))
-														{
-															//This is a reference to the base Loksim3D object directory
-															DirectoryInfo d = new DirectoryInfo(BaseDir);
-															while (d.Parent != null)
-															{
-																//Recurse upwards and try to see if we're in the Loksim directory
-																d = d.Parent;
-																if (d.ToString().ToLowerInvariant() == "objekte")
-																{
-																	d = d.Parent;
-																	tday = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
-																	break;
-																}
-															}
-														}
-														if (!System.IO.File.Exists(tday))
-														{
-															//Last-ditch attempt: Check User & Public for the Loksim object directory
-															if (Program.CurrentlyRunningOnWindows)
-															{
-																tday = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
-																if (!System.IO.File.Exists(tday))
-																{
-																	tday = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
-																}
-															}
-														}
-														if (!System.IO.File.Exists(tday))
-														{
-															Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture " + tday + " could not be found in file " + FileName);
-															break;
-														}
+														Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Texture file " + attribute.Value + " not found.");
+														break;
 													}
-
 													try
 													{
 														using (Bitmap TextureInformation = new Bitmap(tday))
@@ -220,44 +188,12 @@ namespace OpenBve
 														//Empty....
 														continue;
 													}
-													transtex = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), attribute.Value);
-													if (!System.IO.File.Exists(transtex))
+													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+													if (!File.Exists(transtex))
 													{
-														if (attribute.Value.StartsWith("\\Objekte"))
-														{
-															//This is a reference to the base Loksim3D object directory
-															DirectoryInfo d = new DirectoryInfo(BaseDir);
-															while (d.Parent != null)
-															{
-																//Recurse upwards and try to see if we're in the Loksim directory
-																d = d.Parent;
-																if (d.ToString().ToLowerInvariant() == "objekte")
-																{
-																	d = d.Parent;
-																	transtex = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
-																	break;
-																}
-															}
-														}
-														if (!System.IO.File.Exists(transtex))
-														{
-															//Last-ditch attempt: Check User & Public for the Loksim object directory
-															if (Program.CurrentlyRunningOnWindows)
-															{
-																transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
-																if (!System.IO.File.Exists(transtex))
-																{
-																	transtex = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
-																}
-															}
-														}
-														if (!System.IO.File.Exists(transtex))
-														{
-															transtex = null;
-															Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
-															break;
-														}
-													}
+														transtex = null;
+														Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+													}												
 													break;
 												//Sets the transparency type
 												case "TransparentTyp":

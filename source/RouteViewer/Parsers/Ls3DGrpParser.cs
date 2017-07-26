@@ -40,7 +40,6 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
 			Result.Objects = new ObjectManager.AnimatedObject[0];
-			int ObjectCount = 0;
 			try
 			{
 				currentXML.Load(FileName);
@@ -72,7 +71,11 @@ namespace OpenBve
 						//Loksim parser tolerates multiple quotes, strict XML does not
 						Lines[i] = Lines[i].Replace("\"\"", "\"");
 					}
-
+					while (Lines[i].IndexOf("  ") != -1)
+					{
+						//Replace double-spaces with singles
+						Lines[i] = Lines[i].Replace("  ", " ");
+					}
 				}
 				bool tryLoad = false;
 				try
@@ -128,52 +131,22 @@ namespace OpenBve
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
 										{
-											Array.Resize<GruppenObject>(ref CurrentObjects, CurrentObjects.Length + 1);
 											GruppenObject Object = new GruppenObject();
 											foreach (XmlAttribute attribute in childNode.Attributes)
 											{
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.CombineFile(BaseDir, attribute.Value);
-														if (!System.IO.File.Exists(ObjectFile))
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+														if (!File.Exists(ObjectFile))
 														{
-															if (attribute.Value.StartsWith("\\Objekte"))
-															{
-																//This is a reference to the base Loksim3D object directory
-																DirectoryInfo d = new DirectoryInfo(BaseDir);
-																while (d.Parent != null)
-																{
-																	//Recurse upwards and try to see if we're in the Loksim directory
-																	d = d.Parent;
-																	if (d.ToString().ToLowerInvariant() == "objekte")
-																	{
-																		d = d.Parent;
-																		ObjectFile = OpenBveApi.Path.CombineFile(d.FullName, attribute.Value);
-																		break;
-																	}
-																}
-															}
-															if (!System.IO.File.Exists(ObjectFile))
-															{
-																//Last-ditch attempt: Check User & Public for the Loksim object directory
-																if (!Program.CurrentlyRunOnMono)
-																{
-																	ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attribute.Value);
-																	if (!System.IO.File.Exists(ObjectFile))
-																	{
-																		ObjectFile = OpenBveApi.Path.CombineFile(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), attribute.Value);
-																	}
-																}
-															}
-															if (!System.IO.File.Exists(ObjectFile))
-															{
-																Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
-																break;
-															}
+															Object.Name = null;
+															Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
 														}
-														Object.Name = ObjectFile;
-														ObjectCount++;
+														else
+														{
+															Object.Name = ObjectFile;
+														}
 														break;
 													case "Position":
 														string[] SplitPosition = attribute.Value.Split(';');
@@ -198,14 +171,17 @@ namespace OpenBve
 														break;
 												}
 											}
-											CurrentObjects[CurrentObjects.Length - 1] = Object;
+											if (Object.Name != null)
+											{
+												Array.Resize<GruppenObject>(ref CurrentObjects, CurrentObjects.Length + 1);
+												CurrentObjects[CurrentObjects.Length - 1] = Object;
+											}
 										}
 									}
 								}
 							}
 						}
 					}
-
 					//We've loaded the XML references, now load the objects into memory
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
@@ -218,48 +194,20 @@ namespace OpenBve
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
 							obj[obj.Length - 1] = Object;
-						}
-					}
-					for (int j = 0; j < obj.Length; j++)
-					{
-						if (obj[j] != null)
-						{
+
 							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-							if (obj[j] is ObjectManager.StaticObject)
+							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
 							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
-								s.Dynamic = true;
-								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-								{
-									Object = s,
-									Position = CurrentObjects[j].Position,
-								};
-								a.States = new ObjectManager.AnimatedObjectState[] { aos };
-								Result.Objects[j] = a;
-								if (!string.IsNullOrEmpty(CurrentObjects[j].FunctionScript))
-								{
-									Result.Objects[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[j].FunctionScript + " 1 == --");
-								}
-
-								ObjectCount++;
-							}
-							else if (obj[j] is ObjectManager.AnimatedObjectCollection)
+								Object = Object,
+								Position = CurrentObjects[i].Position,
+							};
+							a.States = new ObjectManager.AnimatedObjectState[] { aos };
+							Result.Objects[i] = a;
+							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
-								ObjectManager.AnimatedObjectCollection a =
-									(ObjectManager.AnimatedObjectCollection)obj[j];
-								for (int k = 0; k < a.Objects.Length; k++)
-								{
-
-									for (int h = 0; h < a.Objects[k].States.Length; h++)
-									{
-										a.Objects[k].States[h].Position.X += CurrentObjects[j].Position.X;
-										a.Objects[k].States[h].Position.Y += CurrentObjects[j].Position.Y;
-										a.Objects[k].States[h].Position.Z += CurrentObjects[j].Position.Z;
-									}
-									Result.Objects[j] = a.Objects[k];
-									ObjectCount++;
-								}
+								Result.Objects[i].StateFunction =
+									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
 							}
 						}
 					}
@@ -323,6 +271,31 @@ namespace OpenBve
 							case '9':
 								//Right doors (??)
 								script += Hidden ? "leftdoors == 0" : "leftdoors != 0";
+								break;
+						}
+					}
+					if (splitStrings[i].StartsWith("rauch"))
+					{
+						//Smoke (e.g. steam loco)
+						string[] finalStrings = splitStrings[i].Split('_');
+						switch (finalStrings[1])
+						{
+							case "stand":
+								//Standing
+								script += Hidden ? "reversernotch != 0 | powernotch != 0" : "reversernotch == 0 | powernotch == 0";
+								break;
+							case "fahrt":
+								switch (finalStrings[2])
+								{
+									case "vor":
+										//Forwards
+										script += Hidden ? "reversernotch != 1 & powernotch == 0" : "reversernotch == 1 & powernotch > 1";
+										break;
+									case "rueck":
+										//Reverse
+										script += Hidden ? "reversernotch != -1 & powernotch == 0" : "reversernotch == -1 & powernotch > 1";
+										break;
+								}
 								break;
 						}
 					}
