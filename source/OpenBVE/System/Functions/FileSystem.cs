@@ -43,6 +43,12 @@ namespace OpenBve {
 
 		/// <summary>The location to which packaged other items will be installed</summary>
 		internal string OtherInstallationDirectory;
+
+		/// <summary>Any lines loaded from the filesystem.cfg which were not understood</summary>
+		internal string[] NotUnderstoodLines;
+
+		/// <summary>The version of the filesystem</summary>
+		internal int Version;
 		
 		
 		// --- constructors ---
@@ -96,6 +102,7 @@ namespace OpenBve {
 		{
 			string file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "FileSystem.cfg");
 			StringBuilder newLines = new StringBuilder();
+			newLines.AppendLine("Version=1");
 			try
 			{
 				if (File.Exists(file))
@@ -150,6 +157,13 @@ namespace OpenBve {
 					Directory.Exists(Program.FileSystem.OtherInstallationDirectory))
 				{
 					newLines.AppendLine("OtherPackageInstall=" + ReplacePath(Program.FileSystem.OtherInstallationDirectory));
+				}
+				if (Program.FileSystem.NotUnderstoodLines != null && Program.FileSystem.NotUnderstoodLines.Length != 0)
+				{
+					for (int i = 0; i < Program.FileSystem.NotUnderstoodLines.Length; i++)
+					{
+						newLines.Append(Program.FileSystem.NotUnderstoodLines[i]);
+					}
 				}
 				System.IO.File.WriteAllText(file, newLines.ToString(), new System.Text.UTF8Encoding(true));
 			}
@@ -249,6 +263,24 @@ namespace OpenBve {
 									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(), true);
 								}
 								break;
+							case "version":
+								int v;
+								if (!int.TryParse(value, out v))
+								{
+									Program.AppendToLogFile("WARNING: Invalid filesystem.cfg version detected.");
+								}
+								if (v <= 1)
+								{
+									//Silently upgrade to the current config version
+									system.Version = 1;
+									break;
+								}
+								if (v > 1)
+								{
+									Program.AppendToLogFile("WARNING: A newer filesystem.cfg version " + v + " was detected. The current version is 1.");
+									system.Version = v;
+								}
+								break;
 							case "settings":
 								system.SettingsFolder = GetAbsolutePath(value, true);
 								break;
@@ -272,6 +304,16 @@ namespace OpenBve {
 								break;
 							case "otherpackageinstall":
 								system.OtherInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							default:
+								if (system.NotUnderstoodLines == null)
+								{
+									system.NotUnderstoodLines = new string[0];
+								}
+								int l = system.NotUnderstoodLines.Length;
+								Array.Resize(ref system.NotUnderstoodLines, system.NotUnderstoodLines.Length + 1);
+								system.NotUnderstoodLines[l] = line;
+								Program.AppendToLogFile("WARNING: Unrecognised key " + key + " detected in filesystem.cfg");
 								break;
 						}
 					}
