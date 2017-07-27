@@ -48,6 +48,73 @@ namespace OpenBve
 				long temp = (value - value_min) * 65535;
 				return (int)(temp / (value_max - value_min) + Int16.MinValue);
 			}
+
+			internal byte[] wData;
+
+			internal void SetDisplay(int speed)
+			{
+				int d1 = (int)((double)speed / 100 % 10); //1 digit
+				int d2 = (int)((double)speed / 10 % 10); //10 digit
+				int d3 = (int)((double)speed % 10); //100 digit
+				for (int i = 2; i < 5; i++)
+				{
+					switch (i)
+					{
+						//100 digit display
+						case 2:
+							wData[i] = GetDigit(d3);
+							break;
+						//10 digit display
+						case 3:
+							wData[i] = GetDigit(d2); 
+							break;
+						//1 digit display
+						case 4:
+							wData[i] = GetDigit(d1);
+							break;
+					}
+				}
+				int result = 404;
+				while (result == 404) { result = devices[Handle].WriteData(wData); }
+				if (result != 0)
+				{
+					throw new Exception();
+				}
+			}
+			private byte GetDigit(int num)
+			{
+				num = Math.Abs(num);
+				if (num > 9 || num < 0)
+				{
+					//Invalid data
+					return 0;
+				}
+				switch (num)
+				{
+					case 0:
+						return 63;
+					case 1:
+						return 6;
+					case 2:
+						return 91;
+					case 3:
+						return 79;
+					case 4:
+						return 102;
+					case 5:
+						return 109;
+					case 6:
+						return 125;
+					case 7:
+						return 7;
+					case 8:
+						return 127;
+					case 9:
+						return 103;
+					default:
+						return 0;
+				}
+			}
 		}
 		/// <summary>Callback function from the PI Engineering DLL, raised each time the device pushes a data packet</summary>
 		/// <param name="data">The callback data</param>

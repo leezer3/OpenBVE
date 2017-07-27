@@ -417,6 +417,7 @@ namespace OpenBve {
 			checkboxWarningMessages.Checked = Interface.CurrentOptions.ShowWarningMessages;
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
 			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
+			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			// language
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
@@ -1686,6 +1687,19 @@ namespace OpenBve {
 		{
 			var bugReportForm = new formBugReport();
 			bugReportForm.ShowDialog();
+		}
+
+		private void comboBoxRailDriverUnits_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			switch (comboBoxRailDriverUnits.SelectedIndex)
+			{
+				case 0:
+					Interface.CurrentOptions.RailDriverMPH = true;
+					break;
+				case 1:
+					Interface.CurrentOptions.RailDriverMPH = false;
+					break;
+			}
 		}
 	}
 }

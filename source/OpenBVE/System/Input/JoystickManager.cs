@@ -100,7 +100,11 @@ namespace OpenBve {
 							Raildriver newJoystick = new Raildriver
 							{
 								Name = "RailDriver Desktop Cab Controller",
-								Handle = i
+								Handle = i,
+								wData = new byte[]
+								{
+									0,134,0,0,0,0,0,0,0
+								}
 							};
 							bool alreadyFound = false;
 							for (int j = 0; j < AttachedJoysticks.Length; j++)
@@ -118,7 +122,6 @@ namespace OpenBve {
 								devices[i].SetupInterface();
 								devices[i].SetDataCallback(this);
 								devices[i].SetErrorCallback(this);
-								//devices[i].callNever = false;
 							}
 							break;
 					}
