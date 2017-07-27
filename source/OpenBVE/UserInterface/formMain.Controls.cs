@@ -510,12 +510,9 @@ namespace OpenBve {
 			Font f = new Font(this.Font.Name, 0.875f * this.Font.Size);
 			float x = 2.0f, y = 2.0f;
 			float threshold = ((float)trackbarJoystickAxisThreshold.Value - (float)trackbarJoystickAxisThreshold.Minimum) / (float)(trackbarJoystickAxisThreshold.Maximum - trackbarJoystickAxisThreshold.Minimum);
-			for (int i = 0; i < Joysticks.AttachedJoysticks.Length; i++)
+			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
 			{
-				//Get the current joystick state
-				var capabilities = Joystick.GetCapabilities(Joysticks.AttachedJoysticks[i].OpenTKHandle);
-				var state = Joystick.GetState(Joysticks.AttachedJoysticks[i].OpenTKHandle);
-				
+				JoystickManager.AttachedJoysticks[i].Poll();
 				float w, h;
 				if (JoystickImage != null) {
 					e.Graphics.DrawImage(JoystickImage, x, y);
@@ -534,7 +531,7 @@ namespace OpenBve {
 					e.Graphics.DrawString(t, f, Brushes.Black, x + w - 8.0f - 0.5f * s.Width, y + 8.0f - 0.5f * s.Height);
 				}
 				{ // joystick name
-					e.Graphics.DrawString(Joysticks.AttachedJoysticks[i].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
+					e.Graphics.DrawString(JoystickManager.AttachedJoysticks[i].Name, this.Font, Brushes.Black, x + w + 8.0f, y);
 				}
 				if (OpenTK.Configuration.RunningOnSdl2)
 				{
@@ -557,7 +554,7 @@ namespace OpenBve {
 						float v = y + 24.0f;
 						float g = h - 24.0f;
 						{ // hats
-							int n = capabilities.HatCount;
+							int n = JoystickManager.AttachedJoysticks[i].HatCount();
 							for (int j = 0; j < n; j++) {
 								if (device == i & component == Interface.JoystickComponent.Hat & element == j) {
 									e.Graphics.DrawEllipse(ps, u, v, g, g);
@@ -567,7 +564,7 @@ namespace OpenBve {
 								string t = "H" + (j + 1).ToString(Culture);
 								SizeF s = e.Graphics.MeasureString(t, f);
 								e.Graphics.DrawString(t, f, Brushes.Black, u + 0.5f * (g - s.Width), v + 0.5f * (g - s.Height));
-								JoystickHatState aa = state.GetHat((JoystickHat)j);
+								JoystickHatState aa = JoystickManager.AttachedJoysticks[i].GetHat(j);
 								HatPosition a = aa.Position;
 								if (a != HatPosition.Centered)
 								{
@@ -637,10 +634,10 @@ namespace OpenBve {
 						float u = x;
 						float v = y + h + 8.0f;
 						{ // axes
-							int n = capabilities.AxisCount;
+							int n = JoystickManager.AttachedJoysticks[i].AxisCount();
 							float g = (float)pictureboxJoysticks.ClientRectangle.Height - v - 2.0f;
 							for (int j = 0; j < n; j++) {
-								float r = state.GetAxis(j);
+								float r = (float)JoystickManager.AttachedJoysticks[i].GetAxis(j);
 								float r0 = r < 0.0f ? r : 0.0f;
 								float r1 = r > 0.0f ? r : 0.0f;
 								if ((float)Math.Abs((double)r) < threshold) {
@@ -671,10 +668,10 @@ namespace OpenBve {
 						}
 						
 						{ // buttons
-							int n = capabilities.ButtonCount;
+							int n = JoystickManager.AttachedJoysticks[i].ButtonCount();
 							float g = (float)0.5f * (pictureboxJoysticks.ClientRectangle.Height - v - 10.0f);
 							for (int j = 0; j < n; j++) {
-								bool q = state.GetButton(j) != 0;
+								bool q = JoystickManager.AttachedJoysticks[i].GetButton(j) != 0;
 								float dv = (float)(j & 1) * (g + 8.0f);
 								if (q) e.Graphics.FillRectangle(Brushes.Firebrick, u, v + dv, g, g);
 								if (device == i & component == Interface.JoystickComponent.Button & element == j) {

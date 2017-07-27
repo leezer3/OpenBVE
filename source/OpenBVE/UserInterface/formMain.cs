@@ -1361,28 +1361,21 @@ namespace OpenBve {
 
 		private void timerEvents_Tick(object sender, EventArgs e)
 		{
-			Joysticks.RefreshJoysticks();
-			if (currentJoystickStates == null || currentJoystickStates.Length < Joysticks.AttachedJoysticks.Length)
+			Program.Joysticks.RefreshJoysticks();
+			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Length)
 			{
-				currentJoystickStates = new JoystickState[Joysticks.AttachedJoysticks.Length];
+				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
 			}	
 			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
-				for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++)
+				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
 				{
-					JoystickState s = currentJoystickStates[k];
-					currentJoystickStates[k] = Joystick.GetState(k);
-					if (currentJoystickStates[k].Equals(s))
-					{
-						continue;
-					}
-					int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
-					for (int i = 0; i < axes; i++)
-					{
-						if (OpenTK.Input.Joystick.GetState(k).GetAxis(i) != s.GetAxis(i))
+						JoystickManager.AttachedJoysticks[k].Poll();
+						int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
+						for (int i = 0; i < axes; i++)
 						{
-							double a = OpenTK.Input.Joystick.GetState(k).GetAxis(i);
+							double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
 							if (a < -0.75)
 							{
 								Interface.CurrentControls[j].Device = k;
@@ -1406,38 +1399,39 @@ namespace OpenBve {
 								return;
 							}
 						}
-					}
-					int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
-					for (int i = 0; i < buttons; i++)
-					{
-						if (OpenTK.Input.Joystick.GetState(k).GetButton(i) == ButtonState.Pressed)
+						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
+						for (int i = 0; i < buttons; i++)
 						{
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = 1;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
+							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
+							{
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = 1;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
+							}
 						}
-					}
-					int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
-					for (int i = 0; i < hats; i++)
-					{
-						JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
-						if (hat.Position != HatPosition.Centered)
+						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
+						for (int i = 0; i < hats; i++)
 						{
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = (int)hat.Position;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
+							if (hat.Position != HatPosition.Centered)
+							{
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = (int)hat.Position;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
+							}
 						}
-					}
+					
+					
 				}
 			}
 

@@ -44,6 +44,8 @@ namespace OpenBve {
 		internal static bool GenerateDebugLogging = false;
 
 		public static GameWindow currentGameWindow;
+
+		internal static JoystickManager Joysticks = new JoystickManager();
 		
 		// --- functions ---
 		
