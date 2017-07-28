@@ -196,7 +196,7 @@ namespace OpenBveApi.Packages
 
 
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>
-	public static class Manipulation
+	public static partial class Manipulation
 	{
 		/// <summary>This extracts a package, and returns the list of extracted files</summary>
 		/// <param name="currentPackage">The package to extract</param>
@@ -219,10 +219,9 @@ namespace OpenBveApi.Packages
 					foreach (var archiveEntry in reader.Entries)
 					{
 						fp = archiveEntry.Key;
-						if (archiveEntry.Key.ToLowerInvariant() == "package.xml" || archiveEntry.Key.ToLowerInvariant() == "package.png" ||
-						    archiveEntry.Key.ToLowerInvariant() == "package.rtf" || archiveEntry.Key.ToLowerInvariant() == "thumbs.db")
+						if (filesToSkip.Contains(archiveEntry.Key.ToLowerInvariant()))
 						{
-							//Skip package information files
+							//Skip package information files etc.
 						}
 						else if (archiveEntry.Size == 0)
 						{

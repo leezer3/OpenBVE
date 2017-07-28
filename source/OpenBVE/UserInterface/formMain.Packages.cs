@@ -265,6 +265,9 @@ namespace OpenBve
 					case PackageType.Train:
 						ExtractionDirectory = Program.FileSystem.TrainInstallationDirectory;
 						break;
+					case PackageType.Loksim3D:
+						ExtractionDirectory = Program.FileSystem.LoksimPackageInstallationDirectory;
+						break;
 					default:
 						ExtractionDirectory = Program.FileSystem.OtherInstallationDirectory;
 						break;

@@ -43,6 +43,9 @@ namespace OpenBve {
 
 		/// <summary>The location to which packaged other items will be installed</summary>
 		internal string OtherInstallationDirectory;
+		
+		/// <summary>The location to which Loksim3D packages will be installed</summary>
+		internal string LoksimPackageInstallationDirectory;
 
 		/// <summary>Any lines loaded from the filesystem.cfg which were not understood</summary>
 		internal string[] NotUnderstoodLines;
@@ -68,6 +71,7 @@ namespace OpenBve {
 			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			this.TrainInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			this.OtherInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Other");
+			this.LoksimPackageInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent"), "Loksim3D");
 			this.RestartProcess = assemblyFile;
 			this.RestartArguments = string.Empty;
 		}
@@ -157,6 +161,11 @@ namespace OpenBve {
 					Directory.Exists(Program.FileSystem.OtherInstallationDirectory))
 				{
 					newLines.AppendLine("OtherPackageInstall=" + ReplacePath(Program.FileSystem.OtherInstallationDirectory));
+				}
+				if (Program.FileSystem.LoksimPackageInstallationDirectory != null &&
+				    Directory.Exists(Program.FileSystem.LoksimPackageInstallationDirectory))
+				{
+					newLines.AppendLine("LoksimPackageInstall=" + ReplacePath(Program.FileSystem.LoksimPackageInstallationDirectory));
 				}
 				if (Program.FileSystem.NotUnderstoodLines != null && Program.FileSystem.NotUnderstoodLines.Length != 0)
 				{
@@ -304,6 +313,9 @@ namespace OpenBve {
 								break;
 							case "otherpackageinstall":
 								system.OtherInstallationDirectory = GetAbsolutePath(value, true);
+								break;
+							case "loksimpackageinstall":
+								system.LoksimPackageInstallationDirectory = GetAbsolutePath(value, true);
 								break;
 							default:
 								if (system.NotUnderstoodLines == null)
