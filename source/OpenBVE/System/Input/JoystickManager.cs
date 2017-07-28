@@ -37,6 +37,10 @@ namespace OpenBve {
 
 		internal JoystickManager()
 		{
+			if (!Program.CurrentlyRunningOnWindows)
+			{
+				return;
+			}
 			devices = PIEDevice.EnumeratePIE();
 		}
 
@@ -86,6 +90,10 @@ namespace OpenBve {
 						AttachedJoysticks[l] = newJoystick;
 					}
 				}
+			}
+			if (!Program.CurrentlyRunningOnWindows || devices == null)
+			{
+				return;
 			}
 			//Enumerate all PI Engineering devices
 			

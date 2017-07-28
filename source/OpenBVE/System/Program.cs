@@ -45,7 +45,7 @@ namespace OpenBve {
 
 		public static GameWindow currentGameWindow;
 
-		internal static JoystickManager Joysticks = new JoystickManager();
+		internal static JoystickManager Joysticks;
 		
 		// --- functions ---
 		
@@ -77,6 +77,7 @@ namespace OpenBve {
 			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
 			//Doesn't appear to, but Mono have fixed the button appearance bug
 			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
+			Joysticks = new JoystickManager();
 			CurrentHost = new Host();
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
