@@ -159,6 +159,8 @@ namespace OpenBve
 			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
 			internal bool PreferNativeBackend = true;
 
+			internal bool RailDriverMPH = true;
+
 			internal TimeTableMode TimeTableStyle;
 
 			internal CompressionType packageCompressionType;
@@ -234,6 +236,7 @@ namespace OpenBve
 				this.AllowAxisEB = true;
 				this.TimeTableStyle = TimeTableMode.Default;
 				this.packageCompressionType = CompressionType.Zip;
+				this.RailDriverMPH = true;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -548,6 +551,9 @@ namespace OpenBve
 												if (a <= 0) a = 100;
 												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * (double)a;
 											} break;
+										case "raildrivermph":
+											Interface.CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 									} break;
 								case "sound":
 									switch (Key)
@@ -799,6 +805,7 @@ namespace OpenBve
 			Builder.AppendLine("joystickAxisthreshold = " + CurrentOptions.JoystickAxisThreshold.ToString(Culture));
 			Builder.AppendLine("keyRepeatDelay = " + (1000.0 * CurrentOptions.KeyRepeatDelay).ToString("0", Culture));
 			Builder.AppendLine("keyRepeatInterval = " + (1000.0 * CurrentOptions.KeyRepeatInterval).ToString("0", Culture));
+			Builder.AppendLine("raildrivermph = " + (CurrentOptions.RailDriverMPH ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[sound]");
 			Builder.Append("model = ");

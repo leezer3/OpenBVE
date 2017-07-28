@@ -241,12 +241,13 @@ namespace OpenBve {
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{
-					for (int k = 0; k < Joysticks.AttachedJoysticks.Length; k++)
+					for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
 					{
-						int axes = OpenTK.Input.Joystick.GetCapabilities(k).AxisCount;
+						JoystickManager.AttachedJoysticks[k].Poll();
+						int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
-							double aa = OpenTK.Input.Joystick.GetState(k).GetAxis(i);
+							double aa = JoystickManager.AttachedJoysticks[k].GetAxis(i);
 							if (aa < -0.75)
 							{
 								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Axis, i, -1);
@@ -258,19 +259,19 @@ namespace OpenBve {
 								return;
 							}
 						}
-						int buttons = OpenTK.Input.Joystick.GetCapabilities(k).ButtonCount;
+						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
 						for (int i = 0; i < buttons; i++)
 						{
-							if (OpenTK.Input.Joystick.GetState(k).GetButton(i) == ButtonState.Pressed)
+							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
 							{
 								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Button, i, 1);
 								return;
 							}
 						}
-						int hats = OpenTK.Input.Joystick.GetCapabilities(k).HatCount;
+						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
 						for (int i = 0; i < hats; i++)
 						{
-							JoystickHatState hat = OpenTK.Input.Joystick.GetState(k).GetHat(JoystickHat.Hat0);
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
 							if (hat.Position != HatPosition.Centered)
 							{
 								Game.Menu.SetControlJoyCustomData(k, Interface.JoystickComponent.Hat, i, (int) hat.Position);
@@ -307,7 +308,8 @@ namespace OpenBve {
 					switch (Interface.CurrentControls[i].Component)
 					{
 						case Interface.JoystickComponent.Axis:
-							var axisState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis(Interface.CurrentControls[i].Element);
+							var axisState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetAxis(Interface.CurrentControls[i].Element);
+								//= OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis(Interface.CurrentControls[i].Element);
 							if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 							{
 								Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
@@ -388,7 +390,7 @@ namespace OpenBve {
 							break;
 						case Interface.JoystickComponent.Button:
 							//Load the current state
-							var buttonState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetButton(Interface.CurrentControls[i].Element);
+							var buttonState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetButton(Interface.CurrentControls[i].Element);
 							//Test whether the state is the same as the last frame
 							if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 							{
@@ -410,7 +412,7 @@ namespace OpenBve {
 							break;
 						case Interface.JoystickComponent.Hat:
 							//Load the current state
-							var hatState = OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetHat((JoystickHat)Interface.CurrentControls[i].Element).Position;
+							var hatState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetHat(Interface.CurrentControls[i].Element).Position;
 							//Test if the state is the same as last frame
 							if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 							{
