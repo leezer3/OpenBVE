@@ -144,7 +144,7 @@ namespace OpenBve
 												//Sets the texture
 												//Loksim3D objects only support daytime textures
 												case "Texture":
-													tday = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+													tday = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 													if (!File.Exists(tday))
 													{
 														Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Texture file " + attribute.Value + " not found.");
@@ -188,11 +188,11 @@ namespace OpenBve
 														//Empty....
 														continue;
 													}
-													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 													if (!File.Exists(transtex))
 													{
-														transtex = null;
 														Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+														transtex = null;
 													}
 													break;
 												//Sets the transparency type

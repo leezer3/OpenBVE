@@ -129,7 +129,7 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, string.Empty);
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
