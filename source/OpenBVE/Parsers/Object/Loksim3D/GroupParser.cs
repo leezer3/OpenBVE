@@ -7,19 +7,15 @@ namespace OpenBve
 {
 	internal static class Ls3DGrpParser
 	{
-		/// <summary>A GruppenObject contains a single textured mesh stored in a separate .ls3dobj file (Roughly equivilant to a MeshBuilder)</summary>
+
 		internal class GruppenObject
 		{
-			/// <summary>The on-disk path to the mesh</summary>
+			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
 			internal string Name;
-			/// <summary>The position of the mesh within the object</summary>
 			internal Vector3 Position;
-			/// <summary>The rotation to be applied to the mesh (During load, BEFORE position)</summary>
 			internal Vector3 Rotation;
-			/// <summary>The FunctionScript attached to the mesh, controlling it's animations</summary>
 			internal string FunctionScript;
 
-			/// <summary>Creates a new GruppenObject</summary>
 			internal GruppenObject()
 			{
 				Name = string.Empty;
@@ -28,12 +24,8 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Loads a Loksim3D GruppenObject</summary>
-		/// <param name="FileName">The filename to load</param>
-		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
-		/// <param name="LoadMode">The object load mode</param>
-		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
+			ObjectManager.ObjectLoadMode LoadMode)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			//May need to be changed to use de-DE
@@ -44,7 +36,7 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				//The XML is not strictly valid
 				string[] Lines = File.ReadAllLines(FileName);
@@ -107,7 +99,7 @@ namespace OpenBve
 					return null;
 				}
 			}
-			
+
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
@@ -126,7 +118,7 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.HasChildNodes)
 								{
-									
+
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
@@ -137,7 +129,7 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir,attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
@@ -189,13 +181,14 @@ namespace OpenBve
 						{
 							continue;
 						}
-						var Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
 							obj[obj.Length - 1] = Object;
 
 							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
+							Object.Dynamic = true;
 							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
 							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
 							{
@@ -211,6 +204,7 @@ namespace OpenBve
 							}
 						}
 					}
+					
 				}
 				return Result;
 			}
@@ -219,10 +213,6 @@ namespace OpenBve
 			return null;
 		}
 
-		/// <summary>Gets the internal animation function string for the given Loksim3D function</summary>
-		/// <param name="Value">The Loksim3D function</param>
-		/// <param name="Hidden">If set, this function HIDES the object, if not it SHOWS the object</param>
-		/// <returns>The new function string</returns>
 		private static string GetAnimatedFunction(string Value, bool Hidden)
 		{
 			string[] splitStrings = Value.Split(' ');
@@ -289,11 +279,11 @@ namespace OpenBve
 								{
 									case "vor":
 										//Forwards
-										script += Hidden ? "reversernotch != 1 & powernotch == 0" : "reversernotch == 1 & powernotch > 1";
+										script += Hidden ? "reversernotch != 1 & powernotch == 0" : "reversernotch == 1 & powernotch > 0";
 										break;
 									case "rueck":
 										//Reverse
-										script += Hidden ? "reversernotch != -1 & powernotch == 0" : "reversernotch == -1 & powernotch > 1";
+										script += Hidden ? "reversernotch != -1 & powernotch == 0" : "reversernotch == -1 & powernotch > 0";
 										break;
 								}
 								break;

@@ -12,7 +12,7 @@ namespace OpenBveApi {
 	 * ---------------------------------------- */
 
 	/// <summary>Provides path-related functions for accessing files and directories in a cross-platform manner.</summary>
-	public static class Path {
+	public static partial class Path {
 		
 		// --- read-only fields ---
 		
@@ -72,7 +72,6 @@ namespace OpenBveApi {
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
 				throw new ArgumentException("The relative path contains invalid characters.");
 			}
-			ResolvePackageReference(ref absolute, ref relative);
 			string[] parts = relative.Split(PathSeparationChars, StringSplitOptions.RemoveEmptyEntries);
 			for (int i = 0; i < parts.Length; i++) {
 				if (parts[i].Length != 0) {
@@ -156,7 +155,6 @@ namespace OpenBveApi {
 			if (relative.IndexOfAny(InvalidPathChars) >= 0) {
 				throw new ArgumentException("The relative path contains invalid characters.");
 			}
-			ResolvePackageReference(ref absolute, ref relative);
 			string[] parts = relative.Split(PathSeparationChars, StringSplitOptions.RemoveEmptyEntries);
 			for (int i = 0; i < parts.Length; i++) {
 				if (parts[i].Length != 0) {
@@ -277,27 +275,6 @@ namespace OpenBveApi {
 				}
 			}
 			return true;
-		}
-		
-		/// <summary>Resolves a package reference in the relative path and adjusts the absolute path if found.</summary>
-		/// <param name="absolute">The absolute path.</param>
-		/// <param name="relative">The relative path.</param>
-		private static void ResolvePackageReference(ref string absolute, ref string relative) {
-			if (relative.Length != 0 && relative[0] == '$') {
-				int index = relative.IndexOfAny(new char[] { '/', '\\' });
-				if (index >= 0) {
-					string package = relative.Substring(1, index - 1);
-					relative = relative.Substring(index + 1);
-					if (PackageNames != null) {
-						index = Array.BinarySearch<string>(PackageNames, package);
-						if (index >= 0 & index < PackageNames.Length) {
-							absolute = PackageDirectories[index];
-							return;
-						}
-					}
-					throw new DirectoryNotFoundException("The package " + package + " could not be found.");
-				}
-			}
 		}
 	}
 }

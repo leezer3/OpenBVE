@@ -44,7 +44,7 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				//The XML is not strictly valid
 				string[] Lines = File.ReadAllLines(FileName);
@@ -107,7 +107,7 @@ namespace OpenBve
 					return null;
 				}
 			}
-			
+
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
@@ -126,7 +126,7 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.HasChildNodes)
 								{
-									
+
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
@@ -137,7 +137,7 @@ namespace OpenBve
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir,attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
@@ -189,7 +189,7 @@ namespace OpenBve
 						{
 							continue;
 						}
-						var Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);

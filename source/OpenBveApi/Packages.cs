@@ -170,6 +170,8 @@ namespace OpenBveApi.Packages
 		Train = 2,
 		/// <summary>The package is a route, utility etc.</summary>
 		Other = 3,
+		/// <summary>The package contains imported Loksim3D content.</summary>
+		Loksim3D = 4,
 	}
 
 	/// <summary>Holds the properties of a file, used during creation of a package.</summary>
@@ -194,7 +196,7 @@ namespace OpenBveApi.Packages
 
 
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>
-	public static class Manipulation
+	public static partial class Manipulation
 	{
 		/// <summary>This extracts a package, and returns the list of extracted files</summary>
 		/// <param name="currentPackage">The package to extract</param>
@@ -217,10 +219,9 @@ namespace OpenBveApi.Packages
 					foreach (var archiveEntry in reader.Entries)
 					{
 						fp = archiveEntry.Key;
-						if (archiveEntry.Key.ToLowerInvariant() == "package.xml" || archiveEntry.Key.ToLowerInvariant() == "package.png" ||
-						    archiveEntry.Key.ToLowerInvariant() == "package.rtf" || archiveEntry.Key.ToLowerInvariant() == "thumbs.db")
+						if (filesToSkip.Contains(archiveEntry.Key.ToLowerInvariant()))
 						{
-							//Skip package information files
+							//Skip package information files etc.
 						}
 						else if (archiveEntry.Size == 0)
 						{
@@ -404,21 +405,22 @@ namespace OpenBveApi.Packages
 		public static Package ReadPackage(string packageFile)
 		{
 			bool InfoFound = false;
+			string ImageFile = "package.png";
 			//Create a random temp directory
 			string TempDirectory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
 
 			Package currentPackage = new Package();
 			Directory.CreateDirectory(TempDirectory);
 			//Load the selected package file into a stream
+			reset:
 			using (Stream stream = File.OpenRead(packageFile))
 			{
-				
 				var reader = ReaderFactory.Open(stream);
 				while (reader.MoveToNextEntry())
 				{
 
 					//Search for the package.xml file- This must be located in the archive root
-					if (reader.Entry.Key.ToLowerInvariant() == "package.xml")
+					if (reader.Entry.Key.ToLowerInvariant() == "package.xml" && !InfoFound)
 					{
 						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 						//Load the XML file
@@ -427,13 +429,33 @@ namespace OpenBveApi.Packages
 						SerializedPackage newPackage = (SerializedPackage)listReader.Deserialize(XmlReader.Create(OpenBveApi.Path.CombineFile(TempDirectory, "package.xml")));
 						currentPackage = newPackage.Package;
 					}
-					if (reader.Entry.Key.ToLowerInvariant() == "package.png")
+					if (reader.Entry.Key.ToLowerInvariant() == "packageinfo.xml" && packageFile.ToLowerInvariant().EndsWith(".l3dpack") && !InfoFound)
+					{
+						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+						//Load the XML file
+						try
+						{
+							XmlDocument xml = new XmlDocument();
+							xml.Load(OpenBveApi.Path.CombineFile(TempDirectory, "packageinfo.xml"));
+							currentPackage = LoksimPackage.Parse(xml, System.IO.Path.GetFileNameWithoutExtension(packageFile), ref ImageFile);
+							InfoFound = true;
+							//Yuck...
+							//We need to reset our streamreader, but Sharpcompress doesn't allow this, so just hit goto.....
+							stream.Seek(0,0);
+							goto reset;
+						}
+						catch
+						{
+							return null;
+						}
+					}
+					if (reader.Entry.Key.ToLowerInvariant() == ImageFile)
 					{
 						//Extract the package.png to the uniquely assigned temp directory
 						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 						try
 						{
-							currentPackage.PackageImage = Image.FromFile(Path.CombineFile(TempDirectory, "package.png"));
+							currentPackage.PackageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
 						}
 						catch
 						{
