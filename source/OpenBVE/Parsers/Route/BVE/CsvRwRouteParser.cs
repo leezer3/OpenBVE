@@ -60,6 +60,7 @@ namespace OpenBve {
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
+			internal StopRequest[] RequestStops;
 			internal int FirstUsedBlock;
 		}
 
@@ -121,6 +122,7 @@ namespace OpenBve {
 				Data.Blocks[0].Transponder = new Transponder[] {};
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
 				Data.Markers = new Marker[] {};
+				Data.RequestStops = new StopRequest[] { };
 				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
 				Data.Structure.Poles = new ObjectManager.UnifiedObject[][]
 				{
@@ -1367,6 +1369,7 @@ namespace OpenBve {
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
 			Game.Stations = new Game.Station[] { };
+			Data.RequestStops = new StopRequest[] { };
 			int CurrentStation = -1;
 			int CurrentStop = -1;
 			bool DepartureSignalUsed = false;
@@ -4172,7 +4175,16 @@ namespace OpenBve {
 									}
 									CurrentStation++;
 									Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-									Game.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm);
+									StopRequest sr = new StopRequest();
+									sr.TrackPosition = Data.TrackPosition;
+									sr.StationIndex = CurrentStation;
+									Game.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
+									if (Game.Stations[CurrentStation].StationType == Game.StationType.RequestStop)
+									{
+										int l = Data.RequestStops.Length;
+										Array.Resize<StopRequest> (ref Data.RequestStops, l + 1);
+										Data.RequestStops[l] = sr;
+									}
 									Data.Blocks[BlockIndex].Station = CurrentStation;
 									break;
 								case "track.buffer":
@@ -5374,6 +5386,20 @@ namespace OpenBve {
 								TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.MarkerEndEvent(d, Data.Markers[j].Message);
 							}
 						}
+					}
+				}
+				// request stops
+				if (!PreviewOnly)
+				{
+					for (int j = 0; j < Data.RequestStops.Length; j++)
+					{
+						if (Data.RequestStops[j].TrackPosition >= StartingDistance & Data.RequestStops[j].TrackPosition < EndingDistance)
+						{
+							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
+							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RequestStopEvent(Data.RequestStops[j].StationIndex, Data.RequestStops[j].Probability, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].StopMessage, Data.RequestStops[j].PassMessage);
+						}
+						
 					}
 				}
 				// sound

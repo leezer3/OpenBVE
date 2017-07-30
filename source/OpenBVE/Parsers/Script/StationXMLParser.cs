@@ -8,10 +8,11 @@ namespace OpenBve
 {
 	class StationXMLParser
 	{
-		public static Game.Station ReadStationXML(string fileName, bool PreviewOnly, Textures.Texture[] daytimeTimetableTextures, Textures.Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm)
+		public static Game.Station ReadStationXML(string fileName, bool PreviewOnly, Textures.Texture[] daytimeTimetableTextures, Textures.Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref CsvRwRouteParser.StopRequest stopRequest)
 		{
 			Game.Station station = new Game.Station();
 			station.Stops = new Game.StationStop[] { };
+			stopRequest.Probability = 75;
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -324,6 +325,70 @@ namespace OpenBve
 												}
 											}
 										}
+										break;
+									case "requeststop":
+										station.StationType = Game.StationType.RequestStop;
+										foreach (XmlNode cc in c.ChildNodes)
+										{
+											switch (cc.Name.ToLowerInvariant())
+											{
+												case "distance":
+													if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														double d;
+														if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out d))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Request stop distance is invalid in XML file " + fileName);
+															break;
+														}
+														stopRequest.TrackPosition -= Math.Abs(d);
+													}
+													break;
+												case "earlytime":
+													if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.EarlyTime))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Request stop early time was invalid in XML file " + fileName);
+														}
+													}
+													break;
+												case "latetime":
+													if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.LateTime))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Request stop late time was invalid in XML file " + fileName);
+														}
+													}
+													break;
+												case "stopmessage":
+													if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														stopRequest.StopMessage = cc.InnerText;
+													}
+													break;
+												case "passmessage":
+													if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														stopRequest.PassMessage = cc.InnerText;
+													}
+													break;
+												case "probability":
+													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.Probability))
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, "Request stop probability was invalid in XML file " + fileName);
+													}
+													break;
+												case "maxcars":
+													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.MaxNumberOfCars))
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, "Request stop maximum cars was invalid in XML file " + fileName);
+													}
+													break;
+											}
+										}
+										
 										break;
 								}
 							}

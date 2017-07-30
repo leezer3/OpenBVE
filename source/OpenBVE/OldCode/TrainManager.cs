@@ -453,6 +453,7 @@ namespace OpenBve
 			internal Game.GeneralAI AI;
 			internal double InternalTimerTimeElapsed;
 			internal bool Derailed;
+			internal bool NextStopSkipped = false;
 
 			/// <summary>Call this method to derail a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>

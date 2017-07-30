@@ -36,7 +36,13 @@ namespace OpenBve
 			/// <summary>The player train stops at this station, AI trains do not</summary>
 			PlayerStop = 2,
 			/// <summary>The player train passes this station, AI trains stop</summary>
-			PlayerPass = 3
+			PlayerPass = 3,
+			/// <summary>This station is a random request stop for all trains</summary>
+			AllRequestStop = 4,
+			/// <summary>This station is a random request stop for the player train only</summary>
+			PlayerRequestStop = 5
+
+
 		}
 
 		/// <summary>Defines the available station types</summary>
@@ -44,7 +50,8 @@ namespace OpenBve
 		{
 			Normal = 0,
 			ChangeEnds = 1,
-			Terminal = 2
+			Terminal = 2,
+			RequestStop = 3
 		}
 
 		/// <summary>Defines a station</summary>

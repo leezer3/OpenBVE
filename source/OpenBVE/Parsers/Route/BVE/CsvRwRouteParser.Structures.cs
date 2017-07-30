@@ -115,6 +115,19 @@
 			internal double EndingPosition;
 			internal MessageManager.Message Message;
 		}
+
+		internal struct StopRequest
+		{
+			internal double Distance;
+			internal int Probability;
+			internal int StationIndex;
+			internal int MaxNumberOfCars;
+			internal double TrackPosition;
+			internal double EarlyTime;
+			internal double LateTime;
+			internal string StopMessage;
+			internal string PassMessage;
+		}
 		private enum SoundType { World, TrainStatic, TrainDynamic }
 		private struct Sound
 		{

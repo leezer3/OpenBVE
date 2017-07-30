@@ -375,7 +375,7 @@ namespace OpenBve
                             if (tp + lookahead <= stp) break;
                             for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
                             {
-                                if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+                                if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && !Train.NextStopSkipped)
                                 {
                                     TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
                                     if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
@@ -476,7 +476,7 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && !Train.NextStopSkipped)
                                 {
                                     // station start
                                     if (Train.Station == -1)
@@ -505,7 +505,7 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationEndEvent)
+                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationEndEvent && !Train.NextStopSkipped)
                                 {
                                     // station end
                                     if (Train.Station == -1)

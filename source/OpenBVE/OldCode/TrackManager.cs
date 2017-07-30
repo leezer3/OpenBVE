@@ -166,6 +166,73 @@ namespace OpenBve {
 				}
 			}
 		}
+		// stop request
+		internal class RequestStopEvent : GeneralEvent {
+			internal int StationIndex;
+			internal int Probability;
+			internal int MaxCars;
+			internal string StopMessage;
+			internal string PassMessage;
+			internal RequestStopEvent(int stationIndex, int probability, int maxCars, string stopMessage, string passMessage)
+			{
+				this.StationIndex = stationIndex;
+				this.Probability = probability;
+				this.MaxCars = maxCars;
+				this.StopMessage = stopMessage;
+				this.PassMessage = passMessage;
+			}
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			{
+				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+				{
+					if (MaxCars != 0 && Train.Cars.Length > MaxCars)
+					{
+						//Check whether our train length is valid for this before doing anything else
+						return;
+					}
+					if (Direction > 0)
+					{
+						if (Program.RandomNumberGenerator.Next(0, 100) <= Probability)
+						{
+							//We have hit our probability roll
+							if (Game.Stations[StationIndex].StopMode == Game.StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == Game.StationStopMode.PlayerRequestStop))
+							{
+								//If our train can stop at this station, set it's index accordingly
+								Train.Station = StationIndex;
+							}
+							else
+							{
+								//We don't meet the conditions for this request stop
+								Train.NextStopSkipped = true;
+							}
+							//Play sound
+							int d = Train.DriverCar;
+							Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
+							if (buffer != null)
+							{
+								OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
+
+							}
+							//If message is not empty, add it
+							if (!string.IsNullOrEmpty(StopMessage) && Train == TrainManager.PlayerTrain)
+							{
+								Game.AddMessage(StopMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+							}
+						}
+						else
+						{
+							Train.NextStopSkipped = true;
+							//If message is not empty, add it
+							if (!string.IsNullOrEmpty(PassMessage) && Train == TrainManager.PlayerTrain)
+							{
+								Game.AddMessage(PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		// station pass alarm
 		internal class StationPassAlarmEvent : GeneralEvent {
 			internal StationPassAlarmEvent(double TrackPositionDelta) {
@@ -211,7 +278,7 @@ namespace OpenBve {
 						Train.Station = -1;
 					} else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex)
+						if (Train.Station == StationIndex || Train.NextStopSkipped == true)
 						{
 							return;
 						}
@@ -251,7 +318,11 @@ namespace OpenBve {
 					if (Direction < 0) {
 						Train.Station = this.StationIndex;
 						Train.StationRearCar = true;
-						Train.LastStation = this.StationIndex;
+						if (!Train.NextStopSkipped)
+						{
+							Train.LastStation = this.StationIndex;
+						}
+						Train.NextStopSkipped = false;
 					} else if (Direction > 0) {
 						if (Train.Station == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {
