@@ -11,6 +11,7 @@ namespace OpenBve
 		public static Game.Station ReadStationXML(string fileName, bool PreviewOnly, Textures.Texture[] daytimeTimetableTextures, Textures.Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm)
 		{
 			Game.Station station = new Game.Station();
+			station.Stops = new Game.StationStop[] { };
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -47,77 +48,35 @@ namespace OpenBve
 									case "arrivaltime":
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											if (string.Equals(c.InnerText, "P", StringComparison.OrdinalIgnoreCase) | string.Equals(c.InnerText, "L", StringComparison.OrdinalIgnoreCase))
+											if (!Interface.TryParseTime(c.InnerText, out station.ArrivalTime))
 											{
-												station.StopMode = Game.StationStopMode.AllPass;
-											}
-											else if (string.Equals(c.InnerText, "B", StringComparison.OrdinalIgnoreCase))
-											{
-												station.StopMode = Game.StationStopMode.PlayerPass;
-											}
-											else if (c.InnerText.StartsWith("B:", StringComparison.InvariantCultureIgnoreCase))
-											{
-												station.StopMode = Game.StationStopMode.PlayerPass;
-												if (!Interface.TryParseTime(c.InnerText.Substring(2).TrimStart(), out station.ArrivalTime))
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Station arrivaltime was invalid in XML file " + fileName);
-													station.ArrivalTime = -1.0;
-												}
-											}
-											else if (string.Equals(c.InnerText, "S", StringComparison.OrdinalIgnoreCase))
-											{
-												station.StopMode = Game.StationStopMode.PlayerStop;
-											}
-											else if (c.InnerText.StartsWith("S:", StringComparison.InvariantCultureIgnoreCase))
-											{
-												station.StopMode = Game.StationStopMode.PlayerStop;
-												if (!Interface.TryParseTime(c.InnerText.Substring(2).TrimStart(), out station.ArrivalTime))
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Station arrivaltime was invalid in XML file " + fileName);
-													station.ArrivalTime = -1.0;
-												}
-											}
-											else if (!Interface.TryParseTime(c.InnerText, out station.ArrivalTime))
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "Station arrivaltime was invalid in XML file " + fileName);
-												station.ArrivalTime = -1.0;
+												Interface.AddMessage(Interface.MessageType.Error, false, "Station arrival time was invalid in XML file " + fileName);
 											}
 										}
 										break;
 									case "departuretime":
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											if (string.Equals(c.InnerText, "T", StringComparison.OrdinalIgnoreCase) | string.Equals(c.InnerText, "=", StringComparison.OrdinalIgnoreCase))
+											if (!Interface.TryParseTime(c.InnerText, out station.DepartureTime))
 											{
-												station.StationType = Game.StationType.Terminal;
+												Interface.AddMessage(Interface.MessageType.Error, false, "Station arrival time was invalid in XML file " + fileName);
 											}
-											else if (c.InnerText.StartsWith("T:", StringComparison.InvariantCultureIgnoreCase))
-											{
-												station.StationType = Game.StationType.Terminal;
-												if (!Interface.TryParseTime(c.InnerText.Substring(2).TrimStart(), out station.DepartureTime))
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Station departure time was invalid in XML file " + fileName);
-													station.DepartureTime = -1.0;
-												}
-											}
-											else if (string.Equals(c.InnerText, "C", StringComparison.OrdinalIgnoreCase))
-											{
+										}
+										break;
+									case "type":
+										switch (c.InnerText.ToLowerInvariant())
+										{
+											case "c":
+											case "changeends":
 												station.StationType = Game.StationType.ChangeEnds;
-											}
-											else if (c.InnerText.StartsWith("C:", StringComparison.InvariantCultureIgnoreCase))
-											{
-												station.StationType = Game.StationType.ChangeEnds;
-												if (!Interface.TryParseTime(c.InnerText.Substring(2).TrimStart(), out station.DepartureTime))
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Station departure time was invalid in XML file " + fileName);
-													station.DepartureTime = -1.0;
-												}
-											}
-											else if (!Interface.TryParseTime(c.InnerText, out station.DepartureTime))
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "Station departure time was invalid in XML file " + fileName);
-												station.DepartureTime = -1.0;
-											}
+												break;
+											case "t":
+											case "terminal":
+												station.StationType = Game.StationType.Terminal;
+												break;
+											default:
+												station.StationType = Game.StationType.Normal;
+												break;
 										}
 										break;
 									case "passalarm":
@@ -138,18 +97,23 @@ namespace OpenBve
 										bool doorboth = false;
 										if (!string.IsNullOrEmpty(c.InnerText))
 										{
-											switch (c.InnerText.ToUpperInvariant())
+											switch (c.InnerText.ToLowerInvariant())
 											{
-												case "L":
+												case "l":
+												case "left":
 													door = -1;
 													break;
-												case "R":
+												case "r":
+												case "right":
 													door = 1;
 													break;
-												case "N":
+												case "n":
+												case "none":
+												case "neither":
 													door = 0;
 													break;
-												case "B":
+												case "b":
+												case "both":
 													doorboth = true;
 													break;
 												default:
@@ -367,7 +331,7 @@ namespace OpenBve
 
 						}
 					}
-
+					return station;
 				}
 			}
 			//We couldn't find any valid XML, so return false

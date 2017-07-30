@@ -4163,6 +4163,18 @@ namespace OpenBve {
 										CurrentStop = -1;
 										DepartureSignalUsed = false;
 									} break;
+								case "track.stationxml":
+									string fn = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+									if (!System.IO.File.Exists(fn))
+									{
+										Interface.AddMessage(Interface.MessageType.Error, true, "Station XML file " + fn + " not found in Track.StationXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										break;
+									}
+									CurrentStation++;
+									Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
+									Game.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm);
+									Data.Blocks[BlockIndex].Station = CurrentStation;
+									break;
 								case "track.buffer":
 									{
 										if (!PreviewOnly) {
