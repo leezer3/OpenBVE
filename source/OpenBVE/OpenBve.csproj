@@ -180,6 +180,12 @@
     <Compile Include="System\Translations\InterfaceStrings.cs" />
     <Compile Include="System\Translations\KeyInfo.cs" />
     <Compile Include="System\Translations\LanguageFile.cs" />
+    <Compile Include="UserInterface\formRaildriverCalibration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formRaildriverCalibration.Designer.cs">
+      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formBugReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formAbout.resx">
       <DependentUpon>formAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
+      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />

@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using OpenBve.UserInterface;
 using OpenBveApi.Packages;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -1699,6 +1700,14 @@ namespace OpenBve {
 				case 1:
 					Interface.CurrentOptions.RailDriverMPH = false;
 					break;
+			}
+		}
+
+		private void buttonRailDriverCalibration_Click(object sender, EventArgs e)
+		{
+			using (formRaildriverCalibration f = new formRaildriverCalibration())
+			{
+				f.ShowDialog();
 			}
 		}
 	}

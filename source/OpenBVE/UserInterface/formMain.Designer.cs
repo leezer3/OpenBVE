@@ -412,6 +412,8 @@
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
+			this.buttonRailDriverCalibration = new System.Windows.Forms.Button();
+			this.labelRailDriverCalibration = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -1395,11 +1397,13 @@
 			// 
 			// groupBoxRailDriver
 			// 
+			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverCalibration);
+			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
 			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
 			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverSpeedUnits);
 			this.groupBoxRailDriver.Location = new System.Drawing.Point(1, 157);
 			this.groupBoxRailDriver.Name = "groupBoxRailDriver";
-			this.groupBoxRailDriver.Size = new System.Drawing.Size(337, 67);
+			this.groupBoxRailDriver.Size = new System.Drawing.Size(337, 75);
 			this.groupBoxRailDriver.TabIndex = 20;
 			this.groupBoxRailDriver.TabStop = false;
 			this.groupBoxRailDriver.Text = "RailDriver";
@@ -5222,6 +5226,25 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
+			// buttonRailDriverCalibration
+			// 
+			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(253, 47);
+			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
+			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
+			this.buttonRailDriverCalibration.TabIndex = 4;
+			this.buttonRailDriverCalibration.Text = "Launch...";
+			this.buttonRailDriverCalibration.UseVisualStyleBackColor = true;
+			this.buttonRailDriverCalibration.Click += new System.EventHandler(this.buttonRailDriverCalibration_Click);
+			// 
+			// labelRailDriverCalibration
+			// 
+			this.labelRailDriverCalibration.AutoSize = true;
+			this.labelRailDriverCalibration.Location = new System.Drawing.Point(7, 53);
+			this.labelRailDriverCalibration.Name = "labelRailDriverCalibration";
+			this.labelRailDriverCalibration.Size = new System.Drawing.Size(78, 13);
+			this.labelRailDriverCalibration.TabIndex = 5;
+			this.labelRailDriverCalibration.Text = "Set Calibration:";
+			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5777,5 +5800,7 @@
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
 		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
 		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
+		private System.Windows.Forms.Label labelRailDriverCalibration;
+		private System.Windows.Forms.Button buttonRailDriverCalibration;
 	}
 }

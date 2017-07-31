@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using System.Xml;
+using OpenBveApi.Math;
 using OpenTK.Input;
 using PIEHid32Net;
+using ButtonState = OpenTK.Input.ButtonState;
 
 namespace OpenBve
 {
@@ -8,6 +14,139 @@ namespace OpenBve
 	{
 		internal class Raildriver : Joystick
 		{
+			internal Raildriver()
+			{
+				for (int i = 0; i < Calibration.Length; i++)
+				{
+					Calibration[i] = new AxisCalibration();
+				}
+				LoadCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
+			}
+
+			internal AxisCalibration[] Calibration = new AxisCalibration[7];
+
+			internal void LoadCalibration(string calibrationFile)
+			{
+				if (!File.Exists(calibrationFile))
+				{
+					return;
+				}
+				try
+				{
+					for (int i = 0; i < Calibration.Length; i++)
+					{
+						Calibration[i] = new AxisCalibration();
+					}
+					XmlDocument currentXML = new XmlDocument();
+					currentXML.Load(calibrationFile);
+					XmlNodeList documentNodes = currentXML.SelectNodes("openBVE/RailDriverCalibration");
+					if (documentNodes != null && documentNodes.Count != 0)
+					{
+						for (int i = 0; i < documentNodes.Count; i++)
+						{
+							int idx = -1;
+							int lMin = 0;
+							int lMax = 255;
+							foreach (XmlNode node in documentNodes[i].ChildNodes)
+							{
+								switch (node.Name.ToLowerInvariant())
+								{
+									case "axis":
+										foreach (XmlNode n in node.ChildNodes)
+										{
+											switch (n.Name.ToLowerInvariant())
+											{
+												case "index":
+													if (!NumberFormats.TryParseIntVb6(n.InnerText, out idx))
+													{
+														Program.AppendToLogFile(@"Invalid index in RailDriver calibration file");
+													}
+													break;
+												case "minimum":
+													if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMin))
+													{
+														Program.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													}
+													break;
+												case "maximum":
+													if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMax))
+													{
+														Program.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+													}
+													break;
+											}
+										}
+										lMin = Math.Abs(lMin);
+										lMax = Math.Abs(lMax);
+										if (lMin > 255)
+										{
+											lMin = 255;
+										}
+										else if (lMin < 0)
+										{
+											lMin = 0;
+										}
+										if (lMax >= 255)
+										{
+											lMax = 255;
+										}
+										else if (lMax < 0)
+										{
+											lMax = 0;
+										}
+										if (lMin >= lMax)
+										{
+											throw new InvalidDataException(@"Maximum must be non-zero and greater than minimum.");
+										}
+										if (idx == -1)
+										{
+											throw new InvalidDataException(@"Invalid axis specified.");
+										}
+										Calibration[idx].Minimum = lMin;
+										Calibration[idx].Maximum = lMax;
+										break;
+								}
+							}
+							
+						}
+					}
+				}
+				catch
+				{
+					for (int i = 0; i < Calibration.Length; i++)
+					{
+						Calibration[i] = new AxisCalibration();
+					}
+					MessageBox.Show(Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				
+			}
+
+			internal void SaveCalibration(string calibrationFile)
+			{
+				List<string> lines = new List<string>();
+				lines.Add("<openBVE>");
+				lines.Add("<RailDriverCalibration>");
+				for (int i = 0; i < Calibration.Length; i++)
+				{
+					lines.Add("<Axis>");
+					lines.Add("<Index>"+ i +"</Index>");
+					lines.Add("<Minimum>" + Calibration[i].Minimum + "</Minimum>");
+					lines.Add("<Maximum>" + Calibration[i].Maximum + "</Maximum>");
+					lines.Add("</Axis>");
+				}
+				lines.Add("</RailDriverCalibration>");
+				lines.Add("</openBVE>");
+				try
+				{
+					File.WriteAllLines(calibrationFile, lines);
+				}
+				catch
+				{
+				}
+				
+			}
+
 			internal override ButtonState GetButton(int button)
 			{
 				return 1 == ((currentState[8 + (button / 8)] >> button % 8) & 1) ? ButtonState.Pressed : ButtonState.Released;
@@ -15,7 +154,7 @@ namespace OpenBve
 
 			internal override double GetAxis(int axis)
 			{
-				return ScaleValue(currentState[axis + 1], 0, 255) * 1.0f / (short.MaxValue + 0.5f);
+				return ScaleValue(currentState[axis + 1], Calibration[axis].Minimum, Calibration[axis].Maximum) * 1.0f / (short.MaxValue + 0.5f);
 			}
 
 			internal override JoystickHatState GetHat(int Hat)
@@ -114,6 +253,12 @@ namespace OpenBve
 					default:
 						return 0;
 				}
+			}
+
+			internal class AxisCalibration
+			{
+				internal int Minimum = 0;
+				internal int Maximum = 255;
 			}
 		}
 		/// <summary>Callback function from the PI Engineering DLL, raised each time the device pushes a data packet</summary>
