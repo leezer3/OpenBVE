@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -166,25 +167,53 @@ namespace OpenBve {
 				}
 			}
 		}
+
+		internal class RequestStop
+		{
+			internal int Probability;
+			internal double Time = -1;
+			internal string StopMessage;
+			internal string PassMessage;
+		}
+
 		// stop request
 		internal class RequestStopEvent : GeneralEvent {
 			internal int StationIndex;
-			internal int Probability;
+			internal RequestStop Early;
+			internal RequestStop OnTime;
+			internal RequestStop Late;
+			internal bool FullSpeed;
 			internal int MaxCars;
-			internal string StopMessage;
-			internal string PassMessage;
-			internal RequestStopEvent(int stationIndex, int probability, int maxCars, string stopMessage, string passMessage)
+			internal RequestStopEvent(int stationIndex, int maxCars, bool fullSpeed, RequestStop onTime, RequestStop early, RequestStop late)
 			{
+				this.FullSpeed = fullSpeed;
+				this.OnTime = onTime;
 				this.StationIndex = stationIndex;
-				this.Probability = probability;
+				this.Early = early;
+				this.Late = late;
 				this.MaxCars = maxCars;
-				this.StopMessage = stopMessage;
-				this.PassMessage = passMessage;
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
+					RequestStop stop; //Temp probability value
+					if (Early.Time != -1 && Game.SecondsSinceMidnight > Early.Time)
+					{
+						stop = Early;
+					}
+					else if (Early.Time != -1 && Game.SecondsSinceMidnight > Early.Time && Late.Time != -1 && Game.SecondsSinceMidnight < Late.Time)
+					{
+						stop = OnTime;
+					}
+					else if(Late.Time != -1 && Game.SecondsSinceMidnight > Late.Time)
+					{
+						stop = Late;
+					}
+					else
+					{
+						stop = OnTime;
+					}
 					if (MaxCars != 0 && Train.Cars.Length > MaxCars)
 					{
 						//Check whether our train length is valid for this before doing anything else
@@ -192,18 +221,24 @@ namespace OpenBve {
 					}
 					if (Direction > 0)
 					{
-						if (Program.RandomNumberGenerator.Next(0, 100) <= Probability)
+						
+						if (Program.RandomNumberGenerator.Next(0, 100) <= stop.Probability)
 						{
 							//We have hit our probability roll
 							if (Game.Stations[StationIndex].StopMode == Game.StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == Game.StationStopMode.PlayerRequestStop))
 							{
+								
 								//If our train can stop at this station, set it's index accordingly
 								Train.Station = StationIndex;
 							}
 							else
 							{
 								//We don't meet the conditions for this request stop
-								Train.NextStopSkipped = true;
+								if (FullSpeed)
+								{
+									//Pass at linespeed, rather than braking as if for stop
+									Train.NextStopSkipped = true;
+								}
 							}
 							//Play sound
 							int d = Train.DriverCar;
@@ -214,18 +249,22 @@ namespace OpenBve {
 
 							}
 							//If message is not empty, add it
-							if (!string.IsNullOrEmpty(StopMessage) && Train == TrainManager.PlayerTrain)
+							if (!string.IsNullOrEmpty(stop.StopMessage) && Train == TrainManager.PlayerTrain)
 							{
-								Game.AddMessage(StopMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								Game.AddMessage(stop.StopMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 						else
 						{
-							Train.NextStopSkipped = true;
-							//If message is not empty, add it
-							if (!string.IsNullOrEmpty(PassMessage) && Train == TrainManager.PlayerTrain)
+							if (FullSpeed)
 							{
-								Game.AddMessage(PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								//Pass at linespeed, rather than braking as if for stop
+								Train.NextStopSkipped = true;
+							}
+							//If message is not empty, add it
+							if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+							{
+								Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 					}

@@ -5397,7 +5397,7 @@ namespace OpenBve {
 						{
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RequestStopEvent(Data.RequestStops[j].StationIndex, Data.RequestStops[j].Probability, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].StopMessage, Data.RequestStops[j].PassMessage);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RequestStopEvent(Data.RequestStops[j].StationIndex, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].FullSpeed, Data.RequestStops[j].OnTime , Data.RequestStops[j].Early, Data.RequestStops[j].Late);
 						}
 						
 					}

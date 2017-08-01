@@ -12,7 +12,10 @@ namespace OpenBve
 		{
 			Game.Station station = new Game.Station();
 			station.Stops = new Game.StationStop[] { };
-			stopRequest.Probability = 75;
+			stopRequest.Early = new TrackManager.RequestStop();
+			stopRequest.OnTime = new TrackManager.RequestStop();
+			stopRequest.Late = new TrackManager.RequestStop();
+			stopRequest.OnTime.Probability = 75;
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -236,7 +239,7 @@ namespace OpenBve
 												Interface.AddMessage(Interface.MessageType.Error, false, "Passenger ratio must be non-negative in XML file " + fileName);
 												ratio = 100.0;
 											}
-											station.PassengerRatio = ratio;
+											station.PassengerRatio = ratio * 0.01;
 										}
 										break;
 									case "departuresound":
@@ -332,6 +335,21 @@ namespace OpenBve
 										{
 											switch (cc.Name.ToLowerInvariant())
 											{
+												case "aibehaviour":
+													switch (cc.InnerText.ToLowerInvariant())
+													{
+														case "fullspeed":
+														case "0":
+															//With this set, the AI driver will not attempt to brake, but pass through at linespeed
+															stopRequest.FullSpeed = true;
+															break;
+														case "normalbrake":
+														case "1":
+															//With this set, the AI driver breaks to a near stop whilst passing through the station
+															stopRequest.FullSpeed = false;
+															break;
+													}
+													break;
 												case "distance":
 													if (!string.IsNullOrEmpty(cc.InnerText))
 													{
@@ -347,7 +365,7 @@ namespace OpenBve
 												case "earlytime":
 													if (!string.IsNullOrEmpty(cc.InnerText))
 													{
-														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.EarlyTime))
+														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.Early.Time))
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Request stop early time was invalid in XML file " + fileName);
 														}
@@ -356,26 +374,84 @@ namespace OpenBve
 												case "latetime":
 													if (!string.IsNullOrEmpty(cc.InnerText))
 													{
-														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.LateTime))
+														if (!Interface.TryParseTime(cc.InnerText, out stopRequest.Late.Time))
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Request stop late time was invalid in XML file " + fileName);
 														}
 													}
 													break;
 												case "stopmessage":
-													if (!string.IsNullOrEmpty(cc.InnerText))
+													if (cc.HasChildNodes)
 													{
-														stopRequest.StopMessage = cc.InnerText;
+														foreach (XmlNode cd in cc.ChildNodes)
+														{
+															switch (cd.Name.ToLowerInvariant())
+															{
+																case "early":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.Early.StopMessage = cd.InnerText;
+																	}
+																	break;
+																case "ontime":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.OnTime.StopMessage = cd.InnerText;
+																	}
+																	break;
+																case "late":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.Late.StopMessage = cd.InnerText;
+																	}
+																	break;
+															}
+														}
+													}
+													else if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														stopRequest.Early.StopMessage = cc.InnerText;
+														stopRequest.OnTime.StopMessage = cc.InnerText;
+														stopRequest.Late.StopMessage = cc.InnerText;
 													}
 													break;
 												case "passmessage":
-													if (!string.IsNullOrEmpty(cc.InnerText))
+													if (cc.HasChildNodes)
 													{
-														stopRequest.PassMessage = cc.InnerText;
+														foreach (XmlNode cd in cc.ChildNodes)
+														{
+															switch (cd.Name.ToLowerInvariant())
+															{
+																case "early":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.Early.PassMessage = cd.InnerText;
+																	}
+																	break;
+																case "ontime":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.OnTime.PassMessage = cd.InnerText;
+																	}
+																	break;
+																case "late":
+																	if (!string.IsNullOrEmpty(cd.InnerText))
+																	{
+																		stopRequest.Late.PassMessage = cd.InnerText;
+																	}
+																	break;
+															}
+														}
+													}
+													else if (!string.IsNullOrEmpty(cc.InnerText))
+													{
+														stopRequest.Early.PassMessage = cc.InnerText;
+														stopRequest.OnTime.PassMessage = cc.InnerText;
+														stopRequest.Late.PassMessage = cc.InnerText;
 													}
 													break;
 												case "probability":
-													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.Probability))
+													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.OnTime.Probability))
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, "Request stop probability was invalid in XML file " + fileName);
 													}
