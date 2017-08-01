@@ -98,7 +98,42 @@ namespace CarXmlConvertor
                         i--;
                         newLines.Add("</Run>");
                         break;
-                    case "[ats]":
+	                case "[motor]":
+		                newLines.Add("<Motor>");
+		                i++;
+		                while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+		                {
+			                int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+			                if (j >= 0)
+			                {
+				                string a = Lines[i].Substring(0, j).TrimEnd();
+				                string b = Lines[i].Substring(j + 1).TrimStart();
+				                int k;
+				                if (!int.TryParse(a, System.Globalization.NumberStyles.Integer,
+					                CultureInfo.InvariantCulture, out k))
+				                {
+					                continue;
+				                }
+				                if (b.Length == 0 || Path.ContainsInvalidChars(b))
+				                {
+					                continue;
+				                }
+				                if (k >= 0)
+				                {
+					                newLines.Add("<Sound>");
+					                newLines.Add("<Index>" + k + "</Index>");
+					                newLines.Add("<FileName>" + b + "</FileName>");
+					                newLines.Add("<Position>0,0,0</Position>");
+					                newLines.Add("<Radius>10.0</Radius>");
+					                newLines.Add("</Sound>");
+				                }
+			                }
+			                i++;
+		                }
+		                i--;
+		                newLines.Add("</Motor>");
+		                break;
+					case "[ats]":
                         newLines.Add("<ATS>");
                         i++;
                         while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))

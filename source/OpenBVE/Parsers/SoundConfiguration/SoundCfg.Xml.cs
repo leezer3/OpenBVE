@@ -490,7 +490,7 @@ namespace OpenBve
 				{
 					continue;
 				}
-				for (int i = 0; i > Tables.Length; i++)
+				for (int i = 0; i < Tables.Length; i++)
 				{
 					Tables[i].Buffer = null;
 					Tables[i].Source = null;
