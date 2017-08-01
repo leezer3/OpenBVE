@@ -83,6 +83,7 @@
 			this.Controls.Add(this.pictureBox1);
 			this.Name = "formRaildriverCalibration";
 			this.Text = "Raildriver Calibration";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formRaildriverCalibration_FormClosing);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

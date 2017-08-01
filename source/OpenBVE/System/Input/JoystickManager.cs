@@ -50,6 +50,7 @@ namespace OpenBve {
 		/// <summary>Holds all raildrivers & other PI Engineering controllers attached to the computer</summary>
 		internal static PIEDevice[] devices;
 
+		internal bool RailDriverInit = false;
 
 		// --- functions ---
 
@@ -91,12 +92,12 @@ namespace OpenBve {
 					}
 				}
 			}
-			if (!Program.CurrentlyRunningOnWindows || devices == null)
+			if (!Program.CurrentlyRunningOnWindows || devices == null || RailDriverInit == true)
 			{
 				return;
 			}
 			//Enumerate all PI Engineering devices
-			
+			RailDriverInit = true;
 			for (int i = 0; i < devices.Length; i++)
 			{
 				if (devices[i].HidUsagePage == 0xc)

@@ -118,6 +118,8 @@ namespace OpenBve
 						Calibration[i] = new AxisCalibration();
 					}
 					MessageBox.Show(Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					//Clear the calibration file
+					File.Delete(calibrationFile);
 				}
 				
 			}
@@ -129,6 +131,28 @@ namespace OpenBve
 				lines.Add("<RailDriverCalibration>");
 				for (int i = 0; i < Calibration.Length; i++)
 				{
+					if (Calibration[i].Maximum < Calibration[i].Minimum)
+					{
+						//If calibration min and max are reversed flip them
+						int t = Calibration[i].Maximum;
+						Calibration[i].Maximum = Calibration[i].Minimum;
+						Calibration[i].Minimum = t;
+					}
+					if (Calibration[i].Maximum == Calibration[i].Minimum)
+					{
+						//If calibration values are identical, reset to defaults
+						Calibration[i].Minimum = 0;
+						Calibration[i].Maximum = 255;
+					}
+					//Bounds check values
+					if (Calibration[i].Minimum < 0)
+					{
+						Calibration[i].Minimum = 0;
+					}
+					if (Calibration[i].Maximum > 255)
+					{
+						Calibration[i].Maximum = 255;
+					}
 					lines.Add("<Axis>");
 					lines.Add("<Index>"+ i +"</Index>");
 					lines.Add("<Minimum>" + Calibration[i].Minimum + "</Minimum>");

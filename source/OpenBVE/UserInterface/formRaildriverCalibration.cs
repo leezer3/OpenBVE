@@ -29,6 +29,49 @@ namespace OpenBve.UserInterface
 			buttonCalibrationPrevious.Text = Interface.GetInterfaceString("packages_button_back");
 		}
 
+		private void formRaildriverCalibration_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (joystickIDX != -1)
+			{
+				var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+				if (j == null)
+				{
+					return;
+				}
+				for (int i = 0; i < j.Calibration.Length; i++)
+				{
+					if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
+					{
+						//If calibration min and max are reversed flip them
+						int t = j.Calibration[i].Maximum;
+						j.Calibration[i].Maximum = j.Calibration[i].Minimum;
+						j.Calibration[i].Minimum = t;
+					}
+					if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
+					{
+						//If calibration values are identical, reset to defaults
+						j.Calibration[i].Minimum = 0;
+						j.Calibration[i].Maximum = 255;
+					}
+					//Bounds check values (This should never happen, but check anyways)
+					if (j.Calibration[i].Minimum < 0)
+					{
+						j.Calibration[i].Minimum = 0;
+					}
+					if (j.Calibration[i].Maximum > 255)
+					{
+						j.Calibration[i].Maximum = 255;
+					}
+					if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
+					{
+						//If calibration values are within 10 of each other, something is not right....
+						j.Calibration[i].Minimum = 0;
+						j.Calibration[i].Maximum = 255;
+					}
+				}
+			}
+		}
+
 		private int calibrationStage;
 		private readonly int joystickIDX = -1;
 
@@ -244,7 +287,5 @@ namespace OpenBve.UserInterface
 					break;
 			}
 		}
-
-		
 	}
 }
