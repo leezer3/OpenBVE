@@ -472,6 +472,12 @@ namespace OpenBve
 					case "stop":
 						ParseNode(c, out Horn.EndSound, ref Position, Radius);
 						break;
+					case "toggle":
+						if (c.InnerText.ToLowerInvariant() == "true" || c.InnerText.ToLowerInvariant() == "1")
+						{
+							Horn.Loop = true;
+						}
+						break;
 				}
 			}
 		}

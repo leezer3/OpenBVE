@@ -454,6 +454,7 @@ namespace CarXmlConvertor
                         {
                             newLines.Add("<Music>");
                             newLines.AddRange(music);
+							newLines.Add("<Toggle>true</Toggle>");
                             newLines.Add("</Music>");
                         }
                         newLines.Add("</Horn>");
