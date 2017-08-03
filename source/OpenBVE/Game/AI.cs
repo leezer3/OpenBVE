@@ -165,7 +165,7 @@ namespace OpenBve
                 {
                     // door opened or boarding at station
                     this.PowerNotchAtWhichWheelSlipIsObserved = Train.Specs.MaximumPowerNotch + 1;
-                    if (Train.Station >= 0 && Stations[Train.Station].StationType != StationType.Normal && Train == TrainManager.PlayerTrain)
+                    if (Train.Station >= 0 && Stations[Train.Station].StationType != StationType.Normal && Stations[Train.Station].StationType != StationType.RequestStop && Train == TrainManager.PlayerTrain)
                     {
 						// player's terminal station
 	                    if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
@@ -248,7 +248,7 @@ namespace OpenBve
                     }
                     CurrentInterval = 1.0;
                 }
-                else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].StationType != StationType.Normal && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
+                else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].StationType != StationType.Normal && Stations[Train.Station].StationType != StationType.RequestStop && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
                 {
 					// player's terminal station (not boarding any longer)
 	                if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
@@ -375,7 +375,7 @@ namespace OpenBve
                             if (tp + lookahead <= stp) break;
                             for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
                             {
-                                if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && !Train.NextStopSkipped)
+                                if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
                                 {
                                     TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
                                     if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
@@ -476,7 +476,7 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && !Train.NextStopSkipped)
+                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
                                 {
                                     // station start
                                     if (Train.Station == -1)
@@ -505,7 +505,40 @@ namespace OpenBve
                                         }
                                     }
                                 }
-                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationEndEvent && !Train.NextStopSkipped)
+                                else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.Decelerate)
+                                {
+	                                // Brakes the train when passing through a request stop, which is not to be passed at linespeed
+	                                if (Train.Station == -1)
+	                                {
+		                                TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
+		                                if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
+		                                {
+			                                int s = GetStopIndex(e.StationIndex, Train.Cars.Length);
+			                                if (s >= 0)
+			                                {
+				                                double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
+				                                if (dist > -Stations[e.StationIndex].Stops[s].ForwardTolerance)
+				                                {
+					                                if (dist < 25.0)
+					                                {
+						                                reduceDecelerationCruiseAndStart = true;
+					                                }
+					                                else if (this.CurrentSpeedFactor < 1.0)
+					                                {
+						                                dist -= 5.0;
+					                                }
+													if (dist > 25)
+													{
+														var edec = spd * spd / (2.0 * dist);
+														if (edec > dec) dec = edec;
+													}
+					                                
+				                                }
+			                                }
+		                                }
+	                                }
+                                }
+								else if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
                                 {
                                     // station end
                                     if (Train.Station == -1)

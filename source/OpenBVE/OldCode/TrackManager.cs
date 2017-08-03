@@ -230,6 +230,7 @@ namespace OpenBve {
 								
 								//If our train can stop at this station, set it's index accordingly
 								Train.Station = StationIndex;
+								Train.NextStopSkipped = TrainManager.StopSkipMode.None;
 							}
 							else
 							{
@@ -237,7 +238,11 @@ namespace OpenBve {
 								if (FullSpeed)
 								{
 									//Pass at linespeed, rather than braking as if for stop
-									Train.NextStopSkipped = true;
+									Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+								}
+								else
+								{
+									Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
 								}
 							}
 							//Play sound
@@ -259,7 +264,11 @@ namespace OpenBve {
 							if (FullSpeed)
 							{
 								//Pass at linespeed, rather than braking as if for stop
-								Train.NextStopSkipped = true;
+								Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+							}
+							else
+							{
+								Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
 							}
 							//If message is not empty, add it
 							if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
@@ -317,7 +326,7 @@ namespace OpenBve {
 						Train.Station = -1;
 					} else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex || Train.NextStopSkipped == true)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
 							return;
 						}
@@ -357,11 +366,11 @@ namespace OpenBve {
 					if (Direction < 0) {
 						Train.Station = this.StationIndex;
 						Train.StationRearCar = true;
-						if (!Train.NextStopSkipped)
+						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
 							Train.LastStation = this.StationIndex;
 						}
-						Train.NextStopSkipped = false;
+						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
 					} else if (Direction > 0) {
 						if (Train.Station == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {

@@ -331,6 +331,7 @@ namespace OpenBve
 										break;
 									case "requeststop":
 										station.StationType = Game.StationType.RequestStop;
+										station.StopMode = Game.StationStopMode.AllRequestStop;
 										foreach (XmlNode cc in c.ChildNodes)
 										{
 											switch (cc.Name.ToLowerInvariant())
@@ -349,6 +350,9 @@ namespace OpenBve
 															stopRequest.FullSpeed = false;
 															break;
 													}
+													break;
+												case "playeronly":
+													station.StopMode = Game.StationStopMode.PlayerRequestStop;
 													break;
 												case "distance":
 													if (!string.IsNullOrEmpty(cc.InnerText))
@@ -405,14 +409,13 @@ namespace OpenBve
 																		stopRequest.Late.StopMessage = cd.InnerText;
 																	}
 																	break;
+																case "#text":
+																	stopRequest.Early.StopMessage = cc.InnerText;
+																	stopRequest.OnTime.StopMessage = cc.InnerText;
+																	stopRequest.Late.StopMessage = cc.InnerText;
+																	break;
 															}
 														}
-													}
-													else if (!string.IsNullOrEmpty(cc.InnerText))
-													{
-														stopRequest.Early.StopMessage = cc.InnerText;
-														stopRequest.OnTime.StopMessage = cc.InnerText;
-														stopRequest.Late.StopMessage = cc.InnerText;
 													}
 													break;
 												case "passmessage":
@@ -440,21 +443,59 @@ namespace OpenBve
 																		stopRequest.Late.PassMessage = cd.InnerText;
 																	}
 																	break;
+																case "#text":
+																	stopRequest.Early.PassMessage = cc.InnerText;
+																	stopRequest.OnTime.PassMessage = cc.InnerText;
+																	stopRequest.Late.PassMessage = cc.InnerText;
+																	break;
 															}
 														}
 													}
-													else if (!string.IsNullOrEmpty(cc.InnerText))
-													{
-														stopRequest.Early.PassMessage = cc.InnerText;
-														stopRequest.OnTime.PassMessage = cc.InnerText;
-														stopRequest.Late.PassMessage = cc.InnerText;
-													}
 													break;
 												case "probability":
-													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.OnTime.Probability))
+													foreach (XmlNode cd in cc.ChildNodes)
 													{
-														Interface.AddMessage(Interface.MessageType.Error, false, "Request stop probability was invalid in XML file " + fileName);
+														switch (cd.Name.ToLowerInvariant())
+														{
+															case "early":
+																if (!string.IsNullOrEmpty(cd.InnerText))
+																{
+																	if (!NumberFormats.TryParseIntVb6(cd.InnerText, out stopRequest.Early.Probability))
+																	{
+																		Interface.AddMessage(Interface.MessageType.Error, false, "Request stop early probability was invalid in XML file " + fileName);
+																	}
+																}
+																break;
+															case "ontime":
+																if (!string.IsNullOrEmpty(cd.InnerText))
+																{
+																	if (!NumberFormats.TryParseIntVb6(cd.InnerText, out stopRequest.OnTime.Probability))
+																	{
+
+																		Interface.AddMessage(Interface.MessageType.Error, false, "Request stop ontime probability was invalid in XML file " + fileName);
+																	}
+																}
+																break;
+															case "late":
+																if (!string.IsNullOrEmpty(cd.InnerText))
+																{
+																	if (!NumberFormats.TryParseIntVb6(cd.InnerText, out stopRequest.OnTime.Probability))
+																	{
+
+																		Interface.AddMessage(Interface.MessageType.Error, false, "Request stop late probability was invalid in XML file " + fileName);
+																	}
+																}
+																break;
+															case "#text":
+																if (!NumberFormats.TryParseIntVb6(cd.InnerText, out stopRequest.OnTime.Probability))
+																{
+
+																	Interface.AddMessage(Interface.MessageType.Error, false, "Request stop probability was invalid in XML file " + fileName);
+																}
+																break;
+														}
 													}
+													
 													break;
 												case "maxcars":
 													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.MaxNumberOfCars))
