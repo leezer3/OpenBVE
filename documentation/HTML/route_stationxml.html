@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>XML Stations & Request Stops</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">The XML Station Format</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />This page describes the principles and implementation of the XML based station format.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Dynamic Backgrounds: Basic Principles</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+
+A station within openBVE, when combined with one or more <em>.Stop</em> commands, defines a point at which trains call. <br>
+
+Each station which you wish to use must be setup using a Station XML file an example of which is shown below:
+<br>
+<textarea rows="16" cols="110" style="border:2;">
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<openBVE>
+	<Station>
+		<Name>Dockyard</Name>
+		<ArrivalTime>12.3130</ArrivalTime>
+		<DepartureTime>12.3150</DepartureTime>
+		<Doors>Left</Doors>
+		<ForcedRedSignal>False</ForcedRedSignal>
+		<PassengerRatio>10</PassengerRatio>
+	</Station>
+</openBVE>
+</textarea>
+<br>
+
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ The basic station</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+The following basic attributes are required for all stations:<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;Name&gt;</b> <em>StationName</em> <b>&lt;&#47;Name&gt;</b></font></td></tr>
+</table>
+<b>StationName</b> sets the textual string by which this station is referred to in timetables, in-game messages etc.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;ArrivalTime&gt;</b> <em>Time</em> <b>&lt;&#47;ArrivalTime&gt;</b></font></td></tr>
+</table>
+<b>Time</b> sets the time at which the player's train is expected to arrive at this station. <em>Note:</em> When this parameter is omitted, the player is permitted to arrive at any time.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;DepartureTime&gt;</b> <em>Time</em> <b>&lt;&#47;DepartureTime&gt;</b></font></td></tr>
+</table>
+<b>Time</b> sets the time at which the player's train is expected to depart this station. <em>Note:</em> When this parameter is omitted, the player is permitted to depart at any time.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;Doors&gt;</b> <em>Value</em> <b>&lt;&#47;Doors&gt;</b></font></td></tr>
+</table>
+<b>Doors</b> controls the side on which the train doors are to open. Valid values are:<p>
+<b>Left , L or -1</b>  : The left-hand doors are to open.<br>
+<b>Right, R or 1</b>   : The right-hand doors are to open.<br>
+<b>None, N or 0</b>    : No doors open at this station.<br>
+<em>Note:</em> If omitted, no doors open.
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;ForcedRedSignal&gt;</b> <em>True / False</em> <b>&lt;&#47;ForcedRedSignal&gt;</b></font></td></tr>
+</table>
+If <em>ForcedRedSignal</em> is set to <b>True</b> , then the signal associated with this station will be held at Red (Aspect 0) until the scheduled departure time.<p>
+</font></td></tr></table>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;PassengerRatio&gt;</b> <em>Ratio</em> <b>&lt;&#47;PassengerRatio&gt;</b></font></td></tr>
+</table>
+<b>Ratio</b> sets the approximate ratio of passengers on-board the train from this point onwards. As a reference, <b>100</b> represents a train with normal amount of passengers, while <b>250</b> represents an over-crowded train. Values in-between <b>0</b> and <b>250</b> should be used.<p>
+</font></td></tr></table>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;ArrivalSound&gt;</b> <em>Sound</em> <b>&lt;&#47;ArrivalSound&gt;</b></font></td></tr>
+</table>
+<b>Sound</b> should be the path of the sound-file to be played upon arrival at this station, relative to the <em>Sound</em> folder.<p>
+</font></td></tr></table>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;DepartureSound&gt;</b> <em>Sound</em> <b>&lt;&#47;DepartureSound&gt;</b></font></td></tr>
+</table>
+<b>Sound</b> should be the path of the sound-file to be played upon departure from this station, relative to the <em>Sound</em> folder.<p>
+</font></td></tr></table>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;StopDuration&gt;</b> <em>Duration</em> <b>&lt;&#47;StopDuration&gt;</b></font></td></tr>
+</table>
+<b>Duration</b> should be the minimum stop duration in seconds, to include both the door opening and closing times. The default value is <b>15</b>.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;TimeTableIndex&gt;</b> <em>Index</em> <b>&lt;&#47;TimeTableIndex&gt;</b></font></td></tr>
+</table>
+<b>Inddex</b> sets the timetable to be shown from this station on as defined via <em>Train.Timetable(TimetableIndex)</em><p>
+
+<table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ Creating a Request Stop</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+Creating a request stop requires one further section to be added within your <em>&lt;Station&gt;</em> section:<p>
+<br>
+<textarea rows="6" cols="110" style="border:2;">
+<RequestStop>
+	<Probability>50</Probability>
+	<Distance>700</Distance>
+	<StopMessage>You will need to stop at Dockyard today.</StopMessage>
+	<PassMessage>No passengers for Dockyard.</PassMessage>
+</RequestStop>
+</textarea>
+<br>
+The following basic attributes are supported for this section:<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;EarlyTime&gt;</b> <em>Time</em> <b>&lt;&#47;EarlyTime&gt;</b></font></td></tr>
+</table>
+<b>Time</b> sets the time before which the <em>Early</em> probabilities / message will be used. <em>Note:</em> May be omitted.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;LateTime&gt;</b> <em>Time</em> <b>&lt;&#47;LateTime&gt;</b></font></td></tr>
+</table>
+<b>Time</b> sets the time before which the <em>Late</em> probabilities / message will be used. <em>Note:</em> May be omitted.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;Distance&gt;</b> <em>DistanceInMeters</em> <b>&lt;&#47;Distance&gt;</b></font></td></tr>
+</table>
+<b>DistanceInMeters</b> sets the distance in meters before this station that the Request Stop roll will be made. <em>Note:</em> This distance must be less than that to the previous station.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;StopMessage&gt;</b> <em>Message</em> <b>&lt;&#47;StopMessage&gt;</b></font></td></tr>
+</table>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;PassMessage&gt;</b> <em>Message</em> <b>&lt;&#47;PassMessage&gt;</b></font></td></tr>
+</table>
+<b>Message</b> sets the textual message to be displayed in the upper left of the screen when the request stop is triggered, depending on whether we are to stop at or pass this station.<br>
+Alternatively, if you require a specific message when the player is early/ late, the following sub-attributes are supported:<br>
+
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;Early&gt;</b> <em>Message</em> <b>&lt;&#47;Early&gt;</b></font></td></tr>
+</table>
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;OnTime&gt;</b> <em>Message</em> <b>&lt;&#47;OnTime&gt;</b></font></td></tr>
+</table>
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;Late&gt;</b> <em>Message</em> <b>&lt;&#47;Late&gt;</b></font></td></tr>
+</table><br>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;Probability&gt;</b> <em>Value</em> <b>&lt;&#47;Probability&gt;</b></font></td></tr>
+</table>
+<b>Probability</b> should be an integer from <b>0</b> to <b>100</b> , representing the approximate probability that this stop may be requested.<br>
+Alternatively, if you require a specific probability when the player is early/ late, the following sub-attributes are supported:<br>
+
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;Early&gt;</b> <em>Value</em> <b>&lt;&#47;Early&gt;</b></font></td></tr>
+</table>
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;OnTime&gt;</b> <em>Value</em> <b>&lt;&#47;OnTime&gt;</b></font></td></tr>
+</table>
+<table border="0" style="margin-left:20px">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#4274f4"><b>&lt;Late&gt;</b> <em>Value</em> <b>&lt;&#47;Late&gt;</b></font></td></tr>
+</table>
+<em>Note:</em> If only one or two of the specific probabilities above are set, the others are assumed to have a zero-probability and thus will not trigger.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;MaxCars&gt;</b> <em>Cars</em> <b>&lt;&#47;MaxCars&gt;</b></font></td></tr>
+</table>
+<b>Cars</b> sets the maximum length of a train before this request stop is automatically skipped. <em>Note:</em> No message is displayed in this case.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;AIBehaviour&gt;</b> <em>Value</em> <b>&lt;&#47;AIBehaviour&gt;</b></font></td></tr>
+</table>
+<b>Value</b> controls the behaviour of the default AI driver towards this request stop. Valid values are:<p>
+<b>FullSpeed or 0</b>     : If the request stop is not triggered, the AI driver ignores it and passes at linespeed.<br>
+<b>NormalBrake or 1</b>   : If the request stop is not triggered, the AI driver brakes to ~10mph as it passes through the station.<br>
+<em>Note:</em> May be overriden by plugins implementing an AI method.<p>
+
+</body>
+
+
+</html>

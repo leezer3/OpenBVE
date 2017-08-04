@@ -198,7 +198,7 @@ namespace OpenBve {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
 					RequestStop stop; //Temp probability value
-					if (Early.Time != -1 && Game.SecondsSinceMidnight > Early.Time)
+					if (Early.Time != -1 && Game.SecondsSinceMidnight < Early.Time)
 					{
 						stop = Early;
 					}
