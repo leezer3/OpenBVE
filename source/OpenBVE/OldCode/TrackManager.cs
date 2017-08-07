@@ -201,30 +201,30 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.TrainFront) {
 					if (Direction < 0) {
-						Train.StationFrontCar = false;
-						if (Train.Specs.CurrentReverser.Actual == 1 && Train.Specs.CurrentPowerNotch.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.Station)
+						Train.Cars[CarIndex].CurrentlyInStation = false;
+						if (Train.Specs.CurrentReverser.Actual == 1 && Train.Specs.CurrentPowerNotch.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.StationInfo.NextStation)
 						{
 							//Our reverser and power are in F, but we are rolling backwards
 							//Leave the station index alone, and we won't trigger again when we actually move forwards
 							return;
 						}
-						Train.Station = -1;
+						Train.StationInfo.NextStation = -1;
 					} else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex)
+						if (Train.StationInfo.NextStation == StationIndex)
 						{
 							return;
 						}
-						Train.Station = StationIndex;
-						Train.StationFrontCar = true;
-						Train.StationState = TrainManager.TrainStopState.Pending;
-						Train.LastStation = this.StationIndex;
+						Train.StationInfo.NextStation = StationIndex;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
+						Train.StationInfo.CurrentStopState = TrainManager.TrainStopState.Pending;
+						Train.StationInfo.PreviousStation = this.StationIndex;
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 					if (Direction < 0) {
-						Train.StationRearCar = false;
+						Train.Cars[CarIndex].CurrentlyInStation = false;
 					} else {
-						Train.StationRearCar = true;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
 					}
 				}
 			}
@@ -240,34 +240,34 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle) {
 					if (Direction < 0) {
-						Train.StationFrontCar = true;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
 					} else if (Direction > 0) {
-						Train.StationFrontCar = false;
+						Train.Cars[CarIndex].CurrentlyInStation = false;
 						if (Train == TrainManager.PlayerTrain) {
 							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
 						}
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 					if (Direction < 0) {
-						Train.Station = this.StationIndex;
-						Train.StationRearCar = true;
-						Train.LastStation = this.StationIndex;
+						Train.StationInfo.NextStation = this.StationIndex;
+						Train.Cars[CarIndex].CurrentlyInStation = true;
+						Train.StationInfo.PreviousStation = this.StationIndex;
 					} else if (Direction > 0) {
-						if (Train.Station == StationIndex) {
+						if (Train.StationInfo.NextStation == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {
-								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending) {
+								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Pending) {
 									string s = Interface.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0, null);
-								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
+								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding) {
 									string s = Interface.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 10.0, null);
 								}
 							}
-							Train.Station = -1;
-							Train.StationRearCar = false;
-							Train.StationState = TrainManager.TrainStopState.Pending;
+							Train.StationInfo.NextStation = -1;
+							Train.Cars[CarIndex].CurrentlyInStation = false;
+							Train.StationInfo.CurrentStopState = TrainManager.TrainStopState.Pending;
 							int d = Train.DriverCar;
 							Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}
@@ -547,24 +547,24 @@ namespace OpenBve {
 							// HACK: Represents the train point sound
 							if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 								if (Train.Specs.CurrentAverageSpeed <= 0.0) return;
-								int bufferIndex = Train.Cars[CarIndex].Sounds.FrontAxleRunIndex;
-								if (Train.Cars[CarIndex].Sounds.PointFrontAxle == null || Train.Cars[CarIndex].Sounds.PointFrontAxle.Length == 0)
+								int bufferIndex = Train.Cars[CarIndex].FrontAxle.currentRunIdx;
+								if (Train.Cars[CarIndex].FrontAxle.PointSounds == null || Train.Cars[CarIndex].FrontAxle.PointSounds.Length == 0)
 								{
 									//No point sounds defined at all
 									return;
 								}
-								if (bufferIndex > Train.Cars[CarIndex].Sounds.PointFrontAxle.Length -1 || Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Buffer == null)
+								if (bufferIndex > Train.Cars[CarIndex].FrontAxle.PointSounds.Length -1 || Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer == null)
 								{
 									//If the switch sound does not exist, return zero
 									//Required to handle legacy trains which don't have idx specific run sounds defined
 									bufferIndex = 0;
 								}
-								buffer = Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Buffer;
-								p = Train.Cars[CarIndex].Sounds.PointFrontAxle[bufferIndex].Position;
+								buffer = Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer;
+								p = Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Position;
 							} else {
 								return; // HACK: Don't trigger sound for the rear axles
-								//buffer = Train.Cars[CarIndex].Sounds.PointRearAxle.Buffer;
-								//p = Train.Cars[CarIndex].Sounds.PointRearAxle.Position;
+								//buffer = Train.Cars[CarIndex].RearAxle.PointSounds.Buffer;
+								//p = Train.Cars[CarIndex].RearAxle.PointSounds.Position;
 							}
 						}
 						if (buffer != null) {
@@ -608,19 +608,19 @@ namespace OpenBve {
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle) {
 					if (Direction < 0) {
-						Train.Cars[CarIndex].Sounds.FrontAxleRunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].Sounds.FrontAxleFlangeIndex = this.PreviousFlangeIndex;
+						Train.Cars[CarIndex].FrontAxle.currentRunIdx = this.PreviousRunIndex;
+						Train.Cars[CarIndex].FrontAxle.currentFlangeIdx = this.PreviousFlangeIndex;
 					} else if (Direction > 0) {
-						Train.Cars[CarIndex].Sounds.FrontAxleRunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].Sounds.FrontAxleFlangeIndex = this.NextFlangeIndex;
+						Train.Cars[CarIndex].FrontAxle.currentRunIdx = this.NextRunIndex;
+						Train.Cars[CarIndex].FrontAxle.currentFlangeIdx = this.NextFlangeIndex;
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle | TriggerType == EventTriggerType.OtherCarRearAxle) {
 					if (Direction < 0) {
-						Train.Cars[CarIndex].Sounds.RearAxleRunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].Sounds.RearAxleFlangeIndex = this.PreviousFlangeIndex;
+						Train.Cars[CarIndex].RearAxle.currentRunIdx = this.PreviousRunIndex;
+						Train.Cars[CarIndex].RearAxle.currentFlangeIdx = this.PreviousFlangeIndex;
 					} else if (Direction > 0) {
-						Train.Cars[CarIndex].Sounds.RearAxleRunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].Sounds.RearAxleFlangeIndex = this.NextFlangeIndex;
+						Train.Cars[CarIndex].RearAxle.currentRunIdx = this.NextRunIndex;
+						Train.Cars[CarIndex].RearAxle.currentFlangeIdx = this.NextFlangeIndex;
 					}
 				}
 			}
@@ -633,8 +633,9 @@ namespace OpenBve {
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
 				if (TriggerType == EventTriggerType.RearCarRearAxle & Train != TrainManager.PlayerTrain) {
-					TrainManager.DisposeTrain(Train);
+					Train.Dispose();
 				} else if (Train == TrainManager.PlayerTrain) {
+					//This derails each car as they pass the end of the track
 					Train.Derail(CarIndex, 0.0);
 				}
 			}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBve.BrakeSystems;
 
 namespace OpenBve
 {
@@ -35,7 +36,7 @@ namespace OpenBve
 			//Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * car.Length);
 			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
-			Vector3 panel = new Vector3(car.Driver.X, car.Driver.Y, car.Driver.Z + 1.0);
+			Vector3 panel = new Vector3(car.DriverPosition.X, car.DriverPosition.Y, car.DriverPosition.Z + 1.0);
 
 
 
@@ -80,21 +81,22 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
 										break;
 									}
+									car.AirBrake.AirSoundPosition = center;
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
-												ParseNode(cc, out car.Sounds.AirHigh, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirHigh, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "release":
 												//Release brakes from normal pressure
-												ParseNode(cc, out car.Sounds.Air, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirNormal, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "releasefull":
 												//Release brakes from full pressure
-												ParseNode(cc, out car.Sounds.AirZero, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.AirBrake.AirHigh, ref car.AirBrake.AirSoundPosition, SoundCfgParser.smallRadius);
 												break;
 											case "emergency":
 												//Apply EB
@@ -183,7 +185,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.Specs.AirBrake.Type != TrainManager.AirBrakeType.Main)
+									if (car.AirBrake.Type != AirBrake.BrakeType.Main)
 									{
 										break;
 									}
@@ -194,17 +196,17 @@ namespace OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.Sounds.CpStart, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.StartSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.Sounds.CpLoop, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.LoopSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.Sounds.CpEnd, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.AirBrake.Compressor.EndSound, ref center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -268,15 +270,15 @@ namespace OpenBve
 										{
 											case "primary":
 												//Primary horn
-												ParseHornNode(cc, out car.Sounds.Horns[0], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[0], front, SoundCfgParser.largeRadius);
 												break;
 											case "secondary":
 												//Secondary horn
-												ParseHornNode(cc, out car.Sounds.Horns[1], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[1], front, SoundCfgParser.largeRadius);
 												break;
 											case "music":
 												//Music horn
-												ParseHornNode(cc, out car.Sounds.Horns[2], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[2], front, SoundCfgParser.largeRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -365,7 +367,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointFrontAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.FrontAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "pointrearaxle":
 								case "switchrearaxle":
@@ -374,7 +376,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.RearAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "reverser":
 								case "reverserhandle":

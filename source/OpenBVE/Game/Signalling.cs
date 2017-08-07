@@ -237,7 +237,7 @@ namespace OpenBve
 				{
 					if (!Sections[SectionIndex].TrainReachedStopPoint)
 					{
-						if (train.Station == d)
+						if (train.StationInfo.NextStation == d)
 						{
 							int c = GetStopIndex(d, train.Cars.Length);
 							if (c >= 0)
