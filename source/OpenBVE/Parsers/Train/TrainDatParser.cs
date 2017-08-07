@@ -70,7 +70,7 @@ namespace OpenBve {
 			double CoefficientOfRollingResistance = 0.0025;
 			double AerodynamicDragCoefficient = 1.1;
 			TrainManager.AccelerationCurve[] AccelerationCurves = new TrainManager.AccelerationCurve[] { };
-			double DriverX = 0.0, DriverY = 0.0, DriverZ = 0.0;
+			Vector3 Driver = new Vector3();
 			int DriverCar = 0;
 			double MotorCarMass = 1.0, TrailerCarMass = 1.0;
 			int MotorCars = 0, TrailerCars = 0;
@@ -307,9 +307,9 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
-										case 0: DriverX = 0.001 * a; break;
-										case 1: DriverY = 0.001 * a; break;
-										case 2: DriverZ = 0.001 * a; break;
+										case 0: Driver.X = 0.001 * a; break;
+										case 1: Driver.Y = 0.001 * a; break;
+										case 2: Driver.Z = 0.001 * a; break;
 										case 3: DriverCar = (int)Math.Round(a); break;
 								}
 							} i++; n++;
@@ -715,8 +715,8 @@ namespace OpenBve {
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
 				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
 				Train.Cars[i].RearAxle.Follower.CarIndex = i;
-				Train.Cars[i].FrontAxlePosition = AxleDistance;
-				Train.Cars[i].RearAxlePosition = -AxleDistance;
+				Train.Cars[i].FrontAxle.Position = AxleDistance;
+				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.IsMotorCar = false;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
@@ -861,9 +861,9 @@ namespace OpenBve {
 			}
 			// driver
 			Train.DriverCar = DriverCar;
-			Train.Cars[Train.DriverCar].DriverX = DriverX;
-			Train.Cars[Train.DriverCar].DriverY = DriverY;
-			Train.Cars[Train.DriverCar].DriverZ = 0.5 * CarLength + DriverZ;
+			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
+			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
+			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
 			// couplers
 			Train.Couplers = new TrainManager.Coupler[Cars - 1];
 			for (int i = 0; i < Train.Couplers.Length; i++) {

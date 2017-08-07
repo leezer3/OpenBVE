@@ -30,7 +30,7 @@ namespace OpenBve
 				double tf, tb;
 				if (n >= 0)
 				{
-					double p0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition + 0.5 * Train.Cars[0].Length;
+					double p0 = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxle.Position + 0.5 * Train.Cars[0].Length;
 					double p1 = Game.Stations[i].Stops[n].TrackPosition;
 					tf = Game.Stations[i].Stops[n].ForwardTolerance;
 					tb = Game.Stations[i].Stops[n].BackwardTolerance;

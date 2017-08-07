@@ -364,7 +364,7 @@ namespace OpenBve
                     bool reduceDecelerationCruiseAndStart = false;
                     // look ahead
                     double lookahead = (Train.Station >= 0 ? 150.0 : 50.0) + (spd * spd) / (2.0 * decelerationCruise);
-                    double tp = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxlePosition + 0.5 * Train.Cars[0].Length;
+                    double tp = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxle.Position + 0.5 * Train.Cars[0].Length;
                     double stopDistance = double.MaxValue;
                     {
                         // next station stop
@@ -595,7 +595,7 @@ namespace OpenBve
                         {
                             double pos =
                                 TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
-                                TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxlePosition -
+                                TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Position -
                                 0.5 * TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].Length;
                             double dist = pos - tp;
                             if (dist > -10.0 & dist < lookahead)

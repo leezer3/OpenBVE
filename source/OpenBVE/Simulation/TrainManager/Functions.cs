@@ -59,7 +59,7 @@ namespace OpenBve
 				{
 					train.Cars[h].Specs.CurrentSpeed = 0.0;
 				}
-				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxlePosition - 0.5 * train.Cars[0].Length;
+				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
 				if (train == PlayerTrain)
 				{
 					TrackManager.SuppressSoundEvents = true;

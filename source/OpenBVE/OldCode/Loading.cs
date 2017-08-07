@@ -410,15 +410,15 @@ namespace OpenBve {
 					double z = 0.0;
 					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
 						//Front axle track position
-						TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].FrontAxlePosition;
+						TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].FrontAxle.Position;
 						//Bogie for front axle
-						TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxlePosition;
-						TrainManager.Trains[k].Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.RearAxlePosition;
+						TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxle.Position;
+						TrainManager.Trains[k].Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.RearAxle.Position;
 						//Rear axle track position
-						TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].RearAxlePosition;
+						TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].RearAxle.Position;
 						//Bogie for rear axle
-						TrainManager.Trains[k].Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.FrontAxlePosition;
-						TrainManager.Trains[k].Cars[i].RearBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.RearAxlePosition;
+						TrainManager.Trains[k].Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.FrontAxle.Position;
+						TrainManager.Trains[k].Cars[i].RearBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.RearAxle.Position;
 						//Beacon reciever (AWS, ATC etc.)
 						TrainManager.Trains[k].Cars[i].BeaconReceiver.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].BeaconReceiverPosition;
 						z -= TrainManager.Trains[k].Cars[i].Length;

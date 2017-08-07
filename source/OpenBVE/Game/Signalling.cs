@@ -242,7 +242,7 @@ namespace OpenBve
 							int c = GetStopIndex(d, train.Cars.Length);
 							if (c >= 0)
 							{
-								double p0 = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxlePosition + 0.5 * train.Cars[0].Length;
+								double p0 = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
 								double p1 = Stations[d].Stops[c].TrackPosition - Stations[d].Stops[c].BackwardTolerance;
 								if (p0 >= p1)
 								{
@@ -420,14 +420,14 @@ namespace OpenBve
 				{
 					aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
 				}
-				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxlePosition + 0.5 * train.Cars[0].Length;
+				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
 				return new OpenBveApi.Runtime.SignalData(aspect, distance);
 			}
 			else
 			{
 				int aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
-				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxlePosition + 0.5 * train.Cars[0].Length;
+				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
 				return new OpenBveApi.Runtime.SignalData(aspect, distance);
 			}
