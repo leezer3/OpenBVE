@@ -682,6 +682,7 @@ namespace OpenBve {
 								} break;
 								// digitalindicator
 							case "digitalindicator":
+							case "デジタル速度計":
 								{
 									string Number = null;
 									double CornerX = 0.0, CornerY = 0.0;
@@ -694,6 +695,7 @@ namespace OpenBve {
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "number":
+												case "数字":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -706,6 +708,7 @@ namespace OpenBve {
 													}
 													break;
 												case "corner":
+												case "左上":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out CornerX)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														CornerX = 0.0;
@@ -714,6 +717,7 @@ namespace OpenBve {
 														CornerY = 0.0;
 													} break;
 												case "size":
+												case "サイズ":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out Width)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Width is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Width = 0;
