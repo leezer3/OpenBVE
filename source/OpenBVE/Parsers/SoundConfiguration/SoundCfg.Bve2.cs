@@ -35,6 +35,15 @@ namespace OpenBve
 			train.Cars[train.DriverCar].Sounds.Horns[2].SoundPosition = front;
 			train.Cars[train.DriverCar].Sounds.PilotLampOn = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Leave.wav"), cab, SoundCfgParser.tinyRadius);
 			train.Cars[train.DriverCar].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
+			// load the default ATS plugin sound set
+			train.Cars[train.DriverCar].Sounds.Plugin = new TrainManager.CarSound[] {
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), panel, SoundCfgParser.tinyRadius),
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "atscnt.wav"), panel, SoundCfgParser.tinyRadius),
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "ding.wav"), panel, SoundCfgParser.tinyRadius),
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "toats.wav"), panel, SoundCfgParser.tinyRadius),
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "toatc.wav"), panel, SoundCfgParser.tinyRadius),
+				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "eb.wav"), panel, SoundCfgParser.tinyRadius)
+			};
 			// load sounds for all cars
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
