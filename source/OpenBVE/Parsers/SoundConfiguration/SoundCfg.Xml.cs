@@ -8,7 +8,6 @@ namespace OpenBve
 	{
 		internal static bool ParseTrain(string fileName, TrainManager.Train train)
 		{
-			train.InitializeCarSounds();
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
 				try
