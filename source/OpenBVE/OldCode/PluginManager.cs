@@ -505,7 +505,6 @@ namespace OpenBve {
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success) {
 				train.Plugin.IsDefault = true;
-				SoundCfgParser.LoadDefaultATSSounds(train, trainFolder);
 			}
 			return success;
 		}

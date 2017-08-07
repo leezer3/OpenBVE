@@ -30,7 +30,6 @@ namespace OpenBve
 			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
 			
 
-			train.InitializeCarSounds();
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
