@@ -169,11 +169,11 @@ namespace OpenBve {
 				bool leftopen = false;
 				bool rightopen = false;
 				for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++) {
-					for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Specs.Doors.Length; k++) {
-						if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].State != 0.0) {
-							if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].Direction == -1) {
+					for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Doors.Length; k++) {
+						if (TrainManager.PlayerTrain.Cars[j].Doors[k].State != 0.0) {
+							if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == -1) {
 								leftopen = true;
-							} else if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].Direction == 1) {
+							} else if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == 1) {
 								rightopen = true;
 							}
 						}
@@ -182,7 +182,7 @@ namespace OpenBve {
 				bool bad;
 				if (leftopen | rightopen) {
 					bad = true;
-					int j = TrainManager.PlayerTrain.Station;
+					int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 					if (j >= 0) {
 						int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
 						if (p >= 0) {
@@ -278,9 +278,9 @@ namespace OpenBve {
 			}
 			// arrival
 			{
-				int j = TrainManager.PlayerTrain.Station;
+				int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 				if (j >= 0 & j < Stations.Length) {
-					if (j >= CurrentScore.ArrivalStation & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
+					if (j >= CurrentScore.ArrivalStation & TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Boarding) {
 						if (j == 0 || Stations[j - 1].StationType != StationType.ChangeEnds) {
 							// arrival
 							int xa = ScoreValueStationArrival;
@@ -312,7 +312,7 @@ namespace OpenBve {
 							int xc;
 							int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
 							if (p >= 0) {
-								double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
+								double d = TrainManager.PlayerTrain.StationInfo.DistanceToStopPosition;
 								double r;
 								if (d >= 0) {
 									double t = Stations[j].Stops[p].BackwardTolerance;
@@ -366,16 +366,16 @@ namespace OpenBve {
 			}
 			// departure
 			{
-				int j = TrainManager.PlayerTrain.Station;
+				int j = TrainManager.PlayerTrain.StationInfo.NextStation;
 				if (j >= 0 & j < Stations.Length & j == CurrentScore.DepartureStation) {
 					bool q;
 					if (Stations[j].OpenLeftDoors | Stations[j].OpenRightDoors) {
-						q = TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Completed;
+						q = TrainManager.PlayerTrain.StationInfo.CurrentStopState == TrainManager.TrainStopState.Completed;
 					} else {
-						q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
+						q = TrainManager.PlayerTrain.StationInfo.CurrentStopState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
 					}
 					if (q) {
-						double r = TrainManager.PlayerTrain.StationDepartureTime - SecondsSinceMidnight;
+						double r = TrainManager.PlayerTrain.StationInfo.ExpectedDepartureTime - SecondsSinceMidnight;
 						if (r > 0.0) {
 							int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
 							CurrentScore.Value += x;
@@ -550,12 +550,12 @@ namespace OpenBve {
 				BlackBoxEntries[BlackBoxEntryCount].ReverserSafety = (short)TrainManager.PlayerTrain.Specs.CurrentReverser.Actual;
 				BlackBoxEntries[BlackBoxEntryCount].PowerDriver = (BlackBoxPower)TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Driver;
 				BlackBoxEntries[BlackBoxEntryCount].PowerSafety = (BlackBoxPower)TrainManager.PlayerTrain.Specs.CurrentPowerNotch.Safety;
-				if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Driver) {
+				if (TrainManager.PlayerTrain.EmergencyBrake.DriverApplied) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Emergency;
 				} else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.HoldBrake;
-				} else if (TrainManager.PlayerTrain.Cars[d].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					switch (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Driver) {
+				} else if (TrainManager.PlayerTrain.Cars[d].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+					switch (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Driver) {
 							case TrainManager.AirBrakeHandleState.Release: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Release; break;
 							case TrainManager.AirBrakeHandleState.Lap: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Lap; break;
 							case TrainManager.AirBrakeHandleState.Service: BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = BlackBoxBrake.Service; break;
@@ -564,12 +564,12 @@ namespace OpenBve {
 				} else {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeDriver = (BlackBoxBrake)TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver;
 				}
-				if (TrainManager.PlayerTrain.Specs.CurrentEmergencyBrake.Safety) {
+				if (TrainManager.PlayerTrain.EmergencyBrake.SafetySystemApplied) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Emergency;
 				} else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Actual) {
 					BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.HoldBrake;
-				} else if (TrainManager.PlayerTrain.Cars[d].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					switch (TrainManager.PlayerTrain.Specs.AirBrake.Handle.Safety) {
+				} else if (TrainManager.PlayerTrain.Cars[d].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+					switch (TrainManager.PlayerTrain.Specs.CurrentAirBrakeHandle.Safety) {
 							case TrainManager.AirBrakeHandleState.Release: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Release; break;
 							case TrainManager.AirBrakeHandleState.Lap: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Lap; break;
 							case TrainManager.AirBrakeHandleState.Service: BlackBoxEntries[BlackBoxEntryCount].BrakeSafety = BlackBoxBrake.Service; break;

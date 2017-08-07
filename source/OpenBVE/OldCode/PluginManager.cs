@@ -92,11 +92,11 @@ namespace OpenBve {
 				}
 				//End of additions
 				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
-				double bcPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakeCylinderCurrentPressure;
-				double mrPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.MainReservoirCurrentPressure;
-				double erPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-				double bpPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakePipeCurrentPressure;
-				double sapPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.StraightAirPipeCurrentPressure;
+				double bcPressure = this.Train.Cars[this.Train.DriverCar].AirBrake.BrakeCylinder.CurrentPressure;
+				double mrPressure = this.Train.Cars[this.Train.DriverCar].AirBrake.MainReservoir.CurrentPressure;
+				double erPressure = this.Train.Cars[this.Train.DriverCar].AirBrake.EqualizingReservoir.CurrentPressure;
+				double bpPressure = this.Train.Cars[this.Train.DriverCar].AirBrake.BrakePipe.CurrentPressure;
+				double sapPressure = this.Train.Cars[this.Train.DriverCar].AirBrake.StraightAirPipe.CurrentPressure;
 				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, CurrentRadius, CurrentCant, CurrentPitch);
 				/*
 				 * Prepare the preceding vehicle state.
@@ -147,13 +147,13 @@ namespace OpenBve {
 				int reverser = this.Train.Specs.CurrentReverser.Driver;
 				int powerNotch = this.Train.Specs.CurrentPowerNotch.Driver;
 				int brakeNotch;
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? 3 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+				if (this.Train.Cars[this.Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+					brakeNotch = this.Train.EmergencyBrake.DriverApplied ? 3 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
 				} else {
 					if (this.Train.Specs.HasHoldBrake) {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? this.Train.Specs.MaximumBrakeNotch + 2 : this.Train.Specs.CurrentBrakeNotch.Driver > 0 ? this.Train.Specs.CurrentBrakeNotch.Driver + 1 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? this.Train.Specs.MaximumBrakeNotch + 2 : this.Train.Specs.CurrentBrakeNotch.Driver > 0 ? this.Train.Specs.CurrentBrakeNotch.Driver + 1 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
 					} else {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? this.Train.Specs.MaximumBrakeNotch + 1 : this.Train.Specs.CurrentBrakeNotch.Driver;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? this.Train.Specs.MaximumBrakeNotch + 1 : this.Train.Specs.CurrentBrakeNotch.Driver;
 					}
 				}
 				bool constSpeed = this.Train.Specs.CurrentConstSpeed;
@@ -191,7 +191,7 @@ namespace OpenBve {
 					if (virtualHandles) {
 						this.Train.Specs.CurrentPowerNotch.Safety = handles.PowerNotch;
 					} else {
-						TrainManager.ApplyNotch(this.Train, handles.PowerNotch, false, 0, true);
+						Train.ApplyNotch(handles.PowerNotch, false, 0, true);
 					}
 				} else {
 					if (virtualHandles) {
@@ -199,47 +199,43 @@ namespace OpenBve {
 					}
 					this.PluginValid = false;
 				}
-//				if (handles.BrakeNotch != 0) {
-//					if (virtualHandles) {
-//						this.Train.Specs.CurrentPowerNotch.Safety = 0;
-//					}
-//				}
+
 				/*
 				 * Process the brakes.
 				 * */
 				if (virtualHandles) {
-					this.Train.Specs.CurrentEmergencyBrake.Safety = false;
+					this.Train.EmergencyBrake.SafetySystemApplied = false;
 					this.Train.Specs.CurrentHoldBrake.Actual = false;
 				}
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+				if (this.Train.Cars[this.Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
 					if (handles.BrakeNotch == 0) {
 						if (virtualHandles) {
-							this.Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Release;
+							this.Train.Specs.CurrentAirBrakeHandle.Safety = TrainManager.AirBrakeHandleState.Release;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
+							Train.EmergencyBrake.Release();
 							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 1) {
 						if (virtualHandles) {
-							this.Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Lap;
+							this.Train.Specs.CurrentAirBrakeHandle.Safety = TrainManager.AirBrakeHandleState.Lap;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
+							Train.EmergencyBrake.Release();
 							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Lap);
 						}
 					} else if (handles.BrakeNotch == 2) {
 						if (virtualHandles) {
-							this.Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
+							this.Train.Specs.CurrentAirBrakeHandle.Safety = TrainManager.AirBrakeHandleState.Service;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
+							Train.EmergencyBrake.Release();
 							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 3) {
 						if (virtualHandles) {
-							this.Train.Specs.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
-							this.Train.Specs.CurrentEmergencyBrake.Safety = true;
+							this.Train.Specs.CurrentAirBrakeHandle.Safety = TrainManager.AirBrakeHandleState.Service;
+						    this.Train.EmergencyBrake.SafetySystemApplied = true;
 						} else {
 							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Service);
-							TrainManager.ApplyEmergencyBrake(this.Train);
+							Train.EmergencyBrake.Apply();
 						}
 					} else {
 						this.PluginValid = false;
@@ -247,37 +243,38 @@ namespace OpenBve {
 				} else {
 					if (this.Train.Specs.HasHoldBrake) {
 						if (handles.BrakeNotch == this.Train.Specs.MaximumBrakeNotch + 2) {
-							if (virtualHandles) {
-								this.Train.Specs.CurrentEmergencyBrake.Safety = true;
+							if (virtualHandles)
+							{
+							    this.Train.EmergencyBrake.SafetySystemApplied = true;
 								this.Train.Specs.CurrentBrakeNotch.Safety = this.Train.Specs.MaximumBrakeNotch;
 							} else {
 								TrainManager.ApplyHoldBrake(this.Train, false);
-								TrainManager.ApplyNotch(this.Train, 0, true, this.Train.Specs.MaximumBrakeNotch, false);
-								TrainManager.ApplyEmergencyBrake(this.Train);
+								Train.ApplyNotch(0, true, this.Train.Specs.MaximumBrakeNotch, false);
+								Train.EmergencyBrake.Apply();
 							}
 						} else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Specs.MaximumBrakeNotch + 1) {
 							if (virtualHandles) {
 								this.Train.Specs.CurrentBrakeNotch.Safety = handles.BrakeNotch - 1;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
+								Train.EmergencyBrake.Release();
 								TrainManager.ApplyHoldBrake(this.Train, false);
-								TrainManager.ApplyNotch(this.Train, 0, true, handles.BrakeNotch - 1, false);
+								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false);
 							}
 						} else if (handles.BrakeNotch == 1) {
 							if (virtualHandles) {
 								this.Train.Specs.CurrentBrakeNotch.Safety = 0;
 								this.Train.Specs.CurrentHoldBrake.Actual = true;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
-								TrainManager.ApplyNotch(this.Train, 0, true, 0, false);
+								Train.EmergencyBrake.Release();
+								Train.ApplyNotch(0, true, 0, false);
 								TrainManager.ApplyHoldBrake(this.Train, true);
 							}
 						} else if (handles.BrakeNotch == 0) {
 							if (virtualHandles) {
 								this.Train.Specs.CurrentBrakeNotch.Safety = 0;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
-								TrainManager.ApplyNotch(this.Train, 0, true, 0, false);
+								Train.EmergencyBrake.Release();
+								Train.ApplyNotch(0, true, 0, false);
 								TrainManager.ApplyHoldBrake(this.Train, false);
 							}
 						} else {
@@ -288,19 +285,20 @@ namespace OpenBve {
 						}
 					} else {
 						if (handles.BrakeNotch == this.Train.Specs.MaximumBrakeNotch + 1) {
-							if (virtualHandles) {
-								this.Train.Specs.CurrentEmergencyBrake.Safety = true;
+							if (virtualHandles)
+							{
+							    Train.EmergencyBrake.SafetySystemApplied = true;
 								this.Train.Specs.CurrentBrakeNotch.Safety = this.Train.Specs.MaximumBrakeNotch;
 							} else {
 								TrainManager.ApplyHoldBrake(this.Train, false);
-								TrainManager.ApplyEmergencyBrake(this.Train);
+								Train.EmergencyBrake.Apply();
 							}
 						} else if (handles.BrakeNotch >= 0 & handles.BrakeNotch <= this.Train.Specs.MaximumBrakeNotch | this.Train.Specs.CurrentBrakeNotch.DelayedChanges.Length == 0) {
 							if (virtualHandles) {
 								this.Train.Specs.CurrentBrakeNotch.Safety = handles.BrakeNotch;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
-								TrainManager.ApplyNotch(this.Train, 0, true, handles.BrakeNotch, false);
+								Train.EmergencyBrake.Release();
+								Train.ApplyNotch(0, true, handles.BrakeNotch, false);
 							}
 						} else {
 							if (virtualHandles) {
@@ -346,17 +344,17 @@ namespace OpenBve {
 			/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occured.</summary>
 			internal void UpdateBrake() {
 				int brakeNotch;
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+				if (this.Train.Cars[this.Train.DriverCar].BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
 					if (this.Train.Specs.HasHoldBrake) {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? 4 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? 4 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
 					} else {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? 3 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Specs.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? 3 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Specs.CurrentAirBrakeHandle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
 					}
 				} else {
 					if (this.Train.Specs.HasHoldBrake) {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? this.Train.Specs.MaximumBrakeNotch + 2 : this.Train.Specs.CurrentBrakeNotch.Driver > 0 ? this.Train.Specs.CurrentBrakeNotch.Driver + 1 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? this.Train.Specs.MaximumBrakeNotch + 2 : this.Train.Specs.CurrentBrakeNotch.Driver > 0 ? this.Train.Specs.CurrentBrakeNotch.Driver + 1 : this.Train.Specs.CurrentHoldBrake.Driver ? 1 : 0;
 					} else {
-						brakeNotch = this.Train.Specs.CurrentEmergencyBrake.Driver ? this.Train.Specs.MaximumBrakeNotch + 1 : this.Train.Specs.CurrentBrakeNotch.Driver;
+						brakeNotch = this.Train.EmergencyBrake.DriverApplied ? this.Train.Specs.MaximumBrakeNotch + 1 : this.Train.Specs.CurrentBrakeNotch.Driver;
 					}
 				}
 				if (brakeNotch != this.LastBrakeNotch) {
@@ -530,7 +528,7 @@ namespace OpenBve {
 			/*
 			 * Prepare initialization data for the plugin.
 			 * */
-			BrakeTypes brakeType = (BrakeTypes)train.Cars[train.DriverCar].Specs.BrakeType;
+			BrakeTypes brakeType = (BrakeTypes)train.Cars[train.DriverCar].BrakeType;
 			int brakeNotches;
 			int powerNotches;
 			bool hasHoldBrake;

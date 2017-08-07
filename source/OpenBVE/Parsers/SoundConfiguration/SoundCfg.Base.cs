@@ -36,6 +36,29 @@ namespace OpenBve
 		internal const double smallRadius = 5.0;
 		internal const double tinyRadius = 2.0;
 
+		/// <summary>Loads a sound file into a sound buffer</summary>
+		/// <param name="FileName">The sound to load</param>
+		/// <param name="Radius">The sound radius</param>
+		/// <returns>The new sound buffer</returns>
+		internal static Sounds.SoundBuffer TryLoadSoundBuffer(string FileName, double Radius)
+		{
+			if (FileName != null)
+			{
+				if (System.IO.File.Exists(FileName))
+				{
+					try
+					{
+						return Sounds.RegisterBuffer(FileName, Radius);
+					}
+					catch
+					{
+						return null;
+					}
+				}
+			}
+			return null;
+		}
+
 		/// <summary>Attempts to load an array of sound files into a car-sound array</summary>
 		/// <param name="Folder">The folder the sound files are located in</param>
 		/// <param name="FileStart">The first sound file</param>

@@ -7,11 +7,11 @@
 		/// <param name="RelativeDirection">The direction: -1 for decrease, 1 for increase</param>
 		internal static void ApplyAirBrakeHandle(Train Train, int RelativeDirection)
 		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+			if (Train.Cars[Train.DriverCar].BrakeType == CarBrakeType.AutomaticAirBrake)
 			{
 				if (RelativeDirection == -1)
 				{
-					if (Train.Specs.AirBrake.Handle.Driver == AirBrakeHandleState.Service)
+					if (Train.Specs.CurrentAirBrakeHandle.Driver == AirBrakeHandleState.Service)
 					{
 						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Lap);
 					}
@@ -22,7 +22,7 @@
 				}
 				else if (RelativeDirection == 1)
 				{
-					if (Train.Specs.AirBrake.Handle.Driver == AirBrakeHandleState.Release)
+					if (Train.Specs.CurrentAirBrakeHandle.Driver == AirBrakeHandleState.Release)
 					{
 						ApplyAirBrakeHandle(Train, AirBrakeHandleState.Lap);
 					}
@@ -40,9 +40,9 @@
 		/// <param name="State">The state</param>
 		internal static void ApplyAirBrakeHandle(Train Train, AirBrakeHandleState State)
 		{
-			if (Train.Cars[Train.DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
+			if (Train.Cars[Train.DriverCar].BrakeType == CarBrakeType.AutomaticAirBrake)
 			{
-				if (State != Train.Specs.AirBrake.Handle.Driver)
+				if (State != Train.Specs.CurrentAirBrakeHandle.Driver)
 				{
 					// sound when moved to service
 					if (State == AirBrakeHandleState.Service)
@@ -55,7 +55,7 @@
 						}
 					}
 					// sound
-					if ((int)State < (int)Train.Specs.AirBrake.Handle.Driver)
+					if ((int)State < (int)Train.Specs.CurrentAirBrakeHandle.Driver)
 					{
 						// brake release
 						if ((int)State > 0)
@@ -79,7 +79,7 @@
 							}
 						}
 					}
-					else if ((int)State > (int)Train.Specs.AirBrake.Handle.Driver)
+					else if ((int)State > (int)Train.Specs.CurrentAirBrakeHandle.Driver)
 					{
 						// brake
 						Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleApply.Buffer;
@@ -90,7 +90,7 @@
 						}
 					}
 					// apply
-					Train.Specs.AirBrake.Handle.Driver = State;
+					Train.Specs.CurrentAirBrakeHandle.Driver = State;
 					Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 					// plugin
 					if (Train.Plugin != null)

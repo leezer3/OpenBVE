@@ -44,7 +44,7 @@ namespace OpenBve
 				 
 				}
 			}
-			train.StationState = TrainStopState.Jumping;
+			train.StationInfo.CurrentStopState = TrainStopState.Jumping;
 			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
 			if (stopIndex >= 0)
 			{
@@ -77,7 +77,7 @@ namespace OpenBve
 					}
 					for (int h = 0; h < train.Cars.Length; h++)
 					{
-						TrainManager.MoveCar(train, h, x, 0.0);
+						train.Cars[h].Move(x, 0.0);
 					}
 					if (Math.Abs(d) >= 1.0)
 					{
@@ -93,13 +93,13 @@ namespace OpenBve
 					TrainManager.UnderailTrains();
 					TrackManager.SuppressSoundEvents = false;
 				}
-				if (train.Specs.CurrentEmergencyBrake.Driver)
+				if (train.EmergencyBrake.DriverApplied)
 				{
-					TrainManager.ApplyNotch(train, 0, false, 0, true);
+					train.ApplyNotch(0, false, 0, true);
 				}
 				else
 				{
-					TrainManager.ApplyNotch(train, 0, false, train.Specs.MaximumBrakeNotch, false);
+				    train.ApplyNotch(0, false, train.Specs.MaximumBrakeNotch, false);
 					TrainManager.ApplyAirBrakeHandle(train, TrainManager.AirBrakeHandleState.Service);
 				}
 				if (Game.Sections.Length > 0)
@@ -126,8 +126,8 @@ namespace OpenBve
 				}
 				for (int i = 0; i < train.Cars.Length; i++)
 				{
-					train.Cars[i].Specs.AnticipatedLeftDoorsOpened = Game.Stations[stationIndex].OpenLeftDoors;
-					train.Cars[i].Specs.AnticipatedRightDoorsOpened = Game.Stations[stationIndex].OpenRightDoors;
+					train.Cars[i].Doors[0].AnticipatedOpen = Game.Stations[stationIndex].OpenLeftDoors;
+					train.Cars[i].Doors[1].AnticipatedOpen = Game.Stations[stationIndex].OpenRightDoors;
 				}
 				if (train == PlayerTrain)
 				{
@@ -144,7 +144,7 @@ namespace OpenBve
 						train.Plugin.EndJump();
 					}
 				}
-				train.StationState = TrainStopState.Pending;
+				train.StationInfo.CurrentStopState = TrainStopState.Pending;
 			}
 		}
 	}
