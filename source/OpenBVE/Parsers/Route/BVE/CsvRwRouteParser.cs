@@ -1163,6 +1163,11 @@ namespace OpenBve {
 				//e.g. Taipei Metro. BVE4/ 2 accept this......
 				Expression.Text = "Train." + Expression.Text.Substring(7, Expression.Text.Length -7);
 			}
+			else if (Expression.Text.StartsWith("Texture. Background", StringComparison.InvariantCultureIgnoreCase))
+			{
+				//Same hack as above, found in Minobu route for BVE2
+				Expression.Text = "Texture.Background" + Expression.Text.Substring(19, Expression.Text.Length - 19);
+			}
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {
 					bool found = false;
