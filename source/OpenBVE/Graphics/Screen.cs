@@ -86,6 +86,7 @@ namespace OpenBve {
 				        break;
 			        }
 			    }
+			    System.Threading.Thread.Sleep(20);
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
                     MessageBox.Show(Interface.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
