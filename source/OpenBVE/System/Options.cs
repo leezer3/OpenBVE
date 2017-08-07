@@ -158,8 +158,10 @@ namespace OpenBve
 			internal bool AllowAxisEB;
 			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
 			internal bool PreferNativeBackend = true;
-
+			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH = true;
+			/// <summary>Enables / disables various hacks for BVE related content</summary>
+			internal bool EnableBveTsHacks = true;
 
 			internal TimeTableMode TimeTableStyle;
 
@@ -237,6 +239,7 @@ namespace OpenBve
 				this.TimeTableStyle = TimeTableMode.Default;
 				this.packageCompressionType = CompressionType.Zip;
 				this.RailDriverMPH = true;
+				this.EnableBveTsHacks = true;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -521,6 +524,10 @@ namespace OpenBve
 											}
 											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
+										case "bvetshacks":
+											Interface.CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+
 									} break;
 								case "controls":
 									switch (Key)
@@ -793,6 +800,7 @@ namespace OpenBve
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.Append("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
+			Builder.AppendLine("enablebvetshacks = " + (CurrentOptions.RailDriverMPH ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));

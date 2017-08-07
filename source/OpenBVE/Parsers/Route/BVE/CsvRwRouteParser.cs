@@ -1157,16 +1157,19 @@ namespace OpenBve {
 		private static void SeparateCommandsAndArguments(Expression Expression, out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors) {
 			bool openingerror = false, closingerror = false;
 			int i, fcb = 0;
-			if (Expression.Text.StartsWith("Train. ", StringComparison.InvariantCultureIgnoreCase))
+			if (Interface.CurrentOptions.EnableBveTsHacks)
 			{
-				//HACK: Some Chinese routes seem to have used a space between Train. and the rest of the command
-				//e.g. Taipei Metro. BVE4/ 2 accept this......
-				Expression.Text = "Train." + Expression.Text.Substring(7, Expression.Text.Length -7);
-			}
-			else if (Expression.Text.StartsWith("Texture. Background", StringComparison.InvariantCultureIgnoreCase))
-			{
-				//Same hack as above, found in Minobu route for BVE2
-				Expression.Text = "Texture.Background" + Expression.Text.Substring(19, Expression.Text.Length - 19);
+				if (Expression.Text.StartsWith("Train. ", StringComparison.InvariantCultureIgnoreCase))
+				{
+					//HACK: Some Chinese routes seem to have used a space between Train. and the rest of the command
+					//e.g. Taipei Metro. BVE4/ 2 accept this......
+					Expression.Text = "Train." + Expression.Text.Substring(7, Expression.Text.Length - 7);
+				}
+				else if (Expression.Text.StartsWith("Texture. Background", StringComparison.InvariantCultureIgnoreCase))
+				{
+					//Same hack as above, found in Minobu route for BVE2
+					Expression.Text = "Texture.Background" + Expression.Text.Substring(19, Expression.Text.Length - 19);
+				}
 			}
 			for (i = 0; i < Expression.Text.Length; i++) {
 				if (Expression.Text[i] == '(') {

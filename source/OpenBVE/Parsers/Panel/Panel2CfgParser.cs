@@ -123,6 +123,11 @@ namespace OpenBve {
 														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenterY)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
+														if (Interface.CurrentOptions.EnableBveTsHacks && PanelBottom == 768 && PanelResolution == 1024 && PanelCenterY == 229)
+														{
+															//HACK: Workaround for Martin Finken's BVE4 trams panel center causing borked zoom
+															PanelCenterY = 350;
+														}
 													} else {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
