@@ -3137,7 +3137,7 @@ namespace OpenBve {
 												idx = 0;
 											}
 											if (idx < 0 || idx >= Data.Blocks[BlockIndex].Rail.Length || !Data.Blocks[BlockIndex].Rail[idx].RailStart) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex "+ idx + "references a non-existing rail in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex "+ idx + " references a non-existing rail in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
 													Array.Resize<Rail>(ref Data.Blocks[BlockIndex].Rail, idx + 1);
