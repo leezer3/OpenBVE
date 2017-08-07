@@ -64,7 +64,6 @@ namespace OpenBve {
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Lighting);
 			Renderer.LightingEnabled = false;
-			Textures.UnloadAllTextures();
 			if (Fullscreen)
 			{
                 
