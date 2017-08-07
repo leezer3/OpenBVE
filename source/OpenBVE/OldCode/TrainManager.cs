@@ -270,6 +270,7 @@ namespace OpenBve
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
 			internal CarSound Halt;
+			internal CarSound[] RequestStop;
 			internal Horn[] Horns;
 			internal CarSound Loop;
 			internal CarSound MasterControllerUp;
@@ -490,7 +491,6 @@ namespace OpenBve
 			}
 
 			/// <summary>Initializes a train with the default (empty) set of car sounds</summary>
-			/// <param name="train">The train</param>
 			internal void InitializeCarSounds()
 			{
 				// initialize
@@ -525,6 +525,12 @@ namespace OpenBve
 						new TrainManager.Horn(),
 						new TrainManager.Horn(),
 						new TrainManager.Horn()
+					};
+					Cars[i].Sounds.RequestStop = new CarSound[]
+					{
+						CarSound.Empty,
+						CarSound.Empty,
+						CarSound.Empty
 					};
 					Cars[i].Sounds.Loop = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.MasterControllerUp = TrainManager.CarSound.Empty;

@@ -217,6 +217,7 @@ namespace OpenBve {
 					if (MaxCars != 0 && Train.Cars.Length > MaxCars)
 					{
 						//Check whether our train length is valid for this before doing anything else
+						//Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[2], 1.0, 1.0, Train, Train.DriverCar, false);
 						return;
 					}
 					if (Direction > 0)
@@ -244,15 +245,17 @@ namespace OpenBve {
 								{
 									Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
 								}
+								//Play sound
+								Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train, Train.DriverCar, false);
+								//If message is not empty, add it
+								if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+								{
+									Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								}
+								return;
 							}
 							//Play sound
-							int d = Train.DriverCar;
-							Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
-							if (buffer != null)
-							{
-								OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
-
-							}
+							Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[0], 1.0, 1.0, Train, Train.DriverCar, false);
 							//If message is not empty, add it
 							if (!string.IsNullOrEmpty(stop.StopMessage) && Train == TrainManager.PlayerTrain)
 							{
@@ -261,6 +264,7 @@ namespace OpenBve {
 						}
 						else
 						{
+							Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train, Train.DriverCar, false);
 							if (FullSpeed)
 							{
 								//Pass at linespeed, rather than braking as if for stop
