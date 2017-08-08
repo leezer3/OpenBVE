@@ -24,13 +24,12 @@ namespace OpenBve
 			//Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
 			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 
 			//Radius at which the sound is audible at full volume, presumably in m
 			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
 			
 
-			train.InitializeCarSounds();
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
@@ -220,8 +219,8 @@ namespace OpenBve
 												train.Cars[c].Sounds.PointRearAxle[h] = TrainManager.CarSound.Empty;
 											}
 										}
-										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxlePosition);
-										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxlePosition);
+										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
+										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
 										train.Cars[c].Sounds.PointFrontAxle[runIndex] = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), frontaxle, SoundCfgParser.smallRadius);
 										train.Cars[c].Sounds.PointRearAxle[runIndex] = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), rearaxle, SoundCfgParser.smallRadius);
 									}

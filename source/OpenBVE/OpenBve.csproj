@@ -94,6 +94,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="PIEHid32Net">
+      <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress.Unsigned, Version=0.11.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\SharpCompress.Unsigned.dll</HintPath>
@@ -132,13 +135,15 @@
     <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
-    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.CompatibilityObjects.cs" />
-    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Functions.cs" />
-    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Objects.cs" />
-    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.Structures.cs" />
-    <Compile Include="Parsers\DynamicBackgroundParser.cs" />
-    <Compile Include="Parsers\DynamicLightParser.cs" />
-    <Compile Include="Parsers\MarkerScriptParser.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
+    <Compile Include="Parsers\Script\DynamicLightParser.cs" />
+    <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
+    <Compile Include="Parsers\Object\Loksim3D\GroupParser.cs" />
+    <Compile Include="Parsers\Object\Loksim3D\ObjectParser.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
@@ -166,6 +171,8 @@
     <Compile Include="System\Functions\TextEncoding.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Input\JoystickManager.RailDriver.cs" />
+    <Compile Include="System\Input\JoystickManager.StandardJoystick.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -173,6 +180,12 @@
     <Compile Include="System\Translations\InterfaceStrings.cs" />
     <Compile Include="System\Translations\KeyInfo.cs" />
     <Compile Include="System\Translations\LanguageFile.cs" />
+    <Compile Include="UserInterface\formRaildriverCalibration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserInterface\formRaildriverCalibration.Designer.cs">
+      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\formBugReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserInterface\formAbout.resx">
       <DependentUpon>formAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserInterface\formRaildriverCalibration.resx">
+      <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Graphics\Camera.cs" />
@@ -287,16 +303,16 @@
     <Compile Include="OldCode\TrackManager.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
-    <Compile Include="OldParsers\AnimatedObjectParser.cs" />
-    <Compile Include="OldParsers\ExtensionsCfgParser.cs" />
-    <Compile Include="OldParsers\Panel2CfgParser.cs" />
-    <Compile Include="OldParsers\CsvB3dObjectParser.cs" />
-    <Compile Include="OldParsers\BveRouteParser\CsvRwRouteParser.cs" />
-    <Compile Include="OldParsers\XObjectParser.cs" />
-    <Compile Include="OldParsers\PanelCfgParser.cs" />
+    <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
+    <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
+    <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
+    <Compile Include="Parsers\Object\BVE\CsvB3dObjectParser.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
+    <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
+    <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
     <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\Host.cs" />
-    <Compile Include="System\Input\Joysticks.cs" />
+    <Compile Include="System\Input\JoystickManager.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <EmbeddedResource Include="UserInterface\formBugReport.resx">
@@ -310,7 +326,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="OldParsers\TrainDatParser.cs" />
+    <Compile Include="Parsers\Train\TrainDatParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

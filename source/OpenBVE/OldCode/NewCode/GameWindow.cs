@@ -57,7 +57,6 @@ namespace OpenBve
 				MainLoop.UpdateControlRepeats(0.0);
 				MainLoop.ProcessKeyboard();
 				MainLoop.ProcessControls(0.0);
-				
 				if (Game.CurrentInterface == Game.InterfaceType.Pause)
 				{
 					System.Threading.Thread.Sleep(10);
@@ -137,26 +136,41 @@ namespace OpenBve
 			{
 				Program.currentGameWindow.Exit();
 			}
-				Renderer.UpdateLighting();
-				Renderer.RenderScene(TimeElapsed);
-				Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
-				Program.currentGameWindow.SwapBuffers();
-
-				Game.UpdateBlackBox();
-
-				// pause/menu
-				
-				// limit framerate
-				if (MainLoop.LimitFramerate)
+			Renderer.UpdateLighting();
+			Renderer.RenderScene(TimeElapsed);
+			Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+			Program.currentGameWindow.SwapBuffers();
+			Game.UpdateBlackBox();
+			// pause/menu
+			
+			// limit framerate
+			if (MainLoop.LimitFramerate)
+			{
+				System.Threading.Thread.Sleep(10);
+			}
+			MainLoop.UpdateControlRepeats(RealTimeElapsed);
+			MainLoop.ProcessKeyboard();
+			World.UpdateMouseGrab(TimeElapsed);
+			MainLoop.ProcessControls(TimeElapsed);
+			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
+			{
+				var railDriver = JoystickManager.AttachedJoysticks[i] as JoystickManager.Raildriver;
+				if (railDriver != null)
 				{
-					System.Threading.Thread.Sleep(10);
+					if (Interface.CurrentOptions.RailDriverMPH)
+					{
+						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
+							                             .CurrentPerceivedSpeed * 2.23694));
+					}
+					else
+					{
+						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
+							                             .CurrentPerceivedSpeed * 3.6));
+					}
 				}
-				MainLoop.UpdateControlRepeats(RealTimeElapsed);
-				MainLoop.ProcessKeyboard();
-				World.UpdateMouseGrab(TimeElapsed);
-				MainLoop.ProcessControls(TimeElapsed);
-				RenderRealTimeElapsed = 0.0;
-				RenderTimeElapsed = 0.0;
+			}
+			RenderRealTimeElapsed = 0.0;
+			RenderTimeElapsed = 0.0;
 				
 				
 

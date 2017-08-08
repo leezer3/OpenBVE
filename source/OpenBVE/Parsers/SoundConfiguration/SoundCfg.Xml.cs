@@ -8,7 +8,6 @@ namespace OpenBve
 	{
 		internal static bool ParseTrain(string fileName, TrainManager.Train train)
 		{
-			train.InitializeCarSounds();
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
 				try
@@ -35,7 +34,7 @@ namespace OpenBve
 			//Positioned at the front of the car, centered X and Y
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * car.Length);
 			//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
-			Vector3 panel = new Vector3(car.DriverX, car.DriverY, car.DriverZ + 1.0);
+			Vector3 panel = new Vector3(car.Driver.X, car.Driver.Y, car.Driver.Z + 1.0);
 
 
 
@@ -365,7 +364,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointFrontAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.Sounds.PointFrontAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "pointrearaxle":
 								case "switchrearaxle":
@@ -374,7 +373,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxlePosition), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "reverser":
 								case "reverserhandle":
@@ -472,6 +471,12 @@ namespace OpenBve
 					case "stop":
 						ParseNode(c, out Horn.EndSound, ref Position, Radius);
 						break;
+					case "toggle":
+						if (c.InnerText.ToLowerInvariant() == "true" || c.InnerText.ToLowerInvariant() == "1")
+						{
+							Horn.Loop = true;
+						}
+						break;
 				}
 			}
 		}
@@ -490,7 +495,7 @@ namespace OpenBve
 				{
 					continue;
 				}
-				for (int i = 0; i > Tables.Length; i++)
+				for (int i = 0; i < Tables.Length; i++)
 				{
 					Tables[i].Buffer = null;
 					Tables[i].Source = null;

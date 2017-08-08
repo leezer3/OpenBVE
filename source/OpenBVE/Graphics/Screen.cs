@@ -64,7 +64,6 @@ namespace OpenBve {
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Lighting);
 			Renderer.LightingEnabled = false;
-			Textures.UnloadAllTextures();
 			if (Fullscreen)
 			{
                 
@@ -86,6 +85,7 @@ namespace OpenBve {
 				        break;
 			        }
 			    }
+			    System.Threading.Thread.Sleep(20);
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
                     MessageBox.Show(Interface.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +

@@ -14,9 +14,8 @@ namespace OpenBve
 			Vector3 center = new Vector3(0.0, 0.0, 0.0);
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
-			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
-			train.InitializeCarSounds();
+			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z - 0.5);
+			Vector3 panel = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 			// load sounds for driver's car
 			train.Cars[train.DriverCar].Sounds.Adjust = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Adjust.wav"), panel, SoundCfgParser.tinyRadius);
 			train.Cars[train.DriverCar].Sounds.Brake = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Brake.wav"), center, SoundCfgParser.smallRadius);
@@ -39,8 +38,8 @@ namespace OpenBve
 			// load sounds for all cars
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
-				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxlePosition);
-				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxlePosition);
+				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxle.Position);
+				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxle.Position);
 				train.Cars[i].Sounds.Air = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), center, SoundCfgParser.smallRadius);
 				train.Cars[i].Sounds.AirHigh = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), center, SoundCfgParser.smallRadius);
 				train.Cars[i].Sounds.AirZero = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), center, SoundCfgParser.smallRadius);

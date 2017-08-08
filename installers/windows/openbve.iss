@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.5.1.5"
+#define MyAppVersion "1.5.1.6"
 #define MyAppPublisher "Christopher Lees"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
@@ -64,7 +64,8 @@ Name: "desktopicon2"; Description: "Create a desktop shortcut to the openBVE Add
 ;Open BVE Main Folder.
 Source: "..\..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 ;Custom Config File
-Source: "InstallerData\filesystem.cfg"; DestDir: "{app}\UserData\Settings\";
+Source: "InstallerData\filesystem_appdata.cfg"; DestDir: "{app}\";
+Source: "InstallerData\filesystem_programfolder.cfg"; DestDir: "{app}\";
 ;MS .NET 4.0 Full Web Installer.
 Source: "InstallerData\dotNetFx40_Full_setup.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')
 [Icons]
@@ -232,13 +233,17 @@ FileLines: TArrayOfString;
       if (UsagePage.SelectedValueIndex = 0) then
       begin
         CreateDir(ExpandConstant('{userappdata}\{#MyAppName}'));
+        ForceDirectories(ExpandConstant('{{userappdata}\{#MyAppName}\Settings'));
+        FileCopy(ExpandConstant('{app}\filesystem_appdata.cfg'), ExpandConstant('{userappdata}\{#MyAppName}\Settings\filesystem.cfg'), True);
+        DeleteFile(ExpandConstant('{app}\filesystem_programfolder.cfg'));
         DataDirPage.Values[0] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Railway');
         DataDirPage.Values[1] := ExpandConstant('{userappdata}\{#MyAppName}\LegacyContent\Train');
       end;
       if (UsagePage.SelectedValueIndex = 1) then
       begin
         ForceDirectories(ExpandConstant('{app}\UserData\Settings'));
-        FileCopy(ExpandConstant('{app}\filesystem.cfg'), ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), True);
+        FileCopy(ExpandConstant('{app}\filesystem_programfolder.cfg'), ExpandConstant('{app}\UserData\Settings\filesystem.cfg'), True);
+        DeleteFile(ExpandConstant('{app}\filesystem_appdata.cfg'));
         DataDirPage.Values[0] := ExpandConstant('{app}\UserData');
 
       end;
