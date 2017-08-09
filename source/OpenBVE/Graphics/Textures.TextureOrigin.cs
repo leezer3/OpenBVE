@@ -189,7 +189,7 @@ namespace OpenBve {
 						raw[i] = raw[i + 2];
 						raw[i + 2] = temp;
 					}
-					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw);
+					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw, bitmap.Palette);
 					texture = texture.ApplyParameters(this.Parameters);
 					return true;
 				}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
@@ -389,7 +390,7 @@ namespace Plugin {
 						throw new NotSupportedException();
 					}
 					// --- return texture ---
-					return new Texture(width, height, 32, bytes);
+					return new Texture(width, height, 32, bytes, null);
 				}
 			}
 		}
