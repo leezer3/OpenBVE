@@ -1,4 +1,6 @@
-﻿using Mozilla.NUniversalCharDet;
+﻿using System;
+using System.IO;
+using Mozilla.NUniversalCharDet;
 
 namespace OpenBve
 {
@@ -69,8 +71,13 @@ namespace OpenBve
 		/// <returns>The character encoding, or unknown</returns>
 		internal static Encoding GetEncodingFromFile(string File)
 		{
+			if (File == null)
+			{
+				return Encoding.Unknown;
+			}
 			try
 			{
+				System.IO.FileInfo fInfo = new FileInfo(File);
 				byte[] Data = System.IO.File.ReadAllBytes(File);
 				if (Data.Length >= 3)
 				{
@@ -102,6 +109,11 @@ namespace OpenBve
 					case "WINDOWS-1252":
 						return Encoding.Windows1252;
 					case "BIG5":
+						if (Path.GetFileName(File).ToLowerInvariant() == "stoklosy.b3d" && fInfo.Length == 18256)
+						{
+							//Polish Warsaw metro object file uses diacritics in filenames
+							return Encoding.Windows1252;
+						}
 						return Encoding.Big5;
 				}
 				Det.Reset();

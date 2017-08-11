@@ -3467,6 +3467,11 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												num = -2;
 											}
+											if (num == 0 && IsRW == true)
+											{
+												//Aspects value of zero in RW routes produces a 2-aspect R/G signal
+												num = -2;
+											}
 											if (num != 1 & num != -2 & num != 2 & num != -3 & num != 3 & num != -4 & num != 4 & num != -5 & num != 5 & num != 6) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "Aspects has an unsupported value in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												num = num == -3 | num == -6 | num == -1 ? -num : -4;
