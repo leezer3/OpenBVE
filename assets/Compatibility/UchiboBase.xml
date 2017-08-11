@@ -293,5 +293,10 @@
 		<Path>Poles\Pole_4.csv</Path>
 		<Message></Message>
 	</Object>
+	<Object>
+		<Name>Signal3.csv</Name>
+		<Path>Signals\Signal_3_0.csv</Path>
+		<Message></Message>
+	</Object>
   </Compatibility>
 </openBVE>
