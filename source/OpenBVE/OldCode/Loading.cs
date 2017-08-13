@@ -291,6 +291,7 @@ namespace OpenBve {
 				// add panel section
 				if (k == TrainManager.PlayerTrain.TrainIndex) {
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];
+					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0] = new TrainManager.CarSection();
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Overlay = true;
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
@@ -326,81 +327,18 @@ namespace OpenBve {
 						}
 						if (CarObjects[i] != null) {
 							// add object
-							int j = TrainManager.Trains[k].Cars[i].CarSections.Length;
-							Array.Resize<TrainManager.CarSection>(ref TrainManager.Trains[k].Cars[i].CarSections, j + 1);
-							if (CarObjects[i] is ObjectManager.StaticObject) {
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)CarObjects[i];
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States[0].Object = s;
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].CurrentState = 0;
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
-							} else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection) {
-								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
-								for (int h = 0; h < a.Objects.Length; h++) {
-									TrainManager.Trains[k].Cars[i].CarSections[j].Elements[h] = a.Objects[h];
-									TrainManager.Trains[k].Cars[i].CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
-								}
-							}
+							TrainManager.Trains[k].Cars[i].LoadCarSections(CarObjects[i]);
 						}
 						
 						//Load bogie objects
 						if (BogieObjects[currentBogieObject] != null)
 						{
-							int j = TrainManager.Trains[k].Cars[i].FrontBogie.CarSections.Length;
-							Array.Resize<TrainManager.CarSection>(ref TrainManager.Trains[k].Cars[i].FrontBogie.CarSections, j + 1);
-							if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
-							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].States[0].Object = s;
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].CurrentState = 0;
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
-							}
-							else if (BogieObjects[currentBogieObject] is ObjectManager.AnimatedObjectCollection)
-							{
-								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[currentBogieObject];
-								TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
-								for (int h = 0; h < a.Objects.Length; h++)
-								{
-									TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[h] = a.Objects[h];
-									TrainManager.Trains[k].Cars[i].FrontBogie.CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
-								}
-							}
+							TrainManager.Trains[k].Cars[i].FrontBogie.LoadCarSections(BogieObjects[currentBogieObject]);
 						}
 						currentBogieObject++;
-						//Can't think of a better way to do this than two functions......
 						if (BogieObjects[currentBogieObject] != null)
 						{
-							int j = TrainManager.Trains[k].Cars[i].RearBogie.CarSections.Length;
-							Array.Resize<TrainManager.CarSection>(ref TrainManager.Trains[k].Cars[i].RearBogie.CarSections, j + 1);
-							if (BogieObjects[currentBogieObject] is ObjectManager.StaticObject)
-							{
-								ObjectManager.StaticObject s = (ObjectManager.StaticObject)BogieObjects[currentBogieObject];
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].States[0].Object = s;
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].CurrentState = 0;
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
-							}
-							else if (BogieObjects[currentBogieObject] is ObjectManager.AnimatedObjectCollection)
-							{
-								ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)BogieObjects[currentBogieObject];
-								TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
-								for (int h = 0; h < a.Objects.Length; h++)
-								{
-									TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[h] = a.Objects[h];
-									TrainManager.Trains[k].Cars[i].RearBogie.CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
-								}
-							}
+							TrainManager.Trains[k].Cars[i].RearBogie.LoadCarSections(BogieObjects[currentBogieObject]);
 						}
 						currentBogieObject++;
 					}

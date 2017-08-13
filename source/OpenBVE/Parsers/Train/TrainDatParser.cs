@@ -498,6 +498,12 @@ namespace OpenBve {
 			if (TrailerCars < 0) TrailerCars = 0;
 			int Cars = MotorCars + TrailerCars;
 			Train.Cars = new TrainManager.Car[Cars];
+			for (int i = 0; i < Train.Cars.Length; i++)
+			{
+				Train.Cars[i] = new TrainManager.Car(Train, i);
+				Train.Cars[i].FrontBogie = new TrainManager.Bogie(Train, Train.Cars[i]);
+				Train.Cars[i].RearBogie = new TrainManager.Bogie(Train, Train.Cars[i]);
+			}
 			double DistanceBetweenTheCars = 0.3;
 			if (DriverCar < 0 | DriverCar >= Cars) {
 				Interface.AddMessage(Interface.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
@@ -702,13 +708,10 @@ namespace OpenBve {
 			// apply other attributes for all cars
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].CarSections = new TrainManager.CarSection[] { };
-				Train.Cars[i].FrontBogie.CarSections = new TrainManager.CarSection[] { };
-				Train.Cars[i].RearBogie.CarSections = new TrainManager.CarSection[] { };
 				Train.Cars[i].CurrentCarSection = -1;
-				TrainManager.ChangeCarSection(Train, i, -1);
-				TrainManager.ChangeFrontBogieSection(Train, i, -1);
-				TrainManager.ChangeRearBogieSection(Train, i, -1);
+				Train.Cars[i].ChangeCarSection(-1);
+				Train.Cars[i].FrontBogie.ChangeSection(-1);
+				Train.Cars[i].RearBogie.ChangeSection(-1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? TrackManager.EventTriggerType.RearCarRearAxle : TrackManager.EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? TrackManager.EventTriggerType.TrainFront : TrackManager.EventTriggerType.None;

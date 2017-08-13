@@ -20,7 +20,7 @@ namespace OpenBve
 
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e)
 		{
-			if (listviewRouteFiles.Columns.Count == 0)
+			if (listviewRouteFiles.Columns.Count == 0 || OpenBveApi.Path.ContainsInvalidChars(textboxRouteFolder.Text))
 			{
 				return;
 			}
@@ -403,7 +403,7 @@ namespace OpenBve
 
 		private void textboxTrainFolder_TextChanged(object sender, EventArgs e)
 		{
-			if (listviewTrainFolders.Columns.Count == 0)
+			if (listviewTrainFolders.Columns.Count == 0 || OpenBveApi.Path.ContainsInvalidChars(textboxTrainFolder.Text))
 			{
 				return;
 			}

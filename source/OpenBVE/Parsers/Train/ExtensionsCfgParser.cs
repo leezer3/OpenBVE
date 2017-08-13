@@ -424,14 +424,14 @@ namespace OpenBve {
 								if (IsOdd)
 								{
 									double temp = Train.Cars[CarIndex].FrontBogie.FrontAxle.Position;
-									Train.Cars[i].FrontBogie.FrontAxle.Position = -Train.Cars[CarIndex].FrontBogie.RearAxle.Position;
-									Train.Cars[i].FrontBogie.RearAxle.Position = -temp;
+									Train.Cars[CarIndex].FrontBogie.FrontAxle.Position = -Train.Cars[CarIndex].FrontBogie.RearAxle.Position;
+									Train.Cars[CarIndex].FrontBogie.RearAxle.Position = -temp;
 								}
 								else
 								{
 									double temp = Train.Cars[CarIndex].RearBogie.FrontAxle.Position;
-									Train.Cars[i].RearBogie.FrontAxle.Position = -Train.Cars[CarIndex].RearBogie.RearAxle.Position;
-									Train.Cars[i].RearBogie.RearAxle.Position = -temp;
+									Train.Cars[CarIndex].RearBogie.FrontAxle.Position = -Train.Cars[CarIndex].RearBogie.RearAxle.Position;
+									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
 							if (BogieObjects[i] is ObjectManager.StaticObject)
