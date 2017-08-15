@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
