@@ -112,6 +112,14 @@ namespace OpenBveApi.Colors {
 				return false;
 			}
 		}
+
+		/// <summary>Casts a System.Drawing.Color to a Color24, discarding the alpha component</summary>
+		/// <param name="c">The System.Drawing.Color</param>
+		/// <returns>The new Color24</returns>
+		public static implicit operator Color24(System.Drawing.Color c)
+		{
+			return new Color24(c.R, c.G, c.B);
+		}
 	}
 	
 	
@@ -253,6 +261,14 @@ namespace OpenBveApi.Colors {
 				Color = new Color32(0, 0, 255, 255);
 				return false;
 			}
+		}
+
+		/// <summary>Casts a System.Drawing.Color to a Color32</summary>
+		/// <param name="c">The System.Drawing.Color</param>
+		/// <returns>The new Color32</returns>
+		public static implicit operator Color32(System.Drawing.Color c)
+		{
+			return new Color32(c.R, c.G, c.B, c.A);
 		}
 	}
 	
