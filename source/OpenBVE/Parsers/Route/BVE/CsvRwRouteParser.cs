@@ -369,7 +369,7 @@ namespace OpenBve {
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
 			Data.UnitOfSpeed = 0.277777777777778;
-			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength);
+			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength, PreviewOnly);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
 			ParseRouteForData(FileName, IsRW, Encoding, Expressions, TrainPath, ObjectPath, SoundPath, UnitOfLength, ref Data, PreviewOnly);
 			Game.RouteUnitOfLength = UnitOfLength;
@@ -907,7 +907,7 @@ namespace OpenBve {
 		}
 
 		// preprocess options
-		private static void PreprocessOptions(bool IsRW, Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength) {
+		private static void PreprocessOptions(bool IsRW, Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength, bool PreviewOnly) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = "";
 			bool SectionAlwaysPrefix = false;
@@ -1079,6 +1079,68 @@ namespace OpenBve {
 											Data.AccurateObjectDisposal = mode == 1;
 										}
 									} break;
+								case "options.compatibletransparencymode":
+								{
+									//Whether to use fuzzy matching for BVE2 / BVE4 transparencies
+									//Should be DISABLED on openBVE content
+									if (PreviewOnly)
+									{
+										continue;
+									}
+									if (Arguments.Length == 0) {
+										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										if (Arguments.Length > 1) {
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										int mode = 0;
+										if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode)) {
+											Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											mode = 0;
+										}
+										else if (mode != 0 & mode != 1) {
+											Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											mode = 0;
+										}
+										Interface.CurrentOptions.OldTransparencyMode = mode == 1;
+									}
+								} break;
+								case "options.enablehacks":
+								{
+									//Whether to apply various hacks to fix BVE2 / BVE4 routes
+									//Whilst this is harmless, it should be DISABLED on openBVE content
+									//in order to ensure that all errors are correctly fixed by the developer
+									if (PreviewOnly)
+									{
+										continue;
+									}
+									if (Arguments.Length == 0)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										if (Arguments.Length > 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										int mode = 0;
+										if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											mode = 0;
+										}
+										else if (mode != 0 & mode != 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											mode = 0;
+										}
+										Interface.CurrentOptions.EnableBveTsHacks = mode == 1;
+									}
+								}
+									break;
 							}
 						}
 					}

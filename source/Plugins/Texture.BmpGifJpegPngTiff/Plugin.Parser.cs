@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 
@@ -17,7 +18,7 @@ namespace Plugin {
 			 * us to extract the bitmap data easily.
 			 * */
 			System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file);
-			ColorPalette p = null;
+			Color24[] p = null;
 			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
 			{
 				/* Only store the color palette data for
@@ -25,7 +26,11 @@ namespace Plugin {
 				 * With a large number of textures loaded at
 				 * once, this can save a decent chunk of memory
 				 * */
-				p = bitmap.Palette;
+				p = new Color24[bitmap.Palette.Entries.Length];
+				for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
+				{
+					p[i] = bitmap.Palette.Entries[i];
+				}
 			}
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			/* 

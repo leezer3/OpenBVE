@@ -2,6 +2,7 @@
 
 using System.Drawing;
 using System.Drawing.Imaging;
+using OpenBveApi.Colors;
 
 namespace OpenBve {
 	internal static partial class Textures {
@@ -160,6 +161,20 @@ namespace OpenBve {
 				 * If the bitmap format is not already 32-bit BGRA,
 				 * then convert it to 32-bit BGRA.
 				 * */
+				Color24[] p = null;
+				if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
+				{
+					/* Only store the color palette data for
+					 * textures using a restricted palette
+					 * With a large number of textures loaded at
+					 * once, this can save a decent chunk of memory
+					 * */
+					p = new Color24[bitmap.Palette.Entries.Length];
+					for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
+					{
+						p[i] = bitmap.Palette.Entries[i];
+					}
+				}
 				if (bitmap.PixelFormat != PixelFormat.Format32bppArgb) {
 					Bitmap compatibleBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
 					Graphics graphics = Graphics.FromImage(compatibleBitmap);
@@ -189,7 +204,7 @@ namespace OpenBve {
 						raw[i] = raw[i + 2];
 						raw[i + 2] = temp;
 					}
-					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw, bitmap.Palette);
+					texture = new OpenBveApi.Textures.Texture(width, height, 32, raw, p);
 					texture = texture.ApplyParameters(this.Parameters);
 					return true;
 				}

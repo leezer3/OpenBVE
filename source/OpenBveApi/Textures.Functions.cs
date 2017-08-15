@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using OpenBveApi.Colors;
 
@@ -88,14 +87,14 @@ namespace OpenBveApi.Textures {
 		    throw new NotSupportedException();
 		}
 
-		private static Color24 GetClosestColor(Color[] colorArray, Color baseColor)
+		private static Color24 GetClosestColor(Color24[] colorArray, Color24 baseColor)
 		{
 			int colorDiffs = colorArray.Select(n => GetDiff(n, baseColor)).Min(n => n);
-			Color c = colorArray[Array.FindIndex(colorArray,n => GetDiff(n, baseColor) == colorDiffs)];
+			Color24 c = colorArray[Array.FindIndex(colorArray,n => GetDiff(n, baseColor) == colorDiffs)];
 			return new Color24(c.R, c.G, c.B);
 		}
 
-		private static int GetDiff(Color c1, Color c2)
+		private static int GetDiff(Color24 c1, Color24 c2)
 		{
 			return (int)System.Math.Sqrt((c1.R - c2.R) * (c1.R - c2.R)
 			                      + (c1.G - c2.G) * (c1.G - c2.G)
@@ -114,14 +113,14 @@ namespace OpenBveApi.Textures {
 		    if (color == null) {
 				return texture;
 			}
-			if (texture.Palette != null)
+			if (texture.Palette != null && texture.CompatibleTransparencyMode == true)
 			{
-				switch (texture.Palette.Entries.Length)
+				switch (texture.Palette.Length)
 				{
 					case 16:
 					case 256:
 						Color24 c = (Color24)color;
-						color = GetClosestColor(texture.Palette.Entries, Color.FromArgb(255, (int)c.R, (int)c.G, (int)c.B));
+						color = GetClosestColor(texture.Palette, c);
 						break;
 				}
 			}
