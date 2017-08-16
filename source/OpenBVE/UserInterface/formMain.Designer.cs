@@ -90,11 +90,17 @@
 			this.labelFillerTwo = new System.Windows.Forms.Label();
 			this.panelOptions = new System.Windows.Forms.Panel();
 			this.buttonOptionsPrevious = new System.Windows.Forms.Button();
-			this.buttonOptionsNext = new System.Windows.Forms.Button();
 			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
-			this.groupBoxRailDriver = new System.Windows.Forms.GroupBox();
-			this.comboBoxRailDriverUnits = new System.Windows.Forms.ComboBox();
-			this.labelRailDriverSpeedUnits = new System.Windows.Forms.Label();
+			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
+			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
+			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
+			this.labelNumberFive = new System.Windows.Forms.Label();
+			this.labelNumberZero = new System.Windows.Forms.Label();
+			this.labelTimeAcceleration = new System.Windows.Forms.Label();
+			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
+			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
+			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
 			this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
 			this.comboBoxCompressionFormat = new System.Windows.Forms.ComboBox();
 			this.labelPackageCompression = new System.Windows.Forms.Label();
@@ -107,7 +113,13 @@
 			this.buttonSetRouteDirectory = new System.Windows.Forms.Button();
 			this.labelRouteInstallDirectory = new System.Windows.Forms.Label();
 			this.textBoxRouteDirectory = new System.Windows.Forms.TextBox();
+			this.buttonOptionsNext = new System.Windows.Forms.Button();
 			this.panelOptionsRight = new System.Windows.Forms.Panel();
+			this.groupBoxRailDriver = new System.Windows.Forms.GroupBox();
+			this.labelRailDriverCalibration = new System.Windows.Forms.Label();
+			this.buttonRailDriverCalibration = new System.Windows.Forms.Button();
+			this.comboBoxRailDriverUnits = new System.Windows.Forms.ComboBox();
+			this.labelRailDriverSpeedUnits = new System.Windows.Forms.Label();
 			this.groupboxDistance = new System.Windows.Forms.GroupBox();
 			this.comboboxMotionBlur = new System.Windows.Forms.ComboBox();
 			this.labelMotionBlur = new System.Windows.Forms.Label();
@@ -122,14 +134,6 @@
 			this.groupboxVerbosity = new System.Windows.Forms.GroupBox();
 			this.checkboxErrorMessages = new System.Windows.Forms.CheckBox();
 			this.checkboxWarningMessages = new System.Windows.Forms.CheckBox();
-			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
-			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
-			this.labelNumberFive = new System.Windows.Forms.Label();
-			this.labelNumberZero = new System.Windows.Forms.Label();
-			this.labelTimeAcceleration = new System.Windows.Forms.Label();
-			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
-			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
-			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
 			this.groupboxSimulation = new System.Windows.Forms.GroupBox();
 			this.checkBoxLoadingSway = new System.Windows.Forms.CheckBox();
 			this.checkboxBlackBox = new System.Windows.Forms.CheckBox();
@@ -412,8 +416,6 @@
 			this.labelNewGUID = new System.Windows.Forms.Label();
 			this.openPackageFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.savePackageDialog = new System.Windows.Forms.SaveFileDialog();
-			this.buttonRailDriverCalibration = new System.Windows.Forms.Button();
-			this.labelRailDriverCalibration = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
 			this.panelStart.SuspendLayout();
 			this.groupboxTrainSelection.SuspendLayout();
@@ -443,16 +445,16 @@
 			this.panelRouteEncoding.SuspendLayout();
 			this.panelOptions.SuspendLayout();
 			this.panelOptionsPage2.SuspendLayout();
-			this.groupBoxRailDriver.SuspendLayout();
+			this.groupBoxAdvancedOptions.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
 			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelOptionsRight.SuspendLayout();
+			this.groupBoxRailDriver.SuspendLayout();
 			this.groupboxDistance.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.updownDistance)).BeginInit();
 			this.groupboxControls.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackbarJoystickAxisThreshold)).BeginInit();
 			this.groupboxVerbosity.SuspendLayout();
-			this.groupBoxAdvancedOptions.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
 			this.groupboxSimulation.SuspendLayout();
 			this.groupboxSound.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).BeginInit();
@@ -1348,9 +1350,9 @@
 			this.panelOptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(243)))));
 			this.panelOptions.Controls.Add(this.buttonOptionsPrevious);
 			this.panelOptions.Controls.Add(this.buttonOptionsNext);
-			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Controls.Add(this.panelOptionsRight);
 			this.panelOptions.Controls.Add(this.panelOptionsLeft);
+			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Controls.Add(this.pictureboxLanguage);
 			this.panelOptions.Controls.Add(this.comboboxLanguages);
 			this.panelOptions.Controls.Add(this.labelOptionsTitleSeparator);
@@ -1372,63 +1374,126 @@
 			this.buttonOptionsPrevious.UseVisualStyleBackColor = true;
 			this.buttonOptionsPrevious.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
 			// 
-			// buttonOptionsNext
-			// 
-			this.buttonOptionsNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOptionsNext.Location = new System.Drawing.Point(549, 38);
-			this.buttonOptionsNext.Name = "buttonOptionsNext";
-			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 23);
-			this.buttonOptionsNext.TabIndex = 18;
-			this.buttonOptionsNext.Text = "Next Page...";
-			this.buttonOptionsNext.UseVisualStyleBackColor = true;
-			this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
-			// 
 			// panelOptionsPage2
 			// 
 			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelOptionsPage2.Controls.Add(this.groupBoxRailDriver);
+			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
 			this.panelOptionsPage2.Location = new System.Drawing.Point(8, 72);
 			this.panelOptionsPage2.Name = "panelOptionsPage2";
 			this.panelOptionsPage2.Size = new System.Drawing.Size(643, 528);
 			this.panelOptionsPage2.TabIndex = 20;
 			// 
-			// groupBoxRailDriver
+			// groupBoxAdvancedOptions
 			// 
-			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverCalibration);
-			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
-			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
-			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverSpeedUnits);
-			this.groupBoxRailDriver.Location = new System.Drawing.Point(1, 157);
-			this.groupBoxRailDriver.Name = "groupBoxRailDriver";
-			this.groupBoxRailDriver.Size = new System.Drawing.Size(337, 75);
-			this.groupBoxRailDriver.TabIndex = 20;
-			this.groupBoxRailDriver.TabStop = false;
-			this.groupBoxRailDriver.Text = "RailDriver";
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberFive);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
+			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
+			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
+			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
+			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 208);
+			this.groupBoxAdvancedOptions.TabIndex = 21;
+			this.groupBoxAdvancedOptions.TabStop = false;
+			this.groupBoxAdvancedOptions.Text = "Advanced Options";
 			// 
-			// comboBoxRailDriverUnits
+			// checkBoxHacks
 			// 
-			this.comboBoxRailDriverUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxRailDriverUnits.FormattingEnabled = true;
-			this.comboBoxRailDriverUnits.Items.AddRange(new object[] {
-            "Miles per Hour (MPH)",
-            "Kilometers per Hour (KPH)"});
-			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(138, 16);
-			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
-			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(190, 21);
-			this.comboBoxRailDriverUnits.TabIndex = 3;
-			this.comboBoxRailDriverUnits.SelectedIndexChanged += new System.EventHandler(this.comboBoxRailDriverUnits_SelectedIndexChanged);
+			this.checkBoxHacks.AutoSize = true;
+			this.checkBoxHacks.Location = new System.Drawing.Point(8, 100);
+			this.checkBoxHacks.Name = "checkBoxHacks";
+			this.checkBoxHacks.Size = new System.Drawing.Size(203, 17);
+			this.checkBoxHacks.TabIndex = 15;
+			this.checkBoxHacks.Text = "Enable hacks for buggy older content";
+			this.checkBoxHacks.UseVisualStyleBackColor = true;
 			// 
-			// labelRailDriverSpeedUnits
+			// checkBoxTransparencyFix
 			// 
-			this.labelRailDriverSpeedUnits.AutoSize = true;
-			this.labelRailDriverSpeedUnits.Location = new System.Drawing.Point(7, 19);
-			this.labelRailDriverSpeedUnits.Name = "labelRailDriverSpeedUnits";
-			this.labelRailDriverSpeedUnits.Size = new System.Drawing.Size(125, 13);
-			this.labelRailDriverSpeedUnits.TabIndex = 2;
-			this.labelRailDriverSpeedUnits.Text = "LED Display speed units:";
+			this.checkBoxTransparencyFix.AutoSize = true;
+			this.checkBoxTransparencyFix.Location = new System.Drawing.Point(8, 81);
+			this.checkBoxTransparencyFix.Name = "checkBoxTransparencyFix";
+			this.checkBoxTransparencyFix.Size = new System.Drawing.Size(259, 17);
+			this.checkBoxTransparencyFix.TabIndex = 14;
+			this.checkBoxTransparencyFix.Text = "Attempt to fix transparency issues in older content";
+			this.checkBoxTransparencyFix.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxUnloadTextures
+			// 
+			this.checkBoxUnloadTextures.AutoSize = true;
+			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 62);
+			this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
+			this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
+			this.checkBoxUnloadTextures.TabIndex = 13;
+			this.checkBoxUnloadTextures.Text = "Unload unused textures";
+			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
+			// 
+			// labelNumberFive
+			// 
+			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelNumberFive.AutoSize = true;
+			this.labelNumberFive.Location = new System.Drawing.Point(267, 163);
+			this.labelNumberFive.Name = "labelNumberFive";
+			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberFive.TabIndex = 12;
+			this.labelNumberFive.Text = "5";
+			// 
+			// labelNumberZero
+			// 
+			this.labelNumberZero.AutoSize = true;
+			this.labelNumberZero.Location = new System.Drawing.Point(186, 163);
+			this.labelNumberZero.Name = "labelNumberZero";
+			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberZero.TabIndex = 11;
+			this.labelNumberZero.Text = "0";
+			// 
+			// labelTimeAcceleration
+			// 
+			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 132);
+			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
+			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
+			this.labelTimeAcceleration.TabIndex = 10;
+			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
+			this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// trackBarTimeAccelerationFactor
+			// 
+			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarTimeAccelerationFactor.LargeChange = 1;
+			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 122);
+			this.trackBarTimeAccelerationFactor.Maximum = 5;
+			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
+			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
+			this.trackBarTimeAccelerationFactor.TabIndex = 3;
+			this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
+			// 
+			// checkBoxDisableDisplayLists
+			// 
+			this.checkBoxDisableDisplayLists.AutoSize = true;
+			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 43);
+			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
+			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
+			this.checkBoxDisableDisplayLists.TabIndex = 2;
+			this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
+			this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxLoadInAdvance
+			// 
+			this.checkBoxLoadInAdvance.AutoSize = true;
+			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(8, 24);
+			this.checkBoxLoadInAdvance.Name = "checkBoxLoadInAdvance";
+			this.checkBoxLoadInAdvance.Size = new System.Drawing.Size(106, 17);
+			this.checkBoxLoadInAdvance.TabIndex = 1;
+			this.checkBoxLoadInAdvance.Text = "Load in advance";
+			this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxPackageOptions
 			// 
@@ -1565,18 +1630,83 @@
 			this.textBoxRouteDirectory.Size = new System.Drawing.Size(353, 20);
 			this.textBoxRouteDirectory.TabIndex = 0;
 			// 
+			// buttonOptionsNext
+			// 
+			this.buttonOptionsNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOptionsNext.Location = new System.Drawing.Point(549, 38);
+			this.buttonOptionsNext.Name = "buttonOptionsNext";
+			this.buttonOptionsNext.Size = new System.Drawing.Size(99, 23);
+			this.buttonOptionsNext.TabIndex = 18;
+			this.buttonOptionsNext.Text = "Next Page...";
+			this.buttonOptionsNext.UseVisualStyleBackColor = true;
+			this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
+			// 
 			// panelOptionsRight
 			// 
+			this.panelOptionsRight.Controls.Add(this.groupBoxRailDriver);
 			this.panelOptionsRight.Controls.Add(this.groupboxDistance);
 			this.panelOptionsRight.Controls.Add(this.groupboxControls);
 			this.panelOptionsRight.Controls.Add(this.groupboxVerbosity);
-			this.panelOptionsRight.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsRight.Controls.Add(this.groupboxSimulation);
 			this.panelOptionsRight.Controls.Add(this.groupboxSound);
 			this.panelOptionsRight.Location = new System.Drawing.Point(332, 72);
 			this.panelOptionsRight.Name = "panelOptionsRight";
 			this.panelOptionsRight.Size = new System.Drawing.Size(316, 579);
 			this.panelOptionsRight.TabIndex = 17;
+			// 
+			// groupBoxRailDriver
+			// 
+			this.groupBoxRailDriver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverCalibration);
+			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
+			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
+			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverSpeedUnits);
+			this.groupBoxRailDriver.Location = new System.Drawing.Point(0, 230);
+			this.groupBoxRailDriver.Name = "groupBoxRailDriver";
+			this.groupBoxRailDriver.Size = new System.Drawing.Size(316, 75);
+			this.groupBoxRailDriver.TabIndex = 21;
+			this.groupBoxRailDriver.TabStop = false;
+			this.groupBoxRailDriver.Text = "RailDriver";
+			// 
+			// labelRailDriverCalibration
+			// 
+			this.labelRailDriverCalibration.AutoSize = true;
+			this.labelRailDriverCalibration.Location = new System.Drawing.Point(7, 53);
+			this.labelRailDriverCalibration.Name = "labelRailDriverCalibration";
+			this.labelRailDriverCalibration.Size = new System.Drawing.Size(78, 13);
+			this.labelRailDriverCalibration.TabIndex = 5;
+			this.labelRailDriverCalibration.Text = "Set Calibration:";
+			// 
+			// buttonRailDriverCalibration
+			// 
+			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(230, 45);
+			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
+			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
+			this.buttonRailDriverCalibration.TabIndex = 4;
+			this.buttonRailDriverCalibration.Text = "Launch...";
+			this.buttonRailDriverCalibration.UseVisualStyleBackColor = true;
+			// 
+			// comboBoxRailDriverUnits
+			// 
+			this.comboBoxRailDriverUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRailDriverUnits.FormattingEnabled = true;
+			this.comboBoxRailDriverUnits.Items.AddRange(new object[] {
+            "Miles per Hour (MPH)",
+            "Kilometers per Hour (KPH)"});
+			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(138, 16);
+			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
+			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(170, 21);
+			this.comboBoxRailDriverUnits.TabIndex = 3;
+			// 
+			// labelRailDriverSpeedUnits
+			// 
+			this.labelRailDriverSpeedUnits.AutoSize = true;
+			this.labelRailDriverSpeedUnits.Location = new System.Drawing.Point(7, 19);
+			this.labelRailDriverSpeedUnits.Name = "labelRailDriverSpeedUnits";
+			this.labelRailDriverSpeedUnits.Size = new System.Drawing.Size(125, 13);
+			this.labelRailDriverSpeedUnits.TabIndex = 2;
+			this.labelRailDriverSpeedUnits.Text = "LED Display speed units:";
 			// 
 			// groupboxDistance
 			// 
@@ -1600,7 +1730,7 @@
 			this.comboboxMotionBlur.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxMotionBlur.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxMotionBlur.FormattingEnabled = true;
-			this.comboboxMotionBlur.Location = new System.Drawing.Point(156, 48);
+			this.comboboxMotionBlur.Location = new System.Drawing.Point(144, 48);
 			this.comboboxMotionBlur.Name = "comboboxMotionBlur";
 			this.comboboxMotionBlur.Size = new System.Drawing.Size(152, 21);
 			this.comboboxMotionBlur.TabIndex = 4;
@@ -1612,7 +1742,7 @@
 			this.labelMotionBlur.AutoEllipsis = true;
 			this.labelMotionBlur.Location = new System.Drawing.Point(9, 51);
 			this.labelMotionBlur.Name = "labelMotionBlur";
-			this.labelMotionBlur.Size = new System.Drawing.Size(148, 16);
+			this.labelMotionBlur.Size = new System.Drawing.Size(136, 16);
 			this.labelMotionBlur.TabIndex = 3;
 			this.labelMotionBlur.Text = "Motion blur:";
 			this.labelMotionBlur.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1621,7 +1751,7 @@
 			// 
 			this.labelDistanceUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDistanceUnit.AutoEllipsis = true;
-			this.labelDistanceUnit.Location = new System.Drawing.Point(284, 24);
+			this.labelDistanceUnit.Location = new System.Drawing.Point(272, 24);
 			this.labelDistanceUnit.Name = "labelDistanceUnit";
 			this.labelDistanceUnit.Size = new System.Drawing.Size(24, 16);
 			this.labelDistanceUnit.TabIndex = 2;
@@ -1630,7 +1760,7 @@
 			// updownDistance
 			// 
 			this.updownDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.updownDistance.Location = new System.Drawing.Point(156, 24);
+			this.updownDistance.Location = new System.Drawing.Point(144, 24);
 			this.updownDistance.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -1657,7 +1787,7 @@
 			this.labelDistance.AutoEllipsis = true;
 			this.labelDistance.Location = new System.Drawing.Point(9, 26);
 			this.labelDistance.Name = "labelDistance";
-			this.labelDistance.Size = new System.Drawing.Size(148, 16);
+			this.labelDistance.Size = new System.Drawing.Size(136, 16);
 			this.labelDistance.TabIndex = 0;
 			this.labelDistance.Text = "Viewing distance:";
 			this.labelDistance.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1698,7 +1828,7 @@
 			this.trackbarJoystickAxisThreshold.Location = new System.Drawing.Point(200, 32);
 			this.trackbarJoystickAxisThreshold.Maximum = 100;
 			this.trackbarJoystickAxisThreshold.Name = "trackbarJoystickAxisThreshold";
-			this.trackbarJoystickAxisThreshold.Size = new System.Drawing.Size(108, 45);
+			this.trackbarJoystickAxisThreshold.Size = new System.Drawing.Size(96, 45);
 			this.trackbarJoystickAxisThreshold.TabIndex = 2;
 			this.trackbarJoystickAxisThreshold.TickFrequency = 10;
 			this.trackbarJoystickAxisThreshold.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -1731,7 +1861,7 @@
 			this.groupboxVerbosity.Controls.Add(this.checkboxErrorMessages);
 			this.groupboxVerbosity.Controls.Add(this.checkboxWarningMessages);
 			this.groupboxVerbosity.ForeColor = System.Drawing.Color.Black;
-			this.groupboxVerbosity.Location = new System.Drawing.Point(0, 320);
+			this.groupboxVerbosity.Location = new System.Drawing.Point(0, 396);
 			this.groupboxVerbosity.Name = "groupboxVerbosity";
 			this.groupboxVerbosity.Size = new System.Drawing.Size(316, 64);
 			this.groupboxVerbosity.TabIndex = 12;
@@ -1758,97 +1888,6 @@
 			this.checkboxWarningMessages.Text = "Show warning messages";
 			this.checkboxWarningMessages.UseVisualStyleBackColor = true;
 			// 
-			// groupBoxAdvancedOptions
-			// 
-			this.groupBoxAdvancedOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberFive);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
-			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
-			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(0, 390);
-			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 136);
-			this.groupBoxAdvancedOptions.TabIndex = 12;
-			this.groupBoxAdvancedOptions.TabStop = false;
-			this.groupBoxAdvancedOptions.Text = "Advanced Options";
-			// 
-			// checkBoxUnloadTextures
-			// 
-			this.checkBoxUnloadTextures.AutoSize = true;
-			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 58);
-			this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
-			this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
-			this.checkBoxUnloadTextures.TabIndex = 13;
-			this.checkBoxUnloadTextures.Text = "Unload unused textures";
-			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
-			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxUnloadTextures_CheckedChanged);
-			// 
-			// labelNumberFive
-			// 
-			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelNumberFive.AutoSize = true;
-			this.labelNumberFive.Location = new System.Drawing.Point(271, 115);
-			this.labelNumberFive.Name = "labelNumberFive";
-			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberFive.TabIndex = 12;
-			this.labelNumberFive.Text = "5";
-			// 
-			// labelNumberZero
-			// 
-			this.labelNumberZero.AutoSize = true;
-			this.labelNumberZero.Location = new System.Drawing.Point(190, 115);
-			this.labelNumberZero.Name = "labelNumberZero";
-			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberZero.TabIndex = 11;
-			this.labelNumberZero.Text = "0";
-			// 
-			// labelTimeAcceleration
-			// 
-			this.labelTimeAcceleration.Location = new System.Drawing.Point(3, 84);
-			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
-			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
-			this.labelTimeAcceleration.TabIndex = 10;
-			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-			this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// trackBarTimeAccelerationFactor
-			// 
-			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarTimeAccelerationFactor.LargeChange = 1;
-			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(183, 74);
-			this.trackBarTimeAccelerationFactor.Maximum = 5;
-			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
-			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
-			this.trackBarTimeAccelerationFactor.TabIndex = 3;
-			this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
-			// 
-			// checkBoxDisableDisplayLists
-			// 
-			this.checkBoxDisableDisplayLists.AutoSize = true;
-			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 41);
-			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
-			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
-			this.checkBoxDisableDisplayLists.TabIndex = 2;
-			this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
-			this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxLoadInAdvance
-			// 
-			this.checkBoxLoadInAdvance.AutoSize = true;
-			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(8, 24);
-			this.checkBoxLoadInAdvance.Name = "checkBoxLoadInAdvance";
-			this.checkBoxLoadInAdvance.Size = new System.Drawing.Size(106, 17);
-			this.checkBoxLoadInAdvance.TabIndex = 1;
-			this.checkBoxLoadInAdvance.Text = "Load in advance";
-			this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
-			this.checkBoxLoadInAdvance.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
-			// 
 			// groupboxSimulation
 			// 
 			this.groupboxSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1859,7 +1898,7 @@
 			this.groupboxSimulation.Controls.Add(this.checkboxCollisions);
 			this.groupboxSimulation.Controls.Add(this.checkboxToppling);
 			this.groupboxSimulation.ForeColor = System.Drawing.Color.Black;
-			this.groupboxSimulation.Location = new System.Drawing.Point(0, 232);
+			this.groupboxSimulation.Location = new System.Drawing.Point(0, 310);
 			this.groupboxSimulation.Name = "groupboxSimulation";
 			this.groupboxSimulation.Size = new System.Drawing.Size(316, 80);
 			this.groupboxSimulation.TabIndex = 11;
@@ -1943,7 +1982,7 @@
 			// updownSoundNumber
 			// 
 			this.updownSoundNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.updownSoundNumber.Location = new System.Drawing.Point(152, 16);
+			this.updownSoundNumber.Location = new System.Drawing.Point(140, 16);
 			this.updownSoundNumber.Minimum = new decimal(new int[] {
             8,
             0,
@@ -1964,7 +2003,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoundNumber.Location = new System.Drawing.Point(5, 18);
 			this.labelSoundNumber.Name = "labelSoundNumber";
-			this.labelSoundNumber.Size = new System.Drawing.Size(148, 14);
+			this.labelSoundNumber.Size = new System.Drawing.Size(136, 14);
 			this.labelSoundNumber.TabIndex = 2;
 			this.labelSoundNumber.Text = "Number of allowed sounds:";
 			this.labelSoundNumber.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -5226,25 +5265,6 @@
 			// 
 			this.openPackageFileDialog.FileName = "openFileDialog1";
 			// 
-			// buttonRailDriverCalibration
-			// 
-			this.buttonRailDriverCalibration.Location = new System.Drawing.Point(253, 47);
-			this.buttonRailDriverCalibration.Name = "buttonRailDriverCalibration";
-			this.buttonRailDriverCalibration.Size = new System.Drawing.Size(75, 23);
-			this.buttonRailDriverCalibration.TabIndex = 4;
-			this.buttonRailDriverCalibration.Text = "Launch...";
-			this.buttonRailDriverCalibration.UseVisualStyleBackColor = true;
-			this.buttonRailDriverCalibration.Click += new System.EventHandler(this.buttonRailDriverCalibration_Click);
-			// 
-			// labelRailDriverCalibration
-			// 
-			this.labelRailDriverCalibration.AutoSize = true;
-			this.labelRailDriverCalibration.Location = new System.Drawing.Point(7, 53);
-			this.labelRailDriverCalibration.Name = "labelRailDriverCalibration";
-			this.labelRailDriverCalibration.Size = new System.Drawing.Size(78, 13);
-			this.labelRailDriverCalibration.TabIndex = 5;
-			this.labelRailDriverCalibration.Text = "Set Calibration:";
-			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5308,11 +5328,14 @@
 			this.panelOptions.ResumeLayout(false);
 			this.panelOptions.PerformLayout();
 			this.panelOptionsPage2.ResumeLayout(false);
-			this.groupBoxRailDriver.ResumeLayout(false);
-			this.groupBoxRailDriver.PerformLayout();
+			this.groupBoxAdvancedOptions.ResumeLayout(false);
+			this.groupBoxAdvancedOptions.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
 			this.groupBoxPackageOptions.ResumeLayout(false);
 			this.groupBoxPackageOptions.PerformLayout();
 			this.panelOptionsRight.ResumeLayout(false);
+			this.groupBoxRailDriver.ResumeLayout(false);
+			this.groupBoxRailDriver.PerformLayout();
 			this.groupboxDistance.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.updownDistance)).EndInit();
 			this.groupboxControls.ResumeLayout(false);
@@ -5320,9 +5343,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackbarJoystickAxisThreshold)).EndInit();
 			this.groupboxVerbosity.ResumeLayout(false);
 			this.groupboxVerbosity.PerformLayout();
-			this.groupBoxAdvancedOptions.ResumeLayout(false);
-			this.groupBoxAdvancedOptions.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
 			this.groupboxSimulation.ResumeLayout(false);
 			this.groupboxSimulation.PerformLayout();
 			this.groupboxSound.ResumeLayout(false);
@@ -5422,8 +5442,6 @@
         private System.Windows.Forms.CheckBox checkboxWarningMessages;
         private System.Windows.Forms.CheckBox checkboxErrorMessages;
         private System.Windows.Forms.GroupBox groupboxVerbosity;
-        private System.Windows.Forms.GroupBox groupBoxAdvancedOptions;
-        private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 
         #endregion
 
@@ -5621,11 +5639,6 @@
         private System.Windows.Forms.Button buttonTrainEncodingLatin1;
         private System.Windows.Forms.Panel panelRouteEncoding;
         private System.Windows.Forms.Panel panelTrainEncoding;
-        private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
-        private System.Windows.Forms.Label labelNumberFive;
-        private System.Windows.Forms.Label labelNumberZero;
-        private System.Windows.Forms.Label labelTimeAcceleration;
-        private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
         private System.Windows.Forms.Label labelTransparencyQuality;
         private System.Windows.Forms.RadioButton radioButtonPackages;
         private System.Windows.Forms.Label label13;
@@ -5634,7 +5647,6 @@
         private System.Windows.Forms.Label labelPackagesTitleBackground;
         private System.Windows.Forms.CheckBox checkBoxEBAxis;
         private System.Windows.Forms.Button buttonControlReset;
-        private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
         private System.Windows.Forms.LinkLabel aboutLabel;
 		private System.Windows.Forms.Panel panelPackageList;
         private System.Windows.Forms.Button buttonUninstallPackage;
@@ -5797,10 +5809,20 @@
         private System.Windows.Forms.Button buttonCancel2;
         private System.Windows.Forms.Button buttonAbort;
 		private System.Windows.Forms.CheckBox checkBoxLoadingSway;
+		private System.Windows.Forms.GroupBox groupBoxAdvancedOptions;
+		private System.Windows.Forms.CheckBox checkBoxHacks;
+		private System.Windows.Forms.CheckBox checkBoxTransparencyFix;
+		private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
+		private System.Windows.Forms.Label labelNumberFive;
+		private System.Windows.Forms.Label labelNumberZero;
+		private System.Windows.Forms.Label labelTimeAcceleration;
+		private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
+		private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
+		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
-		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
-		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
 		private System.Windows.Forms.Label labelRailDriverCalibration;
 		private System.Windows.Forms.Button buttonRailDriverCalibration;
+		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
+		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
 	}
 }

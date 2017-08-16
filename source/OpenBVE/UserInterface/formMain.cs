@@ -405,6 +405,8 @@ namespace OpenBve {
 			checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkBoxLoadingSway.Checked = Interface.CurrentOptions.LoadingSway;
+			checkBoxTransparencyFix.Checked = Interface.CurrentOptions.OldTransparencyMode;
+			checkBoxHacks.Checked = Interface.CurrentOptions.EnableBveTsHacks;
 			checkboxJoysticksUsed.Checked = Interface.CurrentOptions.UseJoysticks;
 			checkBoxEBAxis.Checked = Interface.CurrentOptions.AllowAxisEB;
 			{
@@ -881,6 +883,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;
 			Interface.CurrentOptions.LoadInAdvance = checkBoxLoadInAdvance.Checked;
 			Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
+			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
+			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
 			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
 			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
