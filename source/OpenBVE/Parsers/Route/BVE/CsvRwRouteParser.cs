@@ -61,6 +61,7 @@ namespace OpenBve {
 			internal Block[] Blocks;
 			internal Marker[] Markers;
 			internal int FirstUsedBlock;
+			internal bool IgnorePitchRoll;
 		}
 
 		
@@ -2812,6 +2813,8 @@ namespace OpenBve {
 					}
 				}
 			}
+			//Check for any special-cased fixes we might need
+			CheckRouteSpecificFixes(FileName, ref Data);
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = 0.3333 + (double)j * progressFactor;
@@ -4688,8 +4691,16 @@ namespace OpenBve {
 														Data.Blocks[BlockIndex].GroundFreeObj[n].X = x;
 														Data.Blocks[BlockIndex].GroundFreeObj[n].Y = y;
 														Data.Blocks[BlockIndex].GroundFreeObj[n].Yaw = yaw * 0.0174532925199433;
-														Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch * 0.0174532925199433;
-														Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll * 0.0174532925199433;
+														if (!Data.IgnorePitchRoll)
+														{
+															Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch * 0.0174532925199433;
+															Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll * 0.0174532925199433;
+														}
+														else
+														{
+															Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = 0;
+															Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = 0;
+														}
 													} else {
 														if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length) {
 															Array.Resize<FreeObj[]>(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
@@ -4707,8 +4718,16 @@ namespace OpenBve {
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
-														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
-														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+														if (!Data.IgnorePitchRoll)
+														{
+															Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
+															Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+														}
+														else
+														{
+															Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = 0;
+															Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = 0;
+														}
 													}
 												}
 											}

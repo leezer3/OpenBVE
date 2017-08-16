@@ -138,6 +138,7 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\Script\DynamicLightParser.cs" />
