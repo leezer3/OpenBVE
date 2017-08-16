@@ -129,7 +129,7 @@ namespace OpenBve
 												{
 													byte[] bytes = texture.Bytes;
 													InvertLightness(bytes);
-													texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes);
+													texture = new OpenBveApi.Textures.Texture(texture.Width, texture.Height, 32, bytes, texture.Palette);
 												}
 												Textures[j] = OpenBve.Textures.RegisterTexture(texture);
 											}

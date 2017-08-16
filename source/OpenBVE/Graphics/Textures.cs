@@ -440,7 +440,7 @@ namespace OpenBve
 					bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
 				}
 			}
-			OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes);
+			OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes, texture.Palette);
 			return result;
 		}
 

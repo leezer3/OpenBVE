@@ -162,6 +162,8 @@ namespace OpenBve
 			internal bool RailDriverMPH = true;
 			/// <summary>Enables / disables various hacks for BVE related content</summary>
 			internal bool EnableBveTsHacks = true;
+			/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
+			internal bool OldTransparencyMode = true;
 
 			internal TimeTableMode TimeTableStyle;
 
@@ -240,6 +242,7 @@ namespace OpenBve
 				this.packageCompressionType = CompressionType.Zip;
 				this.RailDriverMPH = true;
 				this.EnableBveTsHacks = true;
+				this.OldTransparencyMode = true;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -454,6 +457,9 @@ namespace OpenBve
 														break;
 													}
 											} break;
+										case "oldtransparencymode":
+											Interface.CurrentOptions.OldTransparencyMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
 										case "viewingdistance":
 											{
 												int a;
@@ -768,6 +774,7 @@ namespace OpenBve
 			Builder.AppendLine("anisotropicFilteringMaximum = " + CurrentOptions.AnisotropicFilteringMaximum.ToString(Culture));
 			Builder.AppendLine("antiAliasingLevel = " + CurrentOptions.AntiAliasingLevel.ToString(Culture));
 			Builder.AppendLine("transparencyMode = " + ((int)CurrentOptions.TransparencyMode).ToString(Culture));
+			Builder.AppendLine("oldtransparencymode = " + (CurrentOptions.OldTransparencyMode ? "true" : "false"));
 			Builder.AppendLine("viewingDistance = " + CurrentOptions.ViewingDistance.ToString(Culture));
 			{
 				string t; switch (CurrentOptions.MotionBlur)
@@ -800,7 +807,7 @@ namespace OpenBve
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.Append("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
-			Builder.AppendLine("enablebvetshacks = " + (CurrentOptions.RailDriverMPH ? "true" : "false"));
+			Builder.AppendLine("enablebvetshacks = " + (CurrentOptions.EnableBveTsHacks ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[verbosity]");
 			Builder.AppendLine("showWarningMessages = " + (CurrentOptions.ShowWarningMessages ? "true" : "false"));

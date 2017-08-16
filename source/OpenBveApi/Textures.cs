@@ -1,7 +1,6 @@
 ﻿#pragma warning disable 0659, 0661
 
 using System;
-using System.Runtime.Remoting.Messaging;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures {
@@ -34,6 +33,11 @@ namespace OpenBveApi.Textures {
 		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		private readonly byte[] MyBytes;
+		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
+		private readonly Color24[] MyPalette;
+
+		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted pallete)</summary>
+		public bool CompatibleTransparencyMode;
 
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="X">The X-coordinate of the pixel</param>
@@ -58,10 +62,11 @@ namespace OpenBveApi.Textures {
 		/// <param name="height">The height of the texture in pixels.</param>
 		/// <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
 		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
+		/// <param name="palette">The original color pallete of the image (Before upsampling to 32-bit RGBA)</param>
 		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
-		public Texture(int width, int height, int bitsPerPixel, byte[] bytes)
+		public Texture(int width, int height, int bitsPerPixel, byte[] bytes, Color24[] palette)
 		{
 		    if (bitsPerPixel != 32) {
 				throw new ArgumentException("The number of bits per pixel is supported.");
@@ -76,6 +81,7 @@ namespace OpenBveApi.Textures {
 		    this.MyHeight = height;
 		    this.MyBitsPerPixel = bitsPerPixel;
 		    this.MyBytes = bytes;
+			this.MyPalette = palette;
 		}
 
 	    // --- properties ---
@@ -97,6 +103,16 @@ namespace OpenBveApi.Textures {
 				return this.MyBitsPerPixel;
 			}
 		}
+
+		/// <summary>Gets the restricted color palette for this texture, or a null reference if not applicable</summary>
+		public Color24[] Palette
+		{
+			get
+			{
+				return this.MyPalette;
+			}
+		}
+
 		/// <summary>Gets the texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
 		public byte[] Bytes {
 			get {
