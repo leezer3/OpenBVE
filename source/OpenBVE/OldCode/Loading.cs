@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using OpenBve.Parsers.Train;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -302,9 +303,17 @@ namespace OpenBve {
 				}
 				// add exterior section
 				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus) {
-					ObjectManager.UnifiedObject[] CarObjects;
-					ObjectManager.UnifiedObject[] BogieObjects;
-					ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, out CarObjects, out BogieObjects, TrainManager.Trains[k]);
+					ObjectManager.UnifiedObject[] CarObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length];
+					ObjectManager.UnifiedObject[] BogieObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
+					string tXml = OpenBveApi.Path.CombineFile(CurrentTrainFolder, "train.xml");
+					if (System.IO.File.Exists(tXml))
+					{
+						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects);
+					}
+					else
+					{
+						ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, TrainManager.Trains[k]);
+					}
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					//Stores the current array index of the bogie object to add
 					//Required as there are two bogies per car, and we're using a simple linear array....

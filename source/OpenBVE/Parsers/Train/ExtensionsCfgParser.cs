@@ -5,10 +5,8 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, out ObjectManager.UnifiedObject[] CarObjects, out ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train)
 		{
-			CarObjects = new ObjectManager.UnifiedObject[Train.Cars.Length];
-			BogieObjects = new ObjectManager.UnifiedObject[Train.Cars.Length * 2];
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 

@@ -11,20 +11,33 @@ namespace CarXmlConvertor
             InitializeComponent();
         }
 
-
-        /*
-         * All this currently does is to process an existing sound.cfg into a sound.xml file
-         * 
-         * TODO:
-         * When the XML replacement for the train.dat file is completed, this should be generated.
-         * Add a separate class containing this function
-         * 
-         */
-
         private void process_Click(object sender, EventArgs e)
         {
 	        ConvertTrainDat.Process();
-            ConvertSoundCfg.Process();
+	        if (!System.IO.File.Exists(ConvertSoundCfg.FileName))
+	        {
+				//TODO: Is it worth spinning up a default XML for the BVE2 sound-set??
+				if (MessageBox.Show("The selected folder does not contain a valid sound.cfg", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+				{
+					return;
+				}
+	        }
+	        if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
+	        {
+		        if (MessageBox.Show("The selected folder already contains a sound.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+		        {
+			        return;
+		        }
+	        }
+			ConvertSoundCfg.Process();
+	        if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml")))
+	        {
+		        if (MessageBox.Show("The selected folder already contains a train.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+		        {
+			        return;
+		        }
+	        }
+			ConvertExtensionsCfg.Process();
         }
         
 
@@ -35,6 +48,7 @@ namespace CarXmlConvertor
             {
 	            ConvertTrainDat.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "train.dat");
 				ConvertSoundCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "sound.cfg");
+	            ConvertExtensionsCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "extensions.cfg");
 				//TODO:
 				//Check for all train components when the above is complete
 				//Error checking??
