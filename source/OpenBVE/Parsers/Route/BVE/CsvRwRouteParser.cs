@@ -4359,8 +4359,8 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[0]);
-													if (!System.IO.File.Exists(f)) {
+													string f = Arguments[0];
+													if (!LocateSound(ref f, SoundPath)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														double speed = 0.0;
@@ -4389,8 +4389,8 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[0]);
-													if (!System.IO.File.Exists(f)) {
+													string f = Arguments[0];
+													if (!LocateSound(ref f, SoundPath)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														double x = 0.0, y = 0.0;
