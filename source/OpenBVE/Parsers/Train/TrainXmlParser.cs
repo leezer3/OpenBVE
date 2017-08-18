@@ -28,29 +28,44 @@ namespace OpenBve.Parsers.Train
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
+					if (i > Train.Cars.Length)
+					{
+						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
+						break;
+					}
 					if (DocumentNodes[i].HasChildNodes)
 					{
 						foreach (XmlNode c in DocumentNodes[i].ChildNodes)
 						{
+							//Note: Don't use the short-circuiting operator, as otherwise we need another if
 							switch (c.Name.ToLowerInvariant())
 							{
 								case "length":
-									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[i].Length))
+									double l;
+									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out l) | l <= 0.0)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid length defined for Car " + i + " in XML file " + fileName);
+										break;
 									}
+									Train.Cars[i].Length = l;
 									break;
 								case "width":
-									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[i].Width))
+									double w;
+									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out w) | w <= 0.0)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid width defined for Car " + i + " in XML file " + fileName);
+										break;
 									}
+									Train.Cars[i].Width = w;
 									break;
 								case "height":
-									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[i].Height))
+									double h;
+									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out h) | h <= 0.0)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid height defined for Car " + i + " in XML file " + fileName);
+										break;
 									}
+									Train.Cars[i].Height = h;
 									break;
 								case "motorcar":
 									if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
@@ -64,15 +79,13 @@ namespace OpenBve.Parsers.Train
 									break;
 								case "mass":
 									double m;
-									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out m))
+									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out m) | m <= 0.0)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid mass defined for Car " + i + " in XML file " + fileName);
+										break;
 									}
-									else
-									{
-										Train.Cars[i].Specs.MassEmpty = m;
-										Train.Cars[i].Specs.MassCurrent = m;
-									}
+									Train.Cars[i].Specs.MassEmpty = m;
+									Train.Cars[i].Specs.MassCurrent = m;
 									break;
 								case "frontaxle":
 									if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[i].FrontAxle.Position))
