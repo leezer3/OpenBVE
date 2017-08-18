@@ -528,8 +528,11 @@ namespace OpenBve
 					};
 					Cars[i].Sounds.RequestStop = new CarSound[]
 					{
+						//Stop
 						CarSound.Empty,
+						//Pass
 						CarSound.Empty,
+						//Ignored
 						CarSound.Empty
 					};
 					Cars[i].Sounds.Loop = TrainManager.CarSound.Empty;

@@ -440,6 +440,31 @@ namespace OpenBve
 										}
 									}
 									break;
+								case "requeststop":
+									if (!c.HasChildNodes)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of request stop sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "stop":
+												ParseNode(cc, out car.Sounds.RequestStop[0], center, SoundCfgParser.smallRadius);
+												break;
+											case "pass":
+												ParseNode(cc, out car.Sounds.RequestStop[1], center, SoundCfgParser.smallRadius);
+												break;
+											case "ignored":
+												ParseNode(cc, out car.Sounds.RequestStop[2], center, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
 							}
 						}
 					}
