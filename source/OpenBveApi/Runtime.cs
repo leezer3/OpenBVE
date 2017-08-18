@@ -397,6 +397,8 @@ namespace OpenBveApi.Runtime {
 		public bool OpenRightDoors;
 		/// <summary>The track position of this station.</summary>
 		public double DefaultTrackPosition;
+		/// <summary>The stop position applicable to the current train.</summary>
+		public double StopPosition;
 	}
 	
 	/// <summary>Represents the current state of the train.</summary>

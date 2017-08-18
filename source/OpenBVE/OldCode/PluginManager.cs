@@ -84,8 +84,9 @@ namespace OpenBve {
 							OpenLeftDoors = selectedStation.OpenLeftDoors,
 							OpenRightDoors = selectedStation.OpenRightDoors,
 							ForceStopSignal = selectedStation.ForceStopSignal,
-							DefaultTrackPosition = selectedStation.DefaultTrackPosition
-						};
+							DefaultTrackPosition = selectedStation.DefaultTrackPosition,
+							StopPosition = selectedStation.Stops[Game.GetStopIndex(Train.Station, Train.Cars.Length)].TrackPosition
+					};
 						currentRouteStations.Add(i);
 					}
 					StationsLoaded = true;
