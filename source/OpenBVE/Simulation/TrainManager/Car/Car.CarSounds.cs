@@ -56,6 +56,7 @@
 			internal CarSound SpringL;
 			internal CarSound SpringR;
 			internal CarSound[] Plugin;
+			internal CarSound[] RequestStop;
 			internal int FrontAxleRunIndex;
 			internal int RearAxleRunIndex;
 			internal int FrontAxleFlangeIndex;

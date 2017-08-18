@@ -312,6 +312,15 @@ namespace OpenBve
 			Bogus = 3
 		}
 
+		internal enum StopSkipMode
+		{
+			/// <summary>This stop is not skipped</summary>
+			None = 0,
+			/// <summary>The train decelerates through the station to a near stop</summary>
+			Decelerate = 1,
+			/// <summary>The train skips the stop at linespeed</summary>
+			Linespeed = 2
+		}
 
 		/// <summary>The root class for a train within the simulation</summary>
 		public class Train
@@ -343,6 +352,7 @@ namespace OpenBve
 			internal Game.GeneralAI AI;
 			internal double InternalTimerTimeElapsed;
 			internal bool Derailed;
+			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
 
 			/// <summary>Call this method to derail a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>
@@ -404,6 +414,15 @@ namespace OpenBve
 						new TrainManager.Horn(),
 						new TrainManager.Horn(),
 						new TrainManager.Horn()
+					};
+					Cars[i].Sounds.RequestStop = new CarSound[]
+					{
+						//Stop
+						CarSound.Empty,
+						//Pass
+						CarSound.Empty,
+						//Ignored
+						CarSound.Empty
 					};
 					Cars[i].Sounds.Loop = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.MasterControllerUp = TrainManager.CarSound.Empty;

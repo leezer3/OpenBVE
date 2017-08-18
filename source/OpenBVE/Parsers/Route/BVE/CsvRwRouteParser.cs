@@ -98,6 +98,7 @@ namespace OpenBve {
 				Data.Blocks[0].Transponder = new Transponder[] {};
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
 				Data.Markers = new Marker[] {};
+				Data.RequestStops = new StopRequest[] { };
 				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
 				Data.Structure.Poles = new ObjectManager.UnifiedObject[][]
 				{
@@ -960,6 +961,7 @@ namespace OpenBve {
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
 			Game.Stations = new Game.Station[] { };
+			Data.RequestStops = new StopRequest[] { };
 			int CurrentStation = -1;
 			int CurrentStop = -1;
 			bool DepartureSignalUsed = false;
@@ -3763,6 +3765,27 @@ namespace OpenBve {
 										CurrentStop = -1;
 										DepartureSignalUsed = false;
 									} break;
+								case "track.stationxml":
+									string fn = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+									if (!System.IO.File.Exists(fn))
+									{
+										Interface.AddMessage(Interface.MessageType.Error, true, "Station XML file " + fn + " not found in Track.StationXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										break;
+									}
+									CurrentStation++;
+									Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
+									StopRequest sr = new StopRequest();
+									sr.TrackPosition = Data.TrackPosition;
+									sr.StationIndex = CurrentStation;
+									Game.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
+									if (Game.Stations[CurrentStation].StationType == Game.StationType.RequestStop)
+									{
+										int l = Data.RequestStops.Length;
+										Array.Resize<StopRequest> (ref Data.RequestStops, l + 1);
+										Data.RequestStops[l] = sr;
+									}
+									Data.Blocks[BlockIndex].Station = CurrentStation;
+									break;
 								case "track.buffer":
 									{
 										if (!PreviewOnly) {

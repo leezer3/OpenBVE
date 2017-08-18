@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -166,6 +167,128 @@ namespace OpenBve {
 				}
 			}
 		}
+
+		internal class RequestStop
+		{
+			internal int Probability;
+			internal double Time = -1;
+			internal string StopMessage;
+			internal string PassMessage;
+		}
+
+		// stop request
+		internal class RequestStopEvent : GeneralEvent {
+			internal int StationIndex;
+			internal RequestStop Early;
+			internal RequestStop OnTime;
+			internal RequestStop Late;
+			internal bool FullSpeed;
+			internal int MaxCars;
+			internal RequestStopEvent(int stationIndex, int maxCars, bool fullSpeed, RequestStop onTime, RequestStop early, RequestStop late)
+			{
+				this.FullSpeed = fullSpeed;
+				this.OnTime = onTime;
+				this.StationIndex = stationIndex;
+				this.Early = early;
+				this.Late = late;
+				this.MaxCars = maxCars;
+			}
+			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			{
+				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
+				{
+					RequestStop stop; //Temp probability value
+					if (Early.Time != -1 && Game.SecondsSinceMidnight < Early.Time)
+					{
+						stop = Early;
+					}
+					else if (Early.Time != -1 && Game.SecondsSinceMidnight > Early.Time && Late.Time != -1 && Game.SecondsSinceMidnight < Late.Time)
+					{
+						stop = OnTime;
+					}
+					else if(Late.Time != -1 && Game.SecondsSinceMidnight > Late.Time)
+					{
+						stop = Late;
+					}
+					else
+					{
+						stop = OnTime;
+					}
+					if (MaxCars != 0 && Train.Cars.Length > MaxCars)
+					{
+						//Check whether our train length is valid for this before doing anything else
+						Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[2], 1.0, 1.0, Train, Train.DriverCar, false);
+						return;
+					}
+					if (Direction > 0)
+					{
+						
+						if (Program.RandomNumberGenerator.Next(0, 100) <= stop.Probability)
+						{
+							//We have hit our probability roll
+							if (Game.Stations[StationIndex].StopMode == Game.StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == Game.StationStopMode.PlayerRequestStop))
+							{
+								
+								//If our train can stop at this station, set it's index accordingly
+								Train.Station = StationIndex;
+								Train.NextStopSkipped = TrainManager.StopSkipMode.None;
+								//Play sound
+								Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[0], 1.0, 1.0, Train, Train.DriverCar, false);
+							}
+							else
+							{
+								//We don't meet the conditions for this request stop
+								if (FullSpeed)
+								{
+									//Pass at linespeed, rather than braking as if for stop
+									Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+								}
+								else
+								{
+									Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
+								}
+								//Play sound
+								Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train, Train.DriverCar, false);
+								//If message is not empty, add it
+								if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+								{
+									Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								}
+								return;
+							}
+							//Play sound
+							Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[0], 1.0, 1.0, Train, Train.DriverCar, false);
+							//If message is not empty, add it
+							if (!string.IsNullOrEmpty(stop.StopMessage) && Train == TrainManager.PlayerTrain)
+							{
+								Game.AddMessage(stop.StopMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+							}
+						}
+						else
+						{
+							Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train, Train.DriverCar, false);
+							if (FullSpeed)
+							{
+								//Pass at linespeed, rather than braking as if for stop
+								Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+							}
+							else
+							{
+								Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
+							}
+							//Play sound
+							Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train, Train.DriverCar, false);
+							//If message is not empty, add it
+							if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+							{
+								Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		// station pass alarm
 		internal class StationPassAlarmEvent : GeneralEvent {
 			internal StationPassAlarmEvent(double TrackPositionDelta) {
@@ -211,7 +334,7 @@ namespace OpenBve {
 						Train.Station = -1;
 					} else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
 							return;
 						}
@@ -251,7 +374,11 @@ namespace OpenBve {
 					if (Direction < 0) {
 						Train.Station = this.StationIndex;
 						Train.StationRearCar = true;
-						Train.LastStation = this.StationIndex;
+						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						{
+							Train.LastStation = this.StationIndex;
+						}
+						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
 					} else if (Direction > 0) {
 						if (Train.Station == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {

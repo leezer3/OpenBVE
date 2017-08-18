@@ -36,7 +36,13 @@ namespace OpenBve
 			/// <summary>The player train stops at this station, AI trains do not</summary>
 			PlayerStop = 2,
 			/// <summary>The player train passes this station, AI trains stop</summary>
-			PlayerPass = 3
+			PlayerPass = 3,
+			/// <summary>This station is a random request stop for all trains</summary>
+			AllRequestStop = 4,
+			/// <summary>This station is a random request stop for the player train only</summary>
+			PlayerRequestStop = 5
+
+
 		}
 
 		/// <summary>Defines the available station types</summary>
@@ -44,7 +50,8 @@ namespace OpenBve
 		{
 			Normal = 0,
 			ChangeEnds = 1,
-			Terminal = 2
+			Terminal = 2,
+			RequestStop = 3
 		}
 
 		/// <summary>Defines a station</summary>
@@ -114,16 +121,16 @@ namespace OpenBve
 		/// <summary>Indicates whether the player's train stops at a station.</summary>
 		internal static bool PlayerStopsAtStation(int StationIndex)
 		{
-			return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerStop;
+			return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerStop | Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 		}
 		/// <summary>Indicates whether a train stops at a station.</summary>
 		internal static bool StopsAtStation(int StationIndex, TrainManager.Train Train)
 		{
 			if (Train == TrainManager.PlayerTrain)
 			{
-				return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerStop;
+				return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerStop | Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 			}
-			return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerPass;
+			return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerPass | Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 		}
 	}
 }

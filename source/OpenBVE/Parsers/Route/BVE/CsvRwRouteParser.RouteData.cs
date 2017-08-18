@@ -27,6 +27,7 @@ namespace OpenBve
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
+			internal StopRequest[] RequestStops;
 			internal int FirstUsedBlock;
 			internal bool IgnorePitchRoll;
 
