@@ -1353,6 +1353,9 @@ namespace OpenBve {
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			this.Close();
+			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
+			//This fixes the main form failing to close on Linux
+			Application.DoEvents();
 		}
 
 
