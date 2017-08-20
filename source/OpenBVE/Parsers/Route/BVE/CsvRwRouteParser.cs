@@ -1267,6 +1267,13 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Interval " + k.ToString(Culture) + " must be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													continue;
 												}
+												if (o > 43200 && Interface.CurrentOptions.EnableBveTsHacks)
+												{
+													//Southern Blighton- Treston park has a runinterval of well over 24 hours, and there are likely others
+													//Discard this
+													Interface.AddMessage(Interface.MessageType.Error, false, "Interval " + k.ToString(Culture) + " is greater than 12 hours in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													continue;
+												}
 												intervals.Add(o);
 											}
 											intervals.Sort();
