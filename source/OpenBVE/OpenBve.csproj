@@ -175,6 +175,7 @@
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
