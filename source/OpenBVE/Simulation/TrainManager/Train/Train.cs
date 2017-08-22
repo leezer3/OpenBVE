@@ -37,6 +37,59 @@ namespace OpenBve
 			internal bool Derailed;
 			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
 
+			internal void Initialize()
+			{
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].Initialize();
+				}
+				UpdateAtmosphericConstants(this);
+				Update(0.0);
+			}
+
+			/// <summary>Disposes of the train</summary>
+			internal void Dispose()
+			{
+				State = TrainState.Disposed;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					int s = Cars[i].CurrentCarSection;
+					if (s >= 0)
+					{
+						for (int j = 0; j < Cars[i].CarSections[s].Elements.Length; j++)
+						{
+							Renderer.HideObject(Cars[i].CarSections[s].Elements[j].ObjectIndex);
+						}
+					}
+					s = Cars[i].FrontBogie.CurrentCarSection;
+					if (s >= 0)
+					{
+						for (int j = 0; j < Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
+						{
+							Renderer.HideObject(Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
+						}
+					}
+					s = Cars[i].RearBogie.CurrentCarSection;
+					if (s >= 0)
+					{
+						for (int j = 0; j < Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
+						{
+							Renderer.HideObject(Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
+						}
+					}
+				}
+				Sounds.StopAllSounds(this);
+
+				for (int i = 0; i < Game.Sections.Length; i++)
+				{
+					Game.Sections[i].Leave(this);
+				}
+				if (Game.Sections.Length != 0)
+				{
+					Game.UpdateSection(Game.Sections.Length - 1);
+				}
+			}
+
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
 			internal void Update(double TimeElapsed)
@@ -133,6 +186,48 @@ namespace OpenBve
 					{
 						AI.Trigger(this, TimeElapsed);
 					}
+				}
+			}
+
+			/// <summary>Updates the safety system for this train</summary>
+			internal void UpdateSafetySystem()
+			{
+				Game.UpdatePluginSections(this);
+				if (Plugin != null)
+				{
+					Plugin.LastSection = CurrentSectionIndex;
+					Plugin.UpdatePlugin();
+				}
+			}
+
+			/// <summary>Updates the objects for all cars in this train</summary>
+			/// <param name="TimeElapsed">The time elapsed</param>
+			/// <param name="ForceUpdate">Whether this is a forced update</param>
+			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
+			{
+				if (!Game.MinimalisticSimulation)
+				{
+					for (int i = 0; i < Cars.Length; i++)
+					{
+						Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
+						Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+						Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+					}
+				}
+			}
+
+			internal void UpdateCabObjects()
+			{
+				//BUG: ?? This probably ought to be the driver car index, not zero ??
+				Cars[0].UpdateObjects(0.0, true, false);
+			}
+
+			/// <summary>Synchronizes the entire train after a period of infrequent updates</summary>
+			internal void Synchronize()
+			{
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].Syncronize();
 				}
 			}
 

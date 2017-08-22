@@ -168,13 +168,7 @@ namespace OpenBve
 			internal bool AnticipatedLeftDoorsOpened;
 			internal bool AnticipatedRightDoorsOpened;
 		}
-		internal struct CarBrightness
-		{
-			internal float PreviousBrightness;
-			internal double PreviousTrackPosition;
-			internal float NextBrightness;
-			internal double NextTrackPosition;
-		}
+		
 
 		internal struct CarSound
 		{
@@ -404,25 +398,7 @@ namespace OpenBve
 		// ================================
 
 		// move car
-		internal static void MoveCar(Train Train, int CarIndex, double Delta, double TimeElapsed)
-		{
-			if (Train.State != TrainState.Disposed)
-			{
-				TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].FrontAxle.Follower, Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition + Delta, true, true);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower, Train.Cars[CarIndex].FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].FrontBogie.RearAxle.Follower, Train.Cars[CarIndex].FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
-				if (Train.State != TrainState.Disposed)
-				{
-					TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].RearAxle.Follower, Train.Cars[CarIndex].RearAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].RearBogie.FrontAxle.Follower, Train.Cars[CarIndex].RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].RearBogie.RearAxle.Follower, Train.Cars[CarIndex].RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
-					if (Train.State != TrainState.Disposed)
-					{
-						TrackManager.UpdateTrackFollower(ref Train.Cars[CarIndex].BeaconReceiver, Train.Cars[CarIndex].BeaconReceiver.TrackPosition + Delta, true, true);
-					}
-				}
-			}
-		}
+		
 
 		// update atmospheric constants
 		internal static void UpdateAtmosphericConstants(Train Train)
@@ -568,153 +544,22 @@ namespace OpenBve
 			}
 		}
 
-		// initialize train
-		internal static void InitializeTrain(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				InitializeCar(Train, i);
-			}
-			UpdateAtmosphericConstants(Train);
-			Train.Update(0.0);
-		}
-
-		// initialize car
-		private static void InitializeCar(Train Train, int CarIndex)
-		{
-			int c = CarIndex;
-			for (int i = 0; i < Train.Cars[c].CarSections.Length; i++)
-			{
-				Train.Cars[c].CarSections[i].Initialize(false);
-			}
-			for (int i = 0; i < Train.Cars[c].FrontBogie.CarSections.Length; i++)
-			{
-				Train.Cars[c].FrontBogie.CarSections[i].Initialize(false);
-			}
-			for (int i = 0; i < Train.Cars[c].RearBogie.CarSections.Length; i++)
-			{
-				Train.Cars[c].RearBogie.CarSections[i].Initialize(false);
-			}
-			Train.Cars[c].Brightness.PreviousBrightness = 1.0f;
-			Train.Cars[c].Brightness.NextBrightness = 1.0f;
-		}
 		
-		// update train objects
+		/// <summary>Updates the objects for all trains within the simulation world</summary>
+		/// <param name="TimeElapsed">The time elapsed</param>
+		/// <param name="ForceUpdate">Whether this is a forced update</param>
 		internal static void UpdateTrainObjects(double TimeElapsed, bool ForceUpdate)
 		{
-			/*
-			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
-			{
-				UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
-			});
-			 */
 			for (int i = 0; i < Trains.Length; i++)
 			{
-				UpdateTrainObjects(Trains[i], TimeElapsed, ForceUpdate);
+				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
 		}
 
-		internal static void UpdateCabObjects(Train Train)
-		{
-			UpdateTrainObjects(Train, 0, 0.0, true, false);
-		}
-		private static void UpdateTrainObjects(Train Train, double TimeElapsed, bool ForceUpdate)
-		{
-			if (!Game.MinimalisticSimulation)
-			{
-				for (int i = 0; i < Train.Cars.Length; i++)
-				{
-					UpdateTrainObjects(Train, i, TimeElapsed, ForceUpdate, true);
-					Train.Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-					Train.Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-				}
-			}
-		}
-		private static void UpdateTrainObjects(Train Train, int CarIndex, double TimeElapsed, bool ForceUpdate, bool EnableDamping) {
-			// calculate positions and directions for section element update
-			int c = CarIndex;
-			double dx = Train.Cars[c].FrontAxle.Follower.WorldPosition.X - Train.Cars[c].RearAxle.Follower.WorldPosition.X;
-			double dy = Train.Cars[c].FrontAxle.Follower.WorldPosition.Y - Train.Cars[c].RearAxle.Follower.WorldPosition.Y;
-			double dz = Train.Cars[c].FrontAxle.Follower.WorldPosition.Z - Train.Cars[c].RearAxle.Follower.WorldPosition.Z;
-			double t = dx * dx + dy * dy + dz * dz;
-			double ux, uy, uz, sx, sy, sz;
-			if (t != 0.0)
-			{
-				t = 1.0 / Math.Sqrt(t);
-				dx *= t; dy *= t; dz *= t;
-				ux = Train.Cars[c].Up.X;
-				uy = Train.Cars[c].Up.Y;
-				uz = Train.Cars[c].Up.Z;
-				sx = dz * uy - dy * uz;
-				sy = dx * uz - dz * ux;
-				sz = dy * ux - dx * uy;
-			}
-			else
-			{
-				ux = 0.0; uy = 1.0; uz = 0.0;
-				sx = 1.0; sy = 0.0; sz = 0.0;
-			}
-			double px = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.X + Train.Cars[c].RearAxle.Follower.WorldPosition.X);
-			double py = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.Y + Train.Cars[c].RearAxle.Follower.WorldPosition.Y);
-			double pz = 0.5 * (Train.Cars[c].FrontAxle.Follower.WorldPosition.Z + Train.Cars[c].RearAxle.Follower.WorldPosition.Z);
-			double d = 0.5 * (Train.Cars[c].FrontAxle.Position + Train.Cars[c].RearAxle.Position);
-			px -= dx * d;
-			py -= dy * d;
-			pz -= dz * d;
-			// determine visibility
-			double cdx = px - World.AbsoluteCameraPosition.X;
-			double cdy = py - World.AbsoluteCameraPosition.Y;
-			double cdz = pz - World.AbsoluteCameraPosition.Z;
-			double dist = cdx * cdx + cdy * cdy + cdz * cdz;
-			double bid = Interface.CurrentOptions.ViewingDistance + Train.Cars[c].Length;
-			Train.Cars[c].CurrentlyVisible = dist < bid * bid;
-			// Updates the brightness value
-			byte dnb;
-			{
-				float Brightness = (float)(Train.Cars[c].Brightness.NextTrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition);
+		
+		
+		
 
-				//1.0f represents a route brightness value of 255
-				//0.0f represents a route brightness value of 0
-
-				if (Brightness != 0.0f)
-				{
-					Brightness = (float)(Train.Cars[c].FrontAxle.Follower.TrackPosition - Train.Cars[c].Brightness.PreviousTrackPosition) / Brightness;
-					if (Brightness < 0.0f) Brightness = 0.0f;
-					if (Brightness > 1.0f) Brightness = 1.0f;
-					Brightness = Train.Cars[c].Brightness.PreviousBrightness * (1.0f - Brightness) + Train.Cars[c].Brightness.NextBrightness * Brightness;
-				}
-				else
-				{
-					Brightness = Train.Cars[c].Brightness.PreviousBrightness;
-				}
-				//Calculate the cab brightness
-				double ccb = Math.Round(255.0 * (double)(1.0 - Brightness));
-				//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-				dnb = (byte) Math.Min(Renderer.DynamicCabBrightness, ccb);
-			}
-			// update current section
-			int s = Train.Cars[c].CurrentCarSection;
-			if (s >= 0)
-			{
-				for (int i = 0; i < Train.Cars[c].CarSections[s].Elements.Length; i++)
-				{
-					Train.Cars[c].UpdateCarSectionElement(s, i, new Vector3(px, py, pz), new Vector3(dx, dy, dz), new Vector3(ux, uy, uz), new Vector3(sx, sy, sz), Train.Cars[c].CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
-					
-					// brightness change
-					int o = Train.Cars[c].CarSections[s].Elements[i].ObjectIndex;
-					if (ObjectManager.Objects[o] != null)
-					{
-						for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
-						{
-							ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
-						}
-					}
-				}
-			}
-		}
-
-
-		// update train
 		
 
 		/// <summary>This method should be called once a frame to update the position, speed and state of all trains within the simulation</summary>
@@ -1057,73 +902,11 @@ namespace OpenBve
 			});
 		}
 
-		// dispose train
-		internal static void DisposeTrain(Train Train)
-		{
-			Train.State = TrainState.Disposed;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				int s = Train.Cars[i].CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-				s = Train.Cars[i].FrontBogie.CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-				s = Train.Cars[i].RearBogie.CurrentCarSection;
-				if (s >= 0)
-				{
-					for (int j = 0; j < Train.Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
-					{
-						Renderer.HideObject(Train.Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
-					}
-				}
-			}
-			Sounds.StopAllSounds(Train);
-
-			for (int i = 0; i < Game.Sections.Length; i++)
-			{
-				Game.Sections[i].Leave(Train);
-			}
-			if (Game.Sections.Length != 0)
-			{
-				Game.UpdateSection(Game.Sections.Length - 1);
-			}
-		}
-
 		// synchronize train
-		private static void SynchronizeTrain(Train Train)
-		{
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				double s = 0.5 * (Train.Cars[i].FrontAxle.Follower.TrackPosition + Train.Cars[i].RearAxle.Follower.TrackPosition);
-				double d = 0.5 * (Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].RearAxle.Follower.TrackPosition);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].FrontAxle.Follower, s + d, false, false);
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].RearAxle.Follower, s - d, false, false);
-				double b = Train.Cars[i].FrontAxle.Follower.TrackPosition - Train.Cars[i].FrontAxle.Position + Train.Cars[i].BeaconReceiverPosition;
-				TrackManager.UpdateTrackFollower(ref Train.Cars[i].BeaconReceiver, b, false, false);
-			}
-		}
+		
 
 		// update safety system
-		private static void UpdateSafetySystem(Train Train)
-		{
-			Game.UpdatePluginSections(Train);
-			if (Train.Plugin != null)
-			{
-				Train.Plugin.LastSection = Train.CurrentSectionIndex;
-				Train.Plugin.UpdatePlugin();
-			}
-		}
+		
 
 		// apply notch
 		internal static void ApplyNotch(Train Train, int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative)
@@ -1251,7 +1034,6 @@ namespace OpenBve
 			}
 		}	
 
-		// update train passengers
 		
 
 		// update speeds
@@ -1831,7 +1613,7 @@ namespace OpenBve
 			// move cars
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				MoveCar(Train, i, Train.Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
+				Train.Cars[i].Move(Train.Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
 				if (Train.State == TrainState.Disposed)
 				{
 					return;
@@ -2164,7 +1946,7 @@ namespace OpenBve
 			// safety system
 			if (!Game.MinimalisticSimulation | Train != PlayerTrain)
 			{
-				UpdateSafetySystem(Train);
+				Train.UpdateSafetySystem();
 			}
 			{
 				// breaker sound
@@ -2223,7 +2005,7 @@ namespace OpenBve
 			if (Train.InternalTimerTimeElapsed > 10.0)
 			{
 				Train.InternalTimerTimeElapsed -= 10.0;
-				SynchronizeTrain(Train);
+				Train.Synchronize();
 				UpdateAtmosphericConstants(Train);
 			}
 		}

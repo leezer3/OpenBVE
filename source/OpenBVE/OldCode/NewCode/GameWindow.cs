@@ -491,7 +491,7 @@ namespace OpenBve
 			// initialize trains
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
-				TrainManager.InitializeTrain(TrainManager.Trains[i]);
+				TrainManager.Trains[i].Initialize();
 				int s = i == TrainManager.PlayerTrain.TrainIndex ? PlayerFirstStationIndex : OtherFirstStationIndex;
 				if (s >= 0)
 				{
@@ -517,8 +517,8 @@ namespace OpenBve
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
 					double length = TrainManager.Trains[i].Cars[0].Length;
-					TrainManager.MoveCar(TrainManager.Trains[i], j, -length, 0.01);
-					TrainManager.MoveCar(TrainManager.Trains[i], j, length, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(-length, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(length, 0.01);
 				}
 			}
 			// score
@@ -563,7 +563,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
-					TrainManager.MoveCar(TrainManager.Trains[i], j, p, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(p, 0.01);
 				}
 			}
 			// timetable
@@ -626,7 +626,7 @@ namespace OpenBve
 			//HACK: This function calls a single update on all objects attached to the player's train
 			//      but ignores any specified damping so that all needles etc. are in the correct place
 			//      for the first frame, rather than spinning wildly to get to the starting point.
-			TrainManager.UpdateCabObjects(TrainManager.PlayerTrain);
+			TrainManager.PlayerTrain.UpdateCabObjects();
 			// timetable
 			if (TrainManager.PlayerTrain.Station >= 0)
 			{

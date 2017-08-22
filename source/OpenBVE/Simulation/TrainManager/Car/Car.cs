@@ -47,6 +47,14 @@ namespace OpenBve
 			/// <summary>The index of the car within the train</summary>
 			internal int Index;
 
+			internal struct CarBrightness
+			{
+				internal float PreviousBrightness;
+				internal double PreviousTrackPosition;
+				internal float NextBrightness;
+				internal double NextTrackPosition;
+			}
+
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
@@ -54,6 +62,61 @@ namespace OpenBve
 				CarSections = new CarSection[] { };
 			}
 
+			/// <summary>Moves the car</summary>
+			/// <param name="Delta">The delta to move</param>
+			/// <param name="TimeElapsed">The time elapsed</param>
+			internal void Move(double Delta, double TimeElapsed)
+			{
+				if (baseTrain.State != TrainState.Disposed)
+				{
+					TrackManager.UpdateTrackFollower(ref FrontAxle.Follower, FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref FrontBogie.FrontAxle.Follower, FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+					TrackManager.UpdateTrackFollower(ref FrontBogie.RearAxle.Follower, FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					if (baseTrain.State != TrainState.Disposed)
+					{
+						TrackManager.UpdateTrackFollower(ref RearAxle.Follower, RearAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref RearBogie.FrontAxle.Follower, RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+						TrackManager.UpdateTrackFollower(ref RearBogie.RearAxle.Follower, RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						if (baseTrain.State != TrainState.Disposed)
+						{
+							TrackManager.UpdateTrackFollower(ref BeaconReceiver, BeaconReceiver.TrackPosition + Delta, true, true);
+						}
+					}
+				}
+			}
+
+			/// <summary>Initializes the car</summary>
+			internal void Initialize()
+			{
+				for (int i = 0; i < CarSections.Length; i++)
+				{
+					CarSections[i].Initialize(false);
+				}
+				for (int i = 0; i < FrontBogie.CarSections.Length; i++)
+				{
+					FrontBogie.CarSections[i].Initialize(false);
+				}
+				for (int i = 0; i < RearBogie.CarSections.Length; i++)
+				{
+					RearBogie.CarSections[i].Initialize(false);
+				}
+				Brightness.PreviousBrightness = 1.0f;
+				Brightness.NextBrightness = 1.0f;
+			}
+
+			/// <summary>Synchronizes the car after a period of infrequent updates</summary>
+			internal void Syncronize()
+			{
+				double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
+				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
+				TrackManager.UpdateTrackFollower(ref FrontAxle.Follower, s + d, false, false);
+				TrackManager.UpdateTrackFollower(ref RearAxle.Follower, s - d, false, false);
+				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
+				TrackManager.UpdateTrackFollower(ref BeaconReceiver, b, false, false);
+			}
+
+			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
+			/// <param name="currentObject">The object to add to the car sections array</param>
 			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
 			{
 				int j = CarSections.Length;
@@ -82,6 +145,8 @@ namespace OpenBve
 				}
 			}
 
+			/// <summary>Changes the currently visible car section</summary>
+			/// <param name="SectionIndex">The index of the new car section to display</param>
 			internal void ChangeCarSection(int SectionIndex)
 			{
 				for (int i = 0; i < CarSections.Length; i++)
@@ -111,9 +176,107 @@ namespace OpenBve
 				CurrentCarSection = SectionIndex;
 				//When changing car section, do not apply damping
 				//This stops objects from spinning if the last position before they were hidden is different
-				UpdateTrainObjects(baseTrain, Index, 0.0, true, false);
+				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);
 			}
 
+			/// <summary>Updates the currently displayed objects for this car</summary>
+			/// <param name="TimeElapsed">The time elapsed</param>
+			/// <param name="ForceUpdate">Whether this is a forced update</param>
+			/// <param name="EnableDamping">Whether damping is applied during this update (Skipped on transitions between camera views etc.)</param>
+			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate, bool EnableDamping)
+			{
+				// calculate positions and directions for section element update
+				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = dx * dx + dy * dy + dz * dz;
+				double ux, uy, uz, sx, sy, sz;
+				if (t != 0.0)
+				{
+					t = 1.0 / Math.Sqrt(t);
+					dx *= t; dy *= t; dz *= t;
+					ux = Up.X;
+					uy = Up.Y;
+					uz = Up.Z;
+					sx = dz * uy - dy * uz;
+					sy = dx * uz - dz * ux;
+					sz = dy * ux - dx * uy;
+				}
+				else
+				{
+					ux = 0.0; uy = 1.0; uz = 0.0;
+					sx = 1.0; sy = 0.0; sz = 0.0;
+				}
+				double px = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+				double py = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+				double pz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+				double d = 0.5 * (FrontAxle.Position + RearAxle.Position);
+				px -= dx * d;
+				py -= dy * d;
+				pz -= dz * d;
+				// determine visibility
+				double cdx = px - World.AbsoluteCameraPosition.X;
+				double cdy = py - World.AbsoluteCameraPosition.Y;
+				double cdz = pz - World.AbsoluteCameraPosition.Z;
+				double dist = cdx * cdx + cdy * cdy + cdz * cdz;
+				double bid = Interface.CurrentOptions.ViewingDistance + Length;
+				CurrentlyVisible = dist < bid * bid;
+				// Updates the brightness value
+				byte dnb;
+				{
+					float b = (float)(Brightness.NextTrackPosition - Brightness.PreviousTrackPosition);
+
+					//1.0f represents a route brightness value of 255
+					//0.0f represents a route brightness value of 0
+
+					if (b != 0.0f)
+					{
+						b = (float)(FrontAxle.Follower.TrackPosition - Brightness.PreviousTrackPosition) / b;
+						if (b < 0.0f) b = 0.0f;
+						if (b > 1.0f) b = 1.0f;
+						b = Brightness.PreviousBrightness * (1.0f - b) + Brightness.NextBrightness * b;
+					}
+					else
+					{
+						b = Brightness.PreviousBrightness;
+					}
+					//Calculate the cab brightness
+					double ccb = Math.Round(255.0 * (double)(1.0 - b));
+					//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
+					dnb = (byte)Math.Min(Renderer.DynamicCabBrightness, ccb);
+				}
+				// update current section
+				int s = CurrentCarSection;
+				if (s >= 0)
+				{
+					for (int i = 0; i < CarSections[s].Elements.Length; i++)
+					{
+						UpdateCarSectionElement(s, i, new Vector3(px, py, pz), new Vector3(dx, dy, dz), new Vector3(ux, uy, uz), new Vector3(sx, sy, sz), CurrentlyVisible, TimeElapsed, ForceUpdate, EnableDamping);
+
+						// brightness change
+						int o = CarSections[s].Elements[i].ObjectIndex;
+						if (ObjectManager.Objects[o] != null)
+						{
+							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+							{
+								ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+							}
+						}
+					}
+				}
+			}
+
+			/// <summary>Updates the given car section element</summary>
+			/// <param name="SectionIndex">The car section</param>
+			/// <param name="ElementIndex">The element within the car section</param>
+			/// <param name="Position"></param>
+			/// <param name="Direction"></param>
+			/// <param name="Up"></param>
+			/// <param name="Side"></param>
+			/// <param name="Show"></param>
+			/// <param name="TimeElapsed"></param>
+			/// <param name="ForceUpdate"></param>
+			/// <param name="EnableDamping"></param>
 			internal void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
@@ -461,7 +624,7 @@ namespace OpenBve
 						{
 							if (!OpenBve.Sounds.IsPlaying(Sounds.SpringL.Source))
 							{
-								OpenBveApi.Math.Vector3 pos = Sounds.SpringL.Position;
+								Vector3 pos = Sounds.SpringL.Position;
 								Sounds.SpringL.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
 							}
 						}
@@ -474,7 +637,7 @@ namespace OpenBve
 						{
 							if (!OpenBve.Sounds.IsPlaying(Sounds.SpringR.Source))
 							{
-								OpenBveApi.Math.Vector3 pos = Sounds.SpringR.Position;
+								Vector3 pos = Sounds.SpringR.Position;
 								Sounds.SpringR.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
 							}
 						}
@@ -549,7 +712,7 @@ namespace OpenBve
 							Sounds.SoundBuffer buffer = Sounds.Flange[i].Buffer;
 							if (buffer != null)
 							{
-								OpenBveApi.Math.Vector3 pos = Sounds.Flange[i].Position;
+								Vector3 pos = Sounds.Flange[i].Position;
 								Sounds.Flange[i].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
 							}
 						}

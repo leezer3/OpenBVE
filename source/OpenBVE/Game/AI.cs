@@ -930,12 +930,12 @@ namespace OpenBve
                         double d = p - Train.Cars[0].FrontAxle.Follower.TrackPosition;
                         for (int j = 0; j < Train.Cars.Length; j++)
                         {
-                            TrainManager.MoveCar(Train, j, d, 0.1);
+							Train.Cars[j].Move(d, 0.1);
                         }
                     }
                     else
                     {
-                        TrainManager.DisposeTrain(Train);
+                        Train.Dispose();
                     }
                 }
             }
