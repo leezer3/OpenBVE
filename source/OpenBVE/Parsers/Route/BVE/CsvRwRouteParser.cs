@@ -453,6 +453,11 @@ namespace OpenBve {
 								}
 								break;
 							case '@':
+								if (Level == 1 & IsRW & Interface.CurrentOptions.EnableBveTsHacks)
+								{
+									//BVE2 doesn't care if a bracket is unclosed, fixes various routefiles
+									Level--;
+								}
 								if (Level == 0 & IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";")) {
