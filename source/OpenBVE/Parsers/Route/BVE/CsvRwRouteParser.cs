@@ -458,6 +458,25 @@ namespace OpenBve {
 									//BVE2 doesn't care if a bracket is unclosed, fixes various routefiles
 									Level--;
 								}
+								else if (Level == 2 && IsRW & Interface.CurrentOptions.EnableBveTsHacks)
+								{
+									int k = j;
+									while (k > 0)
+									{
+										k--;
+										if (Lines[i][k] == '(')
+										{
+											//Opening bracket has been used instead of closing bracket, again BVE2 ignores this
+											Level -= 2;
+											break;
+										}
+										if (!char.IsWhiteSpace(Lines[i][k]))
+										{
+											//Bracket not found, and this isn't whitespace either, so break out
+											break;
+										}
+									}
+								}
 								if (Level == 0 & IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim();
 									if (t.Length > 0 && !t.StartsWith(";")) {
