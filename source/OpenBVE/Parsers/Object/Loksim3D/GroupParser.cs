@@ -181,7 +181,26 @@ namespace OpenBve
 						{
 							continue;
 						}
-						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+						ObjectManager.StaticObject Object = null;
+						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						try {
+							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
+							{
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode);
+							}
+							else if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
+							{
+								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+							}
+							else
+							{
+								throw new Exception("Format " + System.IO.Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
+							}
+						}
+						catch (Exception ex) {
+							Interface.AddMessage(Interface.MessageType.Error, false, ex.Message);
+						}
+						
 						if (Object != null)
 						{
 							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
@@ -201,6 +220,28 @@ namespace OpenBve
 							{
 								Result.Objects[i].StateFunction =
 									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+							}
+						}
+						else if (AnimatedObject != null)
+						{
+							int rl = Result.Objects.Length;
+							int l = AnimatedObject.Objects.Length;
+							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + l);
+							for (int o = rl; o < rl + l; o++)
+							{
+								if (AnimatedObject.Objects[o - rl] != null)
+								{
+									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
+									for (int si = 0; si < Result.Objects[o].States.Length; si++)
+									{
+										Result.Objects[o].States[si].Position += CurrentObjects[i].Position;
+									}
+								}
+								else
+								{
+									Result.Objects[o] = new ObjectManager.AnimatedObject();
+									Result.Objects[o].States = new ObjectManager.AnimatedObjectState[0];
+								}
 							}
 						}
 					}

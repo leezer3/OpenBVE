@@ -47,7 +47,7 @@ namespace OpenBveApi
 
 						//A char of '\' or '/' denotes a reference to the base Loksim3D directory
 						//Split the path, and find the first directory in it
-						string[] splitPath = relative.Split(new char['\\'], StringSplitOptions.RemoveEmptyEntries);
+						string[] splitPath = relative.Split(new[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
 						DirectoryInfo d = new DirectoryInfo(absolute);
 						while (d.Parent != null)
 						{
