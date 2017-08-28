@@ -33,7 +33,7 @@ namespace OpenBve
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
 		/// <param name="LoadMode">The object load mode</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			//May need to be changed to use de-DE
@@ -131,7 +131,10 @@ namespace OpenBve
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
 										{
-											GruppenObject Object = new GruppenObject();
+											GruppenObject Object = new GruppenObject
+											{
+												Rotation = Rotation
+											};
 											foreach (XmlAttribute attribute in childNode.Attributes)
 											{
 												switch (attribute.Name)
@@ -156,10 +159,11 @@ namespace OpenBve
 														break;
 													case "Rotation":
 														string[] SplitRotation = attribute.Value.Split(';');
-
-														double.TryParse(SplitRotation[0], out Object.Rotation.X);
-														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
-														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
+														Vector3 r;
+														double.TryParse(SplitRotation[0], out r.X);
+														double.TryParse(SplitRotation[1], out r.Y);
+														double.TryParse(SplitRotation[2], out r.Z);
+														Object.Rotation += r;
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
@@ -195,7 +199,7 @@ namespace OpenBve
 						{
 							if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
-								AnimatedObject = (ObjectManager.AnimatedObjectCollection)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
 							}
 							else if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{

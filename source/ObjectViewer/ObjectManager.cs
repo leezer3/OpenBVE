@@ -1012,7 +1012,12 @@ namespace OpenBve
 
         // load object
         internal enum ObjectLoadMode { Normal, DontAllowUnloadOfTextures }
-        internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
+		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		{
+			return LoadObject(FileName, Encoding, LoadMode, PreserveVertices, ForceTextureRepeatX, ForceTextureRepeatY, new Vector3());
+		}
+
+		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
         {
 			if (FileName == null)
 			{
@@ -1064,7 +1069,7 @@ namespace OpenBve
                     Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY, Rotation);
                     break;
                 case ".l3dgrp":
-                    Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
+                    Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, Rotation);
                     break;
                 default:
                     Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);

@@ -1231,7 +1231,7 @@ namespace OpenBve {
 						Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 						break;
 					case ".l3dgrp":
-						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
+						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, new Vector3());
 						break;
 					case ".l3dobj":
 						Result = Ls3DObjectParser.ReadObject(FileName, LoadMode, new Vector3());
