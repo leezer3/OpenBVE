@@ -19,6 +19,8 @@ namespace OpenBve
 			/// <summary>The FunctionScript attached to the mesh, controlling it's animations</summary>
 			internal string FunctionScript;
 
+			internal bool FixedDynamicVisibility;
+
 			/// <summary>Creates a new GruppenObject</summary>
 			internal GruppenObject()
 			{
@@ -173,6 +175,23 @@ namespace OpenBve
 														//Defines when the object should be hidden
 														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
 														break;
+													case "FixedDynamicVisibility":
+														if (attribute.Value.ToLowerInvariant() == "true")
+														{
+															Object.FixedDynamicVisibility = true;
+														}
+														else
+														{
+															Object.FixedDynamicVisibility = false;
+														}
+														break;
+													case "DynamicVisibility":
+														if (Object.FixedDynamicVisibility)
+														{
+															Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetDynamicFunction(attribute.Value));
+															int t = 0;
+														}
+														break;
 												}
 											}
 											if (Object.Name != null)
@@ -262,6 +281,59 @@ namespace OpenBve
 			//Didn't find an acceptable XML object
 			//Probably will cause things to throw an absolute wobbly somewhere....
 			return null;
+		}
+
+		private static string GetDynamicFunction(string Value)
+		{
+			string script = string.Empty;
+			Value = Value.Trim();
+			if (Value.Length == 0)
+			{
+				return script;
+			}
+			bool Hidden = Value[0] == '!';
+			int Level = 0;
+			for (int i = 0; i < Value.Length; i++)
+			{
+				if (Value[i] == '(')
+				{
+					Level++;
+				}
+				if (i + 5 < Value.Length)
+				{
+					string s = Value.Substring(i, 5).ToLowerInvariant();
+					if (s == "str::")
+					{
+						string ss = Value.Substring(i + 5, Value.Length - (i + 5));
+						int j = ss.IndexOf(')');
+						if (j != -1)
+						{
+							string sss = ss.Substring(0, j);
+							switch (sss.ToLowerInvariant())
+							{
+								case "tuer_rechts":
+									script += Hidden ? "rightdoors == 0" : "rightdoors != 0";
+									break;
+								case "tuer_links":
+									script += Hidden ? "leftdoors == 0" : "leftdoors != 0";
+									break;
+							}
+						}
+					}
+				}
+				if (Value[i] == ')')
+				{
+					Level--;
+				}
+
+
+			}
+			if (Level != 0)
+			{
+				Interface.AddMessage(Interface.MessageType.Warning, false, "Script error in Loksim3D object file....");
+				return String.Empty;
+			}
+			return script;
 		}
 
 		/// <summary>Gets the internal animation function string for the given Loksim3D function</summary>

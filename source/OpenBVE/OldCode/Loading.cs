@@ -387,7 +387,8 @@ namespace OpenBve {
 			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			ObjectManager.FinishCreatingObjects();
+			Array.Resize(ref ObjectManager.Objects, ObjectManager.ObjectsUsed);
+			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
 			if (Game.Sections.Length > 0) {
 				Game.UpdateSection(Game.Sections.Length - 1);

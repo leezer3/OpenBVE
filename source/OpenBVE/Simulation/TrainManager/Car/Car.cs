@@ -315,7 +315,7 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				ObjectManager.UpdateAnimatedObject(ref CarSections[SectionIndex].Elements[ElementIndex], true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, EnableDamping);
+				CarSections[SectionIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, EnableDamping);
 			}
 
 			internal void UpdateTopplingCantAndSpring(double TimeElapsed)
