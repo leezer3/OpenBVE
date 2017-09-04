@@ -132,6 +132,7 @@ namespace OpenBve
 			{
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
+			Objects[a] = new StaticObject();
 			Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
 			for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
 			{

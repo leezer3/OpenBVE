@@ -206,6 +206,10 @@ namespace OpenBve
 						}
 					}
 					//We've loaded the XML references, now load the objects into memory
+
+					//Single mesh object, containing all static components of the LS3D object
+					//If we use multiples, the Z-sorting throws a wobbly
+					ObjectManager.StaticObject staticObject = null;
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
@@ -234,22 +238,32 @@ namespace OpenBve
 						}
 						if (Object != null)
 						{
-							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
-							obj[obj.Length - 1] = Object;
-
-							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-							{
-								Object = Object,
-								Position = CurrentObjects[i].Position,
-							};
-							a.States = new ObjectManager.AnimatedObjectState[] { aos };
-							Result.Objects[i] = a;
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
-								Result.Objects[i].StateFunction =
+								//If the function script is not empty, this is a new animated object bit
+								Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
+								obj[obj.Length - 1] = Object;
+								int aL = Result.Objects.Length;
+								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
+								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+								{
+									Object = Object,
+									Position = CurrentObjects[i].Position,
+								};
+								a.States = new ObjectManager.AnimatedObjectState[] { aos };
+								Result.Objects[aL] = a;
+								Result.Objects[aL].StateFunction =
 									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+							}
+							else
+							{
+								//Otherwise, join to the main static mesh & update co-ords
+								for (int j = 0; j < Object.Mesh.Vertices.Length; j++)
+								{
+									Object.Mesh.Vertices[j].Coordinates += CurrentObjects[i].Position;
+								}
+								ObjectManager.JoinObjects(ref staticObject, Object);
 							}
 						}
 						else if (AnimatedObject != null)
@@ -274,6 +288,17 @@ namespace OpenBve
 								}
 							}
 						}
+					}
+					if (staticObject != null)
+					{
+						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
+						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+						{
+							Object = staticObject,
+						};
+						a.States = new ObjectManager.AnimatedObjectState[] { aos };
+						Result.Objects[Result.Objects.Length -1] = a;
 					}
 				}
 				return Result;
