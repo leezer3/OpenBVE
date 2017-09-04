@@ -221,6 +221,10 @@ namespace OpenBve
 															TransparencyUsed = false;
 															FirstPxTransparent = false;
 															break;
+														case "5":
+															//Use the alpha channel from the image, so we don't need to do anything fancy
+															//TODO: (Low priority) Check what happens in Loksim itself when an image uses the Alpha channel, but doesn't actually specify type 5
+															break;
 														default:
 															Interface.AddMessage(Interface.MessageType.Error, false, "Unrecognised transparency type " + attribute.Value + " detected in " + attribute.Name + " in Loksim3D object file " + FileName);
 															break;

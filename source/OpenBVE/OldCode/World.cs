@@ -292,7 +292,7 @@ namespace OpenBve {
 					if (CurrentDriverBody.PitchDamping == null) {
 						CurrentDriverBody.PitchDamping = new ObjectManager.Damping(6.0, 0.3);
 					}
-					ObjectManager.UpdateDamping(ref CurrentDriverBody.PitchDamping, TimeElapsed, ref CurrentDriverBody.Pitch, true);
+					CurrentDriverBody.PitchDamping.Update(TimeElapsed, ref CurrentDriverBody.Pitch, true);
 				}
 				{
 					// roll
@@ -350,7 +350,7 @@ namespace OpenBve {
 					if (CurrentDriverBody.RollDamping == null) {
 						CurrentDriverBody.RollDamping = new ObjectManager.Damping(6.0, 0.3);
 					}
-					ObjectManager.UpdateDamping(ref CurrentDriverBody.RollDamping, TimeElapsed, ref CurrentDriverBody.Roll, true);
+					CurrentDriverBody.RollDamping.Update(TimeElapsed, ref CurrentDriverBody.Roll, true);
 				}
 			}
 		}

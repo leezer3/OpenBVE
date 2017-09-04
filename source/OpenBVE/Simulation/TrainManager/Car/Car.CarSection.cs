@@ -15,7 +15,7 @@
 				{
 					for (int k = 0; k < Elements[j].States.Length; k++)
 					{
-						ObjectManager.InitializeAnimatedObject(ref Elements[j], k, Overlay, CurrentlyVisible);
+						Elements[j].Initialize(k, Overlay, CurrentlyVisible);
 					}
 				}
 			}

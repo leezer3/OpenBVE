@@ -83,7 +83,7 @@ namespace OpenBve {
 													if (obj.Length == objCount) {
 														Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false, new Vector3());
+													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false);
 													objCount++;
 												} else {
 													Interface.AddMessage(Interface.MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);

@@ -1187,7 +1187,7 @@ namespace OpenBve {
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].CurrentState = 0;
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex] = ObjectManager.CloneObject(Object);
+				ObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex] = Object.Clone();
 				return n;
 			}
 		}
