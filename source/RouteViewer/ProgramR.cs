@@ -309,7 +309,7 @@ namespace OpenBve {
 					AltPressed = true;
 					break;
 				case Key.F5:
-					if (CurrentRoute != null)
+					if (CurrentRoute != null && CurrentlyLoading == false)
 					{
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
@@ -343,6 +343,10 @@ namespace OpenBve {
 					}
 					break;
 				case Key.F7:
+					if (CurrentlyLoading == true)
+					{
+						break;
+					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
 					Dialog.Filter = "CSV/RW files|*.csv;*.rw|All files|*";
