@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using System.Collections.Generic;
+
+namespace OpenBve
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile
@@ -206,25 +208,25 @@
 		}
 		private struct StructureData
 		{
-			internal ObjectManager.UnifiedObject[] Rail;
+			internal Dictionary<int, ObjectManager.UnifiedObject> RailObjects;
 			internal ObjectManager.UnifiedObject[][] Poles;
-			internal ObjectManager.UnifiedObject[] Ground;
-			internal ObjectManager.UnifiedObject[] WallL;
-			internal ObjectManager.UnifiedObject[] WallR;
-			internal ObjectManager.UnifiedObject[] DikeL;
-			internal ObjectManager.UnifiedObject[] DikeR;
-			internal ObjectManager.UnifiedObject[] FormL;
-			internal ObjectManager.UnifiedObject[] FormR;
-			internal ObjectManager.StaticObject[] FormCL;
-			internal ObjectManager.StaticObject[] FormCR;
-			internal ObjectManager.UnifiedObject[] RoofL;
-			internal ObjectManager.UnifiedObject[] RoofR;
-			internal ObjectManager.StaticObject[] RoofCL;
-			internal ObjectManager.StaticObject[] RoofCR;
-			internal ObjectManager.StaticObject[] CrackL;
-			internal ObjectManager.StaticObject[] CrackR;
-			internal ObjectManager.UnifiedObject[] FreeObj;
-			internal ObjectManager.UnifiedObject[] Beacon;
+			internal Dictionary<int, ObjectManager.UnifiedObject> Ground;
+			internal Dictionary<int, ObjectManager.UnifiedObject> WallL;
+			internal Dictionary<int, ObjectManager.UnifiedObject> WallR;
+			internal Dictionary<int, ObjectManager.UnifiedObject> DikeL;
+			internal Dictionary<int, ObjectManager.UnifiedObject> DikeR;
+			internal Dictionary<int, ObjectManager.UnifiedObject> FormL;
+			internal Dictionary<int, ObjectManager.UnifiedObject> FormR;
+			internal Dictionary<int, ObjectManager.StaticObject> FormCL;
+			internal Dictionary<int, ObjectManager.StaticObject> FormCR;
+			internal Dictionary<int, ObjectManager.UnifiedObject> RoofL;
+			internal Dictionary<int, ObjectManager.UnifiedObject> RoofR;
+			internal Dictionary<int, ObjectManager.StaticObject> RoofCL;
+			internal Dictionary<int, ObjectManager.StaticObject> RoofCR;
+			internal Dictionary<int, ObjectManager.StaticObject> CrackL;
+			internal Dictionary<int, ObjectManager.StaticObject> CrackR;
+			internal Dictionary<int, ObjectManager.UnifiedObject> FreeObjects;
+			internal Dictionary<int, ObjectManager.UnifiedObject> Beacon;
 			internal int[][] Cycle;
 			internal int[][] RailCycle;
 			internal int[] Run;
