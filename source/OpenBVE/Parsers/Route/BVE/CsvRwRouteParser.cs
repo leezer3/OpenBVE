@@ -123,7 +123,7 @@ namespace OpenBve {
 							ObjectManager.ObjectLoadMode.Normal, false, false, false)
 					}
 				};
-				Data.Structure.RailObjects = new Dictionary<int, ObjectManager.UnifiedObject>();
+				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.Ground = new ObjectDictionary();
 				Data.Structure.WallL = new ObjectDictionary();
