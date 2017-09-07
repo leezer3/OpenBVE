@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using System.Collections.Generic;
+
+namespace OpenBve
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile
@@ -206,25 +208,25 @@
 		}
 		private struct StructureData
 		{
-			internal ObjectManager.UnifiedObject[] Rail;
+			internal ObjectDictionary RailObjects;
 			internal ObjectManager.UnifiedObject[][] Poles;
-			internal ObjectManager.UnifiedObject[] Ground;
-			internal ObjectManager.UnifiedObject[] WallL;
-			internal ObjectManager.UnifiedObject[] WallR;
-			internal ObjectManager.UnifiedObject[] DikeL;
-			internal ObjectManager.UnifiedObject[] DikeR;
-			internal ObjectManager.UnifiedObject[] FormL;
-			internal ObjectManager.UnifiedObject[] FormR;
-			internal ObjectManager.StaticObject[] FormCL;
-			internal ObjectManager.StaticObject[] FormCR;
-			internal ObjectManager.UnifiedObject[] RoofL;
-			internal ObjectManager.UnifiedObject[] RoofR;
-			internal ObjectManager.StaticObject[] RoofCL;
-			internal ObjectManager.StaticObject[] RoofCR;
-			internal ObjectManager.StaticObject[] CrackL;
-			internal ObjectManager.StaticObject[] CrackR;
-			internal ObjectManager.UnifiedObject[] FreeObj;
-			internal ObjectManager.UnifiedObject[] Beacon;
+			internal ObjectDictionary Ground;
+			internal ObjectDictionary WallL;
+			internal ObjectDictionary WallR;
+			internal ObjectDictionary DikeL;
+			internal ObjectDictionary DikeR;
+			internal ObjectDictionary FormL;
+			internal ObjectDictionary FormR;
+			internal ObjectDictionary FormCL;
+			internal ObjectDictionary FormCR;
+			internal ObjectDictionary RoofL;
+			internal ObjectDictionary RoofR;
+			internal ObjectDictionary RoofCL;
+			internal ObjectDictionary RoofCR;
+			internal ObjectDictionary CrackL;
+			internal ObjectDictionary CrackR;
+			internal ObjectDictionary FreeObjects;
+			internal ObjectDictionary Beacon;
 			internal int[][] Cycle;
 			internal int[][] RailCycle;
 			internal int[] Run;
