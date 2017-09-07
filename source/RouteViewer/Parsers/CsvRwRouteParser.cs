@@ -8,6 +8,45 @@ using OpenBveApi.Colors;
 namespace OpenBve {
 	internal class CsvRwRouteParser {
 
+		/// <inheritdoc />
+		/// <summary>Defines a dictionary of objects</summary>
+		private class ObjectDictionary : Dictionary<int, ObjectManager.UnifiedObject>
+		{
+			/// <summary>Adds a new Unified Object to the dictionary</summary>
+			/// <param name="key">The object index</param>
+			/// <param name="unifiedObject">The object</param>
+			/// <param name="Type">The object type</param>
+			internal void Add(int key, ObjectManager.UnifiedObject unifiedObject, string Type)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = unifiedObject;
+					Interface.AddMessage(Interface.MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					this.Add(key, unifiedObject);
+				}
+			}
+
+			/// <summary>Adds a new Static Object to the dictionary</summary>
+			/// <param name="key">The object index</param>
+			/// <param name="staticObject">The object</param>
+			/// <param name="Type">The object type</param>
+			internal void Add(int key, ObjectManager.StaticObject staticObject, string Type)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = staticObject;
+					Interface.AddMessage(Interface.MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					this.Add(key, staticObject);
+				}
+			}
+		}
+
 		// structures
 		private struct Rail {
 			internal bool RailStart;
@@ -169,25 +208,25 @@ namespace OpenBve {
 		}
 		private struct StructureData
 		{
-			internal Dictionary<int, ObjectManager.UnifiedObject> RailObjects;
+			internal ObjectDictionary RailObjects;
 			internal ObjectManager.UnifiedObject[][] Poles;
-			internal Dictionary<int, ObjectManager.UnifiedObject> Ground;
-			internal Dictionary<int, ObjectManager.UnifiedObject> WallL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> WallR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> DikeL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> DikeR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FormL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FormR;
-			internal Dictionary<int, ObjectManager.StaticObject> FormCL;
-			internal Dictionary<int, ObjectManager.StaticObject> FormCR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> RoofL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> RoofR;
-			internal Dictionary<int, ObjectManager.StaticObject> RoofCL;
-			internal Dictionary<int, ObjectManager.StaticObject> RoofCR;
-			internal Dictionary<int, ObjectManager.StaticObject> CrackL;
-			internal Dictionary<int, ObjectManager.StaticObject> CrackR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FreeObjects;
-			internal Dictionary<int, ObjectManager.UnifiedObject> Beacon;
+			internal ObjectDictionary Ground;
+			internal ObjectDictionary WallL;
+			internal ObjectDictionary WallR;
+			internal ObjectDictionary DikeL;
+			internal ObjectDictionary DikeR;
+			internal ObjectDictionary FormL;
+			internal ObjectDictionary FormR;
+			internal ObjectDictionary FormCL;
+			internal ObjectDictionary FormCR;
+			internal ObjectDictionary RoofL;
+			internal ObjectDictionary RoofR;
+			internal ObjectDictionary RoofCL;
+			internal ObjectDictionary RoofCR;
+			internal ObjectDictionary CrackL;
+			internal ObjectDictionary CrackR;
+			internal ObjectDictionary FreeObjects;
+			internal ObjectDictionary Beacon;
 			internal int[][] Cycle;
 			internal int[][] RailCycle;
 			internal int[] Run;
@@ -285,24 +324,24 @@ namespace OpenBve {
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (PoleFolder, "pole_4.csv"), Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false)
 					}
 				};
-				Data.Structure.RailObjects = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.Ground = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.WallL = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.WallR = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.DikeL = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.DikeR = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.FormL = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.FormR = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.FormCL = new Dictionary<int, ObjectManager.StaticObject>();
-	            Data.Structure.FormCR = new Dictionary<int, ObjectManager.StaticObject>();
-				Data.Structure.RoofL = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.RoofR = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.RoofCL = new Dictionary<int, ObjectManager.StaticObject>();
-				Data.Structure.RoofCR = new Dictionary<int, ObjectManager.StaticObject>();
-				Data.Structure.CrackL = new Dictionary<int, ObjectManager.StaticObject>();
-				Data.Structure.CrackR = new Dictionary<int, ObjectManager.StaticObject>();
-				Data.Structure.FreeObjects = new Dictionary<int, ObjectManager.UnifiedObject>();
-				Data.Structure.Beacon = new Dictionary<int, ObjectManager.UnifiedObject>();
+				Data.Structure.RailObjects = new ObjectDictionary();
+				Data.Structure.Ground = new ObjectDictionary();
+				Data.Structure.WallL = new ObjectDictionary();
+				Data.Structure.WallR = new ObjectDictionary();
+				Data.Structure.DikeL = new ObjectDictionary();
+				Data.Structure.DikeR = new ObjectDictionary();
+				Data.Structure.FormL = new ObjectDictionary();
+				Data.Structure.FormR = new ObjectDictionary();
+				Data.Structure.FormCL = new ObjectDictionary();
+	            Data.Structure.FormCR = new ObjectDictionary();
+				Data.Structure.RoofL = new ObjectDictionary();
+				Data.Structure.RoofR = new ObjectDictionary();
+				Data.Structure.RoofCL = new ObjectDictionary();
+				Data.Structure.RoofCR = new ObjectDictionary();
+				Data.Structure.CrackL = new ObjectDictionary();
+				Data.Structure.CrackR = new ObjectDictionary();
+				Data.Structure.FreeObjects = new ObjectDictionary();
+				Data.Structure.Beacon = new ObjectDictionary();
 				Data.Structure.Cycle = new int[][] { };
 				Data.Structure.RailCycle = new int[][] { };
                 Data.Structure.Run = new int[] { };
@@ -1999,7 +2038,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.RailObjects.Add(CommandIndex1, obj);
+															Data.Structure.RailObjects.Add(CommandIndex1, obj, "RailStructure");
 														}
 													}
 												}
@@ -2024,7 +2063,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.Beacon.Add(CommandIndex1, obj);
+															Data.Structure.Beacon.Add(CommandIndex1, obj, "BeaconStructure");
 														}
 													}
 												}
@@ -2080,7 +2119,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.Ground.Add(CommandIndex1, obj);
+															Data.Structure.Ground.Add(CommandIndex1, obj, "GroundStructure");
 														}
 													}
 												}
@@ -2091,7 +2130,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2105,7 +2144,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.WallL.Add(CommandIndex1, obj);
+															Data.Structure.WallL.Add(CommandIndex1, obj, "Left WallStructure");
 														}
 													}
 												}
@@ -2116,7 +2155,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2130,7 +2169,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.WallR.Add(CommandIndex1, obj);
+															Data.Structure.WallR.Add(CommandIndex1, obj, "Right WallStructure");
 														}
 													}
 												}
@@ -2141,7 +2180,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2155,7 +2194,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.DikeL.Add(CommandIndex1, obj);
+															Data.Structure.DikeL.Add(CommandIndex1, obj, "Left DikeStructure");
 														}
 													}
 												}
@@ -2166,7 +2205,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2180,7 +2219,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.DikeR.Add(CommandIndex1, obj);
+															Data.Structure.DikeR.Add(CommandIndex1, obj, "Right DikeStructure");
 														}
 													}
 												}
@@ -2191,7 +2230,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2205,7 +2244,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.FormL.Add(CommandIndex1, obj);
+															Data.Structure.FormL.Add(CommandIndex1, obj, "Left FormStructure");
 														}
 													}
 												}
@@ -2216,7 +2255,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2230,7 +2269,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.FormR.Add(CommandIndex1, obj);
+															Data.Structure.FormR.Add(CommandIndex1, obj, "Right FormStructure");
 														}
 													}
 												}
@@ -2241,7 +2280,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2255,7 +2294,7 @@ namespace OpenBve {
 														ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.FormCL.Add(CommandIndex1, obj);
+															Data.Structure.FormCL.Add(CommandIndex1, obj, "Left FormCStructure");
 														}
 													}
 												}
@@ -2266,7 +2305,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2280,7 +2319,7 @@ namespace OpenBve {
 														ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.FormCR.Add(CommandIndex1, obj);
+															Data.Structure.FormCR.Add(CommandIndex1, obj, "Right FormCStructure");
 														}
 													}
 												}
@@ -2291,7 +2330,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2312,7 +2351,7 @@ namespace OpenBve {
 															ObjectManager.UnifiedObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 															if (obj != null)
 															{
-																Data.Structure.RoofL.Add(CommandIndex1, obj);
+																Data.Structure.RoofL.Add(CommandIndex1, obj, "Left RoofStructure");
 															}
 														}
 													}
@@ -2324,7 +2363,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2345,7 +2384,7 @@ namespace OpenBve {
 															ObjectManager.UnifiedObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 															if (obj != null)
 															{
-																Data.Structure.RoofR.Add(CommandIndex1, obj);
+																Data.Structure.RoofR.Add(CommandIndex1, obj, "Right RoofStructure");
 															}
 														}
 													}
@@ -2357,7 +2396,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2378,7 +2417,7 @@ namespace OpenBve {
 															ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 															if (obj != null)
 															{
-																Data.Structure.RoofCL.Add(CommandIndex1, obj);
+																Data.Structure.RoofCL.Add(CommandIndex1, obj, "Left RoofCStructureIndex");
 															}
 														}
 													}
@@ -2390,7 +2429,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2411,7 +2450,7 @@ namespace OpenBve {
 															ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 															if (obj != null)
 															{
-																Data.Structure.RoofCR.Add(CommandIndex1, obj);
+																Data.Structure.RoofCR.Add(CommandIndex1, obj, "Right RoofCStructureIndex");
 															}
 														}
 													}
@@ -2423,7 +2462,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Left CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2437,7 +2476,7 @@ namespace OpenBve {
 														ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.CrackL.Add(CommandIndex1, obj);
+															Data.Structure.CrackL.Add(CommandIndex1, obj, "Left CrackStructure");
 														}
 													}
 												}
@@ -2448,7 +2487,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											if (CommandIndex1 < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Right CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (Arguments.Length < 1) {
 													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2462,7 +2501,7 @@ namespace OpenBve {
 														ObjectManager.StaticObject obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.CrackR.Add(CommandIndex1, obj);
+															Data.Structure.CrackR.Add(CommandIndex1, obj, "Right CrackStructure");
 														}
 													}
 												}
@@ -2487,7 +2526,7 @@ namespace OpenBve {
 														ObjectManager.UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 														if (obj != null)
 														{
-															Data.Structure.FreeObjects.Add(CommandIndex1, obj);
+															Data.Structure.FreeObjects.Add(CommandIndex1, obj, "FreeObject");
 														}
 													}
 												}
@@ -5589,7 +5628,7 @@ namespace OpenBve {
 									if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 										Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 									} else {
-										ObjectManager.CreateStaticObject(Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										ObjectManager.CreateStaticObject((ObjectManager.StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 									if (Data.Blocks[i].Form[k].RoofType > 0) {
 										if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
@@ -5600,7 +5639,7 @@ namespace OpenBve {
 										if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											ObjectManager.CreateStaticObject(Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											ObjectManager.CreateStaticObject((ObjectManager.StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 								} else if (Data.Blocks[i].Form[k].SecondaryRail == Form.SecondaryRailR) {
@@ -5612,7 +5651,7 @@ namespace OpenBve {
 									if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 										Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 									} else {
-										ObjectManager.CreateStaticObject(Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										ObjectManager.CreateStaticObject((ObjectManager.StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 									if (Data.Blocks[i].Form[k].RoofType > 0) {
 										if (!Data.Structure.RoofR.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
@@ -5623,7 +5662,7 @@ namespace OpenBve {
 										if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											ObjectManager.CreateStaticObject(Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											ObjectManager.CreateStaticObject((ObjectManager.StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 								} else if (Data.Blocks[i].Form[k].SecondaryRail > 0) {
@@ -5647,7 +5686,7 @@ namespace OpenBve {
 											if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												ObjectManager.StaticObject FormC = GetTransformedStaticObject(Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], d0, d1);
+												ObjectManager.StaticObject FormC = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], d0, d1);
 												ObjectManager.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -5659,7 +5698,7 @@ namespace OpenBve {
 												if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													ObjectManager.StaticObject RoofC = GetTransformedStaticObject(Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													ObjectManager.StaticObject RoofC = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], d0, d1);
 													ObjectManager.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -5672,7 +5711,7 @@ namespace OpenBve {
 											if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												ObjectManager.StaticObject FormC = GetTransformedStaticObject(Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], d0, d1);
+												ObjectManager.StaticObject FormC = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], d0, d1);
 												ObjectManager.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -5684,7 +5723,7 @@ namespace OpenBve {
 												if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													ObjectManager.StaticObject RoofC = GetTransformedStaticObject(Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													ObjectManager.StaticObject RoofC = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], d0, d1);
 													ObjectManager.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -5746,14 +5785,14 @@ namespace OpenBve {
 										if (!Data.Structure.CrackL.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "CrackStructureIndex references a CrackL not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											ObjectManager.StaticObject Crack = GetTransformedStaticObject(Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type], d0, d1);
+											ObjectManager.StaticObject Crack = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type], d0, d1);
 											ObjectManager.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									} else if (d0 > 0.0) {
 										if (!Data.Structure.CrackR.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(Interface.MessageType.Error, false, "CrackStructureIndex references a CrackR not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											ObjectManager.StaticObject Crack = GetTransformedStaticObject(Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type], d0, d1);
+											ObjectManager.StaticObject Crack = GetTransformedStaticObject((ObjectManager.StaticObject)Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type], d0, d1);
 											ObjectManager.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}

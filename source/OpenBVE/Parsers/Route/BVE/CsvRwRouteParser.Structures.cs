@@ -208,25 +208,25 @@ namespace OpenBve
 		}
 		private struct StructureData
 		{
-			internal Dictionary<int, ObjectManager.UnifiedObject> RailObjects;
+			internal ObjectDictionary RailObjects;
 			internal ObjectManager.UnifiedObject[][] Poles;
-			internal Dictionary<int, ObjectManager.UnifiedObject> Ground;
-			internal Dictionary<int, ObjectManager.UnifiedObject> WallL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> WallR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> DikeL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> DikeR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FormL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FormR;
-			internal Dictionary<int, ObjectManager.StaticObject> FormCL;
-			internal Dictionary<int, ObjectManager.StaticObject> FormCR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> RoofL;
-			internal Dictionary<int, ObjectManager.UnifiedObject> RoofR;
-			internal Dictionary<int, ObjectManager.StaticObject> RoofCL;
-			internal Dictionary<int, ObjectManager.StaticObject> RoofCR;
-			internal Dictionary<int, ObjectManager.StaticObject> CrackL;
-			internal Dictionary<int, ObjectManager.StaticObject> CrackR;
-			internal Dictionary<int, ObjectManager.UnifiedObject> FreeObjects;
-			internal Dictionary<int, ObjectManager.UnifiedObject> Beacon;
+			internal ObjectDictionary Ground;
+			internal ObjectDictionary WallL;
+			internal ObjectDictionary WallR;
+			internal ObjectDictionary DikeL;
+			internal ObjectDictionary DikeR;
+			internal ObjectDictionary FormL;
+			internal ObjectDictionary FormR;
+			internal ObjectDictionary FormCL;
+			internal ObjectDictionary FormCR;
+			internal ObjectDictionary RoofL;
+			internal ObjectDictionary RoofR;
+			internal ObjectDictionary RoofCL;
+			internal ObjectDictionary RoofCR;
+			internal ObjectDictionary CrackL;
+			internal ObjectDictionary CrackR;
+			internal ObjectDictionary FreeObjects;
+			internal ObjectDictionary Beacon;
 			internal int[][] Cycle;
 			internal int[][] RailCycle;
 			internal int[] Run;
