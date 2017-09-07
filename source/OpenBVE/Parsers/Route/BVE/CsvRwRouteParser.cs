@@ -433,7 +433,23 @@ namespace OpenBve {
 								Level++;
 								break;
 							case ')':
-								Level--;
+								if (Interface.CurrentOptions.EnableBveTsHacks)
+								{
+
+									if (Level > 0)
+									{
+										//Don't decrease the level below zero, as this messes up when extra closing brackets are encountered
+										Level--;
+									}
+									else
+									{
+										Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid additional closing parenthesis encountered at line " + i + " character " + j + " in file " + FileName);
+									}
+								}
+								else
+								{
+									Level--;
+								}
 								break;
 							case ',':
 								if (Level == 0 & !IsRW) {
