@@ -473,6 +473,38 @@ This command can be used to specify the length of a block. This is an overall se
 <b>0</b>: Block-based: Fog color and ranges are interpolated from the beginning of the block where Track.Fog is used with the old settings to the end of the block with the new settings.<br />
 <b>1</b>: Interpolated: Fog color and ranges are interpolated between adjacent Track.Fog commands. This behavior mimicks Track.Brightness.
 </font></td></tr></table>
+<hr />
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Options.CompatibleTransparencyMode</b> <em>Mode</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Mode</em></b>: The mode determining how transparencies are processed in BVE2/ BVE4 objects which use a restricted color pallete. This may be used on a per-route basis to override the value set in 'Options'.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Available options for <em>Mode</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: Colors are matched specifically. If the specified transparent color does not exist within the color pallete, no transparency will be added.<br />
+<b>1</b>: Fuzzy matching. If the texture uses a restricted color pallete, the transparent color will be clamped to the nearest available color in the pallete.
+</font></td></tr></table>
+<hr />
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Options.EnableBveTsHacks</b> <em>Mode</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Mode</em></b>: The mode determining whether various hacks are applied in order to fix BVE2 / BVE4 content. This may be used on a per-route basis to override the value set in 'Options'.
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Available options for <em>Mode</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: Hacks are disabled.<br />
+<b>1</b>: Hacks are enabled.
+</font></td></tr></table>
 <br /><a name="route" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 5. The Route namespace</font><hr />

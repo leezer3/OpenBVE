@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
 
@@ -17,6 +18,20 @@ namespace Plugin {
 			 * us to extract the bitmap data easily.
 			 * */
 			System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file);
+			Color24[] p = null;
+			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
+			{
+				/* Only store the color palette data for
+				 * textures using a restricted palette
+				 * With a large number of textures loaded at
+				 * once, this can save a decent chunk of memory
+				 * */
+				p = new Color24[bitmap.Palette.Entries.Length];
+				for (int i = 0; i < bitmap.Palette.Entries.Length; i++)
+				{
+					p[i] = bitmap.Palette.Entries[i];
+				}
+			}
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			/* 
 			 * If the bitmap format is not already 32-bit BGRA,
@@ -44,7 +59,7 @@ namespace Plugin {
 				bitmap.UnlockBits(data);
 				int width = bitmap.Width;
 				int height = bitmap.Height;
-				bitmap.Dispose();
+				
 				/*
 				 * Change the byte order from BGRA to RGBA.
 				 * */
@@ -53,7 +68,8 @@ namespace Plugin {
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new Texture(width, height, 32, raw);
+				texture = new Texture(width, height, 32, raw, p);
+				bitmap.Dispose();
 				return true;
 			} else {
 				/*

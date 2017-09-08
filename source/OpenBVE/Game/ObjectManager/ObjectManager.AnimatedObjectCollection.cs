@@ -1,0 +1,97 @@
+﻿using OpenBveApi.Math;
+
+namespace OpenBve
+{
+	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
+	public static partial class ObjectManager
+	{
+		/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
+		internal class AnimatedObjectCollection : UnifiedObject
+		{
+			/// <summary>The objects that this collection contains</summary>
+			internal AnimatedObject[] Objects;
+
+			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
+				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
+				double TrackPosition, double Brightness, bool DuplicateMaterials)
+			{
+				bool[] free = new bool[Objects.Length];
+				bool anyfree = false;
+				bool allfree = true;
+				for (int i = 0; i < Objects.Length; i++)
+				{
+					free[i] = Objects[i].IsFreeOfFunctions();
+					if (free[i])
+					{
+						anyfree = true;
+					}
+					else
+					{
+						allfree = false;
+					}
+				}
+				if (anyfree && !allfree && Objects.Length > 1)
+				{
+					var X = new Vector3(1.0, 0.0, 0.0);
+					var Y = new Vector3(0.0, 1.0, 0.0);
+					var Z = new Vector3(0.0, 0.0, 1.0);
+					//Optimise a little: If *all* are free of functions, this can safely be converted into a static object without regard to below
+					if (AuxTransformation.X != X || AuxTransformation.Y != Y || AuxTransformation.Z != Z)
+					{
+						//HACK:
+						//An animated object containing a mix of functions and non-functions and using yaw, pitch or roll must not be converted into a mix
+						//of animated and static objects, as this causes rounding differences....
+						anyfree = false;
+					}
+				}
+				if (anyfree)
+				{
+					for (int i = 0; i < Objects.Length; i++)
+					{
+						if (Objects[i].States.Length != 0)
+						{
+							if (free[i])
+							{
+								Vector3 p = Position;
+								World.Transformation t = new OpenBve.World.Transformation(BaseTransformation, AuxTransformation);
+								Vector3 s = t.X;
+								Vector3 u = t.Y;
+								Vector3 d = t.Z;
+								p.X += Objects[i].States[0].Position.X * s.X + Objects[i].States[0].Position.Y * u.X + Objects[i].States[0].Position.Z * d.X;
+								p.Y += Objects[i].States[0].Position.X * s.Y + Objects[i].States[0].Position.Y * u.Y + Objects[i].States[0].Position.Z * d.Y;
+								p.Z += Objects[i].States[0].Position.X * s.Z + Objects[i].States[0].Position.Y * u.Z + Objects[i].States[0].Position.Z * d.Z;
+								double zOffset = Objects[i].States[0].Position.Z;
+								CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
+							}
+							else
+							{
+								Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+							}
+						}
+					}
+				}
+				else
+				{
+					for (int i = 0; i < Objects.Length; i++)
+					{
+						if (Objects[i].States.Length != 0)
+						{
+							Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+						}
+					}
+				}
+			}
+
+			internal override void OptimizeObject(bool PreserveVerticies)
+			{
+				for (int i = 0; i < Objects.Length; i++)
+				{
+					for (int j = 0; j < Objects[i].States.Length; j++)
+					{
+						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
+					}
+				}
+			}
+		}
+	}
+}

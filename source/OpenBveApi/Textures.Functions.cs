@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures {
@@ -65,7 +66,7 @@ namespace OpenBveApi.Textures {
 		                    j += 3;
 		                }
 		            }
-		            return new Texture(clipWidth, clipHeight, 24, newBytes);
+		            return new Texture(clipWidth, clipHeight, 24, newBytes, texture.Palette);
 		        } else {
 		            byte[] newBytes = new byte[4 * clipWidth * clipHeight];
 		            int i = 0;
@@ -80,15 +81,28 @@ namespace OpenBveApi.Textures {
 		                    j += 4;
 		                }
 		            }
-		            return new Texture(clipWidth, clipHeight, 32, newBytes);
+		            return new Texture(clipWidth, clipHeight, 32, newBytes, texture.Palette);
 		        }
 		    }
 		    throw new NotSupportedException();
 		}
 
+		private static Color24 GetClosestColor(Color24[] colorArray, Color24 baseColor)
+		{
+			int colorDiffs = colorArray.Select(n => GetDiff(n, baseColor)).Min(n => n);
+			Color24 c = colorArray[Array.FindIndex(colorArray,n => GetDiff(n, baseColor) == colorDiffs)];
+			return new Color24(c.R, c.G, c.B);
+		}
 
-	    // --- apply transparent color ---
-		
+		private static int GetDiff(Color24 c1, Color24 c2)
+		{
+			return (int)System.Math.Sqrt((c1.R - c2.R) * (c1.R - c2.R)
+			                      + (c1.G - c2.G) * (c1.G - c2.G)
+			                      + (c1.B - c2.B) * (c1.B - c2.B));
+		}
+
+		// --- apply transparent color ---
+
 		/// <summary>Applies a transparent color onto a texture.</summary>
 		/// <param name="texture">The original texture.</param>
 		/// <param name="color">The transparent color, or a null reference.</param>
@@ -98,6 +112,17 @@ namespace OpenBveApi.Textures {
 		{
 		    if (color == null) {
 				return texture;
+			}
+			if (texture.Palette != null && texture.CompatibleTransparencyMode == true)
+			{
+				switch (texture.Palette.Length)
+				{
+					case 16:
+					case 256:
+						Color24 c = (Color24)color;
+						color = GetClosestColor(texture.Palette, c);
+						break;
+				}
 			}
 		    if (texture.BitsPerPixel == 32) {
 		        int width = texture.Width;
@@ -131,7 +156,7 @@ namespace OpenBveApi.Textures {
 		                target[i + 3] = source[i + 3];
 		            }
 		        }
-		        return new Texture(width, height, 32, target);
+		        return new Texture(width, height, 32, target, texture.Palette);
 		    }
 		    throw new NotSupportedException();
 		}

@@ -389,7 +389,7 @@ namespace Plugin {
 						throw new NotSupportedException();
 					}
 					// --- return texture ---
-					return new Texture(width, height, 32, bytes);
+					return new Texture(width, height, 32, bytes, null);
 				}
 			}
 		}

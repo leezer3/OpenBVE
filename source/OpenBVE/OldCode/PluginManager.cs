@@ -61,6 +61,10 @@ namespace OpenBve {
 			internal abstract void EndJump();
 			/// <summary>Called every frame to update the plugin.</summary>
 			internal void UpdatePlugin() {
+				if (Train.Cars == null || Train.Cars.Length == 0)
+				{
+					return;
+				}
 				/*
 				 * Prepare the vehicle state.
 				 * */
@@ -73,8 +77,15 @@ namespace OpenBve {
 				if (!StationsLoaded)
 				{
 					currentRouteStations = new List<Station>();
+					int s = 0;
 					foreach (Game.Station selectedStation in Game.Stations)
 					{
+						double stopPosition = -1;
+						int stopIdx = Game.GetStopIndex(s, Train.Cars.Length);
+						if (selectedStation.Stops.Length != 0)
+						{
+							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
+						}
 						Station i = new Station
 						{
 							Name = selectedStation.Name,
@@ -84,11 +95,14 @@ namespace OpenBve {
 							OpenLeftDoors = selectedStation.OpenLeftDoors,
 							OpenRightDoors = selectedStation.OpenRightDoors,
 							ForceStopSignal = selectedStation.ForceStopSignal,
-							DefaultTrackPosition = selectedStation.DefaultTrackPosition
+							DefaultTrackPosition = selectedStation.DefaultTrackPosition,
+							StopPosition = stopPosition
 						};
 						currentRouteStations.Add(i);
+						s++;
 					}
 					StationsLoaded = true;
+					
 				}
 				//End of additions
 				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
@@ -103,17 +117,28 @@ namespace OpenBve {
 				 * */
 				double bestLocation = double.MaxValue;
 				double bestSpeed = 0.0;
-				for (int i = 0; i < TrainManager.Trains.Length; i++) {
-					if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainManager.TrainState.Available) {
-						int c = TrainManager.Trains[i].Cars.Length - 1;
-						double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManager.Trains[i].Cars[c].Length;
-						if (z >= location & z < bestLocation) {
-							bestLocation = z;
-							bestSpeed = TrainManager.Trains[i].Specs.CurrentAverageSpeed;
+				PrecedingVehicleState precedingVehicle;
+				try
+				{
+					for (int i = 0; i < TrainManager.Trains.Length; i++)
+					{
+						if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainManager.TrainState.Available & Train.Cars.Length > 0)
+						{
+							int c = TrainManager.Trains[i].Cars.Length - 1;
+							double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManager.Trains[i].Cars[c].Length;
+							if (z >= location & z < bestLocation)
+							{
+								bestLocation = z;
+								bestSpeed = TrainManager.Trains[i].Specs.CurrentAverageSpeed;
+							}
 						}
 					}
+					precedingVehicle = bestLocation != double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
 				}
-				var precedingVehicle = bestLocation != double.MaxValue ? new PrecedingVehicleState(bestLocation, bestLocation - location, new Speed(bestSpeed)) : null;
+				catch
+				{
+					precedingVehicle = null;
+				}
 				/*
 				 * Get the driver handles.
 				 * */

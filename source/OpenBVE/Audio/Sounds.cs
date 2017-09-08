@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
@@ -253,6 +254,27 @@ namespace OpenBve {
 			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, train, car, looped);
 			SourceCount++;
 			return Sources[SourceCount - 1];
+		}
+
+		/// <summary>Plays a car sound.</summary>
+		/// <param name="sound">The car sound.</param>
+		/// <param name="pitch">The pitch change factor.</param>
+		/// <param name="volume">The volume change factor.</param>
+		/// <param name="train">The train the sound is attached to.</param>
+		/// <param name="car">The car in the train the sound is attached to.</param>
+		/// <param name="looped">Whether to play the sound in a loop.</param>
+		/// <returns>The sound source.</returns>
+		internal static void PlayCarSound(TrainManager.CarSound sound, double pitch, double volume, TrainManager.Train train, int car, bool looped)
+		{
+			if (sound.Buffer == null)
+			{
+				return;
+			}
+			if (train == null)
+			{
+				throw new InvalidDataException("A train and car must be specified");
+			}
+			sound.Source = PlaySound(sound.Buffer, pitch, volume, sound.Position, train, car, looped);
 		}
 		
 		/// <summary>Stops the specified sound source.</summary>

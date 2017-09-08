@@ -51,6 +51,52 @@ namespace OpenBve
 			return false;
 		}
 
+		/// <summary>Locates the absolute on-disk path of the object to be loaded, or an available compatible replacement if not found</summary>
+		/// <param name="fileName">The object's file-name</param>
+		/// <param name="objectPath">The path to the objects directory for this route</param>
+		internal static bool LocateSound(ref string fileName, string objectPath)
+		{
+			string n;
+			try
+			{
+				//Catch completely malformed path references
+				n = OpenBveApi.Path.CombineFile(objectPath, fileName);
+			}
+			catch
+			{
+				return false;
+			}
+			if (System.IO.File.Exists(n))
+			{
+				fileName = n;
+				//The object exists, and does not require a compatibility object
+				return true;
+			}
+			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
+			for (int i = 0; i < CompatibilityObjects.AvailableSounds.Length; i++)
+			{
+				if (CompatibilityObjects.AvailableSounds[i].ObjectNames.Length == 0)
+				{
+					continue;
+				}
+				for (int j = 0; j < CompatibilityObjects.AvailableSounds[i].ObjectNames.Length; j++)
+				{
+					if (CompatibilityObjects.AvailableSounds[i].ObjectNames[j].ToLowerInvariant() == fileName.ToLowerInvariant())
+					{
+						//Available replacement found
+						fileName = CompatibilityObjects.AvailableSounds[i].ReplacementPath;
+						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableSounds[i].Message))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
+						}
+						CompatibilityObjectsUsed++;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		/// <summary>The total number of compatability objects used by the current route</summary>
 		internal static int CompatibilityObjectsUsed;
 	}
@@ -76,6 +122,8 @@ namespace OpenBve
 
 		/// <summary>The array containing the paths to all available replacement objects</summary>
 		internal static ReplacementObject[] AvailableReplacements = new ReplacementObject[0];
+
+		internal static ReplacementObject[] AvailableSounds = new ReplacementObject[0];
 
 		/// <summary>Loads the available compatibility object database</summary>
 		/// <param name="fileName">The database file</param>
@@ -153,8 +201,64 @@ namespace OpenBve
 							}
 						}
 					}
+					DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/Sound");
+					//Check this file actually contains OpenBVE compatibility nodes
+					if (DocumentNodes != null)
+					{
+						foreach (XmlNode n in DocumentNodes)
+						{
+							if (n.HasChildNodes)
+							{
+								ReplacementObject o = new ReplacementObject();
+								string[] names = null;
+								foreach (XmlNode c in n.ChildNodes)
+								{
+									switch (c.Name.ToLowerInvariant())
+									{
+										case "name":
+											if (c.InnerText.IndexOf(';') == -1)
+											{
+												names = new string[]
+												{
+													c.InnerText
+												};
+											}
+											else
+											{
+												names = c.InnerText.Split(';');
+											}
+											break;
+										case "path":
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim());
+											if (System.IO.File.Exists(f))
+											{
+												o.ReplacementPath = f;
+											}
+											break;
+										case "message":
+											o.Message = c.InnerText.Trim();
+											break;
+										default:
+											Interface.AddMessage(Interface.MessageType.Warning, false,
+												"Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
+											break;
+									}
+								}
+								if (names != null)
+								{
+									o.ObjectNames = names;
+									if (o.ReplacementPath != string.Empty)
+									{
+										int i = AvailableSounds.Length;
+										Array.Resize(ref AvailableSounds, i + 1);
+										AvailableSounds[i] = o;
+									}
+								}
+							}
+						}
+					}
 					//Now try and load any object list XML files this references
-					DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/ObjectList");
+						DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Compatibility/ObjectList");
 					
 					if (DocumentNodes != null)
 					{

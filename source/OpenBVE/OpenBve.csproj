@@ -116,6 +116,16 @@
     <Compile Include="Game\MessageManager.TextualMessages.cs" />
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\MessageManager.Message.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedObject.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedObjectCollection.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedWorldObject.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.AnimationScript.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.Damping.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
+    <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
@@ -135,10 +145,17 @@
     <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ObjectDictionary.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.PreprocessOptions.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
+    <Compile Include="Parsers\Script\StationXMLParser.cs" />
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\Script\DynamicLightParser.cs" />
     <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
@@ -149,12 +166,21 @@
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve4.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Xml.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Parsers\Train\TrainXmlParser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.CarSection.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
@@ -164,6 +190,7 @@
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
@@ -218,6 +245,7 @@
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
     <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
@@ -295,7 +323,6 @@
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="OldCode\NewCode\GameWindow.cs" />
-    <Compile Include="OldCode\ObjectManager.cs" />
     <Compile Include="OldCode\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />

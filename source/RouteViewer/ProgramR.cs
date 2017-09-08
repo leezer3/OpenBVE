@@ -78,7 +78,6 @@ namespace OpenBve {
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
-			SetPackageLookupDirectories();
 			// command line arguments
 			SkipArgs = new bool[args.Length];
 			if (args.Length != 0) {
@@ -309,7 +308,7 @@ namespace OpenBve {
 					AltPressed = true;
 					break;
 				case Key.F5:
-					if (CurrentRoute != null)
+					if (CurrentRoute != null && CurrentlyLoading == false)
 					{
 						CurrentlyLoading = true;
 						Renderer.OptionInterface = false;
@@ -343,6 +342,10 @@ namespace OpenBve {
 					}
 					break;
 				case Key.F7:
+					if (CurrentlyLoading == true)
+					{
+						break;
+					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
 					Dialog.Filter = "CSV/RW files|*.csv;*.rw|All files|*";
@@ -672,34 +675,5 @@ namespace OpenBve {
 				currentGameWindow.Title = Application.ProductName;
 			}
 		}
-		
-		/// <summary>The object that serves as an authentication for the SetPackageLookupDirectories call.</summary>
-		private static object SetPackageLookupDirectoriesAuthentication = null;
-
-		/// <summary>Provides the API with lookup directories for all installed packages.</summary>
-		internal static void SetPackageLookupDirectories() {
-			int size = 16;
-			string[] names = new string[size];
-			string[] directories = new string[size];
-			int count = 0;
-			foreach (string lookupDirectory in FileSystem.ManagedContentFolders) {
-				string[] packageDirectories = System.IO.Directory.GetDirectories(lookupDirectory);
-				foreach (string packageDirectory in packageDirectories) {
-					string package = System.IO.Path.GetFileName(packageDirectory);
-					if (count == size) {
-						size <<= 1;
-						Array.Resize<string>(ref names, size);
-						Array.Resize<string>(ref directories, size);
-					}
-					names[count] = package;
-					directories[count] = packageDirectory;
-					count++;
-				}
-			}
-			Array.Resize<string>(ref names, count);
-			Array.Resize<string>(ref directories, count);
-			SetPackageLookupDirectoriesAuthentication = OpenBveApi.Path.SetPackageLookupDirectories(names, directories, SetPackageLookupDirectoriesAuthentication);
-		}
-
 	}
 }

@@ -24,8 +24,7 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding,
-			ObjectManager.ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			//May need to be changed to use de-DE
@@ -123,7 +122,10 @@ namespace OpenBve
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
 										{
-											GruppenObject Object = new GruppenObject();
+											GruppenObject Object = new GruppenObject
+											{
+												Rotation = Rotation
+											};
 											foreach (XmlAttribute attribute in childNode.Attributes)
 											{
 												switch (attribute.Name)
@@ -148,10 +150,11 @@ namespace OpenBve
 														break;
 													case "Rotation":
 														string[] SplitRotation = attribute.Value.Split(';');
-
-														double.TryParse(SplitRotation[0], out Object.Rotation.X);
-														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
-														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
+														Vector3 r;
+														double.TryParse(SplitRotation[0], out r.X);
+														double.TryParse(SplitRotation[1], out r.Y);
+														double.TryParse(SplitRotation[2], out r.Z);
+														Object.Rotation += r;
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
@@ -175,36 +178,104 @@ namespace OpenBve
 						}
 					}
 					//We've loaded the XML references, now load the objects into memory
+
+					//Single mesh object, containing all static components of the LS3D object
+					//If we use multiples, the Z-sorting throws a wobbly
+					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject();
+					staticObject.Mesh = new World.Mesh();
+					staticObject.Mesh.Vertices = new World.Vertex[0];
+					staticObject.Mesh.Faces = new World.MeshFace[0];
+					staticObject.Mesh.Materials = new World.MeshMaterial[0];
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
-						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+						ObjectManager.StaticObject Object = null;
+						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						try {
+							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
+							{
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
+							}
+							else if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
+							{
+								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+							}
+							else
+							{
+								throw new Exception("Format " + System.IO.Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
+							}
+						}
+						catch (Exception ex) {
+							Interface.AddMessage(Interface.MessageType.Error, false, ex.Message);
+						}
+						
 						if (Object != null)
 						{
-							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
-							obj[obj.Length - 1] = Object;
-
-							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-							Object.Dynamic = true;
-							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-							{
-								Object = Object,
-								Position = CurrentObjects[i].Position,
-							};
-							a.States = new ObjectManager.AnimatedObjectState[] { aos };
-							Result.Objects[i] = a;
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
-								Result.Objects[i].StateFunction =
+								//If the function script is not empty, this is a new animated object bit
+								Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
+								obj[obj.Length - 1] = Object;
+								int aL = Result.Objects.Length;
+								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
+								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+								{
+									Object = Object,
+									Position = CurrentObjects[i].Position,
+								};
+								a.States = new ObjectManager.AnimatedObjectState[] { aos };
+								Result.Objects[aL] = a;
+								Result.Objects[aL].StateFunction =
 									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+							}
+							else
+							{
+								//Otherwise, join to the main static mesh & update co-ords
+								for (int j = 0; j < Object.Mesh.Vertices.Length; j++)
+								{
+									Object.Mesh.Vertices[j].Coordinates += CurrentObjects[i].Position;
+								}
+								staticObject.JoinObjects(Object);
+							}
+						}
+						else if (AnimatedObject != null)
+						{
+							int rl = Result.Objects.Length;
+							int l = AnimatedObject.Objects.Length;
+							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + l);
+							for (int o = rl; o < rl + l; o++)
+							{
+								if (AnimatedObject.Objects[o - rl] != null)
+								{
+									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
+									for (int si = 0; si < Result.Objects[o].States.Length; si++)
+									{
+										Result.Objects[o].States[si].Position += CurrentObjects[i].Position;
+									}
+								}
+								else
+								{
+									Result.Objects[o] = new ObjectManager.AnimatedObject();
+									Result.Objects[o].States = new ObjectManager.AnimatedObjectState[0];
+								}
 							}
 						}
 					}
-					
+					if (staticObject != null)
+					{
+						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
+						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+						{
+							Object = staticObject,
+						};
+						a.States = new ObjectManager.AnimatedObjectState[] { aos };
+						Result.Objects[Result.Objects.Length - 1] = a;
+					}
 				}
 				return Result;
 			}

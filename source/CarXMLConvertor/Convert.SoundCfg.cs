@@ -10,7 +10,6 @@ namespace CarXmlConvertor
 {
     class ConvertSoundCfg
     {
-	    internal static double length = 20.0;
 	    internal static Vector3 DriverPosition = new Vector3(0, 1, 0);
 	    //3D center of the car
 	    internal static Vector3 center = new Vector3(0.0, 0.0, 0.0);
@@ -19,23 +18,12 @@ namespace CarXmlConvertor
 		//Positioned to the right of the car, but centered Y & Z
 	    internal static Vector3 right = new Vector3(1.3, 0.0, 0.0);
 		//Positioned at the front of the car, centered X and Y
-	    internal static Vector3 front = new Vector3(0.0, 0.0, 0.5 * length);
+	    internal static Vector3 front = new Vector3(0.0, 0.0, 0.5 * ConvertTrainDat.CarLength);
 		//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 	    internal static Vector3 panel;
 		internal static string FileName;
         internal static void Process()
         {
-            if (!System.IO.File.Exists(FileName))
-            {
-                MessageBox.Show("The selected folder does not contain a valid sound.cfg \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "sound.xml")))
-            {
-                if (MessageBox.Show("The selected folder already contains a sound.xml file. \r\n Do you wish to continue?", "CarXML Convertor", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
             panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
             List<string> newLines = new List<string>();
