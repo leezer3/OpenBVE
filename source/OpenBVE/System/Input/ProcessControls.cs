@@ -539,7 +539,7 @@ namespace OpenBve
 										break;
 									case Interface.Command.CameraInterior:
 										// camera: interior
-										SaveCameraSettings();
+										MainLoop.SaveCameraSettings();
 										bool lookahead = false;
 										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead &
 											World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
@@ -557,7 +557,7 @@ namespace OpenBve
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 										}
 										World.CameraMode = World.CameraViewMode.Interior;
-										RestoreCameraSettings();
+										MainLoop.RestoreCameraSettings();
 										for (int j = 0; j <= TrainManager.PlayerTrain.DriverCar; j++)
 										{
 											if (TrainManager.PlayerTrain.Cars[j].CarSections.Length != 0)

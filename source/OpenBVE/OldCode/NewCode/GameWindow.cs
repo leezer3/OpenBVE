@@ -285,7 +285,7 @@ namespace OpenBve
 			locks = new Queue<object>(10);
 			Renderer.Initialize();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
-			MainLoop.InitializeMotionBlur();
+			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons

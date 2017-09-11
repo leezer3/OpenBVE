@@ -5,10 +5,34 @@ namespace OpenBve
 {
     internal static partial class Renderer
     {
-        /// <summary>
-        /// This function renderers full-screen motion blur if selected
-        /// </summary>
-        private static void RenderFullscreenMotionBlur()
+		/// <summary>Intializes motion blur</summary>
+	    internal static void InitializeMotionBlur()
+	    {
+		    if (Interface.CurrentOptions.MotionBlur == Interface.MotionBlurMode.None)
+		    {
+			    return;
+		    }
+
+		    if (Renderer.PixelBufferOpenGlTextureIndex != 0)
+		    {
+			    GL.DeleteTextures(1, new int[] {Renderer.PixelBufferOpenGlTextureIndex});
+			    Renderer.PixelBufferOpenGlTextureIndex = 0;
+		    }
+		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
+		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
+		    Renderer.PixelBuffer = new byte[4 * w * h];
+		    int[] a = new int[1];
+		    GL.GenTextures(1, a);
+		    GL.BindTexture(TextureTarget.Texture2D, a[0]);
+		    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMagFilter.Linear);
+		    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb,
+			    PixelType.UnsignedByte, Renderer.PixelBuffer);
+		    Renderer.PixelBufferOpenGlTextureIndex = a[0];
+		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, 0, 0, w, h, 0);
+	    }
+
+	    /// <summary>This function renderers full-screen motion blur if selected</summary>
+		private static void RenderFullscreenMotionBlur()
         {
             int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
             int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 
@@ -22,10 +24,92 @@ namespace OpenBve {
 		/// <summary>Initializes the default values of the screen.</summary>
 		internal static void Initialize()
 		{
-            // --- video mode ---
+            //Initialize the values used by the renderer
             Width = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth;
             Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
             Fullscreen = Interface.CurrentOptions.FullscreenMode;
+			//Set a new graphics mode, using 8 bits for R,G,B,A & a 8 bit stencil buffer (Currently unused)
+			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+			if (Interface.CurrentOptions.FullscreenMode)
+			{
+				IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+				bool resolutionFound = false;
+				foreach (DisplayResolution currentResolution in resolutions)
+				{
+					//Test resolution
+					if (currentResolution.Width == Interface.CurrentOptions.FullscreenWidth &&
+					    currentResolution.Height == Interface.CurrentOptions.FullscreenHeight &&
+					    currentResolution.BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
+					{
+						try
+						{
+							OpenTK.DisplayDevice.Default.ChangeResolution(currentResolution);
+							Program.currentGameWindow = new OpenBVEGame(currentResolution.Width, currentResolution.Height, currentGraphicsMode,
+								GameWindowFlags.Default)
+							{
+								Visible = true,
+								WindowState = WindowState.Fullscreen,
+							};
+							resolutionFound = true;
+							break;
+						}
+						catch
+						{
+							//A candidate resolution was found, but we failed to switch to it
+							//Carry on enumerating through the rest of the resolutions, in case one with
+							//a different refresh rate but identical properties works
+							resolutionFound = false;
+						}
+					}
+				}
+				if (resolutionFound == false)
+				{
+					//Our resolution was not found at all
+					MessageBox.Show(
+						"The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine +
+						Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " +
+						Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
+						"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					return;
+				}
+			}
+			else
+			{
+
+				try
+				{
+					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
+						Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
+					{
+						Visible = true
+					};
+				}
+				catch
+				{
+					//Windowed mode failed to launch
+					MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
+									Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " +
+									Environment.NewLine +
+									"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
+						MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					return;
+				}
+			}
+			if (Program.currentGameWindow == null)
+			{
+				//We should never really get an unspecified error here, but it's good manners to handle all cases
+				MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.",
+					Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				return;
+			}
+
+			Program.currentGameWindow.TargetUpdateFrequency = 0;
+			Program.currentGameWindow.TargetRenderFrequency = 0;
+			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
+			
 		}
 		
         /// <summary>Resizes the OpenGL viewport if the window is resized</summary>
@@ -103,7 +187,7 @@ namespace OpenBve {
 			}
 			Renderer.InitializeLighting();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
-			MainLoop.InitializeMotionBlur();
+			Renderer.InitializeMotionBlur();
 			Timetable.CreateTimetable();
 			Timetable.UpdateCustomTimetable(null, null);
 			
