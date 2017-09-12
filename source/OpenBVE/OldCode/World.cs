@@ -608,7 +608,7 @@ namespace OpenBve {
 				double tr = World.CameraCurrentAlignment.TrackPosition;
 				AdjustAlignment(ref World.CameraCurrentAlignment.TrackPosition, World.CameraAlignmentDirection.TrackPosition, ref World.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
 				if (tr != World.CameraCurrentAlignment.TrackPosition) {
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, World.CameraCurrentAlignment.TrackPosition, true, false);
+					World.CameraTrackFollower.Update(World.CameraCurrentAlignment.TrackPosition, true, false);
 					UpdateViewingDistances();
 				}
 				// camera
@@ -764,7 +764,7 @@ namespace OpenBve {
 					double tr = World.CameraCurrentAlignment.TrackPosition;
 					AdjustAlignment(ref World.CameraCurrentAlignment.TrackPosition, World.CameraAlignmentDirection.TrackPosition, ref World.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
 					if (tr != World.CameraCurrentAlignment.TrackPosition) {
-						TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, World.CameraCurrentAlignment.TrackPosition, true, false);
+						World.CameraTrackFollower.Update(World.CameraCurrentAlignment.TrackPosition, true, false);
 						q = true;
 					}
 					if (q) {
@@ -795,7 +795,7 @@ namespace OpenBve {
 					d -= TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Position;
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
 					f.TriggerType = TrackManager.EventTriggerType.None;
-					TrackManager.UpdateTrackFollower(ref f, f.TrackPosition + d, true, false);
+					f.Update(f.TrackPosition + d, true, false);
 					double rx = f.WorldPosition.X - cx + World.CameraTrackFollower.WorldSide.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
 					double ry = f.WorldPosition.Y - cy + World.CameraTrackFollower.WorldSide.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
 					double rz = f.WorldPosition.Z - cz + World.CameraTrackFollower.WorldSide.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;

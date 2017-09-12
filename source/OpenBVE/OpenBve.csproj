@@ -147,6 +147,9 @@
     <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
@@ -340,7 +343,6 @@
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="OldCode\Timetable.cs" />
-    <Compile Include="OldCode\TrackManager.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
     <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />

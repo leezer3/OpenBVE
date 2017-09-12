@@ -80,7 +80,7 @@ namespace OpenBve
 			}
 			// process poi
 			if (j < 0) return false;
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
+			World.CameraTrackFollower.Update(t, true, false);
 			World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
 			World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
 			World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;

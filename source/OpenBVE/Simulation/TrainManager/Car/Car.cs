@@ -69,20 +69,38 @@ namespace OpenBve
 			{
 				if (baseTrain.State != TrainState.Disposed)
 				{
-					TrackManager.UpdateTrackFollower(ref FrontAxle.Follower, FrontAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref FrontBogie.FrontAxle.Follower, FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-					TrackManager.UpdateTrackFollower(ref FrontBogie.RearAxle.Follower, FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + Delta, true, true);
+					FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+					FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
 					if (baseTrain.State != TrainState.Disposed)
 					{
-						TrackManager.UpdateTrackFollower(ref RearAxle.Follower, RearAxle.Follower.TrackPosition + Delta, true, true);
-						TrackManager.UpdateTrackFollower(ref RearBogie.FrontAxle.Follower, RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-						TrackManager.UpdateTrackFollower(ref RearBogie.RearAxle.Follower, RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + Delta, true, true);
+						RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+						RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
 						if (baseTrain.State != TrainState.Disposed)
 						{
-							TrackManager.UpdateTrackFollower(ref BeaconReceiver, BeaconReceiver.TrackPosition + Delta, true, true);
+							BeaconReceiver.Update(BeaconReceiver.TrackPosition + Delta, true, true);
 						}
 					}
 				}
+			}
+
+			/// <summary>Call this method to update all track followers attached to the car</summary>
+			/// <param name="NewTrackPosition">The track position change</param>
+			/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
+			/// <param name="AddTrackInaccurary">Whether to add track innaccuarcy</param>
+			internal void UpdateTrackFollowers(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary)
+			{
+				//Car axles
+				FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				//Front bogie axles
+				FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				//Rear bogie axles
+
+				RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 			}
 
 			/// <summary>Initializes the car</summary>
@@ -109,10 +127,10 @@ namespace OpenBve
 			{
 				double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
 				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
-				TrackManager.UpdateTrackFollower(ref FrontAxle.Follower, s + d, false, false);
-				TrackManager.UpdateTrackFollower(ref RearAxle.Follower, s - d, false, false);
+				FrontAxle.Follower.Update(s + d, false, false);
+				RearAxle.Follower.Update(s - d, false, false);
 				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
-				TrackManager.UpdateTrackFollower(ref BeaconReceiver, b, false, false);
+				BeaconReceiver.Update(b, false, false);
 			}
 
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>

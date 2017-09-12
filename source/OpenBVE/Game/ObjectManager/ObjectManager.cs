@@ -76,8 +76,8 @@ namespace OpenBve
 								double delta = AnimatedWorldObjects[i].UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
 
 								//Update the front and rear axle track followers
-								TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].FrontAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
-								TrackManager.UpdateTrackFollower(ref AnimatedWorldObjects[i].RearAxleFollower, (AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
+								AnimatedWorldObjects[i].FrontAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
+								AnimatedWorldObjects[i].RearAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
 								//Update the base object position
 								AnimatedWorldObjects[i].FrontAxleFollower.UpdateWorldCoordinates(false);
 								AnimatedWorldObjects[i].RearAxleFollower.UpdateWorldCoordinates(false);

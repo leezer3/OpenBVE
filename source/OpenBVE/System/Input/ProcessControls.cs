@@ -770,10 +770,8 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
-											TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
-												World.CameraTrackFollower.TrackPosition + z, true, false);
-											World.CameraCurrentAlignment.TrackPosition =
-												World.CameraTrackFollower.TrackPosition;
+											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
+											World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
 											UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
@@ -841,8 +839,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
-											TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
-												World.CameraTrackFollower.TrackPosition + z, true, false);
+											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
 											World.CameraCurrentAlignment.TrackPosition =
 												World.CameraTrackFollower.TrackPosition;
 											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
@@ -864,7 +861,7 @@ namespace OpenBve
 										World.CameraCurrentAlignment.Roll = 0.0;
 										if (World.CameraMode == World.CameraViewMode.Track)
 										{
-											TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
+											World.CameraTrackFollower.Update(
 												TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,
 												false);
 										}
@@ -875,7 +872,7 @@ namespace OpenBve
 											{
 												double d = 30.0 +
 														   4.0*TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;
-												TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
+												World.CameraTrackFollower.Update(
 													TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower
 														.TrackPosition + d, true, false);
 											}
@@ -883,7 +880,7 @@ namespace OpenBve
 											{
 												double d = 30.0 -
 														   4.0*TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;
-												TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,
+												World.CameraTrackFollower.Update(
 													TrainManager.PlayerTrain.Cars[
 														TrainManager.PlayerTrain.Cars.Length - 1].RearAxle.Follower
 														.TrackPosition - d, true, false);

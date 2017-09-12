@@ -213,7 +213,7 @@ namespace OpenBve {
             World.CameraCurrentAlignment.Roll = 0.0;
             if (World.CameraMode == World.CameraViewMode.Track)
             {
-                TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower,TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,false);
+                World.CameraTrackFollower.Update(TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,false);
             }  
 		}
         
