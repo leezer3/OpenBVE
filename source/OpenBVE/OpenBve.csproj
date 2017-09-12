@@ -338,7 +338,7 @@
     <Compile Include="OldCode\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\NewCode\GameWindow.cs" />
+    <Compile Include="System\GameWindow.cs" />
     <Compile Include="OldCode\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
