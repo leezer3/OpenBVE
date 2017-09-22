@@ -5263,10 +5263,6 @@
 			this.labelNewGUID.TabIndex = 24;
 			this.labelNewGUID.Text = "The new package has been assigned the following GUID:";
 			// 
-			// openPackageFileDialog
-			// 
-			this.openPackageFileDialog.FileName = "openFileDialog1";
-			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
