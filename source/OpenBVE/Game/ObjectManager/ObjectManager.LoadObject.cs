@@ -98,6 +98,9 @@ namespace OpenBve
 					case TextEncoding.Encoding.Big5:
 						Encoding = System.Text.Encoding.GetEncoding(950);
 						break;
+					case TextEncoding.Encoding.EUC_KR:
+						Encoding = System.Text.Encoding.GetEncoding(949);
+						break;
 				}
 			}
 			string e = System.IO.Path.GetExtension(FileName);

@@ -55,6 +55,9 @@ namespace OpenBve
 								case TextEncoding.Encoding.Big5:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
 									break;
+								case TextEncoding.Encoding.EUC_KR:
+									Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+									break;
 								default:
 									Result.RouteEncoding = Encoding.Default;
 									break;
@@ -87,6 +90,9 @@ namespace OpenBve
 									break;
 								case TextEncoding.Encoding.Big5:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
+									break;
+								case TextEncoding.Encoding.EUC_KR:
+									Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
 									break;
 								default:
 									Result.TrainEncoding = Encoding.Default;
