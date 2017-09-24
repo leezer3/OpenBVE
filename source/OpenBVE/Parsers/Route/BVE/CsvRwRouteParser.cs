@@ -785,20 +785,49 @@ namespace OpenBve {
 									}
 									break;
 								case "$chr":
+								case "$chruni":
 									{
 										int x;
 										if (NumberFormats.TryParseIntVb6(s, out x)) {
-											if (x > 0 & x < 128) {
-												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + new string(Encoding.GetChars(new byte[] { (byte)x })) + Expressions[i].Text.Substring(h + 1);
-											} else {
+											if (x < 0)
+											{
+												//Must be non-negative
 												continueWithNextExpression = true;
-												Interface.AddMessage(Interface.MessageType.Error, false, "Index does not correspond to a valid ASCII character in " + t + Epilog);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Index must be a non-negative character in " + t + Epilog);
 											}
-										} else {
+											else
+											{
+												Expressions[i].Text = Expressions[i].Text.Substring(0, j) + char.ConvertFromUtf32(x) + Expressions[i].Text.Substring(h + 1);
+											}
+										}
+										else {
 											continueWithNextExpression = true;
 											Interface.AddMessage(Interface.MessageType.Error, false, "Index is invalid in " + t + Epilog);
 										}
 									} break;
+								case "$chrascii":
+								{
+									int x;
+									if (NumberFormats.TryParseIntVb6(s, out x))
+									{
+										if (x < 0 || x > 128)
+										{
+											//Standard ASCII characters from 0-128
+											continueWithNextExpression = true;
+											Interface.AddMessage(Interface.MessageType.Error, false, "Index does not correspond to a valid ASCII character in " + t + Epilog);
+										}
+										else
+										{
+											Expressions[i].Text = Expressions[i].Text.Substring(0, j) + char.ConvertFromUtf32(x) + Expressions[i].Text.Substring(h + 1);
+										}
+									}
+									else
+									{
+										continueWithNextExpression = true;
+										Interface.AddMessage(Interface.MessageType.Error, false, "Index is invalid in " + t + Epilog);
+									}
+								}
+									break;
 								case "$rnd":
 									{
 										int m = s.IndexOf(";", StringComparison.Ordinal);
