@@ -10,58 +10,58 @@ namespace OpenBve {
 		// --- win32 proxy calls ---
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "LoadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-		private extern static int Win32LoadDLL([MarshalAs(UnmanagedType.LPWStr)]string UnicodeFileName, [MarshalAs(UnmanagedType.LPStr)]string AnsiFileName);
+		private static extern int Win32LoadDLL([MarshalAs(UnmanagedType.LPWStr)]string UnicodeFileName, [MarshalAs(UnmanagedType.LPStr)]string AnsiFileName);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "UnloadDLL", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static int Win32UnloadDLL();
+		private static extern int Win32UnloadDLL();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "Load", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32Load();
+		private static extern void Win32Load();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "Dispose", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32Dispose();
+		private static extern void Win32Dispose();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "GetPluginVersion", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static int Win32GetPluginVersion();
+		private static extern int Win32GetPluginVersion();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetVehicleSpec", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetVehicleSpec(ref int spec);
+		private static extern void Win32SetVehicleSpec(ref int spec);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "Initialize", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32Initialize(int brake);
+		private static extern void Win32Initialize(int brake);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "Elapse", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32Elapse(ref int handles, ref double state, ref int panel, ref int sound);
+		private static extern void Win32Elapse(ref int handles, ref double state, ref int panel, ref int sound);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetPower", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetPower(int notch);
+		private static extern void Win32SetPower(int notch);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetBrake", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetBrake(int notch);
+		private static extern void Win32SetBrake(int notch);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetReverser", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetReverser(int pos);
+		private static extern void Win32SetReverser(int pos);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "KeyDown", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32KeyDown(int atsKeyCode);
+		private static extern void Win32KeyDown(int atsKeyCode);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "KeyUp", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32KeyUp(int atsKeyCode);
+		private static extern void Win32KeyUp(int atsKeyCode);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "HornBlow", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32HornBlow(int hornType);
+		private static extern void Win32HornBlow(int hornType);
 
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "DoorOpen", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32DoorOpen();
+		private static extern void Win32DoorOpen();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "DoorClose", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32DoorClose();
+		private static extern void Win32DoorClose();
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetSignal", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetSignal(int signal);
+		private static extern void Win32SetSignal(int signal);
 		
 		[DllImport("AtsPluginProxy.dll", EntryPoint = "SetBeaconData", ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private extern static void Win32SetBeaconData(ref int beacon);
+		private static extern void Win32SetBeaconData(ref int beacon);
 		
 		[StructLayout(LayoutKind.Sequential, Size = 20)]
 		private struct Win32VehicleSpec {
