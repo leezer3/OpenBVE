@@ -320,7 +320,7 @@ namespace OpenBve {
 			}
 			ParseRouteForData(FileName, IsRW, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;
-			ApplyRouteData(FileName, Encoding, ref Data, PreviewOnly);
+			ApplyRouteData(FileName, ref Data, PreviewOnly);
 
 //		    if (PreviewOnly == true && customLoadScreen == false)
 //		    {

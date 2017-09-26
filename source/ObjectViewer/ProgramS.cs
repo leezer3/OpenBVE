@@ -88,7 +88,7 @@ namespace OpenBve {
 	                System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
 	                for (int i = 0; i < args.Length; i++)
 	                {
-	                    if (System.IO.File.Exists(args[i]))
+	                    if (args[i] != null && System.IO.File.Exists(args[i]))
 	                    {
 	                        if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase))
 	                        {

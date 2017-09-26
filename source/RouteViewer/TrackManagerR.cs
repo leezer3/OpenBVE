@@ -201,7 +201,7 @@ namespace OpenBve {
 			AtsPTemporarySpeedRestriction = -2,
 			AtsPPermanentSpeedRestriction = -3
 		}
-        internal enum TransponderSpecialSection : int {
+        internal enum TransponderSpecialSection {
             NextRedSection = -2,
         }
         internal class TransponderEvent : GeneralEvent {

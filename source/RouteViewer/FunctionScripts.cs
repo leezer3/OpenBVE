@@ -5,7 +5,7 @@ namespace OpenBve {
 	internal static class FunctionScripts {
 
 		// instruction set
-		internal enum Instructions : int {
+		internal enum Instructions {
 			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
 			StackCopy, StackSwap,
 			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, MathRandom, MathRandomInt,

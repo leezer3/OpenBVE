@@ -3,7 +3,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 
 namespace Plugin {
-	public partial class Plugin : SoundInterface {
+	public class Plugin : SoundInterface {
 
 		// --- members ---
 		

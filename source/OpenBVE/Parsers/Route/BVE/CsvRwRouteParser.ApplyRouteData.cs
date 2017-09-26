@@ -7,7 +7,7 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void ApplyRouteData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly)
+		private static void ApplyRouteData(string FileName, ref RouteData Data, bool PreviewOnly)
 		{
 			if (CompatibilityObjectsUsed != 0)
 			{
