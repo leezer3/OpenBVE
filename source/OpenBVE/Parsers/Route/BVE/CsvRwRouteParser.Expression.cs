@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -11,6 +12,35 @@ namespace OpenBve
 			internal int Line;
 			internal int Column;
 			internal double TrackPositionOffset;
+
+			/// <summary>Converts a RW formatted expression to CSV format</summary>
+			/// <param name="Section">The current section</param>
+			/// <param name="SectionAlwaysPrefix">Whether the section prefix should always be applied</param>
+			internal void ConvertRwToCsv(string Section, bool SectionAlwaysPrefix)
+			{
+				int Equals = Text.IndexOf('=');
+				if (Equals >= 0)
+				{
+					// handle RW cycle syntax
+					string t = Text.Substring(0, Equals);
+					if (Section.ToLowerInvariant() == "cycle" & SectionAlwaysPrefix)
+					{
+						double b; if (NumberFormats.TryParseDoubleVb6(t, out b))
+						{
+							t = ".Ground(" + b + ")";
+						}
+					}
+					else if (Section.ToLowerInvariant() == "signal" & SectionAlwaysPrefix)
+					{
+						double b; if (NumberFormats.TryParseDoubleVb6(t, out b))
+						{
+							t = ".Void(" + b + ")";
+						}
+					}
+					// convert RW style into CSV style
+					Text = t + " " + Text.Substring(Equals + 1);
+				}
+			}
 
 			/// <summary>Separates an expression into it's consituent command and arguments</summary>
 			/// <param name="Command">The command</param>
