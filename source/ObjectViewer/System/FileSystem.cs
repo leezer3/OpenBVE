@@ -23,9 +23,6 @@ namespace OpenBve
 		/// <summary>The initial location of the Railway/Route folder.</summary>
 		internal string InitialRouteFolder;
 
-		/// <summary>The initial location of the Railway folder.</summary>
-		internal string InitialRailwayFolder;
-
 		/// <summary>The initial location of the Train folder.</summary>
 		internal string InitialTrainFolder;
 
@@ -67,7 +64,6 @@ namespace OpenBve
 			this.ManagedContentFolders = new string[] { OpenBveApi.Path.CombineDirectory(userDataFolder, "ManagedContent") };
 			this.SettingsFolder = OpenBveApi.Path.CombineDirectory(userDataFolder, "Settings");
 			this.InitialRouteFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway"), "Route");
-			this.InitialRailwayFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
 			this.RouteInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Railway");
 			this.InitialTrainFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");
 			this.TrainInstallationDirectory = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(userDataFolder, "LegacyContent"), "Train");

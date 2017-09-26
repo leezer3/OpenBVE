@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -756,9 +755,6 @@ namespace OpenBve
 			}
 		}
 
-		internal static readonly object LoadingLock = new object();
-		internal static bool LoadingRemakeCurrent = false;
-		
 		private static readonly object jobLock = new object();
 		private static Queue<ThreadStart> jobs;
 		private static Queue<object> locks;

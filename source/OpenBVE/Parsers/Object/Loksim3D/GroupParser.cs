@@ -27,10 +27,10 @@ namespace OpenBve
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			//May need to be changed to use de-DE
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-			Result.Objects = new ObjectManager.AnimatedObject[0];
+			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			{
+				Objects = new ObjectManager.AnimatedObject[0]
+			};
 			try
 			{
 				currentXML.Load(FileName);
@@ -60,12 +60,12 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Lines.Length; i++)
 				{
-					while (Lines[i].IndexOf("\"\"") != -1)
+					while (Lines[i].IndexOf("\"\"", StringComparison.Ordinal) != -1)
 					{
 						//Loksim parser tolerates multiple quotes, strict XML does not
 						Lines[i] = Lines[i].Replace("\"\"", "\"");
 					}
-					while (Lines[i].IndexOf("  ") != -1)
+					while (Lines[i].IndexOf("  ", StringComparison.Ordinal) != -1)
 					{
 						//Replace double-spaces with singles
 						Lines[i] = Lines[i].Replace("  ", " ");
@@ -184,11 +184,15 @@ namespace OpenBve
 
 					//Single mesh object, containing all static components of the LS3D object
 					//If we use multiples, the Z-sorting throws a wobbly
-					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject();
-					staticObject.Mesh = new World.Mesh();
-					staticObject.Mesh.Vertices = new World.Vertex[0];
-					staticObject.Mesh.Faces = new World.MeshFace[0];
-					staticObject.Mesh.Materials = new World.MeshMaterial[0];
+					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject
+					{
+						Mesh = new World.Mesh
+						{
+							Vertices = new World.Vertex[0],
+							Faces = new World.MeshFace[0],
+							Materials = new World.MeshMaterial[0]
+						}
+					};
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))

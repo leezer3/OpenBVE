@@ -1906,12 +1906,6 @@ namespace OpenBve
 							follower.Update(p - 1.0, true, false);
 							follower.Update(p, true, false);
 							TrackManager.CurrentTrack.Elements[i].CurveRadius = r;
-
-							//TODO: Why are these commented out?
-							//Michelle commented them out.....
-
-							//TrackManager.CurrentTrack.Elements[i].CurveCant = TrackManager.CurrentTrack.Elements[i].CurveCant;
-							//TrackManager.CurrentTrack.Elements[i].CurveCantInterpolation = TrackManager.CurrentTrack.Elements[i].CurveCantInterpolation;
 							TrackManager.CurrentTrack.Elements[i].WorldPosition = follower.WorldPosition;
 							TrackManager.CurrentTrack.Elements[i].WorldDirection = follower.WorldDirection;
 							TrackManager.CurrentTrack.Elements[i].WorldUp = follower.WorldUp;

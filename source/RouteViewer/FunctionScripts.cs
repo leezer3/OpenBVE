@@ -1168,7 +1168,7 @@ namespace OpenBve {
 											if (k > 0) r.Append(',');
 											r.Append(p[k]);
 										}
-										Expression = a + "[" + r.ToString() + "]" + c;
+										Expression = a + "[" + r + "]" + c;
 										s = i + r.Length + 2;
 										q = true;
 									} break;

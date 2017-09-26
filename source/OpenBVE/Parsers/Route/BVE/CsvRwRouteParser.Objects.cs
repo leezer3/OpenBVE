@@ -15,11 +15,13 @@
 				ObjectManager.StaticObject s = (ObjectManager.StaticObject)Prototype;
 				return GetMirroredStaticObject(s);
 			}
-			else if (Prototype is ObjectManager.AnimatedObjectCollection)
+			if (Prototype is ObjectManager.AnimatedObjectCollection)
 			{
 				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
-				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-				Result.Objects = new ObjectManager.AnimatedObject[a.Objects.Length];
+				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+				{
+					Objects = new ObjectManager.AnimatedObject[a.Objects.Length]
+				};
 				for (int i = 0; i < a.Objects.Length; i++)
 				{
 					Result.Objects[i] = a.Objects[i].Clone();
@@ -36,10 +38,7 @@
 				}
 				return Result;
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 
 		/// <summary>Creates a mirrored copy of the prototype object</summary>

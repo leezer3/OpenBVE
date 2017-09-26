@@ -73,7 +73,7 @@ namespace OpenBve {
 				}
 				int s0w = Interface.RoundToPowerOfTwo((int)Math.Ceiling((double)s1 * 1.25));
 				int s0h = s0w;
-				FontStyle fs = Font == 0 ? FontStyle.Regular : FontStyle.Regular;
+				FontStyle fs = FontStyle.Regular;
 				Bitmap b = new Bitmap(s0w, s0h, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 				Graphics g = Graphics.FromImage(b);
 				g.Clear(Color.Black);
