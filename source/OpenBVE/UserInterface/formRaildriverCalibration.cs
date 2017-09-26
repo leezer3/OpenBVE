@@ -15,7 +15,7 @@ namespace OpenBve.UserInterface
 			if (JoystickManager.devices.Length == 0)
 			{
 				MessageBox.Show(Interface.GetInterfaceString("raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Close();
+				Load += (s, e) => Close();
 				return;
 			}
 			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)

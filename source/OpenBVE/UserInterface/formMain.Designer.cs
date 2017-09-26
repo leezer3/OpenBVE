@@ -1430,6 +1430,7 @@
 			this.buttonRailDriverCalibration.TabIndex = 4;
 			this.buttonRailDriverCalibration.Text = "Launch...";
 			this.buttonRailDriverCalibration.UseVisualStyleBackColor = true;
+			this.buttonRailDriverCalibration.Click += new System.EventHandler(this.buttonRailDriverCalibration_Click);
 			// 
 			// comboBoxRailDriverUnits
 			// 
@@ -1442,6 +1443,7 @@
 			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
 			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(170, 21);
 			this.comboBoxRailDriverUnits.TabIndex = 3;
+			this.comboBoxRailDriverUnits.SelectedIndexChanged += new System.EventHandler(this.comboBoxRailDriverUnits_SelectedIndexChanged);
 			// 
 			// labelRailDriverSpeedUnits
 			// 

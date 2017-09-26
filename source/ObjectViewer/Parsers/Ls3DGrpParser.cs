@@ -8,7 +8,7 @@ namespace OpenBve
 	internal static class Ls3DGrpParser
 	{
 		/// <summary>A GruppenObject contains a single textured mesh stored in a separate .ls3dobj file (Roughly equivilant to a MeshBuilder)</summary>
-		internal class GruppenObject
+		private class GruppenObject
 		{
 			/// <summary>The on-disk path to the mesh</summary>
 			internal string Name;
@@ -35,6 +35,7 @@ namespace OpenBve
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
 		/// <param name="LoadMode">The object load mode</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
+		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
@@ -59,10 +60,13 @@ namespace OpenBve
 						{
 							//Attempt to find the text encoding and re-read the file
 							var result = xmlReader.GetAttribute("encoding");
-							var e = System.Text.Encoding.GetEncoding(result);
-							Lines = File.ReadAllLines(FileName, e);
-							//Turf out the old encoding, as our string array should now be UTF-8
-							Lines[0] = "<?xml version=\"1.0\"?>";
+							if (result != null)
+							{
+								var e = System.Text.Encoding.GetEncoding(result);
+								Lines = File.ReadAllLines(FileName, e);
+								//Turf out the old encoding, as our string array should now be UTF-8
+								Lines[0] = "<?xml version=\"1.0\"?>";
+							}
 						}
 					}
 				}

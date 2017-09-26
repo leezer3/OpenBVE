@@ -8,7 +8,7 @@ namespace OpenBve
 	internal static class Ls3DGrpParser
 	{
 
-		internal class GruppenObject
+		private class GruppenObject
 		{
 			//A gruppenobject holds a list of ls3dobjs, which appear to be roughly equivilant to meshbuilders
 			internal string Name;
@@ -48,10 +48,13 @@ namespace OpenBve
 						{
 							//Attempt to find the text encoding and re-read the file
 							var result = xmlReader.GetAttribute("encoding");
-							var e = System.Text.Encoding.GetEncoding(result);
-							Lines = File.ReadAllLines(FileName, e);
-							//Turf out the old encoding, as our string array should now be UTF-8
-							Lines[0] = "<?xml version=\"1.0\"?>";
+							if (result != null)
+							{
+								var e = System.Text.Encoding.GetEncoding(result);
+								Lines = File.ReadAllLines(FileName, e);
+								//Turf out the old encoding, as our string array should now be UTF-8
+								Lines[0] = "<?xml version=\"1.0\"?>";
+							}
 						}
 					}
 				}

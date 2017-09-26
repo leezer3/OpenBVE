@@ -8,7 +8,7 @@ namespace OpenBve
 	internal static class Ls3DGrpParser
 	{
 		/// <summary>A GruppenObject contains a single textured mesh stored in a separate .ls3dobj file (Roughly equivilant to a MeshBuilder)</summary>
-		internal class GruppenObject
+		private class GruppenObject
 		{
 			/// <summary>The on-disk path to the mesh</summary>
 			internal string Name;
@@ -57,10 +57,13 @@ namespace OpenBve
 						{
 							//Attempt to find the text encoding and re-read the file
 							var result = xmlReader.GetAttribute("encoding");
-							var e = System.Text.Encoding.GetEncoding(result);
-							Lines = File.ReadAllLines(FileName, e);
-							//Turf out the old encoding, as our string array should now be UTF-8
-							Lines[0] = "<?xml version=\"1.0\"?>";
+							if (result != null)
+							{
+								var e = System.Text.Encoding.GetEncoding(result);
+								Lines = File.ReadAllLines(FileName, e);
+								//Turf out the old encoding, as our string array should now be UTF-8
+								Lines[0] = "<?xml version=\"1.0\"?>";
+							}
 						}
 					}
 				}

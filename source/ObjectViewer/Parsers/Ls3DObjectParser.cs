@@ -71,9 +71,7 @@ namespace OpenBve
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
-		/// <param name="RotationX">The X-axis rotation to be applied</param>
-		/// <param name="RotationY">The Y-axis rotation to be applied</param>
-		/// <param name="RotationZ">The Y-axis rotation to be applied</param>
+		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
         {
