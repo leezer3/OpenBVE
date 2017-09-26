@@ -407,7 +407,6 @@ namespace OpenBve {
 	                Fonts.Initialize();
 	                Interface.ClearMessages();
 	                Files = new string[] {};
-	                UpdateCaption();
 	                break;
 	            case Key.Left:
 	                RotateX = -1;
@@ -550,21 +549,6 @@ namespace OpenBve {
 	                break;
 	        }
 	    }
-
-	    // update caption
-	    internal static void UpdateCaption() {
-			if (Files.Length != 0) {
-				string Title = "";
-				for (int i = 0; i < Files.Length; i++) {
-					if (i != 0) Title += ", ";
-					Title += System.IO.Path.GetFileName(Files[i]);
-				}
-				//Sdl.SDL_WM_SetCaption(Title + " - " + Application.ProductName, null);
-			} else {
-				//Sdl.SDL_WM_SetCaption(Application.ProductName, null);
-			}
-		}
-		
 		
 		/// <summary>The object that serves as an authentication for the SetPackageLookupDirectories call.</summary>
 		private static object SetPackageLookupDirectoriesAuthentication = null;
