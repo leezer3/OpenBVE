@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using OpenTK;
 using OpenTK.Input;
 using PIEHid32Net;
 

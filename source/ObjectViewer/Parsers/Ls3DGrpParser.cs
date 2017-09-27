@@ -39,8 +39,6 @@ namespace OpenBve
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			//May need to be changed to use de-DE
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
 			Result.Objects = new ObjectManager.AnimatedObject[0];
 			try
@@ -193,7 +191,6 @@ namespace OpenBve
 														if (Object.FixedDynamicVisibility)
 														{
 															Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetDynamicFunction(attribute.Value));
-															int t = 0;
 														}
 														break;
 												}

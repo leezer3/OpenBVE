@@ -72,7 +72,7 @@ namespace OpenBveApi.Textures {
 				throw new ArgumentException("The number of bits per pixel is supported.");
 			}
 		    if (bytes == null) {
-		        throw new ArgumentNullException("bytes");
+		        throw new ArgumentNullException(nameof(bytes));
 		    }
 		    if (bytes.Length != 4 * width * height) {
 		        throw new ArgumentException("The data bytes are not of the expected length.");

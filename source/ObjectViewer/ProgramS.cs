@@ -6,14 +6,12 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using System.Text;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
-using MouseEventArgs = OpenTK.Input.MouseEventArgs;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {

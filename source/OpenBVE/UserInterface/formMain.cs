@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -1127,7 +1125,6 @@ namespace OpenBve {
 			formMain_Resize(null, null);
 			if (this.WindowState != FormWindowState.Maximized)
 			{
-				Size sss = this.ClientRectangle.Size;
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
 				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height)
 				{

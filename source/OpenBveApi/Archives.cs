@@ -1,7 +1,5 @@
 ﻿#pragma warning disable 0659, 0661
 
-using System;
-
 namespace OpenBveApi.Archives {
 
 	/* ----------------------------------------

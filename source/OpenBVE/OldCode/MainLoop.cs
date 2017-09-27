@@ -5,7 +5,6 @@ using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace OpenBve {
 	internal static partial class MainLoop {

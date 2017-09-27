@@ -77,8 +77,6 @@ namespace OpenBve
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
-            //May need to be changed to use de-DE
-            System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
             //Initialise the object
             ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Faces = new World.MeshFace[] { };

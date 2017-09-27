@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Runtime;
+﻿using OpenBveApi.Runtime;
 
 namespace Plugin {
 	internal class Sounds {

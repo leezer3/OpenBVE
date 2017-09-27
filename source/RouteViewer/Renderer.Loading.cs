@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;
-using System.Threading;
-// for AssemblyVersion
 using OpenBveApi.Colors;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve

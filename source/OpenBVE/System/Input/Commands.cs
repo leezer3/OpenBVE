@@ -306,13 +306,13 @@ namespace OpenBve {
 		internal static VirtualKeys SecurityToVirtualKey(Command cmd)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
-			if (cmdname == null) throw new ArgumentNullException("cmd");
+			if (cmdname == null) throw new ArgumentNullException(nameof(cmd));
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
 			VirtualKeys key;
 			if (!Enum.TryParse(cmdname, out key))
 				throw new ArgumentException("VirtualKeys does not contain following key: " +
-					cmdname, "cmd");
+					cmdname, nameof(cmd));
 			return key;
 		}
 	}

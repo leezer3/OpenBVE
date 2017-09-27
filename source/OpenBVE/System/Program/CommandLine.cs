@@ -18,10 +18,10 @@ namespace OpenBve
 			for (int i = 0; i < Arguments.Length; i++)
 			{
 				int equals = Arguments[i].IndexOf('=');
-				if (@equals >= 0)
+				if (equals >= 0)
 				{
-					string key = Arguments[i].Substring(0, @equals).Trim().ToLowerInvariant();
-					string value = Arguments[i].Substring(@equals + 1).Trim();
+					string key = Arguments[i].Substring(0, equals).Trim().ToLowerInvariant();
+					string value = Arguments[i].Substring(equals + 1).Trim();
 					switch (key)
 					{
 						case "/route":

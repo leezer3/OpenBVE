@@ -8,7 +8,6 @@ using SharpCompress.Writer;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Drawing;
-using System.IO.Pipes;
 using System.Linq;
 using SharpCompress.Archive;
 

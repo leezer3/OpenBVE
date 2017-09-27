@@ -1107,7 +1107,6 @@ namespace OpenBve {
 			int m = (int)Math.Floor(Time / 60.0);
 			Time -= (double)m * 60.0;
 			int s = (int)Math.Floor(Time);
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			return h.ToString("00") + ":" + m.ToString("00") + ":" + s.ToString("00");
 		}
 

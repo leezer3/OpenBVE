@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;

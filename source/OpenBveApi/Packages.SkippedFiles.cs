@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OpenBveApi.Packages
+﻿namespace OpenBveApi.Packages
 {
 	/// <summary>Provides functions for manipulating OpenBVE packages</summary>
 	public static partial class Manipulation

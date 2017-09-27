@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
-using OpenBveApi.Math;
 
 namespace Plugin {
 	/// <summary>Represents ATS-P.</summary>

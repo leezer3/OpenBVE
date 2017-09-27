@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;			// for AssemblyVersion
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 

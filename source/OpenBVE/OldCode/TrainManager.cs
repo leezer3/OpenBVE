@@ -257,11 +257,9 @@ namespace OpenBve
 		}
 		internal struct TrainSpecs
 		{
-			internal double TotalMass;
 			internal ReverserHandle CurrentReverser;
 			internal double CurrentAverageSpeed;
 			internal double CurrentAverageAcceleration;
-			internal double CurrentAverageJerk;
 			internal double CurrentAirPressure;
 			internal double CurrentAirDensity;
 			internal double CurrentAirTemperature;
@@ -1585,7 +1583,6 @@ namespace OpenBve
 			// update average data
 			Train.Specs.CurrentAverageSpeed = 0.0;
 			Train.Specs.CurrentAverageAcceleration = 0.0;
-			Train.Specs.CurrentAverageJerk = 0.0;
 			double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{

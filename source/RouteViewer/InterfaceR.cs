@@ -7,7 +7,6 @@
 
 using System;
 using System.Globalization;
-using OpenBveApi.Colors;
 
 namespace OpenBve {
 
