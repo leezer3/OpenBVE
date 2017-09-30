@@ -13,6 +13,11 @@ namespace LBAHeader
 			{
 				//If we can't find our initial argument, try and locate the openBVE executable in our directory
 				string ff = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				if (ff == null)
+				{
+					Console.WriteLine("Unable to find the executing assembly path....");
+					return;
+				}
 				f = System.IO.Path.Combine(ff, "OpenBve.exe");
 			}
 			if (!System.IO.File.Exists(f))

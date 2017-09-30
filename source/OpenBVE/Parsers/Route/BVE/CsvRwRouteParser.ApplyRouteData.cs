@@ -1106,7 +1106,7 @@ namespace OpenBve
 								wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
 								wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
 								double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
-								ObjectManager.UnifiedObject obj = null;
+								ObjectManager.UnifiedObject obj;
 								Data.Structure.FreeObjects.TryGetValue(sttype, out obj);
 								obj.CreateObject(wpos, RailTransformation, new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch, Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 							}

@@ -328,7 +328,12 @@ namespace OpenBveApi.Packages
 						}
 						//Create temp directory and XML file
 						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
-						Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempXML));
+						string tempPath = System.IO.Path.GetDirectoryName(tempXML);
+						if (tempPath == null)
+						{
+							throw new Exception("Unable to create the temporary directory for package compression.");
+						}
+						Directory.CreateDirectory(tempPath);
 						using (StreamWriter sw = new StreamWriter(tempXML))
 						{
 							//TODO: Let's see if we can get the serializer working everywhere in the solution.....

@@ -1372,7 +1372,7 @@ namespace OpenBve {
 			{
 				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
 			}	
-			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1)
+			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
