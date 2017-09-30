@@ -4,8 +4,10 @@ using System.Windows.Forms;
 
 namespace OpenBve.UserInterface
 {
+	/// <inheritdoc />
 	public partial class formRaildriverCalibration : Form
 	{
+		/// <inheritdoc />
 		public formRaildriverCalibration()
 		{
 			InitializeComponent();

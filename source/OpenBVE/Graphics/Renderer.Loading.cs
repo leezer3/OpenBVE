@@ -94,13 +94,13 @@ namespace OpenBve {
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// BACKGROUND IMAGE
-			int		bkgHeight, bkgWidth;
 			int		fontHeight	= (int)Fonts.SmallFont.FontSize;
 			int		logoBottom;
 //			int		versionTop;
 			int		halfWidth	= Screen.Width/2;
 			if (TextureLoadingBkg != null)
 			{
+				int bkgHeight, bkgWidth;
 				// stretch the background image to fit at least one screen dimension
 				double ratio = (double) TextureLoadingBkg.Width/(double) TextureLoadingBkg.Height;
 				if (Screen.Width/ratio > Screen.Height) // if screen ratio is shorter than bkg...

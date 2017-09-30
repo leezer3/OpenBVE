@@ -15,7 +15,9 @@ namespace OpenBve {
 		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
 		/// <returns>The UID</returns>
 		[DllImport("libc")]
+#pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		public static extern uint getuid();
+#pragma warning restore IDE1006
 
 		// --- members ---
 

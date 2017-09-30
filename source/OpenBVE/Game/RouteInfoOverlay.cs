@@ -66,7 +66,7 @@ namespace OpenBve
 		{
 			if (currentState == state.none)
 				return;
-			int i, trainX, trainZ, xPos, zPos;
+			int xPos, zPos;
 			// size the image to half of the smallest screen size, but not larger than default size
 			// NO: compressing the image below its original size makes texs hard to read
 //			int		width		= Math.Min(Math.Min(Screen.Height, Screen.Width) / 2,
@@ -80,10 +80,10 @@ namespace OpenBve
 				Renderer.DrawRectangle(mapImage, origin, mapSize, null);
 				// get current train position
 				int n = TrainManager.Trains.Length;
-				for (i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
-					trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
-					trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
+					int trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
+					int trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
 					xPos = mapSize.Width * (trainX - Game.RouteInformation.RouteMinX) /
 							(Game.RouteInformation.RouteMaxX - Game.RouteInformation.RouteMinX) - trainDotRadius;
