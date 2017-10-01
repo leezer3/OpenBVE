@@ -86,7 +86,7 @@ namespace OpenBve {
 					int Skips = 0;
 					System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
 					for (int i = 0; i < args.Length; i++) {
-						if (System.IO.File.Exists(args[i])) {
+						if (args[i] != null && System.IO.File.Exists(args[i])) {
 							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase)) {
 								string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
 								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0) {

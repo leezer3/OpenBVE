@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using OpenBve.Parsers.Train;
-using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class Loading {

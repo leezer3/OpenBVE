@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Mozilla.NUniversalCharDet;
 
 namespace OpenBve
@@ -36,7 +35,9 @@ namespace OpenBve
 			/// <summary>Windows-1252 (Legacy Microsoft)</summary>
 			Windows1252,
 			/// <summary>BIG5</summary>
-			Big5
+			Big5,
+			/// <summary>Legacy Korean</summary>
+			EUC_KR
 		}
 
 		/// <summary>Gets the character endcoding of a file</summary>
@@ -61,6 +62,10 @@ namespace OpenBve
 					return System.Text.Encoding.GetEncoding(12001);
 				case Encoding.Shift_JIS:
 					return System.Text.Encoding.GetEncoding(932);
+				case Encoding.Big5:
+					return System.Text.Encoding.GetEncoding(950);
+				case Encoding.EUC_KR:
+					return System.Text.Encoding.GetEncoding(949);
 				default:
 					return System.Text.Encoding.Default;
 			}
@@ -115,6 +120,8 @@ namespace OpenBve
 							return Encoding.Windows1252;
 						}
 						return Encoding.Big5;
+					case "EUC-KR":
+						return Encoding.EUC_KR;
 				}
 				Det.Reset();
 				return Encoding.Unknown;

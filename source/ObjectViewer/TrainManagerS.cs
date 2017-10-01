@@ -5,7 +5,6 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
 using OpenBveApi.Math;
 
 namespace OpenBve {

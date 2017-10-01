@@ -109,6 +109,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\Events\Events.cs" />
+    <Compile Include="Game\Events\Events.TriggerType.cs" />
+    <Compile Include="Game\Events\EventTypes\BackgroundChange.cs" />
+    <Compile Include="Game\Events\EventTypes\BrightnessChange.cs" />
+    <Compile Include="Game\Events\EventTypes\FogChange.cs" />
+    <Compile Include="Game\Events\EventTypes\Markers.cs" />
+    <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
+    <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
+    <Compile Include="Game\Events\EventTypes\Sounds.cs" />
+    <Compile Include="Game\Events\EventTypes\SpeedLimit.cs" />
+    <Compile Include="Game\Events\EventTypes\Station.cs" />
+    <Compile Include="Game\Events\EventTypes\TrackEnd.cs" />
+    <Compile Include="Game\Events\EventTypes\Transponder.cs" />
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.ImageMessage.cs" />
@@ -134,6 +147,9 @@
     <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
+    <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
@@ -322,12 +338,11 @@
     <Compile Include="OldCode\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\NewCode\GameWindow.cs" />
+    <Compile Include="System\GameWindow.cs" />
     <Compile Include="OldCode\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="OldCode\Timetable.cs" />
-    <Compile Include="OldCode\TrackManager.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
     <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
@@ -392,6 +407,7 @@
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
   <!-- Optionally make the import portable across VS versions -->

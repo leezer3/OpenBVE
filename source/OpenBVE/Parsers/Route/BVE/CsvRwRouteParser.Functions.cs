@@ -90,7 +90,7 @@ namespace OpenBve
 			for (int i = 0; i < Files.Length; i++)
 			{
 				string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
-				if (a == null) return Textures;
+				if (a == null || Name == null) return Textures;
 				if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase))
 				{
 					if (a.Length > Name.Length)

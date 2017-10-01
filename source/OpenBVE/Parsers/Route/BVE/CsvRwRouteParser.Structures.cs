@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile

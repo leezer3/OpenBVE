@@ -15,7 +15,9 @@ namespace OpenBve {
 		/// <summary>Gets the UID of the current user if running on a Unix based system</summary>
 		/// <returns>The UID</returns>
 		[DllImport("libc")]
+#pragma warning disable IDE1006 // Suppress the VS2017 naming style rule, as this is an external syscall
 		public static extern uint getuid();
+#pragma warning restore IDE1006
 
 		// --- members ---
 
@@ -107,7 +109,7 @@ namespace OpenBve {
 						"OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
 						"Please follow the install prompts.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 
-					ProcessStartInfo info = new ProcessStartInfo(System.IO.Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
+					ProcessStartInfo info = new ProcessStartInfo(Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
 					info.UseShellExecute = true;
 					if (Environment.OSVersion.Version.Major >= 6)
 					{
@@ -115,8 +117,17 @@ namespace OpenBve {
 					}
 					try
 					{
-						System.Diagnostics.Process p = System.Diagnostics.Process.Start(info);
-						p.WaitForExit();
+						Process p = Process.Start(info);
+						if (p != null)
+						{
+							p.WaitForExit();
+						}
+						else
+						{
+							//For unknown reasons, the process failed to trigger, but did not raise an exception itself
+							//Throw one
+							throw new Win32Exception();
+						}
 					}
 					catch (Win32Exception)
 					{

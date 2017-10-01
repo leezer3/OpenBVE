@@ -248,12 +248,12 @@ namespace TrainEditor {
 		}
 		/// <summary>Saves the content of a textbox into an output parameter and creates a message box if the textbox contains invalid data.</summary>
 		/// <param name="Box">A textbox control.</param>
-		/// <param name="Text">The description of the textbox.</param>
+		/// <param name="Description">The description of the textbox.</param>
 		/// <param name="Page">The tabpage the textbox resides in.</param>
 		/// <param name="Range">The allowed number range.</param>
 		/// <param name="Value">The output parameter that receives the numeric value of the textbox content.</param>
 		/// <returns>A boolean indicating the success of the operation.</returns>
-		private bool SaveControlContent(TextBox Box, string Text, TabPage Page, NumberRange Range, out int Value) {
+		private bool SaveControlContent(TextBox Box, string Description, TabPage Page, NumberRange Range, out int Value) {
 			bool error;
 			if (int.TryParse(Box.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out Value)) {
 				switch (Range) {
@@ -283,7 +283,7 @@ namespace TrainEditor {
 						prefix = "";
 						break;
 				}
-				MessageBox.Show(Text + " must be a " + prefix + "integer.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Description + " must be a " + prefix + "integer.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = Page;
 				Box.SelectAll();
 				Box.Focus();
@@ -294,12 +294,12 @@ namespace TrainEditor {
 		}
 		/// <summary>Saves the content of a textbox into an output parameter and creates a message box if the textbox contains invalid data.</summary>
 		/// <param name="Box">A textbox control.</param>
-		/// <param name="Text">The description of the textbox.</param>
+		/// <param name="Description">The description of the textbox.</param>
 		/// <param name="Page">The tabpage the textbox resides in.</param>
 		/// <param name="Range">The allowed number range.</param>
 		/// <param name="Value">The output parameter that receives the numeric value of the textbox content.</param>
 		/// <returns>A boolean indicating the success of the operation.</returns>
-		private bool SaveControlContent(TextBox Box, string Text, TabPage Page, NumberRange Range, out double Value) {
+		private bool SaveControlContent(TextBox Box, string Description, TabPage Page, NumberRange Range, out double Value) {
 			bool error;
 			if (double.TryParse(Box.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out Value)) {
 				switch (Range) {
@@ -329,7 +329,7 @@ namespace TrainEditor {
 						prefix = "";
 						break;
 				}
-				MessageBox.Show(Text + " must be a " + prefix + "floating-point number.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Description + " must be a " + prefix + "floating-point number.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = Page;
 				Box.SelectAll();
 				Box.Focus();
@@ -576,7 +576,6 @@ namespace TrainEditor {
 				double factorX = AccelerationMaximumX / (double)pictureboxAcceleration.ClientRectangle.Width;
 				double factory = -(double)pictureboxAcceleration.ClientRectangle.Height / AccelerationMaximumY;
 				double offsety = (double)pictureboxAcceleration.ClientRectangle.Height;
-				bool resistance = checkboxAccelerationSubtractDeceleration.Checked;
 				for (int x = 0; x < pictureboxAcceleration.ClientRectangle.Width; x++) {
 					double speed = (double)x * factorX;
 					double a = GetDeceleration(speed);
@@ -968,7 +967,7 @@ namespace TrainEditor {
 		}
 
 		// draw motor curve
-		private void DrawMotorCurve(PaintEventArgs e, TrainDat.Motor Motor, string Text, PictureBox Box) {
+		private void DrawMotorCurve(PaintEventArgs e, TrainDat.Motor Motor, string Description, PictureBox Box) {
 			// prepare
 			int width = Box.ClientRectangle.Width;
 			int height = Box.ClientRectangle.Height;
@@ -1154,7 +1153,7 @@ namespace TrainEditor {
 				}
 			}
 			// text
-			e.Graphics.DrawString(Text, this.Font, Brushes.White, new PointF(2.0f, 12.0f));
+			e.Graphics.DrawString(Description, this.Font, Brushes.White, new PointF(2.0f, 12.0f));
 			// border
 			e.Graphics.DrawRectangle(new Pen(SystemColors.ButtonShadow), new Rectangle(0, 0, width - 1, height - 1));
 			// queue

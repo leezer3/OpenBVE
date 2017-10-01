@@ -9,7 +9,6 @@ using System;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using OpenBveApi.Math;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve

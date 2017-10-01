@@ -750,7 +750,7 @@ namespace OpenBve {
 												if (nnight > nday) nnight = nday;
 												tnight = new Textures.Texture[nday];
 												for (int k = 0; k < nnight; k++) {
-													Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+													Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
 												}
 												for (int k = nnight; k < nday; k++) {
 													tnight[k] = null;

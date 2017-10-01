@@ -334,7 +334,6 @@ namespace OpenBve
             ObjectManager.FinishCreatingObjects();
             ObjectManager.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
-            Program.UpdateCaption();
         }
     }
 }

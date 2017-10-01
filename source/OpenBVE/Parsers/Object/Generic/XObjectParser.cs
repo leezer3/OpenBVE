@@ -836,7 +836,7 @@ namespace OpenBve {
 										}
 										if (n != 0) {
 											Cache.Integers = new int[n];
-											for (int j = 0; j < n; i++) {
+											for (int j = 0; j < n; j++) {
 												Cache.Integers[n - j - 1] = Reader.ReadInt32();
 											}
 											Cache.IntegersRemaining = n - 1;
@@ -877,7 +877,7 @@ namespace OpenBve {
 										}
 										if (n != 0) {
 											Cache.Floats = new double[n];
-											for (int j = 0; j < n; i++) {
+											for (int j = 0; j < n; j++) {
 												if (FloatingPointSize == 32) {
 													Cache.Floats[n - j - 1] = (double)Reader.ReadSingle();
 												} else if (FloatingPointSize == 64) {
@@ -1631,7 +1631,7 @@ namespace OpenBve {
 				}
 			}
 			// return
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return true;
 		}
 

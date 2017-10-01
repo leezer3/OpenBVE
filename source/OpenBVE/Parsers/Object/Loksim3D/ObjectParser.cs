@@ -74,8 +74,6 @@ namespace OpenBve
 		{
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
-			//May need to be changed to use de-DE
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			//Initialise the object
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Faces = new World.MeshFace[] { };
@@ -480,7 +478,7 @@ namespace OpenBve
 
 			}
 			ApplyMeshBuilder(ref Object, Builder, LoadMode, false, false);
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return Object;
 		}
 		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)

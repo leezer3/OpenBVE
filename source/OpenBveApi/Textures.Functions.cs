@@ -47,7 +47,6 @@ namespace OpenBveApi.Textures {
 		    }
 		    if (texture.BitsPerPixel == 24 | texture.BitsPerPixel == 32) {
 		        int width = texture.Width;
-		        int height = texture.Height;
 		        byte[] bytes = texture.Bytes;
 		        int clipLeft = region.Left;
 		        int clipTop = region.Top;

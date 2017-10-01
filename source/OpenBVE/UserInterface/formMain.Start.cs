@@ -751,6 +751,7 @@ namespace OpenBve
 				Result.RouteFile = null;
 				checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
 				routeWorkerThread.Dispose();
+				this.Cursor = Cursors.Default;
 				return;
 			}
 			try
@@ -920,6 +921,12 @@ namespace OpenBve
 							comboboxRouteEncoding.Items[0] = "Chinese Traditional (Big5) 950";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
 							break;
+						case TextEncoding.Encoding.EUC_KR:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Korean - 949";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+							break;
 					}
 					panelRouteEncoding.Enabled = true;
 					comboboxRouteEncoding.Tag = new object();
@@ -1000,6 +1007,11 @@ namespace OpenBve
 					case TextEncoding.Encoding.Big5:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "Chinese Traditional (Big5) 950";
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
+						break;
+					case TextEncoding.Encoding.EUC_KR:
+						comboboxTrainEncoding.SelectedIndex = 0;
+						comboboxTrainEncoding.Items[0] = "Korean - 949";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
 						break;
 				}

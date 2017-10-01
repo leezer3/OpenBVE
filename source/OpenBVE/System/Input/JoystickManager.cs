@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using OpenTK;
 using OpenTK.Input;
 using PIEHid32Net;
 
@@ -47,7 +45,7 @@ namespace OpenBve {
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
 		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
 
-		/// <summary>Holds all raildrivers & other PI Engineering controllers attached to the computer</summary>
+		/// <summary>Holds all raildrivers and other PI Engineering controllers attached to the computer</summary>
 		internal static PIEDevice[] devices;
 
 		internal bool RailDriverInit = false;

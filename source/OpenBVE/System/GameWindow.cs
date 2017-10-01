@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -285,7 +284,7 @@ namespace OpenBve
 			locks = new Queue<object>(10);
 			Renderer.Initialize();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
-			MainLoop.InitializeMotionBlur();
+			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons
@@ -343,9 +342,9 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -0.1, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.1, true, false);
+			World.CameraTrackFollower.Update(0.0, true, false);
+			World.CameraTrackFollower.Update(-0.1, true, false);
+			World.CameraTrackFollower.Update(0.1, true, false);
 			World.CameraTrackFollower.TriggerType = TrackManager.EventTriggerType.Camera;
 			// starting time and track position
 			Game.SecondsSinceMidnight = 0.0;
@@ -579,7 +578,7 @@ namespace OpenBve
 			}
 			//Place the initial camera in the driver car
 			TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
+			World.CameraTrackFollower.Update(-1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
 			World.CameraSavedInterior = new World.CameraAlignment();
 			World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
@@ -756,9 +755,6 @@ namespace OpenBve
 			}
 		}
 
-		internal static readonly object LoadingLock = new object();
-		internal static bool LoadingRemakeCurrent = false;
-		
 		private static readonly object jobLock = new object();
 		private static Queue<ThreadStart> jobs;
 		private static Queue<object> locks;

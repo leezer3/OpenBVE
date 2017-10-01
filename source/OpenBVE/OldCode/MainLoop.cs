@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Threading;
-using System.Windows.Forms;
 using OpenTK.Input;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace OpenBve {
 	internal static partial class MainLoop {
@@ -73,96 +68,6 @@ namespace OpenBve {
 			}
 			Screen.Initialize();
 			currentResult = result;
-			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,
-				Interface.CurrentOptions.AntiAliasingLevel);
-
-			/*
-			 * TODO: This should be able to be moved back into the screen initialisation file
-			 */
-			if (Interface.CurrentOptions.FullscreenMode)
-			{
-				IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
-				bool resolutionFound = false;
-				for (int i = 0; i < resolutions.Count; i++)
-				{
-
-					//Test each resolution
-					if (resolutions[i].Width == Interface.CurrentOptions.FullscreenWidth &&
-					    resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
-					    resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
-					{
-						try
-						{
-							OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
-							Program.currentGameWindow = new OpenBVEGame(resolutions[i].Width, resolutions[i].Height, currentGraphicsMode,
-								GameWindowFlags.Default)
-							{
-								Visible = true,
-								WindowState = WindowState.Fullscreen
-							};
-							resolutionFound = true;
-						}
-						catch
-						{
-							//Our resolution was in the list of available resolutions presented, but the graphics card driver failed to switch
-							MessageBox.Show("Failed to change to the selected full-screen resolution:" + Environment.NewLine +
-							                Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight +
-							                " " + Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
-							                "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
-								MessageBoxIcon.Hand);
-							Program.RestartArguments = " ";
-							return;
-						}
-						break;
-					}
-				}
-				if (resolutionFound == false)
-				{
-					//Our resolution was not found at all
-					MessageBox.Show(
-						"The graphics card driver reported that the selected resolution was not supported:" + Environment.NewLine +
-						Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight + " " +
-						Interface.CurrentOptions.FullscreenBits + "bit color" + Environment.NewLine +
-						"Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					return;
-				}
-			}
-			else
-			{
-
-				try
-				{
-					Program.currentGameWindow = new OpenBVEGame(Interface.CurrentOptions.WindowWidth,
-						Interface.CurrentOptions.WindowHeight, currentGraphicsMode, GameWindowFlags.Default)
-					{
-						Visible = true
-					};
-				}
-				catch
-				{
-					//Windowed mode failed to launch
-					MessageBox.Show("An error occured whilst tring to launch in windowed mode at resolution:" + Environment.NewLine +
-					                Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight + " " +
-					                Environment.NewLine +
-					                "Please check your resolution settings.", Application.ProductName, MessageBoxButtons.OK,
-						MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					return;
-				}
-			}
-			if (Program.currentGameWindow == null)
-			{
-				//We should never really get an unspecified error here, but it's good manners to handle all cases
-				MessageBox.Show("An unspecified error occured whilst attempting to launch the graphics subsystem.",
-					Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				Program.RestartArguments = " ";
-				return;
-			}
-
-			Program.currentGameWindow.TargetUpdateFrequency = 0;
-			Program.currentGameWindow.TargetRenderFrequency = 0;
-			Program.currentGameWindow.VSync = Interface.CurrentOptions.VerticalSynchronization ? VSyncMode.On : VSyncMode.Off;
 			Program.currentGameWindow.Closing += OpenTKQuit;
 			Program.currentGameWindow.Run();
 		}
@@ -469,7 +374,7 @@ namespace OpenBve {
 				case World.CameraViewMode.FlyBy:
 				case World.CameraViewMode.FlyByZooming:
 					World.CameraCurrentAlignment = World.CameraSavedTrack;
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, World.CameraSavedTrack.TrackPosition, true, false);
+					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
 					World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 					break;
 			}
@@ -520,25 +425,7 @@ namespace OpenBve {
 			GL.LoadIdentity();
 		}
 
-		// initialize motion blur
-		internal static void InitializeMotionBlur() {
-			if (Interface.CurrentOptions.MotionBlur != Interface.MotionBlurMode.None) {
-				if (Renderer.PixelBufferOpenGlTextureIndex != 0) {
-					GL.DeleteTextures(1, new int[] { Renderer.PixelBufferOpenGlTextureIndex });
-					Renderer.PixelBufferOpenGlTextureIndex = 0;
-				}
-				int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-				int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
-				Renderer.PixelBuffer = new byte[4 * w * h];
-				int[] a = new int[1];
-				GL.GenTextures(1,a);
-				GL.BindTexture(TextureTarget.Texture2D, a[0]);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMagFilter.Linear);
-				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb,PixelType.UnsignedByte, Renderer.PixelBuffer);
-				Renderer.PixelBufferOpenGlTextureIndex = a[0];
-				GL.CopyTexImage2D(TextureTarget.Texture2D, 0,PixelInternalFormat.Rgb, 0,0,w,h,0);
-			}
-		}
+		
 		
 		#if DEBUG
 

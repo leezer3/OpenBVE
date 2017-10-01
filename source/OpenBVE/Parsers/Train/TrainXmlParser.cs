@@ -6,14 +6,13 @@ namespace OpenBve.Parsers.Train
 {
 	class TrainXmlParser
 	{
-		internal static string currentPath;
 		internal static void Parse(string fileName, TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
-			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			string currentPath = System.IO.Path.GetDirectoryName(fileName);
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			if (currentXML.DocumentElement != null)

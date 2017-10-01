@@ -40,7 +40,7 @@ namespace OpenBve {
                 this.PreviousBackground = PreviousBackground;
                 this.NextBackground = NextBackground;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         World.TargetBackground = this.PreviousBackground;
@@ -64,7 +64,7 @@ namespace OpenBve {
                 this.CurrentFog = CurrentFog;
                 this.NextFog = NextFog;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Game.PreviousFog = this.PreviousFog;
@@ -92,7 +92,7 @@ namespace OpenBve {
                 this.NextBrightness = NextBrightness;
                 this.NextDistance = NextDistance;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
         }
         // marker start
         internal class MarkerStartEvent : GeneralEvent {
@@ -102,7 +102,7 @@ namespace OpenBve {
                 this.DontTriggerAnymore = false;
                 this.TextureIndex = TextureIndex;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Game.RemoveMarker(this.TextureIndex);
@@ -120,7 +120,7 @@ namespace OpenBve {
                 this.DontTriggerAnymore = false;
                 this.TextureIndex = TextureIndex;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Game.AddMarker(this.TextureIndex);
@@ -136,7 +136,7 @@ namespace OpenBve {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
         }
         // station start
         internal class StationStartEvent : GeneralEvent {
@@ -146,7 +146,7 @@ namespace OpenBve {
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         if (Program.CurrentStation == this.StationIndex) {
@@ -166,7 +166,7 @@ namespace OpenBve {
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            override internal void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Program.CurrentStation = this.StationIndex;
@@ -201,7 +201,7 @@ namespace OpenBve {
 			AtsPTemporarySpeedRestriction = -2,
 			AtsPPermanentSpeedRestriction = -3
 		}
-        internal enum TransponderSpecialSection : int {
+        internal enum TransponderSpecialSection {
             NextRedSection = -2,
         }
         internal class TransponderEvent : GeneralEvent {

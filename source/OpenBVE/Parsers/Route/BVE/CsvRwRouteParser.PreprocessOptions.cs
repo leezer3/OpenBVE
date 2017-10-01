@@ -34,29 +34,7 @@ namespace OpenBve
 				}
 				else
 				{
-					// find equals
-					int Equals = Expressions[j].Text.IndexOf('=');
-					if (Equals >= 0)
-					{
-						// handle RW cycle syntax
-						string t = Expressions[j].Text.Substring(0, Equals);
-						if (Section.ToLowerInvariant() == "cycle" & SectionAlwaysPrefix)
-						{
-							double b; if (NumberFormats.TryParseDoubleVb6(t, out b))
-							{
-								t = ".Ground(" + t + ")";
-							}
-						}
-						else if (Section.ToLowerInvariant() == "signal" & SectionAlwaysPrefix)
-						{
-							double b; if (NumberFormats.TryParseDoubleVb6(t, out b))
-							{
-								t = ".Void(" + t + ")";
-							}
-						}
-						// convert RW style into CSV style
-						Expressions[j].Text = t + " " + Expressions[j].Text.Substring(Equals + 1);
-					}
+					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
 					string Command, ArgumentSequence;
 					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, true);

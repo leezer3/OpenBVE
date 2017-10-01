@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -1127,7 +1125,6 @@ namespace OpenBve {
 			formMain_Resize(null, null);
 			if (this.WindowState != FormWindowState.Maximized)
 			{
-				Size sss = this.ClientRectangle.Size;
 				System.Windows.Forms.Screen s = System.Windows.Forms.Screen.FromControl(this);
 				if ((double)this.Width >= 0.95 * (double)s.WorkingArea.Width | (double)this.Height >= 0.95 * (double)s.WorkingArea.Height)
 				{
@@ -1375,7 +1372,7 @@ namespace OpenBve {
 			{
 				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
 			}	
-			if (textboxJoystickGrab.Focused & this.Tag == null & listviewControls.SelectedIndices.Count == 1)
+			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
 				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)

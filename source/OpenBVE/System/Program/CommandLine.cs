@@ -18,10 +18,10 @@ namespace OpenBve
 			for (int i = 0; i < Arguments.Length; i++)
 			{
 				int equals = Arguments[i].IndexOf('=');
-				if (@equals >= 0)
+				if (equals >= 0)
 				{
-					string key = Arguments[i].Substring(0, @equals).Trim().ToLowerInvariant();
-					string value = Arguments[i].Substring(@equals + 1).Trim();
+					string key = Arguments[i].Substring(0, equals).Trim().ToLowerInvariant();
+					string value = Arguments[i].Substring(equals + 1).Trim();
 					switch (key)
 					{
 						case "/route":
@@ -55,6 +55,9 @@ namespace OpenBve
 								case TextEncoding.Encoding.Big5:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
 									break;
+								case TextEncoding.Encoding.EUC_KR:
+									Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+									break;
 								default:
 									Result.RouteEncoding = Encoding.Default;
 									break;
@@ -87,6 +90,9 @@ namespace OpenBve
 									break;
 								case TextEncoding.Encoding.Big5:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
+									break;
+								case TextEncoding.Encoding.EUC_KR:
+									Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
 									break;
 								default:
 									Result.TrainEncoding = Encoding.Default;

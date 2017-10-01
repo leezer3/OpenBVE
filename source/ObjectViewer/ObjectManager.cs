@@ -2082,7 +2082,6 @@ namespace OpenBve
         {
             double d = TrackPosition - LastUpdatedTrackPosition;
             int n = ObjectsSortedByStart.Length;
-            int m = ObjectsSortedByEnd.Length;
             double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
             if (d < 0.0)
             {

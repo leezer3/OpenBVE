@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
-using OpenBveApi;
 
 namespace OpenBve
 {
@@ -10,8 +9,10 @@ namespace OpenBve
 	{
 		public static Game.Station ReadStationXML(string fileName, bool PreviewOnly, Textures.Texture[] daytimeTimetableTextures, Textures.Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref CsvRwRouteParser.StopRequest stopRequest)
 		{
-			Game.Station station = new Game.Station();
-			station.Stops = new Game.StationStop[] { };
+			Game.Station station = new Game.Station
+			{
+				Stops = new Game.StationStop[] { }
+			};
 			stopRequest.Early = new TrackManager.RequestStop();
 			stopRequest.OnTime = new TrackManager.RequestStop();
 			stopRequest.Late = new TrackManager.RequestStop();

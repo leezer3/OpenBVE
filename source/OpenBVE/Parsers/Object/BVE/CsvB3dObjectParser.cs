@@ -1000,7 +1000,7 @@ namespace OpenBve {
 			}
 			// finalize object
 			ApplyMeshBuilder(ref Object, Builder);
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return Object;
 		}
 

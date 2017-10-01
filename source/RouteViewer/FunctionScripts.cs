@@ -5,7 +5,7 @@ namespace OpenBve {
 	internal static class FunctionScripts {
 
 		// instruction set
-		internal enum Instructions : int {
+		internal enum Instructions {
 			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
 			StackCopy, StackSwap,
 			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, MathRandom, MathRandomInt,
@@ -1168,7 +1168,7 @@ namespace OpenBve {
 											if (k > 0) r.Append(',');
 											r.Append(p[k]);
 										}
-										Expression = a + "[" + r.ToString() + "]" + c;
+										Expression = a + "[" + r + "]" + c;
 										s = i + r.Length + 2;
 										q = true;
 									} break;

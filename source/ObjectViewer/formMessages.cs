@@ -50,12 +50,6 @@ namespace OpenBve
             buttonClose.Focus();
         }
 
-        // ignore
-        private void buttonIgnore_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Ignore;
-        }
-
         // cancel
         private void buttonCancel_Click(object sender, EventArgs e)
         {

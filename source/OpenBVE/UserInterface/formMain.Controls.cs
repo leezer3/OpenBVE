@@ -454,16 +454,18 @@ namespace OpenBve {
 			textboxJoystickGrab.ForeColor = Color.White;
 		}
 
-		private void textboxJoystickGrab_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		private void textboxJoystickGrab_KeyDown(object sender, KeyEventArgs e)
 		{
+			//Required to avoid race condition with openTK recieving the same event internally
+			System.Threading.Thread.Sleep(1);
+			var kbState = OpenTK.Input.Keyboard.GetState();
 			if (KeyGrab == false)
 			{
 				return;
 			}
-			KeyboardState state = OpenTK.Input.Keyboard.GetState();
 			for (int j = 0; j < Interface.TranslatedKeys.Length; j++)
 			{
-				if (state.IsKeyDown(Interface.TranslatedKeys[j].Key))
+				if (kbState.IsKeyDown(Interface.TranslatedKeys[j].Key))
 				{
 					int i = listviewControls.SelectedIndices[0];
 					Interface.CurrentControls[i].Key = Interface.TranslatedKeys[j].Key;
@@ -477,7 +479,14 @@ namespace OpenBve {
 			comboboxKeyboardKey.Focus();
 		}
 		private void textboxJoystickGrab_Leave(object sender, EventArgs e) {
-			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
+			if (radiobuttonJoystick.Checked)
+			{
+				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");
+			}
+			else
+			{
+				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");
+			}
 			textboxJoystickGrab.BackColor = panelControls.BackColor;
 			textboxJoystickGrab.ForeColor = Color.Black;
 			KeyGrab = false;

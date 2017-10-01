@@ -98,6 +98,9 @@ namespace OpenBve
 					case TextEncoding.Encoding.Big5:
 						Encoding = System.Text.Encoding.GetEncoding(950);
 						break;
+					case TextEncoding.Encoding.EUC_KR:
+						Encoding = System.Text.Encoding.GetEncoding(949);
+						break;
 				}
 			}
 			string e = System.IO.Path.GetExtension(FileName);
@@ -203,7 +206,10 @@ namespace OpenBve
 					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 					return null;
 			}
-			Result.OptimizeObject(PreserveVertices);
+			if (Result != null)
+			{
+				Result.OptimizeObject(PreserveVertices);
+			}
 			return Result;
 #if !DEBUG
 			} catch (Exception ex) {

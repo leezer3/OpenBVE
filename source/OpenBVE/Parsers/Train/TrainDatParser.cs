@@ -493,7 +493,6 @@ namespace OpenBve {
 			if (Train.Specs.MaximumPowerNotch <= 0) Train.Specs.MaximumPowerNotch = 8;
 			if (Train.Specs.MaximumBrakeNotch <= 0) Train.Specs.MaximumBrakeNotch = 8;
 			// apply data
-			Train.Specs.TotalMass = (double)MotorCars * MotorCarMass + (double)TrailerCars * TrailerCarMass;
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
 			int Cars = MotorCars + TrailerCars;
