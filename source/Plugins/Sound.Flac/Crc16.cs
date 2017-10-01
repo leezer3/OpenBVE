@@ -3,7 +3,7 @@
 
 		private const ushort Polynomial = 0x8005;
 		
-		private static ushort[] Table = new ushort[256];
+		private static readonly ushort[] Table = new ushort[256];
 
 		internal static ushort ComputeHash(byte[] bytes, int offset, int count) {
 			unchecked {

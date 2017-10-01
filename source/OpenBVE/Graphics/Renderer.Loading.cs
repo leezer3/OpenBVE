@@ -123,7 +123,7 @@ namespace OpenBve {
 				if (TextureLogo != null)
 				{
 					// place the centre of the logo at from the screen top
-					int logoTop = (int) (Screen.Height*logoCentreYFactor - TextureLogo.Height/2);
+					int logoTop = (int) (Screen.Height*logoCentreYFactor - TextureLogo.Height/2.0);
 					logoBottom = logoTop + TextureLogo.Height;
 					DrawRectangle(TextureLogo, new Point((Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 				}

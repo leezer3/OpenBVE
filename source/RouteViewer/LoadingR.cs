@@ -28,7 +28,7 @@ namespace OpenBve {
 		internal static bool JobAvailable;
 
 		// load
-		internal static bool Load(string RouteFile, Encoding RouteEncoding) {
+		internal static void Load(string RouteFile, Encoding RouteEncoding) {
 			// members
 			Renderer.InitLoading();
 			RouteProgress = 0.0;
@@ -42,8 +42,6 @@ namespace OpenBve {
 			// thread
 			Loading.LoadAsynchronously(CurrentRouteFile, Encoding.UTF8);
 			RouteViewer.LoadingScreenLoop();
-
-			return true;
 		}
 
 		// get railway folder

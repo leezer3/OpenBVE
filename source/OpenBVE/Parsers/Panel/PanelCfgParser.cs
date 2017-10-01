@@ -275,22 +275,22 @@ namespace OpenBve {
 												case "単位":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 														string a = Arguments[0].ToLowerInvariant();
-														int Unit = 0;
-														if (a == "kpa") {
-															Unit = 0;
-														} else if (a == "kgf/cm2" | a == "kgf/cm^2" | a == "kg/cm2" | a == "kg/cm^2") {
-															Unit = 1;
-														} else if (!NumberFormats.TryParseIntVb6(Arguments[0], out Unit)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															Unit = 0;
-														} else if (Unit != 0 & Unit != 1) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Value must be either 0 or 1 in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															Unit = 0;
-														}
-														if (Unit == 1) {
-															UnitFactor = 98066.5;
-														} else {
-															UnitFactor = 1000.0;
+														switch (a)
+														{
+															case "kpa":
+															case "0":
+																UnitFactor = 1000.0;
+																break;
+															case "1":
+															case "kgf/cm2":
+															case "kgf/cm^2":
+															case "kg/cm2":
+															case "kg/cm^2":
+																UnitFactor = 98066.5;
+																break;
+															default:
+																Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+																break;
 														}
 													} break;
 												case "maximum":

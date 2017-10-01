@@ -694,7 +694,6 @@ namespace OpenBve
             internal Vector3[] LEDVectors;
             internal FunctionScripts.FunctionScript LEDFunction;
             internal double RefreshRate;
-            internal double CurrentTrackZOffset;
             internal double SecondsSinceLastUpdate;
             internal int ObjectIndex;
             // methods
@@ -754,7 +753,6 @@ namespace OpenBve
                 }
                 Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
                 Result.RefreshRate = this.RefreshRate;
-                Result.CurrentTrackZOffset = 0.0;
                 Result.SecondsSinceLastUpdate = 0.0;
                 Result.ObjectIndex = -1;
                 return Result;

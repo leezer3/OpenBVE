@@ -177,7 +177,6 @@ namespace OpenBve {
 			if (PanelDaytimeImage != null) {
 				if (!System.IO.File.Exists(PanelDaytimeImage)) {
 					Interface.AddMessage(Interface.MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
-					PanelDaytimeImage = null;
 				} else {
 					Textures.Texture tday;
 					Textures.RegisterTexture(PanelDaytimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tday);
@@ -185,7 +184,6 @@ namespace OpenBve {
 					if (PanelNighttimeImage != null) {
 						if (!System.IO.File.Exists(PanelNighttimeImage)) {
 							Interface.AddMessage(Interface.MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
-							PanelNighttimeImage = null;
 						} else {
 							Textures.RegisterTexture(PanelNighttimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
 						}

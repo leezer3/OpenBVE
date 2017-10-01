@@ -597,7 +597,6 @@ namespace OpenBve {
 				Train.Cars[i].Specs.AirBrake.EqualizingReservoirChargeRate = 200000.0;
 				Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure = OperatingPressure;
 				Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake ? 0.0 : Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
-				Train.Cars[i].Specs.AirBrake.BrakePipeFlowSpeed = 100000000.0;
 				Train.Cars[i].Specs.AirBrake.BrakePipeChargeRate = 10000000.0;
 				Train.Cars[i].Specs.AirBrake.BrakePipeServiceRate = 1500000.0;
 				Train.Cars[i].Specs.AirBrake.BrakePipeEmergencyRate = 5000000.0;
