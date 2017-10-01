@@ -419,66 +419,79 @@ namespace OpenBveApi.Packages
 			reset:
 			using (Stream stream = File.OpenRead(packageFile))
 			{
-				var reader = ReaderFactory.Open(stream);
-				while (reader.MoveToNextEntry())
+				try
 				{
+					var reader = ReaderFactory.Open(stream);
+					while (reader.MoveToNextEntry())
+					{
 
-					//Search for the package.xml file- This must be located in the archive root
-					if (reader.Entry.Key.ToLowerInvariant() == "package.xml" && !InfoFound)
-					{
-						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-						//Load the XML file
-						InfoFound = true;
-						XmlSerializer listReader = new XmlSerializer(typeof(SerializedPackage));
-						SerializedPackage newPackage = (SerializedPackage)listReader.Deserialize(XmlReader.Create(OpenBveApi.Path.CombineFile(TempDirectory, "package.xml")));
-						currentPackage = newPackage.Package;
-					}
-					if (reader.Entry.Key.ToLowerInvariant() == "packageinfo.xml" && packageFile.ToLowerInvariant().EndsWith(".l3dpack") && !InfoFound)
-					{
-						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-						//Load the XML file
-						try
+						//Search for the package.xml file- This must be located in the archive root
+						if (reader.Entry.Key.ToLowerInvariant() == "package.xml" && !InfoFound)
 						{
-							XmlDocument xml = new XmlDocument();
-							xml.Load(OpenBveApi.Path.CombineFile(TempDirectory, "packageinfo.xml"));
-							currentPackage = LoksimPackage.Parse(xml, System.IO.Path.GetFileNameWithoutExtension(packageFile), ref ImageFile);
+							reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+							//Load the XML file
 							InfoFound = true;
-							//Yuck...
-							//We need to reset our streamreader, but Sharpcompress doesn't allow this, so just hit goto.....
-							stream.Seek(0,0);
-							goto reset;
+							XmlSerializer listReader = new XmlSerializer(typeof(SerializedPackage));
+							SerializedPackage newPackage =
+								(SerializedPackage) listReader.Deserialize(
+									XmlReader.Create(OpenBveApi.Path.CombineFile(TempDirectory, "package.xml")));
+							currentPackage = newPackage.Package;
 						}
-						catch
+						if (reader.Entry.Key.ToLowerInvariant() == "packageinfo.xml" &&
+						    packageFile.ToLowerInvariant().EndsWith(".l3dpack") && !InfoFound)
 						{
-							return null;
+							reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+							//Load the XML file
+							try
+							{
+								XmlDocument xml = new XmlDocument();
+								xml.Load(OpenBveApi.Path.CombineFile(TempDirectory, "packageinfo.xml"));
+								currentPackage =
+									LoksimPackage.Parse(xml, System.IO.Path.GetFileNameWithoutExtension(packageFile), ref ImageFile);
+								InfoFound = true;
+								//Yuck...
+								//We need to reset our streamreader, but Sharpcompress doesn't allow this, so just hit goto.....
+								stream.Seek(0, 0);
+								goto reset;
+							}
+							catch
+							{
+								return null;
+							}
 						}
-					}
-					if (reader.Entry.Key.ToLowerInvariant() == ImageFile)
-					{
-						//Extract the package.png to the uniquely assigned temp directory
-						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-						try
+						if (reader.Entry.Key.ToLowerInvariant() == ImageFile)
 						{
-							currentPackage.PackageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
+							//Extract the package.png to the uniquely assigned temp directory
+							reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+							try
+							{
+								currentPackage.PackageImage = Image.FromFile(Path.CombineFile(TempDirectory, ImageFile));
+							}
+							catch
+							{
+								//Image loading failed
+								currentPackage.PackageImage = null;
+							}
 						}
-						catch
+						/*
+						 * May have to change to plaintext-
+						 * No way of easily storing a RTF object....
+						 * 
+						 */
+						if (reader.Entry.Key.ToLowerInvariant() == "package.rtf")
 						{
-							//Image loading failed
-							currentPackage.PackageImage = null;
+							//Extract the package.rtf description file to the uniquely assigned temp directory
+							reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+							//PackageDescription.LoadFile(OpenBveApi.Path.CombineFile(TempDirectory, "package.rtf"));
 						}
-					}
-					/*
-					 * May have to change to plaintext-
-					 * No way of easily storing a RTF object....
-					 * 
-					 */
-					if (reader.Entry.Key.ToLowerInvariant() == "package.rtf")
-					{
-						//Extract the package.rtf description file to the uniquely assigned temp directory
-						reader.WriteEntryToDirectory(TempDirectory, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-						//PackageDescription.LoadFile(OpenBveApi.Path.CombineFile(TempDirectory, "package.rtf"));
-					}
 
+					}
+				}
+				catch
+				{
+					//The ReaderFactory threw a wobbly
+					//Most likely cause is that this file is not an archive
+					return null;
 				}
 			}
 			if (!InfoFound)
