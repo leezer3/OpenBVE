@@ -330,19 +330,19 @@
     <Compile Include="OldCode\Game.cs" />
     <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
-    <Compile Include="OldCode\LegacyPlugin.cs">
+    <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\Loading.cs" />
+    <Compile Include="System\Loading.cs" />
     <Compile Include="OldCode\MainLoop.cs" />
-    <Compile Include="OldCode\NetPlugin.cs">
+    <Compile Include="System\Plugins\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\GameWindow.cs" />
-    <Compile Include="OldCode\PluginManager.cs" />
+    <Compile Include="System\Plugins\PluginManager.cs" />
     <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
-    <Compile Include="OldCode\Timetable.cs" />
+    <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
     <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />

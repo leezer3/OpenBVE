@@ -233,11 +233,6 @@ namespace OpenBve {
 			#if !DEBUG
 			try {
 				#endif
-//				if (this.Train == TrainManager.PlayerTrain) {
-//					for (int i = 0; i < signal.Length; i++) {
-//						Game.AddDebugMessage(i.ToString() + " - " + signal[i].Aspect.ToString(), 3.0);
-//					}
-//				}
 				this.Api.SetSignal(signal);
 				#if !DEBUG
 			} catch (Exception ex) {
@@ -247,9 +242,6 @@ namespace OpenBve {
 			#endif
 		}
 		internal override void SetBeacon(BeaconData beacon) {
-//			if (this.Train == TrainManager.PlayerTrain) {
-//				Game.AddDebugMessage("Beacon, type=" + beacon.Type.ToString() + ", aspect=" + beacon.Signal.Aspect.ToString() + ", data=" + beacon.Optional.ToString(), 3.0);
-//			}
 			#if !DEBUG
 			try {
 				#endif
@@ -311,7 +303,8 @@ namespace OpenBve {
 		/// <param name="pitch">The pitch of the sound- A pitch of 1.0 represents nominal pitch</param>
 		/// <param name="looped">Whether the sound is looped</param>
 		/// <returns>The sound handle, or null if not successful</returns>
-		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped) {
+		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
+		{
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null) {
 				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
 				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
@@ -322,9 +315,8 @@ namespace OpenBve {
 				this.SoundHandles[this.SoundHandlesCount] = new SoundHandleEx(volume, pitch, source);
 				this.SoundHandlesCount++;
 				return this.SoundHandles[this.SoundHandlesCount - 1];
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to play a sound from a specific car of a train</summary>
@@ -349,10 +341,7 @@ namespace OpenBve {
 				this.SoundHandlesCount++;
 				return this.SoundHandles[this.SoundHandlesCount - 1];
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 	}
 	
