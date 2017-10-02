@@ -38,7 +38,7 @@ namespace OpenBveApi.Sounds {
 				throw new ArgumentException("The number of bits per sample is neither 8 nor 16.");
 			}
 			if (bytes == null) {
-				throw new ArgumentNullException(nameof(bytes));
+				throw new ArgumentNullException("bytes");
 			}
 			if (bytes.Length == 0) {
 				throw new ArgumentException("There must be at least one channel.");

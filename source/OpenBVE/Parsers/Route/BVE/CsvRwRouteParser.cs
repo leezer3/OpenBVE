@@ -2280,10 +2280,34 @@ namespace OpenBve {
 															Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not contain a valid path in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															break;
 														}
-														if (!System.IO.File.Exists(f))
+														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(FileName))
 														{
-															Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-															break;
+															bool notFound = false;
+															while (true)
+															{
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+																if (System.IO.File.Exists(f))
+																{
+																	break;
+																}
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
+																if (System.IO.File.Exists(f))
+																{
+																	break;
+																}
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
+																if (System.IO.File.Exists(f))
+																{
+																	break;
+																}
+																Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																notFound = true;
+																break;
+															}
+															if (notFound)
+															{
+																break;
+															}
 														}
 														Bve4SignalData Signal = new Bve4SignalData
 														{
