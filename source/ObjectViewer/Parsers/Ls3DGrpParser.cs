@@ -70,12 +70,12 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Lines.Length; i++)
 				{
-					while (Lines[i].IndexOf("\"\"") != -1)
+					while (Lines[i].IndexOf("\"\"", StringComparison.InvariantCulture) != -1)
 					{
 						//Loksim parser tolerates multiple quotes, strict XML does not
 						Lines[i] = Lines[i].Replace("\"\"", "\"");
 					}
-					while (Lines[i].IndexOf("  ") != -1)
+					while (Lines[i].IndexOf("  ", StringComparison.InvariantCulture) != -1)
 					{
 						//Replace double-spaces with singles
 						Lines[i] = Lines[i].Replace("  ", " ");

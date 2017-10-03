@@ -42,13 +42,7 @@ namespace OpenBve {
 			MessageCount = 0;
 		}
 
-
-		// get score text
 		
-		
-
-		// control descriptions
-		internal static string[] ControlDescriptions = { };
 		internal static CommandInfo[] CommandInfos = {
 			new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE"),
 			new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE"),

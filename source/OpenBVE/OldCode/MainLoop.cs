@@ -406,12 +406,8 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			//This value was used to convert radians to degrees
-			//OpenTK works in radians, so removed.....
-			//const double invdeg = 57.295779513082320877;
 			if (CurrentViewPortMode == ViewPortMode.Cab) {
 
-				//Glu.Perspective(World.VerticalViewingAngle * invdeg, -World.AspectRatio, 0.025, 50.0);
 				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle,-World.AspectRatio, 0.025, 50.0);
 				GL.MultMatrix(ref perspective);
 			} else

@@ -25,8 +25,10 @@ namespace ObjectBender {
 				/*
 				 * Default values.
 				 * */
-				Bender.Options options = new Bender.Options();
-				options.NumberOfSegments = 1;
+				Bender.Options options = new Bender.Options
+				{
+					NumberOfSegments = 1
+				};
 				bool help = false;
 				/*
 				 * Parse the arguments.

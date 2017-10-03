@@ -129,8 +129,11 @@ namespace OpenBve
 				{
 					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-					CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
+					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
+					{
+						States = new ObjectManager.AnimatedObjectState[1]
+						
+					};
 					CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
 					CarSections[j].Elements[0].States[0].Object = s;
 					CarSections[j].Elements[0].CurrentState = 0;
@@ -177,8 +180,9 @@ namespace OpenBve
 				UpdateObjects(0.0, true);
 			}
 
-			internal void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
+			private void UpdateSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate)
 			{
+				//TODO: Check whether the UP and SIDE vectors should actually be recalculated, as this just uses that of the root car
 				{
 					Vector3 p = Position;
 					double timeDelta;

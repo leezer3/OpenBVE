@@ -146,7 +146,7 @@ namespace OpenBve {
 				Data.Structure.RailCycle = new int[][] { };
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
-				Data.Backgrounds = new BackgroundManager.StaticBackground[] {};
+				Data.Backgrounds = new BackgroundManager.BackgroundHandle[] {};
 				Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
 				// signals

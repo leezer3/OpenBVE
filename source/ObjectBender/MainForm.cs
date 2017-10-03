@@ -26,9 +26,11 @@ namespace ObjectBender {
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The event arguments.</param>
 		private void ButtonInputClick(object sender, EventArgs e) {
-			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Filter = "B3D/CSV files|*.b3d;*.csv|All files|*";
-			dialog.CheckFileExists = true;
+			OpenFileDialog dialog = new OpenFileDialog
+			{
+				Filter = @"B3D/CSV files|*.b3d;*.csv|All files|*",
+				CheckFileExists = true
+			};
 			if (dialog.ShowDialog() == DialogResult.OK) {
 				InputFile = dialog.FileName;
 				textboxInput.Text = Path.GetFileName(dialog.FileName);
@@ -42,12 +44,12 @@ namespace ObjectBender {
 			SaveFileDialog dialog = new SaveFileDialog();
 			if (InputFile != null) {
 				if (InputFile.EndsWith(".b3d", StringComparison.OrdinalIgnoreCase)) {
-					dialog.Filter = "B3D files|*.b3d|All files|*";
+					dialog.Filter = @"B3D files|*.b3d|All files|*";
 				} else {
-					dialog.Filter = "CSV files|*.csv|All files|*";
+					dialog.Filter = @"CSV files|*.csv|All files|*";
 				}
 			} else {
-				dialog.Filter = "B3D/CSV files|*.b3d;*.csv|All files|*";
+				dialog.Filter = @"B3D/CSV files|*.b3d;*.csv|All files|*";
 			}
 			dialog.OverwritePrompt = true;
 			if (dialog.ShowDialog() == DialogResult.OK) {
@@ -120,10 +122,12 @@ namespace ObjectBender {
 				#endif
 				if (InputFile != null & OutputFile != null) {
 					CultureInfo culture = CultureInfo.InvariantCulture;
-					Bender.Options options = new Bender.Options();
-					options.InputFile = InputFile;
-					options.OutputFile = OutputFile;
-					options.NumberOfSegments = 1;
+					Bender.Options options = new Bender.Options
+					{
+						InputFile = InputFile,
+						OutputFile = OutputFile,
+						NumberOfSegments = 1
+					};
 					if (textboxNumberOfSegments.Text.Length != 0) {
 						options.NumberOfSegments = int.Parse(textboxNumberOfSegments.Text, culture);
 					}
