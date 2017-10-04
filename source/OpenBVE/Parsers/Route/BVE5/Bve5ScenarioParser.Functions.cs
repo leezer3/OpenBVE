@@ -13,7 +13,7 @@ namespace OpenBve
 			int sttype = -1;
 			for (int k = 0; k < Data.ObjectList.Length; k++)
 			{
-				if (Data.ObjectList[k].Name == key)
+				if (Data.ObjectList[k].Name.ToLowerInvariant() == key.ToLowerInvariant())
 				{
 					sttype = k;
 					break;
@@ -27,7 +27,7 @@ namespace OpenBve
 		{
 			for (int k = 0; k < Data.ObjectList.Length; k++)
 			{
-				if (Data.ObjectList[k].Name == key)
+				if (Data.ObjectList[k].Name.ToLowerInvariant() == key.ToLowerInvariant())
 				{
 					return Data.ObjectList[k].Path;
 				}

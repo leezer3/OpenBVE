@@ -307,10 +307,15 @@ namespace OpenBve
 				//As commands may come in any order, the position may be modified later on....
 				SecondaryTrack(railkey, new string[]{"0","0"}, ref Data, BlockIndex, UnitOfLength);
 				idx = FindRailIndex(railkey.Trim(), Data.Blocks[BlockIndex].Rail);
+				if (idx == -1)
+				{
+					Interface.AddMessage(Interface.MessageType.Error, false, "Rail key is invalid in Structure.Put");
+					return;
+				}
 			}
 			if (sttype == -1)
 			{
-				//TODO: Add error message
+				Interface.AddMessage(Interface.MessageType.Error, false, "Structure key is invalid in Structure.Put");
 				return;
 			}
 
@@ -323,7 +328,7 @@ namespace OpenBve
 				 * 
 				 * TYPE 1 .Put0:
 				 * 0 = Rail key
-				 * 1 = 0- Flat object 1- Follows gradient 2- Follows gradient & cant
+				 * 1 = 0- Flat object 1- Follows gradient 2- Follows cant 3- Follows gradient & cant
 				 * 2 = Object length, used for rotations (NOT IMPLEMENTED AT PRESENT)
 				 * 
 				 * TYPE 2 .Put:
@@ -339,9 +344,9 @@ namespace OpenBve
 				 */
 			if (Type2)
 			{
-				if (!NumberFormats.TryParseIntVb6(Arguments[1], out Type))
+				if (!NumberFormats.TryParseIntVb6(Arguments[1], out Type) && (Type < 0 || Type > 3))
 				{
-					//Interface.AddMessage(Interface.MessageType.Error, false,"Roll is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " +Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+					Interface.AddMessage(Interface.MessageType.Error, false, "Object rotation type is invalid in Structure.Put0");
 					Type = 0;
 				}
 			}
@@ -379,46 +384,69 @@ namespace OpenBve
 					//Interface.AddMessage(Interface.MessageType.Error, false,"Roll is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " +Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 					roll = 0.0;
 				}
-				if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[7], out Type))
+				if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[7], out Type) && (Type < 0 || Type > 3))
 				{
-					//Interface.AddMessage(Interface.MessageType.Error, false,"Roll is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " +Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+					Interface.AddMessage(Interface.MessageType.Error, false, "Object rotation type is invalid in Structure.Put");
 					Type = 0;
 				}
 			}
 			int n;
+			if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length)
+			{
+				Array.Resize<Object[]>(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
+			}
+			if (Data.Blocks[BlockIndex].RailFreeObj[idx] == null)
+			{
+				Data.Blocks[BlockIndex].RailFreeObj[idx] = new Object[1];
+				n = 0;
+			}
+			else
+			{
+				n = Data.Blocks[BlockIndex].RailFreeObj[idx].Length;
+				Array.Resize<Object>(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
+			}
 			switch (Type)
 			{
 				case 0:
-					//Object is horizontal, for the minute we'll call this the equivilant of a GroundFreeObj
-					//TODO: We can attach an object to a rail, but still place it horizontal==> Need to find the distance of the rail in question.....
-					n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
-					Array.Resize<Object>(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
-					Data.Blocks[BlockIndex].GroundFreeObj[n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Type = sttype;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].X = x;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Y = y;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Z = z;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Yaw = yaw*0.0174532925199433;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch*0.0174532925199433;
-					Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll*0.0174532925199433;
+					//Object is horizontal
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = false;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = false;
 					break;
 				case 1:
-					//Object follows the gradient of it's attached rail (or rail 0 if not specificied)
-					//int idx = 0;
-					if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length)
-					{
-						Array.Resize<Object[]>(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
-					}
-					if (Data.Blocks[BlockIndex].RailFreeObj[idx] == null)
-					{
-						Data.Blocks[BlockIndex].RailFreeObj[idx] = new Object[1];
-						n = 0;
-					}
-					else
-					{
-						n = Data.Blocks[BlockIndex].RailFreeObj[idx].Length;
-						Array.Resize<Object>(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
-					}
+					//Follows gradient
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = false;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = true;
+					break;
+				case 2:
+					//Follows cant
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = true;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = false;
+					break;
+				case 3:
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
@@ -427,6 +455,8 @@ namespace OpenBve
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw*0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch*0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll*0.0174532925199433;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = true;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = true;
 					break;
 			}
 		}

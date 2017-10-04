@@ -53,6 +53,8 @@ namespace OpenBve
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
+			internal bool followsRailPitch;
+			internal bool followsRailCant;
 		}
 
 		private struct Crack
@@ -1726,6 +1728,7 @@ namespace OpenBve
 				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
 				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
 				World.Transformation GroundTransformation = new World.Transformation(TrackYaw, 0.0, 0.0);
+				World.Transformation TrackGroundTransformation = new World.Transformation(TrackYaw, 0.0, 0.0);
 				World.Transformation TrackTransformation = new World.Transformation(TrackYaw, TrackPitch, 0.0);
 				World.Transformation NullTransformation = new World.Transformation(0.0, 0.0, 0.0);
 				//Add repeating objects into arrays
@@ -1834,6 +1837,8 @@ namespace OpenBve
 												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
+												Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 											}
 										}
 									}
@@ -1859,7 +1864,9 @@ namespace OpenBve
 											Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 											Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 											Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-										}
+											Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
+											Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+									}
 										Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 									
 								}
@@ -1889,6 +1896,8 @@ namespace OpenBve
 									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+									Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
+									Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 								}
 								break;
 							case 3:
@@ -1933,6 +1942,8 @@ namespace OpenBve
 												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
+												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
+												Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 											}
 										}
 									}
@@ -1958,6 +1969,8 @@ namespace OpenBve
 										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
+										Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
+										Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -1988,6 +2001,8 @@ namespace OpenBve
 									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
+									Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
+									Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 								}
 								break;
 						}
@@ -2092,9 +2107,14 @@ namespace OpenBve
 								World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
 								World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
 								RailTransformation = new World.Transformation(TrackTransformation2, 0.0, 0.0, 0.0);
+								TrackGroundTransformation = new World.Transformation(GroundTransformation2, 0.0, 0.0, 0.0);
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
+
+								/*
+								 * Create transform for rails
+								 */
 								Vector3 pos2 = Position2 + offset2;
 								double rx = pos2.X - pos.X;
 								double ry = pos2.Y - pos.Y;
@@ -2104,6 +2124,21 @@ namespace OpenBve
 								RailTransformation.X = new Vector3(rz, 0.0, -rx);
 								World.Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
+								/*
+								 * Create transform for rail attached grounds
+								 */
+								Vector3 offset3 = new Vector3(Direction2.Y * x2, 0.0, -Direction2.X * x2);
+								Vector3 pos3 = Position2 + offset3;
+								rx = pos3.X;
+								ry = pos3.Y;
+								rz = pos3.Z;
+								World.Normalize(ref rx, ref ry, ref rz);
+								TrackGroundTransformation.Z = new Vector3(rx, ry, rz);
+								TrackGroundTransformation.X = new Vector3(rz, 0.0, -rx);
+								World.Normalize(ref TrackGroundTransformation.X.X, ref TrackGroundTransformation.X.Z);
+								TrackGroundTransformation.Y = Vector3.Cross(TrackGroundTransformation.Z, TrackGroundTransformation.X);
+
+
 								double dx = Data.Blocks[i + 1].Rail[j].RailEndX - Data.Blocks[i].Rail[j].RailStartX;
 								double dy = Data.Blocks[i + 1].Rail[j].RailEndY - Data.Blocks[i].Rail[j].RailStartY;
 								planar = Math.Atan(dx / c);
@@ -2118,6 +2153,7 @@ namespace OpenBve
 								dh = 0.0;
 								updown = 0.0;
 								RailTransformation = new World.Transformation(TrackTransformation, 0.0, 0.0, 0.0);
+								TrackGroundTransformation = new World.Transformation(GroundTransformation, 0.0, 0.0, 0.0);
 							}
 						}
 						// cracks
@@ -2187,10 +2223,31 @@ namespace OpenBve
 									{
 										continue;
 									}
-									Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
-										new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-											Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-										Data.BlockInterval, tpos, 1.0, false);
+									if (Data.Blocks[i].RailFreeObj[j][k].followsRailCant && Data.Blocks[i].RailFreeObj[j][k].followsRailPitch)
+									{
+										Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
+											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+											Data.BlockInterval, tpos, 1.0, false);
+									} else if (Data.Blocks[i].RailFreeObj[j][k].followsRailCant) {
+										Data.Structure.Objects[sttype].CreateObject(wpos, TrackGroundTransformation,
+											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+											Data.BlockInterval, tpos, 1.0, false);
+									} else if (Data.Blocks[i].RailFreeObj[j][k].followsRailPitch)
+									{
+										Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation,
+											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+											Data.BlockInterval, tpos, 1.0, false);
+									}
+									else
+									{
+										Data.Structure.Objects[sttype].CreateObject(wpos, NullTransformation,
+											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+											Data.BlockInterval, tpos, 1.0, false);
+									}
 								}
 							}
 						}
