@@ -3,21 +3,27 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ObjectBender {
+namespace ObjectBender
+{
 	/// <summary>The class with the program's entry point.</summary>
-	internal static class Program {
+	internal static class Program
+	{
 
 		/// <summary>The main procedure.</summary>
 		[STAThread]
-		private static void Main(string[] args) {
-			if (args.Length == 0) {
+		private static void Main(string[] args)
+		{
+			if (args.Length == 0)
+			{
 				/*
 				 * Show the GUI.
 				 * */
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
 				Application.Run(new MainForm());
-			} else {
+			}
+			else
+			{
 				/*
 				 * Use the command-line arguments.
 				 * */
@@ -33,60 +39,81 @@ namespace ObjectBender {
 				/*
 				 * Parse the arguments.
 				 * */
-				for (int i = 0; i < args.Length; i++) {
-					if (args[i] == "-?") {
+				for (int i = 0; i < args.Length; i++)
+				{
+					if (args[i] == "-?")
+					{
 						help = true;
-					} else if (args[i].Equals("-a", StringComparison.OrdinalIgnoreCase)) {
+					}
+					else if (args[i].Equals("-a", StringComparison.OrdinalIgnoreCase))
+					{
 						options.AppendToOutputFile = true;
-					} else if (args.Length != 0 && args[i][0] == '-') {
-						if (args[i].Length >= 3 && args[i][2] == '=') {
+					}
+					else if (args.Length != 0 && args[i][0] == '-')
+					{
+						if (args[i].Length >= 3 && args[i][2] == '=')
+						{
 							string value = args[i].Substring(3);
-							switch (args[i][1]) {
+							switch (args[i][1])
+							{
 								case 'n':
-									if (!int.TryParse(value, NumberStyles.Integer, culture, out options.NumberOfSegments)) {
+									if (!int.TryParse(value, NumberStyles.Integer, culture, out options.NumberOfSegments))
+									{
 										Console.WriteLine("Invalid integer in -n parameter.");
 										return;
 									}
 									break;
 								case 's':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.SegmentLength)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.SegmentLength))
+									{
 										Console.WriteLine("Invalid float in -s parameter.");
 										return;
 									}
 									break;
 								case 'b':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.BlockLength)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.BlockLength))
+									{
 										Console.WriteLine("Invalid float in -b parameter.");
 										return;
 									}
 									break;
 								case 'r':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.Radius)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.Radius))
+									{
 										Console.WriteLine("Invalid float in -r parameter.");
 										return;
 									}
 									break;
 								case 'g':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.RailGauge)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.RailGauge))
+									{
 										Console.WriteLine("Invalid float in -g parameter.");
 										return;
-									} else {
+									}
+									else
+									{
 										options.RailGauge *= 0.001;
 									}
 									break;
 								case 'u':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.InitialCant)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.InitialCant))
+									{
 										Console.WriteLine("Invalid float in -u parameter.");
 										return;
-									} else {
+									}
+									else
+									{
 										options.InitialCant *= 0.001;
 									}
 									break;
 								case 'v':
-									if (!double.TryParse(value, NumberStyles.Float, culture, out options.FinalCant)) {
+									if (!double.TryParse(value, NumberStyles.Float, culture, out options.FinalCant))
+									{
 										Console.WriteLine("Invalid float in -v parameter.");
 										return;
-									} else {
+									}
+									else
+									{
 										options.FinalCant *= 0.001;
 									}
 									break;
@@ -94,15 +121,24 @@ namespace ObjectBender {
 									help = true;
 									break;
 							}
-						} else {
+						}
+						else
+						{
 							help = true;
 						}
-					} else {
-						if (options.InputFile == null) {
+					}
+					else
+					{
+						if (options.InputFile == null)
+						{
 							options.InputFile = args[i];
-						} else if (options.OutputFile == null) {
+						}
+						else if (options.OutputFile == null)
+						{
 							options.OutputFile = args[i];
-						} else {
+						}
+						else
+						{
 							help = true;
 						}
 					}
@@ -111,19 +147,32 @@ namespace ObjectBender {
 				 * Process.
 				 * */
 				ConsoleColor originalColor = Console.ForegroundColor;
-				if (options.NumberOfSegments != 1 & options.SegmentLength == 0.0) {
+				if (options.NumberOfSegments != 1 & options.SegmentLength == 0.0)
+				{
 					Console.WriteLine("If -n is used, -s must also be used.");
-				} else if (options.BlockLength != 0.0 & options.Radius == 0.0) {
+				}
+				else if (options.BlockLength != 0.0 & options.Radius == 0.0)
+				{
 					Console.WriteLine("If -b is used, -r must also be used.");
-				} else if (options.InitialCant != 0.0 & options.SegmentLength == 0.0) {
+				}
+				else if (options.InitialCant != 0.0 & options.SegmentLength == 0.0)
+				{
 					Console.WriteLine("If -u is used, -s must also be used.");
-				} else if (options.FinalCant != 0.0 & options.SegmentLength == 0.0) {
+				}
+				else if (options.FinalCant != 0.0 & options.SegmentLength == 0.0)
+				{
 					Console.WriteLine("If -v is used, -s must also be used.");
-				} else if (options.InitialCant != 0.0 & options.RailGauge == 0.0) {
+				}
+				else if (options.InitialCant != 0.0 & options.RailGauge == 0.0)
+				{
 					Console.WriteLine("If -u is used, -g must also be used.");
-				} else if (options.FinalCant != 0.0 & options.RailGauge == 0.0) {
+				}
+				else if (options.FinalCant != 0.0 & options.RailGauge == 0.0)
+				{
 					Console.WriteLine("If -v is used, -g must also be used.");
-				} else if (help) {
+				}
+				else if (help)
+				{
 					Console.WriteLine();
 					Console.WriteLine("ObjectBender <inputFile> <outputFile> <options>");
 					Console.WriteLine();
@@ -143,17 +192,25 @@ namespace ObjectBender {
 					Console.WriteLine("Example:");
 					Console.WriteLine("ObjectBender in.csv out.csv -n=5 -s=5 -b=25 -r=150");
 					Console.WriteLine();
-				} else {
-					if (options.AppendToOutputFile) {
+				}
+				else
+				{
+					if (options.AppendToOutputFile)
+					{
 						Console.Write(Path.GetFileName(options.InputFile) + " ++> " + Path.GetFileName(options.OutputFile) + "   ");
-					} else {
+					}
+					else
+					{
 						Console.Write(Path.GetFileName(options.InputFile) + " --> " + Path.GetFileName(options.OutputFile) + "   ");
 					}
-					try {
+					try
+					{
 						Bender.BendObject(options);
 						Console.ForegroundColor = ConsoleColor.Green;
 						Console.WriteLine("[OK]");
-					} catch (Exception ex) {
+					}
+					catch (Exception ex)
+					{
 						Console.ForegroundColor = ConsoleColor.Red;
 						Console.WriteLine("[ERROR]");
 						Console.ForegroundColor = ConsoleColor.Yellow;
