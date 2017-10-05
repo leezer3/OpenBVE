@@ -2,9 +2,11 @@
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
-namespace Plugin {
+namespace Plugin
+{
 	/// <summary>Implements the texture interface.</summary>
-	public partial class Plugin : TextureInterface {
+	public partial class Plugin : TextureInterface
+	{
 		
 		// --- members ---
 		
@@ -16,7 +18,8 @@ namespace Plugin {
 		
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
-		public override void Load(HostInterface host) {
+		public override void Load(HostInterface host)
+		{
 			// CurrentHost = host;
 		}
 		
@@ -25,7 +28,8 @@ namespace Plugin {
 		/// <param name="width">Receives the width of the texture.</param>
 		/// <param name="height">Receives the height of the texture.</param>
 		/// <returns>Whether querying the dimensions was successful.</returns>
-		public override bool QueryTextureDimensions(string path, out int width, out int height) {
+		public override bool QueryTextureDimensions(string path, out int width, out int height)
+		{
 			QueryDimensionsFromFile(path, out width, out height);
 			return true;
 		}
@@ -35,7 +39,8 @@ namespace Plugin {
 		/// <returns>Whether the plugin can load the specified texture.</returns>
 		public override bool CanLoadTexture(string path)
 		{
-		    if (File.Exists(path)) {
+		    if (File.Exists(path))
+			{
 				return CanLoadFile(path);
 			}
 		    return false;
@@ -45,7 +50,8 @@ namespace Plugin {
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool LoadTexture(string path, out Texture texture) {
+		public override bool LoadTexture(string path, out Texture texture)
+		{
 			texture = LoadFromFile(path);
 			return true;
 		}
