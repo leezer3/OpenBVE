@@ -134,7 +134,10 @@ namespace OpenBve
 					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 					return null;
 			}
-			Result.OptimizeObject(PreserveVertices);
+			if (Result != null)
+			{
+				Result.OptimizeObject(PreserveVertices);
+			}
 			return Result;
 #if !DEBUG
 			} catch (Exception ex) {
