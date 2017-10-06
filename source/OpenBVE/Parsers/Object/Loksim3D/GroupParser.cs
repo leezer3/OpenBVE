@@ -201,7 +201,8 @@ namespace OpenBve
 						}
 						ObjectManager.StaticObject Object = null;
 						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
-						try {
+						try
+						{
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
 								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
@@ -215,10 +216,11 @@ namespace OpenBve
 								throw new Exception("Format " + System.IO.Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
 							}
 						}
-						catch (Exception ex) {
+						catch (Exception ex)
+						{
 							Interface.AddMessage(Interface.MessageType.Error, false, ex.Message);
 						}
-						
+
 						if (Object != null)
 						{
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))

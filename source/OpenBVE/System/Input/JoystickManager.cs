@@ -2,7 +2,8 @@
 using OpenTK.Input;
 using PIEHid32Net;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	/// <summary>Provides functions for dealing with joysticks.</summary>
 	internal partial class JoystickManager : PIEDataHandler, PIEErrorHandler
 	{

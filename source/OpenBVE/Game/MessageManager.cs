@@ -88,7 +88,7 @@ namespace OpenBve
 		/// <summary>Updates all current messages</summary>
 		internal static void Update()
 		{
-			for (int i = TextualMessages.Count -1; i >= 0; i--)
+			for (int i = TextualMessages.Count - 1; i >= 0; i--)
 			{
 				TextualMessages[i].Update();
 				if (TextualMessages[i].QueueForRemoval)

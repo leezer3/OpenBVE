@@ -85,31 +85,31 @@ namespace OpenBve
 					else if (DampingRatio == 0.0)
 					{
 						newDerivative = OriginalDerivative * Math.Cos(NaturalFrequency * CurrentTimeDelta) -
-						                NaturalFrequency * Math.Sin(NaturalFrequency * CurrentTimeDelta);
+										NaturalFrequency * Math.Sin(NaturalFrequency * CurrentTimeDelta);
 					}
 					else if (DampingRatio < 1.0)
 					{
 						newDerivative = Math.Exp(-DampingRatio * NaturalFrequency * CurrentTimeDelta) *
-						                (NaturalDampingFrequency * OriginalDerivative *
-						                 Math.Cos(NaturalDampingFrequency * CurrentTimeDelta) -
-						                 (NaturalDampingFrequency * NaturalDampingFrequency + DampingRatio * NaturalFrequency *
-						                  (DampingRatio * NaturalFrequency + OriginalDerivative)) *
-						                 Math.Sin(NaturalDampingFrequency * CurrentTimeDelta)) / NaturalDampingFrequency;
+										(NaturalDampingFrequency * OriginalDerivative *
+										 Math.Cos(NaturalDampingFrequency * CurrentTimeDelta) -
+										 (NaturalDampingFrequency * NaturalDampingFrequency + DampingRatio * NaturalFrequency *
+										  (DampingRatio * NaturalFrequency + OriginalDerivative)) *
+										 Math.Sin(NaturalDampingFrequency * CurrentTimeDelta)) / NaturalDampingFrequency;
 					}
 					else if (DampingRatio == 1.0)
 					{
 						newDerivative = Math.Exp(-NaturalFrequency * CurrentTimeDelta) *
-						                (OriginalDerivative - NaturalFrequency * (NaturalFrequency + OriginalDerivative) *
-						                 CurrentTimeDelta);
+										(OriginalDerivative - NaturalFrequency * (NaturalFrequency + OriginalDerivative) *
+										 CurrentTimeDelta);
 					}
 					else
 					{
 						newDerivative = Math.Exp(-DampingRatio * NaturalFrequency * CurrentTimeDelta) *
-						                (NaturalDampingFrequency * OriginalDerivative *
-						                 Math.Cosh(NaturalDampingFrequency * CurrentTimeDelta) +
-						                 (NaturalDampingFrequency * NaturalDampingFrequency - DampingRatio * NaturalFrequency *
-						                  (DampingRatio * NaturalFrequency + OriginalDerivative)) *
-						                 Math.Sinh(NaturalDampingFrequency * CurrentTimeDelta)) / NaturalDampingFrequency;
+										(NaturalDampingFrequency * OriginalDerivative *
+										 Math.Cosh(NaturalDampingFrequency * CurrentTimeDelta) +
+										 (NaturalDampingFrequency * NaturalDampingFrequency - DampingRatio * NaturalFrequency *
+										  (DampingRatio * NaturalFrequency + OriginalDerivative)) *
+										 Math.Sinh(NaturalDampingFrequency * CurrentTimeDelta)) / NaturalDampingFrequency;
 					}
 					double a = TargetAngle - OriginalAngle;
 					OriginalAngle = CurrentAngle;
@@ -132,26 +132,26 @@ namespace OpenBve
 					else if (DampingRatio == 0.0)
 					{
 						newValue = Math.Cos(NaturalFrequency * CurrentTimeDelta) + OriginalDerivative *
-						           Math.Sin(NaturalFrequency * CurrentTimeDelta) / NaturalFrequency;
+								   Math.Sin(NaturalFrequency * CurrentTimeDelta) / NaturalFrequency;
 					}
 					else if (DampingRatio < 1.0)
 					{
 						double n = (OriginalDerivative + NaturalFrequency * DampingRatio) / NaturalDampingFrequency;
 						newValue = Math.Exp(-DampingRatio * NaturalFrequency * CurrentTimeDelta) *
-						           (Math.Cos(NaturalDampingFrequency * CurrentTimeDelta) +
-						            n * Math.Sin(NaturalDampingFrequency * CurrentTimeDelta));
+								   (Math.Cos(NaturalDampingFrequency * CurrentTimeDelta) +
+									n * Math.Sin(NaturalDampingFrequency * CurrentTimeDelta));
 					}
 					else if (DampingRatio == 1.0)
 					{
 						newValue = Math.Exp(-NaturalFrequency * CurrentTimeDelta) *
-						           (1.0 + (OriginalDerivative + NaturalFrequency) * CurrentTimeDelta);
+								   (1.0 + (OriginalDerivative + NaturalFrequency) * CurrentTimeDelta);
 					}
 					else
 					{
 						double n = (OriginalDerivative + NaturalFrequency * DampingRatio) / NaturalDampingFrequency;
 						newValue = Math.Exp(-DampingRatio * NaturalFrequency * CurrentTimeDelta) *
-						           (Math.Cosh(NaturalDampingFrequency * CurrentTimeDelta) +
-						            n * Math.Sinh(NaturalDampingFrequency * CurrentTimeDelta));
+								   (Math.Cosh(NaturalDampingFrequency * CurrentTimeDelta) +
+									n * Math.Sinh(NaturalDampingFrequency * CurrentTimeDelta));
 					}
 					CurrentValue = newValue;
 					CurrentAngle = TargetAngle * (1.0 - newValue) + OriginalAngle * newValue;

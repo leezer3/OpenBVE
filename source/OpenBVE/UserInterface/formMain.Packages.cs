@@ -79,7 +79,7 @@ namespace OpenBve
 				}
 				//Only set properties after making the checks
 
-				
+
 				if (Program.CurrentlyRunningOnMono)
 				{
 					//HACK: Mono's WinForms implementation appears to be setting the encoding for a textbox to be Encoding.Default
@@ -204,7 +204,7 @@ namespace OpenBve
 					{
 						linkLabelPackageWebsite.Links.Clear();
 						linkLabelPackageWebsite.Text = currentPackage.Website;
-						LinkLabel.Link link = new LinkLabel.Link {LinkData = currentPackage.Website};
+						LinkLabel.Link link = new LinkLabel.Link { LinkData = currentPackage.Website };
 						linkLabelPackageWebsite.Links.Add(link);
 					}
 					else
@@ -276,10 +276,10 @@ namespace OpenBve
 				Manipulation.ExtractPackage(currentPackage, ExtractionDirectory, currentDatabaseFolder, ref PackageFiles);
 				if (ProblemEncountered == false && PackageFiles != string.Empty)
 				{
-					textBoxFilesInstalled.Invoke((MethodInvoker) delegate
-					{
-						textBoxFilesInstalled.Text = PackageFiles;
-					});
+					textBoxFilesInstalled.Invoke((MethodInvoker)delegate
+				   {
+					   textBoxFilesInstalled.Text = PackageFiles;
+				   });
 				}
 			};
 			workerThread.RunWorkerCompleted += delegate
@@ -344,10 +344,10 @@ namespace OpenBve
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
-				{
-					OnWorkerProgressChanged(sender, e);
-				});
+				this.BeginInvoke((MethodInvoker)delegate
+			   {
+				   OnWorkerProgressChanged(sender, e);
+			   });
 				return;
 			}
 
@@ -361,10 +361,10 @@ namespace OpenBve
 			//We need to invoke the control so we don't get a cross thread exception
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
-				{
-					OnWorkerReportsProblem(sender, e);
-				});
+				this.BeginInvoke((MethodInvoker)delegate
+			   {
+				   OnWorkerReportsProblem(sender, e);
+			   });
 				return;
 			}
 			//Update the text, but don't change the tab- Do this when the worker terminates
@@ -383,7 +383,7 @@ namespace OpenBve
 			buttonInstallFinish.Text = Interface.GetInterfaceString("packages_success");
 			//Non-localised string as this is a specific error message
 			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
-			                             e.CurrentFile + " at " + e.Progress + "% completion.";
+										 e.CurrentFile + " at " + e.Progress + "% completion.";
 			//Create crash dump file
 			CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
 		}
@@ -400,10 +400,10 @@ namespace OpenBve
 			listPopulating = true;
 			if (this.InvokeRequired)
 			{
-				this.BeginInvoke((MethodInvoker) delegate
-				{
-					PopulatePackageList(packageList, dataGrid, simpleList, isDependancy, isRecommendation);
-				});
+				this.BeginInvoke((MethodInvoker)delegate
+			   {
+				   PopulatePackageList(packageList, dataGrid, simpleList, isDependancy, isRecommendation);
+			   });
 				return;
 			}
 			//Clear the package list
@@ -554,7 +554,7 @@ namespace OpenBve
 					PopulatePackageList(currentPackage.Reccomendations, dataGridViewPackages3, false, false, true);
 			}
 			catch
-			{				
+			{
 			}
 		}
 
@@ -862,7 +862,8 @@ namespace OpenBve
 				Manipulation.CreatePackage(currentPackage, Interface.CurrentOptions.packageCompressionType, currentPackage.FileName, ImageFile, filesToPackage);
 			};
 
-			workerThread.RunWorkerCompleted += delegate {
+			workerThread.RunWorkerCompleted += delegate
+			{
 				if (ProblemEncountered == false)
 				{
 					string text = "";
@@ -880,7 +881,7 @@ namespace OpenBve
 				panelSuccess.Show();
 			};
 
-			 workerThread.RunWorkerAsync();	
+			workerThread.RunWorkerAsync();
 		}
 
 		private void buttonCreateProceed_Click(object sender, EventArgs e)
@@ -1111,7 +1112,7 @@ namespace OpenBve
 				{
 					return;
 				}
-				
+
 				switch (newPackageType)
 				{
 					case PackageType.Route:
@@ -1146,7 +1147,7 @@ namespace OpenBve
 					linkLabelPackageWebsite.Text = currentPackage.Website;
 					linkLabelPackageWebsite.Links[0].LinkData = currentPackage.Website;
 				}
-				
+
 			}
 			else
 			{
@@ -1213,8 +1214,8 @@ namespace OpenBve
 
 			inputBox.AcceptButton = okButton;
 			inputBox.CancelButton = cancelButton;
-			inputBox.AcceptButton = okButton; 
-			inputBox.CancelButton = cancelButton; 
+			inputBox.AcceptButton = okButton;
+			inputBox.CancelButton = cancelButton;
 			DialogResult result = inputBox.ShowDialog();
 			input = textBox.Text;
 			return result;
@@ -1296,7 +1297,7 @@ namespace OpenBve
 				}
 				else
 				{
-					minimumVersion = Version.Parse(textBox.Text);	
+					minimumVersion = Version.Parse(textBox.Text);
 				}
 				if (textBox2.Text == String.Empty || textBox2.Text == @"0")
 				{
@@ -1481,7 +1482,7 @@ namespace OpenBve
 				switch (currentPackage.PackageType)
 				{
 					case PackageType.Route:
-						for (int i = Database.currentDatabase.InstalledRoutes.Count -1; i >= 0; i--)
+						for (int i = Database.currentDatabase.InstalledRoutes.Count - 1; i >= 0; i--)
 						{
 							if (Database.currentDatabase.InstalledRoutes[i].GUID == currentPackage.GUID)
 							{
@@ -1584,7 +1585,7 @@ namespace OpenBve
 			}
 			workerThread = null;
 			workerThread = new BackgroundWorker();
-		}	
+		}
 
 
 		private void buttonBack_Click(object sender, EventArgs e)

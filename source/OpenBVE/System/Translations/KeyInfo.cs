@@ -25,8 +25,8 @@ namespace OpenBve
 			{
 				return Description;
 			}
-		
-		
+
+
 		}
 
 		/// <summary>Holds the translations for all keys available for assignation</summary>

@@ -42,7 +42,7 @@ namespace OpenBve
 							double repetitions = 6;
 							foreach (XmlNode c in n.ChildNodes)
 							{
-								
+
 								string[] Arguments = c.InnerText.Split(',');
 								switch (c.Name.ToLowerInvariant())
 								{
@@ -59,7 +59,7 @@ namespace OpenBve
 												mode = BackgroundManager.BackgroundTransitionMode.None;
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
+												Interface.AddMessage(Interface.MessageType.Error, true, c.InnerText + "is not a valid background fade mode in file " + fileName);
 												break;
 										}
 										break;
@@ -72,7 +72,7 @@ namespace OpenBve
 										else
 										{
 											ObjectManager.UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-											o = (ObjectManager.StaticObject) b;
+											o = (ObjectManager.StaticObject)b;
 										}
 										break;
 									case "repetitions":
@@ -92,7 +92,7 @@ namespace OpenBve
 											Textures.RegisterTexture(file, out t);
 										}
 										break;
-									
+
 									case "time":
 										if (!Interface.TryParseTime(Arguments[0].Trim(), out DisplayTime))
 										{
@@ -118,7 +118,7 @@ namespace OpenBve
 								//TODO: Error message stating they have been ignored
 								return new BackgroundManager.BackgroundObject(o);
 							}
-							
+
 						}
 					}
 					if (Backgrounds.Count == 1)

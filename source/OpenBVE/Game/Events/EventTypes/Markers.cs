@@ -41,7 +41,7 @@ namespace OpenBve
 				}
 			}
 		}
-		
+
 		/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
 		internal class MarkerEndEvent : GeneralEvent
 		{

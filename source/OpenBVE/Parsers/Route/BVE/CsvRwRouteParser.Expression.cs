@@ -92,7 +92,7 @@ namespace OpenBve
 									if (stationName)
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
-										                                                         Column.ToString(Culture) + " in file " + File);
+																								 Column.ToString(Culture) + " in file " + File);
 										openingerror = true;
 									}
 									else

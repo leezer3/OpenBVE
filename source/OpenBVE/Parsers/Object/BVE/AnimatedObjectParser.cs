@@ -87,7 +87,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												default:
 													Interface.AddMessage(Interface.MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
@@ -176,7 +177,7 @@ namespace OpenBve
 								}
 								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
 								{
-									States = new ObjectManager.AnimatedObjectState[] {},
+									States = new ObjectManager.AnimatedObjectState[] { },
 									CurrentState = -1,
 									TranslateXDirection = new Vector3(1.0, 0.0, 0.0),
 									TranslateYDirection = new Vector3(0.0, 1.0, 0.0),
@@ -238,7 +239,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												case "states":
 													{
 														string[] s = b.Split(',');
@@ -272,7 +274,7 @@ namespace OpenBve
 																if (StateFiles[k] != null)
 																{
 																	NullObject = false;
-																}	
+																}
 															}
 															if (NullObject == true)
 															{
@@ -285,7 +287,8 @@ namespace OpenBve
 															Interface.AddMessage(Interface.MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															return null;
 														}
-													} break;
+													}
+													break;
 												case "statefunction":
 													try
 													{
@@ -295,12 +298,14 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "statefunctionrpn":
 													{
 														StateFunctionLine = i;
 														StateFunctionRpn = b;
-													} break;
+													}
+													break;
 												case "translatexdirection":
 												case "translateydirection":
 												case "translatezdirection":
@@ -341,7 +346,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												case "translatexfunction":
 													try
 													{
@@ -358,7 +364,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translatexscript":
 													try
 													{
@@ -367,7 +374,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translateyfunction":
 													try
 													{
@@ -384,7 +392,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translateyscript":
 													try
 													{
@@ -393,7 +402,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translatezfunction":
 													try
 													{
@@ -410,7 +420,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translatezscript":
 													try
 													{
@@ -419,7 +430,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "trackfollowerfunction":
 													try
 													{
@@ -428,7 +440,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "axles":
 													try
 													{
@@ -444,7 +457,7 @@ namespace OpenBve
 														}
 														else if (FrontAxlePosition < RearAxlePosition)
 														{
-															Interface.AddMessage(Interface.MessageType.Error, false,"Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+															Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 														else
 														{
@@ -452,16 +465,16 @@ namespace OpenBve
 														}
 
 													}
-													catch(Exception ex)
+													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
-													/*
-													 * RPN Functions were added by Michelle, and she stated that they should not be used other than in debugging
-													 * Not aware of any uses, but these should stay there anyway
-													 * 
-													 */
+												/*
+												 * RPN Functions were added by Michelle, and she stated that they should not be used other than in debugging
+												 * Not aware of any uses, but these should stay there anyway
+												 * 
+												 */
 												case "translatexfunctionrpn":
 													try
 													{
@@ -470,7 +483,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translateyfunctionrpn":
 													try
 													{
@@ -479,7 +493,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "translatezfunctionrpn":
 													try
 													{
@@ -488,7 +503,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotatexdirection":
 												case "rotateydirection":
 												case "rotatezdirection":
@@ -533,7 +549,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												case "rotatexfunction":
 													try
 													{
@@ -548,7 +565,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotateyfunction":
 													try
 													{
@@ -561,7 +579,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotatezfunction":
 													try
 													{
@@ -574,7 +593,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotatexfunctionrpn":
 													try
 													{
@@ -583,7 +603,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotateyfunctionrpn":
 													try
 													{
@@ -592,7 +613,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotatezfunctionrpn":
 													try
 													{
@@ -601,7 +623,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "rotatexdamping":
 												case "rotateydamping":
 												case "rotatezdamping":
@@ -646,7 +669,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												case "textureshiftxdirection":
 												case "textureshiftydirection":
 													{
@@ -679,7 +703,8 @@ namespace OpenBve
 														{
 															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
-													} break;
+													}
+													break;
 												case "textureshiftxfunction":
 													try
 													{
@@ -688,7 +713,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "textureshiftyfunction":
 													try
 													{
@@ -697,7 +723,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "textureshiftxfunctionrpn":
 													try
 													{
@@ -706,7 +733,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "textureshiftyfunctionrpn":
 													try
 													{
@@ -715,7 +743,8 @@ namespace OpenBve
 													catch (Exception ex)
 													{
 														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													}
+													break;
 												case "textureoverride":
 													switch (b.ToLowerInvariant())
 													{
@@ -748,7 +777,8 @@ namespace OpenBve
 														{
 															Result.Objects[ObjectCount].RefreshRate = r;
 														}
-													} break;
+													}
+													break;
 												default:
 													Interface.AddMessage(Interface.MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
@@ -808,7 +838,7 @@ namespace OpenBve
 										{
 											Result.Objects[ObjectCount].States[k].Object = null;
 										}
-										
+
 									}
 									for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++)
 									{
@@ -858,7 +888,7 @@ namespace OpenBve
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
 											Result.Objects[ObjectCount].RotateZFunction = null;
 										}
-										
+
 									}
 								}
 								else
@@ -888,7 +918,7 @@ namespace OpenBve
 			//Update normals
 			for (int i = 0; i < Mesh.Faces.Length; i++)
 			{
-				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
+				for (int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
 					{
 						World.Rotate(ref Mesh.Faces[i].Vertices[j].Normal, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));

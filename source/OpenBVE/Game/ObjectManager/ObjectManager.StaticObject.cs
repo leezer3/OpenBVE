@@ -134,9 +134,9 @@ namespace OpenBve
 					Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
 					for (int j = 0; j < Mesh.Faces[mf + i].Vertices.Length; j++)
 					{
-						Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+						Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
 					}
-					Mesh.Faces[mf + i].Material += (ushort) mm;
+					Mesh.Faces[mf + i].Material += (ushort)mm;
 				}
 				for (int i = 0; i < Add.Mesh.Materials.Length; i++)
 				{
@@ -556,9 +556,9 @@ namespace OpenBve
 
 							// Conditions for face merger
 							bool mergeable = (type == World.MeshFace.FaceTypeTriangles) &&
-							                 (type == type2) &&
-							                 (face == face2) &&
-							                 (Mesh.Faces[i].Material == Mesh.Faces[j].Material);
+											 (type == type2) &&
+											 (face == face2) &&
+											 (Mesh.Faces[i].Material == Mesh.Faces[j].Material);
 
 							can_merge[j] = mergeable;
 							merge_vertices += mergeable ? Mesh.Faces[j].Vertices.Length : 0;

@@ -132,7 +132,7 @@ namespace OpenBve
 					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
 					{
 						States = new ObjectManager.AnimatedObjectState[1]
-						
+
 					};
 					CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
 					CarSections[j].Elements[0].States[0].Object = s;
@@ -231,11 +231,11 @@ namespace OpenBve
 					double sx, sy, sz;
 					{
 						dx = FrontAxle.Follower.WorldPosition.X -
-						     RearAxle.Follower.WorldPosition.X;
+							 RearAxle.Follower.WorldPosition.X;
 						dy = FrontAxle.Follower.WorldPosition.Y -
-						     RearAxle.Follower.WorldPosition.Y;
+							 RearAxle.Follower.WorldPosition.Y;
 						dz = FrontAxle.Follower.WorldPosition.Z -
-						     RearAxle.Follower.WorldPosition.Z;
+							 RearAxle.Follower.WorldPosition.Z;
 						double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
 						dx *= t;
 						dy *= t;
@@ -249,12 +249,12 @@ namespace OpenBve
 						World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
 					}
 					// cant and radius
-					
+
 					//TODO: This currently uses the figures from the base car
 					// apply position due to cant/toppling
 					{
 						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+								   baseCar.Specs.CurrentRollDueToCantAngle;
 						double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 						double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
 						double cx = sx * x + ux * y;
@@ -270,7 +270,7 @@ namespace OpenBve
 					// apply rolling
 					{
 						double a = -baseCar.Specs.CurrentRollDueToTopplingAngle -
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+								   baseCar.Specs.CurrentRollDueToCantAngle;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
@@ -281,7 +281,7 @@ namespace OpenBve
 					}
 					// apply pitching
 					if (CurrentCarSection >= 0 &&
-					    CarSections[CurrentCarSection].Overlay)
+						CarSections[CurrentCarSection].Overlay)
 					{
 						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
 						double cosa = Math.Cos(a);
@@ -289,14 +289,14 @@ namespace OpenBve
 						World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
 						World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
 						double cx = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.X +
-						             RearAxle.Follower.WorldPosition.X);
+									(FrontAxle.Follower.WorldPosition.X +
+									 RearAxle.Follower.WorldPosition.X);
 						double cy = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.Y +
-						             RearAxle.Follower.WorldPosition.Y);
+									(FrontAxle.Follower.WorldPosition.Y +
+									 RearAxle.Follower.WorldPosition.Y);
 						double cz = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.Z +
-						             RearAxle.Follower.WorldPosition.Z);
+									(FrontAxle.Follower.WorldPosition.Z +
+									 RearAxle.Follower.WorldPosition.Z);
 						FrontAxle.Follower.WorldPosition.X -= cx;
 						FrontAxle.Follower.WorldPosition.Y -= cy;
 						FrontAxle.Follower.WorldPosition.Z -= cz;

@@ -43,11 +43,11 @@ namespace OpenBve
 				double sx, sy, sz;
 				{
 					dx = FrontAxleFollower.WorldPosition.X -
-					     RearAxleFollower.WorldPosition.X;
+						 RearAxleFollower.WorldPosition.X;
 					dy = FrontAxleFollower.WorldPosition.Y -
-					     RearAxleFollower.WorldPosition.Y;
+						 RearAxleFollower.WorldPosition.Y;
 					dz = FrontAxleFollower.WorldPosition.Z -
-					     RearAxleFollower.WorldPosition.Z;
+						 RearAxleFollower.WorldPosition.Z;
 					double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
 					dx *= t;
 					dy *= t;
@@ -64,7 +64,7 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = CurrentRollDueToTopplingAngle +
-					           CurrentRollDueToCantAngle;
+							   CurrentRollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
 					double cx = sx * x + ux * y;
@@ -80,7 +80,7 @@ namespace OpenBve
 				// apply rolling
 				{
 					double a = CurrentRollDueToTopplingAngle -
-					           CurrentRollDueToCantAngle;
+							   CurrentRollDueToCantAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
 					World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);

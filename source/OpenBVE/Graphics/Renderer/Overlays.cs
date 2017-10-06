@@ -9,7 +9,7 @@ namespace OpenBve
 		/* --------------------------------------------------------------
 		 * This file contains the base drawing routines for screen overlays
 		 * -------------------------------------------------------------- */
-		
+
 		/// <summary>Is called once by the main renderer loop, in order to render all overlays shown on the screen</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
 		private static void RenderOverlays(double TimeElapsed)
@@ -36,25 +36,25 @@ namespace OpenBve
 					switch (Command)
 					{
 						case "messages":
-						{
-							RenderGameMessages(Interface.CurrentHudElements[i], TimeElapsed);
-						} 
-						break;
+							{
+								RenderGameMessages(Interface.CurrentHudElements[i], TimeElapsed);
+							}
+							break;
 						case "scoremessages":
-						{
-							RenderScoreMessages(Interface.CurrentHudElements[i], TimeElapsed);
-						}
-						break;
+							{
+								RenderScoreMessages(Interface.CurrentHudElements[i], TimeElapsed);
+							}
+							break;
 						case "ats":
-						{
-							RenderATSLamps(Interface.CurrentHudElements[i], TimeElapsed);
-						}
-						break;
+							{
+								RenderATSLamps(Interface.CurrentHudElements[i], TimeElapsed);
+							}
+							break;
 						default:
-						{
-							RenderHUDElement(Interface.CurrentHudElements[i], TimeElapsed);
-						}
-						break;
+							{
+								RenderHUDElement(Interface.CurrentHudElements[i], TimeElapsed);
+							}
+							break;
 					}
 				}
 				//Marker textures
@@ -674,72 +674,86 @@ namespace OpenBve
 								if (TrainManager.PlayerTrain.Plugin.Panel[256] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtsOperation:
 								if (TrainManager.PlayerTrain.Plugin.Panel[258] != 0)
 								{
 									sc = MessageColor.Red;
-								} break;
+								}
+								break;
 							case LampType.AtsPPower:
 								if (TrainManager.PlayerTrain.Plugin.Panel[259] != 0)
 								{
 									sc = MessageColor.Green;
-								} break;
+								}
+								break;
 							case LampType.AtsPPattern:
 								if (TrainManager.PlayerTrain.Plugin.Panel[260] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtsPBrakeOverride:
 								if (TrainManager.PlayerTrain.Plugin.Panel[261] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtsPBrakeOperation:
 								if (TrainManager.PlayerTrain.Plugin.Panel[262] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtsP:
 								if (TrainManager.PlayerTrain.Plugin.Panel[263] != 0)
 								{
 									sc = MessageColor.Green;
-								} break;
+								}
+								break;
 							case LampType.AtsPFailure:
 								if (TrainManager.PlayerTrain.Plugin.Panel[264] != 0)
 								{
 									sc = MessageColor.Red;
-								} break;
+								}
+								break;
 							case LampType.Atc:
 								if (TrainManager.PlayerTrain.Plugin.Panel[265] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtcPower:
 								if (TrainManager.PlayerTrain.Plugin.Panel[266] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtcUse:
 								if (TrainManager.PlayerTrain.Plugin.Panel[267] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 							case LampType.AtcEmergency:
 								if (TrainManager.PlayerTrain.Plugin.Panel[268] != 0)
 								{
 									sc = MessageColor.Red;
-								} break;
+								}
+								break;
 							case LampType.Eb:
 								if (TrainManager.PlayerTrain.Plugin.Panel[270] != 0)
 								{
 									sc = MessageColor.Green;
-								} break;
+								}
+								break;
 							case LampType.ConstSpeed:
 								if (TrainManager.PlayerTrain.Plugin.Panel[269] != 0)
 								{
 									sc = MessageColor.Orange;
-								} break;
+								}
+								break;
 						}
 					}
 					// colors
@@ -969,57 +983,8 @@ namespace OpenBve
 					break;
 				case "doorsleft":
 				case "doorsright":
-				{
-					if ((LeftDoors & TrainManager.TrainDoorState.AllClosed) == 0 | (RightDoors & TrainManager.TrainDoorState.AllClosed) == 0)
 					{
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else
-					{
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					}
-					TrainManager.TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
-					if ((Doors & TrainManager.TrainDoorState.Mixed) != 0)
-					{
-						sc = MessageColor.Orange;
-					}
-					else if ((Doors & TrainManager.TrainDoorState.AllClosed) != 0)
-					{
-						sc = MessageColor.Gray;
-					}
-					else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == TrainManager.DoorMode.Manual)
-					{
-						sc = MessageColor.Green;
-					}
-					else
-					{
-						sc = MessageColor.Blue;
-					}
-					t = Command == "doorsleft" ? Interface.QuickReferences.DoorsLeft : Interface.QuickReferences.DoorsRight;
-				} break;
-				case "stopleft":
-				case "stopright":
-				case "stopnone":
-				{
-					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
-					{
-						bool cond;
-						if (Command == "stopleft")
-						{
-							cond = Game.Stations[s].OpenLeftDoors;
-						}
-						else if (Command == "stopright")
-						{
-							cond = Game.Stations[s].OpenRightDoors;
-						}
-						else
-						{
-							cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
-						}
-						if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+						if ((LeftDoors & TrainManager.TrainDoorState.AllClosed) == 0 | (RightDoors & TrainManager.TrainDoorState.AllClosed) == 0)
 						{
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -1029,30 +994,39 @@ namespace OpenBve
 							Element.TransitionState += speed * TimeElapsed;
 							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 						}
+						TrainManager.TrainDoorState Doors = Command == "doorsleft" ? LeftDoors : RightDoors;
+						if ((Doors & TrainManager.TrainDoorState.Mixed) != 0)
+						{
+							sc = MessageColor.Orange;
+						}
+						else if ((Doors & TrainManager.TrainDoorState.AllClosed) != 0)
+						{
+							sc = MessageColor.Gray;
+						}
+						else if (TrainManager.PlayerTrain.Specs.DoorCloseMode == TrainManager.DoorMode.Manual)
+						{
+							sc = MessageColor.Green;
+						}
+						else
+						{
+							sc = MessageColor.Blue;
+						}
+						t = Command == "doorsleft" ? Interface.QuickReferences.DoorsLeft : Interface.QuickReferences.DoorsRight;
 					}
-					else
+					break;
+				case "stopleft":
+				case "stopright":
+				case "stopnone":
 					{
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					}
-					t = Element.Text;
-				} break;
-				case "stoplefttick":
-				case "stoprighttick":
-				case "stopnonetick":
-				{
-					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
-					{
-						int c = Game.GetStopIndex(s, TrainManager.PlayerTrain.Cars.Length);
-						if (c >= 0)
+						int s = TrainManager.PlayerTrain.Station;
+						if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 						{
 							bool cond;
-							if (Command == "stoplefttick")
+							if (Command == "stopleft")
 							{
 								cond = Game.Stations[s].OpenLeftDoors;
 							}
-							else if (Command == "stoprighttick")
+							else if (Command == "stopright")
 							{
 								cond = Game.Stations[s].OpenRightDoors;
 							}
@@ -1070,19 +1044,87 @@ namespace OpenBve
 								Element.TransitionState += speed * TimeElapsed;
 								if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 							}
-							double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
-							double r;
-							if (d > 0.0)
+						}
+						else
+						{
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						}
+						t = Element.Text;
+					}
+					break;
+				case "stoplefttick":
+				case "stoprighttick":
+				case "stopnonetick":
+					{
+						int s = TrainManager.PlayerTrain.Station;
+						if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+						{
+							int c = Game.GetStopIndex(s, TrainManager.PlayerTrain.Cars.Length);
+							if (c >= 0)
 							{
-								r = d / Game.Stations[s].Stops[c].BackwardTolerance;
+								bool cond;
+								if (Command == "stoplefttick")
+								{
+									cond = Game.Stations[s].OpenLeftDoors;
+								}
+								else if (Command == "stoprighttick")
+								{
+									cond = Game.Stations[s].OpenRightDoors;
+								}
+								else
+								{
+									cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
+								}
+								if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+								{
+									Element.TransitionState -= speed * TimeElapsed;
+									if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+								}
+								else
+								{
+									Element.TransitionState += speed * TimeElapsed;
+									if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+								}
+								double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
+								double r;
+								if (d > 0.0)
+								{
+									r = d / Game.Stations[s].Stops[c].BackwardTolerance;
+								}
+								else
+								{
+									r = d / Game.Stations[s].Stops[c].ForwardTolerance;
+								}
+								if (r < -1.0) r = -1.0;
+								if (r > 1.0) r = 1.0;
+								y -= r * (double)Element.Value1;
 							}
 							else
 							{
-								r = d / Game.Stations[s].Stops[c].ForwardTolerance;
+								Element.TransitionState += speed * TimeElapsed;
+								if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 							}
-							if (r < -1.0) r = -1.0;
-							if (r > 1.0) r = 1.0;
-							y -= r * (double)Element.Value1;
+						}
+						else
+						{
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						}
+						t = Element.Text;
+					}
+					break;
+				case "clock":
+					{
+						int hours = (int)Math.Floor(Game.SecondsSinceMidnight);
+						int seconds = hours % 60; hours /= 60;
+						int minutes = hours % 60; hours /= 60;
+						hours %= 24;
+						t = hours.ToString(Culture).PadLeft(2, '0') + ":" + minutes.ToString(Culture).PadLeft(2, '0') + ":" + seconds.ToString(Culture).PadLeft(2, '0');
+						if (OptionClock)
+						{
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 						}
 						else
 						{
@@ -1090,31 +1132,7 @@ namespace OpenBve
 							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 						}
 					}
-					else
-					{
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					}
-					t = Element.Text;
-				} break;
-				case "clock":
-				{
-					int hours = (int)Math.Floor(Game.SecondsSinceMidnight);
-					int seconds = hours % 60; hours /= 60;
-					int minutes = hours % 60; hours /= 60;
-					hours %= 24;
-					t = hours.ToString(Culture).PadLeft(2, '0') + ":" + minutes.ToString(Culture).PadLeft(2, '0') + ":" + seconds.ToString(Culture).PadLeft(2, '0');
-					if (OptionClock)
-					{
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else
-					{
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					}
-				} break;
+					break;
 				case "gradient":
 					if (OptionGradient == GradientDisplayMode.Percentage)
 					{
@@ -1157,7 +1175,8 @@ namespace OpenBve
 						}
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					} break;
+					}
+					break;
 				case "speed":
 					if (OptionSpeed == SpeedDisplayMode.Kmph)
 					{
@@ -1179,7 +1198,8 @@ namespace OpenBve
 						t = mph.ToString("0.00", Culture) + " mph";
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					} break;
+					}
+					break;
 				case "fps":
 					int fps = (int)Math.Round(Game.InfoFrameRate);
 					t = fps.ToString(Culture) + " fps";
@@ -1192,7 +1212,8 @@ namespace OpenBve
 					{
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					} break;
+					}
+					break;
 				case "ai":
 					t = "A.I.";
 					if (TrainManager.PlayerTrain.AI != null)
@@ -1204,7 +1225,8 @@ namespace OpenBve
 					{
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					} break;
+					}
+					break;
 				case "score":
 					if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 					{
@@ -1227,7 +1249,8 @@ namespace OpenBve
 					{
 						Element.TransitionState = 1.0;
 						t = "";
-					} break;
+					}
+					break;
 				default:
 					t = Element.Text;
 					break;
@@ -1479,7 +1502,8 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
 					GL.Color3(1.0f, 1.0f, 0.0f);
 					RenderOverlaySolid(x, y, x + r * w, y + h);
-				} x += w + 8.0;
+				}
+				x += w + 8.0;
 				// auxillary reservoir
 				if (TrainManager.PlayerTrain.Cars[i].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].Specs.BrakeType == TrainManager.CarBrakeType.ElectromagneticStraightAirBrake)
 				{
@@ -1495,7 +1519,8 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
 					GL.Color3(0.5f, 0.5f, 0.5f);
 					RenderOverlaySolid(x, y, x + r * w, y + h);
-				} x += w + 8.0;
+				}
+				x += w + 8.0;
 				// brake cylinder
 				{
 					if (!heading[2])
@@ -1510,7 +1535,8 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 					GL.Color3(0.75f, 0.5f, 0.25f);
 					RenderOverlaySolid(x, y, x + r * w, y + h);
-				} x += w + 8.0;
+				}
+				x += w + 8.0;
 				// main reservoir
 				if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
 				{
@@ -1526,7 +1552,8 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.AirCompressorMaximumPressure;
 					GL.Color3(1.0f, 0.0f, 0.0f);
 					RenderOverlaySolid(x, y, x + r * w, y + h);
-				} x += w + 8.0;
+				}
+				x += w + 8.0;
 				// equalizing reservoir
 				if (TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
 				{
@@ -1542,7 +1569,8 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure;
 					GL.Color3(0.0f, 0.75f, 0.0f);
 					RenderOverlaySolid(x, y, x + r * w, y + h);
-				} x += w + 8.0;
+				}
+				x += w + 8.0;
 				// straight air pipe
 				if (TrainManager.PlayerTrain.Cars[i].Specs.BrakeType == TrainManager.CarBrakeType.ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
 				{
@@ -1564,6 +1592,6 @@ namespace OpenBve
 			}
 		}
 
-		
+
 	}
 }

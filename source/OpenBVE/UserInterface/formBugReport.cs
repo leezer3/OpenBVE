@@ -28,7 +28,7 @@ namespace OpenBve
 			try
 			{
 				var file = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "log.txt");
-				if(File.Exists(file))
+				if (File.Exists(file))
 				{
 					Process.Start(file);
 				}
@@ -44,7 +44,7 @@ namespace OpenBve
 			{
 				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
 				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
-				Process.Start(Path.Combine(file.DirectoryName,file.Name));
+				Process.Start(Path.Combine(file.DirectoryName, file.Name));
 			}
 			catch
 			{
@@ -56,7 +56,7 @@ namespace OpenBve
 		{
 			try
 			{
-				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) , "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip")))
+				using (var ProblemReport = File.OpenWrite(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "openBVE Bug Report" + DateTime.Now.ToString("dd_MM_yyyy") + ".zip")))
 				{
 					using (var zipWriter = WriterFactory.Open(ProblemReport, ArchiveType.Zip, CompressionType.LZMA))
 					{

@@ -52,15 +52,15 @@ namespace OpenBve
 		/// <returns>Whether registering the texture was successful.</returns>
 		internal static bool RegisterTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out Texture handle)
 		{
-		   /* BUG:
-			* Attempt to delete null texture handles from the end of the array
-			* These sometimes seem to end up there
-			* 
-			* Have also seen a registered textures count of 72 and an array length of 64
-			* Is it possible for a texture to fail to register, but still increment the registered textures count?
-			* 
-			* There appears to be a timing issue somewhere whilst loading, as this only happens intermittantly
-			*/
+			/* BUG:
+			 * Attempt to delete null texture handles from the end of the array
+			 * These sometimes seem to end up there
+			 * 
+			 * Have also seen a registered textures count of 72 and an array length of 64
+			 * Is it possible for a texture to fail to register, but still increment the registered textures count?
+			 * 
+			 * There appears to be a timing issue somewhere whilst loading, as this only happens intermittantly
+			 */
 			if (RegisteredTexturesCount > RegisteredTextures.Length)
 			{
 				/* BUG:
@@ -86,7 +86,7 @@ namespace OpenBve
 				{
 				}
 			}
-			
+
 			/*
 			 * Check if the texture is already registered.
 			 * If so, return the existing handle.
@@ -329,9 +329,10 @@ namespace OpenBve
 		/// <summary>Loads all registered textures.</summary>
 		internal static void LoadAllTextures()
 		{
-						for (int i = 0; i < RegisteredTexturesCount; i++) {
-							LoadTexture(RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp);
-						}
+			for (int i = 0; i < RegisteredTexturesCount; i++)
+			{
+				LoadTexture(RegisteredTextures[i], OpenGlTextureWrapMode.ClampClamp);
+			}
 		}
 
 
@@ -451,7 +452,7 @@ namespace OpenBve
 		internal static void UnloadTexture(Texture handle)
 		{
 			//Null check the texture handle, as otherwise this can cause OpenGL to throw a fit
-			if(handle == null)
+			if (handle == null)
 			{
 				return;
 			}

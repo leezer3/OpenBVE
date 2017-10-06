@@ -107,7 +107,7 @@ namespace OpenBve
 										break;
 								}
 							}
-							
+
 						}
 					}
 				}
@@ -121,7 +121,7 @@ namespace OpenBve
 					//Clear the calibration file
 					File.Delete(calibrationFile);
 				}
-				
+
 			}
 
 			internal void SaveCalibration(string calibrationFile)
@@ -154,7 +154,7 @@ namespace OpenBve
 						Calibration[i].Maximum = 255;
 					}
 					lines.Add("<Axis>");
-					lines.Add("<Index>"+ i +"</Index>");
+					lines.Add("<Index>" + i + "</Index>");
 					lines.Add("<Minimum>" + Calibration[i].Minimum + "</Minimum>");
 					lines.Add("<Maximum>" + Calibration[i].Maximum + "</Maximum>");
 					lines.Add("</Axis>");
@@ -168,7 +168,7 @@ namespace OpenBve
 				catch
 				{
 				}
-				
+
 			}
 
 			internal override ButtonState GetButton(int button)
@@ -229,7 +229,7 @@ namespace OpenBve
 							break;
 						//10 digit display
 						case 3:
-							wData[i] = GetDigit(d2); 
+							wData[i] = GetDigit(d2);
 							break;
 						//1 digit display
 						case 4:

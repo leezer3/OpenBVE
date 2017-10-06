@@ -129,7 +129,7 @@ namespace OpenBve
 						if (Train.Specs.AirBrake.Handle.Actual == AirBrakeHandleState.Service)
 						{
 							double r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirServiceRate; //50000
-							double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure; 
+							double d = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;
 							double m = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirNormalPressure; //1.05 * max service pressure from train.dat in pascals
 							r = GetRate(d / m, r * TimeElapsed);
 							if (r > Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.EqualizingReservoirCurrentPressure;

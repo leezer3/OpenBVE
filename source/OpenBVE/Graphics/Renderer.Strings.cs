@@ -3,14 +3,17 @@ using System.Drawing;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBve {
-	internal static partial class Renderer {
-		
+namespace OpenBve
+{
+	internal static partial class Renderer
+	{
+
 		// --- structures ---
-		
+
 		/// <summary>Represents the alignment of a text compared to a reference coordinate.</summary>
 		[Flags]
-		internal enum TextAlignment {
+		internal enum TextAlignment
+		{
 			/// <summary>The reference coordinate represents the top-left corner.</summary>
 			TopLeft = 1,
 			/// <summary>The reference coordinate represents the top-middle corner.</summary>
@@ -42,24 +45,28 @@ namespace OpenBve {
 			/// <summary>Represents the bottom for bitmasking.</summary>
 			Bottom = BottomLeft | BottomMiddle | BottomRight
 		}
-		
-		
+
+
 		// --- functions ---
-		
+
 		/// <summary>Measures the size of a string as it would be rendered using the specified font.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
 		/// <returns>The size of the string.</returns>
-		internal static Size MeasureString(Fonts.OpenGlFont font, string text) {
+		internal static Size MeasureString(Fonts.OpenGlFont font, string text)
+		{
 			int width = 0;
 			int height = 0;
-			if (text != null && font != null) {
-				for (int i = 0; i < text.Length; i++) {
+			if (text != null && font != null)
+			{
+				for (int i = 0; i < text.Length; i++)
+				{
 					Textures.Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					width += data.TypographicSize.Width;
-					if (data.TypographicSize.Height > height) {
+					if (data.TypographicSize.Height > height)
+					{
 						height = data.TypographicSize.Height;
 					}
 				}
@@ -74,8 +81,10 @@ namespace OpenBve {
 		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
-			if (text == null || font == null) {
+		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color)
+		{
+			if (text == null || font == null)
+			{
 				return;
 			}
 			/*
@@ -83,67 +92,84 @@ namespace OpenBve {
 			 * orientation of the string in relation to the specified location.
 			 * */
 			int left;
-			if ((alignment & TextAlignment.Left) == 0) {
+			if ((alignment & TextAlignment.Left) == 0)
+			{
 				int width = 0;
-				for (int i = 0; i < text.Length; i++) {
+				for (int i = 0; i < text.Length; i++)
+				{
 					Textures.Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					width += data.TypographicSize.Width;
 				}
-				if ((alignment & TextAlignment.Right) != 0) {
+				if ((alignment & TextAlignment.Right) != 0)
+				{
 					left = location.X - width;
-				} else {
+				}
+				else
+				{
 					left = location.X - width / 2;
 				}
-			} else {
+			}
+			else
+			{
 				left = location.X;
 			}
 			int top;
-			if ((alignment & TextAlignment.Top) == 0) {
+			if ((alignment & TextAlignment.Top) == 0)
+			{
 				int height = 0;
-				for (int i = 0; i < text.Length; i++) {
+				for (int i = 0; i < text.Length; i++)
+				{
 					Textures.Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
-					if (data.TypographicSize.Height > height) {
+					if (data.TypographicSize.Height > height)
+					{
 						height = data.TypographicSize.Height;
 					}
 				}
-				if ((alignment & TextAlignment.Bottom) != 0) {
+				if ((alignment & TextAlignment.Bottom) != 0)
+				{
 					top = location.Y - height;
-				} else {
+				}
+				else
+				{
 					top = location.Y - height / 2;
 				}
-			} else {
+			}
+			else
+			{
 				top = location.Y;
 			}
 			/*
 			 * Render the string.
 			 * */
-            GL.Enable(EnableCap.Texture2D);
-			for (int i = 0; i < text.Length; i++) {
+			GL.Enable(EnableCap.Texture2D);
+			for (int i = 0; i < text.Length; i++)
+			{
 				Textures.Texture texture;
 				Fonts.OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
-				if (Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
-                    GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
-                    
+				if (Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				{
+					GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+
 					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
 					int y = top - (data.PhysicalSize.Height - data.TypographicSize.Height) / 2;
 					/*
 					 * In the first pass, mask off the background with pure black.
 					 * */
-                    GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
+					GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
 					GL.Begin(PrimitiveType.Polygon);
-                    GL.Color4(color.A, color.A, color.A, 1.0f);
-                    GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
+					GL.Color4(color.A, color.A, color.A, 1.0f);
+					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
 					GL.Vertex2(x, y);
 					GL.Color4(color.A, color.A, color.A, 1.0f);
 					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
 					GL.Vertex2(x + data.PhysicalSize.Width, y);
 					GL.Color4(color.A, color.A, color.A, 1.0f);
-                    GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
 					GL.Vertex2(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
 					GL.Color4(color.A, color.A, color.A, 1.0f);
 					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
@@ -152,13 +178,13 @@ namespace OpenBve {
 					/*
 					 * In the second pass, add the character onto the background.
 					 * */
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
 					GL.Begin(PrimitiveType.Polygon);
 					GL.Color4(color.R, color.G, color.B, color.A);
 					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
 					GL.Vertex2(x, y);
 					GL.Color4(color.R, color.G, color.B, color.A);
-                    GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
 					GL.Vertex2(x + data.PhysicalSize.Width, y);
 					GL.Color4(color.R, color.G, color.B, color.A);
 					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
@@ -172,7 +198,7 @@ namespace OpenBve {
 			}
 			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha); // HACK //
 		}
-		
+
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
@@ -181,14 +207,18 @@ namespace OpenBve {
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		internal static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
-			if (shadow) {
+		internal static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow)
+		{
+			if (shadow)
+			{
 				DrawString(font, text, new Point(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
 				DrawString(font, text, location, alignment, color);
-			} else {
+			}
+			else
+			{
 				DrawString(font, text, location, alignment, color);
 			}
 		}
-		
+
 	}
 }

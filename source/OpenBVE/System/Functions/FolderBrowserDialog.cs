@@ -18,8 +18,14 @@ namespace OpenBve
 		/// </summary>
 		public string InitialDirectory
 		{
-			get { return string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory; }
-			set { _initialDirectory = value; }
+			get
+			{
+				return string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory;
+			}
+			set
+			{
+				_initialDirectory = value;
+			}
 		}
 
 		/// <summary>
@@ -27,19 +33,34 @@ namespace OpenBve
 		/// </summary>
 		public string Title
 		{
-			get { return _title ?? "Select a folder"; }
-			set { _title = value; }
+			get
+			{
+				return _title ?? "Select a folder";
+			}
+			set
+			{
+				_title = value;
+			}
 		}
 
 		/// <summary>
 		/// The selected filename
 		/// </summary>
-		public string FileName { get { return _fileName; } }
+		public string FileName
+		{
+			get
+			{
+				return _fileName;
+			}
+		}
 
 		/// <summary>
 		/// Shows the dialog
 		/// </summary>
-		public bool Show() { return Show(IntPtr.Zero); }
+		public bool Show()
+		{
+			return Show(IntPtr.Zero);
+		}
 
 		/// <param name="hWndOwner">Handle of the control or window to be the parent of the file dialog</param>
 		/// <returns>true if the user clicks OK</returns>
@@ -54,8 +75,14 @@ namespace OpenBve
 
 		private struct ShowDialogResult
 		{
-			public bool Result { get; set; }
-			public string FileName { get; set; }
+			public bool Result
+			{
+				get; set;
+			}
+			public string FileName
+			{
+				get; set;
+			}
 		}
 
 		private static ShowDialogResult ShowXpDialog(IntPtr ownerHandle, string initialDirectory, string title)
@@ -136,8 +163,17 @@ namespace OpenBve
 		private class WindowWrapper : IWin32Window
 		{
 			private readonly IntPtr _handle;
-			public WindowWrapper(IntPtr handle) { _handle = handle; }
-			public IntPtr Handle { get { return _handle; } }
+			public WindowWrapper(IntPtr handle)
+			{
+				_handle = handle;
+			}
+			public IntPtr Handle
+			{
+				get
+				{
+					return _handle;
+				}
+			}
 		}
 	}
 }

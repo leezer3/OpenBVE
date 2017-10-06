@@ -7,8 +7,11 @@ namespace OpenBve
 		/// <summary>
 		/// Defines the behaviour for immediate texture loading
 		/// </summary>
-		internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
-		
+		internal enum LoadTextureImmediatelyMode
+		{
+			NotYet, Yes, NoLonger
+		}
+
 
 		/// <summary>
 		/// Defines the behaviour of the renderer for transparent textures

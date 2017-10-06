@@ -28,7 +28,7 @@ namespace OpenBve
 
 			//Radius at which the sound is audible at full volume, presumably in m
 			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
-			
+
 
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;

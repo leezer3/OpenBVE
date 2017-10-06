@@ -74,7 +74,7 @@ namespace OpenBve
 			int j = 0;
 			for (int i = j; i < LightDefinitions.Length; i++)
 			{
-				
+
 				if (Time < LightDefinitions[i].Time)
 				{
 					break;
@@ -106,7 +106,7 @@ namespace OpenBve
 				k = j + 1;
 			}
 			int t1 = LightDefinitions[j].Time, t2 = LightDefinitions[k].Time;
-			
+
 			double cb1 = LightDefinitions[j].CabBrightness, cb2 = LightDefinitions[k].Time;
 			//Calculate, inverting if necessary
 
@@ -125,7 +125,7 @@ namespace OpenBve
 			{
 				//Wrapping around
 				mu = (86400 - Time + t1) / (86400 - t2 + t1);
-				
+
 			}
 			else
 			{
@@ -134,7 +134,7 @@ namespace OpenBve
 			//Calculate the final colors and positions
 			OptionDiffuseColor = Color24.CosineInterpolate(LightDefinitions[j].DiffuseColor, LightDefinitions[k].DiffuseColor, mu);
 			OptionAmbientColor = Color24.CosineInterpolate(LightDefinitions[j].AmbientColor, LightDefinitions[k].AmbientColor, mu);
-			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition,LightDefinitions[k].LightPosition, mu);
+			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition, LightDefinitions[k].LightPosition, mu);
 
 			//Interpolate the cab brightness value
 			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;

@@ -1,6 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;				// for Key
+using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
 
@@ -17,7 +17,8 @@ namespace OpenBve
 	public sealed class Menu
 	{
 		/// <summary>The list of possible tags for a menu entry- These define the functionality of a given menu entry</summary>
-		public enum MenuTag		{ 
+		public enum MenuTag
+		{
 			/// <summary>Has no functionality/ is blank</summary>
 			None,
 			/// <summary>Is a caption for another menu item</summary>
@@ -41,10 +42,12 @@ namespace OpenBve
 			/// <summary>Quits the program</summary>
 			Quit,
 			/// <summary>Customises the selected control</summary>
-			Control };
+			Control
+		};
 
 		/// <summary>The list of possible sub-menu types</summary>
-		public enum MenuType	{
+		public enum MenuType
+		{
 			/// <summary>Not a sub menu</summary>
 			None,
 			/// <summary>Returns to the menu level above</summary>
@@ -62,41 +65,41 @@ namespace OpenBve
 		};
 
 		// components of the semi-transparent screen overlay
-		private const float					ovlR			= 0.00f;
-		private const float					ovlG			= 0.00f;
-		private const float					ovlB			= 0.00f;
-		private const float					ovlA			= 0.20f;
+		private const float ovlR = 0.00f;
+		private const float ovlG = 0.00f;
+		private const float ovlB = 0.00f;
+		private const float ovlA = 0.20f;
 		// components of the menu background colour
-		private const float					bkgMenuR		= 0.00f;
-		private const float					bkgMenuG		= 0.00f;
-		private const float					bkgMenuB		= 0.00f;
-		private const float					bkgMenuA		= 1.00f;
+		private const float bkgMenuR = 0.00f;
+		private const float bkgMenuG = 0.00f;
+		private const float bkgMenuB = 0.00f;
+		private const float bkgMenuA = 1.00f;
 		// components of the highlighted item background
-		private const float					bkgHgltR		= 1.00f;
-		private const float					bkgHgltG		= 0.69f;
-		private const float					bkgHgltB		= 0.00f;
-		private const float					bkgHgltA		= 1.00f;
+		private const float bkgHgltR = 1.00f;
+		private const float bkgHgltG = 0.69f;
+		private const float bkgHgltB = 0.00f;
+		private const float bkgHgltA = 1.00f;
 		// text colours
-		private static readonly Color128	ColourCaption	= new Color128(0.750f, 0.750f, 0.875f, 1.0f);
-		private static readonly Color128	ColourDimmed	= new Color128(1.000f, 1.000f, 1.000f, 0.5f);
-		private static readonly Color128	ColourHighlight	= Color128.Black;
-		private static readonly Color128	ColourNormal	= Color128.White;
+		private static readonly Color128 ColourCaption = new Color128(0.750f, 0.750f, 0.875f, 1.0f);
+		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
+		private static readonly Color128 ColourHighlight = Color128.Black;
+		private static readonly Color128 ColourNormal = Color128.White;
 
 		// some sizes and constants
 		// TODO: make borders Menu fields dependent on font size
-		private const int					MenuBorderX		= 16;
-		private const int					MenuBorderY		= 16;
-		private const int					MenuItemBorderX	= 8;
-		private const int					MenuItemBorderY	= 2;
-		private const float					LineSpacing		= 1.75f;	// the ratio between the font size and line distance
-		private const int					SelectionNone	= -1;
+		private const int MenuBorderX = 16;
+		private const int MenuBorderY = 16;
+		private const int MenuItemBorderX = 8;
+		private const int MenuItemBorderY = 2;
+		private const float LineSpacing = 1.75f;    // the ratio between the font size and line distance
+		private const int SelectionNone = -1;
 
 		/********************
 			BASE MENU ENTRY CLASS
 		*********************/
 		private abstract class MenuEntry
 		{
-			internal string	Text;
+			internal string Text;
 		}
 
 		/********************
@@ -106,18 +109,18 @@ namespace OpenBve
 		{
 			internal MenuCaption(string Text)
 			{
-				this.Text	= Text;
+				this.Text = Text;
 			}
 		}
 		private class MenuCommand : MenuEntry
 		{
-			internal MenuTag	Tag;
-			internal int		Data;
+			internal MenuTag Tag;
+			internal int Data;
 			internal MenuCommand(string Text, MenuTag Tag, int Data)
 			{
-				this.Text	= Text;
-				this.Tag	= Tag;
-				this.Data	= Data;
+				this.Text = Text;
+				this.Tag = Tag;
+				this.Data = Data;
 			}
 		}
 
@@ -132,163 +135,163 @@ namespace OpenBve
 			/********************
 				MENU FIELDS
 			*********************/
-			public Renderer.TextAlignment	Align;
-			public MenuEntry[]				Items		= { };
-			public int						ItemWidth	= 0;
-			public int						Height		= 0;
-			public int						Selection	= SelectionNone;
-			public int						TopItem;			// the top displayed menu item
-			public int						Width		= 0;
+			public Renderer.TextAlignment Align;
+			public MenuEntry[] Items = { };
+			public int ItemWidth = 0;
+			public int Height = 0;
+			public int Selection = SelectionNone;
+			public int TopItem;         // the top displayed menu item
+			public int Width = 0;
 
 			/********************
 				MENU C'TOR
 			*********************/
 			public SingleMenu(MenuType menuType, int data = 0)
 			{
-				int		i, menuItem;
-				int		jump	= 0;
-				Size	size;
+				int i, menuItem;
+				int jump = 0;
+				Size size;
 
-				Align		= Renderer.TextAlignment.TopMiddle;
-				Height		= Width = 0;
-				Selection	= 0;						// defaults to first menu item
+				Align = Renderer.TextAlignment.TopMiddle;
+				Height = Width = 0;
+				Selection = 0;                      // defaults to first menu item
 				switch (menuType)
 				{
-				case MenuType.Top:			// top level menu
-					for (i = 0; i < Game.Stations.Length; i++)
-						if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
-						{
-							jump = 1;
-							break;
-						}
-					Items 			= new MenuEntry[4 + jump];
-					Items[0]		= new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
-					if (jump > 0)
-						Items[1]	= new MenuCommand(Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
-					Items[1+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
-					Items[2+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-					Items[3+jump]	= new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
-					break;
-
-				case MenuType.JumpToStation:	// list of stations to jump to
-					// count the number of available stations
-					menuItem = 0;
-					for (i = 0; i < Game.Stations.Length; i++)
-						if (Game.PlayerStopsAtStation (i) & Game.Stations [i].Stops.Length > 0)
-							menuItem++;
-					// list available stations, selecting the next station as predefined choice
-					jump		= 0;							// no jump found yet
-					Items		= new MenuEntry[menuItem + 1];
-					Items[0]	= new MenuCommand (Interface.GetInterfaceString ("menu_back"), MenuTag.MenuBack, 0);
-					menuItem	= 1;
-					for (i = 0; i < Game.Stations.Length; i++)
-						if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
-						{
-							Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
-							// if no preferred jump-to-station found yet and this station is
-							// after the last station the user stopped at, select this item
-							if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)
+					case MenuType.Top:          // top level menu
+						for (i = 0; i < Game.Stations.Length; i++)
+							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
 							{
-								jump		= i;
-								Selection	= menuItem;
+								jump = 1;
+								break;
 							}
-							menuItem++;
-						}
-					Align	= Renderer.TextAlignment.TopLeft;
-					break;
+						Items = new MenuEntry[4 + jump];
+						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+						if (jump > 0)
+							Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
+						Items[1 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
+						Items[2 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
+						Items[3 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+						break;
 
-				case MenuType.ExitToMainMenu:
-					Items		= new MenuEntry[3];
-					Items[0]	= new MenuCaption (Interface.GetInterfaceString ("menu_exit_question"));
-					Items[1]	= new MenuCommand (Interface.GetInterfaceString ("menu_exit_no"), MenuTag.MenuBack, 0);
-					Items[2]	= new MenuCommand (Interface.GetInterfaceString ("menu_exit_yes"), MenuTag.ExitToMainMenu, 0);
-					Selection	= 1;
-					break;
-
-				case MenuType.Quit:			// ask for quit confirmation
-					Items		= new MenuEntry[3];
-					Items[0]	= new MenuCaption(Interface.GetInterfaceString("menu_quit_question"));
-					Items[1]	= new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.MenuBack, 0);
-					Items[2]	= new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
-					Selection	= 1;
-					break;
-
-				case MenuType.Controls:
-					//Refresh the joystick list
-					Program.Joysticks.RefreshJoysticks();
-					Items		= new MenuEntry[Interface.CurrentControls.Length + 1];
-					Items[0]	= new MenuCommand (Interface.GetInterfaceString ("menu_back"), MenuTag.MenuBack, 0);
-					for (i = 0; i < Interface.CurrentControls.Length; i++)
-						Items[i+1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
-					Align		= Renderer.TextAlignment.TopLeft;
-					break;
-
-				case MenuType.Control:
-						//Refresh the joystick list
-					Program.Joysticks.RefreshJoysticks();
-					Selection	= SelectionNone;
-					Items		= new MenuEntry[4];
-					// get code name and description
-					Interface.Control loadedControl = Interface.CurrentControls[data];
-					for (int h = 0; h < Interface.CommandInfos.Length; h++)
-					{
-						if (Interface.CommandInfos[h].Command == loadedControl.Command)
-						{
-							Items[0]	= new MenuCommand(loadedControl.Command.ToString() + " - " +
-									Interface.CommandInfos[h].Description, MenuTag.None, 0);
-							break;
-						}
-					}
-					// get assignment
-					String	str = "";
-					switch (loadedControl.Method)
-					{
-					case Interface.ControlMethod.Keyboard:
-						string keyName = loadedControl.Key.ToString();
-						for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
-						{
-							if (Interface.TranslatedKeys[k].Key == loadedControl.Key)
+					case MenuType.JumpToStation:    // list of stations to jump to
+													// count the number of available stations
+						menuItem = 0;
+						for (i = 0; i < Game.Stations.Length; i++)
+							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+								menuItem++;
+						// list available stations, selecting the next station as predefined choice
+						jump = 0;                           // no jump found yet
+						Items = new MenuEntry[menuItem + 1];
+						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
+						menuItem = 1;
+						for (i = 0; i < Game.Stations.Length; i++)
+							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
 							{
-								keyName = Interface.TranslatedKeys[k].Description;
+								Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
+								// if no preferred jump-to-station found yet and this station is
+								// after the last station the user stopped at, select this item
+								if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)
+								{
+									jump = i;
+									Selection = menuItem;
+								}
+								menuItem++;
+							}
+						Align = Renderer.TextAlignment.TopLeft;
+						break;
+
+					case MenuType.ExitToMainMenu:
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCaption(Interface.GetInterfaceString("menu_exit_question"));
+						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0);
+						Selection = 1;
+						break;
+
+					case MenuType.Quit:         // ask for quit confirmation
+						Items = new MenuEntry[3];
+						Items[0] = new MenuCaption(Interface.GetInterfaceString("menu_quit_question"));
+						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
+						Selection = 1;
+						break;
+
+					case MenuType.Controls:
+						//Refresh the joystick list
+						Program.Joysticks.RefreshJoysticks();
+						Items = new MenuEntry[Interface.CurrentControls.Length + 1];
+						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
+						for (i = 0; i < Interface.CurrentControls.Length; i++)
+							Items[i + 1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
+						Align = Renderer.TextAlignment.TopLeft;
+						break;
+
+					case MenuType.Control:
+						//Refresh the joystick list
+						Program.Joysticks.RefreshJoysticks();
+						Selection = SelectionNone;
+						Items = new MenuEntry[4];
+						// get code name and description
+						Interface.Control loadedControl = Interface.CurrentControls[data];
+						for (int h = 0; h < Interface.CommandInfos.Length; h++)
+						{
+							if (Interface.CommandInfos[h].Command == loadedControl.Command)
+							{
+								Items[0] = new MenuCommand(loadedControl.Command.ToString() + " - " +
+										Interface.CommandInfos[h].Description, MenuTag.None, 0);
 								break;
 							}
 						}
-						if (loadedControl.Modifier != Interface.KeyboardModifier.None)
+						// get assignment
+						String str = "";
+						switch (loadedControl.Method)
 						{
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
+							case Interface.ControlMethod.Keyboard:
+								string keyName = loadedControl.Key.ToString();
+								for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+								{
+									if (Interface.TranslatedKeys[k].Key == loadedControl.Key)
+									{
+										keyName = Interface.TranslatedKeys[k].Description;
+										break;
+									}
+								}
+								if (loadedControl.Modifier != Interface.KeyboardModifier.None)
+								{
+									str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
+								}
+								else
+								{
+									str = Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
+								}
+								break;
+							case Interface.ControlMethod.Joystick:
+								str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
+								switch (loadedControl.Component)
+								{
+									case Interface.JoystickComponent.FullAxis:
+									case Interface.JoystickComponent.Axis:
+										str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
+										break;
+									//						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
+									//							str = str;
+									//							break;
+									case Interface.JoystickComponent.Hat:
+										str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
+										break;
+									case Interface.JoystickComponent.Invalid:
+										str = Interface.GetInterfaceString("menu_joystick_notavailable");
+										break;
+								}
+								break;
+							case Interface.ControlMethod.Invalid:
+								str = Interface.GetInterfaceString("menu_joystick_notavailable");
+								break;
 						}
-						else
-						{
-							str = Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
-						}
+						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
+						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
+						Items[3] = new MenuCommand(Interface.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
-					case Interface.ControlMethod.Joystick:
-						str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
-						switch (loadedControl.Component)
-						{
-						case Interface.JoystickComponent.FullAxis:
-						case Interface.JoystickComponent.Axis:
-							str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
-							break;
-//						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
-//							str = str;
-//							break;
-						case Interface.JoystickComponent.Hat:
-							str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
-							break;
-						case Interface.JoystickComponent.Invalid:
-							str = Interface.GetInterfaceString("menu_joystick_notavailable");
-							break;
-						}
-						break;
-					case Interface.ControlMethod.Invalid:
-						str = Interface.GetInterfaceString("menu_joystick_notavailable");
-						break;
-					}
-					Items[1]	= new MenuCommand(Interface.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
-					Items[2]	= new MenuCommand(" ", MenuTag.None, 0);
-					Items[3]	= new MenuCommand(Interface.GetInterfaceString("menu_assign"), MenuTag.None, 0);
-					break;
 				}
 
 				// compute menu extent
@@ -298,50 +301,72 @@ namespace OpenBve
 					{
 						continue;
 					}
-					size = Renderer.MeasureString(Game.Menu.MenuFont, Items [i].Text);
+					size = Renderer.MeasureString(Game.Menu.MenuFont, Items[i].Text);
 					if (size.Width > Width)
-						Width		= size.Width;
+						Width = size.Width;
 					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
-						ItemWidth	= size.Width;
+						ItemWidth = size.Width;
 				}
-				Height	= Items.Length * Game.Menu.LineHeight;
-				TopItem	= 0;
+				Height = Items.Length * Game.Menu.LineHeight;
+				TopItem = 0;
 			}
 
-		}					// end of private class SingleMenu
+		}                   // end of private class SingleMenu
 
 		/********************
 			MENU SYSTEM FIELDS
 		*********************/
-		private		int					CurrMenu				= -1;
-		private		int					CustomControlIdx;	// the index of the control being customized
-		private		int					em;					// the size of menu font (in pixels)
-		private		bool				isCustomisingControl	= false;
-		private		bool				isInitialized			= false;
+		private int CurrMenu = -1;
+		private int CustomControlIdx;   // the index of the control being customized
+		private int em;                 // the size of menu font (in pixels)
+		private bool isCustomisingControl = false;
+		private bool isInitialized = false;
 		// the total line height from the top of an item to the top of the item below (in pixels)
-		private		int					lineHeight;
-		private		SingleMenu[]		Menus					= { };
-		private		Fonts.OpenGlFont	menuFont				= null;
+		private int lineHeight;
+		private SingleMenu[] Menus = { };
+		private Fonts.OpenGlFont menuFont = null;
 		// area occupied by the items of the current menu in screen coordinates
-		private		int					menuXmin, menuXmax, menuYmin, menuYmax;
-		private		int					topItemY;			// the top edge of top item
-		private		int					visibleItems;		// the number of visible items
-		// properties (to allow read-only access to some fields)
-		internal	int					LineHeight				{ get { return lineHeight; } }
-		internal	Fonts.OpenGlFont	MenuFont 				{ get { return menuFont; } }
+		private int menuXmin, menuXmax, menuYmin, menuYmax;
+		private int topItemY;           // the top edge of top item
+		private int visibleItems;       // the number of visible items
+										// properties (to allow read-only access to some fields)
+		internal int LineHeight
+		{
+			get
+			{
+				return lineHeight;
+			}
+		}
+		internal Fonts.OpenGlFont MenuFont
+		{
+			get
+			{
+				return menuFont;
+			}
+		}
 
-		internal OpenTK.Input.Key		MenuBackKey;
+		internal OpenTK.Input.Key MenuBackKey;
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
 		*********************/
 		private static readonly Menu instance = new Menu();
 		// Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-		static Menu()	{ }
-		private Menu()	{ }
+		static Menu()
+		{
+		}
+		private Menu()
+		{
+		}
 
 		/// <summary>Returns the current menu instance (If applicable)</summary>
-		public static Menu Instance	{ get { return instance; } }
+		public static Menu Instance
+		{
+			get
+			{
+				return instance;
+			}
+		}
 
 		/********************
 			MENU SYSTEM METHODS
@@ -355,23 +380,23 @@ namespace OpenBve
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Screen.Height <= 512)		menuFont	= Fonts.SmallFont;
-			else if (Screen.Height <= 680)	menuFont	= Fonts.NormalFont;
-			else if (Screen.Height <= 890)	menuFont	= Fonts.LargeFont;
-			else if (Screen.Height <= 1150)	menuFont	= Fonts.VeryLargeFont;
-			else 							menuFont	= Fonts.EvenLargerFont;
-			em				= (int)menuFont.FontSize;
-			lineHeight		= (int)(em * LineSpacing);
-			for(int i= 0; i < Interface.CurrentControls.Length; i++)
+			if (Screen.Height <= 512) menuFont = Fonts.SmallFont;
+			else if (Screen.Height <= 680) menuFont = Fonts.NormalFont;
+			else if (Screen.Height <= 890) menuFont = Fonts.LargeFont;
+			else if (Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
+			else menuFont = Fonts.EvenLargerFont;
+			em = (int)menuFont.FontSize;
+			lineHeight = (int)(em * LineSpacing);
+			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//Find the current menu back key- It's unlikely that we want to set a new key to this
-				if(Interface.CurrentControls[i].Command == Interface.Command.MenuBack)
+				if (Interface.CurrentControls[i].Command == Interface.Command.MenuBack)
 				{
 					MenuBackKey = Interface.CurrentControls[i].Key;
 					break;
 				}
 			}
-			isInitialized	= true;
+			isInitialized = true;
 		}
 
 		//
@@ -379,9 +404,9 @@ namespace OpenBve
 		//
 		private void Reset()
 		{
-			CurrMenu				= -1;
-			Menus					= new SingleMenu[] { };
-			isCustomisingControl	= false;
+			CurrMenu = -1;
+			Menus = new SingleMenu[] { };
+			isCustomisingControl = false;
 		}
 
 		//
@@ -394,14 +419,14 @@ namespace OpenBve
 		public void PushMenu(MenuType type, int data = 0)
 		{
 			if (!isInitialized)
-				Init ();
+				Init();
 			CurrMenu++;
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
-			Menus[CurrMenu]			= new Menu.SingleMenu(type, data);
+			Menus[CurrMenu] = new Menu.SingleMenu(type, data);
 			PositionMenu();
-			Game.PreviousInterface  = Game.CurrentInterface;
-			Game.CurrentInterface	= Game.InterfaceType.Menu;			
+			Game.PreviousInterface = Game.CurrentInterface;
+			Game.CurrentInterface = Game.InterfaceType.Menu;
 		}
 
 		//
@@ -410,16 +435,16 @@ namespace OpenBve
 		/// <summary>Pops the previous menu in the menu stack</summary>
 		public void PopMenu()
 		{
-			if (CurrMenu > 0)			// if more than one menu remaining...
+			if (CurrMenu > 0)           // if more than one menu remaining...
 			{
-				CurrMenu--;				// ...back to previous smenu
+				CurrMenu--;             // ...back to previous smenu
 				PositionMenu();
 			}
 			else
-			{							// if only one menu remaining...
+			{                           // if only one menu remaining...
 				Reset();
 				Game.PreviousInterface = Game.CurrentInterface;
-				Game.CurrentInterface  = Game.InterfaceType.Normal;	// return to simulation
+				Game.CurrentInterface = Game.InterfaceType.Normal;  // return to simulation
 			}
 		}
 
@@ -447,25 +472,25 @@ namespace OpenBve
 				Interface.SaveControls(null, Interface.CurrentControls);
 			}
 			PopMenu();
-			isCustomisingControl	= false;
-			
+			isCustomisingControl = false;
+
 		}
 		internal void SetControlJoyCustomData(int device, Interface.JoystickComponent component, int element, int dir)
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				Interface.CurrentControls[CustomControlIdx].Method		= Interface.ControlMethod.Joystick;
-				Interface.CurrentControls[CustomControlIdx].Device		= device;
-				Interface.CurrentControls[CustomControlIdx].Component	= component;
-				Interface.CurrentControls[CustomControlIdx].Element		= element;
-				Interface.CurrentControls[CustomControlIdx].Direction	= dir;
+				Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Joystick;
+				Interface.CurrentControls[CustomControlIdx].Device = device;
+				Interface.CurrentControls[CustomControlIdx].Component = component;
+				Interface.CurrentControls[CustomControlIdx].Element = element;
+				Interface.CurrentControls[CustomControlIdx].Direction = dir;
 				Interface.SaveControls(null, Interface.CurrentControls);
 				PopMenu();
-				isCustomisingControl	= false;
+				isCustomisingControl = false;
 			}
 		}
 
-		
+
 		//
 		// PROCESS MOUSE EVENTS
 		//
@@ -508,7 +533,7 @@ namespace OpenBve
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
 			if (Game.CurrentInterface != Game.InterfaceType.Menu ||
-			    isCustomisingControl)
+				isCustomisingControl)
 				return false;
 
 			// Load the current menu
@@ -524,7 +549,7 @@ namespace OpenBve
 				return false;
 			}
 
-			int	item = (y - topItemY) / lineHeight + menu.TopItem;
+			int item = (y - topItemY) / lineHeight + menu.TopItem;
 			// if the mouse is above a command item, select it
 			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand)
 			{
@@ -535,7 +560,7 @@ namespace OpenBve
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
 
@@ -574,7 +599,7 @@ namespace OpenBve
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
 		internal void ProcessCommand(Interface.Command cmd, double timeElapsed)
 		{
-			
+
 			if (CurrMenu < 0)
 			{
 				return;
@@ -586,88 +611,88 @@ namespace OpenBve
 				return;
 			}
 
-			SingleMenu menu	= Menus[CurrMenu];
-			if (menu.Selection == SelectionNone)	// if menu has no selection, do nothing
+			SingleMenu menu = Menus[CurrMenu];
+			if (menu.Selection == SelectionNone)    // if menu has no selection, do nothing
 				return;
 			switch (cmd)
 			{
-			case Interface.Command.MenuUp:		// UP
-				if (menu.Selection > 0 &&
-				    !(menu.Items[menu.Selection - 1] is MenuCaption))
-				{
-					menu.Selection--;
-					PositionMenu();
-				}
-				break;
-			case Interface.Command.MenuDown:	// DOWN
-				if (menu.Selection < menu.Items.Length - 1)
-				{
-					menu.Selection++;
-					PositionMenu();
-				}
-				break;
-//			case Interface.Command.MenuBack:	// ESC:	managed above
-//				break;
-			case Interface.Command.MenuEnter:	// ENTER
-				if (menu.Items[menu.Selection] is MenuCommand)
-				{
-					MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
-					switch (menuItem.Tag)
+				case Interface.Command.MenuUp:      // UP
+					if (menu.Selection > 0 &&
+						!(menu.Items[menu.Selection - 1] is MenuCaption))
 					{
-					// menu management commands
-					case MenuTag.MenuBack:				// BACK TO PREVIOUS MENU
-						Menu.instance.PopMenu();
-						break;
-					case MenuTag.MenuJumpToStation:		// TO STATIONS MENU
-						Menu.instance.PushMenu(MenuType.JumpToStation);
-						break;
-					case MenuTag.MenuExitToMainMenu:	// TO EXIT MENU
-						Menu.instance.PushMenu(MenuType.ExitToMainMenu);
-						break;
-					case MenuTag.MenuQuit:				// TO QUIT MENU
-						Menu.instance.PushMenu(MenuType.Quit);
-						break;
-					case MenuTag.MenuControls:			// TO CONTROLS MENU
-						Menu.instance.PushMenu(MenuType.Controls);
-						break;
-					case MenuTag.BackToSim:				// OUT OF MENU BACK TO SIMULATION
-						Reset();
-						Game.PreviousInterface = Game.InterfaceType.Menu;
-						Game.CurrentInterface = Game.InterfaceType.Normal;
-						break;
-
-						// simulation commands
-					case MenuTag.JumpToStation:			// JUMP TO STATION
-						Reset();
-						TrainManager.JumpTrain(TrainManager.PlayerTrain, menuItem.Data);
-						break;
-					case MenuTag.ExitToMainMenu:		// BACK TO MAIN MENU
-						Reset();
-						Program.RestartArguments =
-							Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? "/review" : "";
-						MainLoop.Quit = true;
-						break;
-					case MenuTag.Control:				// CONTROL CUSTOMIZATION
-						PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
-						isCustomisingControl	= true;
-						CustomControlIdx		= ((MenuCommand)menu.Items[menu.Selection]).Data;
-						break;
-					case MenuTag.Quit:					// QUIT PROGRAMME
-						Reset();
-						MainLoop.Quit = true;
-						break;
+						menu.Selection--;
+						PositionMenu();
 					}
-				}
-				break;
-			case Interface.Command.MiscFullscreen:
-				// fullscreen
-				Screen.ToggleFullscreen();
-				break;
-			case Interface.Command.MiscMute:
-				// mute
-				Sounds.GlobalMute = !Sounds.GlobalMute;
-				Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
-				break;
+					break;
+				case Interface.Command.MenuDown:    // DOWN
+					if (menu.Selection < menu.Items.Length - 1)
+					{
+						menu.Selection++;
+						PositionMenu();
+					}
+					break;
+				//			case Interface.Command.MenuBack:	// ESC:	managed above
+				//				break;
+				case Interface.Command.MenuEnter:   // ENTER
+					if (menu.Items[menu.Selection] is MenuCommand)
+					{
+						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
+						switch (menuItem.Tag)
+						{
+							// menu management commands
+							case MenuTag.MenuBack:              // BACK TO PREVIOUS MENU
+								Menu.instance.PopMenu();
+								break;
+							case MenuTag.MenuJumpToStation:     // TO STATIONS MENU
+								Menu.instance.PushMenu(MenuType.JumpToStation);
+								break;
+							case MenuTag.MenuExitToMainMenu:    // TO EXIT MENU
+								Menu.instance.PushMenu(MenuType.ExitToMainMenu);
+								break;
+							case MenuTag.MenuQuit:              // TO QUIT MENU
+								Menu.instance.PushMenu(MenuType.Quit);
+								break;
+							case MenuTag.MenuControls:          // TO CONTROLS MENU
+								Menu.instance.PushMenu(MenuType.Controls);
+								break;
+							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
+								Reset();
+								Game.PreviousInterface = Game.InterfaceType.Menu;
+								Game.CurrentInterface = Game.InterfaceType.Normal;
+								break;
+
+							// simulation commands
+							case MenuTag.JumpToStation:         // JUMP TO STATION
+								Reset();
+								TrainManager.JumpTrain(TrainManager.PlayerTrain, menuItem.Data);
+								break;
+							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
+								Reset();
+								Program.RestartArguments =
+									Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? "/review" : "";
+								MainLoop.Quit = true;
+								break;
+							case MenuTag.Control:               // CONTROL CUSTOMIZATION
+								PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
+								isCustomisingControl = true;
+								CustomControlIdx = ((MenuCommand)menu.Items[menu.Selection]).Data;
+								break;
+							case MenuTag.Quit:                  // QUIT PROGRAMME
+								Reset();
+								MainLoop.Quit = true;
+								break;
+						}
+					}
+					break;
+				case Interface.Command.MiscFullscreen:
+					// fullscreen
+					Screen.ToggleFullscreen();
+					break;
+				case Interface.Command.MiscMute:
+					// mute
+					Sounds.GlobalMute = !Sounds.GlobalMute;
+					Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
+					break;
 			}
 		}
 
@@ -683,18 +708,18 @@ namespace OpenBve
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 
-			SingleMenu menu	= Menus[CurrMenu];
+			SingleMenu menu = Menus[CurrMenu];
 			// overlay background
 			GL.Color4(ovlR, ovlG, ovlB, ovlA);
 			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			int		itemLeft			= (Screen.Width - menu.ItemWidth) / 2;	// item left edge
-			// if menu alignment is left, left-align items, otherwise centre them in the screen
-			int		itemX				= (menu.Align & Renderer.TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
+			int itemLeft = (Screen.Width - menu.ItemWidth) / 2; // item left edge
+																// if menu alignment is left, left-align items, otherwise centre them in the screen
+			int itemX = (menu.Align & Renderer.TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
 
-			int		menuBottomItem		= menu.TopItem + visibleItems - 1;
+			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
 			// draw the menu background
 			GL.Color4(bkgMenuR, bkgMenuG, bkgMenuB, bkgMenuA);
@@ -712,7 +737,7 @@ namespace OpenBve
 				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
-			int	itemY	= topItemY;
+			int itemY = topItemY;
 			for (i = menu.TopItem; i <= menuBottomItem && i < menu.Items.Length; i++)
 			{
 				if (menu.Items[i] == null)
@@ -725,8 +750,8 @@ namespace OpenBve
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
 					GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
-					Renderer.RenderOverlaySolid(itemLeft-MenuItemBorderX, itemY/*-MenuItemBorderY*/,
-						itemLeft+menu.ItemWidth+MenuItemBorderX, itemY+em+MenuItemBorderY*2);
+					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 					// draw the text
 					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
@@ -739,8 +764,8 @@ namespace OpenBve
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
-			
-			
+
+
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
 				GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
@@ -760,39 +785,39 @@ namespace OpenBve
 		/// Also sets the menu size</summary>
 		private void PositionMenu()
 		{
-//			int i;
+			//			int i;
 
 			if (CurrMenu < 0 || CurrMenu >= Menus.Length)
 				return;
 
-			SingleMenu menu	= Menus[CurrMenu];
+			SingleMenu menu = Menus[CurrMenu];
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			menuXmin		= (Screen.Width - menu.Width) / 2;		// menu left edge (border excluded)
-			menuXmax		= menuXmin + menu.Width;				// menu right edge (border excluded)
-			// VERTICAL PLACEMENT: centre the menu in the main window
-			menuYmin		= (Screen.Height- menu.Height)/ 2;		// menu top edge (border excluded)
-			menuYmax		= menuYmin + menu.Height;				// menu bottom edge (border excluded)
-			topItemY			= menuYmin;								// top edge of top item
-			// assume all items fit in the screen
-			visibleItems	= menu.Items.Length;
+			menuXmin = (Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
+			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
+															// VERTICAL PLACEMENT: centre the menu in the main window
+			menuYmin = (Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
+			menuYmax = menuYmin + menu.Height;              // menu bottom edge (border excluded)
+			topItemY = menuYmin;                                // top edge of top item
+																// assume all items fit in the screen
+			visibleItems = menu.Items.Length;
 
 			// if there are more items than can fit in the screen height,
 			// (there should be at least room for the menu top border)
 			if (menuYmin < MenuBorderY)
 			{
 				// the number of lines which fit in the screen
-				int	numOfLines	= (Screen.Height - MenuBorderY*2) / lineHeight;
-				visibleItems	= numOfLines - 2;					// at least an empty line at the top and at the bottom
-				// split the menu in chunks of 'visibleItems' items
-				// and display the chunk which contains the currently selected item
-				menu.TopItem	= menu.Selection - (menu.Selection % visibleItems);
-				visibleItems	= menu.Items.Length - menu.TopItem < visibleItems ?	// in the last chunk,
-					menu.Items.Length - menu.TopItem : visibleItems;				// display remaining items only
-				menuYmin		= (Screen.Height - numOfLines*lineHeight) / 2;
-				menuYmax		= menuYmin + numOfLines * lineHeight;
+				int numOfLines = (Screen.Height - MenuBorderY * 2) / lineHeight;
+				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
+																// split the menu in chunks of 'visibleItems' items
+																// and display the chunk which contains the currently selected item
+				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
+				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
+					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
+				menuYmin = (Screen.Height - numOfLines * lineHeight) / 2;
+				menuYmax = menuYmin + numOfLines * lineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens
-				topItemY			= menuYmin + lineHeight;
+				topItemY = menuYmin + lineHeight;
 			}
 		}
 

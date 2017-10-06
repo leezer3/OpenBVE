@@ -150,153 +150,153 @@ namespace OpenBve
 							{
 								// options
 								case "options.unitoflength":
-								{
-									if (Arguments.Length == 0)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "At least 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-									}
-									else
-									{
-										UnitOfLength = new double[Arguments.Length];
-										for (int i = 0; i < Arguments.Length; i++)
+										if (Arguments.Length == 0)
 										{
-											UnitOfLength[i] = i == Arguments.Length - 1 ? 1.0 : 0.0;
-											if (Arguments[i].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[i], out UnitOfLength[i]))
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "FactorInMeters" + i.ToString(Culture) + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												UnitOfLength[i] = i == 0 ? 1.0 : 0.0;
-											}
-											else if (UnitOfLength[i] <= 0.0)
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "FactorInMeters" + i.ToString(Culture) + " is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												UnitOfLength[i] = i == Arguments.Length - 1 ? 1.0 : 0.0;
-											}
-										}
-									}
-								}
-									break;
-								case "options.unitofspeed":
-								{
-									if (Arguments.Length < 1)
-									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-									}
-									else
-									{
-										if (Arguments.Length > 1)
-										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-										}
-										if (Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Data.UnitOfSpeed))
-										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "FactorInKmph is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											Data.UnitOfSpeed = 0.277777777777778;
-										}
-										else if (Data.UnitOfSpeed <= 0.0)
-										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "FactorInKmph is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											Data.UnitOfSpeed = 0.277777777777778;
+											Interface.AddMessage(Interface.MessageType.Error, false, "At least 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										}
 										else
 										{
-											Data.UnitOfSpeed *= 0.277777777777778;
+											UnitOfLength = new double[Arguments.Length];
+											for (int i = 0; i < Arguments.Length; i++)
+											{
+												UnitOfLength[i] = i == Arguments.Length - 1 ? 1.0 : 0.0;
+												if (Arguments[i].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[i], out UnitOfLength[i]))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "FactorInMeters" + i.ToString(Culture) + " is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													UnitOfLength[i] = i == 0 ? 1.0 : 0.0;
+												}
+												else if (UnitOfLength[i] <= 0.0)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "FactorInMeters" + i.ToString(Culture) + " is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													UnitOfLength[i] = i == Arguments.Length - 1 ? 1.0 : 0.0;
+												}
+											}
 										}
 									}
-								}
+									break;
+								case "options.unitofspeed":
+									{
+										if (Arguments.Length < 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										else
+										{
+											if (Arguments.Length > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											if (Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out Data.UnitOfSpeed))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "FactorInKmph is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Data.UnitOfSpeed = 0.277777777777778;
+											}
+											else if (Data.UnitOfSpeed <= 0.0)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "FactorInKmph is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Data.UnitOfSpeed = 0.277777777777778;
+											}
+											else
+											{
+												Data.UnitOfSpeed *= 0.277777777777778;
+											}
+										}
+									}
 									break;
 								case "options.objectvisibility":
-								{
-									if (Arguments.Length == 0)
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										if (Arguments.Length == 0)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+										else
+										{
+											if (Arguments.Length > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											int mode = 0;
+											if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											else if (mode != 0 & mode != 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											Data.AccurateObjectDisposal = mode == 1;
+										}
 									}
-									else
-									{
-										if (Arguments.Length > 1)
-										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-										}
-										int mode = 0;
-										if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
-										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
-										}
-										else if (mode != 0 & mode != 1)
-										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
-										}
-										Data.AccurateObjectDisposal = mode == 1;
-									}
-								}
 									break;
 								case "options.compatibletransparencymode":
-								{
-									//Whether to use fuzzy matching for BVE2 / BVE4 transparencies
-									//Should be DISABLED on openBVE content
-									if (PreviewOnly)
 									{
-										continue;
-									}
-									if (Arguments.Length == 0)
-									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-									}
-									else
-									{
-										if (Arguments.Length > 1)
+										//Whether to use fuzzy matching for BVE2 / BVE4 transparencies
+										//Should be DISABLED on openBVE content
+										if (PreviewOnly)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											continue;
 										}
-										int mode = 0;
-										if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+										if (Arguments.Length == 0)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
+											Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										}
-										else if (mode != 0 & mode != 1)
+										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
+											if (Arguments.Length > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											int mode = 0;
+											if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											else if (mode != 0 & mode != 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											Interface.CurrentOptions.OldTransparencyMode = mode == 1;
 										}
-										Interface.CurrentOptions.OldTransparencyMode = mode == 1;
 									}
-								}
 									break;
 								case "options.enablehacks":
-								{
-									//Whether to apply various hacks to fix BVE2 / BVE4 routes
-									//Whilst this is harmless, it should be DISABLED on openBVE content
-									//in order to ensure that all errors are correctly fixed by the developer
-									if (PreviewOnly)
 									{
-										continue;
-									}
-									if (Arguments.Length == 0)
-									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-									}
-									else
-									{
-										if (Arguments.Length > 1)
+										//Whether to apply various hacks to fix BVE2 / BVE4 routes
+										//Whilst this is harmless, it should be DISABLED on openBVE content
+										//in order to ensure that all errors are correctly fixed by the developer
+										if (PreviewOnly)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											continue;
 										}
-										int mode = 0;
-										if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+										if (Arguments.Length == 0)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
+											Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										}
-										else if (mode != 0 & mode != 1)
+										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											mode = 0;
+											if (Arguments.Length > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Warning, false, "Exactly 1 argument is expected in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											int mode = 0;
+											if (Arguments.Length >= 1 && Arguments[0].Length != 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out mode))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Mode is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											else if (mode != 0 & mode != 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "The specified Mode is not supported in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												mode = 0;
+											}
+											Interface.CurrentOptions.EnableBveTsHacks = mode == 1;
 										}
-										Interface.CurrentOptions.EnableBveTsHacks = mode == 1;
 									}
-								}
 									break;
 							}
 						}

@@ -63,7 +63,8 @@ namespace OpenBve
 							if (Identifier[i] != Data[i]) throw new System.IO.InvalidDataException();
 						}
 						Reader.Close();
-					} Stream.Close();
+					}
+					Stream.Close();
 				}
 			}
 			catch
@@ -127,7 +128,8 @@ namespace OpenBve
 					Identifier = new byte[] { 95, 102, 105, 108, 101, 69, 78, 68 };
 					Writer.Write(Identifier);
 					Writer.Close();
-				} Stream.Close();
+				}
+				Stream.Close();
 			}
 		}
 
@@ -176,7 +178,8 @@ namespace OpenBve
 							Builder.Append("\r\n");
 						}
 						System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
-					} break;
+					}
+					break;
 				// formatted text
 				case BlackBoxFormat.FormattedText:
 					{
@@ -324,8 +327,10 @@ namespace OpenBve
 								if (j != 0)
 								{
 									Builder.Append('╤');
-								} Builder.Append('═', Widths[j] + 2);
-							} Builder.Append("╣\r\n");
+								}
+								Builder.Append('═', Widths[j] + 2);
+							}
+							Builder.Append("╣\r\n");
 						}
 						for (int i = 0; i < Lines.Length; i++)
 						{
@@ -338,8 +343,10 @@ namespace OpenBve
 									if (j != 0)
 									{
 										Builder.Append('┼');
-									} Builder.Append('─', Widths[j] + 2);
-								} Builder.Append("╢\r\n");
+									}
+									Builder.Append('─', Widths[j] + 2);
+								}
+								Builder.Append("╢\r\n");
 							}
 							// cell content
 							Builder.Append('║');
@@ -356,7 +363,8 @@ namespace OpenBve
 									Builder.Append(Lines[i][j].PadRight(Widths[j], ' '));
 								}
 								Builder.Append(' ');
-							} Builder.Append("║\r\n");
+							}
+							Builder.Append("║\r\n");
 						}
 						{ // bottom border row
 							Builder.Append('╚');
@@ -365,11 +373,14 @@ namespace OpenBve
 								if (j != 0)
 								{
 									Builder.Append('╧');
-								} Builder.Append('═', Widths[j] + 2);
-							} Builder.Append('╝');
+								}
+								Builder.Append('═', Widths[j] + 2);
+							}
+							Builder.Append('╝');
 						}
 						System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
-					} break;
+					}
+					break;
 			}
 		}
 

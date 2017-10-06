@@ -37,7 +37,7 @@ namespace OpenBve
 				}
 			}
 		}
-		
+
 		/// <summary>Placed at the start of every station</summary>
 		internal class StationStartEvent : GeneralEvent
 		{
@@ -90,7 +90,7 @@ namespace OpenBve
 				}
 			}
 		}
-		
+
 		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
 		internal class StationEndEvent : GeneralEvent
 		{

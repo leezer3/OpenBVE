@@ -45,6 +45,6 @@ namespace OpenBve
 			internal abstract void AddMessage();
 			/// <summary>Called once a frame to update the message</summary>
 			internal abstract void Update();
-		}	
+		}
 	}
 }

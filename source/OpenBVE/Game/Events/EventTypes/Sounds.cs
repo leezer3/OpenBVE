@@ -104,7 +104,7 @@ namespace OpenBve
 			}
 			internal const int SoundIndexTrainPoint = -2;
 		}
-		
+
 		/// <summary>Called when the rail played for a train should be changed</summary>
 		internal class RailSoundsChangeEvent : GeneralEvent
 		{

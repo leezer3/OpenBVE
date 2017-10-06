@@ -9,7 +9,7 @@ namespace OpenBve
 	{
 		public static bool ReadMarkerXML(string fileName, ref CsvRwRouteParser.Marker marker)
 		{
-			
+
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
@@ -124,7 +124,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false,
 											"No paramaters defined for the late message in " + fileName);
 									}
-									
+
 									foreach (XmlNode cc in c.ChildNodes)
 									{
 										switch (cc.Name.ToLowerInvariant())
@@ -160,13 +160,13 @@ namespace OpenBve
 									}
 									break;
 								case "timeout":
-									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out TimeOut))
+									if (!NumberFormats.TryParseDouble(c.InnerText, new[] { 1.0 }, out TimeOut))
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "Marker timeout invalid in " + fileName);
 									}
 									break;
 								case "distance":
-									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out EndingPosition))
+									if (!NumberFormats.TryParseDouble(c.InnerText, new[] { 1.0 }, out EndingPosition))
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "Marker distance invalid in " + fileName);
 									}
@@ -204,7 +204,7 @@ namespace OpenBve
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
 								}
-								
+
 							}
 							else
 							{
@@ -277,7 +277,7 @@ namespace OpenBve
 						}
 					}
 				}
-				
+
 			}
 			return true;
 		}
@@ -321,6 +321,6 @@ namespace OpenBve
 		}
 	}
 
-	
+
 
 }

@@ -97,8 +97,8 @@ namespace OpenBve.UserInterface
 			}
 			if (calibrationStage != 0)
 			{
-				int axis = (calibrationStage + 1 )/ 2;
-				
+				int axis = (calibrationStage + 1) / 2;
+
 				if (calibrationStage % 2 != 0)
 				{
 					if (axis < 5)

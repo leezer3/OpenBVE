@@ -1,7 +1,8 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	internal static partial class Interface
 	{
 		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>
@@ -156,7 +157,7 @@ namespace OpenBve {
 			 * They have no specified purpose.
 			 * 
 			 */
-			
+
 			/// <summary>The security (Plugin) S-Key</summary>
 			[Obsolete("Please use the function specific keys. These are largely maintained for backwards compatibility")]
 			SecurityS,

@@ -7,28 +7,31 @@ namespace OpenBve
 	{
 		/// <summary>Gets the formatted text for an in-game score event</summary>
 		/// <param name="TextToken">The in-game score event</param>
-		internal static string GetScoreText(Game.ScoreTextToken TextToken) {
-			switch (TextToken) {
-					case Game.ScoreTextToken.Overspeed: return GetInterfaceString("score_overspeed");
-					case Game.ScoreTextToken.PassedRedSignal: return GetInterfaceString("score_redsignal");
-					case Game.ScoreTextToken.Toppling: return GetInterfaceString("score_toppling");
-					case Game.ScoreTextToken.Derailed: return GetInterfaceString("score_derailed");
-					case Game.ScoreTextToken.PassengerDiscomfort: return GetInterfaceString("score_discomfort");
-					case Game.ScoreTextToken.DoorsOpened: return GetInterfaceString("score_doors");
-					case Game.ScoreTextToken.ArrivedAtStation: return GetInterfaceString("score_station_arrived");
-					case Game.ScoreTextToken.PerfectTimeBonus: return GetInterfaceString("score_station_perfecttime");
-					case Game.ScoreTextToken.Late: return GetInterfaceString("score_station_late");
-					case Game.ScoreTextToken.PerfectStopBonus: return GetInterfaceString("score_station_perfectstop");
-					case Game.ScoreTextToken.Stop: return GetInterfaceString("score_station_stop");
-					case Game.ScoreTextToken.PrematureDeparture: return GetInterfaceString("score_station_departure");
-					case Game.ScoreTextToken.Total: return GetInterfaceString("score_station_total");
-					default: return "?";
+		internal static string GetScoreText(Game.ScoreTextToken TextToken)
+		{
+			switch (TextToken)
+			{
+				case Game.ScoreTextToken.Overspeed: return GetInterfaceString("score_overspeed");
+				case Game.ScoreTextToken.PassedRedSignal: return GetInterfaceString("score_redsignal");
+				case Game.ScoreTextToken.Toppling: return GetInterfaceString("score_toppling");
+				case Game.ScoreTextToken.Derailed: return GetInterfaceString("score_derailed");
+				case Game.ScoreTextToken.PassengerDiscomfort: return GetInterfaceString("score_discomfort");
+				case Game.ScoreTextToken.DoorsOpened: return GetInterfaceString("score_doors");
+				case Game.ScoreTextToken.ArrivedAtStation: return GetInterfaceString("score_station_arrived");
+				case Game.ScoreTextToken.PerfectTimeBonus: return GetInterfaceString("score_station_perfecttime");
+				case Game.ScoreTextToken.Late: return GetInterfaceString("score_station_late");
+				case Game.ScoreTextToken.PerfectStopBonus: return GetInterfaceString("score_station_perfectstop");
+				case Game.ScoreTextToken.Stop: return GetInterfaceString("score_station_stop");
+				case Game.ScoreTextToken.PrematureDeparture: return GetInterfaceString("score_station_departure");
+				case Game.ScoreTextToken.Total: return GetInterfaceString("score_station_total");
+				default: return "?";
 			}
 		}
 
 		/// <summary>Exports the current score data to a file</summary>
 		/// <param name="File">The file to write</param>
-		internal static void ExportScore(string File) {
+		internal static void ExportScore(string File)
+		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			string[][] Lines = new string[Game.ScoreLogCount + 1][];
@@ -41,7 +44,8 @@ namespace OpenBve
 			};
 			int Columns = Lines[0].Length;
 			int TotalScore = 0;
-			for (int i = 0; i < Game.ScoreLogCount; i++) {
+			for (int i = 0; i < Game.ScoreLogCount; i++)
+			{
 				int j = i + 1;
 				Lines[j] = new string[Columns];
 				{
@@ -60,16 +64,20 @@ namespace OpenBve
 				Lines[j][4] = GetScoreText(Game.ScoreLogs[i].TextToken);
 			}
 			int[] Widths = new int[Columns];
-			for (int i = 0; i < Lines.Length; i++) {
-				for (int j = 0; j < Columns; j++) {
-					if (Lines[i][j].Length > Widths[j]) {
+			for (int i = 0; i < Lines.Length; i++)
+			{
+				for (int j = 0; j < Columns; j++)
+				{
+					if (Lines[i][j].Length > Widths[j])
+					{
 						Widths[j] = Lines[i][j].Length;
 					}
 				}
 			}
 			{ // header rows
 				int TotalWidth = 0;
-				for (int j = 0; j < Columns; j++) {
+				for (int j = 0; j < Columns; j++)
+				{
 					TotalWidth += Widths[j] + 2;
 				}
 				TotalWidth += Columns - 1;
@@ -95,11 +103,12 @@ namespace OpenBve
 					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
 					if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
 					string s;
-					switch (Interface.CurrentOptions.GameMode) {
-							case Interface.GameMode.Arcade: s = GetInterfaceString("mode_arcade"); break;
-							case Interface.GameMode.Normal: s = GetInterfaceString("mode_normal"); break;
-							case Interface.GameMode.Expert: s = GetInterfaceString("mode_expert"); break;
-							default: s = GetInterfaceString("mode_unknown"); break;
+					switch (Interface.CurrentOptions.GameMode)
+					{
+						case Interface.GameMode.Arcade: s = GetInterfaceString("mode_arcade"); break;
+						case Interface.GameMode.Normal: s = GetInterfaceString("mode_normal"); break;
+						case Interface.GameMode.Expert: s = GetInterfaceString("mode_expert"); break;
+						default: s = GetInterfaceString("mode_unknown"); break;
 					}
 					Builder.Append('║');
 					Builder.Append((" " + GetInterfaceString("log_mode") + " " + s).PadRight(TotalWidth, ' '));
@@ -112,42 +121,61 @@ namespace OpenBve
 			}
 			{ // top border row
 				Builder.Append('╠');
-				for (int j = 0; j < Columns; j++) {
-					if (j != 0) {
+				for (int j = 0; j < Columns; j++)
+				{
+					if (j != 0)
+					{
 						Builder.Append('╤');
-					} Builder.Append('═', Widths[j] + 2);
-				} Builder.Append("╣\n");
+					}
+					Builder.Append('═', Widths[j] + 2);
+				}
+				Builder.Append("╣\n");
 			}
-			for (int i = 0; i < Lines.Length; i++) {
+			for (int i = 0; i < Lines.Length; i++)
+			{
 				// center border row
-				if (i != 0) {
+				if (i != 0)
+				{
 					Builder.Append('╟');
-					for (int j = 0; j < Columns; j++) {
-						if (j != 0) {
+					for (int j = 0; j < Columns; j++)
+					{
+						if (j != 0)
+						{
 							Builder.Append('┼');
-						} Builder.Append('─', Widths[j] + 2);
-					} Builder.Append("╢\n");
+						}
+						Builder.Append('─', Widths[j] + 2);
+					}
+					Builder.Append("╢\n");
 				}
 				// cell content
 				Builder.Append('║');
-				for (int j = 0; j < Columns; j++) {
+				for (int j = 0; j < Columns; j++)
+				{
 					if (j != 0) Builder.Append('│');
 					Builder.Append(' ');
-					if (i != 0 & j <= 3) {
+					if (i != 0 & j <= 3)
+					{
 						Builder.Append(Lines[i][j].PadLeft(Widths[j], ' '));
-					} else {
+					}
+					else
+					{
 						Builder.Append(Lines[i][j].PadRight(Widths[j], ' '));
 					}
 					Builder.Append(' ');
-				} Builder.Append("║\n");
+				}
+				Builder.Append("║\n");
 			}
 			{ // bottom border row
 				Builder.Append('╚');
-				for (int j = 0; j < Columns; j++) {
-					if (j != 0) {
+				for (int j = 0; j < Columns; j++)
+				{
+					if (j != 0)
+					{
 						Builder.Append('╧');
-					} Builder.Append('═', Widths[j] + 2);
-				} Builder.Append('╝');
+					}
+					Builder.Append('═', Widths[j] + 2);
+				}
+				Builder.Append('╝');
 			}
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}

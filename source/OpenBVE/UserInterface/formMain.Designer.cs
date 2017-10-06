@@ -1,28 +1,33 @@
-﻿namespace OpenBve {
-    partial class formMain {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+﻿namespace OpenBve
+{
+	partial class formMain
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent() {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.components = new System.ComponentModel.Container();
 			this.labelFillerOne = new System.Windows.Forms.Label();
 			this.pictureboxLogo = new System.Windows.Forms.PictureBox();
@@ -535,8 +540,8 @@
 			// 
 			// labelVerticalSeparator
 			// 
-			this.labelVerticalSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelVerticalSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.labelVerticalSeparator.BackColor = System.Drawing.Color.White;
 			this.labelVerticalSeparator.Location = new System.Drawing.Point(158, 0);
 			this.labelVerticalSeparator.Name = "labelVerticalSeparator";
@@ -558,9 +563,9 @@
 			// 
 			// panelStart
 			// 
-			this.panelStart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelStart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
 			this.panelStart.Controls.Add(this.comboboxMode);
 			this.panelStart.Controls.Add(this.labelMode);
@@ -617,9 +622,9 @@
 			// 
 			// tabcontrolTrainSelection
 			// 
-			this.tabcontrolTrainSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabcontrolTrainSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainBrowse);
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainRecently);
 			this.tabcontrolTrainSelection.Controls.Add(this.tabpageTrainDefault);
@@ -643,9 +648,9 @@
 			// 
 			// listviewTrainFolders
 			// 
-			this.listviewTrainFolders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewTrainFolders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewTrainFolders.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listviewTrainFolders.HideSelection = false;
 			this.listviewTrainFolders.LabelWrap = false;
@@ -663,8 +668,8 @@
 			// 
 			// textboxTrainFolder
 			// 
-			this.textboxTrainFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxTrainFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxTrainFolder.Location = new System.Drawing.Point(8, 8);
 			this.textboxTrainFolder.Name = "textboxTrainFolder";
 			this.textboxTrainFolder.Size = new System.Drawing.Size(276, 21);
@@ -684,9 +689,9 @@
 			// 
 			// listviewTrainRecently
 			// 
-			this.listviewTrainRecently.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewTrainRecently.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewTrainRecently.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listviewTrainRecently.HideSelection = false;
 			this.listviewTrainRecently.LabelWrap = false;
@@ -713,8 +718,8 @@
 			// 
 			// checkboxTrainDefault
 			// 
-			this.checkboxTrainDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkboxTrainDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.checkboxTrainDefault.AutoSize = true;
 			this.checkboxTrainDefault.Checked = true;
 			this.checkboxTrainDefault.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -742,9 +747,9 @@
 			// 
 			// tabcontrolTrainDetails
 			// 
-			this.tabcontrolTrainDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabcontrolTrainDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tabcontrolTrainDetails.Controls.Add(this.tabpageTrainDescription);
 			this.tabcontrolTrainDetails.Controls.Add(this.tabpageTrainSettings);
 			this.tabcontrolTrainDetails.Location = new System.Drawing.Point(8, 16);
@@ -767,9 +772,9 @@
 			// 
 			// textboxTrainDescription
 			// 
-			this.textboxTrainDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxTrainDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxTrainDescription.BackColor = System.Drawing.SystemColors.Window;
 			this.textboxTrainDescription.Location = new System.Drawing.Point(168, 8);
 			this.textboxTrainDescription.Multiline = true;
@@ -781,8 +786,8 @@
 			// 
 			// pictureboxTrainImage
 			// 
-			this.pictureboxTrainImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.pictureboxTrainImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.pictureboxTrainImage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureboxTrainImage.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxTrainImage.Name = "pictureboxTrainImage";
@@ -807,8 +812,8 @@
 			// 
 			// panelTrainEncoding
 			// 
-			this.panelTrainEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelTrainEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelTrainEncoding.Controls.Add(this.labelTrainEncoding);
 			this.panelTrainEncoding.Controls.Add(this.buttonTrainEncodingBig5);
 			this.panelTrainEncoding.Controls.Add(this.comboboxTrainEncoding);
@@ -844,8 +849,8 @@
 			// 
 			// comboboxTrainEncoding
 			// 
-			this.comboboxTrainEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboboxTrainEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxTrainEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxTrainEncoding.FormattingEnabled = true;
 			this.comboboxTrainEncoding.Location = new System.Drawing.Point(96, 0);
@@ -891,9 +896,9 @@
 			// 
 			// textboxTrainEncodingPreview
 			// 
-			this.textboxTrainEncodingPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxTrainEncodingPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxTrainEncodingPreview.BackColor = System.Drawing.SystemColors.Window;
 			this.textboxTrainEncodingPreview.Location = new System.Drawing.Point(104, 64);
 			this.textboxTrainEncodingPreview.Multiline = true;
@@ -919,8 +924,8 @@
 			// 
 			// labelStart
 			// 
-			this.labelStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelStart.AutoEllipsis = true;
 			this.labelStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(130)))), ((int)(((byte)(153)))));
 			this.labelStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -934,8 +939,8 @@
 			// 
 			// labelTrain
 			// 
-			this.labelTrain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelTrain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTrain.AutoEllipsis = true;
 			this.labelTrain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(130)))), ((int)(((byte)(153)))));
 			this.labelTrain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -949,8 +954,8 @@
 			// 
 			// groupboxRouteSelection
 			// 
-			this.groupboxRouteSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.groupboxRouteSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.groupboxRouteSelection.Controls.Add(this.tabcontrolRouteSelection);
 			this.groupboxRouteSelection.ForeColor = System.Drawing.Color.Black;
 			this.groupboxRouteSelection.Location = new System.Drawing.Point(8, 72);
@@ -962,9 +967,9 @@
 			// 
 			// tabcontrolRouteSelection
 			// 
-			this.tabcontrolRouteSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabcontrolRouteSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tabcontrolRouteSelection.Controls.Add(this.tabpageRouteBrowse);
 			this.tabcontrolRouteSelection.Controls.Add(this.tabpageRouteRecently);
 			this.tabcontrolRouteSelection.Location = new System.Drawing.Point(8, 16);
@@ -987,9 +992,9 @@
 			// 
 			// listviewRouteFiles
 			// 
-			this.listviewRouteFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewRouteFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewRouteFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listviewRouteFiles.HideSelection = false;
 			this.listviewRouteFiles.LabelWrap = false;
@@ -1007,8 +1012,8 @@
 			// 
 			// textboxRouteFolder
 			// 
-			this.textboxRouteFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxRouteFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxRouteFolder.Location = new System.Drawing.Point(8, 8);
 			this.textboxRouteFolder.Name = "textboxRouteFolder";
 			this.textboxRouteFolder.Size = new System.Drawing.Size(276, 21);
@@ -1028,9 +1033,9 @@
 			// 
 			// listviewRouteRecently
 			// 
-			this.listviewRouteRecently.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewRouteRecently.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewRouteRecently.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listviewRouteRecently.HideSelection = false;
 			this.listviewRouteRecently.LabelWrap = false;
@@ -1046,8 +1051,8 @@
 			// 
 			// groupboxRouteDetails
 			// 
-			this.groupboxRouteDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.groupboxRouteDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.groupboxRouteDetails.Controls.Add(this.tabcontrolRouteDetails);
 			this.groupboxRouteDetails.ForeColor = System.Drawing.Color.Black;
 			this.groupboxRouteDetails.Location = new System.Drawing.Point(332, 72);
@@ -1060,9 +1065,9 @@
 			// 
 			// tabcontrolRouteDetails
 			// 
-			this.tabcontrolRouteDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabcontrolRouteDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tabcontrolRouteDetails.Controls.Add(this.tabpageRouteDescription);
 			this.tabcontrolRouteDetails.Controls.Add(this.tabpageRouteMap);
 			this.tabcontrolRouteDetails.Controls.Add(this.tabpageRouteGradient);
@@ -1087,9 +1092,9 @@
 			// 
 			// textboxRouteDescription
 			// 
-			this.textboxRouteDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxRouteDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxRouteDescription.BackColor = System.Drawing.SystemColors.Window;
 			this.textboxRouteDescription.Location = new System.Drawing.Point(168, 8);
 			this.textboxRouteDescription.Multiline = true;
@@ -1101,8 +1106,8 @@
 			// 
 			// pictureboxRouteImage
 			// 
-			this.pictureboxRouteImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.pictureboxRouteImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.pictureboxRouteImage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureboxRouteImage.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxRouteImage.Name = "pictureboxRouteImage";
@@ -1125,9 +1130,9 @@
 			// 
 			// pictureboxRouteMap
 			// 
-			this.pictureboxRouteMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureboxRouteMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureboxRouteMap.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxRouteMap.Name = "pictureboxRouteMap";
 			this.pictureboxRouteMap.Size = new System.Drawing.Size(276, 136);
@@ -1148,9 +1153,9 @@
 			// 
 			// pictureboxRouteGradient
 			// 
-			this.pictureboxRouteGradient.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureboxRouteGradient.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureboxRouteGradient.Location = new System.Drawing.Point(8, 7);
 			this.pictureboxRouteGradient.Name = "pictureboxRouteGradient";
 			this.pictureboxRouteGradient.Size = new System.Drawing.Size(276, 136);
@@ -1173,8 +1178,8 @@
 			// 
 			// panelRouteEncoding
 			// 
-			this.panelRouteEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelRouteEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelRouteEncoding.Controls.Add(this.buttonRouteEncodingLatin1);
 			this.panelRouteEncoding.Controls.Add(this.buttonRouteEncodingBig5);
 			this.panelRouteEncoding.Controls.Add(this.labelRouteEncoding);
@@ -1235,8 +1240,8 @@
 			// 
 			// comboboxRouteEncoding
 			// 
-			this.comboboxRouteEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboboxRouteEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxRouteEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxRouteEncoding.ForeColor = System.Drawing.SystemColors.WindowText;
 			this.comboboxRouteEncoding.FormattingEnabled = true;
@@ -1259,9 +1264,9 @@
 			// 
 			// textboxRouteEncodingPreview
 			// 
-			this.textboxRouteEncodingPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxRouteEncodingPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxRouteEncodingPreview.BackColor = System.Drawing.SystemColors.Window;
 			this.textboxRouteEncodingPreview.ForeColor = System.Drawing.SystemColors.WindowText;
 			this.textboxRouteEncodingPreview.Location = new System.Drawing.Point(104, 64);
@@ -1274,8 +1279,8 @@
 			// 
 			// labelRoute
 			// 
-			this.labelRoute.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelRoute.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelRoute.AutoEllipsis = true;
 			this.labelRoute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(130)))), ((int)(((byte)(153)))));
 			this.labelRoute.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1289,8 +1294,8 @@
 			// 
 			// labelStartTitleSeparator
 			// 
-			this.labelStartTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelStartTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelStartTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelStartTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelStartTitleSeparator.Name = "labelStartTitleSeparator";
@@ -1299,8 +1304,8 @@
 			// 
 			// labelStartTitle
 			// 
-			this.labelStartTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelStartTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelStartTitle.AutoEllipsis = true;
 			this.labelStartTitle.AutoSize = true;
 			this.labelStartTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
@@ -1314,8 +1319,8 @@
 			// 
 			// label13
 			// 
-			this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.label13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
 			this.label13.Location = new System.Drawing.Point(0, 0);
 			this.label13.Name = "label13";
@@ -1324,8 +1329,8 @@
 			// 
 			// labelStartTitleBackground
 			// 
-			this.labelStartTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelStartTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelStartTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(137)))), ((int)(((byte)(179)))));
 			this.labelStartTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelStartTitleBackground.Name = "labelStartTitleBackground";
@@ -1334,8 +1339,8 @@
 			// 
 			// labelFillerTwo
 			// 
-			this.labelFillerTwo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelFillerTwo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.labelFillerTwo.BackColor = System.Drawing.Color.Silver;
 			this.labelFillerTwo.Location = new System.Drawing.Point(0, 330);
 			this.labelFillerTwo.Name = "labelFillerTwo";
@@ -1344,9 +1349,9 @@
 			// 
 			// panelOptions
 			// 
-			this.panelOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelOptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(243)))));
 			this.panelOptions.Controls.Add(this.buttonOptionsPrevious);
 			this.panelOptions.Controls.Add(this.buttonOptionsNext);
@@ -1387,9 +1392,9 @@
 			// 
 			// panelOptionsPage2
 			// 
-			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
 			this.panelOptionsPage2.Location = new System.Drawing.Point(8, 72);
@@ -1476,8 +1481,8 @@
 			// 
 			// trackBarTimeAccelerationFactor
 			// 
-			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarTimeAccelerationFactor.LargeChange = 1;
 			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 122);
 			this.trackBarTimeAccelerationFactor.Maximum = 5;
@@ -1510,8 +1515,8 @@
 			// 
 			// groupBoxPackageOptions
 			// 
-			this.groupBoxPackageOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxPackageOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxPackageOptions.Controls.Add(this.comboBoxCompressionFormat);
 			this.groupBoxPackageOptions.Controls.Add(this.labelPackageCompression);
 			this.groupBoxPackageOptions.Controls.Add(this.buttonOtherDirectory);
@@ -1535,9 +1540,9 @@
 			// 
 			this.comboBoxCompressionFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxCompressionFormat.Items.AddRange(new object[] {
-            "LZMA ZIP ( .zip )",
-            "GZip ( .tgz )",
-            "BZip2 ( .bz2 )"});
+			"LZMA ZIP ( .zip )",
+			"GZip ( .tgz )",
+			"BZip2 ( .bz2 )"});
 			this.comboBoxCompressionFormat.Location = new System.Drawing.Point(200, 117);
 			this.comboBoxCompressionFormat.Name = "comboBoxCompressionFormat";
 			this.comboBoxCompressionFormat.Size = new System.Drawing.Size(188, 21);
@@ -1575,8 +1580,8 @@
 			// 
 			// textBoxOtherDirectory
 			// 
-			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxOtherDirectory.Location = new System.Drawing.Point(200, 84);
 			this.textBoxOtherDirectory.Name = "textBoxOtherDirectory";
 			this.textBoxOtherDirectory.ReadOnly = true;
@@ -1605,8 +1610,8 @@
 			// 
 			// textBoxTrainDirectory
 			// 
-			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
 			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
 			this.textBoxTrainDirectory.ReadOnly = true;
@@ -1635,8 +1640,8 @@
 			// 
 			// textBoxRouteDirectory
 			// 
-			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxRouteDirectory.Location = new System.Drawing.Point(200, 20);
 			this.textBoxRouteDirectory.Name = "textBoxRouteDirectory";
 			this.textBoxRouteDirectory.ReadOnly = true;
@@ -1658,8 +1663,8 @@
 			// 
 			// groupBoxRailDriver
 			// 
-			this.groupBoxRailDriver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxRailDriver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxRailDriver.Controls.Add(this.labelRailDriverCalibration);
 			this.groupBoxRailDriver.Controls.Add(this.buttonRailDriverCalibration);
 			this.groupBoxRailDriver.Controls.Add(this.comboBoxRailDriverUnits);
@@ -1695,8 +1700,8 @@
 			this.comboBoxRailDriverUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxRailDriverUnits.FormattingEnabled = true;
 			this.comboBoxRailDriverUnits.Items.AddRange(new object[] {
-            "Miles per Hour (MPH)",
-            "Kilometers per Hour (KPH)"});
+			"Miles per Hour (MPH)",
+			"Kilometers per Hour (KPH)"});
 			this.comboBoxRailDriverUnits.Location = new System.Drawing.Point(138, 16);
 			this.comboBoxRailDriverUnits.Name = "comboBoxRailDriverUnits";
 			this.comboBoxRailDriverUnits.Size = new System.Drawing.Size(170, 21);
@@ -1714,8 +1719,8 @@
 			// 
 			// groupboxDistance
 			// 
-			this.groupboxDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxDistance.Controls.Add(this.comboboxMotionBlur);
 			this.groupboxDistance.Controls.Add(this.labelMotionBlur);
 			this.groupboxDistance.Controls.Add(this.labelDistanceUnit);
@@ -1741,8 +1746,8 @@
 			// 
 			// labelMotionBlur
 			// 
-			this.labelMotionBlur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelMotionBlur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMotionBlur.AutoEllipsis = true;
 			this.labelMotionBlur.Location = new System.Drawing.Point(9, 51);
 			this.labelMotionBlur.Name = "labelMotionBlur";
@@ -1766,28 +1771,28 @@
 			this.updownDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownDistance.Location = new System.Drawing.Point(144, 24);
 			this.updownDistance.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
+			100000,
+			0,
+			0,
+			0});
 			this.updownDistance.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+			100,
+			0,
+			0,
+			0});
 			this.updownDistance.Name = "updownDistance";
 			this.updownDistance.Size = new System.Drawing.Size(128, 20);
 			this.updownDistance.TabIndex = 1;
 			this.updownDistance.Value = new decimal(new int[] {
-            600,
-            0,
-            0,
-            0});
+			600,
+			0,
+			0,
+			0});
 			// 
 			// labelDistance
 			// 
-			this.labelDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDistance.AutoEllipsis = true;
 			this.labelDistance.Location = new System.Drawing.Point(9, 26);
 			this.labelDistance.Name = "labelDistance";
@@ -1798,8 +1803,8 @@
 			// 
 			// groupboxControls
 			// 
-			this.groupboxControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxControls.Controls.Add(this.checkBoxEBAxis);
 			this.groupboxControls.Controls.Add(this.trackbarJoystickAxisThreshold);
 			this.groupboxControls.Controls.Add(this.checkboxJoysticksUsed);
@@ -1826,8 +1831,8 @@
 			// 
 			// trackbarJoystickAxisThreshold
 			// 
-			this.trackbarJoystickAxisThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.trackbarJoystickAxisThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackbarJoystickAxisThreshold.LargeChange = 10;
 			this.trackbarJoystickAxisThreshold.Location = new System.Drawing.Point(200, 32);
 			this.trackbarJoystickAxisThreshold.Maximum = 100;
@@ -1860,8 +1865,8 @@
 			// 
 			// groupboxVerbosity
 			// 
-			this.groupboxVerbosity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxVerbosity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxVerbosity.Controls.Add(this.checkboxErrorMessages);
 			this.groupboxVerbosity.Controls.Add(this.checkboxWarningMessages);
 			this.groupboxVerbosity.ForeColor = System.Drawing.Color.Black;
@@ -1894,8 +1899,8 @@
 			// 
 			// groupboxSimulation
 			// 
-			this.groupboxSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxSimulation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxSimulation.Controls.Add(this.checkBoxLoadingSway);
 			this.groupboxSimulation.Controls.Add(this.checkboxBlackBox);
 			this.groupboxSimulation.Controls.Add(this.checkboxDerailments);
@@ -1911,9 +1916,9 @@
 			// 
 			// checkBoxLoadingSway
 			// 
-			this.checkBoxLoadingSway.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkBoxLoadingSway.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.checkBoxLoadingSway.AutoSize = true;
 			this.checkBoxLoadingSway.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.checkBoxLoadingSway.Location = new System.Drawing.Point(176, 24);
@@ -1926,9 +1931,9 @@
 			// 
 			// checkboxBlackBox
 			// 
-			this.checkboxBlackBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkboxBlackBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.checkboxBlackBox.AutoSize = true;
 			this.checkboxBlackBox.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.checkboxBlackBox.Location = new System.Drawing.Point(176, 41);
@@ -1971,8 +1976,8 @@
 			// 
 			// groupboxSound
 			// 
-			this.groupboxSound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxSound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxSound.Controls.Add(this.updownSoundNumber);
 			this.groupboxSound.Controls.Add(this.labelSoundNumber);
 			this.groupboxSound.ForeColor = System.Drawing.Color.Black;
@@ -1988,23 +1993,23 @@
 			this.updownSoundNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownSoundNumber.Location = new System.Drawing.Point(140, 16);
 			this.updownSoundNumber.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
+			8,
+			0,
+			0,
+			0});
 			this.updownSoundNumber.Name = "updownSoundNumber";
 			this.updownSoundNumber.Size = new System.Drawing.Size(152, 20);
 			this.updownSoundNumber.TabIndex = 3;
 			this.updownSoundNumber.Value = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			// 
 			// labelSoundNumber
 			// 
-			this.labelSoundNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSoundNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoundNumber.Location = new System.Drawing.Point(5, 18);
 			this.labelSoundNumber.Name = "labelSoundNumber";
 			this.labelSoundNumber.Size = new System.Drawing.Size(136, 14);
@@ -2026,8 +2031,8 @@
 			// 
 			// groupBoxOther
 			// 
-			this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxOther.Controls.Add(this.comboBoxTimeTableDisplayMode);
 			this.groupBoxOther.Controls.Add(this.labelTimeTableDisplayMode);
 			this.groupBoxOther.ForeColor = System.Drawing.Color.Black;
@@ -2051,8 +2056,8 @@
 			// 
 			// labelTimeTableDisplayMode
 			// 
-			this.labelTimeTableDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelTimeTableDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTimeTableDisplayMode.AutoEllipsis = true;
 			this.labelTimeTableDisplayMode.Location = new System.Drawing.Point(3, 17);
 			this.labelTimeTableDisplayMode.Name = "labelTimeTableDisplayMode";
@@ -2063,8 +2068,8 @@
 			// 
 			// groupboxDisplayMode
 			// 
-			this.groupboxDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxDisplayMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxDisplayMode.Controls.Add(this.comboboxVSync);
 			this.groupboxDisplayMode.Controls.Add(this.labelVSync);
 			this.groupboxDisplayMode.Controls.Add(this.radiobuttonFullscreen);
@@ -2089,8 +2094,8 @@
 			// 
 			// labelVSync
 			// 
-			this.labelVSync.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelVSync.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelVSync.AutoEllipsis = true;
 			this.labelVSync.Location = new System.Drawing.Point(8, 72);
 			this.labelVSync.Name = "labelVSync";
@@ -2124,8 +2129,8 @@
 			// 
 			// groupboxWindow
 			// 
-			this.groupboxWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxWindow.Controls.Add(this.updownWindowHeight);
 			this.groupboxWindow.Controls.Add(this.labelWindowHeight);
 			this.groupboxWindow.Controls.Add(this.updownWindowWidth);
@@ -2143,28 +2148,28 @@
 			this.updownWindowHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownWindowHeight.Location = new System.Drawing.Point(156, 48);
 			this.updownWindowHeight.Maximum = new decimal(new int[] {
-            1048575,
-            0,
-            0,
-            0});
+			1048575,
+			0,
+			0,
+			0});
 			this.updownWindowHeight.Minimum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownWindowHeight.Name = "updownWindowHeight";
 			this.updownWindowHeight.Size = new System.Drawing.Size(152, 20);
 			this.updownWindowHeight.TabIndex = 3;
 			this.updownWindowHeight.Value = new decimal(new int[] {
-            600,
-            0,
-            0,
-            0});
+			600,
+			0,
+			0,
+			0});
 			// 
 			// labelWindowHeight
 			// 
-			this.labelWindowHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelWindowHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelWindowHeight.AutoEllipsis = true;
 			this.labelWindowHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelWindowHeight.Name = "labelWindowHeight";
@@ -2178,28 +2183,28 @@
 			this.updownWindowWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownWindowWidth.Location = new System.Drawing.Point(156, 24);
 			this.updownWindowWidth.Maximum = new decimal(new int[] {
-            1048575,
-            0,
-            0,
-            0});
+			1048575,
+			0,
+			0,
+			0});
 			this.updownWindowWidth.Minimum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownWindowWidth.Name = "updownWindowWidth";
 			this.updownWindowWidth.Size = new System.Drawing.Size(152, 20);
 			this.updownWindowWidth.TabIndex = 1;
 			this.updownWindowWidth.Value = new decimal(new int[] {
-            960,
-            0,
-            0,
-            0});
+			960,
+			0,
+			0,
+			0});
 			// 
 			// labelWindowWidth
 			// 
-			this.labelWindowWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelWindowWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelWindowWidth.AutoEllipsis = true;
 			this.labelWindowWidth.Location = new System.Drawing.Point(8, 26);
 			this.labelWindowWidth.Name = "labelWindowWidth";
@@ -2210,8 +2215,8 @@
 			// 
 			// groupboxFullscreen
 			// 
-			this.groupboxFullscreen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxFullscreen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxFullscreen.Controls.Add(this.comboboxFullscreenBits);
 			this.groupboxFullscreen.Controls.Add(this.labelFullscreenBits);
 			this.groupboxFullscreen.Controls.Add(this.updownFullscreenHeight);
@@ -2238,8 +2243,8 @@
 			// 
 			// labelFullscreenBits
 			// 
-			this.labelFullscreenBits.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelFullscreenBits.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelFullscreenBits.AutoEllipsis = true;
 			this.labelFullscreenBits.Location = new System.Drawing.Point(8, 74);
 			this.labelFullscreenBits.Name = "labelFullscreenBits";
@@ -2253,28 +2258,28 @@
 			this.updownFullscreenHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownFullscreenHeight.Location = new System.Drawing.Point(156, 48);
 			this.updownFullscreenHeight.Maximum = new decimal(new int[] {
-            1048575,
-            0,
-            0,
-            0});
+			1048575,
+			0,
+			0,
+			0});
 			this.updownFullscreenHeight.Minimum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownFullscreenHeight.Name = "updownFullscreenHeight";
 			this.updownFullscreenHeight.Size = new System.Drawing.Size(152, 20);
 			this.updownFullscreenHeight.TabIndex = 3;
 			this.updownFullscreenHeight.Value = new decimal(new int[] {
-            768,
-            0,
-            0,
-            0});
+			768,
+			0,
+			0,
+			0});
 			// 
 			// labelFullscreenHeight
 			// 
-			this.labelFullscreenHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelFullscreenHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelFullscreenHeight.AutoEllipsis = true;
 			this.labelFullscreenHeight.Location = new System.Drawing.Point(8, 50);
 			this.labelFullscreenHeight.Name = "labelFullscreenHeight";
@@ -2288,28 +2293,28 @@
 			this.updownFullscreenWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownFullscreenWidth.Location = new System.Drawing.Point(156, 24);
 			this.updownFullscreenWidth.Maximum = new decimal(new int[] {
-            1048575,
-            0,
-            0,
-            0});
+			1048575,
+			0,
+			0,
+			0});
 			this.updownFullscreenWidth.Minimum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownFullscreenWidth.Name = "updownFullscreenWidth";
 			this.updownFullscreenWidth.Size = new System.Drawing.Size(152, 20);
 			this.updownFullscreenWidth.TabIndex = 1;
 			this.updownFullscreenWidth.Value = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
+			1024,
+			0,
+			0,
+			0});
 			// 
 			// labelFullscreenWidth
 			// 
-			this.labelFullscreenWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelFullscreenWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelFullscreenWidth.AutoEllipsis = true;
 			this.labelFullscreenWidth.Location = new System.Drawing.Point(8, 26);
 			this.labelFullscreenWidth.Name = "labelFullscreenWidth";
@@ -2320,8 +2325,8 @@
 			// 
 			// groupboxInterpolation
 			// 
-			this.groupboxInterpolation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxInterpolation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxInterpolation.Controls.Add(this.updownAntiAliasing);
 			this.groupboxInterpolation.Controls.Add(this.labelAntiAliasing);
 			this.groupboxInterpolation.Controls.Add(this.labelTransparencyQuality);
@@ -2345,18 +2350,18 @@
 			this.updownAntiAliasing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.updownAntiAliasing.Location = new System.Drawing.Point(156, 64);
 			this.updownAntiAliasing.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownAntiAliasing.Name = "updownAntiAliasing";
 			this.updownAntiAliasing.Size = new System.Drawing.Size(152, 20);
 			this.updownAntiAliasing.TabIndex = 5;
 			// 
 			// labelAntiAliasing
 			// 
-			this.labelAntiAliasing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelAntiAliasing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAntiAliasing.AutoEllipsis = true;
 			this.labelAntiAliasing.Location = new System.Drawing.Point(8, 66);
 			this.labelAntiAliasing.Name = "labelAntiAliasing";
@@ -2388,8 +2393,8 @@
 			// 
 			// labelTransparency
 			// 
-			this.labelTransparency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelTransparency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTransparency.AutoEllipsis = true;
 			this.labelTransparency.Location = new System.Drawing.Point(8, 100);
 			this.labelTransparency.Name = "labelTransparency";
@@ -2404,18 +2409,18 @@
 			this.updownAnisotropic.Enabled = false;
 			this.updownAnisotropic.Location = new System.Drawing.Point(156, 40);
 			this.updownAnisotropic.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+			16,
+			0,
+			0,
+			0});
 			this.updownAnisotropic.Name = "updownAnisotropic";
 			this.updownAnisotropic.Size = new System.Drawing.Size(152, 20);
 			this.updownAnisotropic.TabIndex = 3;
 			// 
 			// labelAnisotropic
 			// 
-			this.labelAnisotropic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelAnisotropic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAnisotropic.AutoEllipsis = true;
 			this.labelAnisotropic.Enabled = false;
 			this.labelAnisotropic.Location = new System.Drawing.Point(8, 42);
@@ -2438,8 +2443,8 @@
 			// 
 			// labelInterpolation
 			// 
-			this.labelInterpolation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInterpolation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInterpolation.AutoEllipsis = true;
 			this.labelInterpolation.Location = new System.Drawing.Point(8, 18);
 			this.labelInterpolation.Name = "labelInterpolation";
@@ -2479,8 +2484,8 @@
 			// 
 			// labelOptionsTitleSeparator
 			// 
-			this.labelOptionsTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelOptionsTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelOptionsTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelOptionsTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelOptionsTitleSeparator.Name = "labelOptionsTitleSeparator";
@@ -2489,8 +2494,8 @@
 			// 
 			// labelOptionsTitle
 			// 
-			this.labelOptionsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelOptionsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelOptionsTitle.AutoEllipsis = true;
 			this.labelOptionsTitle.AutoSize = true;
 			this.labelOptionsTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(153)))), ((int)(((byte)(61)))));
@@ -2504,8 +2509,8 @@
 			// 
 			// labelOptionsTitleBackground
 			// 
-			this.labelOptionsTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelOptionsTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelOptionsTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(153)))), ((int)(((byte)(61)))));
 			this.labelOptionsTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelOptionsTitleBackground.Name = "labelOptionsTitleBackground";
@@ -2615,9 +2620,9 @@
 			// 
 			// panelReview
 			// 
-			this.panelReview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelReview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelReview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
 			this.panelReview.Controls.Add(this.comboboxBlackBoxFormat);
 			this.panelReview.Controls.Add(this.labelBlackBoxFormat);
@@ -2676,8 +2681,8 @@
 			// 
 			// labelReviewTimeValue
 			// 
-			this.labelReviewTimeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewTimeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewTimeValue.AutoEllipsis = true;
 			this.labelReviewTimeValue.Location = new System.Drawing.Point(104, 32);
 			this.labelReviewTimeValue.Name = "labelReviewTimeValue";
@@ -2697,8 +2702,8 @@
 			// 
 			// labelReviewDateValue
 			// 
-			this.labelReviewDateValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewDateValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewDateValue.AutoEllipsis = true;
 			this.labelReviewDateValue.Location = new System.Drawing.Point(104, 16);
 			this.labelReviewDateValue.Name = "labelReviewDateValue";
@@ -2730,8 +2735,8 @@
 			// 
 			// labelBlackBox
 			// 
-			this.labelBlackBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelBlackBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBlackBox.AutoEllipsis = true;
 			this.labelBlackBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(107)))), ((int)(((byte)(107)))));
 			this.labelBlackBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2745,9 +2750,9 @@
 			// 
 			// groupboxScore
 			// 
-			this.groupboxScore.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxScore.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxScore.Controls.Add(this.checkboxScorePenalties);
 			this.groupboxScore.Controls.Add(this.buttonScoreExport);
 			this.groupboxScore.Controls.Add(this.listviewScore);
@@ -2784,15 +2789,15 @@
 			// 
 			// listviewScore
 			// 
-			this.listviewScore.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewScore.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewScore.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnheaderScoreTime,
-            this.columnheaderScorePosition,
-            this.columnheaderScoreValue,
-            this.columnheaderScoreCumulative,
-            this.columnheaderScoreText});
+			this.columnheaderScoreTime,
+			this.columnheaderScorePosition,
+			this.columnheaderScoreValue,
+			this.columnheaderScoreCumulative,
+			this.columnheaderScoreText});
 			this.listviewScore.FullRowSelect = true;
 			this.listviewScore.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listviewScore.HideSelection = false;
@@ -2845,8 +2850,8 @@
 			// 
 			// labelReviewTrainValue
 			// 
-			this.labelReviewTrainValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewTrainValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewTrainValue.AutoEllipsis = true;
 			this.labelReviewTrainValue.Location = new System.Drawing.Point(8, 32);
 			this.labelReviewTrainValue.Name = "labelReviewTrainValue";
@@ -2877,8 +2882,8 @@
 			// 
 			// labelReviewRouteValue
 			// 
-			this.labelReviewRouteValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewRouteValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewRouteValue.AutoEllipsis = true;
 			this.labelReviewRouteValue.Location = new System.Drawing.Point(8, 32);
 			this.labelReviewRouteValue.Name = "labelReviewRouteValue";
@@ -2897,8 +2902,8 @@
 			// 
 			// labelConditions
 			// 
-			this.labelConditions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelConditions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelConditions.AutoEllipsis = true;
 			this.labelConditions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(107)))), ((int)(((byte)(107)))));
 			this.labelConditions.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3010,8 +3015,8 @@
 			// 
 			// labelRatingDescription
 			// 
-			this.labelRatingDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelRatingDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelRatingDescription.AutoEllipsis = true;
 			this.labelRatingDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.labelRatingDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3024,8 +3029,8 @@
 			// 
 			// labelRatingColor
 			// 
-			this.labelRatingColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelRatingColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelRatingColor.BackColor = System.Drawing.Color.Gray;
 			this.labelRatingColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.labelRatingColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3038,8 +3043,8 @@
 			// 
 			// labelScore
 			// 
-			this.labelScore.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelScore.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelScore.AutoEllipsis = true;
 			this.labelScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(107)))), ((int)(((byte)(107)))));
 			this.labelScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3053,8 +3058,8 @@
 			// 
 			// labelReviewTitleSeparator
 			// 
-			this.labelReviewTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelReviewTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelReviewTitleSeparator.Name = "labelReviewTitleSeparator";
@@ -3063,8 +3068,8 @@
 			// 
 			// labelReviewTitle
 			// 
-			this.labelReviewTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewTitle.AutoEllipsis = true;
 			this.labelReviewTitle.AutoSize = true;
 			this.labelReviewTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
@@ -3078,8 +3083,8 @@
 			// 
 			// labelReviewTitleBackground
 			// 
-			this.labelReviewTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelReviewTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReviewTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
 			this.labelReviewTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelReviewTitleBackground.Name = "labelReviewTitleBackground";
@@ -3093,9 +3098,9 @@
 			// 
 			// panelControls
 			// 
-			this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelControls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(247)))), ((int)(((byte)(230)))));
 			this.panelControls.Controls.Add(this.buttonControlReset);
 			this.panelControls.Controls.Add(this.buttonControlsExport);
@@ -3201,8 +3206,8 @@
 			// 
 			// groupboxJoysticks
 			// 
-			this.groupboxJoysticks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxJoysticks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxJoysticks.Controls.Add(this.pictureboxJoysticks);
 			this.groupboxJoysticks.ForeColor = System.Drawing.Color.Black;
 			this.groupboxJoysticks.Location = new System.Drawing.Point(8, 430);
@@ -3214,9 +3219,9 @@
 			// 
 			// pictureboxJoysticks
 			// 
-			this.pictureboxJoysticks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureboxJoysticks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureboxJoysticks.Location = new System.Drawing.Point(8, 16);
 			this.pictureboxJoysticks.Name = "pictureboxJoysticks";
 			this.pictureboxJoysticks.Size = new System.Drawing.Size(627, 144);
@@ -3226,14 +3231,14 @@
 			// 
 			// listviewControls
 			// 
-			this.listviewControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.listviewControls.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnheaderControlsCommands,
-            this.columnheaderType,
-            this.columnheaderControlsDescription,
-            this.columnheaderControlsAssignment});
+			this.columnheaderControlsCommands,
+			this.columnheaderType,
+			this.columnheaderControlsDescription,
+			this.columnheaderControlsAssignment});
 			this.listviewControls.FullRowSelect = true;
 			this.listviewControls.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listviewControls.HideSelection = false;
@@ -3269,8 +3274,8 @@
 			// 
 			// labelControlsTitleSeparator
 			// 
-			this.labelControlsTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelControlsTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelControlsTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelControlsTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelControlsTitleSeparator.Name = "labelControlsTitleSeparator";
@@ -3279,8 +3284,8 @@
 			// 
 			// labelControlsTitle
 			// 
-			this.labelControlsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelControlsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelControlsTitle.AutoEllipsis = true;
 			this.labelControlsTitle.AutoSize = true;
 			this.labelControlsTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(137)))), ((int)(((byte)(54)))));
@@ -3294,8 +3299,8 @@
 			// 
 			// labelControlsTitleBackground
 			// 
-			this.labelControlsTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelControlsTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelControlsTitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(137)))), ((int)(((byte)(54)))));
 			this.labelControlsTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelControlsTitleBackground.Name = "labelControlsTitleBackground";
@@ -3304,8 +3309,8 @@
 			// 
 			// groupboxControl
 			// 
-			this.groupboxControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupboxControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxControl.Controls.Add(this.panelKeyboard);
 			this.groupboxControl.Controls.Add(this.comboboxCommand);
 			this.groupboxControl.Controls.Add(this.labelCommand);
@@ -3338,8 +3343,8 @@
 			// 
 			// comboboxKeyboardKey
 			// 
-			this.comboboxKeyboardKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboboxKeyboardKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxKeyboardKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxKeyboardKey.FormattingEnabled = true;
 			this.comboboxKeyboardKey.Location = new System.Drawing.Point(80, 0);
@@ -3403,8 +3408,8 @@
 			// 
 			// comboboxCommand
 			// 
-			this.comboboxCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboboxCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxCommand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxCommand.FormattingEnabled = true;
 			this.comboboxCommand.Location = new System.Drawing.Point(88, 21);
@@ -3425,9 +3430,9 @@
 			// 
 			// textboxJoystickGrab
 			// 
-			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textboxJoystickGrab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxJoystickGrab.Location = new System.Drawing.Point(462, 72);
 			this.textboxJoystickGrab.Multiline = true;
 			this.textboxJoystickGrab.Name = "textboxJoystickGrab";
@@ -3441,8 +3446,8 @@
 			// 
 			// panelJoystick
 			// 
-			this.panelJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelJoystick.Controls.Add(this.labelJoystickAssignmentCaption);
 			this.panelJoystick.Controls.Add(this.labelJoystickAssignmentValue);
 			this.panelJoystick.Enabled = false;
@@ -3462,8 +3467,8 @@
 			// 
 			// labelJoystickAssignmentValue
 			// 
-			this.labelJoystickAssignmentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelJoystickAssignmentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.labelJoystickAssignmentValue.Location = new System.Drawing.Point(0, 16);
 			this.labelJoystickAssignmentValue.Name = "labelJoystickAssignmentValue";
 			this.labelJoystickAssignmentValue.Size = new System.Drawing.Size(192, 32);
@@ -3579,8 +3584,8 @@
 			// 
 			// labelVersion
 			// 
-			this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelVersion.AutoEllipsis = true;
 			this.labelVersion.BackColor = System.Drawing.Color.Gray;
 			this.labelVersion.ForeColor = System.Drawing.Color.White;
@@ -3610,9 +3615,9 @@
 			// 
 			// panelPackages
 			// 
-			this.panelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackages.BackColor = System.Drawing.Color.Gainsboro;
 			this.panelPackages.Controls.Add(this.labelPackagesTitleSeparator);
 			this.panelPackages.Controls.Add(this.labelPackagesTitle);
@@ -3633,8 +3638,8 @@
 			// 
 			// labelPackagesTitleSeparator
 			// 
-			this.labelPackagesTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPackagesTitleSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPackagesTitleSeparator.BackColor = System.Drawing.Color.White;
 			this.labelPackagesTitleSeparator.Location = new System.Drawing.Point(0, 32);
 			this.labelPackagesTitleSeparator.Name = "labelPackagesTitleSeparator";
@@ -3643,8 +3648,8 @@
 			// 
 			// labelPackagesTitle
 			// 
-			this.labelPackagesTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPackagesTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPackagesTitle.AutoEllipsis = true;
 			this.labelPackagesTitle.AutoSize = true;
 			this.labelPackagesTitle.BackColor = System.Drawing.Color.DarkGray;
@@ -3658,8 +3663,8 @@
 			// 
 			// labelPackagesTitleBackground
 			// 
-			this.labelPackagesTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPackagesTitleBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPackagesTitleBackground.BackColor = System.Drawing.Color.DarkGray;
 			this.labelPackagesTitleBackground.Location = new System.Drawing.Point(0, 0);
 			this.labelPackagesTitleBackground.Name = "labelPackagesTitleBackground";
@@ -3668,9 +3673,9 @@
 			// 
 			// panelUninstallResult
 			// 
-			this.panelUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelUninstallResult.Controls.Add(this.textBoxUninstallResult);
 			this.panelUninstallResult.Controls.Add(this.labelUninstallLog);
 			this.panelUninstallResult.Controls.Add(this.labelUninstallSuccess);
@@ -3684,9 +3689,9 @@
 			// 
 			// textBoxUninstallResult
 			// 
-			this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxUninstallResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxUninstallResult.BackColor = System.Drawing.SystemColors.Menu;
 			this.textBoxUninstallResult.Location = new System.Drawing.Point(8, 94);
 			this.textBoxUninstallResult.Multiline = true;
@@ -3729,8 +3734,8 @@
 			// 
 			// labelUninstallSuccessHeaderBacking
 			// 
-			this.labelUninstallSuccessHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelUninstallSuccessHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelUninstallSuccessHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelUninstallSuccessHeaderBacking.Location = new System.Drawing.Point(8, 8);
 			this.labelUninstallSuccessHeaderBacking.Name = "labelUninstallSuccessHeaderBacking";
@@ -3751,9 +3756,9 @@
 			// 
 			// panelSuccess
 			// 
-			this.panelSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelSuccess.Controls.Add(this.textBoxFilesInstalled);
 			this.panelSuccess.Controls.Add(this.labelListFilesInstalled);
 			this.panelSuccess.Controls.Add(this.labelInstallSuccess1);
@@ -3767,9 +3772,9 @@
 			// 
 			// textBoxFilesInstalled
 			// 
-			this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxFilesInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxFilesInstalled.BackColor = System.Drawing.SystemColors.Menu;
 			this.textBoxFilesInstalled.Location = new System.Drawing.Point(8, 94);
 			this.textBoxFilesInstalled.Multiline = true;
@@ -3812,8 +3817,8 @@
 			// 
 			// labelInstallSuccessBacking
 			// 
-			this.labelInstallSuccessBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstallSuccessBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInstallSuccessBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelInstallSuccessBacking.Location = new System.Drawing.Point(8, 8);
 			this.labelInstallSuccessBacking.Name = "labelInstallSuccessBacking";
@@ -3834,9 +3839,9 @@
 			// 
 			// panelDependancyError
 			// 
-			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelDependancyError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelDependancyError.Controls.Add(this.buttonAbort);
 			this.panelDependancyError.Controls.Add(this.dataGridViewDependancies);
 			this.panelDependancyError.Controls.Add(this.labelMissingDependanciesText2);
@@ -3867,18 +3872,18 @@
 			this.dataGridViewDependancies.AllowUserToDeleteRows = false;
 			this.dataGridViewDependancies.AllowUserToResizeColumns = false;
 			this.dataGridViewDependancies.AllowUserToResizeRows = false;
-			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn7,
-            this.dataGridViewTextBoxColumn8,
-            this.website});
+			this.dataGridViewTextBoxColumn5,
+			this.dataGridViewTextBoxColumn6,
+			this.dataGridViewTextBoxColumn7,
+			this.dataGridViewTextBoxColumn8,
+			this.website});
 			this.dataGridViewDependancies.Location = new System.Drawing.Point(8, 94);
 			this.dataGridViewDependancies.MultiSelect = false;
 			this.dataGridViewDependancies.Name = "dataGridViewDependancies";
@@ -3958,8 +3963,8 @@
 			// 
 			// labelDependancyErrorHeaderBacking
 			// 
-			this.labelDependancyErrorHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDependancyErrorHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDependancyErrorHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelDependancyErrorHeaderBacking.Location = new System.Drawing.Point(8, 8);
 			this.labelDependancyErrorHeaderBacking.Name = "labelDependancyErrorHeaderBacking";
@@ -3980,9 +3985,9 @@
 			// 
 			// panelPleaseWait
 			// 
-			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPleaseWait.Controls.Add(this.labelProgressFile);
 			this.panelPleaseWait.Controls.Add(this.labelProgressPercent);
 			this.panelPleaseWait.Controls.Add(this.labelPleaseWait);
@@ -4037,9 +4042,9 @@
 			// 
 			// panelPackageDependsAdd
 			// 
-			this.panelPackageDependsAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageDependsAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageDependsAdd.Controls.Add(this.buttonBack);
 			this.panelPackageDependsAdd.Controls.Add(this.buttonRemove);
 			this.panelPackageDependsAdd.Controls.Add(this.labelDependanciesHeader);
@@ -4090,8 +4095,8 @@
 			// 
 			// labelDependanciesHeaderBacking
 			// 
-			this.labelDependanciesHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDependanciesHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDependanciesHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelDependanciesHeaderBacking.Location = new System.Drawing.Point(8, 8);
 			this.labelDependanciesHeaderBacking.Name = "labelDependanciesHeaderBacking";
@@ -4112,9 +4117,9 @@
 			// 
 			// splitContainerDependancies
 			// 
-			this.splitContainerDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainerDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainerDependancies.Location = new System.Drawing.Point(8, 50);
 			this.splitContainerDependancies.Name = "splitContainerDependancies";
 			this.splitContainerDependancies.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -4150,9 +4155,9 @@
 			this.comboBoxDependancyType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxDependancyType.FormattingEnabled = true;
 			this.comboBoxDependancyType.Items.AddRange(new object[] {
-            "Route",
-            "Train",
-            "Other"});
+			"Route",
+			"Train",
+			"Other"});
 			this.comboBoxDependancyType.Location = new System.Drawing.Point(0, 55);
 			this.comboBoxDependancyType.Name = "comboBoxDependancyType";
 			this.comboBoxDependancyType.Size = new System.Drawing.Size(221, 21);
@@ -4165,17 +4170,17 @@
 			this.dataGridViewPackages2.AllowUserToDeleteRows = false;
 			this.dataGridViewPackages2.AllowUserToResizeColumns = false;
 			this.dataGridViewPackages2.AllowUserToResizeRows = false;
-			this.dataGridViewPackages2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewPackages2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewPackages2.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewPackages2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewPackages2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn13,
-            this.dataGridViewTextBoxColumn14,
-            this.dataGridViewTextBoxColumn15,
-            this.dataGridViewTextBoxColumn16});
+			this.dataGridViewTextBoxColumn13,
+			this.dataGridViewTextBoxColumn14,
+			this.dataGridViewTextBoxColumn15,
+			this.dataGridViewTextBoxColumn16});
 			this.dataGridViewPackages2.Location = new System.Drawing.Point(0, 81);
 			this.dataGridViewPackages2.MultiSelect = false;
 			this.dataGridViewPackages2.Name = "dataGridViewPackages2";
@@ -4213,8 +4218,8 @@
 			// 
 			// labelInstalledDependancies
 			// 
-			this.labelInstalledDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInstalledDependancies.AutoEllipsis = true;
 			this.labelInstalledDependancies.BackColor = System.Drawing.Color.Silver;
 			this.labelInstalledDependancies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4232,18 +4237,18 @@
 			this.dataGridViewPackages3.AllowUserToDeleteRows = false;
 			this.dataGridViewPackages3.AllowUserToResizeColumns = false;
 			this.dataGridViewPackages3.AllowUserToResizeRows = false;
-			this.dataGridViewPackages3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewPackages3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewPackages3.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewPackages3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewPackages3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.columnDependancy});
+			this.dataGridViewTextBoxColumn1,
+			this.dataGridViewTextBoxColumn2,
+			this.dataGridViewTextBoxColumn3,
+			this.dataGridViewTextBoxColumn4,
+			this.columnDependancy});
 			this.dataGridViewPackages3.Location = new System.Drawing.Point(0, 60);
 			this.dataGridViewPackages3.MultiSelect = false;
 			this.dataGridViewPackages3.Name = "dataGridViewPackages3";
@@ -4304,8 +4309,8 @@
 			// 
 			// labelSelectedDependencies
 			// 
-			this.labelSelectedDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSelectedDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSelectedDependencies.AutoEllipsis = true;
 			this.labelSelectedDependencies.BackColor = System.Drawing.Color.Silver;
 			this.labelSelectedDependencies.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4330,9 +4335,9 @@
 			// 
 			// panelPackageList
 			// 
-			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageList.Controls.Add(this.comboBoxPackageType);
 			this.panelPackageList.Controls.Add(this.labelPackageListType);
 			this.panelPackageList.Controls.Add(this.createPackageButton);
@@ -4350,9 +4355,9 @@
 			this.comboBoxPackageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxPackageType.FormattingEnabled = true;
 			this.comboBoxPackageType.Items.AddRange(new object[] {
-            "Routes",
-            "Trains",
-            "Other"});
+			"Routes",
+			"Trains",
+			"Other"});
 			this.comboBoxPackageType.Location = new System.Drawing.Point(8, 61);
 			this.comboBoxPackageType.Name = "comboBoxPackageType";
 			this.comboBoxPackageType.Size = new System.Drawing.Size(221, 21);
@@ -4407,17 +4412,17 @@
 			this.dataGridViewPackages.AllowUserToDeleteRows = false;
 			this.dataGridViewPackages.AllowUserToResizeColumns = false;
 			this.dataGridViewPackages.AllowUserToResizeRows = false;
-			this.dataGridViewPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewPackages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewPackages.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.routeName,
-            this.routeVersion,
-            this.routeAuthor,
-            this.routeWebsite});
+			this.routeName,
+			this.routeVersion,
+			this.routeAuthor,
+			this.routeWebsite});
 			this.dataGridViewPackages.Location = new System.Drawing.Point(8, 88);
 			this.dataGridViewPackages.MultiSelect = false;
 			this.dataGridViewPackages.Name = "dataGridViewPackages";
@@ -4455,8 +4460,8 @@
 			// 
 			// labelInstalledPackages
 			// 
-			this.labelInstalledPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstalledPackages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInstalledPackages.AutoEllipsis = true;
 			this.labelInstalledPackages.BackColor = System.Drawing.Color.Silver;
 			this.labelInstalledPackages.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4470,9 +4475,9 @@
 			// 
 			// panelPackageInstall
 			// 
-			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelPackageInstall.Controls.Add(this.buttonBack2);
 			this.panelPackageInstall.Controls.Add(this.buttonNext);
 			this.panelPackageInstall.Controls.Add(this.labelInstallText);
@@ -4534,8 +4539,8 @@
 			// 
 			// labelInstallHeader
 			// 
-			this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInstallHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInstallHeader.BackColor = System.Drawing.Color.Silver;
 			this.labelInstallHeader.Location = new System.Drawing.Point(8, 8);
 			this.labelInstallHeader.Name = "labelInstallHeader";
@@ -4556,8 +4561,8 @@
 			// 
 			// textBoxPackageDescription
 			// 
-			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPackageDescription.Location = new System.Drawing.Point(134, 392);
 			this.textBoxPackageDescription.Multiline = true;
 			this.textBoxPackageDescription.Name = "textBoxPackageDescription";
@@ -4579,8 +4584,8 @@
 			// 
 			// linkLabelPackageWebsite
 			// 
-			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelPackageWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.linkLabelPackageWebsite.AutoSize = true;
 			this.linkLabelPackageWebsite.Location = new System.Drawing.Point(134, 372);
 			this.linkLabelPackageWebsite.Name = "linkLabelPackageWebsite";
@@ -4602,8 +4607,8 @@
 			// 
 			// textBoxPackageVersion
 			// 
-			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPackageVersion.Location = new System.Drawing.Point(134, 344);
 			this.textBoxPackageVersion.Name = "textBoxPackageVersion";
 			this.textBoxPackageVersion.Size = new System.Drawing.Size(383, 20);
@@ -4622,8 +4627,8 @@
 			// 
 			// textBoxPackageAuthor
 			// 
-			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPackageAuthor.Location = new System.Drawing.Point(134, 320);
 			this.textBoxPackageAuthor.Name = "textBoxPackageAuthor";
 			this.textBoxPackageAuthor.Size = new System.Drawing.Size(383, 20);
@@ -4642,8 +4647,8 @@
 			// 
 			// textBoxPackageName
 			// 
-			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPackageName.Location = new System.Drawing.Point(134, 296);
 			this.textBoxPackageName.Name = "textBoxPackageName";
 			this.textBoxPackageName.Size = new System.Drawing.Size(383, 20);
@@ -4662,9 +4667,9 @@
 			// 
 			// pictureBoxPackageImage
 			// 
-			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.pictureBoxPackageImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBoxPackageImage.Location = new System.Drawing.Point(8, 54);
 			this.pictureBoxPackageImage.Name = "pictureBoxPackageImage";
 			this.pictureBoxPackageImage.Size = new System.Drawing.Size(643, 216);
@@ -4675,9 +4680,9 @@
 			// 
 			// panelVersionError
 			// 
-			this.panelVersionError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelVersionError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelVersionError.Controls.Add(this.buttonCancel);
 			this.panelVersionError.Controls.Add(this.labelNewVersionNumber);
 			this.panelVersionError.Controls.Add(this.labelCurrentVersionNumber);
@@ -4778,16 +4783,16 @@
 			this.dataGridViewBrokenDependancies.AllowUserToDeleteRows = false;
 			this.dataGridViewBrokenDependancies.AllowUserToResizeColumns = false;
 			this.dataGridViewBrokenDependancies.AllowUserToResizeRows = false;
-			this.dataGridViewBrokenDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewBrokenDependancies.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewBrokenDependancies.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewBrokenDependancies.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewBrokenDependancies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewBrokenDependancies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn9,
-            this.dataGridViewTextBoxColumn10,
-            this.dataGridViewTextBoxColumn11,
-            this.dataGridViewTextBoxColumn12});
+			this.dataGridViewTextBoxColumn9,
+			this.dataGridViewTextBoxColumn10,
+			this.dataGridViewTextBoxColumn11,
+			this.dataGridViewTextBoxColumn12});
 			this.dataGridViewBrokenDependancies.Location = new System.Drawing.Point(8, 158);
 			this.dataGridViewBrokenDependancies.MultiSelect = false;
 			this.dataGridViewBrokenDependancies.Name = "dataGridViewBrokenDependancies";
@@ -4878,8 +4883,8 @@
 			// 
 			// labelVersionHeaderBackground
 			// 
-			this.labelVersionHeaderBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelVersionHeaderBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelVersionHeaderBackground.BackColor = System.Drawing.Color.Silver;
 			this.labelVersionHeaderBackground.Location = new System.Drawing.Point(8, 8);
 			this.labelVersionHeaderBackground.Name = "labelVersionHeaderBackground";
@@ -4888,9 +4893,9 @@
 			// 
 			// panelCreatePackage
 			// 
-			this.panelCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelCreatePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelCreatePackage.Controls.Add(this.buttonCancel2);
 			this.panelCreatePackage.Controls.Add(this.SaveFileNameButton);
 			this.panelCreatePackage.Controls.Add(this.textBoxPackageFileName);
@@ -4935,8 +4940,8 @@
 			// 
 			// textBoxPackageFileName
 			// 
-			this.textBoxPackageFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxPackageFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPackageFileName.Location = new System.Drawing.Point(8, 486);
 			this.textBoxPackageFileName.Name = "textBoxPackageFileName";
 			this.textBoxPackageFileName.Size = new System.Drawing.Size(517, 20);
@@ -5081,8 +5086,8 @@
 			// 
 			// labelPackageCreationHeaderBacking
 			// 
-			this.labelPackageCreationHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPackageCreationHeaderBacking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPackageCreationHeaderBacking.BackColor = System.Drawing.Color.Silver;
 			this.labelPackageCreationHeaderBacking.Location = new System.Drawing.Point(8, 8);
 			this.labelPackageCreationHeaderBacking.Name = "labelPackageCreationHeaderBacking";
@@ -5101,9 +5106,9 @@
 			// 
 			// panelReplacePackage
 			// 
-			this.panelReplacePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelReplacePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelReplacePackage.Controls.Add(this.replacePackageButton);
 			this.panelReplacePackage.Controls.Add(this.packageToReplaceLabel);
 			this.panelReplacePackage.Controls.Add(this.dataGridViewReplacePackage);
@@ -5139,17 +5144,17 @@
 			this.dataGridViewReplacePackage.AllowUserToDeleteRows = false;
 			this.dataGridViewReplacePackage.AllowUserToResizeColumns = false;
 			this.dataGridViewReplacePackage.AllowUserToResizeRows = false;
-			this.dataGridViewReplacePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridViewReplacePackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewReplacePackage.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewReplacePackage.BackgroundColor = System.Drawing.SystemColors.Control;
 			this.dataGridViewReplacePackage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewReplacePackage.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn21,
-            this.dataGridViewTextBoxColumn22,
-            this.dataGridViewTextBoxColumn23,
-            this.dataGridViewTextBoxColumn24});
+			this.dataGridViewTextBoxColumn21,
+			this.dataGridViewTextBoxColumn22,
+			this.dataGridViewTextBoxColumn23,
+			this.dataGridViewTextBoxColumn24});
 			this.dataGridViewReplacePackage.Location = new System.Drawing.Point(8, 24);
 			this.dataGridViewReplacePackage.MultiSelect = false;
 			this.dataGridViewReplacePackage.Name = "dataGridViewReplacePackage";
@@ -5191,9 +5196,9 @@
 			// 
 			// panelNewPackage
 			// 
-			this.panelNewPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelNewPackage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelNewPackage.Controls.Add(this.newPackageClearSelectionButton);
 			this.panelNewPackage.Controls.Add(this.filesToPackageBox);
 			this.panelNewPackage.Controls.Add(this.addPackageItemsButton);
@@ -5219,9 +5224,9 @@
 			// 
 			// filesToPackageBox
 			// 
-			this.filesToPackageBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.filesToPackageBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.filesToPackageBox.Enabled = false;
 			this.filesToPackageBox.Location = new System.Drawing.Point(8, 72);
 			this.filesToPackageBox.Multiline = true;
@@ -5429,276 +5434,276 @@
 			this.panelNewPackage.PerformLayout();
 			this.ResumeLayout(false);
 
-        }
-        private System.Windows.Forms.Label labelAntiAliasing;
+		}
+		private System.Windows.Forms.Label labelAntiAliasing;
 		private System.Windows.Forms.NumericUpDown updownAntiAliasing;
 		private System.Windows.Forms.ListView listviewRouteFiles;
 		private System.Windows.Forms.CheckBox checkboxTrainDefault;
-        private System.Windows.Forms.Label labelTransparencyPerformance;
-        private System.Windows.Forms.TrackBar trackbarTransparency;
-        private System.Windows.Forms.Panel panelOptionsLeft;
-        private System.Windows.Forms.Panel panelOptionsRight;
-        private System.Windows.Forms.ComboBox comboboxVSync;
-        private System.Windows.Forms.Label labelVSync;
-        private System.Windows.Forms.CheckBox checkboxWarningMessages;
-        private System.Windows.Forms.CheckBox checkboxErrorMessages;
-        private System.Windows.Forms.GroupBox groupboxVerbosity;
+		private System.Windows.Forms.Label labelTransparencyPerformance;
+		private System.Windows.Forms.TrackBar trackbarTransparency;
+		private System.Windows.Forms.Panel panelOptionsLeft;
+		private System.Windows.Forms.Panel panelOptionsRight;
+		private System.Windows.Forms.ComboBox comboboxVSync;
+		private System.Windows.Forms.Label labelVSync;
+		private System.Windows.Forms.CheckBox checkboxWarningMessages;
+		private System.Windows.Forms.CheckBox checkboxErrorMessages;
+		private System.Windows.Forms.GroupBox groupboxVerbosity;
 
-        #endregion
+		#endregion
 
-        private System.Windows.Forms.Label labelFillerOne;
-        private System.Windows.Forms.PictureBox pictureboxLogo;
-        private System.Windows.Forms.Label labelVerticalSeparator;
-        private System.Windows.Forms.Button buttonClose;
-        private System.Windows.Forms.Panel panelStart;
-        private System.Windows.Forms.Label labelFillerTwo;
-        private System.Windows.Forms.Panel panelOptions;
-        private System.Windows.Forms.Label labelStartTitle;
-        private System.Windows.Forms.Label labelStartTitleBackground;
-        private System.Windows.Forms.Label labelOptionsTitle;
-        private System.Windows.Forms.Label labelOptionsTitleBackground;
-        private System.Windows.Forms.Label labelFillerThree;
-        private System.Windows.Forms.GroupBox groupboxFullscreen;
-        private System.Windows.Forms.GroupBox groupboxWindow;
-        private System.Windows.Forms.GroupBox groupboxDisplayMode;
-        private System.Windows.Forms.RadioButton radiobuttonFullscreen;
-        private System.Windows.Forms.RadioButton radiobuttonWindow;
-        private System.Windows.Forms.Label labelOptionsTitleSeparator;
-        private System.Windows.Forms.Label labelStartTitleSeparator;
-        private System.Windows.Forms.Panel panelPanels;
-        private System.Windows.Forms.Label labelPanelsBottom;
-        private System.Windows.Forms.Label labelPanelsTop;
-        private System.Windows.Forms.NumericUpDown updownWindowWidth;
-        private System.Windows.Forms.Label labelWindowWidth;
-        private System.Windows.Forms.NumericUpDown updownWindowHeight;
-        private System.Windows.Forms.Label labelWindowHeight;
-        private System.Windows.Forms.PictureBox pictureboxLanguage;
-        private System.Windows.Forms.ComboBox comboboxLanguages;
-        private System.Windows.Forms.GroupBox groupboxDistance;
-        private System.Windows.Forms.NumericUpDown updownDistance;
-        private System.Windows.Forms.Label labelDistance;
-        private System.Windows.Forms.GroupBox groupboxInterpolation;
-        private System.Windows.Forms.ComboBox comboboxInterpolation;
-        private System.Windows.Forms.Label labelInterpolation;
-        private System.Windows.Forms.NumericUpDown updownAnisotropic;
-        private System.Windows.Forms.Label labelAnisotropic;
-        private System.Windows.Forms.Label labelDistanceUnit;
-        private System.Windows.Forms.ComboBox comboboxMotionBlur;
-        private System.Windows.Forms.Label labelMotionBlur;
-        private System.Windows.Forms.Panel panelReview;
-        private System.Windows.Forms.Label labelReviewTitleSeparator;
-        private System.Windows.Forms.Label labelReviewTitle;
-        private System.Windows.Forms.Label labelReviewTitleBackground;
-        private System.Windows.Forms.GroupBox groupboxRouteSelection;
-        private System.Windows.Forms.TabControl tabcontrolRouteSelection;
-        private System.Windows.Forms.TabPage tabpageRouteBrowse;
-        private System.Windows.Forms.TabPage tabpageRouteRecently;
-        private System.Windows.Forms.GroupBox groupboxRouteDetails;
-        private System.Windows.Forms.Label labelRoute;
-        private System.Windows.Forms.ComboBox textboxRouteFolder;
-        private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.Label labelStart;
-        private System.Windows.Forms.Label labelTrain;
-        private System.Windows.Forms.TabControl tabcontrolRouteDetails;
-        private System.Windows.Forms.TabPage tabpageRouteDescription;
-        private System.Windows.Forms.TextBox textboxRouteDescription;
-        private System.Windows.Forms.PictureBox pictureboxRouteImage;
-        private System.Windows.Forms.TabPage tabpageRouteMap;
-        private System.Windows.Forms.TabPage tabpageRouteGradient;
-        private System.Windows.Forms.TabPage tabpageRouteSettings;
-        private System.Windows.Forms.GroupBox groupboxTrainSelection;
-        private System.Windows.Forms.TabControl tabcontrolTrainSelection;
-        private System.Windows.Forms.TabPage tabpageTrainBrowse;
-        private System.Windows.Forms.ComboBox textboxTrainFolder;
-        private System.Windows.Forms.TabPage tabpageTrainRecently;
-        private System.Windows.Forms.GroupBox groupboxTrainDetails;
-        private System.Windows.Forms.TabControl tabcontrolTrainDetails;
-        private System.Windows.Forms.TabPage tabpageTrainDescription;
-        private System.Windows.Forms.TextBox textboxTrainDescription;
-        private System.Windows.Forms.PictureBox pictureboxTrainImage;
-        private System.Windows.Forms.TabPage tabpageTrainSettings;
-        private System.Windows.Forms.PictureBox pictureboxRouteMap;
-        private System.Windows.Forms.ComboBox comboboxRouteEncoding;
-        private System.Windows.Forms.Label labelRouteEncoding;
-        private System.Windows.Forms.TextBox textboxRouteEncodingPreview;
-        private System.Windows.Forms.Label labelRouteEncodingPreview;
-        private System.Windows.Forms.ListView listviewTrainFolders;
-        private System.Windows.Forms.ListView listviewTrainRecently;
-        private System.Windows.Forms.ListView listviewRouteRecently;
-        private System.Windows.Forms.TabPage tabpageTrainDefault;
-        private System.Windows.Forms.Label labelTrainEncodingPreview;
-        private System.Windows.Forms.TextBox textboxTrainEncodingPreview;
-        private System.Windows.Forms.ComboBox comboboxTrainEncoding;
-        private System.Windows.Forms.Label labelTrainEncoding;
-        private System.Windows.Forms.ComboBox comboboxFullscreenBits;
-        private System.Windows.Forms.Label labelFullscreenBits;
-        private System.Windows.Forms.NumericUpDown updownFullscreenHeight;
-        private System.Windows.Forms.Label labelFullscreenHeight;
-        private System.Windows.Forms.NumericUpDown updownFullscreenWidth;
-        private System.Windows.Forms.Label labelFullscreenWidth;
-        private System.Windows.Forms.Timer timerEvents;
-        private System.Windows.Forms.Panel panelControls;
-        private System.Windows.Forms.ListView listviewControls;
-        private System.Windows.Forms.ColumnHeader columnheaderControlsCommands;
-        private System.Windows.Forms.ColumnHeader columnheaderControlsDescription;
-        private System.Windows.Forms.ColumnHeader columnheaderControlsAssignment;
-        private System.Windows.Forms.Label labelControlsTitleSeparator;
-        private System.Windows.Forms.Label labelControlsTitle;
-        private System.Windows.Forms.Label labelControlsTitleBackground;
-        private System.Windows.Forms.GroupBox groupboxControl;
-        private System.Windows.Forms.RadioButton radiobuttonJoystick;
-        private System.Windows.Forms.RadioButton radiobuttonKeyboard;
-        private System.Windows.Forms.Panel panelKeyboard;
-        private System.Windows.Forms.ComboBox comboboxKeyboardKey;
-        private System.Windows.Forms.Label labelKeyboardKey;
-        private System.Windows.Forms.CheckBox checkboxKeyboardAlt;
-        private System.Windows.Forms.CheckBox checkboxKeyboardCtrl;
-        private System.Windows.Forms.CheckBox checkboxKeyboardShift;
-        private System.Windows.Forms.Label labelKeyboardModifier;
-        private System.Windows.Forms.Panel panelJoystick;
-        private System.Windows.Forms.ComboBox comboboxCommand;
-        private System.Windows.Forms.Label labelCommand;
-        private System.Windows.Forms.Label labelJoystickAssignmentValue;
-        private System.Windows.Forms.GroupBox groupboxJoysticks;
-        private System.Windows.Forms.PictureBox pictureboxJoysticks;
-        private System.Windows.Forms.TextBox textboxJoystickGrab;
-        private System.Windows.Forms.Panel panelInfo;
-        private System.Windows.Forms.LinkLabel linkHomepage;
-        private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.Label labelInfoBottom;
-        private System.Windows.Forms.Label labelInfoTop;
-        private System.Windows.Forms.Button buttonControlDown;
-        private System.Windows.Forms.Button buttonControlUp;
-        private System.Windows.Forms.Button buttonControlRemove;
-        private System.Windows.Forms.Button buttonControlAdd;
-        private System.Windows.Forms.ColumnHeader columnheaderType;
-        private System.Windows.Forms.Label labelJoystickAssignmentCaption;
-        private System.Windows.Forms.GroupBox groupboxControls;
-        private System.Windows.Forms.CheckBox checkboxJoysticksUsed;
-        private System.Windows.Forms.Label labelJoystickAxisThreshold;
-        private System.Windows.Forms.TrackBar trackbarJoystickAxisThreshold;
-        private System.Windows.Forms.GroupBox groupboxSimulation;
-        private System.Windows.Forms.CheckBox checkboxDerailments;
-        private System.Windows.Forms.CheckBox checkboxCollisions;
-        private System.Windows.Forms.CheckBox checkboxToppling;
-        private System.Windows.Forms.GroupBox groupboxSound;
-        private System.Windows.Forms.NumericUpDown updownSoundNumber;
-        private System.Windows.Forms.Label labelSoundNumber;
-        private System.Windows.Forms.PictureBox pictureboxRouteGradient;
-        private System.Windows.Forms.GroupBox groupboxRating;
-        private System.Windows.Forms.Label labelRatingDescription;
-        private System.Windows.Forms.Label labelRatingColor;
-        private System.Windows.Forms.Label labelScore;
-        private System.Windows.Forms.Label labelConditions;
-        private System.Windows.Forms.GroupBox groupboxReviewTrain;
-        private System.Windows.Forms.Label labelReviewTrainValue;
-        private System.Windows.Forms.Label labelReviewTrainCaption;
-        private System.Windows.Forms.GroupBox groupboxReviewRoute;
-        private System.Windows.Forms.Label labelReviewRouteValue;
-        private System.Windows.Forms.Label labelReviewRouteCaption;
-        private System.Windows.Forms.GroupBox groupboxScore;
-        private System.Windows.Forms.ListView listviewScore;
-        private System.Windows.Forms.ColumnHeader columnheaderScoreTime;
-        private System.Windows.Forms.ColumnHeader columnheaderScorePosition;
-        private System.Windows.Forms.ColumnHeader columnheaderScoreValue;
-        private System.Windows.Forms.ColumnHeader columnheaderScoreText;
-        private System.Windows.Forms.Button buttonScoreExport;
-        private System.Windows.Forms.Label labelBlackBox;
-        private System.Windows.Forms.Button buttonBlackBoxExport;
-        private System.Windows.Forms.GroupBox groupboxReviewDateTime;
-        private System.Windows.Forms.Label labelReviewTimeValue;
-        private System.Windows.Forms.Label labelReviewTimeCaption;
-        private System.Windows.Forms.Label labelReviewDateValue;
-        private System.Windows.Forms.Label labelReviewDateCaption;
-        private System.Windows.Forms.ComboBox comboboxBlackBoxFormat;
-        private System.Windows.Forms.Label labelBlackBoxFormat;
-        private System.Windows.Forms.Label labelRatingRatioValue;
-        private System.Windows.Forms.Label labelRatingRatioCaption;
-        private System.Windows.Forms.Label labelRatingMaximumValue;
-        private System.Windows.Forms.Label labelRatingMaximumCaption;
-        private System.Windows.Forms.Label labelRatingAchievedValue;
-        private System.Windows.Forms.Label labelRatingAchievedCaption;
-        private System.Windows.Forms.Label labelRatingModeValue;
-        private System.Windows.Forms.Label labelRatingModeCaption;
-        private System.Windows.Forms.ColumnHeader columnheaderScoreCumulative;
-        private System.Windows.Forms.ComboBox comboboxMode;
-        private System.Windows.Forms.Label labelMode;
-        private System.Windows.Forms.CheckBox checkboxScorePenalties;
-        private System.Windows.Forms.CheckBox checkboxBlackBox;
-        private System.Windows.Forms.Button buttonControlsExport;
-        private System.Windows.Forms.Button buttonControlsImport;
-        private System.Windows.Forms.Label labelTransparency;
-        private System.Windows.Forms.RadioButton radiobuttonStart;
-        private System.Windows.Forms.RadioButton radiobuttonOptions;
-        private System.Windows.Forms.RadioButton radiobuttonControls;
-        private System.Windows.Forms.RadioButton radiobuttonReview;
-        private System.Windows.Forms.Button buttonRouteEncodingLatin1;
-        private System.Windows.Forms.Button buttonRouteEncodingBig5;
-        private System.Windows.Forms.Button buttonRouteEncodingShiftJis;
-        private System.Windows.Forms.Button buttonTrainEncodingBig5;
-        private System.Windows.Forms.Button buttonTrainEncodingShiftJis;
-        private System.Windows.Forms.Button buttonTrainEncodingLatin1;
-        private System.Windows.Forms.Panel panelRouteEncoding;
-        private System.Windows.Forms.Panel panelTrainEncoding;
-        private System.Windows.Forms.Label labelTransparencyQuality;
-        private System.Windows.Forms.RadioButton radioButtonPackages;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Panel panelPackages;
-        private System.Windows.Forms.Label labelPackagesTitle;
-        private System.Windows.Forms.Label labelPackagesTitleBackground;
-        private System.Windows.Forms.CheckBox checkBoxEBAxis;
-        private System.Windows.Forms.Button buttonControlReset;
-        private System.Windows.Forms.LinkLabel aboutLabel;
+		private System.Windows.Forms.Label labelFillerOne;
+		private System.Windows.Forms.PictureBox pictureboxLogo;
+		private System.Windows.Forms.Label labelVerticalSeparator;
+		private System.Windows.Forms.Button buttonClose;
+		private System.Windows.Forms.Panel panelStart;
+		private System.Windows.Forms.Label labelFillerTwo;
+		private System.Windows.Forms.Panel panelOptions;
+		private System.Windows.Forms.Label labelStartTitle;
+		private System.Windows.Forms.Label labelStartTitleBackground;
+		private System.Windows.Forms.Label labelOptionsTitle;
+		private System.Windows.Forms.Label labelOptionsTitleBackground;
+		private System.Windows.Forms.Label labelFillerThree;
+		private System.Windows.Forms.GroupBox groupboxFullscreen;
+		private System.Windows.Forms.GroupBox groupboxWindow;
+		private System.Windows.Forms.GroupBox groupboxDisplayMode;
+		private System.Windows.Forms.RadioButton radiobuttonFullscreen;
+		private System.Windows.Forms.RadioButton radiobuttonWindow;
+		private System.Windows.Forms.Label labelOptionsTitleSeparator;
+		private System.Windows.Forms.Label labelStartTitleSeparator;
+		private System.Windows.Forms.Panel panelPanels;
+		private System.Windows.Forms.Label labelPanelsBottom;
+		private System.Windows.Forms.Label labelPanelsTop;
+		private System.Windows.Forms.NumericUpDown updownWindowWidth;
+		private System.Windows.Forms.Label labelWindowWidth;
+		private System.Windows.Forms.NumericUpDown updownWindowHeight;
+		private System.Windows.Forms.Label labelWindowHeight;
+		private System.Windows.Forms.PictureBox pictureboxLanguage;
+		private System.Windows.Forms.ComboBox comboboxLanguages;
+		private System.Windows.Forms.GroupBox groupboxDistance;
+		private System.Windows.Forms.NumericUpDown updownDistance;
+		private System.Windows.Forms.Label labelDistance;
+		private System.Windows.Forms.GroupBox groupboxInterpolation;
+		private System.Windows.Forms.ComboBox comboboxInterpolation;
+		private System.Windows.Forms.Label labelInterpolation;
+		private System.Windows.Forms.NumericUpDown updownAnisotropic;
+		private System.Windows.Forms.Label labelAnisotropic;
+		private System.Windows.Forms.Label labelDistanceUnit;
+		private System.Windows.Forms.ComboBox comboboxMotionBlur;
+		private System.Windows.Forms.Label labelMotionBlur;
+		private System.Windows.Forms.Panel panelReview;
+		private System.Windows.Forms.Label labelReviewTitleSeparator;
+		private System.Windows.Forms.Label labelReviewTitle;
+		private System.Windows.Forms.Label labelReviewTitleBackground;
+		private System.Windows.Forms.GroupBox groupboxRouteSelection;
+		private System.Windows.Forms.TabControl tabcontrolRouteSelection;
+		private System.Windows.Forms.TabPage tabpageRouteBrowse;
+		private System.Windows.Forms.TabPage tabpageRouteRecently;
+		private System.Windows.Forms.GroupBox groupboxRouteDetails;
+		private System.Windows.Forms.Label labelRoute;
+		private System.Windows.Forms.ComboBox textboxRouteFolder;
+		private System.Windows.Forms.Button buttonStart;
+		private System.Windows.Forms.Label labelStart;
+		private System.Windows.Forms.Label labelTrain;
+		private System.Windows.Forms.TabControl tabcontrolRouteDetails;
+		private System.Windows.Forms.TabPage tabpageRouteDescription;
+		private System.Windows.Forms.TextBox textboxRouteDescription;
+		private System.Windows.Forms.PictureBox pictureboxRouteImage;
+		private System.Windows.Forms.TabPage tabpageRouteMap;
+		private System.Windows.Forms.TabPage tabpageRouteGradient;
+		private System.Windows.Forms.TabPage tabpageRouteSettings;
+		private System.Windows.Forms.GroupBox groupboxTrainSelection;
+		private System.Windows.Forms.TabControl tabcontrolTrainSelection;
+		private System.Windows.Forms.TabPage tabpageTrainBrowse;
+		private System.Windows.Forms.ComboBox textboxTrainFolder;
+		private System.Windows.Forms.TabPage tabpageTrainRecently;
+		private System.Windows.Forms.GroupBox groupboxTrainDetails;
+		private System.Windows.Forms.TabControl tabcontrolTrainDetails;
+		private System.Windows.Forms.TabPage tabpageTrainDescription;
+		private System.Windows.Forms.TextBox textboxTrainDescription;
+		private System.Windows.Forms.PictureBox pictureboxTrainImage;
+		private System.Windows.Forms.TabPage tabpageTrainSettings;
+		private System.Windows.Forms.PictureBox pictureboxRouteMap;
+		private System.Windows.Forms.ComboBox comboboxRouteEncoding;
+		private System.Windows.Forms.Label labelRouteEncoding;
+		private System.Windows.Forms.TextBox textboxRouteEncodingPreview;
+		private System.Windows.Forms.Label labelRouteEncodingPreview;
+		private System.Windows.Forms.ListView listviewTrainFolders;
+		private System.Windows.Forms.ListView listviewTrainRecently;
+		private System.Windows.Forms.ListView listviewRouteRecently;
+		private System.Windows.Forms.TabPage tabpageTrainDefault;
+		private System.Windows.Forms.Label labelTrainEncodingPreview;
+		private System.Windows.Forms.TextBox textboxTrainEncodingPreview;
+		private System.Windows.Forms.ComboBox comboboxTrainEncoding;
+		private System.Windows.Forms.Label labelTrainEncoding;
+		private System.Windows.Forms.ComboBox comboboxFullscreenBits;
+		private System.Windows.Forms.Label labelFullscreenBits;
+		private System.Windows.Forms.NumericUpDown updownFullscreenHeight;
+		private System.Windows.Forms.Label labelFullscreenHeight;
+		private System.Windows.Forms.NumericUpDown updownFullscreenWidth;
+		private System.Windows.Forms.Label labelFullscreenWidth;
+		private System.Windows.Forms.Timer timerEvents;
+		private System.Windows.Forms.Panel panelControls;
+		private System.Windows.Forms.ListView listviewControls;
+		private System.Windows.Forms.ColumnHeader columnheaderControlsCommands;
+		private System.Windows.Forms.ColumnHeader columnheaderControlsDescription;
+		private System.Windows.Forms.ColumnHeader columnheaderControlsAssignment;
+		private System.Windows.Forms.Label labelControlsTitleSeparator;
+		private System.Windows.Forms.Label labelControlsTitle;
+		private System.Windows.Forms.Label labelControlsTitleBackground;
+		private System.Windows.Forms.GroupBox groupboxControl;
+		private System.Windows.Forms.RadioButton radiobuttonJoystick;
+		private System.Windows.Forms.RadioButton radiobuttonKeyboard;
+		private System.Windows.Forms.Panel panelKeyboard;
+		private System.Windows.Forms.ComboBox comboboxKeyboardKey;
+		private System.Windows.Forms.Label labelKeyboardKey;
+		private System.Windows.Forms.CheckBox checkboxKeyboardAlt;
+		private System.Windows.Forms.CheckBox checkboxKeyboardCtrl;
+		private System.Windows.Forms.CheckBox checkboxKeyboardShift;
+		private System.Windows.Forms.Label labelKeyboardModifier;
+		private System.Windows.Forms.Panel panelJoystick;
+		private System.Windows.Forms.ComboBox comboboxCommand;
+		private System.Windows.Forms.Label labelCommand;
+		private System.Windows.Forms.Label labelJoystickAssignmentValue;
+		private System.Windows.Forms.GroupBox groupboxJoysticks;
+		private System.Windows.Forms.PictureBox pictureboxJoysticks;
+		private System.Windows.Forms.TextBox textboxJoystickGrab;
+		private System.Windows.Forms.Panel panelInfo;
+		private System.Windows.Forms.LinkLabel linkHomepage;
+		private System.Windows.Forms.Label labelVersion;
+		private System.Windows.Forms.Label labelInfoBottom;
+		private System.Windows.Forms.Label labelInfoTop;
+		private System.Windows.Forms.Button buttonControlDown;
+		private System.Windows.Forms.Button buttonControlUp;
+		private System.Windows.Forms.Button buttonControlRemove;
+		private System.Windows.Forms.Button buttonControlAdd;
+		private System.Windows.Forms.ColumnHeader columnheaderType;
+		private System.Windows.Forms.Label labelJoystickAssignmentCaption;
+		private System.Windows.Forms.GroupBox groupboxControls;
+		private System.Windows.Forms.CheckBox checkboxJoysticksUsed;
+		private System.Windows.Forms.Label labelJoystickAxisThreshold;
+		private System.Windows.Forms.TrackBar trackbarJoystickAxisThreshold;
+		private System.Windows.Forms.GroupBox groupboxSimulation;
+		private System.Windows.Forms.CheckBox checkboxDerailments;
+		private System.Windows.Forms.CheckBox checkboxCollisions;
+		private System.Windows.Forms.CheckBox checkboxToppling;
+		private System.Windows.Forms.GroupBox groupboxSound;
+		private System.Windows.Forms.NumericUpDown updownSoundNumber;
+		private System.Windows.Forms.Label labelSoundNumber;
+		private System.Windows.Forms.PictureBox pictureboxRouteGradient;
+		private System.Windows.Forms.GroupBox groupboxRating;
+		private System.Windows.Forms.Label labelRatingDescription;
+		private System.Windows.Forms.Label labelRatingColor;
+		private System.Windows.Forms.Label labelScore;
+		private System.Windows.Forms.Label labelConditions;
+		private System.Windows.Forms.GroupBox groupboxReviewTrain;
+		private System.Windows.Forms.Label labelReviewTrainValue;
+		private System.Windows.Forms.Label labelReviewTrainCaption;
+		private System.Windows.Forms.GroupBox groupboxReviewRoute;
+		private System.Windows.Forms.Label labelReviewRouteValue;
+		private System.Windows.Forms.Label labelReviewRouteCaption;
+		private System.Windows.Forms.GroupBox groupboxScore;
+		private System.Windows.Forms.ListView listviewScore;
+		private System.Windows.Forms.ColumnHeader columnheaderScoreTime;
+		private System.Windows.Forms.ColumnHeader columnheaderScorePosition;
+		private System.Windows.Forms.ColumnHeader columnheaderScoreValue;
+		private System.Windows.Forms.ColumnHeader columnheaderScoreText;
+		private System.Windows.Forms.Button buttonScoreExport;
+		private System.Windows.Forms.Label labelBlackBox;
+		private System.Windows.Forms.Button buttonBlackBoxExport;
+		private System.Windows.Forms.GroupBox groupboxReviewDateTime;
+		private System.Windows.Forms.Label labelReviewTimeValue;
+		private System.Windows.Forms.Label labelReviewTimeCaption;
+		private System.Windows.Forms.Label labelReviewDateValue;
+		private System.Windows.Forms.Label labelReviewDateCaption;
+		private System.Windows.Forms.ComboBox comboboxBlackBoxFormat;
+		private System.Windows.Forms.Label labelBlackBoxFormat;
+		private System.Windows.Forms.Label labelRatingRatioValue;
+		private System.Windows.Forms.Label labelRatingRatioCaption;
+		private System.Windows.Forms.Label labelRatingMaximumValue;
+		private System.Windows.Forms.Label labelRatingMaximumCaption;
+		private System.Windows.Forms.Label labelRatingAchievedValue;
+		private System.Windows.Forms.Label labelRatingAchievedCaption;
+		private System.Windows.Forms.Label labelRatingModeValue;
+		private System.Windows.Forms.Label labelRatingModeCaption;
+		private System.Windows.Forms.ColumnHeader columnheaderScoreCumulative;
+		private System.Windows.Forms.ComboBox comboboxMode;
+		private System.Windows.Forms.Label labelMode;
+		private System.Windows.Forms.CheckBox checkboxScorePenalties;
+		private System.Windows.Forms.CheckBox checkboxBlackBox;
+		private System.Windows.Forms.Button buttonControlsExport;
+		private System.Windows.Forms.Button buttonControlsImport;
+		private System.Windows.Forms.Label labelTransparency;
+		private System.Windows.Forms.RadioButton radiobuttonStart;
+		private System.Windows.Forms.RadioButton radiobuttonOptions;
+		private System.Windows.Forms.RadioButton radiobuttonControls;
+		private System.Windows.Forms.RadioButton radiobuttonReview;
+		private System.Windows.Forms.Button buttonRouteEncodingLatin1;
+		private System.Windows.Forms.Button buttonRouteEncodingBig5;
+		private System.Windows.Forms.Button buttonRouteEncodingShiftJis;
+		private System.Windows.Forms.Button buttonTrainEncodingBig5;
+		private System.Windows.Forms.Button buttonTrainEncodingShiftJis;
+		private System.Windows.Forms.Button buttonTrainEncodingLatin1;
+		private System.Windows.Forms.Panel panelRouteEncoding;
+		private System.Windows.Forms.Panel panelTrainEncoding;
+		private System.Windows.Forms.Label labelTransparencyQuality;
+		private System.Windows.Forms.RadioButton radioButtonPackages;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Panel panelPackages;
+		private System.Windows.Forms.Label labelPackagesTitle;
+		private System.Windows.Forms.Label labelPackagesTitleBackground;
+		private System.Windows.Forms.CheckBox checkBoxEBAxis;
+		private System.Windows.Forms.Button buttonControlReset;
+		private System.Windows.Forms.LinkLabel aboutLabel;
 		private System.Windows.Forms.Panel panelPackageList;
-        private System.Windows.Forms.Button buttonUninstallPackage;
-        private System.Windows.Forms.Button buttonInstallPackage;
-        private System.Windows.Forms.DataGridView dataGridViewPackages;
-        private System.Windows.Forms.Label labelInstalledPackages;
-        private System.Windows.Forms.Panel panelPackageInstall;
-        private System.Windows.Forms.TextBox textBoxPackageDescription;
-        private System.Windows.Forms.LinkLabel linkLabelPackageWebsite;
-        private System.Windows.Forms.TextBox textBoxPackageVersion;
-        private System.Windows.Forms.TextBox textBoxPackageAuthor;
-        private System.Windows.Forms.TextBox textBoxPackageName;
-        private System.Windows.Forms.PictureBox pictureBoxPackageImage;
-        private System.Windows.Forms.Button buttonSelectPackage;
-        private System.Windows.Forms.Label labelPackageDescription;
-        private System.Windows.Forms.Label labelPackageWebsite;
-        private System.Windows.Forms.Label labelPackageVersion;
-        private System.Windows.Forms.Label labelPackageAuthor;
-        private System.Windows.Forms.Label labelPackageName;
-        private System.Windows.Forms.OpenFileDialog openPackageFileDialog;
-        private System.Windows.Forms.Label labelInstallText;
-        private System.Windows.Forms.Label labelInstallHeader;
-        private System.Windows.Forms.Panel panelDependancyError;
-        private System.Windows.Forms.Label labelMissingDependanciesText2;
-        private System.Windows.Forms.Label labelMissingDependanciesText1;
-        private System.Windows.Forms.Label labelDependancyErrorHeader;
-        private System.Windows.Forms.Label labelDependancyErrorHeaderBacking;
-        private System.Windows.Forms.Button buttonProceedAnyway;
+		private System.Windows.Forms.Button buttonUninstallPackage;
+		private System.Windows.Forms.Button buttonInstallPackage;
+		private System.Windows.Forms.DataGridView dataGridViewPackages;
+		private System.Windows.Forms.Label labelInstalledPackages;
+		private System.Windows.Forms.Panel panelPackageInstall;
+		private System.Windows.Forms.TextBox textBoxPackageDescription;
+		private System.Windows.Forms.LinkLabel linkLabelPackageWebsite;
+		private System.Windows.Forms.TextBox textBoxPackageVersion;
+		private System.Windows.Forms.TextBox textBoxPackageAuthor;
+		private System.Windows.Forms.TextBox textBoxPackageName;
+		private System.Windows.Forms.PictureBox pictureBoxPackageImage;
+		private System.Windows.Forms.Button buttonSelectPackage;
+		private System.Windows.Forms.Label labelPackageDescription;
+		private System.Windows.Forms.Label labelPackageWebsite;
+		private System.Windows.Forms.Label labelPackageVersion;
+		private System.Windows.Forms.Label labelPackageAuthor;
+		private System.Windows.Forms.Label labelPackageName;
+		private System.Windows.Forms.OpenFileDialog openPackageFileDialog;
+		private System.Windows.Forms.Label labelInstallText;
+		private System.Windows.Forms.Label labelInstallHeader;
+		private System.Windows.Forms.Panel panelDependancyError;
+		private System.Windows.Forms.Label labelMissingDependanciesText2;
+		private System.Windows.Forms.Label labelMissingDependanciesText1;
+		private System.Windows.Forms.Label labelDependancyErrorHeader;
+		private System.Windows.Forms.Label labelDependancyErrorHeaderBacking;
+		private System.Windows.Forms.Button buttonProceedAnyway;
 		private System.Windows.Forms.DataGridView dataGridViewDependancies;
-        private System.Windows.Forms.Panel panelSuccess;
-        private System.Windows.Forms.TextBox textBoxFilesInstalled;
-        private System.Windows.Forms.Label labelListFilesInstalled;
-        private System.Windows.Forms.Label labelInstallSuccess1;
-        private System.Windows.Forms.Label labelInstallSuccess2;
-        private System.Windows.Forms.Label labelInstallSuccessBacking;
-        private System.Windows.Forms.Button buttonInstallFinish;
-        private System.Windows.Forms.Panel panelVersionError;
-        private System.Windows.Forms.Label labelNewVersion;
-        private System.Windows.Forms.Label labelCurrentVersion;
-        private System.Windows.Forms.Label labelVersionError;
-        private System.Windows.Forms.Label labelVersionErrorHeader;
-        private System.Windows.Forms.Label labelVersionHeaderBackground;
-        private System.Windows.Forms.Button buttonProceedAnyway1;
-        private System.Windows.Forms.DataGridView dataGridViewBrokenDependancies;
-        private System.Windows.Forms.Label labelBrokenDependancies;
-        private System.Windows.Forms.Panel panelUninstallResult;
-        private System.Windows.Forms.TextBox textBoxUninstallResult;
-        private System.Windows.Forms.Label labelUninstallLog;
-        private System.Windows.Forms.Label labelUninstallSuccess;
-        private System.Windows.Forms.Label labelUninstallSuccessHeader;
-        private System.Windows.Forms.Label labelUninstallSuccessHeaderBacking;
+		private System.Windows.Forms.Panel panelSuccess;
+		private System.Windows.Forms.TextBox textBoxFilesInstalled;
+		private System.Windows.Forms.Label labelListFilesInstalled;
+		private System.Windows.Forms.Label labelInstallSuccess1;
+		private System.Windows.Forms.Label labelInstallSuccess2;
+		private System.Windows.Forms.Label labelInstallSuccessBacking;
+		private System.Windows.Forms.Button buttonInstallFinish;
+		private System.Windows.Forms.Panel panelVersionError;
+		private System.Windows.Forms.Label labelNewVersion;
+		private System.Windows.Forms.Label labelCurrentVersion;
+		private System.Windows.Forms.Label labelVersionError;
+		private System.Windows.Forms.Label labelVersionErrorHeader;
+		private System.Windows.Forms.Label labelVersionHeaderBackground;
+		private System.Windows.Forms.Button buttonProceedAnyway1;
+		private System.Windows.Forms.DataGridView dataGridViewBrokenDependancies;
+		private System.Windows.Forms.Label labelBrokenDependancies;
+		private System.Windows.Forms.Panel panelUninstallResult;
+		private System.Windows.Forms.TextBox textBoxUninstallResult;
+		private System.Windows.Forms.Label labelUninstallLog;
+		private System.Windows.Forms.Label labelUninstallSuccess;
+		private System.Windows.Forms.Label labelUninstallSuccessHeader;
+		private System.Windows.Forms.Label labelUninstallSuccessHeaderBacking;
 		private System.Windows.Forms.Button buttonUninstallFinish;
 		private System.Windows.Forms.Panel panelPackageDependsAdd;
 		private System.Windows.Forms.Button buttonReccomends;
@@ -5770,45 +5775,45 @@
 		private System.Windows.Forms.Label labelRouteInstallDirectory;
 		private System.Windows.Forms.TextBox textBoxRouteDirectory;
 		private System.Windows.Forms.LinkLabel linkLabelReportBug;
-        private System.Windows.Forms.Label labelPackagesTitleSeparator;
-        private System.Windows.Forms.SplitContainer splitContainerDependancies;
-        private System.Windows.Forms.Label labelSelectedDependencies;
-        private System.Windows.Forms.DataGridView dataGridViewPackages3;
-        private System.Windows.Forms.Label labelNewVersionNumber;
-        private System.Windows.Forms.Label labelCurrentVersionNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn21;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn22;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn23;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn24;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn website;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
-        private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn13;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn14;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn15;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn16;
-        private System.Windows.Forms.Button buttonRemove;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnDependancy;
-        private System.Windows.Forms.Button buttonBack;
-        private System.Windows.Forms.Button buttonBack2;
-        private System.Windows.Forms.Button buttonNext;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonCancel2;
-        private System.Windows.Forms.Button buttonAbort;
+		private System.Windows.Forms.Label labelPackagesTitleSeparator;
+		private System.Windows.Forms.SplitContainer splitContainerDependancies;
+		private System.Windows.Forms.Label labelSelectedDependencies;
+		private System.Windows.Forms.DataGridView dataGridViewPackages3;
+		private System.Windows.Forms.Label labelNewVersionNumber;
+		private System.Windows.Forms.Label labelCurrentVersionNumber;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn21;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn22;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn23;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn24;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+		private System.Windows.Forms.DataGridViewTextBoxColumn website;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+		private System.Windows.Forms.DataGridViewTextBoxColumn routeName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn routeVersion;
+		private System.Windows.Forms.DataGridViewTextBoxColumn routeAuthor;
+		private System.Windows.Forms.DataGridViewTextBoxColumn routeWebsite;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn13;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn14;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn15;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn16;
+		private System.Windows.Forms.Button buttonRemove;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+		private System.Windows.Forms.DataGridViewTextBoxColumn columnDependancy;
+		private System.Windows.Forms.Button buttonBack;
+		private System.Windows.Forms.Button buttonBack2;
+		private System.Windows.Forms.Button buttonNext;
+		private System.Windows.Forms.Button buttonCancel;
+		private System.Windows.Forms.Button buttonCancel2;
+		private System.Windows.Forms.Button buttonAbort;
 		private System.Windows.Forms.CheckBox checkBoxLoadingSway;
 		private System.Windows.Forms.GroupBox groupBoxAdvancedOptions;
 		private System.Windows.Forms.CheckBox checkBoxHacks;

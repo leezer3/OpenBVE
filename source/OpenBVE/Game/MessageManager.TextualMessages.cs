@@ -35,69 +35,72 @@ namespace OpenBve
 				switch (Depencency)
 				{
 					case MessageDependency.RouteLimit:
-					{
-						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
-						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
-						//Get the speed and limit in km/h
-						spd = Math.Round(spd * 3.6);
-						lim = Math.Round(lim * 3.6);
-						remove = spd <= lim;
-						string s = InternalText, t;
-						if (Game.SpeedConversionFactor != 0.0)
 						{
-							spd = Math.Round(spd * Game.SpeedConversionFactor);
-							lim = Math.Round(lim * Game.SpeedConversionFactor);
+							double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
+							double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
+							//Get the speed and limit in km/h
+							spd = Math.Round(spd * 3.6);
+							lim = Math.Round(lim * 3.6);
+							remove = spd <= lim;
+							string s = InternalText, t;
+							if (Game.SpeedConversionFactor != 0.0)
+							{
+								spd = Math.Round(spd * Game.SpeedConversionFactor);
+								lim = Math.Round(lim * Game.SpeedConversionFactor);
+							}
+							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[speed]", t);
+							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[limit]", t);
+							s = s.Replace("[unit]", Game.UnitOfSpeed);
+							MessageToDisplay = s;
 						}
-						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[speed]", t);
-						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[limit]", t);
-						s = s.Replace("[unit]", Game.UnitOfSpeed);
-						MessageToDisplay = s;
-					} break;
+						break;
 					case MessageDependency.SectionLimit:
-					{
-						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
-						double lim = TrainManager.PlayerTrain.CurrentSectionLimit;
-						spd = Math.Round(spd * 3.6);
-						lim = Math.Round(lim * 3.6);
-						remove = spd <= lim;
-						string s = InternalText, t;
-						if (Game.SpeedConversionFactor != 0.0)
 						{
-							spd = Math.Round(spd * Game.SpeedConversionFactor);
-							lim = Math.Round(lim * Game.SpeedConversionFactor);
+							double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
+							double lim = TrainManager.PlayerTrain.CurrentSectionLimit;
+							spd = Math.Round(spd * 3.6);
+							lim = Math.Round(lim * 3.6);
+							remove = spd <= lim;
+							string s = InternalText, t;
+							if (Game.SpeedConversionFactor != 0.0)
+							{
+								spd = Math.Round(spd * Game.SpeedConversionFactor);
+								lim = Math.Round(lim * Game.SpeedConversionFactor);
+							}
+							t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[speed]", t);
+							t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
+							s = s.Replace("[limit]", t);
+							s = s.Replace("[unit]", Game.UnitOfSpeed);
+							MessageToDisplay = s;
 						}
-						t = spd.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[speed]", t);
-						t = lim.ToString(System.Globalization.CultureInfo.InvariantCulture);
-						s = s.Replace("[limit]", t);
-						s = s.Replace("[unit]", Game.UnitOfSpeed);
-						MessageToDisplay = s;
-					} break;
+						break;
 					case MessageDependency.StationArrival:
 					case MessageDependency.StationDeparture:
-					{
-						int j = TrainManager.PlayerTrain.Station;
-						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
 						{
-							double d = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight + 1.0;
-							if (d < 0.0) d = 0.0;
-							string s = InternalText;
-							TimeSpan a = TimeSpan.FromSeconds(d);
-							System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-							string t = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
-							s = s.Replace("[time]", t);
-							s = s.Replace("[name]", Game.Stations[j].Name);
-							MessageToDisplay = s;
-							if (d > 0.0) remove = false;
+							int j = TrainManager.PlayerTrain.Station;
+							if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+							{
+								double d = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight + 1.0;
+								if (d < 0.0) d = 0.0;
+								string s = InternalText;
+								TimeSpan a = TimeSpan.FromSeconds(d);
+								System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+								string t = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
+								s = s.Replace("[time]", t);
+								s = s.Replace("[name]", Game.Stations[j].Name);
+								MessageToDisplay = s;
+								if (d > 0.0) remove = false;
+							}
+							else
+							{
+								//Queue the mesasge for removal if we have completed the station stop for this message
+								remove = true;
+							}
 						}
-						else
-						{
-							//Queue the mesasge for removal if we have completed the station stop for this message
-							remove = true;
-						}
-					} break;
+						break;
 					default:
 						MessageToDisplay = InternalText;
 						break;

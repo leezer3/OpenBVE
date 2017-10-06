@@ -5,44 +5,53 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenTK.Input;
 
-namespace OpenBve {
-	internal static partial class Interface {
+namespace OpenBve
+{
+	internal static partial class Interface
+	{
 
 		// messages
-		internal enum MessageType {
+		internal enum MessageType
+		{
 			Warning,
 			Error,
 			Critical
 		}
-		internal struct Message {
+		internal struct Message
+		{
 			internal MessageType Type;
 			internal bool FileNotFound;
 			internal string Text;
 		}
 		internal static Message[] Messages = new Message[] { };
 		internal static int MessageCount = 0;
-		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
+		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text)
+		{
 			if (Type == MessageType.Warning & !CurrentOptions.ShowWarningMessages) return;
 			if (Type == MessageType.Error & !CurrentOptions.ShowErrorMessages) return;
-			if (MessageCount == 0) {
+			if (MessageCount == 0)
+			{
 				Messages = new Message[16];
-			} else if (MessageCount >= Messages.Length) {
+			}
+			else if (MessageCount >= Messages.Length)
+			{
 				Array.Resize<Message>(ref Messages, Messages.Length << 1);
 			}
 			Messages[MessageCount].Type = Type;
 			Messages[MessageCount].FileNotFound = FileNotFound;
 			Messages[MessageCount].Text = Text;
 			MessageCount++;
-			
+
 			Program.AppendToLogFile(Text);
-			
+
 		}
-		internal static void ClearMessages() {
+		internal static void ClearMessages()
+		{
 			Messages = new Message[] { };
 			MessageCount = 0;
 		}
 
-		
+
 		internal static CommandInfo[] CommandInfos = {
 			new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE"),
 			new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE"),
@@ -166,9 +175,12 @@ namespace OpenBve {
 		internal static Control[] CurrentControls = { };
 
 		// try get command info
-		internal static bool TryGetCommandInfo(Command Value, out CommandInfo Info) {
-			for (int i = 0; i < CommandInfos.Length; i++) {
-				if (CommandInfos[i].Command == Value) {
+		internal static bool TryGetCommandInfo(Command Value, out CommandInfo Info)
+		{
+			for (int i = 0; i < CommandInfos.Length; i++)
+			{
+				if (CommandInfos[i].Command == Value)
+				{
 					Info = CommandInfos[i];
 					return true;
 				}
@@ -183,7 +195,8 @@ namespace OpenBve {
 		/// <summary>Saves a control configuration to disk</summary>
 		/// <param name="FileOrNull">An absolute file path if we are exporting the controls, or a null reference to save to the default configuration location</param>
 		/// <param name="controlsToSave">The list of controls to save</param>
-		internal static void SaveControls(string FileOrNull, Control[] controlsToSave) {
+		internal static void SaveControls(string FileOrNull, Control[] controlsToSave)
+		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			Builder.AppendLine("; Current control configuration");
@@ -191,17 +204,20 @@ namespace OpenBve {
 			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
-			for (int i = 0; i < controlsToSave.Length; i++) {
+			for (int i = 0; i < controlsToSave.Length; i++)
+			{
 				CommandInfo Info;
 				TryGetCommandInfo(controlsToSave[i].Command, out Info);
 				Builder.Append(Info.Name + ", ");
-				switch (controlsToSave[i].Method) {
+				switch (controlsToSave[i].Method)
+				{
 					case ControlMethod.Keyboard:
 						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture));
 						break;
 					case ControlMethod.Joystick:
 						Builder.Append("joystick, " + controlsToSave[i].Device.ToString(Culture) + ", ");
-						switch (controlsToSave[i].Component) {
+						switch (controlsToSave[i].Component)
+						{
 							case JoystickComponent.Axis:
 								Builder.Append("axis, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
 								break;
@@ -223,9 +239,12 @@ namespace OpenBve {
 				Builder.Append("\n");
 			}
 			string File;
-			if (FileOrNull == null) {
+			if (FileOrNull == null)
+			{
 				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
-			} else {
+			}
+			else
+			{
 				File = FileOrNull;
 			}
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
@@ -240,13 +259,15 @@ namespace OpenBve {
 		internal static void LoadControls(string FileOrNull, out Control[] Controls)
 		{
 			string File;
-			if (FileOrNull == null) {
+			if (FileOrNull == null)
+			{
 				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 				if (!System.IO.File.Exists(File))
 				{
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
 				}
-				if (!System.IO.File.Exists(File)) {
+				if (!System.IO.File.Exists(File))
+				{
 					//Load the default key assignments if the user settings don't exist
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 					if (!System.IO.File.Exists(File))
@@ -257,30 +278,40 @@ namespace OpenBve {
 						return;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				File = FileOrNull;
 			}
 			Controls = new Control[256];
 			int Length = 0;
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			if (System.IO.File.Exists(File)) {
+			if (System.IO.File.Exists(File))
+			{
 				string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
-				for (int i = 0; i < Lines.Length; i++) {
+				for (int i = 0; i < Lines.Length; i++)
+				{
 					Lines[i] = Lines[i].Trim();
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
+					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+					{
 						string[] Terms = Lines[i].Split(',');
-						for (int j = 0; j < Terms.Length; j++) {
+						for (int j = 0; j < Terms.Length; j++)
+						{
 							Terms[j] = Terms[j].Trim();
 						}
-						if (Terms.Length >= 2) {
-							if (Length >= Controls.Length) {
+						if (Terms.Length >= 2)
+						{
+							if (Length >= Controls.Length)
+							{
 								Array.Resize<Control>(ref Controls, Controls.Length << 1);
 							}
 							int j;
-							for (j = 0; j < CommandInfos.Length; j++) {
+							for (j = 0; j < CommandInfos.Length; j++)
+							{
 								if (string.Compare(CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
 							}
-							if (j == CommandInfos.Length) {
+							if (j == CommandInfos.Length)
+							{
 								Controls[Length].Command = Command.None;
 								Controls[Length].InheritedType = CommandType.Digital;
 								Controls[Length].Method = ControlMethod.Invalid;
@@ -289,7 +320,9 @@ namespace OpenBve {
 								Controls[Length].Element = -1;
 								Controls[Length].Direction = 0;
 								Controls[Length].Modifier = KeyboardModifier.None;
-							} else {
+							}
+							else
+							{
 								Controls[Length].Command = CommandInfos[j].Command;
 								Controls[Length].InheritedType = CommandInfos[j].Type;
 								string Method = Terms[1].ToLowerInvariant();
@@ -306,7 +339,7 @@ namespace OpenBve {
 											MessageBox.Show(Interface.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_reset"), Application.ProductName,
 												MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										}
-										var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"),"Default keyboard assignment.controls");
+										var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 										if (System.IO.File.Exists(DefaultControls))
 										{
 											if (ControlsReset == false)
@@ -320,13 +353,13 @@ namespace OpenBve {
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 												Controls = new Control[0];
 											}
-											
+
 										}
 										else
 										{
 											MessageBox.Show(Interface.GetInterfaceString("errors_warning") + Environment.NewLine + Interface.GetInterfaceString("errors_controls_default_missing"),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-												Controls = new Control[0];
+											Controls = new Control[0];
 										}
 										return;
 									}
@@ -340,16 +373,18 @@ namespace OpenBve {
 											Controls[Length].Component = JoystickComponent.Invalid;
 											Controls[Length].Key = CurrentKey;
 											Controls[Length].Direction = 0;
-											Controls[Length].Modifier = (KeyboardModifier) Modifiers;
+											Controls[Length].Modifier = (KeyboardModifier)Modifiers;
 											Valid = true;
 										}
 									}
 								}
-								
 
-								 else if (Method == "joystick" & Terms.Length >= 4) {
+
+								else if (Method == "joystick" & Terms.Length >= 4)
+								{
 									int Device;
-									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
+									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+									{
 										string Component = Terms[3].ToLowerInvariant();
 										if (Component == "axis" & Terms.Length == 6)
 										{
@@ -405,12 +440,13 @@ namespace OpenBve {
 										}
 
 									}
-										  
-									
-										  
+
+
+
 								}
 
-								if (!Valid) {
+								if (!Valid)
+								{
 									Controls[Length].Method = ControlMethod.Invalid;
 									Controls[Length].Device = -1;
 									Controls[Length].Component = JoystickComponent.Invalid;
@@ -428,13 +464,17 @@ namespace OpenBve {
 		}
 
 		// add controls
-		internal static void AddControls(ref Control[] Base, Control[] Add) {
-			for (int i = 0; i < Add.Length; i++) {
+		internal static void AddControls(ref Control[] Base, Control[] Add)
+		{
+			for (int i = 0; i < Add.Length; i++)
+			{
 				int j;
-				for (j = 0; j < Base.Length; j++) {
+				for (j = 0; j < Base.Length; j++)
+				{
 					if (Add[i].Command == Base[j].Command) break;
 				}
-				if (j == Base.Length) {
+				if (j == Base.Length)
+				{
 					Array.Resize<Control>(ref Base, Base.Length + 1);
 					Base[Base.Length - 1] = Add[i];
 				}
@@ -444,27 +484,32 @@ namespace OpenBve {
 		// ================================
 
 		// hud elements
-		internal struct HudVector {
+		internal struct HudVector
+		{
 			internal int X;
 			internal int Y;
 		}
-		internal struct HudVectorF {
+		internal struct HudVectorF
+		{
 			internal float X;
 			internal float Y;
 		}
-		internal struct HudImage {
+		internal struct HudImage
+		{
 			internal Textures.Texture BackgroundTexture;
 			internal Textures.Texture OverlayTexture;
 		}
 
 		[Flags]
-		internal enum HudTransition {
+		internal enum HudTransition
+		{
 			None = 0,
 			Move = 1,
 			Fade = 2,
 			MoveAndFade = 3
 		}
-		internal class HudElement {
+		internal class HudElement
+		{
 			internal string Subject;
 			internal HudVectorF Position;
 			internal HudVector Alignment;
@@ -490,7 +535,8 @@ namespace OpenBve {
 			internal HudTransition Transition;
 			internal HudVectorF TransitionVector;
 			internal double TransitionState;
-			internal HudElement() {
+			internal HudElement()
+			{
 				this.Subject = null;
 				this.Position.X = 0.0f;
 				this.Position.Y = 0.0f;
@@ -515,350 +561,545 @@ namespace OpenBve {
 		internal static HudElement[] CurrentHudElements = new HudElement[] { };
 
 		// load hud
-		internal static void LoadHUD() {
+		internal static void LoadHUD()
+		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			string Folder = Program.FileSystem.GetDataFolder("In-game", CurrentOptions.UserInterfaceFolder);
 			string File = OpenBveApi.Path.CombineFile(Folder, "interface.cfg");
 			CurrentHudElements = new HudElement[16];
 			int Length = 0;
-			if (System.IO.File.Exists(File)) {
+			if (System.IO.File.Exists(File))
+			{
 				string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
-				for (int i = 0; i < Lines.Length; i++) {
+				for (int i = 0; i < Lines.Length; i++)
+				{
 					int j = Lines[i].IndexOf(';');
-					if (j >= 0) {
+					if (j >= 0)
+					{
 						Lines[i] = Lines[i].Substring(0, j).Trim();
-					} else {
+					}
+					else
+					{
 						Lines[i] = Lines[i].Trim();
 					}
-					if (Lines[i].Length != 0) {
-						if (!Lines[i].StartsWith(";", StringComparison.Ordinal)) {
-							if (Lines[i].Equals("[element]", StringComparison.OrdinalIgnoreCase)) {
+					if (Lines[i].Length != 0)
+					{
+						if (!Lines[i].StartsWith(";", StringComparison.Ordinal))
+						{
+							if (Lines[i].Equals("[element]", StringComparison.OrdinalIgnoreCase))
+							{
 								Length++;
-								if (Length > CurrentHudElements.Length) {
+								if (Length > CurrentHudElements.Length)
+								{
 									Array.Resize<HudElement>(ref CurrentHudElements, CurrentHudElements.Length << 1);
 								}
 								CurrentHudElements[Length - 1] = new HudElement();
-							} else if (Length == 0) {
+							}
+							else if (Length == 0)
+							{
 								System.Windows.Forms.MessageBox.Show("Line outside of [element] structure encountered at line " + (i + 1).ToString(Culture) + " in " + File);
-							} else {
+							}
+							else
+							{
 								j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-								if (j >= 0) {
+								if (j >= 0)
+								{
 									string Command = Lines[i].Substring(0, j).TrimEnd();
 									string[] Arguments = Lines[i].Substring(j + 1).TrimStart().Split(new char[] { ',' }, StringSplitOptions.None);
-									for (j = 0; j < Arguments.Length; j++) {
+									for (j = 0; j < Arguments.Length; j++)
+									{
 										Arguments[j] = Arguments[j].Trim();
 									}
-									switch (Command.ToLowerInvariant()) {
+									switch (Command.ToLowerInvariant())
+									{
 										case "subject":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												CurrentHudElements[Length - 1].Subject = Arguments[0];
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "position":
-											if (Arguments.Length == 2) {
+											if (Arguments.Length == 2)
+											{
 												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x)) {
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
+												{
 													System.Windows.Forms.MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y)) {
+												}
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
+												{
 													System.Windows.Forms.MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].Position.X = x;
 													CurrentHudElements[Length - 1].Position.Y = y;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "alignment":
-											if (Arguments.Length == 2) {
+											if (Arguments.Length == 2)
+											{
 												int x, y;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x))
+												{
 													System.Windows.Forms.MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y)) {
+												}
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y))
+												{
 													System.Windows.Forms.MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].Alignment.X = Math.Sign(x);
 													CurrentHudElements[Length - 1].Alignment.Y = Math.Sign(y);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "topleft":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].TopLeft.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopLeft.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "topmiddle":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].TopMiddle.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopMiddle.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "topright":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].TopRight.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].TopRight.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "centerleft":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterLeft.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterLeft.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "centermiddle":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterMiddle.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterMiddle.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "centerright":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].CenterRight.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].CenterRight.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "bottomleft":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].BottomLeft.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomLeft.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "bottommiddle":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].BottomMiddle.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomMiddle.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "bottomright":
-											if (Arguments.Length == 2) {
-												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+											if (Arguments.Length == 2)
+											{
+												if (Arguments[0].Length != 0 & !Arguments[0].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[0]), out CurrentHudElements[Length - 1].BottomRight.BackgroundTexture);
 												}
-												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase)) {
+												if (Arguments[1].Length != 0 & !Arguments[1].Equals("null", StringComparison.OrdinalIgnoreCase))
+												{
 													Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, Arguments[1]), out CurrentHudElements[Length - 1].BottomRight.OverlayTexture);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "backcolor":
-											if (Arguments.Length == 4) {
+											if (Arguments.Length == 4)
+											{
 												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
+												{
 													System.Windows.Forms.MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g)) {
+												}
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
+												{
 													System.Windows.Forms.MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b)) {
+												}
+												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
+												{
 													System.Windows.Forms.MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a)) {
+												}
+												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
+												{
 													System.Windows.Forms.MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													r = r < 0 ? 0 : r > 255 ? 255 : r;
 													g = g < 0 ? 0 : g > 255 ? 255 : g;
 													b = b < 0 ? 0 : b > 255 ? 255 : b;
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].BackgroundColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-												} break;
+												}
+												break;
 											}
 											System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "overlaycolor":
-											if (Arguments.Length == 4) {
+											if (Arguments.Length == 4)
+											{
 												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
+												{
 													System.Windows.Forms.MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g)) {
+												}
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
+												{
 													System.Windows.Forms.MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b)) {
+												}
+												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
+												{
 													System.Windows.Forms.MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a)) {
+												}
+												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
+												{
 													System.Windows.Forms.MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													r = r < 0 ? 0 : r > 255 ? 255 : r;
 													g = g < 0 ? 0 : g > 255 ? 255 : g;
 													b = b < 0 ? 0 : b > 255 ? 255 : b;
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].OverlayColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-												} break;
+												}
+												break;
 											}
 											System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "textcolor":
-											if (Arguments.Length == 4) {
+											if (Arguments.Length == 4)
+											{
 												int r, g, b, a;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out r))
+												{
 													System.Windows.Forms.MessageBox.Show("R is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g)) {
+												}
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out g))
+												{
 													System.Windows.Forms.MessageBox.Show("G is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b)) {
+												}
+												else if (!int.TryParse(Arguments[2], NumberStyles.Integer, Culture, out b))
+												{
 													System.Windows.Forms.MessageBox.Show("B is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a)) {
+												}
+												else if (!int.TryParse(Arguments[3], NumberStyles.Integer, Culture, out a))
+												{
 													System.Windows.Forms.MessageBox.Show("A is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													r = r < 0 ? 0 : r > 255 ? 255 : r;
 													g = g < 0 ? 0 : g > 255 ? 255 : g;
 													b = b < 0 ? 0 : b > 255 ? 255 : b;
 													a = a < 0 ? 0 : a > 255 ? 255 : a;
 													CurrentHudElements[Length - 1].TextColor = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-												} break;
+												}
+												break;
 											}
 											System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 										case "textposition":
-											if (Arguments.Length == 2) {
+											if (Arguments.Length == 2)
+											{
 												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x)) {
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
+												{
 													System.Windows.Forms.MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y)) {
+												}
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
+												{
 													System.Windows.Forms.MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].TextPosition.X = x;
 													CurrentHudElements[Length - 1].TextPosition.Y = y;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "textalignment":
-											if (Arguments.Length == 2) {
+											if (Arguments.Length == 2)
+											{
 												int x, y;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out x))
+												{
 													System.Windows.Forms.MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y)) {
+												}
+												else if (!int.TryParse(Arguments[1], NumberStyles.Integer, Culture, out y))
+												{
 													System.Windows.Forms.MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].TextAlignment.X = Math.Sign(x);
 													CurrentHudElements[Length - 1].TextAlignment.Y = Math.Sign(y);
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "textsize":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												{
 													System.Windows.Forms.MessageBox.Show("SIZE is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
-													switch (s) {
-															case 0: CurrentHudElements[Length - 1].Font = Fonts.VerySmallFont; break;
-															case 1: CurrentHudElements[Length - 1].Font = Fonts.SmallFont; break;
-															case 2: CurrentHudElements[Length - 1].Font = Fonts.NormalFont; break;
-															case 3: CurrentHudElements[Length - 1].Font = Fonts.LargeFont; break;
-															case 4: CurrentHudElements[Length - 1].Font = Fonts.VeryLargeFont; break;
-															default: CurrentHudElements[Length - 1].Font = Fonts.NormalFont; break;
+												}
+												else
+												{
+													switch (s)
+													{
+														case 0: CurrentHudElements[Length - 1].Font = Fonts.VerySmallFont; break;
+														case 1: CurrentHudElements[Length - 1].Font = Fonts.SmallFont; break;
+														case 2: CurrentHudElements[Length - 1].Font = Fonts.NormalFont; break;
+														case 3: CurrentHudElements[Length - 1].Font = Fonts.LargeFont; break;
+														case 4: CurrentHudElements[Length - 1].Font = Fonts.VeryLargeFont; break;
+														default: CurrentHudElements[Length - 1].Font = Fonts.NormalFont; break;
 													}
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "textshadow":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												int s;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out s))
+												{
 													System.Windows.Forms.MessageBox.Show("SHADOW is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].TextShadow = s != 0;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "text":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												CurrentHudElements[Length - 1].Text = Arguments[0];
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "value":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												{
 													System.Windows.Forms.MessageBox.Show("VALUE1 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].Value1 = n;
 												}
-											} else if (Arguments.Length == 2) {
+											}
+											else if (Arguments.Length == 2)
+											{
 												float a, b;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out a)) {
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out a))
+												{
 													System.Windows.Forms.MessageBox.Show("VALUE1 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out b)) {
+												}
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out b))
+												{
 													System.Windows.Forms.MessageBox.Show("VALUE2 is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].Value1 = a;
 													CurrentHudElements[Length - 1].Value2 = b;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "transition":
-											if (Arguments.Length == 1) {
+											if (Arguments.Length == 1)
+											{
 												int n;
-												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n)) {
+												if (!int.TryParse(Arguments[0], NumberStyles.Integer, Culture, out n))
+												{
 													System.Windows.Forms.MessageBox.Show("TRANSITION is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].Transition = (HudTransition)n;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										case "transitionvector":
-											if (Arguments.Length == 2) {
+											if (Arguments.Length == 2)
+											{
 												float x, y;
-												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x)) {
+												if (!float.TryParse(Arguments[0], NumberStyles.Float, Culture, out x))
+												{
 													System.Windows.Forms.MessageBox.Show("X is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y)) {
+												}
+												else if (!float.TryParse(Arguments[1], NumberStyles.Float, Culture, out y))
+												{
 													System.Windows.Forms.MessageBox.Show("Y is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-												} else {
+												}
+												else
+												{
 													CurrentHudElements[Length - 1].TransitionVector.X = x;
 													CurrentHudElements[Length - 1].TransitionVector.Y = y;
 												}
-											} else {
+											}
+											else
+											{
 												System.Windows.Forms.MessageBox.Show("Incorrect number of arguments supplied in " + Command + " at line " + (i + 1).ToString(Culture) + " in " + File);
-											} break;
+											}
+											break;
 										default:
 											System.Windows.Forms.MessageBox.Show("Invalid command encountered at line " + (i + 1).ToString(Culture) + " in " + File);
 											break;
 									}
-								} else {
+								}
+								else
+								{
 									System.Windows.Forms.MessageBox.Show("Invalid statement encountered at line " + (i + 1).ToString(Culture) + " in " + File);
 								}
 							}
@@ -876,39 +1117,52 @@ namespace OpenBve {
 		/// <param name="Expression">The time in string format</param>
 		/// <param name="Value">The number of seconds since midnight on the first day this represents, updated via 'out'</param>
 		/// <returns>True if the parse succeeds, false if it does not</returns>
-		internal static bool TryParseTime(string Expression, out double Value) {
+		internal static bool TryParseTime(string Expression, out double Value)
+		{
 			Expression = TrimInside(Expression);
-			if (Expression.Length != 0) {
+			if (Expression.Length != 0)
+			{
 				CultureInfo Culture = CultureInfo.InvariantCulture;
 				int i = Expression.IndexOf('.');
 				if (i == -1)
 				{
 					i = Expression.IndexOf(':');
 				}
-				if (i >= 1) {
-					int h; if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out h)) {
+				if (i >= 1)
+				{
+					int h; if (int.TryParse(Expression.Substring(0, i), NumberStyles.Integer, Culture, out h))
+					{
 						int n = Expression.Length - i - 1;
-						if (n == 1 | n == 2) {
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m)) {
+						if (n == 1 | n == 2)
+						{
+							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m))
+							{
 								Value = 3600.0 * (double)h + 60.0 * (double)m;
 								return true;
 							}
-						} else if (n >= 3) {
+						}
+						else if (n >= 3)
+						{
 							if (n > 4)
 							{
 								Interface.AddMessage(Interface.MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
-							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
-								uint s; if (uint.TryParse(Expression.Substring(i + 3, n - 2), NumberStyles.None, Culture, out s)) {
+							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m))
+							{
+								uint s; if (uint.TryParse(Expression.Substring(i + 3, n - 2), NumberStyles.None, Culture, out s))
+								{
 									Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;
 									return true;
 								}
 							}
 						}
 					}
-				} else if (i == -1) {
-					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h)) {
+				}
+				else if (i == -1)
+				{
+					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h))
+					{
 						Value = 3600.0 * (double)h;
 						return true;
 					}
@@ -917,27 +1171,33 @@ namespace OpenBve {
 			Value = 0.0;
 			return false;
 		}
-	
-		
+
+
 
 		// trim inside
-		private static string TrimInside(string Expression) {
+		private static string TrimInside(string Expression)
+		{
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);
 			foreach (char c in Expression.Where(c => !char.IsWhiteSpace(c)))
 			{
 				Builder.Append(c);
-			} return Builder.ToString();
+			}
+			return Builder.ToString();
 		}
 
 		/// <summary>Determines whether the specified string is encoded using Shift_JIS (Japanese)</summary>
 		/// <param name="Name">The string to check</param>
 		/// <returns>True if Shift_JIS encoded, false otherwise</returns>
-		internal static bool IsJapanese(string Name) {
-			for (int i = 0; i < Name.Length; i++) {
+		internal static bool IsJapanese(string Name)
+		{
+			for (int i = 0; i < Name.Length; i++)
+			{
 				int a = char.ConvertToUtf32(Name, i);
-				if (a < 0x10000) {
+				if (a < 0x10000)
+				{
 					bool q = false;
-					while (true) {
+					while (true)
+					{
 						if (a >= 0x2E80 & a <= 0x2EFF) break;
 						if (a >= 0x3000 & a <= 0x30FF) break;
 						if (a >= 0x31C0 & a <= 0x4DBF) break;
@@ -946,47 +1206,66 @@ namespace OpenBve {
 						if (a >= 0xFE30 & a <= 0xFE4F) break;
 						if (a >= 0xFF00 & a <= 0xFFEF) break;
 						q = true; break;
-					} if (q) return false;
-				} else {
+					}
+					if (q) return false;
+				}
+				else
+				{
 					return false;
 				}
-			} return true;
+			}
+			return true;
 		}
 
 		/// <summary>Unescapes control characters used in a language file</summary>
 		/// <param name="Text">The raw string on which unescaping should be performed</param>
 		/// <returns>The unescaped string</returns>
-		internal static string Unescape(string Text) {
+		internal static string Unescape(string Text)
+		{
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Text.Length);
 			int Start = 0;
-			for (int i = 0; i < Text.Length; i++) {
-				if (Text[i] == '\\') {
+			for (int i = 0; i < Text.Length; i++)
+			{
+				if (Text[i] == '\\')
+				{
 					Builder.Append(Text, Start, i - Start);
-					if (i + 1 < Text.Length) {
-						switch (Text[i + 1]) {
-								case 'a': Builder.Append('\a'); break;
-								case 'b': Builder.Append('\b'); break;
-								case 't': Builder.Append('\t'); break;
-								case 'n': Builder.Append('\n'); break;
-								case 'v': Builder.Append('\v'); break;
-								case 'f': Builder.Append('\f'); break;
-								case 'r': Builder.Append('\r'); break;
-								case 'e': Builder.Append('\x1B'); break;
+					if (i + 1 < Text.Length)
+					{
+						switch (Text[i + 1])
+						{
+							case 'a': Builder.Append('\a'); break;
+							case 'b': Builder.Append('\b'); break;
+							case 't': Builder.Append('\t'); break;
+							case 'n': Builder.Append('\n'); break;
+							case 'v': Builder.Append('\v'); break;
+							case 'f': Builder.Append('\f'); break;
+							case 'r': Builder.Append('\r'); break;
+							case 'e': Builder.Append('\x1B'); break;
 							case 'c':
-								if (i + 2 < Text.Length) {
+								if (i + 2 < Text.Length)
+								{
 									int CodePoint = char.ConvertToUtf32(Text, i + 2);
-									if (CodePoint >= 0x40 & CodePoint <= 0x5F) {
+									if (CodePoint >= 0x40 & CodePoint <= 0x5F)
+									{
 										Builder.Append(char.ConvertFromUtf32(CodePoint - 64));
-									} else if (CodePoint == 0x3F) {
+									}
+									else if (CodePoint == 0x3F)
+									{
 										Builder.Append('\x7F');
-									} else {
+									}
+									else
+									{
 										//Interface.AddMessage(MessageType.Error, false, "Unrecognized control character found in " + Text.Substring(i, 3));
 										return Text;
-									} i++;
-								} else {
+									}
+									i++;
+								}
+								else
+								{
 									//Interface.AddMessage(MessageType.Error, false, "Insufficient characters available in " + Text + " to decode control character escape sequence");
 									return Text;
-								} break;
+								}
+								break;
 							case '"':
 								Builder.Append('"');
 								break;
@@ -994,28 +1273,38 @@ namespace OpenBve {
 								Builder.Append('\\');
 								break;
 							case 'x':
-								if (i + 3 < Text.Length) {
+								if (i + 3 < Text.Length)
+								{
 									Builder.Append(char.ConvertFromUtf32(Convert.ToInt32(Text.Substring(i + 2, 2), 16)));
 									i += 2;
-								} else {
+								}
+								else
+								{
 									//Interface.AddMessage(MessageType.Error, false, "Insufficient characters available in " + Text + " to decode hexadecimal escape sequence.");
 									return Text;
-								} break;
+								}
+								break;
 							case 'u':
-								if (i + 5 < Text.Length) {
+								if (i + 5 < Text.Length)
+								{
 									Builder.Append(char.ConvertFromUtf32(Convert.ToInt32(Text.Substring(i + 2, 4), 16)));
 									i += 4;
-								} else {
+								}
+								else
+								{
 									//Interface.AddMessage(MessageType.Error, false, "Insufficient characters available in " + Text + " to decode hexadecimal escape sequence.");
 									return Text;
-								} break;
+								}
+								break;
 							default:
 								//Interface.AddMessage(MessageType.Error, false, "Unrecognized escape sequence found in " + Text + ".");
 								return Text;
 						}
 						i++;
 						Start = i + 1;
-					} else {
+					}
+					else
+					{
 						//Interface.AddMessage(MessageType.Error, false, "Insufficient characters available in " + Text + " to decode escape sequence.");
 						return Text;
 					}
@@ -1028,27 +1317,40 @@ namespace OpenBve {
 		/// <summary>Converts various line-endings to CR-LF format</summary>
 		/// <param name="Text">The string for which all line-endings should be converted to CR-LF</param>
 		/// <returns>The converted StringBuilder</returns>
-		internal static string ConvertNewlinesToCrLf(string Text) {
+		internal static string ConvertNewlinesToCrLf(string Text)
+		{
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-			for (int i = 0; i < Text.Length; i++) {
+			for (int i = 0; i < Text.Length; i++)
+			{
 				int a = char.ConvertToUtf32(Text, i);
-				if (a == 0xD & i < Text.Length - 1) {
+				if (a == 0xD & i < Text.Length - 1)
+				{
 					int b = char.ConvertToUtf32(Text, i + 1);
-					if (b == 0xA) {
+					if (b == 0xA)
+					{
 						Builder.Append("\r\n");
 						i++;
-					} else {
+					}
+					else
+					{
 						Builder.Append("\r\n");
 					}
-				} else if (a == 0xA | a == 0xC | a == 0xD | a == 0x85 | a == 0x2028 | a == 0x2029) {
+				}
+				else if (a == 0xA | a == 0xC | a == 0xD | a == 0x85 | a == 0x2028 | a == 0x2029)
+				{
 					Builder.Append("\r\n");
-				} else if (a < 0x10000) {
+				}
+				else if (a < 0x10000)
+				{
 					Builder.Append(Text[i]);
-				} else {
+				}
+				else
+				{
 					Builder.Append(Text.Substring(i, 2));
 					i++;
 				}
-			} return Builder.ToString();
+			}
+			return Builder.ToString();
 		}
 	}
 }

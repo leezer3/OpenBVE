@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	/// <summary>This class implements a high-precision, multi-platform timer</summary>
 	public static class CPreciseTimer
 	{
@@ -12,7 +13,7 @@ namespace OpenBve {
 		private static extern bool QueryPerformanceFrequency(ref long PerformanceFrequency);  //gets the clock frequency for ticks per second
 		[DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall), System.Security.SuppressUnmanagedCodeSecurity]
 		private static extern bool QueryPerformanceCounter(ref long PerformanceCount);  //gets the number of elapsed ticks for future calculations
-		//UNSAFE ZONE//
+																						//UNSAFE ZONE//
 
 		static readonly long _ticksPerSecond = 0;  //initialize variables
 		static long _previousElapsedTime = 0;
@@ -54,12 +55,12 @@ namespace OpenBve {
 					Ticks = Environment.TickCount;
 				}
 
-				DeltaTime = (Ticks - OldTicks)/ 1000.0;
+				DeltaTime = (Ticks - OldTicks) / 1000.0;
 				return DeltaTime;
 			}
 			long time = 0;
 			QueryPerformanceCounter(ref time); //gets the number of ticks elapsed, pulled from the cloop
-			double elapsedTime = (double) (time - _previousElapsedTime)/(double) _ticksPerSecond;
+			double elapsedTime = (double)(time - _previousElapsedTime) / (double)_ticksPerSecond;
 			//gets the total elapsed ticks by subtracting the current number of ticks from the last elapsed number of ticks.  it then divides it by ticks per second to get the actual amount of time that has passed.
 			_previousElapsedTime = time; //sets the previous elapsed ticks for the next calculation
 			return elapsedTime;

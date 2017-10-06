@@ -70,7 +70,7 @@ namespace OpenBve
 					return System.Text.Encoding.Default;
 			}
 		}
-		
+
 		/// <summary>Gets the character endcoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
 		/// <returns>The character encoding, or unknown</returns>

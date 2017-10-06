@@ -3,12 +3,15 @@
 using System;
 using System.Drawing;
 
-namespace OpenBve {
-	internal static partial class Textures {
-		
+namespace OpenBve
+{
+	internal static partial class Textures
+	{
+
 		/// <summary>Represents how the texture wraps on each axis.</summary>
 		[Flags]
-		internal enum OpenGlTextureWrapMode {
+		internal enum OpenGlTextureWrapMode
+		{
 			/// <summary>The texture is clamped to edge on both axes.</summary>
 			/// <remarks>The numerical value is 0.</remarks>
 			ClampClamp = 0,
@@ -21,19 +24,21 @@ namespace OpenBve {
 			/// <summary>The texture repeats on both axes.</summary>
 			/// <remarks>The numerical value is 3.</remarks>
 			RepeatRepeat = 3,
-			
+
 		}
-		
+
 		/// <summary>Represents an OpenGL texture.</summary>
-		internal class OpenGlTexture {
+		internal class OpenGlTexture
+		{
 			/// <summary>Whether the texture has been loaded and the OpenGL texture name is valid.</summary>
 			internal bool Valid;
 			/// <summary>The OpenGL texture name.</summary>
 			internal int Name;
 		}
-		
+
 		/// <summary>Represents a texture.</summary>
-		internal class Texture : OpenBveApi.Textures.TextureHandle {
+		internal class Texture : OpenBveApi.Textures.TextureHandle
+		{
 			// --- members ---
 			/// <summary>The origin where the texture can be loaded from.</summary>
 			internal TextureOrigin Origin;
@@ -53,13 +58,15 @@ namespace OpenBve {
 			/// <summary>Creates a new texture.</summary>
 			/// <param name="path">The path to the texture.</param>
 			/// <param name="parameters">The parameters that specify how to process the texture.</param>
-			internal Texture(string path, OpenBveApi.Textures.TextureParameters parameters) {
+			internal Texture(string path, OpenBveApi.Textures.TextureParameters parameters)
+			{
 				this.Origin = new PathOrigin(path, parameters);
 				this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
 			}
 			/// <summary>Creates a new texture.</summary>
 			/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
-			internal Texture(Bitmap bitmap) {
+			internal Texture(Bitmap bitmap)
+			{
 				this.Origin = new BitmapOrigin(bitmap);
 				this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
 			}
@@ -74,7 +81,8 @@ namespace OpenBve {
 			}
 			/// <summary>Creates a new texture.</summary>
 			/// <param name="texture">The texture raw data.</param>
-			internal Texture(OpenBveApi.Textures.Texture texture) {
+			internal Texture(OpenBveApi.Textures.Texture texture)
+			{
 				this.Origin = new RawOrigin(texture);
 				this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
 			}
@@ -83,7 +91,8 @@ namespace OpenBve {
 			/// <param name="a">The first texture.</param>
 			/// <param name="b">The second texture.</param>
 			/// <returns>Whether the two textures are equal.</returns>
-			public static bool operator ==(Texture a, Texture b) {
+			public static bool operator ==(Texture a, Texture b)
+			{
 				if (object.ReferenceEquals(a, b)) return true;
 				if (object.ReferenceEquals(a, null)) return false;
 				if (object.ReferenceEquals(b, null)) return false;
@@ -93,7 +102,8 @@ namespace OpenBve {
 			/// <param name="a">The first texture.</param>
 			/// <param name="b">The second texture.</param>
 			/// <returns>Whether the two textures are unequal.</returns>
-			public static bool operator !=(Texture a, Texture b) {
+			public static bool operator !=(Texture a, Texture b)
+			{
 				if (object.ReferenceEquals(a, b)) return false;
 				if (object.ReferenceEquals(a, null)) return true;
 				if (object.ReferenceEquals(b, null)) return true;
@@ -103,7 +113,8 @@ namespace OpenBve {
 			/// <summary>Checks whether this instance is equal to the specified object.</summary>
 			/// <param name="obj">The object.</param>
 			/// <returns>Whether this instance is equal to the specified object.</returns>
-			public override bool Equals(object obj) {
+			public override bool Equals(object obj)
+			{
 				if (object.ReferenceEquals(this, obj)) return true;
 				if (object.ReferenceEquals(this, null)) return false;
 				if (object.ReferenceEquals(obj, null)) return false;

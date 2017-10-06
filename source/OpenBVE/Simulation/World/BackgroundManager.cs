@@ -200,7 +200,7 @@ namespace OpenBve
 								break;
 						}
 					}
-				}				
+				}
 			}
 
 			internal override void RenderBackground(float Alpha, float Scale)

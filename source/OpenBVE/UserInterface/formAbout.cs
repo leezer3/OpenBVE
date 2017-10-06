@@ -24,14 +24,15 @@ namespace OpenBve
 				}
 			}
 			catch
-			{ }
+			{
+			}
 			try
 			{
 				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico");
 				this.Icon = new Icon(File);
 			}
 			catch { }
-			
+
 		}
 
 		private void buttonClose_Click(object sender, System.EventArgs e)

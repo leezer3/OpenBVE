@@ -41,7 +41,7 @@ namespace OpenBve
 						ObjectManager.AnimatedWorldObjects[i].FrontAxleFollower.UpdateWorldCoordinates(false);
 						ObjectManager.AnimatedWorldObjects[i].RearAxleFollower.UpdateWorldCoordinates(false);
 					}
-				 
+
 				}
 			}
 			train.StationState = TrainStopState.Jumping;

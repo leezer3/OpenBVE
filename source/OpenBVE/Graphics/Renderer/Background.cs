@@ -81,7 +81,7 @@ namespace OpenBve
 				BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
 				BackgroundManager.TargetBackground = null;
 			}
-			
+
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>
@@ -270,7 +270,7 @@ namespace OpenBve
 					if (Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture != null)
 					{
 						Textures.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
-						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int) wrap].Name);
+						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int)wrap].Name);
 					}
 				}
 				int FaceType = Object.ObjectBackground.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
@@ -292,7 +292,7 @@ namespace OpenBve
 						GL.Begin(PrimitiveType.Polygon);
 						break;
 				}
-				
+
 				for (int j = 0; j < Object.ObjectBackground.Mesh.Faces[i].Vertices.Length; j++)
 				{
 					GL.Color4(inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.R * 1.0f, inv255 * Object.ObjectBackground.Mesh.Materials[m].Color.G * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.B * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.A);
@@ -303,6 +303,6 @@ namespace OpenBve
 				GL.End();
 			}
 		}
-		
+
 	}
 }

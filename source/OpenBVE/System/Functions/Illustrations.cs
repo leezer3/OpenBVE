@@ -1,81 +1,119 @@
 ﻿using System;
 using System.Drawing;
 
-namespace OpenBve {
-	internal static class Illustrations {
+namespace OpenBve
+{
+	internal static class Illustrations
+	{
 
-		private const double	LeftPad			= 8.0;
-		private const double	TopPad			= 8.0;
-		private const double	RightPad		= 8.0;
-		private const double	BottomPad		= 8.0;
-		private const int		TrackOffDist	= 48;		// the distance in pixels between track offset labels
-		private const double	TrackOffY		= 6.0;		// distance from bottom of track offset labels
-		private const double	TrackOffsPad	= 16.0;		// how much space to leave for track offsets
-															// at the bottom of the gradient profile
-		private const float		StationRadius	= 4.0f;
-		private const float 	StationDiameter	= (StationRadius*2.0f);
-		private const double	StationTextPad	= 6.0;
+		private const double LeftPad = 8.0;
+		private const double TopPad = 8.0;
+		private const double RightPad = 8.0;
+		private const double BottomPad = 8.0;
+		private const int TrackOffDist = 48;        // the distance in pixels between track offset labels
+		private const double TrackOffY = 6.0;       // distance from bottom of track offset labels
+		private const double TrackOffsPad = 16.0;       // how much space to leave for track offsets
+														// at the bottom of the gradient profile
+		private const float StationRadius = 4.0f;
+		private const float StationDiameter = (StationRadius * 2.0f);
+		private const double StationTextPad = 6.0;
 
 		// a struct for the colours used in the two different graphic contexts, as a GTK+ window and in-game
 		private struct MapColors
-		{										// ROUTE MAP
-			public Color	background;			// global image background
-			public Pen		atcMap;				// atc-controlled track
-			public Pen		normalMap;			// normal track
-			public Brush	actStatnFill;		// dot fill for active station
-			public Brush	inactStatnFill;		// dot fill for inactive station
-			public Pen		actStatnBrdr;		// dot border for active station
-			public Pen		inactStatnBrdr;		// dot border for inactive station
-			public Brush	actNameFill;		// rect. fill for active station names
-			public Brush	inactNameFill;		// rect. fill for inactive station names
-			public Pen		actNameBrdr;		// rect. border for active station names
-			public Pen		inactNameBrdr;		// rect. border for inactive station names
-			public Brush	actNameText;		// active station name text
-			public Brush	inactNameText;		// inactive station name text
-												// ROUTE ELEVATION
-			public Brush	belowSeaFill;		// fill for below-sea level areas
-			public Pen		belowSeaBrdr;		// border for below sea level areas
-			public Brush	elevFill;			// fill for elevation contour
-			public Pen		elevBrdr;			// border for elevation contour
+		{                                       // ROUTE MAP
+			public Color background;            // global image background
+			public Pen atcMap;              // atc-controlled track
+			public Pen normalMap;           // normal track
+			public Brush actStatnFill;      // dot fill for active station
+			public Brush inactStatnFill;        // dot fill for inactive station
+			public Pen actStatnBrdr;        // dot border for active station
+			public Pen inactStatnBrdr;      // dot border for inactive station
+			public Brush actNameFill;       // rect. fill for active station names
+			public Brush inactNameFill;     // rect. fill for inactive station names
+			public Pen actNameBrdr;     // rect. border for active station names
+			public Pen inactNameBrdr;       // rect. border for inactive station names
+			public Brush actNameText;       // active station name text
+			public Brush inactNameText;     // inactive station name text
+											// ROUTE ELEVATION
+			public Brush belowSeaFill;      // fill for below-sea level areas
+			public Pen belowSeaBrdr;        // border for below sea level areas
+			public Brush elevFill;          // fill for elevation contour
+			public Pen elevBrdr;            // border for elevation contour
 		};
 
 		// the colours used for the images
-		private static readonly MapColors[]	mapColors = new MapColors[]
+		private static readonly MapColors[] mapColors = new MapColors[]
 		{					// colours for windowed mode display
-			new MapColors() {background=Color.White,		atcMap=Pens.DarkRed,	normalMap=Pens.Black,
-							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.LightGray,
-							actStatnBrdr=Pens.Black,		inactStatnBrdr=Pens.Gray,
-							actNameFill=Brushes.White,		inactNameFill=Brushes.LightGray,
-							actNameBrdr=Pens.Black,			inactNameBrdr=Pens.Gray,
-							actNameText=Brushes.Black,		inactNameText=Brushes.Gray,
-							belowSeaFill=Brushes.PaleGoldenrod,	belowSeaBrdr=Pens.Gray,
-							elevFill=Brushes.Tan,			elevBrdr=Pens.Black},
+			new MapColors() {background=Color.White,        atcMap=Pens.DarkRed,    normalMap=Pens.Black,
+							actStatnFill=Brushes.SkyBlue,   inactStatnFill=Brushes.LightGray,
+							actStatnBrdr=Pens.Black,        inactStatnBrdr=Pens.Gray,
+							actNameFill=Brushes.White,      inactNameFill=Brushes.LightGray,
+							actNameBrdr=Pens.Black,         inactNameBrdr=Pens.Gray,
+							actNameText=Brushes.Black,      inactNameText=Brushes.Gray,
+							belowSeaFill=Brushes.PaleGoldenrod, belowSeaBrdr=Pens.Gray,
+							elevFill=Brushes.Tan,           elevBrdr=Pens.Black},
 							// colours for in-game display
-			new MapColors() {background=Color.FromArgb(0x64000000),	atcMap=Pens.Red,	normalMap=Pens.White,
-							actStatnFill=Brushes.SkyBlue,	inactStatnFill=Brushes.Gray,
-							actStatnBrdr=Pens.White,		inactStatnBrdr=Pens.LightGray,
-							actNameFill=Brushes.Black,		inactNameFill=Brushes.Gray,
-							actNameBrdr=Pens.White,			inactNameBrdr=Pens.LightGray,
-							actNameText=Brushes.White,		inactNameText=Brushes.LightGray,
-							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),	belowSeaBrdr=Pens.Gray,
-							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),		elevBrdr=Pens.Gray}
+			new MapColors() {background=Color.FromArgb(0x64000000), atcMap=Pens.Red,    normalMap=Pens.White,
+							actStatnFill=Brushes.SkyBlue,   inactStatnFill=Brushes.Gray,
+							actStatnBrdr=Pens.White,        inactStatnBrdr=Pens.LightGray,
+							actNameFill=Brushes.Black,      inactNameFill=Brushes.Gray,
+							actNameBrdr=Pens.White,         inactNameBrdr=Pens.LightGray,
+							actNameText=Brushes.White,      inactNameText=Brushes.LightGray,
+							belowSeaFill= new SolidBrush(Color.FromArgb(0x7feee8aa)),   belowSeaBrdr=Pens.Gray,
+							elevFill= new SolidBrush(Color.FromArgb(0x7fd2b48c)),       elevBrdr=Pens.Gray}
 		};
 
 		// data about world ranges of last generated images
-		private static int	lastGradientMinTrack, lastGradientMaxTrack;
-		private static int	lastRouteMinX, lastRouteMinZ, lastRouteMaxX, lastRouteMaxZ;
+		private static int lastGradientMinTrack, lastGradientMaxTrack;
+		private static int lastRouteMinX, lastRouteMinZ, lastRouteMaxX, lastRouteMaxZ;
 		// access these properties as read-only
-		public  static int	LastGradientMinTrack	{ get { return lastGradientMinTrack; } }
-		public  static int	LastGradientMaxTrack	{ get { return lastGradientMaxTrack; } }
-		public  static int	LastRouteMinX			{ get { return lastRouteMinX; } }
-		public  static int	LastRouteMaxX			{ get { return lastRouteMaxX; } }
-		public  static int	LastRouteMinZ			{ get { return lastRouteMinZ; } }
-		public  static int	LastRouteMaxZ			{ get { return lastRouteMaxZ; } }
+		public static int LastGradientMinTrack
+		{
+			get
+			{
+				return lastGradientMinTrack;
+			}
+		}
+		public static int LastGradientMaxTrack
+		{
+			get
+			{
+				return lastGradientMaxTrack;
+			}
+		}
+		public static int LastRouteMinX
+		{
+			get
+			{
+				return lastRouteMinX;
+			}
+		}
+		public static int LastRouteMaxX
+		{
+			get
+			{
+				return lastRouteMaxX;
+			}
+		}
+		public static int LastRouteMinZ
+		{
+			get
+			{
+				return lastRouteMinZ;
+			}
+		}
+		public static int LastRouteMaxZ
+		{
+			get
+			{
+				return lastRouteMaxZ;
+			}
+		}
 
 		//GDI Plus is not thread-safe
 		//This object should be locked on when drawing a route illustration / gradient profile
 		/// <summary>Holds the current lock for the illustrations drawing functions</summary>
-		public static object Locker =  new Object();
+		public static object Locker = new Object();
 
 		//
 		// CREATE ROUTE MAP
@@ -105,29 +143,30 @@ namespace OpenBve {
 			if (x0 >= x1 - 1.0) x0 = x1 - 1.0;
 			if (z0 >= z1 - 1.0) z0 = z1 - 1.0;
 			// remember area occupied so far
-			double xMin, xMax, zMin, zMax;			// used to track the bitmap area actually occupied by drawings
+			double xMin, xMax, zMin, zMax;          // used to track the bitmap area actually occupied by drawings
 			xMin = x0;
 			xMax = x1;
-			zMin = z1;								// bitmap z goes down, while world z goes up
+			zMin = z1;                              // bitmap z goes down, while world z goes up
 			zMax = z0;
 			// fit route w/h ratio in image w/h ratio
 			double wrh = (double)Width / (double)Height;
-			if ((x1 - x0) / (z1 - z0) <= wrh)		// if route ratio is taller than bitmap ratio
+			if ((x1 - x0) / (z1 - z0) <= wrh)       // if route ratio is taller than bitmap ratio
 			{
-				double dx = 0.5 * (z1 - z0) * wrh;	//	scale (half of) x range as much as (half of) z range
-				double px = 0.5 * (x0 + x1);		//	x range mid point
-				x0 = px - dx;						//	centre scaled x range around mid point
+				double dx = 0.5 * (z1 - z0) * wrh;  //	scale (half of) x range as much as (half of) z range
+				double px = 0.5 * (x0 + x1);        //	x range mid point
+				x0 = px - dx;                       //	centre scaled x range around mid point
 				x1 = px + dx;
-			} else									// if route ratio is wider than bitmap ratio
-			{										//	do the opposite (scale z range on x)
+			}
+			else                                    // if route ratio is wider than bitmap ratio
+			{                                       //	do the opposite (scale z range on x)
 				double dz = 0.5 * (x1 - x0) / wrh;
 				double pz = 0.5 * (z0 + z1);
 				z0 = pz - dz;
 				z1 = pz + dz;
 			}
 			double ox = LeftPad, oy = TopPad;
-			double w = (double)(Width - (LeftPad+RightPad));
-			double h = (double)(Height- (TopPad+BottomPad));
+			double w = (double)(Width - (LeftPad + RightPad));
+			double h = (double)(Height - (TopPad + BottomPad));
 			// horizontal and vertical scales
 			double xd = w / (x1 - x0);
 			double zd = h / (z1 - z0);
@@ -137,7 +176,7 @@ namespace OpenBve {
 			zMin = oy + (z0 - zMin) * zd + h;
 			zMax = oy + (z0 - zMax) * zd + h;
 			// create bitmap
-			int		mode = inGame ? 1 : 0;
+			int mode = inGame ? 1 : 0;
 			Bitmap b = new Bitmap(Width, Height, inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 				: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 			Graphics g = Graphics.FromImage(b);
@@ -153,19 +192,19 @@ namespace OpenBve {
 				PointF[] p = new PointF[n];
 				for (int i = 0; i < n; i++)
 				{
-					double x = TrackManager.CurrentTrack.Elements[i+n0].WorldPosition.X;
-					double z = TrackManager.CurrentTrack.Elements[i+n0].WorldPosition.Z;
+					double x = TrackManager.CurrentTrack.Elements[i + n0].WorldPosition.X;
+					double z = TrackManager.CurrentTrack.Elements[i + n0].WorldPosition.Z;
 					x = ox + (x - x0) * xd;
 					z = oy + (z0 - z) * zd + h;
 					p[i] = new PointF((float)x, (float)z);
 					// ATS / ATC
 					// for each track element, look for a StationStartEvent
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i+n0].Events.Length; j++)
+					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i + n0].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i+n0].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.CurrentTrack.Elements[i + n0].Events[j] is TrackManager.StationStartEvent)
 						{
 							TrackManager.StationStartEvent e =
-								(TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i+n0].Events[j];
+								(TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i + n0].Events[j];
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
@@ -178,7 +217,8 @@ namespace OpenBve {
 										g.DrawCurve(mapColors[mode].normalMap, p, start, i - start - 1);
 									start = i;
 								}
-							} else
+							}
+							else
 							{
 								if (atc)
 								{
@@ -219,7 +259,7 @@ namespace OpenBve {
 							// adjust bitmap occupied area
 							if (r.Left < xMin)
 								xMin = r.Left;
-							if (r.Top  < zMin)
+							if (r.Top < zMin)
 								zMin = r.Top;
 							if (r.Right > xMax)
 								xMax = r.Right;
@@ -264,13 +304,15 @@ namespace OpenBve {
 										// up-right
 										xt = x + StationTextPad;
 										yt = y - StationTextPad - m.Height;
-									} else
+									}
+									else
 									{
 										// down-left
 										xt = x - StationTextPad - m.Width;
 										yt = y + StationTextPad;
 									}
-								} else
+								}
+								else
 								{
 									// ascending
 									bool o = (h - y) * (w - x) <= (x - ox) * (y - oy);
@@ -279,7 +321,8 @@ namespace OpenBve {
 										// up-left
 										xt = x - StationTextPad - m.Width;
 										yt = y - StationTextPad - m.Height;
-									} else
+									}
+									else
 									{
 										// down-right
 										xt = x + StationTextPad;
@@ -305,7 +348,7 @@ namespace OpenBve {
 								// adjust bitmap occupied area
 								if (r.Left < xMin)
 									xMin = r.Left;
-								if (r.Top  < zMin)
+								if (r.Top < zMin)
 									zMin = r.Top;
 								if (r.Right > xMax)
 									xMax = r.Right;
@@ -331,10 +374,10 @@ namespace OpenBve {
 					zMin = 0;
 				if (zMax >= Height)
 					zMax = Height - 1;
-				Bitmap nb = new Bitmap((int)(xMax - xMin + 1.0), (int)(zMax - zMin + 1.0));	// round up
+				Bitmap nb = new Bitmap((int)(xMax - xMin + 1.0), (int)(zMax - zMin + 1.0)); // round up
 				g = Graphics.FromImage(nb);
-				g.DrawImage(b, (int)-xMin, (int)-zMin);										// round down
-				// set total bitmap world X and Z ranges from bitmap ranges
+				g.DrawImage(b, (int)-xMin, (int)-zMin);                                     // round down
+																							// set total bitmap world X and Z ranges from bitmap ranges
 				lastRouteMinX = (int)((xMin - ox) / xd + x0);
 				lastRouteMaxX = (int)((xMax - ox) / xd + x0);
 				lastRouteMinZ = (int)(z0 - (zMax - oy - h) / zd);
@@ -345,7 +388,7 @@ namespace OpenBve {
 			lastRouteMinX = (int)(x0 - ox * (x1 - x0) / w);
 			lastRouteMaxX = (int)(x1 + (Width - w - ox) * (x1 - x0) / w);
 			lastRouteMinZ = (int)(z0 - oy * (z1 - z0) / h);
-			lastRouteMaxZ = (int)(z1 + (Height- h - oy) * (z1 - z0) / h);
+			lastRouteMaxZ = (int)(z1 + (Height - h - oy) * (z1 - z0) / h);
 			return b;
 		}
 
@@ -386,8 +429,8 @@ namespace OpenBve {
 
 			// allow for some padding around actual data
 			double ox = LeftPad, oy = TopPad;
-			double w = (double)(Width - (LeftPad+RightPad));
-			double h = (double)(Height - (TopPad+BottomPad+TrackOffsPad));
+			double w = (double)(Width - (LeftPad + RightPad));
+			double h = (double)(Height - (TopPad + BottomPad + TrackOffsPad));
 			// horizontal and vertical scale
 			double nd = w / (double)(n1 - n0);
 			double yd = h / (double)(y1 - y0);
@@ -428,7 +471,7 @@ namespace OpenBve {
 					double x = ox + (double)(i - n0) * nd;
 					double y = oy + (h - 0.5 *
 						(double)(TrackManager.CurrentTrack.Elements[i].WorldPosition.Y - y0) * yd);
-					p[i -n0 + 1] = new PointF((float)x, (float)y);
+					p[i - n0 + 1] = new PointF((float)x, (float)y);
 				}
 				p[n + 1] = new PointF((float)(ox + (double)(n - 1) * nd), (float)(oy + h));
 				g.FillPolygon(mapColors[mode].elevFill, p);
@@ -474,7 +517,8 @@ namespace OpenBve {
 									}
 									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, ty + 4.0f), new PointF((float)x, (float)y));
-								} else
+								}
+								else
 								{
 									m.Alignment = StringAlignment.Far;
 									m.LineAlignment = StringAlignment.Near;
@@ -545,7 +589,8 @@ namespace OpenBve {
 		}
 
 		// draw segmented curve
-		private static void DrawSegmentedCurve(Graphics Graphics, Pen Pen, PointF[] Points, int Start, int Length) {
+		private static void DrawSegmentedCurve(Graphics Graphics, Pen Pen, PointF[] Points, int Start, int Length)
+		{
 			const int Count = 1000;
 			int End = Start + Length - 1;
 			for (int k = Start; k <= End; k += Count)
@@ -566,9 +611,9 @@ namespace OpenBve {
 		private static void RouteRange(out int n, out int n0, out int n1)
 		{
 			// find first and last track element actually used by stations
-			n	= TrackManager.CurrentTrack.Elements.Length;
-			n0	= n - 1;
-			n1	= 0;
+			n = TrackManager.CurrentTrack.Elements.Length;
+			n0 = n - 1;
+			n1 = 0;
 			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++)
 			{
 				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
@@ -588,7 +633,7 @@ namespace OpenBve {
 			if (n0 < 0) n0 = 0;
 			if (n1 >= TrackManager.CurrentTrack.Elements.Length)
 				n1 = TrackManager.CurrentTrack.Elements.Length - 1;
-			if (n1 <= n0)		// neither a 0-length or 'negative' track!
+			if (n1 <= n0)       // neither a 0-length or 'negative' track!
 				n1 = n0 + 1;
 		}
 

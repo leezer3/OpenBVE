@@ -191,7 +191,7 @@ namespace OpenBve
 													{
 														Interface.AddMessage(Interface.MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
 														transtex = null;
-													}												
+													}
 													break;
 												//Sets the transparency type
 												case "TransparentTyp":
@@ -240,14 +240,14 @@ namespace OpenBve
 													}
 													break;
 
-												/*
-												 * MISSING PROPERTIES:
-												 * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
-												 * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
-												 * FileAuthor
-												 * FileInfo
-												 * FilePicture
-												 */
+													/*
+													 * MISSING PROPERTIES:
+													 * AutoRotate - Rotate with tracks?? LS3D presumably uses a 3D world system.
+													 * Beleuchtet- Translates as illuminated. Presume something to do with lighting? - What emissive color?
+													 * FileAuthor
+													 * FileInfo
+													 * FilePicture
+													 */
 											}
 										}
 									}
