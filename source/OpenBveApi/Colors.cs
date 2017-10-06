@@ -3,7 +3,8 @@
 using System;
 using System.Globalization;
 
-namespace OpenBveApi.Colors {
+namespace OpenBveApi.Colors
+{
 	
 	/* ----------------------------------------
 	 * TODO: This part of the API is unstable.
@@ -13,7 +14,8 @@ namespace OpenBveApi.Colors {
 	// --- color 24 ---
 	
 	/// <summary>Represents a 24-bit color with red, green and blue channels at 8 bits each.</summary>
-	public struct Color24 {
+	public struct Color24
+	{
 		// --- members ---
 		/// <summary>The red component.</summary>
 		public byte R;
@@ -26,7 +28,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
-		public Color24(byte r, byte g, byte b) {
+		public Color24(byte r, byte g, byte b)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -47,14 +50,16 @@ namespace OpenBveApi.Colors {
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are equal.</returns>
-		public static bool operator ==(Color24 a, Color24 b) {
+		public static bool operator ==(Color24 a, Color24 b)
+		{
 			return a.R == b.R & a.G == b.G & a.B == b.B;
 		}
 		/// <summary>Checks whether two colors are unequal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are unequal.</returns>
-		public static bool operator !=(Color24 a, Color24 b) {
+		public static bool operator !=(Color24 a, Color24 b)
+		{
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
 		// --- read-only fields ---
@@ -94,23 +99,14 @@ namespace OpenBveApi.Colors {
 						Color = new Color24((byte)r, (byte)g, (byte)b);
 						return true;
 					}
-					else
-					{
-						Color = new Color24(0, 0, 255);
-						return false;
-					}
-				}
-				else
-				{
 					Color = new Color24(0, 0, 255);
 					return false;
 				}
-			}
-			else
-			{
 				Color = new Color24(0, 0, 255);
 				return false;
 			}
+			Color = new Color24(0, 0, 255);
+			return false;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color24, discarding the alpha component</summary>
@@ -126,7 +122,8 @@ namespace OpenBveApi.Colors {
 	// --- color 32 ---
 	
 	/// <summary>Represents a 32-bit color with red, green, blue and alpha channels at 8 bits each.</summary>
-	public struct Color32 {
+	public struct Color32
+	{
 		// --- members ---
 		/// <summary>The red component.</summary>
 		public byte R;
@@ -142,7 +139,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		/// <param name="a">The alpha component.</param>
-		public Color32(byte r, byte g, byte b, byte a) {
+		public Color32(byte r, byte g, byte b, byte a)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -153,7 +151,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
-		public Color32(byte r, byte g, byte b) {
+		public Color32(byte r, byte g, byte b)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -162,7 +161,8 @@ namespace OpenBveApi.Colors {
 		/// <summary>Creates a new color.</summary>
 		/// <param name="color">The solid color.</param>
 		/// <param name="a">The alpha component.</param>
-		public Color32(Color24 color, byte a) {
+		public Color32(Color24 color, byte a)
+		{
 			this.R = color.R;
 			this.G = color.G;
 			this.B = color.B;
@@ -171,7 +171,8 @@ namespace OpenBveApi.Colors {
 		/// <summary>Creates a new color.</summary>
 		/// <param name="color">The solid color.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
-		public Color32(Color24 color) {
+		public Color32(Color24 color)
+		{
 			this.R = color.R;
 			this.G = color.G;
 			this.B = color.B;
@@ -182,14 +183,16 @@ namespace OpenBveApi.Colors {
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are equal.</returns>
-		public static bool operator ==(Color32 a, Color32 b) {
+		public static bool operator ==(Color32 a, Color32 b)
+		{
 			return a.R == b.R & a.G == b.G & a.B == b.B & a.A == b.A;
 		}
 		/// <summary>Checks whether two colors are unequal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are unequal.</returns>
-		public static bool operator !=(Color32 a, Color32 b) {
+		public static bool operator !=(Color32 a, Color32 b)
+		{
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
 		// --- read-only fields ---
@@ -215,13 +218,15 @@ namespace OpenBveApi.Colors {
 		/// <summary>Performs a widening conversion from Color24 to Color32.</summary>
 		/// <param name="value">The Color24 value.</param>
 		/// <returns>The Color32 value.</returns>
-		public static implicit operator Color32(Color24 value) {
+		public static implicit operator Color32(Color24 value)
+		{
 			return new Color32(value.R, value.G, value.B);
 		}
 		/// <summary>Performs a narrowing conversion from Color32 to Color24.</summary>
 		/// <param name="value">The Color32 value.</param>
 		/// <returns>The Color24 value.</returns>
-		public static explicit operator Color24(Color32 value) {
+		public static explicit operator Color24(Color32 value)
+		{
 			return new Color24(value.R, value.G, value.B);
 		}
 
@@ -244,23 +249,14 @@ namespace OpenBveApi.Colors {
 						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
 						return true;
 					}
-					else
-					{
-						Color = new Color32(0, 0, 255, 255);
-						return false;
-					}
-				}
-				else
-				{
 					Color = new Color32(0, 0, 255, 255);
 					return false;
 				}
-			}
-			else
-			{
 				Color = new Color32(0, 0, 255, 255);
 				return false;
 			}
+			Color = new Color32(0, 0, 255, 255);
+			return false;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color32</summary>
@@ -276,7 +272,8 @@ namespace OpenBveApi.Colors {
 	// --- color 96 ---
 
 	/// <summary>Represents a 96-bit color with red, green and blue channels at 32 bits each.</summary>
-	public struct Color96 {
+	public struct Color96
+	{
 		// --- members ---
 		/// <summary>The red component.</summary>
 		public float R;
@@ -289,7 +286,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="r">The red component.</param>
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
-		public Color96(float r, float g, float b) {
+		public Color96(float r, float g, float b)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -299,14 +297,16 @@ namespace OpenBveApi.Colors {
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are equal.</returns>
-		public static bool operator ==(Color96 a, Color96 b) {
+		public static bool operator ==(Color96 a, Color96 b)
+		{
 			return a.R == b.R & a.G == b.G & a.B == b.B;
 		}
 		/// <summary>Checks whether two colors are unequal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are unequal.</returns>
-		public static bool operator !=(Color96 a, Color96 b) {
+		public static bool operator !=(Color96 a, Color96 b)
+		{
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
 		// --- read-only fields ---
@@ -332,7 +332,8 @@ namespace OpenBveApi.Colors {
 	// --- color 128 ---
 	
 	/// <summary>Represents a 128-bit color with red, green, blue and alpha channels at 32 bits each.</summary>
-	public struct Color128 {
+	public struct Color128
+	{
 		// --- members ---
 		/// <summary>The red component.</summary>
 		public float R;
@@ -348,7 +349,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		/// <param name="a">The alpha component.</param>
-		public Color128(float r, float g, float b, float a) {
+		public Color128(float r, float g, float b, float a)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -359,7 +361,8 @@ namespace OpenBveApi.Colors {
 		/// <param name="g">The green component.</param>
 		/// <param name="b">The blue component.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
-		public Color128(float r, float g, float b) {
+		public Color128(float r, float g, float b)
+		{
 			this.R = r;
 			this.G = g;
 			this.B = b;
@@ -368,7 +371,8 @@ namespace OpenBveApi.Colors {
 		/// <summary>Creates a new color.</summary>
 		/// <param name="color">The solid color.</param>
 		/// <param name="a">The alpha component.</param>
-		public Color128(Color24 color, float a) {
+		public Color128(Color24 color, float a)
+		{
 			this.R = color.R;
 			this.G = color.G;
 			this.B = color.B;
@@ -377,7 +381,8 @@ namespace OpenBveApi.Colors {
 		/// <summary>Creates a new color.</summary>
 		/// <param name="color">The solid color.</param>
 		/// <remarks>The alpha component is set to full opacity.</remarks>
-		public Color128(Color24 color) {
+		public Color128(Color24 color)
+		{
 			this.R = color.R;
 			this.G = color.G;
 			this.B = color.B;
@@ -388,14 +393,16 @@ namespace OpenBveApi.Colors {
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are equal.</returns>
-		public static bool operator ==(Color128 a, Color128 b) {
+		public static bool operator ==(Color128 a, Color128 b)
+		{
 			return a.R == b.R & a.G == b.G & a.B == b.B & a.A == b.A;
 		}
 		/// <summary>Checks whether two colors are unequal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
 		/// <returns>Whether the two colors are unequal.</returns>
-		public static bool operator !=(Color128 a, Color128 b) {
+		public static bool operator !=(Color128 a, Color128 b)
+		{
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
 		// --- read-only fields ---
@@ -421,13 +428,15 @@ namespace OpenBveApi.Colors {
 		/// <summary>Performs a widening conversion from Color96 to Color128.</summary>
 		/// <param name="value">The Color96 value.</param>
 		/// <returns>The Color128 value.</returns>
-		public static implicit operator Color128(Color24 value) {
+		public static implicit operator Color128(Color24 value)
+		{
 			return new Color128(value.R, value.G, value.B);
 		}
 		/// <summary>Performs a narrowing conversion from Color128 to Color96.</summary>
 		/// <param name="value">The Color128 value.</param>
 		/// <returns>The Color96 value.</returns>
-		public static explicit operator Color96(Color128 value) {
+		public static explicit operator Color96(Color128 value)
+		{
 			return new Color96(value.R, value.G, value.B);
 		}
 

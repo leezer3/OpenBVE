@@ -1,6 +1,8 @@
-﻿namespace OpenBveApi.Math {
+﻿namespace OpenBveApi.Math
+{
 	/// <summary>Represents an orientation in three-dimensional space.</summary>
-	public struct Orientation3 {
+	public struct Orientation3
+	{
 		
 		// --- members ---
 		
@@ -20,7 +22,8 @@
 		/// <param name="x">The vector pointing right.</param>
 		/// <param name="y">The vector pointing up.</param>
 		/// <param name="z">The vector pointing forward.</param>
-		public Orientation3(Vector3 x, Vector3 y, Vector3 z) {
+		public Orientation3(Vector3 x, Vector3 y, Vector3 z)
+		{
 			this.X = x;
 			this.Y = y;
 			this.Z = z;

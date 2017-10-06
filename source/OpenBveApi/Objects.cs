@@ -1,7 +1,8 @@
 ﻿using System;
 using OpenBveApi.Math;
 
-namespace OpenBveApi.Objects {
+namespace OpenBveApi.Objects
+{
 
 	/* ----------------------------------------
 	 * TODO: This part of the API is unstable.
@@ -11,7 +12,8 @@ namespace OpenBveApi.Objects {
 	// --- objects ---
 	
 	/// <summary>Represents an abstract object. This is the base class from which all objects must inherit.</summary>
-	public abstract class AbstractObject {
+	public abstract class AbstractObject
+	{
 		/// <summary>Translates the object by the specified offset.</summary>
 		/// <param name="offset">The offset by which to translate.</param>
 		public abstract void Translate(Vector3 offset);
@@ -32,24 +34,34 @@ namespace OpenBveApi.Objects {
 		/// <param name="factor">The factor by which to scale.</param>
 		public abstract void Scale(Vector3 factor);
 	}
-	
+
 	/// <summary>Represents an abstract static object. This is the base class from which all static objects must inherit.</summary>
-	public abstract class StaticObject : AbstractObject { }
-	
+	public abstract class StaticObject : AbstractObject
+	{
+		
+	}
+
 	/// <summary>Represents an abstract animated object. This is the base class from which all animated objects must inherit.</summary>
-	public abstract class AnimatedObject : AbstractObject { }
+	public abstract class AnimatedObject : AbstractObject
+	{
+		
+	}
 	
 	
 	// --- materials ---
-	
+
 	/// <summary>Represents an abstract material. This is the base class from which all materials must inherit.</summary>
-	public abstract class AbstractMaterial { }
+	public abstract class AbstractMaterial
+	{
+		
+	}
 	
 	
 	// --- blend modes ---
 	
 	/// <summary>Represents blend modes.</summary>
-	public enum BlendModes {
+	public enum BlendModes
+	{
 		/// <summary>Represents normal blend mode.</summary>
 		Normal = 0,
 		/// <summary>Represents additive blend mode.</summary>
@@ -64,7 +76,8 @@ namespace OpenBveApi.Objects {
 	
 	/// <summary>Represents an abstract orientational glow. This is the base class from which all orientational glows must inherit.</summary>
 	/// <remarks>This type of glow computes the intensity as a function of the camera and object's position and orientation.</remarks>
-	public abstract class OrientationalGlow : AbstractGlow {
+	public abstract class OrientationalGlow : AbstractGlow
+	{
 		/// <summary>Gets the intensity of the glow.</summary>
 		/// <param name="cameraPosition">The position of the camera.</param>
 		/// <param name="cameraOrientation">The orientation of the camera.</param>
@@ -75,14 +88,16 @@ namespace OpenBveApi.Objects {
 	}
 	
 	/// <summary>Represents a glow where the intensity is inversely proportional to the distance between the object and the camera.</summary>
-	public class DistanceGlow : OrientationalGlow {
+	public class DistanceGlow : OrientationalGlow
+	{
 		// --- members ---
 		/// <summary>The square of the distance at which the intensity is exactly 50%.</summary>
 		private double HalfDistanceSquared;
 		// --- constructors ---
 		/// <summary>Creates a new distance glow.</summary>
 		/// <param name="halfDistance">The distance at which the intensity is exactly 50%.</param>
-		public DistanceGlow(double halfDistance) {
+		public DistanceGlow(double halfDistance)
+		{
 			this.HalfDistanceSquared = halfDistance * halfDistance;
 		}
 		// --- functions ---
@@ -92,7 +107,8 @@ namespace OpenBveApi.Objects {
 		/// <param name="objectPosition">The position of the object.</param>
 		/// <param name="objectOrientation">The orientation of the object.</param>
 		/// <returns>The intensity of the glow expressed as a value between 0 and 1.</returns>
-		public override double GetIntensity(Vector3 cameraPosition, Orientation3 cameraOrientation, Vector3 objectPosition, Vector3 objectOrientation) {
+		public override double GetIntensity(Vector3 cameraPosition, Orientation3 cameraOrientation, Vector3 objectPosition, Vector3 objectOrientation)
+		{
 			/* The underlying formula for the intensity is
 			 *    i = d^2 / (d^2 + h^2)
 			 * where
@@ -106,22 +122,32 @@ namespace OpenBveApi.Objects {
 	
 	
 	// --- handles ---
-	
+
 	/// <summary>Represents a handle to an object.</summary>
-	public abstract class ObjectHandle { }
+	public abstract class ObjectHandle
+	{
+		
+	}
 	
 	
 	// --- interfaces ---
 	
 	/// <summary>Represents the interface for loading objects. Plugins must implement this interface if they wish to expose objects.</summary>
-	public abstract class ObjectInterface {
-		
+	public abstract class ObjectInterface
+	{
+
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
-		public virtual void Load(Hosts.HostInterface host) { }
-		
+		public virtual void Load(Hosts.HostInterface host)
+		{
+			
+		}
+
 		/// <summary>Called when the plugin is unloaded.</summary>
-		public virtual void Unload() { }
+		public virtual void Unload()
+		{
+			
+		}
 		
 		/// <summary>Checks whether the plugin can load the specified object.</summary>
 		/// <param name="path">The path to the file or folder that contains the object.</param>

@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0659, 0661
 
-namespace OpenBveApi.Archives {
+namespace OpenBveApi.Archives
+{
 
 	/* ----------------------------------------
 	 * TODO: This part of the API is unstable.
@@ -10,14 +11,21 @@ namespace OpenBveApi.Archives {
 	// --- interfaces ---
 
 	/// <summary>Represents the interface for loading archives. Plugins must implement this interface if they wish to expose archives.</summary>
-	public abstract class ArchiveInterface {
-		
+	public abstract class ArchiveInterface
+	{
+
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
-		public virtual void Load(Hosts.HostInterface host) { }
-		
+		public virtual void Load(Hosts.HostInterface host)
+		{
+			
+		}
+
 		/// <summary>Called when the plugin is unloaded.</summary>
-		public virtual void Unload() { }
+		public virtual void Unload()
+		{
+			
+		}
 		
 		/// <summary>Checks whether the plugin can load the specified element.</summary>
 		/// <param name="path">The path to the file or folder that contains the archive.</param>
