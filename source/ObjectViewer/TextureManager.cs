@@ -22,9 +22,18 @@ namespace OpenBve
 		}
 
 		// textures
-		internal enum TextureLoadMode { Normal, Bve4SignalGlow }
-		internal enum TextureWrapMode { Repeat, ClampToEdge }
-		internal enum TextureTransparencyMode { None, TransparentColor, Alpha }
+		internal enum TextureLoadMode
+		{
+			Normal, Bve4SignalGlow
+		}
+		internal enum TextureWrapMode
+		{
+			Repeat, ClampToEdge
+		}
+		internal enum TextureTransparencyMode
+		{
+			None, TransparentColor, Alpha
+		}
 		internal class Texture
 		{
 			internal bool Queried;
@@ -55,7 +64,10 @@ namespace OpenBve
 		private static double CycleTime = 0.0;
 
 		// use texture
-		internal enum UseMode { Normal, QueryDimensions, LoadImmediately }
+		internal enum UseMode
+		{
+			Normal, QueryDimensions, LoadImmediately
+		}
 		internal static int UseTexture(int TextureIndex, UseMode Mode)
 		{
 			if (TextureIndex == -1) return 0;
@@ -603,8 +615,10 @@ namespace OpenBve
 								Temp[p + 2] = Data[p + 2];
 							}
 							p += 4;
-						} p += pn;
-					} p = 0;
+						}
+						p += pn;
+					}
+					p = 0;
 					// blur the image and multiply by lightness
 					int s = 4;
 					int n = Stride - (2 * s + 1 << 2);
@@ -626,11 +640,14 @@ namespace OpenBve
 											g += (int)Temp[q + 1];
 											r += (int)Temp[q + 2];
 											c++;
-										} q += 4;
-									} q += n;
+										}
+										q += 4;
+									}
+									q += n;
 								}
 								else q += Stride;
-							} if (c == 0)
+							}
+							if (c == 0)
 							{
 								Data[p] = 0;
 								Data[p + 1] = 0;
@@ -647,7 +664,8 @@ namespace OpenBve
 								Data[p + 3] = 255;
 							}
 							p += 4;
-						} p += pn;
+						}
+						p += pn;
 					}
 					Textures[TextureIndex].Transparency = TextureTransparencyMode.None;
 					Textures[TextureIndex].DontAllowUnload = true;
@@ -669,8 +687,10 @@ namespace OpenBve
 							if (Data[p + 3] != 255)
 							{
 								break;
-							} p += 4;
-						} if (x < Width) break;
+							}
+							p += 4;
+						}
+						if (x < Width) break;
 						p += pn;
 					}
 					if (y == Height)
@@ -700,13 +720,16 @@ namespace OpenBve
 												Data[p + 2] = Data[q + 2];
 												Data[p + 3] = 0;
 												break;
-											} q += 4;
-										} if (u < Width)
+											}
+											q += 4;
+										}
+										if (u < Width)
 										{
 											break;
 										}
 										else q += pn;
-									} if (v == Height)
+									}
+									if (v == Height)
 									{
 										if (y == 0)
 										{
@@ -731,8 +754,10 @@ namespace OpenBve
 									Data[p + 2] = Data[p - 2];
 									Data[p + 3] = 0;
 								}
-							} p += 4;
-						} p += pn;
+							}
+							p += 4;
+						}
+						p += pn;
 					}
 					// transparent color is not actually used
 					if (!used & Textures[TextureIndex].Transparency == TextureTransparencyMode.TransparentColor)
@@ -751,8 +776,10 @@ namespace OpenBve
 							if (Data[p + 3] != 255)
 							{
 								break;
-							} p += 4;
-						} if (x < Width) break;
+							}
+							p += 4;
+						}
+						if (x < Width) break;
 						p += pn;
 					}
 					if (y == Height)
