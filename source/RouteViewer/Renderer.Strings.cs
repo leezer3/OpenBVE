@@ -153,7 +153,7 @@ namespace OpenBve
 				Fonts.OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
 				TextureManager.UseTexture(texture, TextureManager.UseMode.LoadImmediately);
-				
+
 				{
 					GL.BindTexture(TextureTarget.Texture2D, TextureManager.Textures[texture].OpenGlTextureIndex);
 

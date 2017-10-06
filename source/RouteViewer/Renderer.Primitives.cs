@@ -48,8 +48,8 @@ namespace OpenBve
 				GL.TexCoord2(0.0f, 1.0f);
 				GL.Vertex2(point.X, point.Y + size.Height);
 				GL.End();
-				
-				
+
+
 			}
 			GL.Disable(EnableCap.Blend);
 		}

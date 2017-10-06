@@ -17,15 +17,23 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve {
-	internal static class Program {
+namespace OpenBve
+{
+	internal static class Program
+	{
 
 		// system
-		internal enum Platform { Windows, Linux, Mac }
+		internal enum Platform
+		{
+			Windows, Linux, Mac
+		}
 		internal static Platform CurrentPlatform = Platform.Windows;
 		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
-		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
+		internal enum ProgramType
+		{
+			OpenBve, ObjectViewer, RouteViewer, Other
+		}
 		internal const ProgramType CurrentProgramType = ProgramType.RouteViewer;
 
 		internal static bool CpuReducedMode = false;
@@ -35,13 +43,13 @@ namespace OpenBve {
 		internal static int CurrentStation = -1;
 		internal static bool JumpToPositionEnabled = false;
 		internal static string JumpToPositionValue = "";
-		internal static double MinimumJumpToPositionValue =  0;
+		internal static double MinimumJumpToPositionValue = 0;
 		internal static bool processCommandLineArgs;
 		internal static string[] commandLineArguments;
 		internal static bool[] SkipArgs;
 
 		internal static int ReloadTexture = -1;
-		
+
 		// keys
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
@@ -64,13 +72,18 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// platform and mono
 			int p = (int)Environment.OSVersion.Platform;
-			if (p == 4 | p == 128) {
+			if (p == 4 | p == 128)
+			{
 				// general Unix
 				CurrentPlatform = Platform.Linux;
-			} else if (p == 6) {
+			}
+			else if (p == 6)
+			{
 				// Mac
 				CurrentPlatform = Platform.Mac;
-			} else {
+			}
+			else
+			{
 				// non-Unix
 				CurrentPlatform = Platform.Windows;
 			}
@@ -80,28 +93,37 @@ namespace OpenBve {
 			FileSystem.CreateFileSystem();
 			// command line arguments
 			SkipArgs = new bool[args.Length];
-			if (args.Length != 0) {
+			if (args.Length != 0)
+			{
 				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-				if (System.IO.File.Exists(File)) {
+				if (System.IO.File.Exists(File))
+				{
 					int Skips = 0;
 					System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
-					for (int i = 0; i < args.Length; i++) {
-						if (args[i] != null && System.IO.File.Exists(args[i])) {
-							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase)) {
+					for (int i = 0; i < args.Length; i++)
+					{
+						if (args[i] != null && System.IO.File.Exists(args[i]))
+						{
+							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase))
+							{
 								string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
-								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0) {
+								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0)
+								{
 									if (NewArgs.Length != 0) NewArgs.Append(" ");
 									NewArgs.Append("\"" + args[i] + "\"");
 									SkipArgs[i] = true;
 									Skips++;
 								}
 							}
-						} else {
+						}
+						else
+						{
 							SkipArgs[i] = true;
 							Skips++;
 						}
 					}
-					if (NewArgs.Length != 0) {
+					if (NewArgs.Length != 0)
+					{
 						System.Diagnostics.Process.Start(File, NewArgs.ToString());
 					}
 					if (Skips == args.Length) return;
@@ -123,7 +145,8 @@ namespace OpenBve {
 		}
 
 		// reset camera
-		internal static void ResetCamera() {
+		internal static void ResetCamera()
+		{
 			World.AbsoluteCameraPosition = new Vector3(0.0, 2.5, -5.0);
 			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
 			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
@@ -136,31 +159,36 @@ namespace OpenBve {
 		}
 
 		// update viewport
-		internal static void UpdateViewport() {
+		internal static void UpdateViewport()
+		{
 			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
 			World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			//const double invdeg = 57.295779513082320877;
-			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
+			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 		}
 
 		// load route
-		internal static bool LoadRoute() {
+		internal static bool LoadRoute()
+		{
 			CurrentStation = -1;
 			Game.Reset();
 			Renderer.Initialize();
 			Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
 			UpdateViewport();
 			bool result;
-			try {
+			try
+			{
 				Loading.Load(CurrentRoute, System.Text.Encoding.UTF8);
 				result = true;
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Game.Reset();
 				CurrentRoute = null;
@@ -172,12 +200,17 @@ namespace OpenBve {
 		}
 
 		// jump to station
-		private static void JumpToStation(int Direction) {
-			if (Direction < 0) {
-				for (int i = Game.Stations.Length - 1; i >= 0; i--) {
-					if (Game.Stations[i].Stops.Length != 0) {
+		private static void JumpToStation(int Direction)
+		{
+			if (Direction < 0)
+			{
+				for (int i = Game.Stations.Length - 1; i >= 0; i--)
+				{
+					if (Game.Stations[i].Stops.Length != 0)
+					{
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
+						if (p < World.CameraTrackFollower.TrackPosition - 0.1)
+						{
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							World.CameraCurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
@@ -185,11 +218,16 @@ namespace OpenBve {
 						}
 					}
 				}
-			} else if (Direction > 0) {
-				for (int i = 0; i < Game.Stations.Length; i++) {
-					if (Game.Stations[i].Stops.Length != 0) {
+			}
+			else if (Direction > 0)
+			{
+				for (int i = 0; i < Game.Stations.Length; i++)
+				{
+					if (Game.Stations[i].Stops.Length != 0)
+					{
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
+						if (p > World.CameraTrackFollower.TrackPosition + 0.1)
+						{
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							World.CameraCurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
@@ -268,7 +306,7 @@ namespace OpenBve {
 				World.CameraAlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					World.CameraAlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
+					World.CameraAlignmentDirection.Yaw = 0.025 * (double)(previousMouseState.X - currentMouseState.X);
 					World.CameraAlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
 				else if (MouseButton == 2)
@@ -276,7 +314,7 @@ namespace OpenBve {
 					World.CameraAlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
 					World.CameraAlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
-				
+
 			}
 		}
 
@@ -335,7 +373,7 @@ namespace OpenBve {
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
-						
+
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						TextureManager.UnregisterTexture(ref Renderer.TextureLoadingBkg);
@@ -394,62 +432,62 @@ namespace OpenBve {
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					World.CameraAlignmentDirection.Position.X = -World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Position.X = -World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					World.CameraAlignmentDirection.Position.X = World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Position.X = World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad2:
-					World.CameraAlignmentDirection.Position.Y = -World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Position.Y = -World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad8:
-					World.CameraAlignmentDirection.Position.Y = World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Position.Y = World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					World.CameraAlignmentDirection.TrackPosition = World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.TrackPosition = World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					World.CameraAlignmentDirection.TrackPosition = -World.CameraExteriorTopSpeed*speedModified;
+					World.CameraAlignmentDirection.TrackPosition = -World.CameraExteriorTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Left:
-					World.CameraAlignmentDirection.Yaw = -World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Yaw = -World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Right:
-					World.CameraAlignmentDirection.Yaw = World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Yaw = World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Up:
-					World.CameraAlignmentDirection.Pitch = World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Pitch = World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Down:
-					World.CameraAlignmentDirection.Pitch = -World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Pitch = -World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadDivide:
-					World.CameraAlignmentDirection.Roll = -World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Roll = -World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadMultiply:
-					World.CameraAlignmentDirection.Roll = World.CameraExteriorTopAngularSpeed*speedModified;
+					World.CameraAlignmentDirection.Roll = World.CameraExteriorTopAngularSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad0:
-					World.CameraAlignmentDirection.Zoom = World.CameraZoomTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Zoom = World.CameraZoomTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadPeriod:
-					World.CameraAlignmentDirection.Zoom = -World.CameraZoomTopSpeed*speedModified;
+					World.CameraAlignmentDirection.Zoom = -World.CameraZoomTopSpeed * speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad1:
@@ -592,20 +630,20 @@ namespace OpenBve {
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,
 								out value))
 								if (value < TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
-							{
-								if (direction != 0)
 								{
-									value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
+									if (direction != 0)
+									{
+										value = World.CameraTrackFollower.TrackPosition + (double)direction * value;
+									}
+									TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
+									World.CameraCurrentAlignment.TrackPosition = value;
+									World.UpdateAbsoluteCamera(0.0);
+									World.UpdateViewingDistances();
 								}
-								TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
-								World.CameraCurrentAlignment.TrackPosition = value;
-								World.UpdateAbsoluteCamera(0.0);
-								World.UpdateViewingDistances();
-		                        }
-							}
 						}
-						JumpToPositionEnabled = false;
-						CpuReducedMode = false;
+					}
+					JumpToPositionEnabled = false;
+					CpuReducedMode = false;
 					break;
 				case Key.Escape:
 					JumpToPositionEnabled = false;
@@ -667,10 +705,13 @@ namespace OpenBve {
 		}
 
 		// update caption
-		internal static void UpdateCaption() {
-			if (CurrentRoute != null) {
+		internal static void UpdateCaption()
+		{
+			if (CurrentRoute != null)
+			{
 				currentGameWindow.Title = System.IO.Path.GetFileName(CurrentRoute) + " - " + Application.ProductName;
-			} else
+			}
+			else
 			{
 				currentGameWindow.Title = Application.ProductName;
 			}

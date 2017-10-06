@@ -5,86 +5,86 @@ using OpenTK.Graphics;
 
 namespace OpenBve
 {
-    public partial class formOptions : Form
-    {
-        public formOptions()
-        {
-            InitializeComponent();
-            InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
-            AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
-            AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
-            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
+	public partial class formOptions : Form
+	{
+		public formOptions()
+		{
+			InitializeComponent();
+			InterpolationMode.SelectedIndex = (int)Interface.CurrentOptions.Interpolation;
+			AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
+			AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
+			TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
+			width.Value = Renderer.ScreenWidth;
+			height.Value = Renderer.ScreenHeight;
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
 			checkBoxBackgrounds.Checked = Interface.CurrentOptions.LoadingBackground;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
-        }
+		}
 
-        internal static DialogResult ShowOptions()
-        {
-            formOptions Dialog = new formOptions();
-            DialogResult Result = Dialog.ShowDialog();
-            return Result;
-        }
+		internal static DialogResult ShowOptions()
+		{
+			formOptions Dialog = new formOptions();
+			DialogResult Result = Dialog.ShowDialog();
+			return Result;
+		}
 
-        private void formOptions_Shown(object sender, EventArgs e)
-        {
-            button1.Focus();
-        }
+		private void formOptions_Shown(object sender, EventArgs e)
+		{
+			button1.Focus();
+		}
 
-	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
-	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
-	    readonly TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-	    readonly bool PreviousSort = Renderer.TransparentColorDepthSorting;
-	    private bool GraphicsModeChanged = false;
+		readonly int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
+		readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
+		readonly TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+		readonly bool PreviousSort = Renderer.TransparentColorDepthSorting;
+		private bool GraphicsModeChanged = false;
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-            
+		private void button1_Click(object sender, EventArgs e)
+		{
 
-            //Interpolation mode
-            switch (InterpolationMode.SelectedIndex)
-            {
-                case 0:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor;
-                    break;
-                case 1:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear;
-                    break;
-                case 2:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped;
-                    break;
-                case 3:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped;
-                    break;
-                case 4:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped;
-                    break;
-                case 5:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering;
-                    break;
-            }
-            //Ansiotropic filtering level
-            Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
-            //Antialiasing level
-            Interface.CurrentOptions.AntialiasingLevel = (int)AntialiasingLevel.Value;
-            if (Interface.CurrentOptions.AntialiasingLevel != previousAntialasingLevel)
-            {
-                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
-	            GraphicsModeChanged = true;
-            }
-            //Transparency quality
-            switch (TransparencyQuality.SelectedIndex)
-            {
-                case 0:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
-                    break;
-                default:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
-                    break;
-            }
+
+
+			//Interpolation mode
+			switch (InterpolationMode.SelectedIndex)
+			{
+				case 0:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor;
+					break;
+				case 1:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear;
+					break;
+				case 2:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped;
+					break;
+				case 3:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped;
+					break;
+				case 4:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped;
+					break;
+				case 5:
+					Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering;
+					break;
+			}
+			//Ansiotropic filtering level
+			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)AnsiotropicLevel.Value;
+			//Antialiasing level
+			Interface.CurrentOptions.AntialiasingLevel = (int)AntialiasingLevel.Value;
+			if (Interface.CurrentOptions.AntialiasingLevel != previousAntialasingLevel)
+			{
+				Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
+				GraphicsModeChanged = true;
+			}
+			//Transparency quality
+			switch (TransparencyQuality.SelectedIndex)
+			{
+				case 0:
+					Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
+					break;
+				default:
+					Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+					break;
+			}
 			//Set width and height
 			if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
 			{
@@ -110,11 +110,11 @@ namespace OpenBve
 			}
 
 
-        }
+		}
 
-	    protected override void OnClosing(CancelEventArgs cancelEventArgs)
-	    {
-			
-	    }
-    }
+		protected override void OnClosing(CancelEventArgs cancelEventArgs)
+		{
+
+		}
+	}
 }
