@@ -135,8 +135,25 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
-				CrashHandler.LoadingCrash(ex + Environment.StackTrace, false);
+				if (ex is System.DllNotFoundException)
+				{
+					Interface.AddMessage(Interface.MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
+					switch (ex.Message)
+					{
+						case "libopenal.so.1":
+							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							break;
+						default:
+							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							break;
+					}
+				}
+				else
+				{
+					Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+					CrashHandler.LoadingCrash(ex + Environment.StackTrace, false);
+				}
+				
 				Program.RestartArguments = " ";
 				Cancel = true;                
 			}
