@@ -1663,7 +1663,10 @@ namespace OpenBve
                 case ".l3dgrp":
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, Rotation);
                     break;
-                default:
+	            case ".obj":
+		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+		            break;
+					default:
                     Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
                     return null;
             }
@@ -1727,7 +1730,10 @@ namespace OpenBve
                 case ".animated":
                     Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
                     return null;
-                default:
+	            case ".obj":
+		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+		            break;
+				default:
                     Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
                     return null;
             }
