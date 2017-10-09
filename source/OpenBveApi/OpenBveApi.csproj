@@ -69,7 +69,6 @@
     </Compile>
     <Compile Include="Colors.cs">
     </Compile>
-    <Compile Include="Geometry.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Objects.cs" />
