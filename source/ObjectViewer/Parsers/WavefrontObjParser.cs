@@ -72,9 +72,9 @@ namespace OpenBve
 			/*
 			 * Temporary arrays
 			 */
-			Vector3[] tempVertices = new Vector3[0];
-			Vector3[] tempNormals = new Vector3[0];
-			Vector2[] tempCoords = new Vector2[0];
+			 List<Vector3> tempVertices = new List<Vector3>();
+			List<Vector3> tempNormals = new List<Vector3>();
+			List<Vector2> tempCoords = new List<Vector2>();
 			Material[] TempMaterials = new Material[0];
 			//Stores the current material
 			int currentMaterial = -1;
@@ -122,8 +122,7 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
-						Array.Resize(ref tempVertices, tempVertices.Length + 1);
-						tempVertices[tempVertices.Length - 1] = vertex;
+						tempVertices.Add(vertex);
 						break;
 					case "vt":
 						//Vertex texture co-ords
@@ -138,8 +137,7 @@ namespace OpenBve
 						}
 						//Wavefront obj texture co-ords Y axis appear inverted v.s. BVE standard
 						coords.Y = -coords.Y;
-						Array.Resize(ref tempCoords, tempCoords.Length + 1);
-						tempCoords[tempCoords.Length - 1] = coords;
+						tempCoords.Add(coords);
 						break;
 					case "vn":
 						Vector3 normal = new Vector3();
@@ -155,8 +153,7 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
 						}
-						Array.Resize(ref tempNormals, tempNormals.Length + 1);
-						tempNormals[tempNormals.Length - 1] = normal;
+						tempNormals.Add(normal);
 						//Vertex normals
 						break;
 					case "vp":
@@ -173,7 +170,7 @@ namespace OpenBve
 							World.Vertex newVertex = new World.Vertex();
 							string[] faceArguments = Arguments[f].Split(new char[] {'/'} , StringSplitOptions.None);
 							int idx;
-							if (!int.TryParse(faceArguments[0], out idx) || idx > tempVertices.Length)
+							if (!int.TryParse(faceArguments[0], out idx) || idx > tempVertices.Count)
 							{
 								Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
 								continue;
@@ -185,7 +182,7 @@ namespace OpenBve
 							}
 							else
 							{
-								if (!int.TryParse(faceArguments[1], out idx) || idx > tempCoords.Length)
+								if (!int.TryParse(faceArguments[1], out idx) || idx > tempCoords.Count)
 								{
 									if (!string.IsNullOrEmpty(faceArguments[1]))
 									{
@@ -204,7 +201,7 @@ namespace OpenBve
 							}
 							else
 							{
-								if (!int.TryParse(faceArguments[2], out idx) || idx > tempNormals.Length)
+								if (!int.TryParse(faceArguments[2], out idx) || idx > tempNormals.Count)
 								{
 									if (!string.IsNullOrEmpty(faceArguments[2]))
 									{
@@ -222,30 +219,43 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int l = Builder.Vertices.Count;
-							Builder.Vertices.Add(vertices[k]);
-							Vertices[k].Index = (ushort)l;
+							int v = Builder.Vertices.FindIndex(a => a == vertices[k]);
+							if (v != -1)
+							{
+								Vertices[k].Index = (ushort)v;
+							}
+							else
+							{
+								Builder.Vertices.Add(vertices[k]);
+								Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
+							}
+							
 							Vertices[k].Normal = normals[k];
 						}
-						if (currentMaterial == -1)
-						{
-							Builder.Faces.Add(new World.MeshFace(Vertices, 0));
-						}
-						else
-						{
-							Builder.Faces.Add(new World.MeshFace(Vertices, (ushort)currentMaterial));
-						}
-						
+						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
 						ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 						Builder = new MeshBuilder();
 						break;
+					case "s":
+						/* 
+						 * Changes the smoothing group applied to these vertexes:
+						 * 0- Disabled (Overriden by Vertex normals)
+						 * Otherwise appears to be a bitmask (32 available groups)
+						 * whereby faces within the same groups have their normals averaged
+						 * to appear smooth joins
+						 * 
+						 * Not really supported at the minute, probably requires the engine 
+						 * twiddling to deliberately support specifiying the shading type for a face
+						 * 
+						 */
+						 break;
 					case "mtllib":
 						//Loads the library of materials used by this file
-						string MaterialsPath = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
-						if (System.IO.File.Exists(MaterialsPath))
+						string MaterialsPath = OpenBveApi.Path.CombineFile(Path.GetDirectoryName(FileName), Arguments[1]);
+						if (File.Exists(MaterialsPath))
 						{
 							LoadMaterials(MaterialsPath, ref TempMaterials);
 						}
@@ -266,6 +276,9 @@ namespace OpenBve
 								currentMaterial = -1;
 							}
 						}
+						break;
+					default:
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Unrecognised command " + Arguments[0]);
 						break;
 				}
 			}
