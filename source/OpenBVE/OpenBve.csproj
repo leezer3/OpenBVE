@@ -161,6 +161,7 @@
     <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
