@@ -131,6 +131,12 @@ namespace OpenBve {
 				this.Material = 0;
 				this.Flags = 0;
 			}
+			internal MeshFace(MeshFaceVertex[] verticies, ushort material)
+			{
+				this.Vertices = verticies;
+				this.Material = material;
+				this.Flags = 0;
+			}
 			internal void Flip() {
 				if ((this.Flags & FaceTypeMask) == FaceTypeQuadStrip) {
 					for (int i = 0; i < this.Vertices.Length; i += 2) {
