@@ -9,7 +9,7 @@ matrix:
       script: make publish
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install hudochenkov/sshpass/sshpass; fi
+      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install hudochenkov/sshpass/sshpass; fi;
       script: make publish
 
 #Test builds

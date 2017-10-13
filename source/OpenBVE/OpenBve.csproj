@@ -129,10 +129,10 @@
     <Compile Include="Game\MessageManager.TextualMessages.cs" />
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\MessageManager.Message.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedObject.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedObjectCollection.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.AnimatedWorldObject.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.AnimationScript.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimationScript.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Damping.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
@@ -327,21 +327,20 @@
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OldCode\FunctionScripts.cs" />
-    <Compile Include="OldCode\Game.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
+    <Compile Include="Game\Game.cs" />
     <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
     <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\Loading.cs" />
-    <Compile Include="OldCode\MainLoop.cs" />
+    <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\Plugins\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="System\Plugins\PluginManager.cs" />
-    <Compile Include="OldCode\Renderer.cs" />
     <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
