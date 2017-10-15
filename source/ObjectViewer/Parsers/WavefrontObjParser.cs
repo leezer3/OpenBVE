@@ -33,6 +33,7 @@ namespace OpenBve
 				this.NighttimeTexture = null;
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
+				this.Key = string.Empty;
 			}
 		}
 		private class MeshBuilder
@@ -44,7 +45,7 @@ namespace OpenBve
 			{
 				this.Vertices = new List<World.Vertex>();
 				this.Faces = new List<World.MeshFace>();
-				this.Materials = new Material[] { new Material() };
+				this.Materials = new Material[] { };
 			}
 		}
 
@@ -265,9 +266,22 @@ namespace OpenBve
 						{
 							if (TempMaterials[m].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
 							{
-								Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
-								Builder.Materials[Builder.Materials.Length - 1] = TempMaterials[m];
-								currentMaterial = Builder.Materials.Length - 1;
+								bool mf = false;
+								for (int k = 0; k < Builder.Materials.Length; k++)
+								{
+									if (Builder.Materials[k].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
+									{
+										mf = true;
+										currentMaterial = k;
+										break;
+									}
+								}
+								if (!mf)
+								{
+									Array.Resize(ref Builder.Materials, Builder.Materials.Length + 1);
+									Builder.Materials[Builder.Materials.Length - 1] = TempMaterials[m];
+									currentMaterial = Builder.Materials.Length - 1;
+								}
 								break;
 							}
 							if (m == TempMaterials.Length)
@@ -401,7 +415,17 @@ namespace OpenBve
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+				if (Builder.Materials.Length > 0)
+				{
+					Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+				}
+				else
+				{
+					/*
+					 * If no materials have been defined for this face group, use the last material
+					 */
+					mm -= 1;
+				}
 				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
