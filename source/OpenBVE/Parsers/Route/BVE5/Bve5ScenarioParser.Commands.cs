@@ -384,7 +384,12 @@ namespace OpenBve
 					//Interface.AddMessage(Interface.MessageType.Error, false,"Roll is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " +Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 					roll = 0.0;
 				}
-				if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[7], out Type) && (Type < 0 || Type > 3))
+				if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[7], out Type))
+				{
+					Interface.AddMessage(Interface.MessageType.Error, false, "Object rotation type is invalid in Structure.Put");
+					Type = 0;
+				}
+				if (Type < 0 || Type > 3)
 				{
 					Interface.AddMessage(Interface.MessageType.Error, false, "Object rotation type is invalid in Structure.Put");
 					Type = 0;

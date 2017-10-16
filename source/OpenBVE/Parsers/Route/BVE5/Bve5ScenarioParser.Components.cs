@@ -168,7 +168,7 @@ namespace OpenBve
 				if (Arguments.Count >= 3 && Arguments[2].Length > 0)
 				{
 					//Arrival time (HH:mm:ss or P for pass)
-					if (string.Equals(Arguments[1], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(Arguments[2], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase))
 					{
 						Game.Stations[CurrentStation].StopMode = Game.StationStopMode.AllPass;
 					}
@@ -185,7 +185,7 @@ namespace OpenBve
 					{
 						Game.Stations[CurrentStation].StationType = Game.StationType.Terminal;
 					}
-					else if (!Interface.TryParseBve5Time(Arguments[2], out dep))
+					else if (!Interface.TryParseBve5Time(Arguments[3], out dep))
 					{
 						Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + i + " in file " + StationList);
 						dep = -1.0;
@@ -244,7 +244,7 @@ namespace OpenBve
 
 				if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == Game.StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == Game.StationStopMode.AllStop))
 				{
-					Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString() + ")";
+					Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1);
 				}
 				Game.Stations[CurrentStation].ArrivalTime = arr;
 				Game.Stations[CurrentStation].DepartureTime = dep;

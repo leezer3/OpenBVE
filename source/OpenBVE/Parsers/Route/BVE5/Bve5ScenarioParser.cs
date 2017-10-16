@@ -469,11 +469,6 @@ namespace OpenBve
 							//Horrible hack, but we've already validated parenthesis when we split into expressions......
 							string[] Arguments = Commands[c].Substring(idx + 1, Commands[c].Length - idx - 2).Split(',');
 							string command = Commands[c].Substring(0, idx).ToLowerInvariant();
-							if (command.StartsWith("#"))
-							{
-								//comment
-								continue;
-							}
 							if (command.StartsWith("legacy."))
 							{
 								command = command.Substring(7, command.Length - 7);
@@ -797,6 +792,11 @@ namespace OpenBve
 			// parse
 			for (int i = 0; i < Lines.Length; i++)
 			{
+				int cm = Lines[i].IndexOf('#');
+				if (cm != -1)
+				{
+					Lines[i] = Lines[i].Substring(0, cm);
+				}
 				{
 					// count expressions
 					int n = 0; int Level = 0;
