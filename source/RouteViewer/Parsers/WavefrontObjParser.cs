@@ -33,6 +33,7 @@ namespace OpenBve
 				this.NighttimeTexture = null;
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
+				this.Key = string.Empty;
 			}
 		}
 		private class MeshBuilder
