@@ -749,6 +749,14 @@ namespace OpenBve
 					return;
 				}
 			}
+			if (interval == 24.99)
+			{
+				/*
+				 * The BVETS convertor generates an interval value of 24.99
+				 * Treat this as one complete block
+				 */
+				interval = 25;
+			}
 			Data.Blocks[BlockIndex].Repeaters[n].RailIndex = idx;
 			Data.Blocks[BlockIndex].Repeaters[n].Name = key;
 			Data.Blocks[BlockIndex].Repeaters[n].Type = type;

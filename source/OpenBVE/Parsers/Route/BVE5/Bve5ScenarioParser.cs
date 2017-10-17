@@ -1837,7 +1837,7 @@ namespace OpenBve
 												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
+												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
 												Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
 											}
 										}
