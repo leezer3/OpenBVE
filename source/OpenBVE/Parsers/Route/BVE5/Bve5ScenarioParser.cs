@@ -53,8 +53,27 @@ namespace OpenBve
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
-			internal bool followsRailPitch;
-			internal bool followsRailCant;
+			internal RailTransformationTypes BaseTransformation;
+		}
+
+		/// <summary>Defines the different types of base transform which may be applied to an object
+		/// 
+		/// NOTE:
+		/// Rotation is applied separately to the result of the base transform
+		/// </summary>
+		private enum RailTransformationTypes
+		{
+			/// <summary>Flat within the world</summary>
+			Flat = 0,
+			/// <summary>Follows the pitch of it's rail</summary>
+			FollowsPitch = 1,
+			/// <summary>Follows the cant of it's rail</summary>
+			FollowsCant = 2,
+			/// <summary>Follows both the pitch and cant of it's rail</summary>
+			FollowsBoth = 3,
+			/// <summary>Follows the pitch and cant of rail 0</summary>
+			FollowsFirstRail = 4
+
 		}
 
 		private struct Crack
@@ -1747,55 +1766,103 @@ namespace OpenBve
 						switch (Data.Blocks[i].Repeaters[j].Type)
 						{
 							case 0:
-								double lastRepetion = Data.Blocks[i].Repeaters[j].TrackPosition;
-								int t;
-								if (i != 0)
+								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
 								{
-									for (t = 0; t < Data.Blocks[i - 1].Repeaters.Length; t++)
+									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
+									if (idx >= Data.Blocks[i].RailFreeObj.Length)
 									{
-										if (Data.Blocks[i - 1].Repeaters[t].Name == Data.Blocks[i].Repeaters[j].Name)
+										Array.Resize<Object[]>(ref Data.Blocks[i].RailFreeObj, idx + 1);
+									}
+									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
+									//If the repetition interval is not 0.0 then this may repeat within a block
+									if (i > 0)
+									{
+										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
 										{
-											lastRepetion = Data.Blocks[i - 1].Repeaters[t].TrackPosition;
-											break;
+											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
+											{
+												//We've found our repeater in the last block, so we must add the repetition interval
+												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
+																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
+
+												int ol = 0;
+												if (Data.Blocks[i].RailFreeObj[idx] == null)
+												{
+													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+													ol = 0;
+												}
+												else
+												{
+													ol = Data.Blocks[i].RailFreeObj[idx].Length;
+													Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+												}
+												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
+												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
+											}
 										}
 									}
-								}
-								if (lastRepetion != Data.Blocks[i].Repeaters[j].TrackPosition)
-								{
-									Data.Blocks[i].Repeaters[j].TrackPosition = lastRepetion;
-									double nextRepetition = lastRepetion + Data.Blocks[i].Repeaters[j].RepetitionInterval;
-									
-									if (nextRepetition > Data.Blocks[i].Repeaters[j].TrackPosition)
+									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
 									{
-										Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
-										int sttype = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-										double d = lastRepetion - StartingDistance;
-										double dx = 0;
-										double dy = 0;
-										Vector3 wpos = Position +
-										               new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height,
-											               Direction.Y * d - Direction.X * dx);
-										double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
-										if (sttype > Data.Structure.Objects.Length || Data.Structure.Objects[sttype] == null)
+										int ol = 0;
+										if (Data.Blocks[i].RailFreeObj[idx] == null)
 										{
-											continue;
+											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+											ol = 0;
 										}
-										Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation,
-											new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-											Data.BlockInterval, tpos);
+										else
+										{
+											ol = Data.Blocks[i].RailFreeObj[idx].Length;
+											Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+										}
+										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
+										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
+										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
 									}
+									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
+
 								}
 								else
 								{
-									int sttype = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-									double d = Data.Blocks[i].Repeaters[j].TrackPosition - StartingDistance;
-									double dx = 0;
-									double dy = 0;
-									Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
-									double tpos = Data.Blocks[i].Repeaters[j].TrackPosition;
-									Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation, new World.Transformation(0, 0, 0), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);		
+									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
+									if (idx >= Data.Blocks[i].RailFreeObj.Length)
+									{
+										Array.Resize<Object[]>(ref Data.Blocks[i].RailFreeObj, idx + 1);
+									}
+									int ol = 0;
+									if (Data.Blocks[i].RailFreeObj[idx] == null)
+									{
+										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+										ol = 0;
+									}
+									else
+									{
+										ol = Data.Blocks[i].RailFreeObj[idx].Length;
+										Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+									}
+									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
+									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
 								}
-								
 								break;
 							case 1:
 								//The repeater follows the gradient of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
@@ -1837,8 +1904,7 @@ namespace OpenBve
 												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
-												Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
 											}
 										}
 									}
@@ -1864,8 +1930,7 @@ namespace OpenBve
 											Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 											Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 											Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-											Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
-											Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+											Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
 									}
 										Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 									
@@ -1896,8 +1961,107 @@ namespace OpenBve
 									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-									Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = false;
-									Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
+								}
+								break;
+							case 2:
+								//The repeater follows the cant of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
+								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
+								{
+									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
+									if (idx >= Data.Blocks[i].RailFreeObj.Length)
+									{
+										Array.Resize<Object[]>(ref Data.Blocks[i].RailFreeObj, idx + 1);
+									}
+									double nextRepetition = Data.Blocks[i].Repeaters[j].TrackPosition;
+									//If the repetition interval is not 0.0 then this may repeat within a block
+									if (i > 0)
+									{
+										for (int k = 0; k < Data.Blocks[i - 1].Repeaters.Length; k++)
+										{
+											if (Data.Blocks[i - 1].Repeaters[k].Name == Data.Blocks[i].Repeaters[j].Name)
+											{
+												//We've found our repeater in the last block, so we must add the repetition interval
+												nextRepetition = Data.Blocks[i - 1].Repeaters[k].TrackPosition +
+																 Data.Blocks[i - 1].Repeaters[k].RepetitionInterval;
+
+												int ol = 0;
+												if (Data.Blocks[i].RailFreeObj[idx] == null)
+												{
+													Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+													ol = 0;
+												}
+												else
+												{
+													ol = Data.Blocks[i].RailFreeObj[idx].Length;
+													Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+												}
+												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
+												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
+											}
+										}
+									}
+									while (nextRepetition < Data.Blocks[i].Repeaters[j].TrackPosition + Data.BlockInterval)
+									{
+										int ol = 0;
+										if (Data.Blocks[i].RailFreeObj[idx] == null)
+										{
+											Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+											ol = 0;
+										}
+										else
+										{
+											ol = Data.Blocks[i].RailFreeObj[idx].Length;
+											Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+										}
+										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
+										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
+										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
+									}
+									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
+
+								}
+								else
+								{
+									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
+									if (idx >= Data.Blocks[i].RailFreeObj.Length)
+									{
+										Array.Resize<Object[]>(ref Data.Blocks[i].RailFreeObj, idx + 1);
+									}
+									int ol = 0;
+									if (Data.Blocks[i].RailFreeObj[idx] == null)
+									{
+										Data.Blocks[i].RailFreeObj[idx] = new Object[1];
+										ol = 0;
+									}
+									else
+									{
+										ol = Data.Blocks[i].RailFreeObj[idx].Length;
+										Array.Resize<Object>(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
+									}
+									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
+									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
+									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
+									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
+									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
+									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
+									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
+									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
+									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
 								}
 								break;
 							case 3:
@@ -1942,8 +2106,7 @@ namespace OpenBve
 												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-												Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
-												Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
 											}
 										}
 									}
@@ -1969,8 +2132,7 @@ namespace OpenBve
 										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-										Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
-										Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -2001,8 +2163,7 @@ namespace OpenBve
 									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
 									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
 									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-									Data.Blocks[i].RailFreeObj[idx][ol].followsRailCant = true;
-									Data.Blocks[i].RailFreeObj[idx][ol].followsRailPitch = true;
+									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
 								}
 								break;
 						}
@@ -2035,6 +2196,7 @@ namespace OpenBve
 						// rail
 						Vector3 pos;
 						World.Transformation RailTransformation;
+						World.Transformation RailNullTransformation;
 						double planar, updown;
 						if (j == 0)
 						{
@@ -2042,6 +2204,8 @@ namespace OpenBve
 							planar = 0.0;
 							updown = 0.0;
 							RailTransformation = new World.Transformation(TrackTransformation, planar, updown, 0.0);
+							RailNullTransformation = new World.Transformation(RailTransformation);
+							RailNullTransformation.Y = new Vector3(0,1.0,0);
 							pos = Position;
 						}
 						else
@@ -2144,8 +2308,9 @@ namespace OpenBve
 								planar = Math.Atan(dx / c);
 								dh = dy / c;
 								updown = Math.Atan(dh);
-								
-								
+								RailNullTransformation = new World.Transformation(RailTransformation);
+								RailNullTransformation.Y = new Vector3(0,1.0,0);
+
 							}
 							else
 							{
@@ -2154,6 +2319,8 @@ namespace OpenBve
 								updown = 0.0;
 								RailTransformation = new World.Transformation(TrackTransformation, 0.0, 0.0, 0.0);
 								TrackGroundTransformation = new World.Transformation(GroundTransformation, 0.0, 0.0, 0.0);
+								RailNullTransformation = new World.Transformation(RailTransformation);
+								RailNullTransformation.Y = new Vector3(0, 1.0, 0);
 							}
 						}
 						// cracks
@@ -2223,30 +2390,38 @@ namespace OpenBve
 									{
 										continue;
 									}
-									if (Data.Blocks[i].RailFreeObj[j][k].followsRailCant && Data.Blocks[i].RailFreeObj[j][k].followsRailPitch)
+									switch (Data.Blocks[i].RailFreeObj[j][k].BaseTransformation)
 									{
-										Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
-											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-											Data.BlockInterval, tpos, 1.0, false);
-									} else if (Data.Blocks[i].RailFreeObj[j][k].followsRailCant) {
-										Data.Structure.Objects[sttype].CreateObject(wpos, TrackGroundTransformation,
-											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-											Data.BlockInterval, tpos, 1.0, false);
-									} else if (Data.Blocks[i].RailFreeObj[j][k].followsRailPitch)
-									{
-										Data.Structure.Objects[sttype].CreateObject(wpos, GroundTransformation,
-											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-											Data.BlockInterval, tpos, 1.0, false);
-									}
-									else
-									{
-										Data.Structure.Objects[sttype].CreateObject(wpos, NullTransformation,
-											new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
-												Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
-											Data.BlockInterval, tpos, 1.0, false);
+										case RailTransformationTypes.Flat:
+											//As expected, this is used for repeaters with a type value of zero
+											//However, to get correct appearance in-game, they actually seem to require the rail transform....
+
+											//TODO: Check how the transform is created; I presume we require a new one which doesn't take into account
+											//height or cant, but does X & Y positions of the rail???
+											//Sounds remarkably like the ground transform, but this doesn't appear to work....
+											Data.Structure.Objects[sttype].CreateObject(wpos, RailNullTransformation,
+												new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+												Data.BlockInterval, tpos, 1.0, false);
+											break;
+										case RailTransformationTypes.FollowsPitch:
+											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
+												new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+												Data.BlockInterval, tpos, 1.0, false);
+											break;
+										case RailTransformationTypes.FollowsCant:
+											Data.Structure.Objects[sttype].CreateObject(wpos, TrackGroundTransformation,
+												new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+												Data.BlockInterval, tpos, 1.0, false);
+											break;
+										case RailTransformationTypes.FollowsBoth:
+											Data.Structure.Objects[sttype].CreateObject(wpos, RailTransformation,
+												new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch,
+													Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance,
+												Data.BlockInterval, tpos, 1.0, false);
+											break;
 									}
 								}
 							}

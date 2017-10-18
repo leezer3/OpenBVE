@@ -422,8 +422,7 @@ namespace OpenBve
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = false;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = false;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.Flat;
 					break;
 				case 1:
 					//Follows gradient
@@ -435,8 +434,7 @@ namespace OpenBve
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = false;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = true;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsPitch;
 					break;
 				case 2:
 					//Follows cant
@@ -448,8 +446,7 @@ namespace OpenBve
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = true;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = false;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsCant;
 					break;
 				case 3:
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
@@ -460,8 +457,7 @@ namespace OpenBve
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw*0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch*0.0174532925199433;
 					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll*0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailCant = true;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].followsRailPitch = true;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsBoth;
 					break;
 			}
 		}

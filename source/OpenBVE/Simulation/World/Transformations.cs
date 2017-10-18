@@ -113,6 +113,13 @@ namespace OpenBve
 				this.Y = y;
 				this.Z = z;
 			}
+
+			internal Transformation(Transformation t)
+			{
+				this.X = t.X;
+				this.Y = t.Y;
+				this.Z = t.Z;
+			}
 		}
 
 		/// <summary>Rotates a vector</summary>
