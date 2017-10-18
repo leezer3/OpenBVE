@@ -245,7 +245,6 @@ namespace OpenBve {
 						#if !DEBUG
 					} catch (Exception ex) {
 						bool found = false;
-						//Thread.Sleep(20);
 						for (int i = 0; i < TrainManager.Trains.Length; i++) {
 							if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 								if (TrainManager.Trains[i].Plugin.LastException != null) {
@@ -259,8 +258,24 @@ namespace OpenBve {
 						}
 						if (!found)
 						{
-							MessageBox.Show("The route and train loader encountered the following critical error: " + Environment.NewLine + ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-							CrashHandler.LoadingCrash(ex.ToString(), false);
+							if (ex is System.DllNotFoundException)
+							{
+								Interface.AddMessage(Interface.MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
+								switch (ex.Message)
+								{
+									case "libopenal.so.1":
+										MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										break;
+									default:
+										MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										break;
+								}
+							}
+							else
+							{
+								Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+								CrashHandler.LoadingCrash(ex + Environment.StackTrace, false);
+							}
 							RestartArguments = "";
 						}
 					}

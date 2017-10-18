@@ -72,7 +72,6 @@ namespace OpenBve {
 			internal double EqualizingReservoirChargeRate;
 			internal double BrakePipeCurrentPressure;
 			internal double BrakePipeNormalPressure;
-			internal double BrakePipeFlowSpeed;
 			internal double BrakePipeChargeRate;
 			internal double BrakePipeServiceRate;
 			internal double BrakePipeEmergencyRate;

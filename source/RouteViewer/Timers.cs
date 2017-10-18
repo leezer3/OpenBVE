@@ -5,7 +5,7 @@ namespace OpenBve {
     /// <summary>This class implements a high-precision, multi-platform timer</summary>
     public static class CPreciseTimer
     {
-        internal static bool UseEnvTicks;
+	    private static readonly bool UseEnvTicks;
 
         //UNSAFE ZONE//
         [DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall), System.Security.SuppressUnmanagedCodeSecurity]

@@ -302,17 +302,17 @@ namespace OpenBve {
 
 		/// <summary>Converts the specified security command to a virtual key.</summary>
 		/// <returns>Virtual key for plugins.</returns>
-		/// <param name="cmd">Security command. If this isn't security command, ArgumentException will be thrown.</param>
+		/// <param name="cmd">The security command. If this isn't a recognized security command, ArgumentException will be thrown.</param>
 		internal static VirtualKeys SecurityToVirtualKey(Command cmd)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
-			if (cmdname == null) throw new ArgumentNullException(nameof(cmd));
+			if (cmdname == null) throw new ArgumentNullException("cmd");
 			if (cmdname.StartsWith("Security", StringComparison.Ordinal))
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
 			VirtualKeys key;
 			if (!Enum.TryParse(cmdname, out key))
 				throw new ArgumentException("VirtualKeys does not contain following key: " +
-					cmdname, nameof(cmd));
+					cmdname, "cmd");
 			return key;
 		}
 	}

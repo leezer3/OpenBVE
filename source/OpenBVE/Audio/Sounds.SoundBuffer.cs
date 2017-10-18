@@ -7,7 +7,7 @@ namespace OpenBve {
 		internal class SoundBuffer : SoundHandle {
 			// --- members ---
 			/// <summary>The origin where the sound can be loaded from.</summary>
-			internal SoundOrigin Origin;
+			internal readonly SoundOrigin Origin;
 			/// <summary>The default effective radius.</summary>
 			internal double Radius;
 			/// <summary>Whether the sound is loaded and the OpenAL sound name is valid.</summary>

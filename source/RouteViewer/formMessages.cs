@@ -14,9 +14,14 @@ namespace OpenBve
         // show messages
         internal static DialogResult ShowMessages()
         {
-            formMessages Dialog = new formMessages();
-            Dialog.listviewMessages.SmallImageList = new ImageList();
-            string Folder = Program.FileSystem.GetDataFolder("Menu");
+	        formMessages Dialog = new formMessages
+	        {
+		        listviewMessages =
+		        {
+			        SmallImageList = new ImageList()
+		        }
+	        };
+	        string Folder = Program.FileSystem.GetDataFolder("Menu");
 
             try
             {
@@ -97,7 +102,7 @@ namespace OpenBve
             }
             // save
             SaveFileDialog Dialog = new SaveFileDialog();
-            Dialog.Filter = "Text files|*.txt|All files|*";
+            Dialog.Filter = @"Text files|*.txt|All files|*";
             if (Dialog.ShowDialog() == DialogResult.OK)
             {
                 try

@@ -6,8 +6,10 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 
-namespace OpenBve {
-	internal static class Screen {
+namespace OpenBve
+{
+	internal static class Screen
+	{
 		
 		/// <summary>Stores the current width of the screen.</summary>
 		internal static int Width = 0;
@@ -130,7 +132,9 @@ namespace OpenBve {
                     GL.Disable(EnableCap.CullFace);
                 }
                 Renderer.ReAddObjects();
-            } else {
+            }
+			else
+			{
                 GL.Viewport(0, 0, Width, Height);
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
@@ -139,7 +143,8 @@ namespace OpenBve {
 	    }
 
 		/// <summary>Changes to or from fullscreen mode.</summary>
-		internal static void ToggleFullscreen() {
+		internal static void ToggleFullscreen()
+		{
             
 			Fullscreen = !Fullscreen;
 			// begin HACK //
@@ -176,7 +181,9 @@ namespace OpenBve {
                         Interface.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			        Fullscreen = false;
 			    }
-			} else {
+			}
+			else
+			{
                 OpenTK.DisplayDevice.Default.RestoreResolution();
                 Program.currentGameWindow.WindowState = WindowState.Normal;
                 Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
@@ -195,7 +202,9 @@ namespace OpenBve {
 			if (Renderer.OptionBackfaceCulling)
 			{
 			    GL.Enable(EnableCap.CullFace);
-			} else {
+			}
+			else
+			{
 				GL.Disable(EnableCap.CullFace);
 			}
 			Renderer.ReAddObjects();
@@ -205,16 +214,11 @@ namespace OpenBve {
             //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
             if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
             {
-                World.CameraCurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
-                    0.0);
+                World.CameraCurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0, 0.0);
             }
             World.CameraCurrentAlignment.Yaw = 0.0;
             World.CameraCurrentAlignment.Pitch = 0.0;
             World.CameraCurrentAlignment.Roll = 0.0;
-            if (World.CameraMode == World.CameraViewMode.Track)
-            {
-                World.CameraTrackFollower.Update(TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,false);
-            }  
 		}
         
 		

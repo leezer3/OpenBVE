@@ -56,7 +56,6 @@ namespace OpenBve {
 			bool q = i == (int)Interface.InterpolationMode.AnisotropicFiltering;
 			labelAnisotropic.Enabled = q;
 			updownAnisotropic.Enabled = q;
-			q = i != (int)Interface.InterpolationMode.NearestNeighbor & i != (int)Interface.InterpolationMode.Bilinear;
 		}
 
 		private void comboBoxTimeTableDisplayMode_SelectedIndexChanged(object sender, EventArgs e)

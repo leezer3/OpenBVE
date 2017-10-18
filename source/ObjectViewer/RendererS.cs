@@ -86,7 +86,6 @@ namespace OpenBve
         internal static Color24 OptionDiffuseColor = new Color24(159, 159, 159);
         internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
         internal static float OptionLightingResultingAmount = 1.0f;
-        internal static bool OptionFauxNighttime = true;
         internal static bool OptionNormals = false;
         internal static bool OptionWireframe = false;
         internal static bool OptionBackfaceCulling = true;

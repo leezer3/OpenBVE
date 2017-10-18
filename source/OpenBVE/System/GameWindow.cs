@@ -350,7 +350,7 @@ namespace OpenBve
 			Game.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
 			int PlayerFirstStationIndex = -1;
-			double PlayerFirstStationPosition = 0.0;
+			double PlayerFirstStationPosition;
 			int os = -1;
 			bool f = false;
 			for (int i = 0; i < Game.Stations.Length; i++)

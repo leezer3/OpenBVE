@@ -8,9 +8,9 @@ namespace OpenBve
 		internal struct KeyInfo
 		{
 			/// <summary>The key (OpenTK.Input.Key enum member)</summary>
-			internal Key Key;
+			internal readonly Key Key;
 			/// <summary>The internal key name</summary>
-			internal string Name;
+			internal readonly string Name;
 			/// <summary>The translated key description</summary>
 			internal string Description;
 			/// <summary>Creates a new translated key</summary>

@@ -6,16 +6,16 @@ namespace OpenBve {
 
 		// members (built-in timetable)
 		internal static string DefaultTimetableDescription = "";
-		internal static Textures.Texture DefaultTimetableTexture = null;
+		internal static Textures.Texture DefaultTimetableTexture;
 		internal static double DefaultTimetablePosition = 0.0;
 		
 		// members (custom timetable)
 		internal static ObjectManager.AnimatedObject[] CustomObjects = new ObjectManager.AnimatedObject[16];
-		internal static int CustomObjectsUsed = 0;
+		internal static int CustomObjectsUsed;
 		internal static Textures.Texture[] CustomTextures = new Textures.Texture[] { };
-		internal static bool CustomTimetableAvailable = false;
-		internal static Textures.Texture CurrentCustomTimetableDaytimeTexture = null;
-		internal static Textures.Texture CurrentCustomTimetableNighttimeTexture = null;
+		internal static bool CustomTimetableAvailable;
+		internal static Textures.Texture CurrentCustomTimetableDaytimeTexture;
+		internal static Textures.Texture CurrentCustomTimetableNighttimeTexture;
 		internal static double CustomTimetablePosition = 0.0;
 		
 		// members (interface)

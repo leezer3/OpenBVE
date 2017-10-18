@@ -530,7 +530,7 @@ namespace OpenBve
 											}
 											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
-										case "bvetshacks":
+										case "enablebvetshacks":
 											Interface.CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 
@@ -806,7 +806,7 @@ namespace OpenBve
 				case Interface.GameMode.Expert: Builder.AppendLine("expert"); break;
 				default: Builder.AppendLine("normal"); break;
 			}
-			Builder.Append("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
+			Builder.AppendLine("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
 			Builder.AppendLine("enablebvetshacks = " + (CurrentOptions.EnableBveTsHacks ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[verbosity]");

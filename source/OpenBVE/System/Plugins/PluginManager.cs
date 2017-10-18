@@ -4,7 +4,7 @@ using System.Reflection;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
-	internal static partial class PluginManager {
+	internal static class PluginManager {
 		
 		/// <summary>Represents an abstract plugin.</summary>
 		internal abstract class Plugin {
@@ -42,7 +42,7 @@ namespace OpenBve {
 			/// <summary>Whether this plugin can disable time acceleration.</summary>
 			internal static bool DisableTimeAcceleration;
 			/// <summary>The current camera view mode</summary>
-			internal OpenBveApi.Runtime.CameraViewMode CurrentCameraViewMode;
+			internal CameraViewMode CurrentCameraViewMode;
 
 			private List<Station> currentRouteStations;
 			internal bool StationsLoaded;
@@ -153,7 +153,7 @@ namespace OpenBve {
 				 * Could probably do away with the CurrentCameraViewMode and use a direct cast??
 				 * 
 				 */
-				CurrentCameraViewMode = (OpenBveApi.Runtime.CameraViewMode)World.CameraMode;
+				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
@@ -589,6 +589,11 @@ namespace OpenBve {
 				}
 				foreach (Type type in types) {
 					if (typeof(IRuntime).IsAssignableFrom(type)) {
+						if (type.FullName == null)
+						{
+							//Should never happen, but static code inspection suggests that it's possible....
+							throw new InvalidOperationException();
+						}
 						IRuntime api = assembly.CreateInstance(type.FullName) as IRuntime;
 						train.Plugin = new NetPlugin(pluginFile, trainFolder, api, train);
 						if (train.Plugin.Load(specs, mode)) {
