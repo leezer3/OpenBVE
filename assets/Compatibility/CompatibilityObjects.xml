@@ -1,8 +1,12 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Compatibility>
-  <!-- Uchibo base route objects -->
+	<!-- Uchibo base route objects (V2) -->
 	<ObjectList>
 		<FileName>UchiboBase.xml</FileName>
+	</ObjectList>
+	<!-- Uchibo base route objects (V1) -->
+	<ObjectList>
+		<FileName>UchiboV1Base.xml</FileName>
 	</ObjectList>
   </Compatibility>
 </openBVE>

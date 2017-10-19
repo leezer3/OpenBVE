@@ -1,0 +1,12 @@
+CreateMeshBuilder,
+AddVertex,-3.8,-3.3,0
+AddVertex,-3.8,8.1,0
+AddVertex,7.6,8.1,0
+AddVertex,7.6,-3.3,0
+AddFace,0,1,2,3
+LoadTexture,TunEntD.png
+SetTextureCoordinates,0,0,1
+SetTextureCoordinates,1,0,0
+SetTextureCoordinates,2,1,0
+SetTextureCoordinates,3,1,1
+SetDecalTransparentColor,0,0,0
