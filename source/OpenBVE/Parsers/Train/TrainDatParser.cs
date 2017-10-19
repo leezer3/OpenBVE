@@ -42,6 +42,9 @@ namespace OpenBve {
 					string t = Lines[i].ToLowerInvariant();
 					switch (t)
 					{
+						case "bve1200000":
+							currentFormat = TrainDatFormats.BVE1200000;
+							break;
 						case "bve1210000":
 							currentFormat = TrainDatFormats.BVE1210000;
 							break;
@@ -160,7 +163,7 @@ namespace OpenBve {
 											} break;
 										case 4:
 											{
-												if (currentFormat == TrainDatFormats.BVE1210000 || currentFormat == TrainDatFormats.BVE1220000) {
+												if (currentFormat == TrainDatFormats.BVE1200000 || currentFormat == TrainDatFormats.BVE1210000 || currentFormat == TrainDatFormats.BVE1220000) {
 													if (a <= 0.0) {
 														AccelerationCurves[n].StageTwoExponent = 1.0;
 														Interface.AddMessage(Interface.MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
