@@ -183,6 +183,7 @@
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve4.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Xml.cs" />
+    <Compile Include="Parsers\Train\TrainDatParser.Formats.cs" />
     <Compile Include="Parsers\Train\TrainXmlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
