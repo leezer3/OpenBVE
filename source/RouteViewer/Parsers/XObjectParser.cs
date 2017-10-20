@@ -1916,7 +1916,7 @@ namespace OpenBve
 													return false;
 												}
 											}
-											if (g.Data[3] is String)
+											if (g.Data.Length >= 4 && g.Data[3] is String)
 											{
 												for (int m = 3; m < g.Data.Length; m++)
 												{
