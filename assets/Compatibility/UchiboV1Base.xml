@@ -68,13 +68,13 @@
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>CraSBalL.b3d</Name>
-		<Path>Uchibo\CraSBalL.csv</Path>
+		<Name>CraSlbL.b3d</Name>
+		<Path>Uchibo\CraSlbL.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
-		<Name>CraSBalR.b3d</Name>
-		<Path>Uchibo\CraSBalR.csv</Path>
+		<Name>CraSlbR.b3d</Name>
+		<Path>Uchibo\CraSlbR.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>
@@ -200,6 +200,11 @@
 	<Object>
 		<Name>Signal3.b3d</Name>
 		<Path>Signals\Signal_3_0.csv</Path>
+		<Message></Message>
+	</Object>
+	<Object>
+		<Name>SigPole.b3d</Name>
+		<Path>UchiboV1\SigPole.csv</Path>
 		<Message></Message>
 	</Object>
 	<Object>

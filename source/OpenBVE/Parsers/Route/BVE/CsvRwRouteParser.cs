@@ -2363,8 +2363,12 @@ namespace OpenBve {
 														}
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-													if (!System.IO.File.Exists(f)) {
-														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp")) {
+														//Default background textures supplied with Uchibo for BVE1 / BVE2, so map to something that's not totally black
+														f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
+													}
+													if (!System.IO.File.Exists(f)) {														
+															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														if (f.ToLowerInvariant().EndsWith(".xml"))
 														{
