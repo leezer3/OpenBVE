@@ -3812,9 +3812,9 @@ namespace OpenBve {
 										}
 										int device = 0;
 										if (Arguments.Length >= 5 && Arguments[4].Length > 0) {
-											if (string.Compare(Arguments[4], "ats", StringComparison.OrdinalIgnoreCase) == 0) {
+											if (string.Compare(Arguments[4], "ats", StringComparison.OrdinalIgnoreCase) == 0 || (Interface.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("ats", StringComparison.OrdinalIgnoreCase))) {
 												device = 0;
-											} else if (string.Compare(Arguments[4], "atc", StringComparison.OrdinalIgnoreCase) == 0) {
+											} else if (string.Compare(Arguments[4], "atc", StringComparison.OrdinalIgnoreCase) == 0 || (Interface.CurrentOptions.EnableBveTsHacks && Arguments[4].StartsWith("atc", StringComparison.OrdinalIgnoreCase))) {
 												device = 1;
 											} else if (!NumberFormats.TryParseIntVb6(Arguments[4], out device)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "System is invalid in Track.Station at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
