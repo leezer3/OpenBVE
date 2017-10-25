@@ -95,6 +95,8 @@ namespace OpenBve
 						Data.Blocks[i].Rail[j].RailEndX = Data.Blocks[i - 1].Rail[j].RailStartX;
 						Data.Blocks[i].Rail[j].RailEndY = Data.Blocks[i - 1].Rail[j].RailStartY;
 						Data.Blocks[i].Rail[j].Key = Data.Blocks[i - 1].Rail[j].Key;
+						Data.Blocks[i].Rail[j].HorizontalRadius = Data.Blocks[i - 1].Rail[j].HorizontalRadius;
+						Data.Blocks[i].Rail[j].VerticalRadius = Data.Blocks[i - 1].Rail[j].VerticalRadius;
 					}
 					if (!PreviewOnly)
 					{

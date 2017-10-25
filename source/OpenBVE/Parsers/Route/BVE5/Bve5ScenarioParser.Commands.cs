@@ -1204,6 +1204,8 @@ namespace OpenBve
 				idx = Data.Blocks[BlockIndex].Rail.Length;
 				Array.Resize(ref Data.Blocks[BlockIndex].Rail, idx + 1);
 				Data.Blocks[BlockIndex].Rail[idx].Key = key;
+				Data.Blocks[BlockIndex].Rail[idx].HorizontalRadius = 0;
+				Data.Blocks[BlockIndex].Rail[idx].VerticalRadius = 0;
 			}
 			
 			if (Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed)
@@ -1245,6 +1247,32 @@ namespace OpenBve
 					if (!Data.Blocks[BlockIndex].Rail[idx].RailEnd)
 					{
 						Data.Blocks[BlockIndex].Rail[idx].RailEndY = Data.Blocks[BlockIndex].Rail[idx].RailStartY;
+					}
+				}
+				if (Arguments.Length >= 3)
+				{
+					if (Arguments[2].Length > 0)
+					{
+						double HorizontalRadius;
+						if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out HorizontalRadius))
+						{
+							//Interface.AddMessage(Interface.MessageType.Error, false, "HorizontalRadius is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							HorizontalRadius = 0.0;
+						}
+						Data.Blocks[BlockIndex].Rail[idx].HorizontalRadius = HorizontalRadius;
+					}
+				}
+				if (Arguments.Length >= 4)
+				{
+					if (Arguments[3].Length > 0)
+					{
+						double VerticalRadius;
+						if (!NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out VerticalRadius))
+						{
+							//Interface.AddMessage(Interface.MessageType.Error, false, "HorizontalRadius is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							VerticalRadius = 0.0;
+						}
+						Data.Blocks[BlockIndex].Rail[idx].VerticalRadius = VerticalRadius;
 					}
 				}
 				if (Data.Blocks[BlockIndex].RailType.Length <= idx)
