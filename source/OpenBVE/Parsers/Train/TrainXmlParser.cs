@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using OpenBveApi.Math;
+using System.Drawing;
 
 namespace OpenBve.Parsers.Train
 {
@@ -188,6 +189,57 @@ namespace OpenBve.Parsers.Train
 					}
 				}
 
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
+				if (DocumentNodes != null && DocumentNodes.Count > 0)
+				{
+					//Optional section
+					for (int i = 0; i < DocumentNodes.Count; i++)
+					{
+						if (DocumentNodes[i].HasChildNodes)
+						{
+							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
+							{
+								switch (c.Name.ToLowerInvariant())
+								{
+									case "power":
+										Train.PowerNotchDescriptions = c.InnerText.Split(';');
+										for (int j = 0; j < Train.PowerNotchDescriptions.Length; j++)
+										{
+											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.PowerNotchDescriptions[j]);
+											if (s.Width > Train.MaxPowerNotchWidth)
+											{
+												Train.MaxPowerNotchWidth = s.Width;
+											}
+										}
+										break;
+									case "brake":
+										Train.BrakeNotchDescriptions = c.InnerText.Split(';');
+										for (int j = 0; j < Train.BrakeNotchDescriptions.Length; j++)
+										{
+											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.BrakeNotchDescriptions[j]);
+											if (s.Width > Train.MaxBrakeNotchWidth)
+											{
+												Train.MaxBrakeNotchWidth = s.Width;
+											}
+										}
+										break;
+									case "reverser":
+										Train.ReverserDescriptions = c.InnerText.Split(';');
+										for (int j = 0; j < Train.ReverserDescriptions.Length; j++)
+										{
+											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.ReverserDescriptions[j]);
+											if (s.Width > Train.MaxReverserWidth)
+											{
+												Train.MaxReverserWidth = s.Width;
+											}
+										}
+										break;
+								}
+							}
+						}
+
+					}
+				}
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
 					if (CarObjects[i] != null)
