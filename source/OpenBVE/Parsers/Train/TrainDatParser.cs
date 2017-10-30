@@ -313,7 +313,16 @@ namespace OpenBve {
 							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.SingleHandle = a == 1; break;
-										case 1: Train.Specs.MaximumPowerNotch = a; break;
+										case 1:
+											if (a >= 0)
+											{
+												Train.Specs.MaximumPowerNotch = a;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
+										break;
 										case 2: Train.Specs.MaximumBrakeNotch = a; break;
 										case 3: Train.Specs.PowerNotchReduceSteps = a; break;
 								}
