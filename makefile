@@ -501,6 +501,7 @@ $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_V
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
+	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(ROUTE_VIEWER_RESOURCE))
 
 ################
