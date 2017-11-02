@@ -1,6 +1,4 @@
-﻿#pragma warning disable 0660, 0661
-
-using System;
+﻿using System;
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>
@@ -185,7 +183,33 @@ namespace OpenBveApi.Math {
 			if (a.Z != b.Z) return false;
 			return true;
 		}
-		
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer representing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = this.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.Z.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Vector3))
+			{
+				return false;
+			}
+
+			return this.Equals((Vector3)obj);
+		}
+
 		/// <summary>Checks whether the two specified vectors are unequal.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
