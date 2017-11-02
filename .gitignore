@@ -40,3 +40,7 @@ source/*.xml
 
 #InnoSetup Output Folder
 [Oo]utput/
+
+#NuGet for MS Unit Tests
+packages
+!packages/repositories.config
