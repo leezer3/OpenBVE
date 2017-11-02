@@ -348,7 +348,7 @@ namespace CarXmlConvertor
 
 		internal static void GenerateExtensionsCfgXML()
 		{
-			List<string> newLines = new List<string>();
+			TabbedList newLines = new TabbedList();
 			newLines.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 			newLines.Add(
 				"<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">");
@@ -419,7 +419,7 @@ namespace CarXmlConvertor
 				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 				using (StreamWriter sw = new StreamWriter(fileOut))
 				{
-					foreach (String s in newLines)
+					foreach (String s in newLines.Lines)
 						sw.WriteLine(s);
 				}
 			}

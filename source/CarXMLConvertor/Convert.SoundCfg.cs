@@ -26,7 +26,7 @@ namespace CarXmlConvertor
         {
             panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
-            List<string> newLines = new List<string>();
+	        TabbedList newLines = new TabbedList();
             for (int i = 0; i < Lines.Length; i++)
             {
                 int j = Lines[i].IndexOf(';');
@@ -784,7 +784,7 @@ namespace CarXmlConvertor
                 string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
                 using (StreamWriter sw = new StreamWriter(fileOut))
                 {
-                    foreach (String s in newLines)
+                    foreach (String s in newLines.Lines)
                         sw.WriteLine(s);
                 }
             }
