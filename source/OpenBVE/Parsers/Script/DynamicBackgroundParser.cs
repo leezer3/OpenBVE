@@ -27,7 +27,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode n in DocumentNodes)
 					{
-						if (n.HasChildNodes)
+						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							double DisplayTime = -1;
 							//The time to transition between backgrounds in seconds

@@ -44,8 +44,6 @@ namespace CarXmlConvertor
                 MessageBox.Show("Invalid sound.cfg format declaration.");
                 return;
             }
-            newLines.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            newLines.Add("<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">");
             newLines.Add("<CarSounds>");
             for (int i = 0; i < Lines.Length; i++)
             {

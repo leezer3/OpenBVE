@@ -28,76 +28,127 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.labelSelectTrain = new System.Windows.Forms.Label();
-            this.buttonSelectFolder = new System.Windows.Forms.Button();
-            this.labelInfo = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.SuspendLayout();
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(7, 73);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(183, 20);
-            this.textBox1.TabIndex = 0;
-            // 
-            // labelSelectTrain
-            // 
-            this.labelSelectTrain.AutoSize = true;
-            this.labelSelectTrain.Location = new System.Drawing.Point(12, 54);
-            this.labelSelectTrain.Name = "labelSelectTrain";
-            this.labelSelectTrain.Size = new System.Drawing.Size(221, 13);
-            this.labelSelectTrain.TabIndex = 1;
-            this.labelSelectTrain.Text = "Please select the train folder to be converted:";
-            // 
-            // buttonSelectFolder
-            // 
-            this.buttonSelectFolder.Location = new System.Drawing.Point(196, 70);
-            this.buttonSelectFolder.Name = "buttonSelectFolder";
-            this.buttonSelectFolder.Size = new System.Drawing.Size(75, 23);
-            this.buttonSelectFolder.TabIndex = 2;
-            this.buttonSelectFolder.Text = "Select...";
-            this.buttonSelectFolder.UseVisualStyleBackColor = true;
-            this.buttonSelectFolder.Click += new System.EventHandler(this.buttonSelectFolder_Click);
-            // 
-            // labelInfo
-            // 
-            this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(7, 19);
-            this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(279, 13);
-            this.labelInfo.TabIndex = 3;
-            this.labelInfo.Text = "This tool may be used convert a sound.cfg to a sound.xml";
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(93, 120);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 35);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Convert!";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.process_Click);
-            // 
-            // CarXmlConvertor
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 166);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.labelInfo);
-            this.Controls.Add(this.buttonSelectFolder);
-            this.Controls.Add(this.labelSelectTrain);
-            this.Controls.Add(this.textBox1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "CarXmlConvertor";
-            this.Text = "Car XML Convertor";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.labelSelectTrain = new System.Windows.Forms.Label();
+			this.buttonSelectFolder = new System.Windows.Forms.Button();
+			this.labelInfo = new System.Windows.Forms.Label();
+			this.button1 = new System.Windows.Forms.Button();
+			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.radioButtonSingleFile = new System.Windows.Forms.RadioButton();
+			this.radioButtonChildFiles = new System.Windows.Forms.RadioButton();
+			this.panelCarXMLTypes = new System.Windows.Forms.Panel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.panelCarXMLTypes.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(7, 73);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(183, 20);
+			this.textBox1.TabIndex = 0;
+			// 
+			// labelSelectTrain
+			// 
+			this.labelSelectTrain.AutoSize = true;
+			this.labelSelectTrain.Location = new System.Drawing.Point(12, 54);
+			this.labelSelectTrain.Name = "labelSelectTrain";
+			this.labelSelectTrain.Size = new System.Drawing.Size(221, 13);
+			this.labelSelectTrain.TabIndex = 1;
+			this.labelSelectTrain.Text = "Please select the train folder to be converted:";
+			// 
+			// buttonSelectFolder
+			// 
+			this.buttonSelectFolder.Location = new System.Drawing.Point(196, 70);
+			this.buttonSelectFolder.Name = "buttonSelectFolder";
+			this.buttonSelectFolder.Size = new System.Drawing.Size(75, 23);
+			this.buttonSelectFolder.TabIndex = 2;
+			this.buttonSelectFolder.Text = "Select...";
+			this.buttonSelectFolder.UseVisualStyleBackColor = true;
+			this.buttonSelectFolder.Click += new System.EventHandler(this.buttonSelectFolder_Click);
+			// 
+			// labelInfo
+			// 
+			this.labelInfo.AutoSize = true;
+			this.labelInfo.Location = new System.Drawing.Point(7, 19);
+			this.labelInfo.Name = "labelInfo";
+			this.labelInfo.Size = new System.Drawing.Size(265, 13);
+			this.labelInfo.TabIndex = 3;
+			this.labelInfo.Text = "This tool may be used to convert a train to XML format.";
+			// 
+			// button1
+			// 
+			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button1.Location = new System.Drawing.Point(86, 158);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(104, 35);
+			this.button1.TabIndex = 4;
+			this.button1.Text = "Convert!";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.process_Click);
+			// 
+			// radioButtonSingleFile
+			// 
+			this.radioButtonSingleFile.AutoSize = true;
+			this.radioButtonSingleFile.Checked = true;
+			this.radioButtonSingleFile.Location = new System.Drawing.Point(27, 8);
+			this.radioButtonSingleFile.Name = "radioButtonSingleFile";
+			this.radioButtonSingleFile.Size = new System.Drawing.Size(73, 17);
+			this.radioButtonSingleFile.TabIndex = 0;
+			this.radioButtonSingleFile.TabStop = true;
+			this.radioButtonSingleFile.Text = "Single File";
+			this.radioButtonSingleFile.UseVisualStyleBackColor = true;
+			// 
+			// radioButtonChildFiles
+			// 
+			this.radioButtonChildFiles.AutoSize = true;
+			this.radioButtonChildFiles.Location = new System.Drawing.Point(106, 8);
+			this.radioButtonChildFiles.Name = "radioButtonChildFiles";
+			this.radioButtonChildFiles.Size = new System.Drawing.Size(91, 17);
+			this.radioButtonChildFiles.TabIndex = 1;
+			this.radioButtonChildFiles.Text = "Child Car Files";
+			this.radioButtonChildFiles.UseVisualStyleBackColor = true;
+			// 
+			// panelCarXMLTypes
+			// 
+			this.panelCarXMLTypes.Controls.Add(this.radioButtonSingleFile);
+			this.panelCarXMLTypes.Controls.Add(this.radioButtonChildFiles);
+			this.panelCarXMLTypes.Location = new System.Drawing.Point(48, 125);
+			this.panelCarXMLTypes.Name = "panelCarXMLTypes";
+			this.panelCarXMLTypes.Size = new System.Drawing.Size(200, 27);
+			this.panelCarXMLTypes.TabIndex = 7;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(7, 96);
+			this.label1.MaximumSize = new System.Drawing.Size(300, 0);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(270, 26);
+			this.label1.TabIndex = 8;
+			this.label1.Text = "Please select whether to use a single Train.xml file, or a Train.xml file with ch" +
+    "ild Car.xml files:";
+			// 
+			// MainForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(298, 200);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.panelCarXMLTypes);
+			this.Controls.Add(this.button1);
+			this.Controls.Add(this.labelInfo);
+			this.Controls.Add(this.buttonSelectFolder);
+			this.Controls.Add(this.labelSelectTrain);
+			this.Controls.Add(this.textBox1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "MainForm";
+			this.Text = "Car XML Convertor";
+			this.panelCarXMLTypes.ResumeLayout(false);
+			this.panelCarXMLTypes.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
@@ -109,6 +160,10 @@
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
-    }
+		private System.Windows.Forms.RadioButton radioButtonChildFiles;
+		private System.Windows.Forms.RadioButton radioButtonSingleFile;
+		private System.Windows.Forms.Panel panelCarXMLTypes;
+		private System.Windows.Forms.Label label1;
+	}
 }
 

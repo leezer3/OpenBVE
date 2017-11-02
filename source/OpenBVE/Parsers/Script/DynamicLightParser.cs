@@ -2,6 +2,7 @@
 using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -35,7 +36,7 @@ namespace OpenBve
 					foreach (XmlNode n in DocumentNodes)
 					{
 						Renderer.LightDefinition currentLight = new Renderer.LightDefinition();
-						if (n.HasChildNodes)
+						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							bool tf = false, al = false, dl = false, ld = false, cb = false;
 							string ts = null;

@@ -223,10 +223,18 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
-										case 0: Train.Specs.DelayPowerUp = a; break;
-										case 1: Train.Specs.DelayPowerDown = a; break;
-										case 2: Train.Specs.DelayBrakeUp = a; break;
-										case 3: Train.Specs.DelayBrakeDown = a; break;
+										case 0:
+											Train.Specs.DelayPowerUp = new[] { a };
+											break;
+										case 1:
+											Train.Specs.DelayPowerDown = new[] { a };
+										break;
+										case 2:
+											Train.Specs.DelayBrakeUp = new[] { a };
+										break;
+										case 3:
+											Train.Specs.DelayBrakeDown = new[] { a };
+										break;
 								}
 							} i++; n++;
 						} i--; break;

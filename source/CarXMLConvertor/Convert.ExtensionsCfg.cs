@@ -346,71 +346,40 @@ namespace CarXmlConvertor
 			}
 		}
 
+		internal static bool SingleFile = false;
+
 		internal static void GenerateExtensionsCfgXML()
 		{
 			TabbedList newLines = new TabbedList();
-			newLines.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			newLines.Add(
-				"<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">");
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
-				newLines.Add("<Car>");
-				if (CarInfos[i].Length != 0.0)
+				if (SingleFile == true)
 				{
-					newLines.Add("<Length>" + CarInfos[i].Length + "</Length>");
+					GenerateCarXML(ref newLines, i);
 				}
 				else
 				{
-					newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
+					TabbedList carLines = new TabbedList();
+					GenerateCarXML(ref carLines, i);
+					carLines.Add("</openBVE>");
+					try
+					{
+						string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
+						using (StreamWriter sw = new StreamWriter(fileOut))
+						{
+							foreach (String s in carLines.Lines)
+								sw.WriteLine(s);
+						}
+						newLines.Add("<Car>"+ "Car" + i + ".xml</Car>");
+					}
+					catch
+					{
+						MessageBox.Show("An error occured whilst writing the new XML file for car " + i + ". \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						return;
+					}
 				}
-				newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
-				newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
-				if (ConvertTrainDat.MotorCars[i] == true)
-				{
-					newLines.Add("<MotorCar>True</MotorCar>");
-					newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
-				}
-				else
-				{
-					newLines.Add("<MotorCar>False</MotorCar>");
-					newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
-				}
-				if (CarInfos[i].AxlesDefined == true)
-				{
-					newLines.Add("<FrontAxle>" + CarInfos[i].FrontAxle + "</FrontAxle>");
-					newLines.Add("<RearAxle>" + CarInfos[i].RearAxle + "</RearAxle>");
-				}
-				else
-				{
-					newLines.Add("<FrontAxle>" + 0.4 * ConvertTrainDat.CarLength + "</FrontAxle>");
-					newLines.Add("<RearAxle>" + -(0.4 * ConvertTrainDat.CarLength) + "</RearAxle>");
-				}
-				if (!String.IsNullOrEmpty(CarInfos[i].Object))
-				{
-					newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
-				}
-				newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
-				if (CarInfos[i].FrontBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
-				{
-					newLines.Add("<FrontBogie>");
-					newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
-					newLines.Add("<RearAxle>" + CarInfos[i].FrontBogie.RearAxle + "</RearAxle>");
-					newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object + "</Object>");
-					newLines.Add("<Reversed>" + CarInfos[i].FrontBogie.Reversed + "</Reversed>");
-					newLines.Add("</FrontBogie>");
-				}
-
-				if (CarInfos[i].RearBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].RearBogie.Object))
-				{
-					newLines.Add("<RearBogie>");
-					newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
-					newLines.Add("<RearAxle>" + CarInfos[i].RearBogie.RearAxle + "</RearAxle>");
-					newLines.Add("<Object>" + CarInfos[i].RearBogie.Object + "</Object>");
-					newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
-					newLines.Add("</RearBogie>");
-				}
-				newLines.Add("</Car>");
+				
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
@@ -431,12 +400,70 @@ namespace CarXmlConvertor
 			MessageBox.Show("Conversion succeeded.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
+		internal static void GenerateCarXML(ref TabbedList newLines, int i)
+		{
+			newLines.Add("<Car>");
+			if (CarInfos[i].Length != 0.0)
+			{
+				newLines.Add("<Length>" + CarInfos[i].Length + "</Length>");
+			}
+			else
+			{
+				newLines.Add("<Length>" + ConvertTrainDat.CarLength + "</Length>");
+			}
+			newLines.Add("<Width>" + ConvertTrainDat.CarWidth + "</Width>");
+			newLines.Add("<Height>" + ConvertTrainDat.CarHeight + "</Height>");
+			if (ConvertTrainDat.MotorCars[i] == true)
+			{
+				newLines.Add("<MotorCar>True</MotorCar>");
+				newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
+			}
+			else
+			{
+				newLines.Add("<MotorCar>False</MotorCar>");
+				newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
+			}
+			if (CarInfos[i].AxlesDefined == true)
+			{
+				newLines.Add("<FrontAxle>" + CarInfos[i].FrontAxle + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + CarInfos[i].RearAxle + "</RearAxle>");
+			}
+			else
+			{
+				newLines.Add("<FrontAxle>" + 0.4 * ConvertTrainDat.CarLength + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + -(0.4 * ConvertTrainDat.CarLength) + "</RearAxle>");
+			}
+			if (!String.IsNullOrEmpty(CarInfos[i].Object))
+			{
+				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
+			}
+			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
+			if (CarInfos[i].FrontBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
+			{
+				newLines.Add("<FrontBogie>");
+				newLines.Add("<FrontAxle>" + CarInfos[i].FrontBogie.FrontAxle + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + CarInfos[i].FrontBogie.RearAxle + "</RearAxle>");
+				newLines.Add("<Object>" + CarInfos[i].FrontBogie.Object + "</Object>");
+				newLines.Add("<Reversed>" + CarInfos[i].FrontBogie.Reversed + "</Reversed>");
+				newLines.Add("</FrontBogie>");
+			}
+
+			if (CarInfos[i].RearBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].RearBogie.Object))
+			{
+				newLines.Add("<RearBogie>");
+				newLines.Add("<FrontAxle>" + CarInfos[i].RearBogie.FrontAxle + "</FrontAxle>");
+				newLines.Add("<RearAxle>" + CarInfos[i].RearBogie.RearAxle + "</RearAxle>");
+				newLines.Add("<Object>" + CarInfos[i].RearBogie.Object + "</Object>");
+				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
+				newLines.Add("</RearBogie>");
+			}
+			newLines.Add("</Car>");
+		}
+
 		/// <summary>Generates a train.xml file using the values / assumptions contained within the train.dat file</summary>
 		internal static void GenerateDefaultXML()
 		{
-			List<string> newLines = new List<string>();
-			newLines.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			newLines.Add("<openBVE xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">");
+			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
@@ -459,13 +486,12 @@ namespace CarXmlConvertor
 				newLines.Add("</Car>");
 			}
 			newLines.Add("</Train>");
-			newLines.Add("</openBVE>");
 			try
 			{
 				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 				using (StreamWriter sw = new StreamWriter(fileOut))
 				{
-					foreach (String s in newLines)
+					foreach (String s in newLines.Lines)
 						sw.WriteLine(s);
 				}
 			}

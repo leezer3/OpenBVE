@@ -276,10 +276,10 @@ namespace OpenBve
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
 			internal TrainAirBrake AirBrake;
-			internal double DelayPowerUp;
-			internal double DelayPowerDown;
-			internal double DelayBrakeUp;
-			internal double DelayBrakeDown;
+			internal double[] DelayPowerUp;
+			internal double[] DelayPowerDown;
+			internal double[] DelayBrakeUp;
+			internal double[] DelayBrakeDown;
 			internal PassAlarmType PassAlarm;
 			internal DoorMode DoorOpenMode;
 			internal DoorMode DoorCloseMode;
@@ -1595,6 +1595,22 @@ namespace OpenBve
 			Train.Specs.CurrentAverageAcceleration *= invcarlen;
 		}
 
+		/// <summary>Gets the delay value for the current power notch</summary>
+		/// <param name="Notch">The current notch</param>
+		/// <param name="DelayValues">The array of delay values</param>
+		/// <returns>The delay value to apply</returns>
+		private static double GetDelay(int Notch, double[] DelayValues)
+		{
+			if (DelayValues == null || DelayValues.Length == 0)
+			{
+				return 0.0;
+			}
+			if (Notch < DelayValues.Length)
+			{
+				return DelayValues[Notch];
+			}
+			return DelayValues[DelayValues.Length - 1];
+		}
 
 		// update train physics and controls
 		private static void UpdateTrainPhysicsAndControls(Train Train, double TimeElapsed)
@@ -1627,16 +1643,16 @@ namespace OpenBve
 					{
 						if (Train.Specs.PowerNotchReduceSteps <= 1)
 						{
-							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual - 1, Train.Specs.DelayPowerDown);
+							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual - 1, GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerDown));
 						}
 						else if (Train.Specs.CurrentPowerNotch.Safety + Train.Specs.PowerNotchReduceSteps <= Train.Specs.CurrentPowerNotch.Actual | Train.Specs.CurrentPowerNotch.Safety == 0)
 						{
-							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerDown);
+							Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerDown));
 						}
 					}
 					else if (Train.Specs.CurrentPowerNotch.Safety > Train.Specs.CurrentPowerNotch.Actual)
 					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual + 1, Train.Specs.DelayPowerUp);
+						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Actual + 1, GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerUp));
 					}
 				}
 				else
@@ -1644,11 +1660,11 @@ namespace OpenBve
 					int m = Train.Specs.CurrentPowerNotch.DelayedChanges.Length - 1;
 					if (Train.Specs.CurrentPowerNotch.Safety < Train.Specs.CurrentPowerNotch.DelayedChanges[m].Value)
 					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerDown);
+						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerDown));
 					}
 					else if (Train.Specs.CurrentPowerNotch.Safety > Train.Specs.CurrentPowerNotch.DelayedChanges[m].Value)
 					{
-						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, Train.Specs.DelayPowerUp);
+						Train.Specs.CurrentPowerNotch.AddChange(Train, Train.Specs.CurrentPowerNotch.Safety, GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerUp));
 					}
 				}
 				if (Train.Specs.CurrentPowerNotch.DelayedChanges.Length >= 1)
@@ -1667,11 +1683,11 @@ namespace OpenBve
 				{
 					if (sec < Train.Specs.CurrentBrakeNotch.Actual)
 					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual - 1, Train.Specs.DelayBrakeDown);
+						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual - 1,  GetDelay(Train.Specs.CurrentPowerNotch.Actual, Train.Specs.DelayPowerDown));
 					}
 					else if (sec > Train.Specs.CurrentBrakeNotch.Actual)
 					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual + 1, Train.Specs.DelayBrakeUp);
+						Train.Specs.CurrentBrakeNotch.AddChange(Train, Train.Specs.CurrentBrakeNotch.Actual + 1, GetDelay(Train.Specs.CurrentBrakeNotch.Actual, Train.Specs.DelayBrakeUp));
 					}
 				}
 				else
@@ -1679,11 +1695,11 @@ namespace OpenBve
 					int m = Train.Specs.CurrentBrakeNotch.DelayedChanges.Length - 1;
 					if (sec < Train.Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
 					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, Train.Specs.DelayBrakeDown);
+						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, GetDelay(Train.Specs.CurrentBrakeNotch.Actual, Train.Specs.DelayBrakeDown));
 					}
 					else if (sec > Train.Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
 					{
-						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, Train.Specs.DelayBrakeUp);
+						Train.Specs.CurrentBrakeNotch.AddChange(Train, sec, GetDelay(Train.Specs.CurrentBrakeNotch.Actual, Train.Specs.DelayBrakeUp));
 					}
 				}
 				if (Train.Specs.CurrentBrakeNotch.DelayedChanges.Length >= 1)

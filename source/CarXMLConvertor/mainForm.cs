@@ -37,6 +37,10 @@ namespace CarXmlConvertor
 			        return;
 		        }
 	        }
+	        if (this.radioButtonSingleFile.Checked == true)
+	        {
+		        ConvertExtensionsCfg.SingleFile = true;
+	        }
 			ConvertExtensionsCfg.Process();
         }
         

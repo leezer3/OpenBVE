@@ -2,6 +2,7 @@
 using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -33,7 +34,7 @@ namespace OpenBve
 				marker = new CsvRwRouteParser.Marker();
 				foreach (XmlNode n in DocumentNodes)
 				{
-					if (n.HasChildNodes)
+					if (n.ChildNodes.OfType<XmlElement>().Any())
 					{
 						bool EarlyDefined = false, LateDefined = false;
 						string EarlyText = null, Text = null, LateText = null;
@@ -46,7 +47,7 @@ namespace OpenBve
 							switch (c.Name.ToLowerInvariant())
 							{
 								case "early":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false,
 											"No paramaters defined for the early message in " + fileName);
@@ -86,7 +87,7 @@ namespace OpenBve
 									}
 									break;
 								case "ontime":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false,
 											"No paramaters defined for the on-time message in " + fileName);
@@ -119,7 +120,7 @@ namespace OpenBve
 									}
 									break;
 								case "late":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false,
 											"No paramaters defined for the late message in " + fileName);
