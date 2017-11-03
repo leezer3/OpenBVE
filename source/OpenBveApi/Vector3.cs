@@ -210,6 +210,17 @@ namespace OpenBveApi.Math {
 			return this.Equals((Vector3)obj);
 		}
 
+		/// <summary>Checks whether the current vector is equal to the specified vector.</summary>
+		/// <param name="b">The specified vector.</param>
+		/// <returns>Whether the two vectors are equal.</returns>
+		public bool Equals(Vector3 b)
+		{
+			if (this.X != b.X) return false;
+			if (this.Y != b.Y) return false;
+			if (this.Z != b.Z) return false;
+			return true;
+		}
+
 		/// <summary>Checks whether the two specified vectors are unequal.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
