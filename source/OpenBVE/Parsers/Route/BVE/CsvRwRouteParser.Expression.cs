@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -83,6 +84,16 @@ namespace OpenBve
 							{
 								this.Text = this.Text.Substring(0, idx).Trim();
 							}
+						}
+					}
+					if(IsRw && this.Text.EndsWith("))"))
+					{
+						int openingBrackets = Text.Count(x => x == '(');
+						int closingBrackets = Text.Count(x => x == ')');
+						//Remove obviously wrong double-ending brackets
+						if (closingBrackets == openingBrackets + 1 && this.Text.EndsWith("))"))
+						{
+							this.Text = this.Text.Substring(0, this.Text.Length - 1);
 						}
 					}
 				}
