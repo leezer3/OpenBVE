@@ -1,6 +1,4 @@
-﻿#pragma warning disable 0660, 0661
-
-using System;
+﻿using System;
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a two-dimensional vector.</summary>
@@ -168,10 +166,43 @@ namespace OpenBveApi.Math {
 			if (a.Y != b.Y) return true;
 			return false;
 		}
-		
-		
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (this.X.GetHashCode() * 397) ^ this.Y.GetHashCode();
+			}
+		}
+
+		/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Vector2))
+			{
+				return false;
+			}
+
+			return this.Equals((Vector2)obj);
+		}
+
+		/// <summary>Checks whether the current vector is equal to the specified vector.</summary>
+		/// <param name="b">The specified vector.</param>
+		/// <returns>Whether the two vectors are equal.</returns>
+		public bool Equals(Vector2 b)
+		{
+			if (this.X != b.X) return false;
+			if (this.Y != b.Y) return false;
+			return true;
+		}
+
+
 		// --- instance functions ---
-		
+
 		/// <summary>Normalizes the vector.</summary>
 		/// <exception cref="System.DivideByZeroException">Raised when the vector is a null vector.</exception>
 		public void Normalize() {
