@@ -47,7 +47,9 @@ namespace OpenBve
 			/// <param name="ArgumentSequence">The sequence of arguments contained within the expression</param>
 			/// <param name="Culture">The current culture</param>
 			/// <param name="RaiseErrors">Whether errors should be raised at this point</param>
-			internal void SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors)
+			/// <param name="IsRw">Whether this is a RW format file</param>
+			/// <param name="CurrentSection">The current section being processed</param>
+			internal void SeparateCommandsAndArguments(out string Command, out string ArgumentSequence, System.Globalization.CultureInfo Culture, bool RaiseErrors, bool IsRw, string CurrentSection)
 			{
 				bool openingerror = false, closingerror = false;
 				int i, fcb = 0;
@@ -68,6 +70,20 @@ namespace OpenBve
 					{
 						//Heavy Coal original RW- Fix starting station
 						Text = Text.Substring(0, Text.Length - 9);
+					}
+					if (IsRw && CurrentSection.ToLowerInvariant() == "track")
+					{
+						//Removes misplaced track position indicies from the end of a command in the Track section
+						int idx = Text.LastIndexOf(')');
+						if (idx != -1 && idx != Text.Length)
+						{
+							double d;
+							string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim();
+							if (NumberFormats.TryParseDoubleVb6(s, out d))
+							{
+								this.Text = this.Text.Substring(0, idx).Trim();
+							}
+						}
 					}
 				}
 				for (i = 0; i < Text.Length; i++)

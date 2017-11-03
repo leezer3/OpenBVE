@@ -37,7 +37,7 @@ namespace OpenBve
 					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, true);
+					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, true, IsRW, Section);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;

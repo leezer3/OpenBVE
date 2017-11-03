@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using OpenBveApi;
+
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
+	using System.IO;
+
+	using Path = OpenBveApi.Path;
+
 	internal partial class CsvRwRouteParser {
 		/// <summary>An abstract signal - All signals must inherit from this class</summary>
 		private abstract class SignalData { }
@@ -1058,7 +1062,7 @@ namespace OpenBve {
 					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false);
+					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
@@ -2533,7 +2537,7 @@ namespace OpenBve {
 					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
 					// separate command and arguments
 					string Command, ArgumentSequence;
-					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false);
+					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
@@ -2729,91 +2733,113 @@ namespace OpenBve {
 									// track
 								case "track.railstart":
 								case "track.rail":
+									if (!PreviewOnly)
 									{
-										if (!PreviewOnly) {
-											int idx = 0;
-											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												idx = 0;
+										int idx = 0;
+										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											break;
+										}
+										if (idx < 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											break;
+										}
+										if (string.Compare(Command, "track.railstart", StringComparison.OrdinalIgnoreCase) == 0)
+										{
+											if (idx < Data.Blocks[BlockIndex].Rail.Length && Data.Blocks[BlockIndex].Rail[idx].RailStart)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex " + idx + " is required to reference a non-existing rail in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											}
-											if (idx < 1) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else {
-												if (string.Compare(Command, "track.railstart", StringComparison.OrdinalIgnoreCase) == 0) {
-													if (idx < Data.Blocks[BlockIndex].Rail.Length && Data.Blocks[BlockIndex].Rail[idx].RailStart) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "RailIndex " + idx + " is required to reference a non-existing rail in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-													}
-												}
-												if (Data.Blocks[BlockIndex].Rail.Length <= idx) {
-													Array.Resize<Rail>(ref Data.Blocks[BlockIndex].Rail, idx + 1);
-													int ol = Data.Blocks[BlockIndex].RailCycle.Length;
-													Array.Resize<RailCycle>(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
-													for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
-													{
-														Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
-													}
-												}
-												if (Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed) {
-													Data.Blocks[BlockIndex].Rail[idx].RailEnd = true;
-												}
+										}
+										if (Data.Blocks[BlockIndex].Rail.Length <= idx)
+										{
+											Array.Resize<Rail>(ref Data.Blocks[BlockIndex].Rail, idx + 1);
+											int ol = Data.Blocks[BlockIndex].RailCycle.Length;
+											Array.Resize<RailCycle>(ref Data.Blocks[BlockIndex].RailCycle, idx + 1);
+											for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycle.Length; rc++)
+											{
+												Data.Blocks[BlockIndex].RailCycle[rc].RailCycleIndex = -1;
+											}
+										}
+										if (Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed)
+										{
+											Data.Blocks[BlockIndex].Rail[idx].RailEnd = true;
+										}
+										Data.Blocks[BlockIndex].Rail[idx].RailStart = true;
+										Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed = true;
+										if (Arguments.Length >= 2)
+										{
+											if (Arguments[1].Length > 0)
+											{
+												double x;
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
 												{
-													Data.Blocks[BlockIndex].Rail[idx].RailStart = true;
-													Data.Blocks[BlockIndex].Rail[idx].RailStartRefreshed = true;
-													if (Arguments.Length >= 2) {
-														if (Arguments[1].Length > 0) {
-															double x;
-															if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																x = 0.0;
-															}
-															Data.Blocks[BlockIndex].Rail[idx].RailStartX = x;
-														}
-														if (!Data.Blocks[BlockIndex].Rail[idx].RailEnd) {
-															Data.Blocks[BlockIndex].Rail[idx].RailEndX = Data.Blocks[BlockIndex].Rail[idx].RailStartX;
-														}
-													}
-													if (Arguments.Length >= 3) {
-														if (Arguments[2].Length > 0) {
-															double y;
-															if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																y = 0.0;
-															}
-															Data.Blocks[BlockIndex].Rail[idx].RailStartY = y;
-														}
-														if (!Data.Blocks[BlockIndex].Rail[idx].RailEnd) {
-															Data.Blocks[BlockIndex].Rail[idx].RailEndY = Data.Blocks[BlockIndex].Rail[idx].RailStartY;
-														}
-													}
-													if (Data.Blocks[BlockIndex].RailType.Length <= idx) {
-														Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
-													}
-													if (Arguments.Length >= 4 && Arguments[3].Length != 0) {
-														int sttype;
-														if (!NumberFormats.TryParseIntVb6(Arguments[3], out sttype)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-															sttype = 0;
-														}
-														if (sttype < 0) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														} else if (!Data.Structure.RailObjects.ContainsKey(sttype)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex "+ sttype + " references an object not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														} else {
-															if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null) {
-																Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
-																Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = sttype;
-																Data.Blocks[BlockIndex].RailCycle[idx].CurrentCycle = 0;
-															}
-															else {
-																Data.Blocks[BlockIndex].RailType[idx] = sttype;
-																Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = -1;
-															}
-														}
-													}
+													Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													x = 0.0;
+												}
+												Data.Blocks[BlockIndex].Rail[idx].RailStartX = x;
+											}
+											if (!Data.Blocks[BlockIndex].Rail[idx].RailEnd)
+											{
+												Data.Blocks[BlockIndex].Rail[idx].RailEndX = Data.Blocks[BlockIndex].Rail[idx].RailStartX;
+											}
+										}
+										if (Arguments.Length >= 3)
+										{
+											if (Arguments[2].Length > 0)
+											{
+												double y;
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													y = 0.0;
+												}
+												Data.Blocks[BlockIndex].Rail[idx].RailStartY = y;
+											}
+											if (!Data.Blocks[BlockIndex].Rail[idx].RailEnd)
+											{
+												Data.Blocks[BlockIndex].Rail[idx].RailEndY = Data.Blocks[BlockIndex].Rail[idx].RailStartY;
+											}
+										}
+										if (Data.Blocks[BlockIndex].RailType.Length <= idx)
+										{
+											Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+										}
+										if (Arguments.Length >= 4 && Arguments[3].Length != 0)
+										{
+											int sttype;
+											if (!NumberFormats.TryParseIntVb6(Arguments[3], out sttype))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												sttype = 0;
+											}
+											if (sttype < 0)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else if (!Data.Structure.RailObjects.ContainsKey(sttype))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "RailStructureIndex " + sttype + " references an object not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else
+											{
+												if (sttype < Data.Structure.RailCycle.Length && Data.Structure.RailCycle[sttype] != null)
+												{
+													Data.Blocks[BlockIndex].RailType[idx] = Data.Structure.RailCycle[sttype][0];
+													Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = sttype;
+													Data.Blocks[BlockIndex].RailCycle[idx].CurrentCycle = 0;
+												}
+												else
+												{
+													Data.Blocks[BlockIndex].RailType[idx] = sttype;
+													Data.Blocks[BlockIndex].RailCycle[idx].RailCycleIndex = -1;
 												}
 											}
 										}
-									} break;
+									}
+									break;
 								case "track.railend":
 									{
 										if (!PreviewOnly)
