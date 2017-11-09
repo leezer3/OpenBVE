@@ -352,7 +352,7 @@ namespace CarXmlConvertor
                                         primary.Add("<Start>");
                                         primary.Add("<FileName>" + b + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
-                                        primary.Add("<Radius>5.0</Radius>");
+                                        primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</Start>");
                                         break;
                                     case "primaryend":
@@ -360,7 +360,7 @@ namespace CarXmlConvertor
                                         primary.Add("<End>");
                                         primary.Add("<FileName>" + b + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
-                                        primary.Add("<Radius>5.0</Radius>");
+                                        primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</End>");
                                         break;
                                     case "primaryloop":
@@ -368,7 +368,7 @@ namespace CarXmlConvertor
                                         primary.Add("<Loop>");
                                         primary.Add("<FileName>" + b + "</FileName>");
                                         primary.Add("<Position>" + front + "</Position>");
-                                        primary.Add("<Radius>5.0</Radius>");
+                                        primary.Add("<Radius>30.0</Radius>");
                                         primary.Add("</Loop>");
                                         break;
                                     //SECONDARY HORN (Numpad Enter)
@@ -376,7 +376,7 @@ namespace CarXmlConvertor
                                         secondary.Add("<Start>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
-                                        secondary.Add("<Radius>5.0</Radius>");
+                                        secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</Start>");
                                         break;
                                     case "secondaryend":
@@ -384,7 +384,7 @@ namespace CarXmlConvertor
                                         secondary.Add("<End>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
-                                        secondary.Add("<Radius>5.0</Radius>");
+                                        secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</End>");
                                         break;
                                     case "secondaryloop":
@@ -392,7 +392,7 @@ namespace CarXmlConvertor
                                         secondary.Add("<Loop>");
                                         secondary.Add("<FileName>" + b + "</FileName>");
                                         secondary.Add("<Position>" + front + "</Position>");
-                                        secondary.Add("<Radius>5.0</Radius>");
+                                        secondary.Add("<Radius>30.0</Radius>");
                                         secondary.Add("</Loop>");
                                         break;
                                     //MUSIC HORN
@@ -400,7 +400,7 @@ namespace CarXmlConvertor
                                         music.Add("<Start>");
                                         music.Add("<FileName>" + b + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
-                                        music.Add("<Radius>5.0</Radius>");
+                                        music.Add("<Radius>30.0</Radius>");
                                         music.Add("</Start>");
                                         break;
                                     case "musicend":
@@ -408,7 +408,7 @@ namespace CarXmlConvertor
                                         music.Add("<End>");
                                         music.Add("<FileName>" + b + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
-                                        music.Add("<Radius>5.0</Radius>");
+                                        music.Add("<Radius>30.0</Radius>");
                                         music.Add("</End>");
                                         break;
                                     case "musicloop":
@@ -416,7 +416,7 @@ namespace CarXmlConvertor
                                         music.Add("<Loop>");
                                         music.Add("<FileName>" + b + "</FileName>");
                                         music.Add("<Position>" + front + "</Position>");
-                                        music.Add("<Radius>5.0</Radius>");
+                                        music.Add("<Radius>30.0</Radius>");
                                         music.Add("</Loop>");
                                         break;
                                 }
