@@ -2525,6 +2525,13 @@ namespace OpenBve {
 					System.Threading.Thread.Sleep(1);
 					if (Loading.Cancel) return;
 				}
+				if (Data.LineEndingFix)
+				{
+					if (Expressions[j].Text.EndsWith("_"))
+					{
+						Expressions[j].Text = Expressions[j].Text.Substring(0, Expressions[j].Text.Length - 1).Trim();
+					}
+				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim();
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0) {

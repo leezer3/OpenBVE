@@ -30,6 +30,7 @@ namespace OpenBve
 			internal StopRequest[] RequestStops;
 			internal int FirstUsedBlock;
 			internal bool IgnorePitchRoll;
+			internal bool LineEndingFix;
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="BlocksUsed">The total number of blocks currently used (Will be updated via ref)</param>

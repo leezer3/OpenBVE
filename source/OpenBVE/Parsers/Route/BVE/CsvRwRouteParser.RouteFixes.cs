@@ -13,6 +13,14 @@ namespace OpenBve
 			FileInfo f = new FileInfo(FileName);
 			switch (f.Length)
 			{
+				case 63652:
+					//Jundiai-Francisco Morato.rw
+					if (Game.RouteComment == "Jundiai-Francisco Morato\nExtensão Operacional Linha A\nCPTM - Cia. Paulista de Trens Metropolitanos")
+					{
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Jundiai - Francisco Morato routefile detected- Applying fix to line endings.");
+						Data.LineEndingFix = true;
+					}
+					break;
 				case 67729:
 					//kurra_fine1.csv
 					if (Game.RouteComment == "Kurrajong Line, 1963\r\nLocal\r\n2 Cars\r\nRichmond - Kurrajong\r\n\r\n(C) 2001 Spot")
