@@ -4539,6 +4539,16 @@ namespace OpenBve {
 												else
 												{
 													Data.Blocks[BlockIndex].Background = typ;
+													if (Interface.CurrentOptions.EnableBveTsHacks && Data.Blocks.Length == 2 && Data.Blocks[0].Background == 0)
+													{
+														//The initial background for block 0 is always set to zero
+														//This handles the case where background idx #0 is not used
+														b = Data.Backgrounds[0] as BackgroundManager.StaticBackground;
+														if (b.Texture == null)
+														{
+															Data.Blocks[0].Background = typ;
+														}
+													}
 												}
 											} else if (Data.Backgrounds[typ] is BackgroundManager.DynamicBackground)
 											{
