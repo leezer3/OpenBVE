@@ -29,6 +29,14 @@ namespace OpenBve
 						Interface.AddMessage(Interface.MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
 					}
 					break;
+				case 70625:
+					//FVES3.rw
+					if (Game.RouteComment == "Linie S3 der FVE\nFarge - Vegesack\nHöchstgeschwindigkeit\nder Strecke 80Km/h\nvon Hans-Martin Finken")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Linie S3 (FVE) routefile detected- Applying fix to yaw / roll.");
+					}
+					break;
 				case 73262:
 					//kurrajong.csv
 					if (Game.RouteComment == "Kurrajong Line, 1953\r\nLocal\r\n2 Cars\r\nRichmond - Kurrajong\r\n\r\n(C) 2001 Spot")
