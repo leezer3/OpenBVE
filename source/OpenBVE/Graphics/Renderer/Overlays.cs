@@ -1010,9 +1010,9 @@ namespace OpenBve
 						else if (TrainManager.PlayerTrain.Specs.CurrentHoldBrake.Driver)
 						{
 							sc = MessageColor.Green;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
 							}
 							else
 							{
@@ -1022,9 +1022,9 @@ namespace OpenBve
 						else if (TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver == 0)
 						{
 							sc = MessageColor.Gray;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
+								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
 							}
 							else
 							{
@@ -1034,9 +1034,9 @@ namespace OpenBve
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 3 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && ((TrainManager.PlayerTrain.Specs.HasHoldBrake && TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 2 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length) || (!TrainManager.PlayerTrain.Specs.HasHoldBrake && TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 1 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)))
 							{
-								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 3];
+								t = TrainManager.PlayerTrain.Specs.HasHoldBrake ? TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 2] : TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Specs.CurrentBrakeNotch.Driver + 1];
 							}
 							else
 							{
