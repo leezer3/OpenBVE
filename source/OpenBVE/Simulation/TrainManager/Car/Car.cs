@@ -3,6 +3,8 @@ using OpenBveApi.Math;
 
 namespace OpenBve
 {
+	using OpenTK.Graphics.OpenGL;
+
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
@@ -46,6 +48,8 @@ namespace OpenBve
 			internal Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
 			internal int Index;
+
+			internal bool HasInteriorView = false;
 
 			internal struct CarBrightness
 			{
@@ -164,8 +168,8 @@ namespace OpenBve
 			}
 
 			/// <summary>Changes the currently visible car section</summary>
-			/// <param name="SectionIndex">The index of the new car section to display</param>
-			internal void ChangeCarSection(int SectionIndex)
+			/// <param name="newCarSection">The type of new car section to display</param>
+			internal void ChangeCarSection(CarSectionType newCarSection)
 			{
 				for (int i = 0; i < CarSections.Length; i++)
 				{
@@ -175,23 +179,72 @@ namespace OpenBve
 						Renderer.HideObject(o);
 					}
 				}
-				if (SectionIndex >= 0)
+				switch (newCarSection)
 				{
-					CarSections[SectionIndex].Initialize(true);
-					for (int j = 0; j < CarSections[SectionIndex].Elements.Length; j++)
-					{
-						int o = CarSections[SectionIndex].Elements[j].ObjectIndex;
-						if (CarSections[SectionIndex].Overlay)
+					case CarSectionType.NotVisible:
+						this.CurrentCarSection = -1;
+						break;
+					case CarSectionType.Interior:
+						if (this.HasInteriorView && this.CarSections.Length > 0)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+							this.CurrentCarSection = 0;
+							this.CarSections[0].Initialize(true);
+							for (int j = 0; j < CarSections[0].Elements.Length; j++)
+							{
+								int o = CarSections[0].Elements[j].ObjectIndex;
+								if (CarSections[0].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
 						}
-						else
+						this.CurrentCarSection = -1;
+						break;
+					case CarSectionType.Exterior:
+						if (this.HasInteriorView && this.CarSections.Length > 1)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+							this.CurrentCarSection = 1;
+							this.CarSections[1].Initialize(true);
+							for (int j = 0; j < CarSections[1].Elements.Length; j++)
+							{
+								int o = CarSections[1].Elements[j].ObjectIndex;
+								if (CarSections[1].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
 						}
-					}
+						else if(!this.HasInteriorView && this.CarSections.Length > 0)
+						{
+							this.CurrentCarSection = 0;
+							this.CarSections[0].Initialize(true);
+							for (int j = 0; j < CarSections[0].Elements.Length; j++)
+							{
+								int o = CarSections[0].Elements[j].ObjectIndex;
+								if (CarSections[0].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
+						}
+						this.CurrentCarSection = -1;
+						break;
 				}
-				CurrentCarSection = SectionIndex;
 				//When changing car section, do not apply damping
 				//This stops objects from spinning if the last position before they were hidden is different
 				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);

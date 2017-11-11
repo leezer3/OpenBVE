@@ -741,7 +741,7 @@ namespace OpenBve {
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(-1);
+				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
@@ -899,6 +899,7 @@ namespace OpenBve {
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
+			Train.Cars[DriverCar].HasInteriorView = true;
 			// couplers
 			Train.Couplers = new TrainManager.Coupler[Cars - 1];
 			for (int i = 0; i < Train.Couplers.Length; i++) {

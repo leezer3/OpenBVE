@@ -97,7 +97,7 @@ namespace OpenBve
 			{
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
 				//TODO: Additional available in-car views will be implemented with the new train format
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+				TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
 			}
 			else if (World.CameraMode == World.CameraViewMode.Exterior)
 			{

@@ -362,7 +362,7 @@ namespace OpenBve
 					{
 						Program.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
+						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train, Train.DriverCar);
 						World.CameraRestriction = World.CameraRestrictionMode.On;
 					}
 					else
@@ -479,7 +479,6 @@ namespace OpenBve
 		internal static void UpdateCamera(Train Train, int Car)
 		{
 			int i = Car;
-			int j = Train.DriverCar;
 			double dx = Train.Cars[i].FrontAxle.Follower.WorldPosition.X - Train.Cars[i].RearAxle.Follower.WorldPosition.X;
 			double dy = Train.Cars[i].FrontAxle.Follower.WorldPosition.Y - Train.Cars[i].RearAxle.Follower.WorldPosition.Y;
 			double dz = Train.Cars[i].FrontAxle.Follower.WorldPosition.Z - Train.Cars[i].RearAxle.Follower.WorldPosition.Z;
@@ -494,9 +493,9 @@ namespace OpenBve
 			double rx = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.X + Train.Cars[i].RearAxle.Follower.WorldPosition.X);
 			double ry = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Y + Train.Cars[i].RearAxle.Follower.WorldPosition.Y);
 			double rz = 0.5 * (Train.Cars[i].FrontAxle.Follower.WorldPosition.Z + Train.Cars[i].RearAxle.Follower.WorldPosition.Z);
-			double cx = rx + sx * Train.Cars[j].Driver.X + ux * Train.Cars[j].Driver.Y + dx * Train.Cars[j].Driver.Z;
-			double cy = ry + sy * Train.Cars[j].Driver.X + uy * Train.Cars[j].Driver.Y + dy * Train.Cars[j].Driver.Z;
-			double cz = rz + sz * Train.Cars[j].Driver.X + uz * Train.Cars[j].Driver.Y + dz * Train.Cars[j].Driver.Z;
+			double cx = rx + sx * Train.Cars[i].Driver.X + ux * Train.Cars[i].Driver.Y + dx * Train.Cars[i].Driver.Z;
+			double cy = ry + sy * Train.Cars[i].Driver.X + uy * Train.Cars[i].Driver.Y + dy * Train.Cars[i].Driver.Z;
+			double cz = rz + sz * Train.Cars[i].Driver.X + uz * Train.Cars[i].Driver.Y + dz * Train.Cars[i].Driver.Z;
 			World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
 			World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
 			World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);

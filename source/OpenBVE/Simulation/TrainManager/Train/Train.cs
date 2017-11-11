@@ -145,7 +145,15 @@ namespace OpenBve
 							{
 								if (Cars[j].CarSections.Length != 0)
 								{
-									Cars[j].ChangeCarSection(j <= DriverCar | this != PlayerTrain ? 0 : -1);
+									if (j == this.DriverCar && this == PlayerTrain)
+									{
+										this.Cars[j].ChangeCarSection(CarSectionType.Interior);
+									}
+									else
+									{
+										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+									}
+
 								}
 								Cars[j].FrontBogie.ChangeSection(this != PlayerTrain ? 0 : -1);
 								Cars[j].RearBogie.ChangeSection(this != PlayerTrain ? 0 : -1);
