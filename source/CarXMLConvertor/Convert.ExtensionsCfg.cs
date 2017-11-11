@@ -457,6 +457,19 @@ namespace CarXmlConvertor
 				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
 				newLines.Add("</RearBogie>");
 			}
+			if (i == ConvertTrainDat.DriverCar)
+			{
+				if(System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel.animated")))
+				{
+					newLines.Add("<InteriorView>panel.animated</InteriorView>" );
+					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+				}
+				else if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
+				{
+					newLines.Add("<InteriorView>panel2.cfg</InteriorView>");
+					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+				}
+			}
 			newLines.Add("</Car>");
 		}
 
