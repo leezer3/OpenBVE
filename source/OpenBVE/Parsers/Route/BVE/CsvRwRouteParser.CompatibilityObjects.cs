@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -153,7 +154,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode n in DocumentNodes)
 					{
-						if (n.HasChildNodes)
+						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							ReplacementObject o = new ReplacementObject();
 							string[] names = null;
@@ -207,7 +208,7 @@ namespace OpenBve
 					{
 						foreach (XmlNode n in DocumentNodes)
 						{
-							if (n.HasChildNodes)
+							if (n.ChildNodes.OfType<XmlElement>().Any())
 							{
 								ReplacementObject o = new ReplacementObject();
 								string[] names = null;
@@ -264,7 +265,7 @@ namespace OpenBve
 					{
 						foreach (XmlNode n in DocumentNodes)
 						{
-							if (n.HasChildNodes)
+							if (n.ChildNodes.OfType<XmlElement>().Any())
 							{
 								foreach (XmlNode c in n.ChildNodes)
 								{

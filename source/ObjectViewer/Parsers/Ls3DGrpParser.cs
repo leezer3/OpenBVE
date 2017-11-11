@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -124,11 +125,11 @@ namespace OpenBve
 				{
 					foreach (XmlNode outerNode in DocumentNodes)
 					{
-						if (outerNode.HasChildNodes)
+						if (outerNode.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode node in outerNode.ChildNodes)
 							{
-								if (node.Name == "Object" && node.HasChildNodes)
+								if (node.Name == "Object" && node.ChildNodes.OfType<XmlElement>().Any())
 								{
 									
 									foreach (XmlNode childNode in node.ChildNodes)

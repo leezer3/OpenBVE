@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -54,7 +55,7 @@ namespace OpenBve
 				}
 				foreach (XmlNode n in DocumentNodes)
 				{
-					if (n.HasChildNodes)
+					if (n.ChildNodes.OfType<XmlElement>().Any())
 					{
 						foreach (XmlNode c in n.ChildNodes)
 						{
@@ -62,7 +63,7 @@ namespace OpenBve
 							{
 								case "ats":
 								case "plugin":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
 										break;
@@ -74,7 +75,7 @@ namespace OpenBve
 									ParseArrayNode(c, out car.Sounds.Plugin, center, SoundCfgParser.mediumRadius);
 									break;
 								case "brake":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
 										break;
@@ -110,7 +111,7 @@ namespace OpenBve
 									}
 									break;
 								case "brakehandle":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
 										break;
@@ -144,7 +145,7 @@ namespace OpenBve
 									}
 									break;
 								case "breaker":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
 										break;
@@ -177,7 +178,7 @@ namespace OpenBve
 									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
 									break;
 								case "compressor":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
@@ -212,7 +213,7 @@ namespace OpenBve
 									}
 									break;
 								case "door":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
 										break;
@@ -244,7 +245,7 @@ namespace OpenBve
 									}
 									break;
 								case "flange":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
@@ -252,7 +253,7 @@ namespace OpenBve
 									ParseArrayNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
 									break;
 								case "horn":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
 										break;
@@ -289,7 +290,7 @@ namespace OpenBve
 									break;
 								case "mastercontroller":
 								case "powerhandle":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
 										break;
@@ -332,7 +333,7 @@ namespace OpenBve
 									ParseMotorSoundTableNode(c, ref car.Sounds.Motor.Tables, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
 										break;
@@ -359,7 +360,7 @@ namespace OpenBve
 									break;
 								case "pointfrontaxle":
 								case "switchfrontaxle":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
@@ -368,7 +369,7 @@ namespace OpenBve
 									break;
 								case "pointrearaxle":
 								case "switchrearaxle":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
@@ -377,7 +378,7 @@ namespace OpenBve
 									break;
 								case "reverser":
 								case "reverserhandle":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
 										break;
@@ -403,7 +404,7 @@ namespace OpenBve
 									}
 									break;
 								case "run":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
@@ -416,7 +417,7 @@ namespace OpenBve
 									break;
 								case "suspension":
 								case "spring":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
 										break;
@@ -440,7 +441,7 @@ namespace OpenBve
 									}
 									break;
 								case "requeststop":
-									if (!c.HasChildNodes)
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of request stop sounds was defined in in XML file " + fileName);
 										break;

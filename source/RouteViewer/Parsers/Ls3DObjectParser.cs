@@ -8,6 +8,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -127,7 +128,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode outerNode in DocumentNodes)
 					{
-						if (outerNode.HasChildNodes)
+						if (outerNode.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode node in outerNode.ChildNodes)
 							{
@@ -254,7 +255,7 @@ namespace OpenBve
 									}
 								}
 								//The point command is eqivilant to a vertex
-								else if (node.Name == "Point" && node.HasChildNodes)
+								else if (node.Name == "Point" && node.ChildNodes.OfType<XmlElement>().Any())
 								{
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
@@ -320,7 +321,7 @@ namespace OpenBve
 									}
 								}
 								//The Flaeche command creates a face
-								else if (node.Name == "Flaeche" && node.HasChildNodes)
+								else if (node.Name == "Flaeche" && node.ChildNodes.OfType<XmlElement>().Any())
 								{
 									foreach (XmlNode childNode in node.ChildNodes)
 									{

@@ -36,6 +36,12 @@ namespace OpenBve
 			internal double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
+			internal string[] PowerNotchDescriptions;
+			internal string[] BrakeNotchDescriptions;
+			internal string[] ReverserDescriptions;
+			internal int MaxPowerNotchWidth = 48;
+			internal int MaxBrakeNotchWidth = 48;
+			internal int MaxReverserWidth = 48;
 
 			internal void Initialize()
 			{

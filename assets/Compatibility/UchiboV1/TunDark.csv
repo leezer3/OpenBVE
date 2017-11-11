@@ -1,0 +1,7 @@
+CreateMeshBuilder,
+AddVertex,-3.8,-3.3,50
+AddVertex,-3.8,8.1,50
+AddVertex,7.6,8.1,50
+AddVertex,7.6,-3.3,50
+AddFace,0,1,2,3
+SetColor,16,16,12

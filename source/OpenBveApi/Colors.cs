@@ -1,6 +1,4 @@
-﻿#pragma warning disable 0660, 0661
-
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace OpenBveApi.Colors {
@@ -57,6 +55,41 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color24 a, Color24 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
+
+		/// <summary>Checks whether two colors are equal.</summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>Whether the two colors are equal.</returns>
+		public bool Equals (Color24 a, Color24 b)
+		{
+			return a.R == b.R & a.G == b.G & a.B == b.B;
+		}
+
+		/// <summary>Checks whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Color24))
+			{
+				return false;
+			}
+			return this.Equals((Color24)obj);
+		}
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer representing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = this.R.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.G.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.B.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color24 Black = new Color24(0, 0, 0);
@@ -192,6 +225,42 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color32 a, Color32 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
+
+		/// <summary>Checks whether two colors are equal.</summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>Whether the two colors are equal.</returns>
+		public bool Equals(Color32 a, Color32 b)
+		{
+			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+		}
+
+		/// <summary>Checks whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Color32))
+			{
+				return false;
+			}
+			return this.Equals((Color32)obj);
+		}
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer representing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = this.R.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.G.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.B.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.A.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color32 Black = new Color32(0, 0, 0);

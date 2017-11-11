@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	internal static class TrainDatParser {
+	internal static partial class TrainDatParser {
 
 		/// <summary>Parses a BVE2 / BVE4 / openBVE train.dat file</summary>
 		/// <param name="FileName">The train.dat file to parse</param>
@@ -35,15 +35,32 @@ namespace OpenBve {
 					Lines[i] = Lines[i].Trim();
 				}
 			}
-			//Check to see if the train.dat file was written for BVE1
-			bool ver1220000 = false;
+			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
+			
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					string t = Lines[i].ToLowerInvariant();
-					if (t == "bve1220000") {
-						ver1220000 = true;
-					} else if (t != "bve2000000" & t != "openbve") {
-						Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+					switch (t)
+					{
+						case "bve1200000":
+							currentFormat = TrainDatFormats.BVE1200000;
+							break;
+						case "bve1210000":
+							currentFormat = TrainDatFormats.BVE1210000;
+							break;
+						case "bve1220000":
+							currentFormat = TrainDatFormats.BVE1220000;
+							break;
+						case "bve2000000":
+							currentFormat = TrainDatFormats.BVE2000000;
+							break;
+						case "openbve":
+							currentFormat = TrainDatFormats.openBVE;
+							break;
+						default:
+							currentFormat = TrainDatFormats.Unsupported;
+							Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+							break;
 					}
 					break;
 				}
@@ -146,7 +163,7 @@ namespace OpenBve {
 											} break;
 										case 4:
 											{
-												if (ver1220000) {
+												if (currentFormat == TrainDatFormats.BVE1200000 || currentFormat == TrainDatFormats.BVE1210000 || currentFormat == TrainDatFormats.BVE1220000) {
 													if (a <= 0.0) {
 														AccelerationCurves[n].StageTwoExponent = 1.0;
 														Interface.AddMessage(Interface.MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -206,10 +223,18 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
-										case 0: Train.Specs.DelayPowerUp = a; break;
-										case 1: Train.Specs.DelayPowerDown = a; break;
-										case 2: Train.Specs.DelayBrakeUp = a; break;
-										case 3: Train.Specs.DelayBrakeDown = a; break;
+										case 0:
+											Train.Specs.DelayPowerUp = new[] { a };
+											break;
+										case 1:
+											Train.Specs.DelayPowerDown = new[] { a };
+										break;
+										case 2:
+											Train.Specs.DelayBrakeUp = new[] { a };
+										break;
+										case 3:
+											Train.Specs.DelayBrakeDown = new[] { a };
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -296,7 +321,16 @@ namespace OpenBve {
 							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.SingleHandle = a == 1; break;
-										case 1: Train.Specs.MaximumPowerNotch = a; break;
+										case 1:
+											if (a >= 0)
+											{
+												Train.Specs.MaximumPowerNotch = a;
+											}
+											else
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
+										break;
 										case 2: Train.Specs.MaximumBrakeNotch = a; break;
 										case 3: Train.Specs.PowerNotchReduceSteps = a; break;
 								}

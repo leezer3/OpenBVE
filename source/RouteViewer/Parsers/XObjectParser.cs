@@ -248,10 +248,6 @@ namespace OpenBve
 			//Preprocess the string array to get the variants to something we understand....
 			for (int i = 0; i < Lines.Length; i++)
 			{
-				if (i == 36)
-				{
-					int t = i;
-				}
 				string[] splitLine = Lines[i].Split(',');
 				if (splitLine.Length == 2 && splitLine[1].Trim().Length > 0)
 				{
@@ -1916,7 +1912,7 @@ namespace OpenBve
 													return false;
 												}
 											}
-											if (g.Data[3] is String)
+											if (g.Data.Length >= 4 && g.Data[3] is String)
 											{
 												for (int m = 3; m < g.Data.Length; m++)
 												{

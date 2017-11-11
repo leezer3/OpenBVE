@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -32,7 +33,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode n in DocumentNodes)
 					{
-						if (n.HasChildNodes)
+						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							foreach (XmlNode c in n.ChildNodes)
 							{
@@ -166,7 +167,7 @@ namespace OpenBve
 									case "arrivalsound":
 										string arrSound = string.Empty;
 										double arrRadius = 30.0;
-										if (!c.HasChildNodes)
+										if (!c.ChildNodes.OfType<XmlElement>().Any())
 										{
 											foreach (XmlNode cc in c.ChildNodes)
 											{
@@ -246,7 +247,7 @@ namespace OpenBve
 									case "departuresound":
 										string depSound = string.Empty;
 										double depRadius = 30.0;
-										if (!c.HasChildNodes)
+										if (!c.ChildNodes.OfType<XmlElement>().Any())
 										{
 											foreach (XmlNode cc in c.ChildNodes)
 											{
@@ -386,7 +387,7 @@ namespace OpenBve
 													}
 													break;
 												case "stopmessage":
-													if (cc.HasChildNodes)
+													if (cc.ChildNodes.OfType<XmlElement>().Any())
 													{
 														foreach (XmlNode cd in cc.ChildNodes)
 														{
@@ -420,7 +421,7 @@ namespace OpenBve
 													}
 													break;
 												case "passmessage":
-													if (cc.HasChildNodes)
+													if (cc.ChildNodes.OfType<XmlElement>().Any())
 													{
 														foreach (XmlNode cd in cc.ChildNodes)
 														{

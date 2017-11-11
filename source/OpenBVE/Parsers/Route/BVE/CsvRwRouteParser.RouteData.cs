@@ -30,6 +30,7 @@ namespace OpenBve
 			internal StopRequest[] RequestStops;
 			internal int FirstUsedBlock;
 			internal bool IgnorePitchRoll;
+			internal bool LineEndingFix;
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="BlocksUsed">The total number of blocks currently used (Will be updated via ref)</param>
@@ -61,7 +62,11 @@ namespace OpenBve
 						{
 							for (int j = 0; j < Blocks[i].RailType.Length; j++)
 							{
-								int rc = Blocks[i].RailCycle[j].RailCycleIndex;
+								int rc = -1;
+								if (Blocks[i].RailCycle.Length > j)
+								{
+									rc = Blocks[i].RailCycle[j].RailCycleIndex;
+								}
 								if (rc != -1 && Structure.RailCycle.Length > rc && Structure.RailCycle[rc].Length > 1)
 								{
 									int cc = Blocks[i].RailCycle[j].CurrentCycle;
