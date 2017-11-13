@@ -200,6 +200,7 @@
     <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSection.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
@@ -212,6 +213,8 @@
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
