@@ -306,7 +306,7 @@ namespace OpenBve {
 					TrainManager.Trains[k].Cars[i].BeaconReceiver.Train = TrainManager.Trains[k];
 				}
 				// add panel section
-				if (k == TrainManager.PlayerTrain.TrainIndex) {
+				if (k == TrainManager.PlayerTrain.TrainIndex) {	
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0] = new TrainManager.CarSection();
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
@@ -325,6 +325,7 @@ namespace OpenBve {
 					if (System.IO.File.Exists(tXml))
 					{
 						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects);
+						World.CameraCar = TrainManager.Trains[k].DriverCar;
 					}
 					else
 					{

@@ -21,6 +21,13 @@
 			}
 		}
 
+		internal enum CarSectionType
+		{
+			NotVisible = -1,
+			Interior = 0,
+			Exterior = 1
+		}
+
 		
 	}
 }

@@ -357,7 +357,7 @@ namespace OpenBve
 			{
 				case World.CameraViewMode.Interior:
 				case World.CameraViewMode.InteriorLookAhead:
-					World.CameraSavedInterior = World.CameraCurrentAlignment;
+					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = World.CameraCurrentAlignment;
 					break;
 				case World.CameraViewMode.Exterior:
 					World.CameraSavedExterior = World.CameraCurrentAlignment;
@@ -377,7 +377,7 @@ namespace OpenBve
 			{
 				case World.CameraViewMode.Interior:
 				case World.CameraViewMode.InteriorLookAhead:
-					World.CameraCurrentAlignment = World.CameraSavedInterior;
+					World.CameraCurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
 					break;
 				case World.CameraViewMode.Exterior:
 					World.CameraCurrentAlignment = World.CameraSavedExterior;

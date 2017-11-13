@@ -17,6 +17,7 @@ namespace CarXmlConvertor
 		private static int NumberOfTrailerCars;
 		private static bool FrontCarIsMotorCar;
 		internal static bool[] MotorCars;
+		internal static int DriverCar = 0;
 
 		internal static void Process()
 		{
@@ -42,6 +43,7 @@ namespace CarXmlConvertor
 									case 0: ConvertSoundCfg.DriverPosition.X = 0.001 * a; break;
 									case 1: ConvertSoundCfg.DriverPosition.Y = 0.001 * a; break;
 									case 2: ConvertSoundCfg.DriverPosition.Z = 0.001 * a; break;
+									case 3: DriverCar = (int)Math.Round(a); break;
 								}
 							}
 							i++; n++;
