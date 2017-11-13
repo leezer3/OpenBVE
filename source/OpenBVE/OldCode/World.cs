@@ -465,7 +465,6 @@ namespace OpenBve {
 		internal static int CameraCar;
 		
 		// camera memory
-		internal static CameraAlignment CameraSavedInterior;
 		internal static CameraAlignment CameraSavedExterior;
 		internal static CameraAlignment CameraSavedTrack;
 
@@ -478,7 +477,10 @@ namespace OpenBve {
 			/// <summary>Represents a 2D cab with camera restriction disabled.</summary>
 			Off = 0,
 			/// <summary>Represents a 2D cab with camera restriction enabled.</summary>
-			On = 1
+			On = 1,
+			/// <summary>The camera restriction mode is not specified (Used by parsers)</summary>
+			NotSpecified = 3
+
 		}
 		internal static CameraRestrictionMode CameraRestriction = CameraRestrictionMode.NotAvailable;
 

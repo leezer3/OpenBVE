@@ -541,11 +541,9 @@ namespace OpenBve
 										// camera: interior
 										MainLoop.SaveCameraSettings();
 										bool lookahead = false;
-										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead &
-											World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 										{
-											Game.AddMessage(
-												Interface.GetInterfaceString("notification_interior_lookahead"),
+											Game.AddMessage(Interface.GetInterfaceString("notification_interior_lookahead"),
 												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											lookahead = true;
@@ -566,6 +564,7 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 												{
 													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+													World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 												}
 												else
 												{
@@ -583,6 +582,7 @@ namespace OpenBve
 											//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 											World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+											World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 										}
 										//Hide bogies
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)

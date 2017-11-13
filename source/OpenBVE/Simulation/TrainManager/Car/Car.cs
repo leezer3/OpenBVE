@@ -48,6 +48,10 @@ namespace OpenBve
 			internal Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
 			internal int Index;
+			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
+			internal World.CameraRestrictionMode CameraRestrictionMode = World.CameraRestrictionMode.NotSpecified;
+			/// <summary>Stores the camera interior camera alignment for this car</summary>
+			internal World.CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
 

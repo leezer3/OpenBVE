@@ -362,7 +362,7 @@ namespace OpenBve
 					{
 						Program.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train, Train.DriverCar);
+						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 						World.CameraRestriction = World.CameraRestrictionMode.On;
 					}
 					else

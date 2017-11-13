@@ -499,6 +499,7 @@ namespace CarXmlConvertor
 				newLines.Add("</Car>");
 			}
 			newLines.Add("</Train>");
+			newLines.Add("</openBVE>");
 			try
 			{
 				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
