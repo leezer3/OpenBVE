@@ -196,10 +196,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Simulation\TrainManager\Car\Axle.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSection.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
