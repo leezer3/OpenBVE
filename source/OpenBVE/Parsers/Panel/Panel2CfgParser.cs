@@ -7,11 +7,12 @@ namespace OpenBve {
 	internal static class Panel2CfgParser {
 
 		// constants
-		internal static double StackDistance = 0.000001;
+		private static double StackDistance = 0.000001;
 		/// <remarks>EyeDistance is required to be 1.0 by UpdateCarSectionElement and by UpdateCameraRestriction, thus cannot be easily changed.</remarks>
-		internal const double EyeDistance = 1.0;
+		private const double EyeDistance = 1.0;
 
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
+		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Train">The train</param>

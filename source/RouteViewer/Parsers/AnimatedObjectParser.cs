@@ -13,8 +13,10 @@ namespace OpenBve {
 		/// <returns>The collection of animated objects.</returns>
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-			Result.Objects = new ObjectManager.AnimatedObject[4];
+			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			{
+				Objects = new ObjectManager.AnimatedObject[4]
+			};
 			int ObjectCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);

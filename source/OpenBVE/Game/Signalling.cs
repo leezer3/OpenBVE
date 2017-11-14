@@ -46,8 +46,6 @@ namespace OpenBve
 			internal int StationIndex;
 			/// <summary>Whether this is an invisible section</summary>
 			internal bool Invisible;
-			/// <summary>The indicies of any Track.Sig / Track.SigF attached to this section</summary>
-			internal int[] SignalIndices;
 			/// <summary>The track position at which this section is placed</summary>
 			internal double TrackPosition;
 			/// <summary>The type of section</summary>

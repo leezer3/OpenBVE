@@ -49,7 +49,7 @@ namespace OpenBve
 				{
 					Cars[i].Initialize();
 				}
-				UpdateAtmosphericConstants(this);
+				UpdateAtmosphericConstants();
 				Update(0.0);
 			}
 
@@ -201,6 +201,20 @@ namespace OpenBve
 						AI.Trigger(this, TimeElapsed);
 					}
 				}
+			}
+
+
+			internal void UpdateAtmosphericConstants()
+			{
+				double h = 0.0;
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
+				}
+				Specs.CurrentElevation = Game.RouteInitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Game.GetAirTemperature(Specs.CurrentElevation);
+				Specs.CurrentAirPressure = Game.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				Specs.CurrentAirDensity = Game.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
 			/// <summary>Updates the safety system for this train</summary>

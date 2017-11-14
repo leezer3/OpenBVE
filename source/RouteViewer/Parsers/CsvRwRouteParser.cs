@@ -435,7 +435,6 @@ namespace OpenBve {
 				Game.Sections[0].CurrentAspect = 0;
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
-				Game.Sections[0].SignalIndices = new int[] { };
 				Game.Sections[0].StationIndex = -1;
 				Game.Sections[0].TrackPosition = 0;
 				Game.Sections[0].Trains = new TrainManager.Train[] { };
@@ -4968,6 +4967,11 @@ namespace OpenBve {
 			if (!System.IO.Directory.Exists(Folder)) return new int[] { };
 			string Name = System.IO.Path.GetFileNameWithoutExtension(BaseFile);
 			int[] Textures = new int[] { };
+			if (string.IsNullOrEmpty(Name))
+			{
+				//No filename, just extension, so don't crash...
+				return Textures;
+			}
 			string[] Files = System.IO.Directory.GetFiles(Folder);
 			for (int i = 0; i < Files.Length; i++) {
 				string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
@@ -6007,7 +6011,6 @@ namespace OpenBve {
 							for (int k = 0; k < Data.Blocks[i].Section.Length; k++) {
 								int m = Game.Sections.Length;
 								Array.Resize<Game.Section>(ref Game.Sections, m + 1);
-								Game.Sections[m].SignalIndices = new int[] { };
 								// create associated transponders
 								for (int g = 0; g <= i; g++) {
 									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++) {

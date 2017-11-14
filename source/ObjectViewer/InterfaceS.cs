@@ -46,7 +46,6 @@ namespace OpenBve {
 			internal bool TrainReachedStopPoint;
 			internal int StationIndex;
 			internal bool Invisible;
-			internal int[] SignalIndices;
 			internal double TrackPosition;
 			internal SectionType Type;
 			internal SectionAspect[] Aspects;

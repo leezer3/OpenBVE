@@ -283,18 +283,7 @@ namespace OpenBve
 		
 
 		// update atmospheric constants
-		internal static void UpdateAtmosphericConstants(Train Train)
-		{
-			double h = 0.0;
-			for (int i = 0; i < Train.Cars.Length; i++)
-			{
-				h += Train.Cars[i].FrontAxle.Follower.WorldPosition.Y + Train.Cars[i].RearAxle.Follower.WorldPosition.Y;
-			}
-			Train.Specs.CurrentElevation = Game.RouteInitialElevation + h / (2.0 * (double)Train.Cars.Length);
-			Train.Specs.CurrentAirTemperature = Game.GetAirTemperature(Train.Specs.CurrentElevation);
-			Train.Specs.CurrentAirPressure = Game.GetAirPressure(Train.Specs.CurrentElevation, Train.Specs.CurrentAirTemperature);
-			Train.Specs.CurrentAirDensity = Game.GetAirDensity(Train.Specs.CurrentAirPressure, Train.Specs.CurrentAirTemperature);
-		}
+		
 
 		// get acceleration output
 		internal static double GetAccelerationOutput(Train Train, int CarIndex, int CurveIndex, double Speed)
@@ -1902,7 +1891,7 @@ namespace OpenBve
 			{
 				Train.InternalTimerTimeElapsed -= 10.0;
 				Train.Synchronize();
-				UpdateAtmosphericConstants(Train);
+				Train.UpdateAtmosphericConstants();
 			}
 		}
 

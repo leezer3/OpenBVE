@@ -6,25 +6,29 @@
 		internal class BrightnessChangeEvent : GeneralEvent
 		{
 			/// <summary>The brightness to be applied from this point</summary>
-			internal float CurrentBrightness;
+			internal readonly float CurrentBrightness;
 			/// <summary>The brightness to be applied prior to this point</summary>
-			internal float PreviousBrightness;
+			internal readonly float PreviousBrightness;
 			/// <summary>The distance to the preceeding brightness change (Used in interpolation)</summary>
-			internal double PreviousDistance;
+			internal readonly double PreviousDistance;
 			/// <summary>The next brightness to be applied</summary>
 			internal float NextBrightness;
 			/// <summary>The distance to the next brightness change (Used in interpolation)</summary>
 			internal double NextDistance;
 
-			internal BrightnessChangeEvent(double TrackPositionDelta, float CurrentBrightness, float PreviousBrightness, double PreviousDistance, float NextBrightness, double NextDistance)
+			internal BrightnessChangeEvent(double TrackPositionDelta, float CurrentBrightness, float PreviousBrightness, double PreviousDistance)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 				this.CurrentBrightness = CurrentBrightness;
 				this.PreviousBrightness = PreviousBrightness;
 				this.PreviousDistance = PreviousDistance;
-				this.NextBrightness = NextBrightness;
-				this.NextDistance = NextDistance;
+				/*
+				 * The next brightness & distance will be set when the following brightness event is added
+				 * Setting them to the current values is no interpolation from this point onwards
+				 */
+				this.NextBrightness = CurrentBrightness;
+				this.NextDistance = 0.0;
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{

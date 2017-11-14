@@ -8,7 +8,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The underlying train.</summary>
-		private Train Train;
+		private readonly Train Train;
 		
 		/// <summary>The counter. This starts at zero and counts up until the EbAlarm or EbBrake constants have been reached.</summary>
 		internal double Counter;

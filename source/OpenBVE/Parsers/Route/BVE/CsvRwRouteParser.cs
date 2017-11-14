@@ -311,7 +311,6 @@ namespace OpenBve {
 				Game.Sections[0].CurrentAspect = 0;
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
-				Game.Sections[0].SignalIndices = new int[] {};
 				Game.Sections[0].StationIndex = -1;
 				Game.Sections[0].TrackPosition = 0;
 				Game.Sections[0].Trains = new TrainManager.Train[] {};

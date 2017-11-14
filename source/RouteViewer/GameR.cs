@@ -265,7 +265,6 @@ namespace OpenBve {
 			internal const bool TrainReachedStopPoint = false;
 			internal int StationIndex;
 			internal bool Invisible;
-			internal int[] SignalIndices;
 			internal double TrackPosition;
 			internal SectionType Type;
 			internal SectionAspect[] Aspects;
