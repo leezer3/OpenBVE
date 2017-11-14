@@ -12,8 +12,11 @@ namespace CarXmlConvertor
 		internal static string FileName;
 		internal static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 
-		internal static void Process()
+		private static MainForm mainForm;
+
+		internal static void Process(MainForm form)
 		{
+			mainForm = form;
 			if (!System.IO.File.Exists(FileName))
 			{
 				//No extensions.cfg file exists, so just spin up a default XML file
@@ -363,9 +366,10 @@ namespace CarXmlConvertor
 					TabbedList carLines = new TabbedList();
 					GenerateCarXML(ref carLines, i);
 					carLines.Add("</openBVE>");
+					string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
 					try
 					{
-						string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
+						
 						using (StreamWriter sw = new StreamWriter(fileOut))
 						{
 							foreach (String s in carLines.Lines)
@@ -375,6 +379,7 @@ namespace CarXmlConvertor
 					}
 					catch
 					{
+						mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
 						MessageBox.Show("An error occured whilst writing the new XML file for car " + i + ". \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						return;
 					}
@@ -500,9 +505,9 @@ namespace CarXmlConvertor
 			}
 			newLines.Add("</Train>");
 			newLines.Add("</openBVE>");
+			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 			try
 			{
-				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 				using (StreamWriter sw = new StreamWriter(fileOut))
 				{
 					foreach (String s in newLines.Lines)
@@ -511,10 +516,10 @@ namespace CarXmlConvertor
 			}
 			catch
 			{
+				mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
 				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
-			MessageBox.Show("Conversion succeeded.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 	}
 }

@@ -18,9 +18,10 @@ namespace CarXmlConvertor
 		private static bool FrontCarIsMotorCar;
 		internal static bool[] MotorCars;
 		internal static int DriverCar = 0;
-
-		internal static void Process()
+		private static System.Windows.Forms.Form mainForm;
+		internal static void Process(Form form)
 		{
+			mainForm = form;
 			if (!System.IO.File.Exists(FileName))
 			{
 				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);

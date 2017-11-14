@@ -39,14 +39,17 @@
 			this.radioButtonChildFiles = new System.Windows.Forms.RadioButton();
 			this.panelCarXMLTypes = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
+			this.textBoxOutput = new System.Windows.Forms.TextBox();
 			this.panelCarXMLTypes.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// textBox1
 			// 
+			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox1.Location = new System.Drawing.Point(7, 73);
 			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(183, 20);
+			this.textBox1.Size = new System.Drawing.Size(293, 20);
 			this.textBox1.TabIndex = 0;
 			// 
 			// labelSelectTrain
@@ -60,7 +63,8 @@
 			// 
 			// buttonSelectFolder
 			// 
-			this.buttonSelectFolder.Location = new System.Drawing.Point(196, 70);
+			this.buttonSelectFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonSelectFolder.Location = new System.Drawing.Point(306, 70);
 			this.buttonSelectFolder.Name = "buttonSelectFolder";
 			this.buttonSelectFolder.Size = new System.Drawing.Size(75, 23);
 			this.buttonSelectFolder.TabIndex = 2;
@@ -79,8 +83,9 @@
 			// 
 			// button1
 			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.button1.Location = new System.Drawing.Point(86, 158);
+			this.button1.Location = new System.Drawing.Point(292, 417);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(104, 35);
 			this.button1.TabIndex = 4;
@@ -130,11 +135,24 @@
 			this.label1.Text = "Please select whether to use a single Train.xml file, or a Train.xml file with ch" +
     "ild Car.xml files:";
 			// 
+			// textBoxOutput
+			// 
+			this.textBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxOutput.Enabled = false;
+			this.textBoxOutput.Location = new System.Drawing.Point(15, 158);
+			this.textBoxOutput.Multiline = true;
+			this.textBoxOutput.Name = "textBoxOutput";
+			this.textBoxOutput.Size = new System.Drawing.Size(381, 253);
+			this.textBoxOutput.TabIndex = 9;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(298, 200);
+			this.ClientSize = new System.Drawing.Size(408, 464);
+			this.Controls.Add(this.textBoxOutput);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.panelCarXMLTypes);
 			this.Controls.Add(this.button1);
@@ -154,7 +172,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+	    internal System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label labelSelectTrain;
         private System.Windows.Forms.Button buttonSelectFolder;
         private System.Windows.Forms.Label labelInfo;
@@ -164,6 +182,7 @@
 		private System.Windows.Forms.RadioButton radioButtonSingleFile;
 		private System.Windows.Forms.Panel panelCarXMLTypes;
 		private System.Windows.Forms.Label label1;
+	    internal System.Windows.Forms.TextBox textBoxOutput;
 	}
 }
 
