@@ -117,7 +117,6 @@ namespace OpenBve
 			}
 			OpenAlContext = ContextHandle.Zero;
 			MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
-			return;
 		}
 
 		/// <summary>Deinitializes audio.</summary>

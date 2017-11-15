@@ -130,7 +130,7 @@ namespace OpenBve
 		internal class DynamicBackground : BackgroundHandle
 		{
 			/// <summary>The array of backgrounds for this dynamic background</summary>
-			internal StaticBackground[] Backgrounds;
+			internal readonly StaticBackground[] Backgrounds;
 			/// <summary>The current background in use</summary>
 			internal int CurrentBackgroundIndex = 0;
 
@@ -237,7 +237,7 @@ namespace OpenBve
 		internal class BackgroundObject : BackgroundHandle
 		{
 			/// <summary>The object used for this background (NOTE: Static objects only)</summary>
-			internal ObjectManager.StaticObject ObjectBackground;
+			internal readonly ObjectManager.StaticObject ObjectBackground;
 
 			internal double ClipDistance = 0;
 

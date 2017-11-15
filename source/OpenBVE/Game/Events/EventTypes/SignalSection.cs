@@ -8,9 +8,9 @@ namespace OpenBve
 		internal class SectionChangeEvent : GeneralEvent
 		{
 			/// <summary>The index of the previous signalling section</summary>
-			internal int PreviousSectionIndex;
+			internal readonly int PreviousSectionIndex;
 			/// <summary>The index of the next signalling section</summary>
-			internal int NextSectionIndex;
+			internal readonly int NextSectionIndex;
 
 			internal SectionChangeEvent(double TrackPositionDelta, int PreviousSectionIndex, int NextSectionIndex)
 			{

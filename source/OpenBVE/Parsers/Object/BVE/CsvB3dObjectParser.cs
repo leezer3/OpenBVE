@@ -862,7 +862,7 @@ namespace OpenBve {
 								if (cmd == "setbackgroundcolor" & IsB3D)
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,
-									  "SetBackgroundColor is not a supported command - did you mean TextColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									  "SetBackgroundColor is not a supported command - did you mean BackgroundColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								else if (cmd == "backgroundcolor" & !IsB3D)
 								{

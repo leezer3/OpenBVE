@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-
+using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	using System.IO;
-
-	using Path = OpenBveApi.Path;
-
 	internal partial class CsvRwRouteParser {
 		/// <summary>An abstract signal - All signals must inherit from this class</summary>
 		private abstract class SignalData { }

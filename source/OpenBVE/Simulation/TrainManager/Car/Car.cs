@@ -3,8 +3,6 @@ using OpenBveApi.Math;
 
 namespace OpenBve
 {
-	using OpenTK.Graphics.OpenGL;
-
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
