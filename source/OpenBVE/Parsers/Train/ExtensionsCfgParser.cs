@@ -15,7 +15,35 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "extensions.cfg");
 			if (System.IO.File.Exists(FileName)) {
-				// load file
+				TextEncoding.Encoding newEncoding = TextEncoding.GetEncodingFromFile(FileName);
+				if (newEncoding != TextEncoding.Encoding.Unknown)
+				{
+					switch (newEncoding)
+					{
+						case TextEncoding.Encoding.Utf7:
+							Encoding = System.Text.Encoding.UTF7;
+							break;
+						case TextEncoding.Encoding.Utf8:
+							Encoding = System.Text.Encoding.UTF8;
+							break;
+						case TextEncoding.Encoding.Utf16Le:
+							Encoding = System.Text.Encoding.Unicode;
+							break;
+						case TextEncoding.Encoding.Utf16Be:
+							Encoding = System.Text.Encoding.BigEndianUnicode;
+							break;
+						case TextEncoding.Encoding.Utf32Le:
+							Encoding = System.Text.Encoding.UTF32;
+							break;
+						case TextEncoding.Encoding.Utf32Be:
+							Encoding = System.Text.Encoding.GetEncoding(12001);
+							break;
+						case TextEncoding.Encoding.Shift_JIS:
+							Encoding = System.Text.Encoding.GetEncoding(932);
+							break;
+					}
+				}
+
 				string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 				for (int i = 0; i < Lines.Length; i++) {
 					int j = Lines[i].IndexOf(';');

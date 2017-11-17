@@ -1130,9 +1130,9 @@ namespace OpenBve
 										int j = Interface.CurrentControls[i].Command == Interface.Command.HornPrimary
 											? 0 : Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
 										int d = TrainManager.PlayerTrain.DriverCar;
-											if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
+											if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 											{
-												TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Play();
+												TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
 												if (TrainManager.PlayerTrain.Plugin != null)
 												{
 													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
@@ -1587,10 +1587,10 @@ namespace OpenBve
 											? 0
 											: Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
 										int d = TrainManager.PlayerTrain.DriverCar;
-										if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
+										if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 										{
 											//Required for detecting the end of the loop and triggering the stop sound
-											TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Stop();
+											TrainManager.PlayerTrain.Cars[d].Horns[j].Stop();
 										}
 										break;
 									case Interface.Command.DoorsLeft:

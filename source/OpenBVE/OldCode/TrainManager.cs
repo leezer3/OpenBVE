@@ -96,38 +96,7 @@ namespace OpenBve
 		
 		
 
-		internal struct CarSound
-		{
-			internal Sounds.SoundBuffer Buffer;
-			internal Sounds.SoundSource Source;
-			internal Vector3 Position;
-			private CarSound(Sounds.SoundBuffer buffer, Sounds.SoundSource source, Vector3 position)
-			{
-				this.Buffer = buffer;
-				this.Source = source;
-				this.Position = position;
-			}
-			internal static readonly CarSound Empty = new CarSound(null, null, new Vector3(0.0, 0.0, 0.0));
-
-			/// <summary>Attempts to load a sound file into a car-sound</summary>
-			/// <param name="FileName">The sound to load</param>
-			/// <param name="Position">The position that the sound is emitted from within the car</param>
-			/// <param name="Radius">The sound radius</param>
-			/// <returns>The new car sound, or an empty car sound if load fails</returns>
-			internal CarSound(string FileName, Vector3 Position, double Radius)
-			{
-				this = TrainManager.CarSound.Empty;
-				this.Position = Position;
-				this.Source = null;
-				if (FileName != null)
-				{
-					if (System.IO.File.Exists(FileName))
-					{
-						this.Buffer = Sounds.RegisterBuffer(FileName, Radius);
-					}
-				}
-			}
-		}
+		
 		internal struct MotorSoundTableEntry
 		{
 			internal Sounds.SoundBuffer Buffer;
@@ -181,24 +150,6 @@ namespace OpenBve
 			Atc = 4,
 			Eb = 8
 		}
-		
-
-		
-		// train
-
-		
-
-		internal enum StopSkipMode
-		{
-			/// <summary>This stop is not skipped</summary>
-			None = 0,
-			/// <summary>The train decelerates through the station to a near stop</summary>
-			Decelerate = 1,
-			/// <summary>The train skips the stop at linespeed</summary>
-			Linespeed = 2
-		}
-
-		
 
 		// trains
 		/// <summary>The list of trains available in the simulation.</summary>
@@ -1650,16 +1601,16 @@ namespace OpenBve
 						Train.Cars[i].Sounds.RunNextReasynchronizationPosition = Train.Cars[0].FrontAxle.Follower.TrackPosition;
 					}
 				}
-				else if (Train.Cars[i].Sounds.RunNextReasynchronizationPosition == double.MaxValue & Train.Cars[i].Sounds.FrontAxleRunIndex >= 0)
+				else if (Train.Cars[i].Sounds.RunNextReasynchronizationPosition == double.MaxValue & Train.Cars[i].FrontAxle.RunIndex >= 0)
 				{
 					double distance = Math.Abs(Train.Cars[i].FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
 					const double minDistance = 150.0;
 					const double maxDistance = 750.0;
 					if (distance > minDistance)
 					{
-						if (Train.Cars[i].Sounds.FrontAxleRunIndex < Train.Cars[i].Sounds.Run.Length)
+						if (Train.Cars[i].FrontAxle.RunIndex < Train.Cars[i].Sounds.Run.Length)
 						{
-							Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.Run[Train.Cars[i].Sounds.FrontAxleRunIndex].Buffer;
+							Sounds.SoundBuffer buffer = Train.Cars[i].Sounds.Run[Train.Cars[i].FrontAxle.RunIndex].Buffer;
 							if (buffer != null)
 							{
 								double duration = Sounds.GetDuration(buffer);
@@ -1683,7 +1634,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < Train.Cars[i].Sounds.Run.Length; j++)
 				{
-					if (j == Train.Cars[i].Sounds.FrontAxleRunIndex | j == Train.Cars[i].Sounds.RearAxleRunIndex)
+					if (j == Train.Cars[i].RearAxle.RunIndex | j == Train.Cars[i].RearAxle.RunIndex)
 					{
 						Train.Cars[i].Sounds.RunVolume[j] += 3.0 * TimeElapsed;
 						if (Train.Cars[i].Sounds.RunVolume[j] > 1.0) Train.Cars[i].Sounds.RunVolume[j] = 1.0;

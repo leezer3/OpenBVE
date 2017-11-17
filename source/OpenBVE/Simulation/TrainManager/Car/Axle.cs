@@ -9,6 +9,9 @@
 			internal TrackManager.TrackFollower Follower;
 			internal bool CurrentWheelSlip;
 			internal double Position;
+			internal CarSound[] PointSounds;
+			internal int FlangeIndex;
+			internal int RunIndex;
 		}
 	}
 }

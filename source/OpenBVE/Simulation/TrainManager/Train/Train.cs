@@ -314,7 +314,7 @@ namespace OpenBve
 					Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
 					Cars[i].Sounds.FlangeVolume = new double[] { };
 					Cars[i].Sounds.Halt = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Horns = new TrainManager.Horn[]
+					Cars[i].Horns = new TrainManager.Horn[]
 					{
 						new TrainManager.Horn(),
 						new TrainManager.Horn(),
@@ -336,8 +336,8 @@ namespace OpenBve
 					Cars[i].Sounds.MasterControllerMax = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.PilotLampOn = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.PointFrontAxle = new TrainManager.CarSound[] { };
-					Cars[i].Sounds.PointRearAxle = new TrainManager.CarSound[] { };
+					Cars[i].FrontAxle.PointSounds = new TrainManager.CarSound[] { };
+					Cars[i].RearAxle.PointSounds = new TrainManager.CarSound[] { };
 					Cars[i].Sounds.ReverserOn = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.ReverserOff = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.Rub = TrainManager.CarSound.Empty;

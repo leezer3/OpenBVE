@@ -20,6 +20,8 @@ namespace OpenBve
 			/// <summary>Rear axle about which the car pivots</summary>
 			internal Axle RearAxle;
 			internal Bogie RearBogie;
+
+			internal Horn[] Horns;
 			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
@@ -757,7 +759,7 @@ namespace OpenBve
 					pitch = Sounds.FlangePitch;
 					for (int i = 0; i < Sounds.Flange.Length; i++)
 					{
-						if (i == Sounds.FrontAxleFlangeIndex | i == Sounds.RearAxleFlangeIndex)
+						if (i == this.FrontAxle.FlangeIndex | i == this.RearAxle.FlangeIndex)
 						{
 							Sounds.FlangeVolume[i] += TimeElapsed;
 							if (Sounds.FlangeVolume[i] > 1.0) Sounds.FlangeVolume[i] = 1.0;
