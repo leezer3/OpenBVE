@@ -8,10 +8,10 @@ namespace OpenBve
 		/// <summary>Represents damping that may be applied to the rotation of an animated object</summary>
 		internal class Damping
 		{
-			internal double NaturalFrequency;
-			internal double NaturalTime;
-			internal double DampingRatio;
-			internal double NaturalDampingFrequency;
+			private readonly double NaturalFrequency;
+			private readonly double NaturalTime;
+			private readonly double DampingRatio;
+			private readonly double NaturalDampingFrequency;
 			internal double OriginalAngle;
 			internal double OriginalDerivative;
 			internal double TargetAngle;

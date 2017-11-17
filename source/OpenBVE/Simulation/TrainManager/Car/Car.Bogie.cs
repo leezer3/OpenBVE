@@ -28,7 +28,7 @@ namespace OpenBve
 			/// <summary>Whether currently visible from the in-game camera location</summary>
 			internal bool CurrentlyVisible;
 			/// <summary>Holds a reference to the base car</summary>
-			private Car baseCar;
+			private readonly Car baseCar;
 			/// <summary>Holds a reference to the base train</summary>
 			private Train baseTrain;
 

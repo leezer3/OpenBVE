@@ -16,7 +16,7 @@ namespace OpenBve {
 		private const float		bkgB				= 0.5f;
 		private const float		bkgA				= 1.00f;
 		// the openBVE yellow
-		private static Color128	ColourProgressBar	= new Color128(1.00f, 0.69f, 0.00f, 1.00f);
+		private static readonly Color128 ColourProgressBar = new Color128(1.00f, 0.69f, 0.00f, 1.00f);
 		// the percentage to lower the logo centre from the screen top (currently set at the golden ratio)
 		private const double	logoCentreYFactor	= 0.381966;
 		private const int		progrBorder			= 1;

@@ -36,9 +36,9 @@ namespace OpenBve {
 		internal class Texture : OpenBveApi.Textures.TextureHandle {
 			// --- members ---
 			/// <summary>The origin where the texture can be loaded from.</summary>
-			internal TextureOrigin Origin;
+			internal readonly TextureOrigin Origin;
 			/// <summary>The OpenGL textures for the four clamp modes, where 0=repeat/repeat, 1=repeat/clamp, 2=clamp/repeat and 3=clamp/clamp.</summary>
-			internal OpenGlTexture[] OpenGlTextures;
+			internal readonly OpenGlTexture[] OpenGlTextures;
 			/// <summary>The width of the texture. Only valid if the texture is loaded.</summary>
 			internal int Width;
 			/// <summary>The height of the texture. Only valid if the texture is loaded.</summary>

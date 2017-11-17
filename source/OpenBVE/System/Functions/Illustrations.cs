@@ -247,8 +247,6 @@ namespace OpenBve {
 								double y = TrackManager.CurrentTrack.Elements[i].WorldPosition.Z;
 								x = ox + (x - x0) * xd;
 								y = oy + (z0 - y) * zd + h;
-								RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
-									StationDiameter, StationDiameter);
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);
 								string t = Game.Stations[e.StationIndex].Name;
 								SizeF m = g.MeasureString(t, f, Width, StringFormat.GenericDefault);
@@ -295,7 +293,7 @@ namespace OpenBve {
 									yt = oy;
 								else if (yt + m.Height > h)
 									yt = h - m.Height;
-								r = new RectangleF((float)xt - 1.0f, (float)yt - 1.0f, m.Width + 2.0f, m.Height + 2.0f);
+								RectangleF r = new RectangleF((float)xt - 1.0f, (float)yt - 1.0f, m.Width + 2.0f, m.Height + 2.0f);
 								g.FillRectangle(stop ? mapColors[mode].actNameFill : mapColors[mode].inactNameFill,
 									r.Left, r.Top, r.Width, r.Height);
 								g.DrawRectangle(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,

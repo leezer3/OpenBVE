@@ -1352,19 +1352,17 @@ namespace OpenBve {
 			} else {
 				if (Expression.EndsWith("]")) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-				} else {
-					double value;
-					if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
-						return Expression;
-					} else {
-						for (int j = 0; j < Expression.Length; j++) {
-							if (!char.IsLetterOrDigit(Expression[j]) && Expression[j] != ':') {
-								throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
-							}
-						}
-						return Expression;
+				}
+				double value;
+				if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
+					return Expression;
+				}
+				for (int j = 0; j < Expression.Length; j++) {
+					if (!char.IsLetterOrDigit(Expression[j]) && Expression[j] != ':') {
+						throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
 					}
 				}
+				return Expression;
 			}
 			string f = Expression.Substring(0, i);
 			string s = Expression.Substring(i + 1, Expression.Length - i - 2);

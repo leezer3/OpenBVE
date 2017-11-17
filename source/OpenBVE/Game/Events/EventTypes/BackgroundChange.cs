@@ -6,9 +6,9 @@
 		internal class BackgroundChangeEvent : GeneralEvent
 		{
 			/// <summary>The background which applies previously to this point</summary>
-			internal BackgroundManager.BackgroundHandle PreviousBackground;
+			private readonly BackgroundManager.BackgroundHandle PreviousBackground;
 			/// <summary>The background which applies after this point</summary>
-			internal BackgroundManager.BackgroundHandle NextBackground;
+			private readonly BackgroundManager.BackgroundHandle NextBackground;
 
 			internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundManager.BackgroundHandle PreviousBackground, BackgroundManager.BackgroundHandle NextBackground)
 			{

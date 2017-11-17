@@ -159,11 +159,11 @@ namespace OpenBve
 			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
-			internal bool RailDriverMPH = true;
+			internal bool RailDriverMPH;
 			/// <summary>Enables / disables various hacks for BVE related content</summary>
-			internal bool EnableBveTsHacks = true;
+			internal bool EnableBveTsHacks;
 			/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
-			internal bool OldTransparencyMode = true;
+			internal bool OldTransparencyMode;
 
 			internal TimeTableMode TimeTableStyle;
 

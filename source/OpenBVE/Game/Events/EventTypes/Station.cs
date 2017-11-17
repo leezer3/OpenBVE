@@ -42,7 +42,7 @@ namespace OpenBve
 		internal class StationStartEvent : GeneralEvent
 		{
 			/// <summary>The index of the station this event describes</summary>
-			internal int StationIndex;
+			internal readonly int StationIndex;
 
 			internal StationStartEvent(double TrackPositionDelta, int StationIndex)
 			{
@@ -95,7 +95,7 @@ namespace OpenBve
 		internal class StationEndEvent : GeneralEvent
 		{
 			/// <summary>The index of the station this event describes</summary>
-			internal int StationIndex;
+			internal readonly int StationIndex;
 
 			internal StationEndEvent(double TrackPositionDelta, int StationIndex)
 			{

@@ -17,17 +17,17 @@ namespace OpenBve
 		internal class RequestStopEvent : GeneralEvent
 		{
 			/// <summary>The index of the station which this applies to</summary>
-			internal int StationIndex;
+			private readonly int StationIndex;
 			/// <summary>The request stop to be triggered if we are early</summary>
-			internal RequestStop Early;
+			private readonly RequestStop Early;
 			/// <summary>The request stop to be triggered if we are on-time</summary>
-			internal RequestStop OnTime;
+			private readonly RequestStop OnTime;
 			/// <summary>The request stop to be triggered if we are late</summary>
-			internal RequestStop Late;
+			private readonly RequestStop Late;
 			/// <summary>Whether we pass this stop at linespeed if it is not requested</summary>
-			internal bool FullSpeed;
+			private readonly bool FullSpeed;
 			/// <summary>This stop is only triggered for trains under MaxCars</summary>
-			internal int MaxCars;
+			private readonly int MaxCars;
 
 			internal RequestStopEvent(int stationIndex, int maxCars, bool fullSpeed, RequestStop onTime, RequestStop early, RequestStop late)
 			{

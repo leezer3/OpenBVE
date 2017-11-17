@@ -8,7 +8,7 @@ namespace OpenBve
 		internal class MarkerStartEvent : GeneralEvent
 		{
 			/// <summary>The marker or message to add</summary>
-			internal MessageManager.Message Message;
+			private readonly MessageManager.Message Message;
 
 			internal MarkerStartEvent(double trackPositionDelta, MessageManager.Message message)
 			{

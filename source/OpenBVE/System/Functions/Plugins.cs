@@ -15,9 +15,9 @@ namespace OpenBve {
 		internal class Plugin {
 			// --- members ---
 			/// <summary>The plugin file.</summary>
-			internal string File;
+			internal readonly string File;
 			/// <summary>The plugin title.</summary>
-			internal string Title;
+			internal readonly string Title;
 			/// <summary>The interface to load textures as exposed by the plugin, or a null reference.</summary>
 			internal OpenBveApi.Textures.TextureInterface Texture;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
