@@ -244,10 +244,10 @@ namespace OpenBve
 				}
 			}
 
+			/// <summary>Performs a forced update on all objects attached to the driver car</summary>
 			internal void UpdateCabObjects()
 			{
-				//BUG: ?? This probably ought to be the driver car index, not zero ??
-				Cars[0].UpdateObjects(0.0, true, false);
+				Cars[this.DriverCar].UpdateObjects(0.0, true, false);
 			}
 
 			/// <summary>Synchronizes the entire train after a period of infrequent updates</summary>
@@ -306,10 +306,10 @@ namespace OpenBve
 					Cars[i].Sounds.CpEnd = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.CpLoop = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.CpStart = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.DoorCloseL = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.DoorCloseR = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.DoorOpenL = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.DoorOpenR = TrainManager.CarSound.Empty;
+					Cars[i].Doors[0].CloseSound = TrainManager.CarSound.Empty;
+					Cars[i].Doors[1].CloseSound = TrainManager.CarSound.Empty;
+					Cars[i].Doors[0].OpenSound = TrainManager.CarSound.Empty;
+					Cars[i].Doors[1].OpenSound = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.EmrBrake = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
 					Cars[i].Sounds.FlangeVolume = new double[] { };

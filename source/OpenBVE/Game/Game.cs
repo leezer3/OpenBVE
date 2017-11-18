@@ -169,11 +169,11 @@ namespace OpenBve {
 				bool leftopen = false;
 				bool rightopen = false;
 				for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++) {
-					for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Specs.Doors.Length; k++) {
-						if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].State != 0.0) {
-							if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].Direction == -1) {
+					for (int k = 0; k < TrainManager.PlayerTrain.Cars[j].Doors.Length; k++) {
+						if (TrainManager.PlayerTrain.Cars[j].Doors[k].State != 0.0) {
+							if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == -1) {
 								leftopen = true;
-							} else if (TrainManager.PlayerTrain.Cars[j].Specs.Doors[k].Direction == 1) {
+							} else if (TrainManager.PlayerTrain.Cars[j].Doors[k].Direction == 1) {
 								rightopen = true;
 							}
 						}

@@ -55,13 +55,11 @@
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
 			/// doors
-			internal Door[] Doors;
+			
 			internal double DoorOpenFrequency;
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
-			internal bool AnticipatedLeftDoorsOpened;
-			internal bool AnticipatedRightDoorsOpened;
 		}
 	}
 }

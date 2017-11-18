@@ -92,7 +92,7 @@ namespace OpenBve
 								left = false;
 								for (int j = 0; j < Train.Cars.Length; j++)
 								{
-									if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened)
+									if (Train.Cars[j].Doors[0].AnticipatedOpen)
 									{
 										left = true; break;
 									}
@@ -107,7 +107,7 @@ namespace OpenBve
 								right = false;
 								for (int j = 0; j < Train.Cars.Length; j++)
 								{
-									if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened)
+									if (Train.Cars[j].Doors[1].AnticipatedOpen)
 									{
 										right = true; break;
 									}
@@ -189,10 +189,10 @@ namespace OpenBve
 								// schedule door locks (passengers stuck between the doors)
 								for (int j = 0; j < Train.Cars.Length; j++)
 								{
-									for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+									for (int k = 0; k < Train.Cars[j].Doors.Length; k++)
 									{
-										Train.Cars[j].Specs.Doors[k].DoorLockDuration = 0.0;
-										if (Game.Stations[i].OpenLeftDoors & Train.Cars[j].Specs.Doors[k].Direction == -1 | Game.Stations[i].OpenRightDoors & Train.Cars[j].Specs.Doors[k].Direction == 1)
+										Train.Cars[j].Doors[k].DoorLockDuration = 0.0;
+										if (Game.Stations[i].OpenLeftDoors & Train.Cars[j].Doors[k].Direction == -1 | Game.Stations[i].OpenRightDoors & Train.Cars[j].Doors[k].Direction == 1)
 										{
 											double p = 0.005 * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio * Game.Stations[i].PassengerRatio;
 											if (Program.RandomNumberGenerator.NextDouble() < p)
@@ -202,14 +202,14 @@ namespace OpenBve
 												 * minimum: 0.2 (nearly closed)
 												 * maximum: 0.8 (nearly opened)
 												 * */
-												Train.Cars[j].Specs.Doors[k].DoorLockState = 0.2 + 0.6 * Program.RandomNumberGenerator.NextDouble();
+												Train.Cars[j].Doors[k].DoorLockState = 0.2 + 0.6 * Program.RandomNumberGenerator.NextDouble();
 												/* -- waiting time --
 												 * minimum: 2.9 s
 												 * maximum: 40.0 s
 												 * average: 7.6 s
 												 * */
 												p = Program.RandomNumberGenerator.NextDouble();
-												Train.Cars[j].Specs.Doors[k].DoorLockDuration = (50.0 - 10.0 * p) / (17.0 - 16.0 * p);
+												Train.Cars[j].Doors[k].DoorLockDuration = (50.0 - 10.0 * p) / (17.0 - 16.0 * p);
 											}
 										}
 									}
@@ -283,9 +283,9 @@ namespace OpenBve
 							left = false;
 							for (int j = 0; j < Train.Cars.Length; j++)
 							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++)
 								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
+									if (Train.Cars[j].Doors[k].State != 0.0)
 									{
 										left = true; break;
 									}
@@ -301,9 +301,9 @@ namespace OpenBve
 							right = false;
 							for (int j = 0; j < Train.Cars.Length; j++)
 							{
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++)
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++)
 								{
-									if (Train.Cars[j].Specs.Doors[k].State != 0.0)
+									if (Train.Cars[j].Doors[k].State != 0.0)
 									{
 										right = true; break;
 									}
@@ -347,10 +347,10 @@ namespace OpenBve
 								if (r >= Program.RandomNumberGenerator.NextDouble())
 								{
 									int d =
-										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Specs.Doors.Length);
-									if (Train.Cars[j].Specs.Doors[d].State == 1.0)
+										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Doors.Length);
+									if (Train.Cars[j].Doors[d].State == 1.0)
 									{
-										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Specs.Doors[d].Direction;
+										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Doors[d].Direction;
 									}
 								}
 							}

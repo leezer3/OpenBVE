@@ -224,19 +224,19 @@ namespace OpenBve
 										{
 											case "openleft":
 											case "leftopen":
-												ParseNode(cc, out car.Sounds.DoorOpenL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[0].OpenSound, left, SoundCfgParser.smallRadius);
 												break;
 											case "openright":
 											case "rightopen":
-												ParseNode(cc, out car.Sounds.DoorOpenR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[1].OpenSound, right, SoundCfgParser.smallRadius);
 												break;
 											case "closeleft":
 											case "leftclose":
-												ParseNode(cc, out car.Sounds.DoorCloseL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[0].CloseSound, left, SoundCfgParser.smallRadius);
 												break;
 											case "closeright":
 											case "rightclose":
-												ParseNode(cc, out car.Sounds.DoorCloseR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[1].CloseSound, right, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");

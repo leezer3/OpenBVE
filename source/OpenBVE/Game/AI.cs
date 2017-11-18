@@ -140,9 +140,9 @@ namespace OpenBve
                 bool doorsopen = false;
                 for (int i = 0; i < Train.Cars.Length; i++)
                 {
-                    for (int j = 0; j < Train.Cars[i].Specs.Doors.Length; j++)
+                    for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
                     {
-                        if (Train.Cars[i].Specs.Doors[j].State != 0.0)
+                        if (Train.Cars[i].Doors[j].State != 0.0)
                         {
                             doorsopen = true;
                             break;

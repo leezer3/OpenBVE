@@ -1146,7 +1146,7 @@ namespace OpenBve
 										break;
 									case Interface.Command.DoorsLeft:
 										// doors: left
-										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed)
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed)
 										{
 											return;
 										}
@@ -1174,11 +1174,11 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.LeftDoors);
 										}
 										//Set door button to pressed in the driver's car
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = true;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = true;
 										break;
 									case Interface.Command.DoorsRight:
 										// doors: right
-										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed)
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed)
 										{
 											return;
 										}
@@ -1205,7 +1205,7 @@ namespace OpenBve
 										{
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.RightDoors);
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = true;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = true;
 										break;
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
@@ -1594,14 +1594,14 @@ namespace OpenBve
 										}
 										break;
 									case Interface.Command.DoorsLeft:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = false;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = false;
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.LeftDoors);
 										}
 										break;
 									case Interface.Command.DoorsRight:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = false;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = false;
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.RightDoors);

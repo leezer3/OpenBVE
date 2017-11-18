@@ -762,11 +762,11 @@ namespace OpenBve {
 				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
-				Train.Cars[i].Specs.Doors = new TrainManager.Door[2];
-				Train.Cars[i].Specs.Doors[0].Direction = -1;
-				Train.Cars[i].Specs.Doors[0].State = 0.0;
-				Train.Cars[i].Specs.Doors[1].Direction = 1;
-				Train.Cars[i].Specs.Doors[1].State = 0.0;
+				Train.Cars[i].Doors = new TrainManager.Door[2];
+				Train.Cars[i].Doors[0].Direction = -1;
+				Train.Cars[i].Doors[0].State = 0.0;
+				Train.Cars[i].Doors[1].Direction = 1;
+				Train.Cars[i].Doors[1].State = 0.0;
 				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
 				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
 				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;

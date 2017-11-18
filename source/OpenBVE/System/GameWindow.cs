@@ -498,14 +498,14 @@ namespace OpenBve
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
-							TrainManager.Trains[i].Cars[j].Specs.AnticipatedLeftDoorsOpened = true;
+							TrainManager.Trains[i].Cars[j].Doors[0].AnticipatedOpen = true;
 						}
 					}
 					if (Game.Stations[s].OpenRightDoors)
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
-							TrainManager.Trains[i].Cars[j].Specs.AnticipatedRightDoorsOpened = true;
+							TrainManager.Trains[i].Cars[j].Doors[1].AnticipatedOpen = true;
 						}
 					}
 				}

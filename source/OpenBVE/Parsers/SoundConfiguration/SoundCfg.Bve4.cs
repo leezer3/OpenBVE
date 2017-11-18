@@ -464,25 +464,25 @@ namespace OpenBve
 										case "open left":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.DoorOpenL = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
+												train.Cars[c].Doors[0].OpenSound = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
 											}
 											break;
 										case "open right":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.DoorOpenR = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
+												train.Cars[c].Doors[1].OpenSound = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
 											}
 											break;
 										case "close left":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.DoorCloseL = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
+												train.Cars[c].Doors[0].CloseSound = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
 											}
 											break;
 										case "close right":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.DoorCloseR = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
+												train.Cars[c].Doors[1].CloseSound = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), left, SoundCfgParser.smallRadius);
 											}
 											break;
 										default:

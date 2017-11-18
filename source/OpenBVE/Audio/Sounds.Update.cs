@@ -107,7 +107,7 @@ namespace OpenBve {
 					{
 						case SoundType.TrainCar:
 							OpenBveApi.Math.Vector3 direction;
-							TrainManager.CreateWorldCoordinates(Sources[i].Train, Sources[i].Car, Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
 							velocity = Sources[i].Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
 							break;
 						default:
@@ -379,7 +379,7 @@ namespace OpenBve {
 					OpenBveApi.Math.Vector3 position;
 					if (Sources[i].Train != null) {
 						OpenBveApi.Math.Vector3 direction;
-						TrainManager.CreateWorldCoordinates(Sources[i].Train, Sources[i].Car, Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
 					} else {
 						position = Sources[i].Position;
 					}
@@ -511,7 +511,7 @@ namespace OpenBve {
 					OpenBveApi.Math.Vector3 velocity;
 					if (source.Train != null) {
 						OpenBveApi.Math.Vector3 direction;
-						TrainManager.CreateWorldCoordinates(source.Train, source.Car, source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						source.Train.Cars[source.Car].CreateWorldCoordinates(source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
 						velocity = source.Train.Cars[source.Car].Specs.CurrentSpeed * direction;
 					} else {
 						position = source.Position;

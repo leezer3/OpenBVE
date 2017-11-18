@@ -24,14 +24,6 @@
 			internal bool CpLoopStarted;
 			internal CarSound CpStart;
 			internal double CpStartTimeStarted;
-			/// <summary>Played once when the left doors close</summary>
-			internal CarSound DoorCloseL;
-			/// <summary>Played once when the right doors close</summary>
-			internal CarSound DoorCloseR;
-			/// <summary>Played once when the left doors open</summary>
-			internal CarSound DoorOpenL;
-			/// <summary>Played once when the right doors open</summary>
-			internal CarSound DoorOpenR;
 			internal CarSound EmrBrake;
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
