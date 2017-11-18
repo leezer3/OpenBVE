@@ -491,7 +491,16 @@ namespace OpenBve
 								if (Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Actual > 0 & !Specs.CurrentHoldBrake.Actual & !Specs.CurrentEmergencyBrake.Actual)
 								{
 									// target acceleration
-									a = GetAccelerationOutput(this, i, Specs.CurrentPowerNotch.Actual - 1, (double)Specs.CurrentReverser.Actual * Cars[i].Specs.CurrentSpeed);
+									if (Specs.CurrentPowerNotch.Actual - 1 < Cars[i].Specs.AccelerationCurves.Length)
+									{
+										// Load factor is a constant 1.0 for anything prior to BVE5
+										// This will need to be changed when the relevant branch is merged in
+										a = Cars[i].Specs.AccelerationCurves[Specs.CurrentPowerNotch.Actual - 1].GetAccelerationOutput((double)Specs.CurrentReverser.Actual * Cars[i].Specs.CurrentSpeed, 1.0);
+									}
+									else
+									{
+										a = 0.0;
+									}
 									// readhesion device
 									if (a > Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput)
 									{

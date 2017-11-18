@@ -400,11 +400,11 @@ namespace OpenBve
 								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 								double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 								double d = b - a;
 								if (d > 0.0)
 								{
-									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 									if (p > 1.0) p = 1.0;
 									p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 								}
@@ -507,11 +507,11 @@ namespace OpenBve
 							//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 							double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 							double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 							double d = b - a;
 							if (d > 0.0)
 							{
-								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 								if (p > 1.0) p = 1.0;
 								p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 							}
@@ -662,7 +662,7 @@ namespace OpenBve
 			}
 			// deceleration provided by brake
 			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure;
+			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 			// deceleration provided by motor
 			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Specs.CurrentReverser.Actual != 0 & !Train.Specs.CurrentEmergencyBrake.Actual)
 			{

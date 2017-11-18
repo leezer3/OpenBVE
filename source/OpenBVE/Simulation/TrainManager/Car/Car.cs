@@ -328,7 +328,7 @@ namespace OpenBve
 								else if (ndir == -1)
 								{
 									// brake
-									double max = Specs.BrakeDecelerationAtServiceMaximumPressure;
+									double max = Specs.BrakeDecelerationAtServiceMaximumPressure(this.baseTrain.Specs.CurrentBrakeNotch.Actual);
 									if (max != 0.0)
 									{
 										double cur = -Specs.CurrentAccelerationOutput;

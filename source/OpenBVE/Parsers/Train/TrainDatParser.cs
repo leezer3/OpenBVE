@@ -86,7 +86,7 @@ namespace OpenBve {
 			double CoefficientOfStaticFriction = 0.35;
 			double CoefficientOfRollingResistance = 0.0025;
 			double AerodynamicDragCoefficient = 1.1;
-			TrainManager.AccelerationCurve[] AccelerationCurves = new TrainManager.AccelerationCurve[] { };
+			TrainManager.BveAccelerationCurve[] AccelerationCurves = new TrainManager.BveAccelerationCurve[] { };
 			Vector3 Driver = new Vector3();
 			int DriverCar = 0;
 			double MotorCarMass = 1.0, TrailerCarMass = 1.0;
@@ -123,7 +123,8 @@ namespace OpenBve {
 				switch (Lines[i].ToLowerInvariant()) {
 					case "#acceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							Array.Resize<TrainManager.AccelerationCurve>(ref AccelerationCurves, n + 1);
+							Array.Resize<TrainManager.BveAccelerationCurve>(ref AccelerationCurves, n + 1);
+							AccelerationCurves[n] = new TrainManager.BveAccelerationCurve();
 							string t = Lines[i] + ",";
 							int m = 0;
 							while (true) {
@@ -611,7 +612,10 @@ namespace OpenBve {
 				Train.Cars[i].Specs.BrakeType = BrakeType;
 				Train.Cars[i].Specs.ElectropneumaticType = ElectropneumaticType;
 				Train.Cars[i].Specs.BrakeControlSpeed = BrakeControlSpeed;
-				Train.Cars[i].Specs.BrakeDecelerationAtServiceMaximumPressure = BrakeDeceleration;
+				Train.Cars[i].Specs.DecelerationCurves = new TrainManager.AccelerationCurve[]
+				{
+					new TrainManager.BveDecelerationCurve(BrakeDeceleration), 
+				};
 				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
 				Train.Cars[i].Specs.AirBrake.AirCompressorEnabled = false;
 				Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure = MainReservoirMinimumPressure;
@@ -834,8 +838,11 @@ namespace OpenBve {
 					Train.Cars[i].Specs.AirBrake.Type = TrainManager.AirBrakeType.Main;
 					Train.Cars[i].Specs.MassEmpty = MotorCarMass;
 					Train.Cars[i].Specs.MassCurrent = MotorCarMass;
-					Train.Cars[i].Specs.AccelerationCurves = AccelerationCurves;
-					Train.Cars[i].Specs.AccelerationCurvesMultiplier = 1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass);
+					Array.Resize(ref Train.Cars[i].Specs.AccelerationCurves, AccelerationCurves.Length);
+					for (int j = 0; j < AccelerationCurves.Length; j++)
+					{
+						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+					}
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					switch (ReAdhesionDevice) {
 						case 0: // type a:
@@ -884,7 +891,6 @@ namespace OpenBve {
 					Train.Cars[i].Specs.MassEmpty = TrailerCarMass;
 					Train.Cars[i].Specs.MassCurrent = TrailerCarMass;
 					Train.Cars[i].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
-					Train.Cars[i].Specs.AccelerationCurvesMultiplier = 0.0;
 					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
 					Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
 					Train.Cars[i].Sounds.Motor.SpeedConversionFactor = 18.0;

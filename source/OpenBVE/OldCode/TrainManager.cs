@@ -8,17 +8,6 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-
-		// cars
-		
-		internal struct AccelerationCurve
-		{
-			internal double StageZeroAcceleration;
-			internal double StageOneSpeed;
-			internal double StageOneAcceleration;
-			internal double StageTwoSpeed;
-			internal double StageTwoExponent;
-		}
 		internal enum CarBrakeType
 		{
 			ElectromagneticStraightAirBrake = 0,
@@ -199,6 +188,7 @@ namespace OpenBve
 						Program.AppendToLogFile("Loading train panel: " + File);
 						Panel2 = true;
 						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
 						World.CameraRestriction = World.CameraRestrictionMode.On;
 					}
 					else
@@ -208,6 +198,7 @@ namespace OpenBve
 						{
 							Program.AppendToLogFile("Loading train panel: " + File);
 							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
 							World.CameraRestriction = World.CameraRestrictionMode.On;
 						}
 						else
@@ -228,37 +219,6 @@ namespace OpenBve
 			}
 		}
 		
-
-		// get acceleration output
-		internal static double GetAccelerationOutput(Train Train, int CarIndex, int CurveIndex, double Speed)
-		{
-			if (CurveIndex < Train.Cars[CarIndex].Specs.AccelerationCurves.Length)
-			{
-				double a0 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageZeroAcceleration;
-				double s1 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageOneSpeed;
-				double a1 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageOneAcceleration;
-				double s2 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageTwoSpeed;
-				double e2 = Train.Cars[CarIndex].Specs.AccelerationCurves[CurveIndex].StageTwoExponent;
-				double f = Train.Cars[CarIndex].Specs.AccelerationCurvesMultiplier;
-				if (Speed <= 0.0)
-				{
-					return f * a0;
-				}
-				if (Speed < s1)
-				{
-					double t = Speed / s1;
-					return f * (a0 * (1.0 - t) + a1 * t);
-				}
-				if (Speed < s2)
-				{
-					return f * s1 * a1 / Speed;
-				}
-				return f * s1 * a1 * Math.Pow(s2, e2 - 1.0) * Math.Pow(Speed, -e2);
-
-			}
-			return 0.0;
-		}
-
 		// get resistance
 		private static double GetResistance(Train Train, int CarIndex, ref Axle Axle, double Speed)
 		{
