@@ -96,13 +96,12 @@ namespace OpenBve
 			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
 			{
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
-				//TODO: Additional available in-car views will be implemented with the new train format
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
+				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
 			else if (World.CameraMode == World.CameraViewMode.Exterior)
 			{
 				//Update the camera position based upon the relative car position
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
+				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
 			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 			{
@@ -577,7 +576,7 @@ namespace OpenBve
 				World.CameraMode = World.CameraViewMode.InteriorLookAhead;
 			}
 			//Place the initial camera in the driver car
-			TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			World.CameraTrackFollower.Update(-1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
 			World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);

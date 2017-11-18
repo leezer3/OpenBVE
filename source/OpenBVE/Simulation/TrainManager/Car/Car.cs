@@ -16,13 +16,15 @@ namespace OpenBve
 			internal double Length;
 			/// <summary>Front axle about which the car pivots</summary>
 			internal Axle FrontAxle;
-			internal Bogie FrontBogie;
 			/// <summary>Rear axle about which the car pivots</summary>
 			internal Axle RearAxle;
+			/// <summary>The front bogie</summary>
+			internal Bogie FrontBogie;
+			/// <summary>The rear bogie</summary>
 			internal Bogie RearBogie;
-
+			/// <summary>The horns attached to this car</summary>
 			internal Horn[] Horns;
-
+			/// <summary>The doors for this car</summary>
 			internal Door[] Doors;
 
 			internal Vector3 Up;
@@ -1027,6 +1029,35 @@ namespace OpenBve
 						}
 					}
 				}
+			}
+
+			/// <summary>Updates the position of the camera relative to this car</summary>
+			internal void UpdateCamera()
+			{
+				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+				dx *= t; dy *= t; dz *= t;
+				double ux = Up.X;
+				double uy = Up.Y;
+				double uz = Up.Z;
+				double sx = dz * uy - dy * uz;
+				double sy = dx * uz - dz * ux;
+				double sz = dy * ux - dx * uy;
+				double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+				double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+				double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+				double cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
+				double cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
+				double cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
+				World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
+				World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
+				World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
+				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
+				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
+				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
+				World.CameraTrackFollower.Update(tp, false, false);
 			}
 		}
 	}
