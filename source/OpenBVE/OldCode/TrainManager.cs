@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using OpenBveApi.Colors;
-using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -60,50 +58,17 @@ namespace OpenBve
 			internal double StraightAirPipeServiceRate;
 			internal double StraightAirPipeEmergencyRate;
 		}
-		internal struct CarHoldBrake
-		{
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
+
 		
 		
 
 		
-		internal struct MotorSoundTableEntry
-		{
-			internal Sounds.SoundBuffer Buffer;
-			internal int SoundIndex;
-			internal float Pitch;
-			internal float Gain;
-		}
-		internal struct MotorSoundTable
-		{
-			internal MotorSoundTableEntry[] Entries;
-			internal Sounds.SoundBuffer Buffer;
-			internal Sounds.SoundSource Source;
-		}
-		internal struct MotorSound
-		{
-			internal MotorSoundTable[] Tables;
-			internal Vector3 Position;
-			internal double SpeedConversionFactor;
-			internal int CurrentAccelerationDirection;
-			internal const int MotorP1 = 0;
-			internal const int MotorP2 = 1;
-			internal const int MotorB1 = 2;
-			internal const int MotorB2 = 3;
-		}
+
 
 		// train
 		
 		// train specs
-		internal enum PassAlarmType
-		{
-			None = 0,
-			Single = 1,
-			Loop = 2
-		}
+		
 		internal struct TrainAirBrake
 		{
 			internal AirBrakeHandle Handle;
@@ -115,14 +80,7 @@ namespace OpenBve
 			Manual = 2
 		}
 
-		[Flags]
-		internal enum DefaultSafetySystems
-		{
-			AtsSn = 1,
-			AtsP = 2,
-			Atc = 4,
-			Eb = 8
-		}
+		
 
 		// trains
 		/// <summary>The list of trains available in the simulation.</summary>

@@ -197,6 +197,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
+    <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
     <Compile Include="Simulation\TrainManager\Car\Axle.cs" />
@@ -209,12 +210,15 @@
     <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
+    <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
+    <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
+    <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />

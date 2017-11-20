@@ -774,7 +774,6 @@ namespace OpenBve {
 				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
 				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
 				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
-				Train.Cars[i].Specs.HoldBrake.UpdateInterval = 0.5;
 				Train.Cars[i].Width = CarWidth;
 				Train.Cars[i].Height = CarHeight;
 				Train.Cars[i].Length = CarLength;
@@ -833,6 +832,7 @@ namespace OpenBve {
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
 				Train.Cars[i].Specs.ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
+				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
 					Train.Cars[i].Specs.AirBrake.Type = TrainManager.AirBrakeType.Main;

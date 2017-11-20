@@ -675,22 +675,7 @@ namespace OpenBve
 				DecelerationDueToMotor = 0.0;
 			}
 			// hold brake
-			if (Train.Specs.CurrentHoldBrake.Actual & DecelerationDueToMotor == 0.0)
-			{
-				if (Game.SecondsSinceMidnight >= Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime)
-				{
-					Train.Cars[CarIndex].Specs.HoldBrake.NextUpdateTime = Game.SecondsSinceMidnight + Train.Cars[CarIndex].Specs.HoldBrake.UpdateInterval;
-					Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput += 0.8 * Train.Cars[CarIndex].Specs.CurrentAcceleration * (double)Math.Sign(Train.Cars[CarIndex].Specs.CurrentPerceivedSpeed);
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput < 0.0) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
-					double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-					if (Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput > a) Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = a;
-				}
-				DecelerationDueToMotor = Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput;
-			}
-			else
-			{
-				Train.Cars[CarIndex].Specs.HoldBrake.CurrentAccelerationOutput = 0.0;
-			}
+			Train.Cars[CarIndex].Specs.HoldBrake.Update(ref DecelerationDueToMotor, Train.Specs.CurrentHoldBrake.Actual);
 			{ // rub sound
 				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Sounds.Rub.Buffer;
 				if (buffer != null)
