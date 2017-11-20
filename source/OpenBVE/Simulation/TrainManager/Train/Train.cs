@@ -525,61 +525,12 @@ namespace OpenBve
 										Cars[i].RearAxle.CurrentWheelSlip = true;
 										wheelspin += (double)Specs.CurrentReverser.Actual * a * Cars[i].Specs.MassCurrent;
 									}
-									// readhesion device
-									{
-										if (Game.SecondsSinceMidnight >= Cars[i].Specs.ReAdhesionDevice.NextUpdateTime)
-										{
-											double d = Cars[i].Specs.ReAdhesionDevice.UpdateInterval;
-											double f = Cars[i].Specs.ReAdhesionDevice.ApplicationFactor;
-											double t = Cars[i].Specs.ReAdhesionDevice.ReleaseInterval;
-											double r = Cars[i].Specs.ReAdhesionDevice.ReleaseFactor;
-											Cars[i].Specs.ReAdhesionDevice.NextUpdateTime = Game.SecondsSinceMidnight + d;
-											if (Cars[i].FrontAxle.CurrentWheelSlip | Cars[i].RearAxle.CurrentWheelSlip)
-											{
-												Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput = a * f;
-												Cars[i].Specs.ReAdhesionDevice.TimeStable = 0.0;
-											}
-											else
-											{
-												Cars[i].Specs.ReAdhesionDevice.TimeStable += d;
-												if (Cars[i].Specs.ReAdhesionDevice.TimeStable >= t)
-												{
-													Cars[i].Specs.ReAdhesionDevice.TimeStable -= t;
-													if (r != 0.0 & Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput <= a + 1.0)
-													{
-														if (Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput < 0.025)
-														{
-															Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput = 0.025;
-														}
-														else
-														{
-															Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput *= r;
-														}
-													}
-													else
-													{
-														Cars[i].Specs.ReAdhesionDevice.MaximumAccelerationOutput = double.PositiveInfinity;
-													}
-												}
-											}
-										}
-									}
-									// const speed
-									if (Specs.CurrentConstSpeed)
-									{
-										if (Game.SecondsSinceMidnight >= Cars[i].Specs.ConstSpeed.NextUpdateTime)
-										{
-											Cars[i].Specs.ConstSpeed.NextUpdateTime = Game.SecondsSinceMidnight + Cars[i].Specs.ConstSpeed.UpdateInterval;
-											Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput -= 0.8 * Cars[i].Specs.CurrentAcceleration * (double)Specs.CurrentReverser.Actual;
-											if (Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput < 0.0) Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput = 0.0;
-										}
-										if (a > Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput) a = Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput;
-										if (a < 0.0) a = 0.0;
-									}
-									else
-									{
-										Cars[i].Specs.ConstSpeed.CurrentAccelerationOutput = a;
-									}
+									// Update readhesion device
+									this.Cars[i].Specs.ReAdhesionDevice.Update(a);
+									// Update constant speed device
+
+									this.Cars[i].Specs.ConstSpeed.Update(ref a, this.Specs.CurrentConstSpeed, this.Specs.CurrentReverser.Actual);
+									
 									// finalize
 									if (wheelspin != 0.0) a = 0.0;
 								}

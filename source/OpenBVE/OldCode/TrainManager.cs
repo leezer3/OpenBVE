@@ -66,22 +66,6 @@ namespace OpenBve
 			internal double NextUpdateTime;
 			internal double UpdateInterval;
 		}
-		internal struct CarConstSpeed
-		{
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double UpdateInterval;
-		}
-		internal struct CarReAdhesionDevice
-		{
-			internal double UpdateInterval;
-			internal double MaximumAccelerationOutput;
-			internal double ApplicationFactor;
-			internal double ReleaseInterval;
-			internal double ReleaseFactor;
-			internal double NextUpdateTime;
-			internal double TimeStable;
-		}
 		
 		
 
