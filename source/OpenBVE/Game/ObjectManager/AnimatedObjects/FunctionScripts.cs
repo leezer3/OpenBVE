@@ -25,7 +25,7 @@ namespace OpenBve {
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Odometer, OdometerOfCar,
-			Doors, DoorsIndex,
+			Doors, DoorsIndex, PowerAmmeter, BrakeAmmeter, CombinedAmmeter,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
 			LeftDoorButton, RightDoorButton,
@@ -773,6 +773,9 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.PowerAmmeter:
+						Function.Stack[s] = Train.Specs.PowerAmmeter.CurrentValue();
+						break;
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {

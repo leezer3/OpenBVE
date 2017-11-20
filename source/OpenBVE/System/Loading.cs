@@ -234,6 +234,7 @@ namespace OpenBve {
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
 				//Sleep for 10ms to allow route loading locks to release
 				Thread.Sleep(20);
+				bool Bve5Train = false;
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
 					string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
@@ -248,11 +249,23 @@ namespace OpenBve {
 					Program.AppendToLogFile("Loading player train: " + CurrentTrainFolder);
 					TrainProgressCurrentWeight = 0.1 / TrainProgressMaximum;
 					string TrainData = OpenBveApi.Path.CombineFile(CurrentTrainFolder, "train.dat");
-					TrainDatParser.ParseTrainData(TrainData, CurrentTrainEncoding, TrainManager.Trains[k]);
+					if (System.IO.File.Exists(TrainData))
+					{
+						TrainDatParser.ParseTrainData(TrainData, CurrentTrainEncoding, TrainManager.Trains[k]);
+					}
+					else
+					{
+						TrainData = OpenBveApi.Path.CombineFile(CurrentTrainFolder, "vehicle.txt");
+						Bve5TrainParser.ParseTrainData(TrainData, TrainManager.Trains[k]);
+						Bve5Train = true;
+					}
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.2 / TrainProgressMaximum;
-					SoundCfgParser.ParseSoundConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+					if (!Bve5Train)
+					{
+						SoundCfgParser.ParseSoundConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+					}
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					// door open/close speed
@@ -310,13 +323,12 @@ namespace OpenBve {
 					}
 				}
 				// add panel section
-				if (k == TrainManager.PlayerTrain.TrainIndex) {	
+				if (k == TrainManager.PlayerTrain.TrainIndex && !Bve5Train) {
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0] = new TrainManager.CarSection();
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Overlay = true;
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
-					TrainManager.ParsePanelConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					Program.AppendToLogFile("Train panel loaded sucessfully.");

@@ -162,6 +162,7 @@
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
+    <Compile Include="Parsers\Panel\PanelTxtParser.cs" />
     <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.Commands.cs" />
     <Compile Include="Parsers\Route\BVE5\Bve5ScenarioParser.Components.cs" />
@@ -186,8 +187,14 @@
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
+    <Compile Include="Parsers\SoundConfiguration\SoundTxt.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve4.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Xml.cs" />
+    <Compile Include="Parsers\Train\BVE5\Ammeter.cs" />
+    <Compile Include="Parsers\Train\BVE5\ForceData.cs" />
+    <Compile Include="Parsers\Train\BVE5\Parameters.cs" />
+    <Compile Include="Parsers\Train\BVE5\Parameters.PowerBrake.cs" />
+    <Compile Include="Parsers\Train\BVE5\TrainParser.cs" />
     <Compile Include="Parsers\Train\TrainDatParser.Formats.cs" />
     <Compile Include="Parsers\Train\TrainXmlParser.CarNode.cs" />
     <Compile Include="Parsers\Train\TrainXmlParser.cs" />
@@ -216,6 +223,7 @@
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Ammeter.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />

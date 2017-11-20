@@ -154,6 +154,7 @@ namespace OpenBve {
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
 			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
+			Image Train5Icon = LoadImage(MenuFolder, "icon_train5.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
 			Image MouseIcon = LoadImage(MenuFolder, "icon_mouse.png");
 			Image JoystickIcon = LoadImage(MenuFolder, "icon_joystick.png");
@@ -206,12 +207,14 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
+			if (Train5Icon != null) listviewTrainFolders.SmallImageList.Images.Add("train5", Train5Icon);
 			listviewTrainFolders.Columns.Clear();
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
 			listviewTrainRecently.Columns.Add("");
 			listviewTrainRecently.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (TrainIcon != null) listviewTrainRecently.SmallImageList.Images.Add("train", TrainIcon);
+			if (Train5Icon != null) listviewTrainRecently.SmallImageList.Images.Add("train5", Train5Icon);
 			for (int i = 0; i < Interface.CurrentOptions.RecentlyUsedTrains.Length; i++)
 			{
 				ListViewItem Item = listviewTrainRecently.Items.Add(System.IO.Path.GetFileName(Interface.CurrentOptions.RecentlyUsedTrains[i]));

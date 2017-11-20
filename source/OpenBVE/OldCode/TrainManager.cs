@@ -82,6 +82,7 @@ namespace OpenBve
 
 		
 
+
 		// trains
 		/// <summary>The list of trains available in the simulation.</summary>
 		internal static Train[] Trains = new Train[] { };
@@ -678,11 +679,6 @@ namespace OpenBve
 				Train.Plugin.UpdateBrake();
 			}
 		}	
-
-		
-
-		// update speeds
-		
 
 		/// <summary>Gets the delay value for the current power notch</summary>
 		/// <param name="Notch">The current notch</param>

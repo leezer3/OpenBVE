@@ -34,6 +34,9 @@
 			internal DoorMode DoorCloseMode;
 			internal DoorInterlockStates DoorInterlockState;
 			internal bool DoorClosureAttempted;
+
+			internal Ammeter PowerAmmeter;
+			internal Ammeter BrakeAmmeter;
 		}
 	}
 }

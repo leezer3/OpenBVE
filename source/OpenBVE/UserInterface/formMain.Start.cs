@@ -528,8 +528,9 @@ namespace OpenBve
 									if (!string.IsNullOrEmpty(folderName) && folderName[0] != '.')
 									{
 										string File = OpenBveApi.Path.CombineFile(Folders[i], "train.dat");
+										string File5 = OpenBveApi.Path.CombineFile(Folders[i], "vehicle.txt");
 										ListViewItem Item = listviewTrainFolders.Items.Add(folderName);
-										Item.ImageKey = System.IO.File.Exists(File) ? "train" : "folder";
+										Item.ImageKey = System.IO.File.Exists(File) ? "train" : System.IO.File.Exists(File5) ? "train5" : "folder";
 										Item.Tag = Folders[i];
 									}
 								}
@@ -570,12 +571,18 @@ namespace OpenBve
 							Result.TrainFolder = t;
 							ShowTrain(false);
 							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+							return;
 						}
-						else
+						File = OpenBveApi.Path.CombineFile(t, "vehicle.txt");
+						if (System.IO.File.Exists(File))
 						{
-							groupboxTrainDetails.Visible = false;
-							buttonStart.Enabled = false;
+							Result.TrainFolder = t;
+							ShowTrain(false);
+							if (checkboxTrainDefault.Checked) checkboxTrainDefault.Checked = false;
+							return;
 						}
+						this.groupboxTrainDetails.Visible = false;
+						this.buttonStart.Enabled = false;
 					}
 				}
 			}

@@ -70,5 +70,72 @@ namespace OpenBve
 				this.MaxDecelerationOutput = Deceleration;
 			}
 		}
+
+		/// <summary>Represents a BVE5 format acceleration curve</summary>
+		internal class Bve5AccelerationCurve : AccelerationCurve
+		{
+			internal Bve5AccelerationCurveEntry[] UnloadedAcceleration;
+
+			internal Bve5AccelerationCurveEntry[] LoadedAcceleration;
+
+			internal override double GetAccelerationOutput(double Speed, double Loading)
+			{
+				double UnloadedAccelerationFactor = 0.0;
+				for (int i = 0; i < this.UnloadedAcceleration.Length; i++)
+				{
+					if (Speed <= this.UnloadedAcceleration[i].Speed)
+					{
+						if (i == 0)
+						{
+							UnloadedAccelerationFactor = this.UnloadedAcceleration[i].Acceleration;
+						}
+						else
+						{
+							double speedDiff = (Speed - this.UnloadedAcceleration[i - 1].Speed) / (this.UnloadedAcceleration[i].Speed - this.UnloadedAcceleration[i - 1].Speed);
+							UnloadedAccelerationFactor = ((this.UnloadedAcceleration[i].Acceleration - this.UnloadedAcceleration[i -1].Acceleration) * speedDiff) + this.UnloadedAcceleration[i -1].Acceleration;
+						}
+						break;
+					}
+				}
+				double LoadedAccelerationFactor = 0.0;
+				for (int i = 0; i < this.LoadedAcceleration.Length; i++)
+				{
+					if (Speed <= this.LoadedAcceleration[i].Speed)
+					{
+						if (i == 0)
+						{
+							LoadedAccelerationFactor = this.LoadedAcceleration[i].Acceleration;
+						}
+						else
+						{
+							double speedDiff = (Speed - this.LoadedAcceleration[i - 1].Speed) / (this.LoadedAcceleration[i].Speed - this.LoadedAcceleration[i - 1].Speed);
+							LoadedAccelerationFactor = ((this.LoadedAcceleration[i].Acceleration - this.LoadedAcceleration[i - 1].Acceleration) * speedDiff) + this.LoadedAcceleration[i - 1].Acceleration;
+						}
+						break;
+					}
+				}
+				return (LoadedAccelerationFactor - UnloadedAccelerationFactor) * Loading + UnloadedAccelerationFactor;
+			}
+
+			internal Bve5AccelerationCurve()
+			{
+				this.UnloadedAcceleration = new Bve5AccelerationCurveEntry[0];
+				this.LoadedAcceleration = new Bve5AccelerationCurveEntry[0];
+			}
+		}
+
+		internal class Bve5AccelerationCurveEntry
+		{
+			internal double Speed;
+
+			internal double Acceleration;
+
+			internal Bve5AccelerationCurveEntry(double Speed)
+			{
+				this.Speed = Speed;
+				this.Acceleration = 0.0;
+			}
+
+		}
 	}
 }

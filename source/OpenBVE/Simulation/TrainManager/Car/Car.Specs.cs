@@ -10,7 +10,13 @@
 			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;
 			internal AccelerationCurve[] DecelerationCurves;
+			internal double AccelerationCurveMaximum;
+			internal double[] JerkPowerUp;
+			internal double[] JerkPowerDown;
+			internal double[] JerkBrakeUp;
+			internal double[] JerkBrakeDown;
 
+			/// brake
 			internal double BrakeDecelerationAtServiceMaximumPressure(int Notch)
 			{
 				if (Notch == 0)
@@ -24,12 +30,6 @@
 				return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(this.CurrentSpeed, 1.0);
 			}
 
-			internal double AccelerationCurveMaximum;
-			internal double JerkPowerUp;
-			internal double JerkPowerDown;
-			internal double JerkBrakeUp;
-			internal double JerkBrakeDown;
-			/// brake
 			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
 			/// physical properties
