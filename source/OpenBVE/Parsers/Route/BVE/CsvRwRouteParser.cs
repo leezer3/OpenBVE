@@ -2550,6 +2550,11 @@ namespace OpenBve {
 						} else if (Number < 0.0) {
 							Interface.AddMessage(Interface.MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else {
+							if (Interface.CurrentOptions.EnableBveTsHacks && IsRW && Number == 4535545100)
+							{
+								//WMATA Red line has an erroneous track position causing an out of memory cascade
+								Number = 45355;
+							}
 							Data.TrackPosition = Number;
 							BlockIndex = (int)Math.Floor(Number / Data.BlockInterval + 0.001);
 							if (Data.FirstUsedBlock == -1) Data.FirstUsedBlock = BlockIndex;
