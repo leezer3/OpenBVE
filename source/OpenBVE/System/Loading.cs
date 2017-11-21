@@ -300,11 +300,6 @@ namespace OpenBve {
 						TrainManager.Trains[k].Cars[i].Specs.DoorClosePitch = 1.0;
 					}
 				}
-				for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
-					TrainManager.Trains[k].Cars[i].FrontAxle.Follower.Train = TrainManager.Trains[k];
-					TrainManager.Trains[k].Cars[i].RearAxle.Follower.Train = TrainManager.Trains[k];
-					TrainManager.Trains[k].Cars[i].BeaconReceiver.Train = TrainManager.Trains[k];
-				}
 				// add panel section
 				if (k == TrainManager.PlayerTrain.TrainIndex) {	
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];

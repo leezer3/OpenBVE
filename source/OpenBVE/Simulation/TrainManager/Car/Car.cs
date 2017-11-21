@@ -73,6 +73,9 @@ namespace OpenBve
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
+				FrontAxle.Follower.Train = train;
+				RearAxle.Follower.Train = train;
+				BeaconReceiver.Train = train;
 			}
 
 			/// <summary>Moves the car</summary>
