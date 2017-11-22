@@ -138,7 +138,7 @@ namespace OpenBve {
 		private enum SoundType { World, TrainStatic, TrainDynamic }
 		private struct Sound {
 			internal double TrackPosition;
-			internal int SoundIndex;
+			internal Sounds.SoundBuffer SoundBuffer;
 			internal SoundType Type;
 			internal double X;
 			internal double Y;
@@ -3912,7 +3912,8 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										int arrsnd = -1, depsnd = -1;
+										Sounds.SoundBuffer arrsnd = null;
+										Sounds.SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 8 && Arguments[7].Length > 0) {
 												if (Path.ContainsInvalidChars(Arguments[7])) {
@@ -3922,7 +3923,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														arrsnd = SoundManager.LoadSound(f, 30.0);
+														arrsnd = Sounds.RegisterBuffer(f, 30.0);
 													}
 												}
 											}
@@ -3953,7 +3954,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "DepartureSound " + f + " not found in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														depsnd = SoundManager.LoadSound(f, 30.0);
+														depsnd = Sounds.RegisterBuffer(f, 30.0);
 													}
 												}
 											}
@@ -3999,9 +4000,9 @@ namespace OpenBve {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
 										Game.Stations[CurrentStation].ArrivalTime = arr;
-										Game.Stations[CurrentStation].ArrivalSoundIndex = arrsnd;
+										Game.Stations[CurrentStation].ArrivalSoundBuffer = arrsnd;
 										Game.Stations[CurrentStation].DepartureTime = dep;
-										Game.Stations[CurrentStation].DepartureSoundIndex = depsnd;
+										Game.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
 										Game.Stations[CurrentStation].StopTime = halt;
 										Game.Stations[CurrentStation].ForceStopSignal = stop == 1;
 										Game.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
@@ -4093,7 +4094,7 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										int depsnd = -1;
+										Sounds.SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 6 && Arguments[5].Length != 0) {
 												if (Path.ContainsInvalidChars(Arguments[5])) {
@@ -4103,7 +4104,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														depsnd = SoundManager.LoadSound(f, 30.0);
+														depsnd = Sounds.RegisterBuffer(f, 30.0);
 													}
 												}
 											}
@@ -4112,9 +4113,9 @@ namespace OpenBve {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
 										Game.Stations[CurrentStation].ArrivalTime = arr;
-										Game.Stations[CurrentStation].ArrivalSoundIndex = -1;
+										Game.Stations[CurrentStation].ArrivalSoundBuffer = null;
 										Game.Stations[CurrentStation].DepartureTime = dep;
-										Game.Stations[CurrentStation].DepartureSoundIndex = depsnd;
+										Game.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
 										Game.Stations[CurrentStation].StopTime = 15.0;
 										Game.Stations[CurrentStation].ForceStopSignal = stop == 1;
 										Game.Stations[CurrentStation].OpenLeftDoors = true;
@@ -4638,7 +4639,7 @@ namespace OpenBve {
 														int n = Data.Blocks[BlockIndex].Sound.Length;
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].Sound, n + 1);
 														Data.Blocks[BlockIndex].Sound[n].TrackPosition = Data.TrackPosition;
-														Data.Blocks[BlockIndex].Sound[n].SoundIndex = SoundManager.LoadSound(f, 15.0);
+														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Sounds.RegisterBuffer(f, 15.0);
 														Data.Blocks[BlockIndex].Sound[n].Type = speed == 0.0 ? SoundType.TrainStatic : SoundType.TrainDynamic;
 														Data.Blocks[BlockIndex].Sound[n].Speed = speed * Data.UnitOfSpeed;
 													}
@@ -4672,7 +4673,7 @@ namespace OpenBve {
 														int n = Data.Blocks[BlockIndex].Sound.Length;
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].Sound, n + 1);
 														Data.Blocks[BlockIndex].Sound[n].TrackPosition = Data.TrackPosition;
-														Data.Blocks[BlockIndex].Sound[n].SoundIndex = SoundManager.LoadSound(f, radius);
+														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Sounds.RegisterBuffer(f, radius);
 														Data.Blocks[BlockIndex].Sound[n].Type = SoundType.World;
 														Data.Blocks[BlockIndex].Sound[n].X = x;
 														Data.Blocks[BlockIndex].Sound[n].Y = y;
@@ -5293,7 +5294,7 @@ namespace OpenBve {
 						if (q) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, TrackManager.SoundEvent.SoundIndexTrainPoint, false, false, true, new Vector3(0.0, 0.0, 0.0), 12.5);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, null, false, false, true, new Vector3(0.0, 0.0, 0.0), 12.5);
 						}
 					}
 				}
@@ -5387,10 +5388,10 @@ namespace OpenBve {
 							double d = Data.Blocks[i].Sound[j].TrackPosition - StartingDistance;
 							switch (Data.Blocks[i].Sound[j].Type) {
 								case SoundType.TrainStatic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundIndex, true, true, false, new Vector3(0.0, 0.0, 0.0), 0.0);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, true, true, false, new Vector3(0.0, 0.0, 0.0), 0.0);
 									break;
 								case SoundType.TrainDynamic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundIndex, false, false, true, new Vector3(0.0, 0.0, 0.0), Data.Blocks[i].Sound[j].Speed);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, false, false, true, new Vector3(0.0, 0.0, 0.0), Data.Blocks[i].Sound[j].Speed);
 									break;
 							}
 						}
@@ -5631,7 +5632,7 @@ namespace OpenBve {
 						if (j == 0) {
 							for (int k = 0; k < Data.Blocks[i].Sound.Length; k++) {
 								if (Data.Blocks[i].Sound[k].Type == SoundType.World) {
-									if (Data.Blocks[i].Sound[k].SoundIndex >= 0) {
+									if (Data.Blocks[i].Sound[k].SoundBuffer != null) {
 										double d = Data.Blocks[i].Sound[k].TrackPosition - StartingDistance;
 										double dx = Data.Blocks[i].Sound[k].X;
 										double dy = Data.Blocks[i].Sound[k].Y;
@@ -5646,7 +5647,7 @@ namespace OpenBve {
 										double ux, uy, uz;
 										World.Cross(wx, wy, wz, sx, sy, sz, out ux, out uy, out uz);
 										Vector3 wpos = pos + new Vector3(sx * dx + ux * dy + wx * d, sy * dx + uy * dy + wy * d, sz * dx + uz * dy + wz * d);
-										SoundManager.PlaySound(Data.Blocks[i].Sound[k].SoundIndex, null, -1, wpos, SoundManager.Importance.AlwaysPlay, true, 1.0, 1.0);
+										Sounds.PlaySound(Data.Blocks[i].Sound[k].SoundBuffer, 1.0, 1.0, wpos, null, -1, true);
 									}
 								}
 							}

@@ -484,7 +484,7 @@ $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE) $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE): $(TEXTU
 # RouteViewer #
 ###############
 
-ROUTE_VIEWER_FOLDERS  := . Parsers Properties System
+ROUTE_VIEWER_FOLDERS  := . Audio Parsers Properties System System/Functions
 ROUTE_VIEWER_FOLDERS  := $(addprefix $(ROUTE_VIEWER_ROOT)/, $(ROUTE_VIEWER_FOLDERS))
 ROUTE_VIEWER_SRC      := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 ROUTE_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
