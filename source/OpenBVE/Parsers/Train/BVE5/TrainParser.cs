@@ -244,6 +244,7 @@ namespace OpenBve
 			BVE5SoundParser.Parse(TrainData.SoundConfigFile, Encoding.UTF8, Train);
 			PanelTxtParser.ParsePanelTxt(TrainData.PanelFile, Encoding.UTF8, Train);
 			Train.Cars[Train.DriverCar].HasInteriorView = true;
+			Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
 			World.CameraRestriction = World.CameraRestrictionMode.On;
 			Train.Specs.CurrentAverageAcceleration = 0.0;
 		}

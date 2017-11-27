@@ -16,18 +16,22 @@
 			internal double[] JerkBrakeUp;
 			internal double[] JerkBrakeDown;
 
-			/// brake
 			internal double BrakeDecelerationAtServiceMaximumPressure(int Notch)
+			{
+				return BrakeDecelerationAtServiceMaximumPressure(Notch, 1.0);
+			}
+
+			internal double BrakeDecelerationAtServiceMaximumPressure(int Notch, double Loading)
 			{
 				if (Notch == 0)
 				{
-					return this.DecelerationCurves[0].GetAccelerationOutput(this.CurrentSpeed, 1.0);
+					return this.DecelerationCurves[0].GetAccelerationOutput(this.CurrentSpeed, Loading);
 				}
 				if (this.DecelerationCurves.Length >= Notch)
 				{
-					return this.DecelerationCurves[Notch - 1].GetAccelerationOutput(this.CurrentSpeed, 1.0);
+					return this.DecelerationCurves[Notch - 1].GetAccelerationOutput(this.CurrentSpeed, Loading);
 				}
-				return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(this.CurrentSpeed, 1.0);
+				return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(this.CurrentSpeed, Loading);
 			}
 
 			internal double BrakeControlSpeed;

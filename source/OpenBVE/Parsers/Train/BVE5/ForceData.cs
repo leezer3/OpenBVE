@@ -5,8 +5,6 @@ using System.Text;
 
 namespace OpenBve
 {
-	using System.Collections.Generic;
-
 	partial class Bve5TrainParser
 	{
 		internal static void ParseForceData(string UnloadedFile, string LoadedFile, ref TrainManager.Train Train, bool Power)
@@ -84,7 +82,7 @@ namespace OpenBve
 						}
 						int l = AccelerationCurves[j - 1].UnloadedAcceleration.Length;
 						Array.Resize(ref AccelerationCurves[j - 1].UnloadedAcceleration, l + 1);
-						AccelerationCurves[j - 1].UnloadedAcceleration[l] = new TrainManager.Bve5AccelerationCurveEntry(speed);
+						
 						double a;
 						if (!double.TryParse(splitLine[j].Trim(), out a))
 						{
@@ -92,8 +90,9 @@ namespace OpenBve
 						}
 						else
 						{
-							AccelerationCurves[j - 1].UnloadedAcceleration[l].Acceleration = GetAccelerationFigure(Train, a);
+							a = GetAccelerationFigure(Train, a);
 						}
+						AccelerationCurves[j - 1].UnloadedAcceleration[l] = new TrainManager.Bve5AccelerationCurveEntry(speed, a);
 						k++;
 					}
 					if (AccelerationCurves.Length != k)
@@ -153,7 +152,6 @@ namespace OpenBve
 						}
 						int l = AccelerationCurves[j - 1].LoadedAcceleration.Length;
 						Array.Resize(ref AccelerationCurves[j - 1].LoadedAcceleration, l + 1);
-						AccelerationCurves[j - 1].LoadedAcceleration[l] = new TrainManager.Bve5AccelerationCurveEntry(speed);
 						double a;
 						if (!double.TryParse(splitLine[j].Trim(), out a))
 						{
@@ -161,8 +159,9 @@ namespace OpenBve
 						}
 						else
 						{
-							AccelerationCurves[j - 1].LoadedAcceleration[l].Acceleration = GetAccelerationFigure(Train, a);
+							a = GetAccelerationFigure(Train, a);
 						}
+						AccelerationCurves[j - 1].LoadedAcceleration[l] = new TrainManager.Bve5AccelerationCurveEntry(speed, a);
 					}
 				}
 			}

@@ -126,14 +126,14 @@ namespace OpenBve
 
 		internal class Bve5AccelerationCurveEntry
 		{
-			internal double Speed;
+			internal readonly double Speed;
 
-			internal double Acceleration;
+			internal readonly double Acceleration;
 
-			internal Bve5AccelerationCurveEntry(double Speed)
+			internal Bve5AccelerationCurveEntry(double Speed, double Acceleration)
 			{
 				this.Speed = Speed;
-				this.Acceleration = 0.0;
+				this.Acceleration = Acceleration;
 			}
 
 		}
