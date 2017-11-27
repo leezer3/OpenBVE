@@ -374,52 +374,55 @@ namespace OpenBve
 					{
 						emergency = Train.Specs.CurrentEmergencyBrake.Actual;
 					}
-					double p; if (emergency)
+					double targetPressure; if (emergency)
 					{
-						p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
+						//If EB is selected, then target pressure must be that required for EB
+						targetPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 					}
 					else
 					{
-						p = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
-						p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
+						//Otherwise [BVE2 / BVE4 train.dat format] work out target pressure as a proportion of the max notch:
+						targetPressure = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
+						targetPressure *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 					}
 					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.Specs.CurrentEmergencyBrake.Actual & Train.Specs.CurrentReverser.Actual != 0)
 					{
-						// brake control system
+						//If we meet the conditions for brake control system to activate
 						if (Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) > Train.Cars[CarIndex].Specs.BrakeControlSpeed)
 						{
 							if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.ClosingElectromagneticValve)
 							{
-								// closing electromagnetic valve (lock-out valve)
-								p = 0.0;
+								//When above the brake control speed, pressure to the BC is nil & electric brakes are used
+								//Thus target pressure must be zero
+								targetPressure = 0.0;
 							}
 							else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
 							{
-								// delay-filling control
-								//Variable f is never used, so don't calculate it
-								//double f = (double)Train.Specs.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
+								//Motor is used to brake the train, until not enough deceleration, at which point the air brake is also used
 								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
-								double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
+								double pr = targetPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
 								double d = b - a;
 								if (d > 0.0)
 								{
-									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
-									if (p > 1.0) p = 1.0;
-									p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
+									//Deceleration provided by the motor is not enough, so increase the BC target pressure
+									targetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
+									if (targetPressure > 1.0) targetPressure = 1.0;
+									targetPressure *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 								}
 								else
 								{
-									p = 0.0;
+									//Motor deceleration is enough, BC target pressure to zero
+									targetPressure = 0.0;
 								}
 							}
 						}
 					}
-					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > p + Tolerance | p == 0.0)
+					if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > targetPressure + Tolerance | targetPressure == 0.0)
 					{
-						// brake cylinder release
+						//BC pressure is greater than the target pressure, so release pressure
 						double r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderReleaseRate;
-						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - p;
+						double d = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure - targetPressure;
 						double m = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 						r = GetRate(d / m, r * TimeElapsed);
 						if (r > Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure) r = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
@@ -427,15 +430,15 @@ namespace OpenBve
 						// air sound
 						if (r > 0.0 & Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure < Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure)
 						{
-							Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = p;
-							airsound = p < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1;
+							Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = targetPressure;
+							airsound = targetPressure < Tolerance ? 0 : Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure > m - Tolerance ? 2 : 1;
 						}
 						// pressure change
 						Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure -= r;
 					}
-					else if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < p)
+					else if (Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure + Tolerance < targetPressure)
 					{
-						// refill brake cylinder from auxillary reservoir
+						//BC pressure is less than target pressure, so increase pressure
 						double f = Train.Cars[CarIndex].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient;
 						double r;
 						if (emergency)
