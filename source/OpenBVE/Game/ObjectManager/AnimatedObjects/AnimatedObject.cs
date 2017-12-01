@@ -881,5 +881,99 @@ namespace OpenBve
 				AnimatedWorldObjectsUsed++;
 			}
 		}
+
+		internal class WorldSound
+		{
+			internal Sounds.SoundBuffer Buffer;
+
+			internal Sounds.SoundSource Source;
+
+			internal Vector3 Position;
+
+			internal double currentPitch = 1.0;
+
+			internal double currentVolume = 1.0;
+
+			internal double currentTrackPosition = 0;
+
+			internal TrackManager.TrackFollower Follower;
+
+			internal FunctionScripts.FunctionScript TrackFollowerFunction;
+
+			internal FunctionScripts.FunctionScript VolumeFunction;
+
+			internal FunctionScripts.FunctionScript PitchFunction;
+
+			internal void CreateSound(Vector3 position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition)
+			{
+				int l = WorldSounds.Length;
+				Array.Resize(ref WorldSounds, l + 1);
+				WorldSounds[l] = new WorldSound
+				{
+					Buffer = this.Buffer,
+					//Must clone the vector, not pass the reference
+					Position = new Vector3(position.X, position.Y, position.Z)
+				};
+				WorldSounds[l].currentTrackPosition = TrackPosition;
+				WorldSounds[l].Follower.Update(TrackPosition, true, true);
+				WorldSounds[l].TrackFollowerFunction = this.TrackFollowerFunction.Clone();
+			}
+
+			internal void Update(double TimeElapsed)
+			{
+				if (Game.MinimalisticSimulation || TimeElapsed > 0.05)
+				{
+					return;
+				}
+				TrainManager.Train train = null;
+				double trainDistance = double.MaxValue;
+				for (int j = 0; j < TrainManager.Trains.Length; j++)
+				{
+					if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
+					{
+						double distance;
+						if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < this.Follower.TrackPosition)
+						{
+							distance = this.Follower.TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
+						}
+						else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > this.Follower.TrackPosition)
+						{
+							distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - this.Follower.TrackPosition;
+						}
+						else
+						{
+							distance = 0;
+						}
+						if (distance < trainDistance)
+						{
+							train = TrainManager.Trains[j];
+							trainDistance = distance;
+						}
+					}
+				}
+				if (this.TrackFollowerFunction != null)
+				{
+					
+					double delta = this.TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					this.Follower.Update(this.currentTrackPosition + delta, true, true);
+					this.Follower.UpdateWorldCoordinates(false);
+				}
+				if (this.VolumeFunction != null)
+				{
+					this.currentVolume = this.VolumeFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+				}
+				if (this.PitchFunction != null)
+				{
+					this.currentPitch = this.PitchFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+				}
+				if (this.Source != null)
+				{
+					this.Source.Pitch = this.currentPitch;
+					this.Source.Volume = this.currentVolume;
+				}
+			}
+
+			
+		}
 	}
 }

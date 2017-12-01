@@ -19,6 +19,8 @@ namespace OpenBve
 		internal static double LastUpdatedTrackPosition = 0.0;
 		/// <summary>Holds all animated objects currently in use within the game world</summary>
 		internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
+
+		internal static WorldSound[] WorldSounds = new WorldSound[0];
 		/// <summary>The total number of animated objects used</summary>
 		internal static int AnimatedWorldObjectsUsed = 0;
 
@@ -72,9 +74,9 @@ namespace OpenBve
 						{
 							if (AnimatedWorldObjects[i].Visible)
 							{
+								
 								//Calculate the distance travelled
 								double delta = AnimatedWorldObjects[i].UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
-
 								//Update the front and rear axle track followers
 								AnimatedWorldObjects[i].FrontAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
 								AnimatedWorldObjects[i].RearAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
@@ -112,6 +114,32 @@ namespace OpenBve
 					{
 						Renderer.HideObject(AnimatedWorldObjects[i].Object.ObjectIndex);
 						AnimatedWorldObjects[i].Visible = false;
+					}
+				}
+			}
+
+			for (int i = 0; i < WorldSounds.Length; i++)
+			{
+				const double extraRadius = 10.0;
+				
+				double pa = WorldSounds[i].currentTrackPosition + AnimatedWorldObjects[i].Radius - extraRadius;
+				double pb = WorldSounds[i].currentTrackPosition + AnimatedWorldObjects[i].Radius + extraRadius;
+				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
+				bool visible = pb >= ta & pa <= tb;
+				if (visible | ForceUpdate)
+				{
+					WorldSounds[i].Update(TimeElapsed);
+					if (!Sounds.IsPlaying(WorldSounds[i].Source))
+					{
+						WorldSounds[i].Source = Sounds.PlaySound(WorldSounds[i].Buffer, 1.0, 1.0, WorldSounds[i].Follower.WorldPosition + WorldSounds[i].Position, WorldSounds[i], true);
+					}
+				}
+				else
+				{
+					if (Sounds.IsPlaying(WorldSounds[i].Source))
+					{
+						Sounds.StopSound(WorldSounds[i].Source);
 					}
 				}
 			}

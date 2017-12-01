@@ -272,11 +272,30 @@ namespace OpenBve
 		/// <param name="pitch">The pitch change factor.</param>
 		/// <param name="volume">The volume change factor.</param>
 		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
+		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
+		/// <param name="looped">Whether to play the sound in a loop.</param>
+		/// <returns>The sound source.</returns>
+		internal static SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
+		{
+			if (Sources.Length == SourceCount)
+			{
+				Array.Resize<SoundSource>(ref Sources, Sources.Length << 1);
+			}
+			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, parent, 0, looped);
+			SourceCount++;
+			return Sources[SourceCount - 1];
+		}
+
+		/// <summary>Plays a sound.</summary>
+		/// <param name="buffer">The sound buffer.</param>
+		/// <param name="pitch">The pitch change factor.</param>
+		/// <param name="volume">The volume change factor.</param>
+		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
 		/// <param name="train">The train the sound is attached to, or a null reference.</param>
 		/// <param name="car">The car in the train the sound is attached to.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
-		internal static SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, TrainManager.Train train, int car, bool looped)
+		internal static SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object train, int car, bool looped)
 		{
 			if (Sources.Length == SourceCount)
 			{
@@ -343,7 +362,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{
-				if (Sources[i].Train == train)
+				if (Sources[i].Parent == train)
 				{
 					if (Sources[i].State == SoundSourceState.Playing)
 					{
