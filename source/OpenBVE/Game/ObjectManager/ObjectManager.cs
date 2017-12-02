@@ -18,9 +18,7 @@ namespace OpenBve
 		internal static int ObjectsSortedByEndPointer = 0;
 		internal static double LastUpdatedTrackPosition = 0.0;
 		/// <summary>Holds all animated objects currently in use within the game world</summary>
-		internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
-
-		internal static WorldSound[] WorldSounds = new WorldSound[0];
+		internal static WorldObject[] AnimatedWorldObjects = new WorldObject[4];
 		/// <summary>The total number of animated objects used</summary>
 		internal static int AnimatedWorldObjectsUsed = 0;
 
@@ -31,117 +29,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
-				const double extraRadius = 10.0;
-				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
-				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
-				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
-				if (visible | ForceUpdate)
-				{
-					if (AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate >= AnimatedWorldObjects[i].Object.RefreshRate | ForceUpdate)
-					{
-						double timeDelta = AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate + TimeElapsed;
-						AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate = 0.0;
-						TrainManager.Train train = null;
-						double trainDistance = double.MaxValue;
-						for (int j = 0; j < TrainManager.Trains.Length; j++)
-						{
-							if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
-							{
-								double distance;
-								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
-								{
-									distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-								}
-								else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
-								{
-									distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
-								}
-								else
-								{
-									distance = 0;
-								}
-								if (distance < trainDistance)
-								{
-									train = TrainManager.Trains[j];
-									trainDistance = distance;
-								}
-							}
-						}
-						if (AnimatedWorldObjects[i].FollowsTrack)
-						{
-							if (AnimatedWorldObjects[i].Visible)
-							{
-								
-								//Calculate the distance travelled
-								double delta = AnimatedWorldObjects[i].UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta);
-								//Update the front and rear axle track followers
-								AnimatedWorldObjects[i].FrontAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].FrontAxlePosition) + delta, true, true);
-								AnimatedWorldObjects[i].RearAxleFollower.Update((AnimatedWorldObjects[i].TrackPosition + AnimatedWorldObjects[i].RearAxlePosition) + delta, true, true);
-								//Update the base object position
-								AnimatedWorldObjects[i].FrontAxleFollower.UpdateWorldCoordinates(false);
-								AnimatedWorldObjects[i].RearAxleFollower.UpdateWorldCoordinates(false);
-								AnimatedWorldObjects[i].UpdateTrackFollowingObject();
-
-							}
-							//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-							AnimatedWorldObjects[i].Object.Update(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition, AnimatedWorldObjects[i].FrontAxleFollower.WorldPosition, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta, true);
-
-						}
-						else
-						{
-							AnimatedWorldObjects[i].Object.Update(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position,
-								AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, false, true, true, timeDelta, true);
-						}
-
-					}
-					else
-					{
-						AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
-					}
-					if (!AnimatedWorldObjects[i].Visible)
-					{
-						Renderer.ShowObject(AnimatedWorldObjects[i].Object.ObjectIndex, Renderer.ObjectType.Dynamic);
-						AnimatedWorldObjects[i].Visible = true;
-					}
-				}
-				else
-				{
-					AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
-					if (AnimatedWorldObjects[i].Visible)
-					{
-						Renderer.HideObject(AnimatedWorldObjects[i].Object.ObjectIndex);
-						AnimatedWorldObjects[i].Visible = false;
-					}
-				}
-			}
-
-			for (int i = 0; i < WorldSounds.Length; i++)
-			{
-				const double extraRadius = 10.0;
-				
-				double pa = WorldSounds[i].currentTrackPosition + AnimatedWorldObjects[i].Radius - extraRadius;
-				double pb = WorldSounds[i].currentTrackPosition + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
-				if (visible | ForceUpdate)
-				{
-					WorldSounds[i].Update(TimeElapsed);
-					if (!Sounds.IsPlaying(WorldSounds[i].Source))
-					{
-						WorldSounds[i].Source = Sounds.PlaySound(WorldSounds[i].Buffer, 1.0, 1.0, WorldSounds[i].Follower.WorldPosition + WorldSounds[i].Position, WorldSounds[i], true);
-					}
-				}
-				else
-				{
-					if (Sounds.IsPlaying(WorldSounds[i].Source))
-					{
-						Sounds.StopSound(WorldSounds[i].Source);
-					}
-				}
+				AnimatedWorldObjects[i].Update(TimeElapsed, ForceUpdate);
 			}
 		}
 

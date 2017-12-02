@@ -815,165 +815,128 @@ namespace OpenBve
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
-					Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
 				World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
-				AnimatedWorldObjects[a] = new AnimatedWorldObject
-				{
-					Position = Position,
-					Direction = FinalTransformation.Z,
-					Up = FinalTransformation.Y,
-					Side = FinalTransformation.X,
-					Object = this.Clone()
-				};
-				AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
-				AnimatedWorldObjects[a].SectionIndex = SectionIndex;
-				AnimatedWorldObjects[a].TrackPosition = TrackPosition;
+				
 				//Place track followers if required
 				if (TrackFollowerFunction != null)
 				{
-					AnimatedWorldObjects[a].FollowsTrack = true;
-					AnimatedWorldObjects[a].FrontAxleFollower.TrackPosition = TrackPosition + FrontAxlePosition;
-					AnimatedWorldObjects[a].RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
-					AnimatedWorldObjects[a].FrontAxlePosition = FrontAxlePosition;
-					AnimatedWorldObjects[a].RearAxlePosition = RearAxlePosition;
-					AnimatedWorldObjects[a].FrontAxleFollower.UpdateWorldCoordinates(false);
-					AnimatedWorldObjects[a].RearAxleFollower.UpdateWorldCoordinates(false);
-
-				}
-				for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++)
-				{
-					if (AnimatedWorldObjects[a].Object.States[i].Object == null)
+					var o = this.Clone();
+					o.ObjectIndex = CreateDynamicObject();
+					TrackFollowingObject currentObject = new TrackFollowingObject
 					{
-						AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
+						Position = Position,
+						Direction = FinalTransformation.Z,
+						Up = FinalTransformation.Y,
+						Side = FinalTransformation.X,
+						Object = o,
+						SectionIndex = SectionIndex,
+						TrackPosition = TrackPosition,
+					};
+					
+					currentObject.FrontAxleFollower.TrackPosition = TrackPosition + FrontAxlePosition;
+					currentObject.RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
+					currentObject.FrontAxlePosition = FrontAxlePosition;
+					currentObject.RearAxlePosition = RearAxlePosition;
+					currentObject.FrontAxleFollower.UpdateWorldCoordinates(false);
+					currentObject.RearAxleFollower.UpdateWorldCoordinates(false);
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						if (currentObject.Object.States[i].Object == null)
 						{
-							Mesh =
+							currentObject.Object.States[i].Object = new StaticObject
 							{
-								Faces = new World.MeshFace[] {},
-								Materials = new World.MeshMaterial[] {},
-								Vertices = new World.Vertex[] {}
-							},
-							RendererIndex = -1
-						};
+								Mesh =
+								{
+									Faces = new World.MeshFace[] {},
+									Materials = new World.MeshMaterial[] {},
+									Vertices = new World.Vertex[] {}
+								},
+								RendererIndex = -1
+							};
+						}
 					}
+					double r = 0.0;
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+						{
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						}
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
+						{
+							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
+							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
+							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
+							double t = x * x + y * y + z * z;
+							if (t > r) r = t;
+						}
+					}
+					currentObject.Radius = Math.Sqrt(r);
+					currentObject.Visible = false;
+					currentObject.Object.Initialize(0, false, false);
+					AnimatedWorldObjects[a] = currentObject;
 				}
-				double r = 0.0;
-				for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++)
+				else
 				{
-					for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials.Length; j++)
+					var o = this.Clone();
+					o.ObjectIndex = CreateDynamicObject();
+					AnimatedWorldObject currentObject = new AnimatedWorldObject
 					{
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
-					}
-					for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++)
+						Position = Position,
+						Direction = FinalTransformation.Z,
+						Up = FinalTransformation.Y,
+						Side = FinalTransformation.X,
+						Object = o,
+						SectionIndex = SectionIndex,
+						TrackPosition = TrackPosition,
+					};
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
 					{
-						double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-						double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-						double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-						double t = x * x + y * y + z * z;
-						if (t > r) r = t;
+						if (currentObject.Object.States[i].Object == null)
+						{
+							currentObject.Object.States[i].Object = new StaticObject
+							{
+								Mesh =
+								{
+									Faces = new World.MeshFace[] {},
+									Materials = new World.MeshMaterial[] {},
+									Vertices = new World.Vertex[] {}
+								},
+								RendererIndex = -1
+							};
+						}
 					}
+					double r = 0.0;
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+						{
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						}
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
+						{
+							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
+							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
+							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
+							double t = x * x + y * y + z * z;
+							if (t > r) r = t;
+						}
+					}
+					currentObject.Radius = Math.Sqrt(r);
+					currentObject.Visible = false;
+					currentObject.Object.Initialize(0, false, false);
+					AnimatedWorldObjects[a] = currentObject;
 				}
-				AnimatedWorldObjects[a].Radius = Math.Sqrt(r);
-				AnimatedWorldObjects[a].Visible = false;
-				AnimatedWorldObjects[a].Object.Initialize(0, false, false);
 				AnimatedWorldObjectsUsed++;
 			}
 		}
 
-		internal class WorldSound
-		{
-			internal Sounds.SoundBuffer Buffer;
-
-			internal Sounds.SoundSource Source;
-
-			internal Vector3 Position;
-
-			internal double currentPitch = 1.0;
-
-			internal double currentVolume = 1.0;
-
-			internal double currentTrackPosition = 0;
-
-			internal TrackManager.TrackFollower Follower;
-
-			internal FunctionScripts.FunctionScript TrackFollowerFunction;
-
-			internal FunctionScripts.FunctionScript VolumeFunction;
-
-			internal FunctionScripts.FunctionScript PitchFunction;
-
-			internal void CreateSound(Vector3 position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition)
-			{
-				int l = WorldSounds.Length;
-				Array.Resize(ref WorldSounds, l + 1);
-				WorldSounds[l] = new WorldSound
-				{
-					Buffer = this.Buffer,
-					//Must clone the vector, not pass the reference
-					Position = new Vector3(position.X, position.Y, position.Z)
-				};
-				WorldSounds[l].currentTrackPosition = TrackPosition;
-				WorldSounds[l].Follower.Update(TrackPosition, true, true);
-				WorldSounds[l].TrackFollowerFunction = this.TrackFollowerFunction.Clone();
-			}
-
-			internal void Update(double TimeElapsed)
-			{
-				if (Game.MinimalisticSimulation || TimeElapsed > 0.05)
-				{
-					return;
-				}
-				TrainManager.Train train = null;
-				double trainDistance = double.MaxValue;
-				for (int j = 0; j < TrainManager.Trains.Length; j++)
-				{
-					if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
-					{
-						double distance;
-						if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < this.Follower.TrackPosition)
-						{
-							distance = this.Follower.TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-						}
-						else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > this.Follower.TrackPosition)
-						{
-							distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - this.Follower.TrackPosition;
-						}
-						else
-						{
-							distance = 0;
-						}
-						if (distance < trainDistance)
-						{
-							train = TrainManager.Trains[j];
-							trainDistance = distance;
-						}
-					}
-				}
-				if (this.TrackFollowerFunction != null)
-				{
-					
-					double delta = this.TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
-					this.Follower.Update(this.currentTrackPosition + delta, true, true);
-					this.Follower.UpdateWorldCoordinates(false);
-				}
-				if (this.VolumeFunction != null)
-				{
-					this.currentVolume = this.VolumeFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
-				}
-				if (this.PitchFunction != null)
-				{
-					this.currentPitch = this.PitchFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
-				}
-				if (this.Source != null)
-				{
-					this.Source.Pitch = this.currentPitch;
-					this.Source.Volume = this.currentVolume;
-				}
-			}
-
-			
-		}
+		
 	}
 }

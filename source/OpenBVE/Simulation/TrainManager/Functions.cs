@@ -33,13 +33,14 @@ namespace OpenBve
 			{
 				for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
 				{
-					if (ObjectManager.AnimatedWorldObjects[i].FollowsTrack)
+					var obj = ObjectManager.AnimatedWorldObjects[i] as ObjectManager.TrackFollowingObject;
+					if (obj != null)
 					{
 						//Track followers should be reset if we jump between stations
-						ObjectManager.AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + ObjectManager.AnimatedWorldObjects[i].FrontAxlePosition;
-						ObjectManager.AnimatedWorldObjects[i].FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + ObjectManager.AnimatedWorldObjects[i].RearAxlePosition;
-						ObjectManager.AnimatedWorldObjects[i].FrontAxleFollower.UpdateWorldCoordinates(false);
-						ObjectManager.AnimatedWorldObjects[i].RearAxleFollower.UpdateWorldCoordinates(false);
+						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;
+						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.RearAxlePosition;
+						obj.FrontAxleFollower.UpdateWorldCoordinates(false);
+						obj.RearAxleFollower.UpdateWorldCoordinates(false);
 					}
 				 
 				}
