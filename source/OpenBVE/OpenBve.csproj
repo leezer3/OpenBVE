@@ -133,12 +133,15 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimationScript.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Damping.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
+    <Compile Include="Game\ObjectManager\WorldObject.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
