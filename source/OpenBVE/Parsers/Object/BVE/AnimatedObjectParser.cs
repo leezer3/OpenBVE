@@ -202,8 +202,10 @@ namespace OpenBve
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;
 								int StateFunctionLine = -1;
+								string StateChangeSound = null;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
+									string Folder;
 									if (Lines[i].Length != 0)
 									{
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -246,7 +248,7 @@ namespace OpenBve
 														string[] s = b.Split(',');
 														if (s.Length >= 1)
 														{
-															string Folder = System.IO.Path.GetDirectoryName(FileName);
+															Folder = System.IO.Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
@@ -288,6 +290,14 @@ namespace OpenBve
 															return null;
 														}
 													} break;
+												case "statechangesound":
+													Folder = System.IO.Path.GetDirectoryName(FileName);
+													StateChangeSound = Path.CombineFile(Folder, b);
+													if (!System.IO.File.Exists(StateChangeSound))
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, "StateChangeSound " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
 												case "statefunction":
 													try
 													{
@@ -765,6 +775,7 @@ namespace OpenBve
 									i++;
 								}
 								i--;
+
 								if (StateFiles != null)
 								{
 									// create the object
@@ -866,6 +877,10 @@ namespace OpenBve
 								else
 								{
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
+								}
+								if (StateChangeSound != null)
+								{
+									Result.Objects[ObjectCount].StateChangeSoundBuffer = Sounds.RegisterBuffer(StateChangeSound, 30.0);
 								}
 								ObjectCount++;
 							}

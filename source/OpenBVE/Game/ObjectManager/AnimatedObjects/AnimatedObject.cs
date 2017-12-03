@@ -63,6 +63,9 @@ namespace OpenBve
 			//This section holds parameters used by the track following function
 			internal double FrontAxlePosition = 1;
 			internal double RearAxlePosition = -1;
+
+			internal Sounds.SoundBuffer StateChangeSoundBuffer;
+
 			/// <summary>Checks whether this object contains any functions</summary>
 			internal bool IsFreeOfFunctions()
 			{
@@ -129,6 +132,7 @@ namespace OpenBve
 				Result.RefreshRate = this.RefreshRate;
 				Result.SecondsSinceLastUpdate = 0.0;
 				Result.ObjectIndex = -1;
+				Result.StateChangeSoundBuffer = this.StateChangeSoundBuffer;
 				return Result;
 			}
 
@@ -841,6 +845,59 @@ namespace OpenBve
 					currentObject.RearAxlePosition = RearAxlePosition;
 					currentObject.FrontAxleFollower.UpdateWorldCoordinates(false);
 					currentObject.RearAxleFollower.UpdateWorldCoordinates(false);
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						if (currentObject.Object.States[i].Object == null)
+						{
+							currentObject.Object.States[i].Object = new StaticObject
+							{
+								Mesh =
+								{
+									Faces = new World.MeshFace[] {},
+									Materials = new World.MeshMaterial[] {},
+									Vertices = new World.Vertex[] {}
+								},
+								RendererIndex = -1
+							};
+						}
+					}
+					double r = 0.0;
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+						{
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						}
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
+						{
+							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
+							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
+							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
+							double t = x * x + y * y + z * z;
+							if (t > r) r = t;
+						}
+					}
+					currentObject.Radius = Math.Sqrt(r);
+					currentObject.Visible = false;
+					currentObject.Object.Initialize(0, false, false);
+					AnimatedWorldObjects[a] = currentObject;
+				}
+				else if (this.StateChangeSoundBuffer != null)
+				{
+					var o = this.Clone();
+					o.ObjectIndex = CreateDynamicObject();
+					AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
+					{
+						Position = Position,
+						Direction = FinalTransformation.Z,
+						Up = FinalTransformation.Y,
+						Side = FinalTransformation.X,
+						Object = o,
+						SectionIndex = SectionIndex,
+						TrackPosition = TrackPosition,
+					};
 					for (int i = 0; i < currentObject.Object.States.Length; i++)
 					{
 						if (currentObject.Object.States[i].Object == null)
