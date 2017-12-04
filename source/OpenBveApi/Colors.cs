@@ -378,6 +378,41 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color96 a, Color96 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
+
+		/// <summary>Checks whether two colors are equal.</summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>Whether the two colors are equal.</returns>
+		public bool Equals(Color96 a, Color96 b)
+		{
+			return a.R != b.R | a.G != b.G | a.B != b.B;
+		}
+
+		/// <summary>Checks whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Color96))
+			{
+				return false;
+			}
+			return this.Equals((Color96)obj);
+		}
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer representing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = this.R.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.G.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.B.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color96 Black = new Color96(0.0f, 0.0f, 0.0f);
@@ -467,6 +502,42 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color128 a, Color128 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
+
+		/// <summary>Checks whether two colors are equal.</summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>Whether the two colors are equal.</returns>
+		public bool Equals(Color128 a, Color128 b)
+		{
+			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+		}
+
+		/// <summary>Checks whether this instance and a specified object are equal.</summary>
+		/// <param name="obj">The object to compare to.</param>
+		/// <returns>True if the instances are equal; false otherwise.</returns>
+		public override bool Equals(object obj)
+		{
+			if (!(obj is Color128))
+			{
+				return false;
+			}
+			return this.Equals((Color128)obj);
+		}
+
+		/// <summary>Returns the hashcode for this instance.</summary>
+		/// <returns>An integer representing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = this.R.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.G.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.B.GetHashCode();
+				hashCode = (hashCode * 397) ^ this.A.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color128 Black = new Color128(0.0f, 0.0f, 0.0f);
