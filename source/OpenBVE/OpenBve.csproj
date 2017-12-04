@@ -124,11 +124,19 @@
     <Compile Include="Game\Events\EventTypes\Transponder.cs" />
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
-    <Compile Include="Game\MessageManager.ImageMessage.cs" />
-    <Compile Include="Game\MessageManager.MessageDependency.cs" />
-    <Compile Include="Game\MessageManager.TextualMessages.cs" />
+	<Compile Include="Game\MessageManager.Message.cs">
+		<DependentUpon>MessageManager.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Game\MessageManager.ImageMessage.cs">
+		<DependentUpon>MessageManager.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Game\MessageManager.MessageDependency.cs">
+		<DependentUpon>MessageManager.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Game\MessageManager.TextualMessages.cs">
+		<DependentUpon>MessageManager.cs</DependentUpon>
+	</Compile>
     <Compile Include="Game\Messages.cs" />
-    <Compile Include="Game\MessageManager.Message.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
@@ -234,8 +242,7 @@
     <Compile Include="System\Functions\TextEncoding.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
-    <Compile Include="System\Input\JoystickManager.RailDriver.cs" />
-    <Compile Include="System\Input\JoystickManager.StandardJoystick.cs" />
+    
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -260,9 +267,6 @@
     </Compile>
     <Compile Include="UserInterface\formAbout.Designer.cs">
       <DependentUpon>formAbout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\formMain.Packages.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Parsers\XMLParser.cs" />
     <Compile Include="System\Functions\Extensions.cs" />
@@ -291,6 +295,9 @@
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
     <Compile Include="Audio\Sounds.SoundOrigin.cs">
+      <DependentUpon>Sounds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Audio\Sounds.SoundModels.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
     <Compile Include="Audio\Sounds.SoundSource.cs">
@@ -326,6 +333,10 @@
     </Compile>
     <Compile Include="UserInterface\formMain.Controls.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+	<Compile Include="UserInterface\formMain.Packages.cs">
+	<DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\formMain.cs">
@@ -374,6 +385,12 @@
     <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
+	<Compile Include="System\Input\JoystickManager.RailDriver.cs">
+		<DependentUpon>JoystickManager.cs</DependentUpon>
+	</Compile>
+    <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
+		<DependentUpon>JoystickManager.cs</DependentUpon>
+	</Compile>
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <EmbeddedResource Include="UserInterface\formBugReport.resx">
