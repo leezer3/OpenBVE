@@ -25,7 +25,7 @@ namespace OpenBve
 
 			internal AxisCalibration[] Calibration = new AxisCalibration[7];
 
-			internal void LoadCalibration(string calibrationFile)
+			private void LoadCalibration(string calibrationFile)
 			{
 				if (!File.Exists(calibrationFile))
 				{

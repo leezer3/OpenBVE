@@ -40,7 +40,7 @@ namespace OpenBve {
 		internal static string RestartArguments = null;
 
 		/// <summary>The random number generator used by this program.</summary>
-		internal static Random RandomNumberGenerator = new Random();
+		internal static readonly Random RandomNumberGenerator = new Random();
 
 		/// <summary>Whether the program will generate a considerably more verbose debug log (WIP)</summary>
 		internal static bool GenerateDebugLogging = false;

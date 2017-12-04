@@ -48,7 +48,7 @@ namespace OpenBve {
 		/// <summary>Holds all raildrivers and other PI Engineering controllers attached to the computer</summary>
 		internal static PIEDevice[] devices;
 
-		internal bool RailDriverInit = false;
+		private bool RailDriverInit = false;
 
 		// --- functions ---
 

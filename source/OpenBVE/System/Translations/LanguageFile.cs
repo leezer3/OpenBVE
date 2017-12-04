@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -111,7 +110,7 @@ namespace OpenBve {
             catch (Exception)
             {
                 //This message is shown when loading a language fails, and must not be translated, as otherwise it could produce a blank error message
-                MessageBox.Show("An error occurred whilst attempting to load the selected language file.");
+                MessageBox.Show(@"An error occurred whilst attempting to load the selected language file.");
                 Environment.Exit(0);
             }
         }
@@ -247,7 +246,7 @@ namespace OpenBve {
             catch (Exception)
             {
                 //This message is shown when loading a language fails, and must not be translated, as otherwise it could produce a blank error message
-                MessageBox.Show("An error occurred whilst attempting to load the language file: \n \n" + File);
+                MessageBox.Show(@"An error occurred whilst attempting to load the language file: \n \n" + File);
                 Environment.Exit(0);
             }
 	    }

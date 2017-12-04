@@ -10,10 +10,14 @@ namespace OpenBve
 		{
 			/// <summary>The sound buffer to play</summary>
 			private readonly Sounds.SoundBuffer SoundBuffer;
+			/// <summary>Whether this sound is triggered by the player train only, or all trains</summary>
 			private readonly bool PlayerTrainOnly;
+			/// <summary>Whether this sound should play once, or repeat if triggered again</summary>
 			private readonly bool Once;
 			private readonly bool Dynamic;
+			/// <summary>The 3D position of the sound within the world</summary>
 			internal Vector3 Position;
+			/// <summary>The speed in km/h at which the sound is played at it's original pitch</summary>
 			private readonly double Speed;
 
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>

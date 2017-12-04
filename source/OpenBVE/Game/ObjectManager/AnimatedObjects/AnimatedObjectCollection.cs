@@ -101,6 +101,10 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Objects[i].States.Length; j++)
 					{
+						if (Objects[i].States[j].Object == null)
+						{
+							continue;
+						}
 						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
 					}
 				}
