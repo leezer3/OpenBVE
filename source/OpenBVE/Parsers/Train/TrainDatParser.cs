@@ -135,26 +135,26 @@ namespace OpenBve {
 								double a; if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
 										case 0:
-											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a0 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											if (a <= 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "a0 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageZeroAcceleration = a * 0.277777777777778;
 											} break;
 										case 1:
-											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											if (a <= 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "a1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneAcceleration = a * 0.277777777777778;
 											} break;
 										case 2:
-											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											if (a <= 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "v1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneSpeed = a * 0.277777777777778;
 											} break;
 										case 3:
-											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											if (a <= 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageTwoSpeed = a * 0.277777777777778;
 												if (AccelerationCurves[n].StageTwoSpeed < AccelerationCurves[n].StageOneSpeed) {
@@ -568,6 +568,11 @@ namespace OpenBve {
 			}
 			// acceleration curves
 			double MaximumAcceleration = 0.0;
+			if (AccelerationCurves.Length != Train.Specs.MaximumPowerNotch)
+			{
+				Interface.AddMessage(Interface.MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Specs.MaximumPowerNotch + " power notches in " + FileName);
+			}
+			
 			for (int i = 0; i < Math.Min(AccelerationCurves.Length, Train.Specs.MaximumPowerNotch); i++) {
 				bool errors = false;
 				if (AccelerationCurves[i].StageZeroAcceleration <= 0.0) {
