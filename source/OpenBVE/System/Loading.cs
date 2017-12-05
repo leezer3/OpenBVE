@@ -320,12 +320,12 @@ namespace OpenBve {
 					if (System.IO.File.Exists(tXml))
 					{
 						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects);
-						World.CameraCar = TrainManager.Trains[k].DriverCar;
 					}
 					else
 					{
 						ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, TrainManager.Trains[k]);
 					}
+					World.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					//Stores the current array index of the bogie object to add
 					//Required as there are two bogies per car, and we're using a simple linear array....
