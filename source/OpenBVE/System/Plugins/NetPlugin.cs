@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -60,17 +61,22 @@ namespace OpenBve {
 		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
 			LoadProperties properties = new LoadProperties(this.PluginFolder, this.TrainFolder, this.PlaySound, this.PlaySound, this.AddInterfaceMessage, this.AddScore);
 			bool success;
-			#if !DEBUG
 			try {
-				#endif
 				success = this.Api.Load(properties);
 				base.SupportsAI = properties.AISupport == AISupport.Basic;
-				#if !DEBUG
 			} catch (Exception ex) {
-				base.LastException = ex;
-				throw;
+				if (ex is ThreadStateException)
+				{
+					//TTC plugin, broken when multi-threading is used
+					success = false;
+					properties.FailureReason = "This plugin does not function correctly with current versions of openBVE. Please ask the plugin developer to fix this.";
+				}
+				else
+				{
+					success = false;
+					properties.FailureReason = ex.Message;
+				}
 			}
-			#endif
 			if (success) {
 				base.Panel = properties.Panel ?? new int[] { };
 				#if !DEBUG
