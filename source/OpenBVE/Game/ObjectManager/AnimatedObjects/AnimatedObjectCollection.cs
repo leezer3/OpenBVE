@@ -10,7 +10,7 @@ namespace OpenBve
 		{
 			/// <summary>The objects that this collection contains</summary>
 			internal AnimatedObject[] Objects;
-			internal WorldSound[] Sounds;
+			internal WorldObject[] Sounds;
 
 			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
@@ -91,7 +91,16 @@ namespace OpenBve
 					{
 						continue;
 					}
-					Sounds[i].CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					var snd = this.Sounds[i] as WorldSound;
+					if (snd != null)
+					{
+						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					}
+					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
+					if (snd2 != null)
+					{
+						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+					}
 				}
 			}
 

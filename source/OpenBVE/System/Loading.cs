@@ -17,6 +17,8 @@ namespace OpenBve {
 		internal static bool Cancel;
 		/// <summary>Whether loading is complete</summary>
 		internal static bool Complete;
+		/// <summary>True when the simulation has been completely setup</summary>
+		internal static bool SimulationSetup;
 		/// <summary>Whether there is currently a job waiting to complete in the main game loop</summary>
 		internal static bool JobAvailable = false;
 		private static Thread Loader;
