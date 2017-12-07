@@ -132,6 +132,7 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
+    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.StateSound.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimationScript.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
