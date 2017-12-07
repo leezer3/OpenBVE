@@ -164,6 +164,7 @@
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
+    <Compile Include="Graphics\Renderer\Events.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Glow.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />

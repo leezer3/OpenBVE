@@ -1320,6 +1320,9 @@ namespace OpenBve
 										Renderer.OptionNormals = !Renderer.OptionNormals;
 										Renderer.StaticOpaqueForceUpdate = true;
 										break;
+									case Interface.Command.ShowEvents:
+										Interface.CurrentOptions.ShowEvents = !Interface.CurrentOptions.ShowEvents;
+										break;
 									case Interface.Command.MiscAI:
 										// option: AI
 										if (Interface.CurrentOptions.GameMode == Interface.GameMode.Expert)

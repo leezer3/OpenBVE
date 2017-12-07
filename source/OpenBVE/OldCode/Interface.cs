@@ -162,6 +162,7 @@ namespace OpenBve {
 			new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS"),
 			new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE"),
 			new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
+			new CommandInfo(Command.ShowEvents, CommandType.Digital, "SHOW_EVENTS"),
 		};
 		internal static Control[] CurrentControls = { };
 

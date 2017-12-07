@@ -170,6 +170,10 @@ namespace OpenBve
 
 			internal CompressionType packageCompressionType;
 			/*
+			 * Only relevant in developer mode, not saved
+			 */
+			internal bool ShowEvents = false;
+			/*
 			 * Note: Disabling texture resizing may produce artifacts at the edges of textures,
 			 * and may display issues with certain graphics cards.
 			 */
