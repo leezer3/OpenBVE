@@ -702,6 +702,7 @@ namespace OpenBve
 			RenderRealTimeElapsed = 0.0;
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
+			Loading.SimulationSetup = true;
 		}
 
 		private void LoadingScreenLoop()

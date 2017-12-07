@@ -63,6 +63,7 @@ namespace OpenBve
 			//This section holds parameters used by the track following function
 			internal double FrontAxlePosition = 1;
 			internal double RearAxlePosition = -1;
+
 			/// <summary>Checks whether this object contains any functions</summary>
 			internal bool IsFreeOfFunctions()
 			{

@@ -1,14 +1,10 @@
-﻿using System;
-using OpenBveApi.Math;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static partial class ObjectManager
 	{
-		internal class AnimatedWorldObject : WorldObject
+		private class AnimatedWorldObject : WorldObject
 		{
-	
 			/// <summary>The actual animated object</summary>
 			internal AnimatedObject Object;
 			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
@@ -79,8 +75,6 @@ namespace OpenBve
 					}
 				}
 			}
-
-			
 		}
 	}
 }
