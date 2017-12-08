@@ -45,7 +45,7 @@ namespace OpenBve {
 		// other trains
 		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
 		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
-		internal static BogusPretrainInstruction[] BogusPretrainInstructions = new BogusPretrainInstruction[] { };
+		
 
 		/// <summary>The startup state of the train</summary>
 		internal enum TrainStartMode {

@@ -108,7 +108,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\AI.cs" />
+    <Compile Include="Game\AI\AI.cs" />
+    <Compile Include="Game\AI\AI.PreTrain.cs">
+      <DependentUpon>AI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game\AI\AI.SimpleHuman.cs">
+      <DependentUpon>AI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\Events\Events.cs" />
     <Compile Include="Game\Events\Events.TriggerType.cs" />
     <Compile Include="Game\Events\EventTypes\BackgroundChange.cs" />
@@ -124,18 +130,18 @@
     <Compile Include="Game\Events\EventTypes\Transponder.cs" />
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
-	<Compile Include="Game\MessageManager.Message.cs">
-		<DependentUpon>MessageManager.cs</DependentUpon>
-	</Compile>
+    <Compile Include="Game\MessageManager.Message.cs">
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\MessageManager.ImageMessage.cs">
-		<DependentUpon>MessageManager.cs</DependentUpon>
-	</Compile>
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\MessageManager.MessageDependency.cs">
-		<DependentUpon>MessageManager.cs</DependentUpon>
-	</Compile>
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\MessageManager.TextualMessages.cs">
-		<DependentUpon>MessageManager.cs</DependentUpon>
-	</Compile>
+      <DependentUpon>MessageManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
@@ -244,7 +250,6 @@
     <Compile Include="System\Functions\TextEncoding.cs" />
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.cs" />
-    
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -337,8 +342,8 @@
       <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-	<Compile Include="UserInterface\formMain.Packages.cs">
-	<DependentUpon>formMain.cs</DependentUpon>
+    <Compile Include="UserInterface\formMain.Packages.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\formMain.cs">
@@ -387,12 +392,12 @@
     <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
-	<Compile Include="System\Input\JoystickManager.RailDriver.cs">
-		<DependentUpon>JoystickManager.cs</DependentUpon>
-	</Compile>
+    <Compile Include="System\Input\JoystickManager.RailDriver.cs">
+      <DependentUpon>JoystickManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
-		<DependentUpon>JoystickManager.cs</DependentUpon>
-	</Compile>
+      <DependentUpon>JoystickManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Program.cs" />
     <EmbeddedResource Include="UserInterface\formBugReport.resx">

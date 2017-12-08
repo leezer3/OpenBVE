@@ -113,8 +113,6 @@ namespace OpenBve {
 
 		// get control details
 		private string GetControlDetails(int Index) {
-			Interface.CommandInfo Info;
-			Interface.TryGetCommandInfo(Interface.CurrentControls[Index].Command, out Info);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Separator = Interface.GetInterfaceString("controls_assignment_separator");
 			if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.Keyboard) {

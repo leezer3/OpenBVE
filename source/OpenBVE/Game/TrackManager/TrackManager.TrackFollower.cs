@@ -254,26 +254,27 @@ namespace OpenBve
 
 			private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 			{
-				if (TriggerType != EventTriggerType.None)
+				if (this.TriggerType == EventTriggerType.None)
 				{
-					if (Direction < 0)
+					return;
+				}
+				if (Direction < 0)
+				{
+					for (int j = CurrentTrack.Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
 					{
-						for (int j = CurrentTrack.Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
+						if (OldDelta > CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta <= CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta)
 						{
-							if (OldDelta > CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta <= CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta)
-							{
-								TryTriggerEvent(CurrentTrack.Elements[ElementIndex].Events[j], -1, TriggerType, Train, CarIndex);
-							}
+							CurrentTrack.Elements[ElementIndex].Events[j].TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
-					else if (Direction > 0)
+				}
+				else if (Direction > 0)
+				{
+					for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
 					{
-						for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
+						if (OldDelta < CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta >= CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta)
 						{
-							if (OldDelta < CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta >= CurrentTrack.Elements[ElementIndex].Events[j].TrackPositionDelta)
-							{
-								TryTriggerEvent(CurrentTrack.Elements[ElementIndex].Events[j], 1, TriggerType, Train, CarIndex);
-							}
+							CurrentTrack.Elements[ElementIndex].Events[j].TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
 				}

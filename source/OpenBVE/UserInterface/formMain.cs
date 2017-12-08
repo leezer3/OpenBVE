@@ -13,7 +13,7 @@ using ContentAlignment = System.Drawing.ContentAlignment;
 namespace OpenBve {
 	internal partial class formMain : Form
 	{
-		internal formMain()
+		private formMain()
 		{
 			InitializeComponent();
 			this.Text = Interface.GetInterfaceString("program_title");
@@ -312,7 +312,7 @@ namespace OpenBve {
 					}
 					labelRatingAchievedValue.Text = Game.CurrentScore.Value.ToString(Culture);
 					labelRatingMaximumValue.Text = Game.CurrentScore.Maximum.ToString(Culture);
-					labelRatingRatioValue.Text = (100.0 * ratio).ToString("0.00", Culture) + "%";
+					labelRatingRatioValue.Text = (100.0 * ratio).ToString("0.00", Culture) + @"%";
 				}
 			}
 			comboboxBlackBoxFormat.Items.Clear();
@@ -589,7 +589,7 @@ namespace OpenBve {
 			 * Localisation for strings in the game start pane
 			 */
 			labelStartTitle.Text = Interface.GetInterfaceString("start_title");
-			labelRoute.Text = " " + Interface.GetInterfaceString("start_route");
+			labelRoute.Text = @" " + Interface.GetInterfaceString("start_route");
 			groupboxRouteSelection.Text = Interface.GetInterfaceString("start_route_selection");
 			tabpageRouteBrowse.Text = Interface.GetInterfaceString("start_route_browse");
 			tabpageRouteRecently.Text = Interface.GetInterfaceString("start_route_recently");
@@ -613,7 +613,7 @@ namespace OpenBve {
 			labelTrainEncoding.Text = Interface.GetInterfaceString("start_train_settings_encoding");
 			comboboxTrainEncoding.Items[0] = Interface.GetInterfaceString("(UTF-8)");
 			labelTrainEncodingPreview.Text = Interface.GetInterfaceString("start_train_settings_encoding_preview");
-			labelStart.Text = " " + Interface.GetInterfaceString("start_start");
+			labelStart.Text = @" " + Interface.GetInterfaceString("start_start");
 			labelMode.Text = Interface.GetInterfaceString("start_start_mode");
 			buttonStart.Text = Interface.GetInterfaceString("start_start_start");
 			comboboxMode.Items[0] = Interface.GetInterfaceString("mode_arcade");
@@ -623,7 +623,7 @@ namespace OpenBve {
 			 * Localisation for strings in the game review pane
 			 */
 			labelReviewTitle.Text = Interface.GetInterfaceString("review_title");
-			labelConditions.Text = " " + Interface.GetInterfaceString("review_conditions");
+			labelConditions.Text = @" " + Interface.GetInterfaceString("review_conditions");
 			groupboxReviewRoute.Text = Interface.GetInterfaceString("review_conditions_route");
 			labelReviewRouteCaption.Text = Interface.GetInterfaceString("review_conditions_route_file");
 			groupboxReviewTrain.Text = Interface.GetInterfaceString("review_conditions_train");
@@ -631,7 +631,7 @@ namespace OpenBve {
 			groupboxReviewDateTime.Text = Interface.GetInterfaceString("review_conditions_datetime");
 			labelReviewDateCaption.Text = Interface.GetInterfaceString("review_conditions_datetime_date");
 			labelReviewTimeCaption.Text = Interface.GetInterfaceString("review_conditions_datetime_time");
-			labelScore.Text = " " + Interface.GetInterfaceString("review_score");
+			labelScore.Text = @" " + Interface.GetInterfaceString("review_score");
 			groupboxRating.Text = Interface.GetInterfaceString("review_score_rating");
 			labelRatingModeCaption.Text = Interface.GetInterfaceString("review_score_rating_mode");
 			switch (Interface.CurrentOptions.GameMode)
@@ -667,7 +667,7 @@ namespace OpenBve {
 			ShowScoreLog(checkboxScorePenalties.Checked);
 			checkboxScorePenalties.Text = Interface.GetInterfaceString("review_score_log_penalties");
 			buttonScoreExport.Text = Interface.GetInterfaceString("review_score_log_export");
-			labelBlackBox.Text = " " + Interface.GetInterfaceString("review_blackbox");
+			labelBlackBox.Text = @" " + Interface.GetInterfaceString("review_blackbox");
 			labelBlackBoxFormat.Text = Interface.GetInterfaceString("review_blackbox_format");
 			comboboxBlackBoxFormat.Items[0] = Interface.GetInterfaceString("review_blackbox_format_csv");
 			comboboxBlackBoxFormat.Items[1] = Interface.GetInterfaceString("review_blackbox_format_text");
@@ -1610,7 +1610,7 @@ namespace OpenBve {
 			}
 		}
 
-		internal formAbout AboutDialog;
+		private formAbout AboutDialog;
 
 		private void aboutLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
