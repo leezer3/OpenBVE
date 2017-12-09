@@ -84,7 +84,7 @@ namespace OpenBve
 				for (int i = 0; i < this.States.Length; i++)
 				{
 					Result.States[i].Position = this.States[i].Position;
-					if (Result.States[i].Object != null)
+					if (this.States[i].Object != null)
 					{
 						Result.States[i].Object = this.States[i].Object.Clone();
 					}

@@ -3087,7 +3087,6 @@ namespace OpenBve {
 														int pp = p;
 														while (pp < Arguments[i].Length)
 														{
-															pp++;
 															if (char.IsLetter(Arguments[i][pp]))
 															{
 																Arguments[i] = Arguments[i].Substring(0, p);
@@ -3095,6 +3094,7 @@ namespace OpenBve {
 																Array.Resize(ref aspects, i + 1);
 																break;
 															}
+															pp++;
 														}
 													}
 												}
