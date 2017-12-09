@@ -108,6 +108,7 @@ namespace OpenBve
 						a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 					}
 					Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
+					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
 					World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
 				}
 				catch
