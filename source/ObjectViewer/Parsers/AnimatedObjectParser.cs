@@ -513,6 +513,21 @@ namespace OpenBve {
 								ObjectCount++;
 							}
 							break;
+						case "[sound]":
+						case "[statechangesound]":
+							//Only show the sound nag once per route, otherwise this could cause spam...
+							if (!Program.SoundError)
+							{
+								Interface.AddMessage(Interface.MessageType.Information, false, "Animated objects containing sounds are only supported in openBVE v1.5.2.4+");
+								Interface.AddMessage(Interface.MessageType.Information, false, "Object Viewer does not support sounds. Please use the main game to test these!");
+								Program.SoundError = true;
+							}
+							i++;
+							while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
+							{
+								i++;
+							}
+							break;
 						default:
 							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							return null;

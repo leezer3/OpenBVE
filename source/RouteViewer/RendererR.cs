@@ -1068,6 +1068,7 @@ namespace OpenBve {
 							if (Interface.Messages[i].Type != Interface.MessageType.Information)
 							{
 								error = true;
+								break;
 							}
 
 						}

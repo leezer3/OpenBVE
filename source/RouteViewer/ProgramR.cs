@@ -41,6 +41,8 @@ namespace OpenBve {
 		internal static bool[] SkipArgs;
 
 		internal static int ReloadTexture = -1;
+
+		internal static bool SoundError = false;
 		
 		// keys
 		private static bool ShiftPressed = false;

@@ -47,6 +47,8 @@ namespace OpenBve {
         private static bool ShiftPressed = false;
         internal static bool ReducedMode = true;
 
+		internal static bool SoundError = false;
+
         internal static GameWindow currentGameWindow;
         internal static GraphicsMode currentGraphicsMode;
 		// main
