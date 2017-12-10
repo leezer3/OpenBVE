@@ -1146,6 +1146,13 @@ namespace OpenBve {
 											Data.AccurateObjectDisposal = mode == 1;
 										}
 									} break;
+								case "options.enablebvetshacks":
+								case "options.compatibletransparencymode":
+									if (Arguments[0].Trim() == "1")
+									{
+										Interface.AddMessage(Interface.MessageType.Information, false, Command + " is intended to fix issues with older content, is only supported in openBVE 1.5.2+ , and has no effect in RouteViewer. Please see the documentation for further details");
+									}
+									break;
 							}
 						}
 					}
