@@ -288,7 +288,7 @@ namespace OpenBve {
 		/// <param name="Timeout">The time in seconds for which to display the in-game message</param>
 		internal void AddScore(int Score, string Message, MessageColor Color, double Timeout)
 		{
-			Game.CurrentScore.Value += Score;
+			Game.CurrentScore.CurrentValue += Score;
 
 			int n = Game.ScoreMessages.Length;
 			Array.Resize<Game.ScoreMessage>(ref Game.ScoreMessages, n + 1);

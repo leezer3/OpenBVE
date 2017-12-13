@@ -163,6 +163,11 @@
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
     <Compile Include="Game\RouteConstants.cs" />
+    <Compile Include="Game\Score\Score.cs" />
+    <Compile Include="Game\Score\Score.Log.cs" />
+    <Compile Include="Game\Score\Score.ScoreMessage.cs" />
+    <Compile Include="Game\Score\Score.Tokens.cs" />
+    <Compile Include="Game\Score\Score.Values.cs" />
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\TrackManager\TrackManager.cs" />

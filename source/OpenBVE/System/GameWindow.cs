@@ -262,7 +262,7 @@ namespace OpenBve
 						}
 					}
 				}
-				Game.UpdateScore(TimeElapsed);
+				Game.CurrentScore.Update(TimeElapsed);
 				Game.UpdateMessages();
 				Game.UpdateScoreMessages(TimeElapsed);
 			}

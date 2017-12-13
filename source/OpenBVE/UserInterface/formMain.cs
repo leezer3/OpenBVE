@@ -278,7 +278,7 @@ namespace OpenBve {
 					radiobuttonReview.Enabled = false;
 				}
 				else {
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
+					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
 					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
@@ -310,7 +310,7 @@ namespace OpenBve {
 						}
 						labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(Culture));
 					}
-					labelRatingAchievedValue.Text = Game.CurrentScore.Value.ToString(Culture);
+					labelRatingAchievedValue.Text = Game.CurrentScore.CurrentValue.ToString(Culture);
 					labelRatingMaximumValue.Text = Game.CurrentScore.Maximum.ToString(Culture);
 					labelRatingRatioValue.Text = (100.0 * ratio).ToString("0.00", Culture) + @"%";
 				}
@@ -642,7 +642,7 @@ namespace OpenBve {
 				default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unkown"); break;
 			}
 			{
-				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
+				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 				if (ratio < 0.0) ratio = 0.0;
 				if (ratio > 1.0) ratio = 1.0;
 				int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
