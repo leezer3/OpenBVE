@@ -1219,6 +1219,10 @@ namespace OpenBve
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
 														{
+															if (splitFiles[k].Trim().Length == 0)
+															{
+																continue;
+															}
 															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim());
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
