@@ -75,7 +75,7 @@ namespace OpenBve
 						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, false, true, true, timeDelta, true);
 						if (this.Object.CurrentState != this.lastState && Loading.SimulationSetup)
 						{
-							if (this.SingleBuffer)
+							if (this.SingleBuffer && this.Buffers[0] != null)
 							{
 								switch (this.Object.CurrentState)
 								{
@@ -99,7 +99,7 @@ namespace OpenBve
 							else
 							{
 								int bufferIndex = this.Object.CurrentState + 1;
-								if (bufferIndex < this.Buffers.Length)
+								if (bufferIndex < this.Buffers.Length && this.Buffers[bufferIndex] != null)
 								{
 									switch (bufferIndex)
 									{

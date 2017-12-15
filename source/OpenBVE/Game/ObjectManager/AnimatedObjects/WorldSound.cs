@@ -110,7 +110,8 @@ namespace OpenBve
 						this.Source.Pitch = this.currentPitch;
 						this.Source.Volume = this.currentVolume;
 					}
-					if (!Sounds.IsPlaying(Source))
+					//Buffer should never be null, but check it anyways
+					if (!Sounds.IsPlaying(Source) && this.Buffer != null)
 					{
 						Source = Sounds.PlaySound(Buffer, 1.0, 1.0, Follower.WorldPosition + Position, this, true);
 					}
