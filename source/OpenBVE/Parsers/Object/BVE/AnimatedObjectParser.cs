@@ -931,8 +931,12 @@ namespace OpenBve
 														fileName = OpenBveApi.Path.CombineFile(Folder, b);
 														if (!System.IO.File.Exists(fileName))
 														{
-															Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															fileName = null;
+															fileName = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															if (!System.IO.File.Exists(fileName))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																fileName = null;
+															}
 														}
 													}
 													break;
@@ -1207,8 +1211,12 @@ namespace OpenBve
 														fileNames = new string[] {OpenBveApi.Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
-															Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															fileNames[0] = null;
+															fileNames[0] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															if (!System.IO.File.Exists(fileNames[0]))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																fileNames[0] = null;
+															}
 														}
 													}
 													break;
@@ -1226,8 +1234,12 @@ namespace OpenBve
 															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim());
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
-																Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																fileNames[k] = null;
+																fileNames[k] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+																if (!System.IO.File.Exists(fileNames[k]))
+																{
+																	Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	fileNames[k] = null;
+																}
 															}
 														}
 														
