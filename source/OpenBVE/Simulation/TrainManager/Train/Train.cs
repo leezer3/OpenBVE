@@ -560,11 +560,14 @@ namespace OpenBve
 							{
 								if (Cars[i].Specs.CurrentAccelerationOutput < 0.0)
 								{
-									Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkBrakeDown * TimeElapsed;
+									int n = Math.Min(this.Specs.CurrentBrakeNotch.Actual, this.Cars[i].Specs.JerkBrakeDown.Length - 1);
+									Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkBrakeDown[n] * TimeElapsed;
+
 								}
 								else
 								{
-									Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkPowerUp * TimeElapsed;
+									int n = Math.Min(this.Specs.CurrentPowerNotch.Actual, this.Cars[i].Specs.JerkPowerUp.Length - 1);
+									Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkPowerUp[n] * TimeElapsed;
 								}
 								if (Cars[i].Specs.CurrentAccelerationOutput > a)
 								{
@@ -573,7 +576,8 @@ namespace OpenBve
 							}
 							else
 							{
-								Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkPowerDown * TimeElapsed;
+								int n = Math.Min(this.Specs.CurrentPowerNotch.Actual, this.Cars[i].Specs.JerkPowerDown.Length - 1);
+								Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkPowerDown[n] * TimeElapsed;
 								if (Cars[i].Specs.CurrentAccelerationOutput < a)
 								{
 									Cars[i].Specs.CurrentAccelerationOutput = a;
@@ -598,11 +602,13 @@ namespace OpenBve
 							{
 								if (Cars[i].Specs.CurrentAccelerationOutput > 0.0)
 								{
-									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkPowerDown * TimeElapsed;
+									int n = Math.Min(this.Specs.CurrentPowerNotch.Actual, this.Cars[i].Specs.JerkPowerDown.Length - 1);
+									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkPowerDown[n] * TimeElapsed;
 								}
 								else
 								{
-									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkBrakeUp * TimeElapsed;
+									int n = Math.Min(this.Specs.CurrentBrakeNotch.Actual, this.Cars[i].Specs.JerkBrakeUp.Length - 1);
+									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkBrakeUp[n] * TimeElapsed;
 								}
 								if (Cars[i].Specs.CurrentAccelerationOutput < a)
 								{
@@ -611,7 +617,8 @@ namespace OpenBve
 							}
 							else
 							{
-								Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkBrakeDown * TimeElapsed;
+								int n = Math.Min(this.Specs.CurrentBrakeNotch.Actual, this.Cars[i].Specs.JerkBrakeDown.Length - 1);
+								Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkBrakeDown[n] * TimeElapsed;
 								if (Cars[i].Specs.CurrentAccelerationOutput > a)
 								{
 									Cars[i].Specs.CurrentAccelerationOutput = a;

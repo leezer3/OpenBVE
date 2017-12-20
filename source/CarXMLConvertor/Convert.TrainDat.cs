@@ -13,6 +13,14 @@ namespace CarXmlConvertor
 		internal static double CarHeight = 3.6;
 		internal static double MotorCarMass = 1.0;
 		internal static double TrailerCarMass = 1.0;
+		internal static double DelayPowerUp = 0;
+		internal static double DelayPowerDown = 0;
+		internal static double DelayBrakeUp = 0;
+		internal static double DelayBrakeDown = 0;
+		internal static double JerkPowerUp = 10.0;
+		internal static double JerkPowerDown = 10.0;
+		internal static double JerkBrakeUp = 10.0;
+		internal static double JerkBrakeDown = 10.0;
 		private static int NumberOfMotorCars;
 		private static int NumberOfTrailerCars;
 		private static bool FrontCarIsMotorCar;
@@ -107,7 +115,48 @@ namespace CarXmlConvertor
 							i++; n++;
 						}
 						i--; break;
-
+					case "#delay":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 0:
+										DelayPowerUp = a;
+										break;
+									case 1:
+										DelayPowerDown = a;
+										break;
+									case 2:
+										DelayBrakeUp = a;
+										break;
+									case 3:
+										DelayBrakeDown = a;
+										break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
+					case "#move":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 0: JerkPowerUp = 0.01 * a; break;
+									case 1: JerkPowerDown = 0.01 * a; break;
+									case 2: JerkBrakeUp = 0.01 * a; break;
+									case 3: JerkBrakeDown = 0.01 * a; break;
+									//case 4: BrakeCylinderUp = 1000.0 * a; break;
+									//case 5: BrakeCylinderDown = 1000.0 * a; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
 					default:
 					{
 						i++;

@@ -762,10 +762,10 @@ namespace OpenBve {
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.IsMotorCar = false;
-				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
-				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
-				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
-				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
+				Train.Cars[i].Specs.JerkPowerUp = new double[] {JerkPowerUp};
+				Train.Cars[i].Specs.JerkPowerDown = new double[] {JerkPowerDown};
+				Train.Cars[i].Specs.JerkBrakeUp = new double[] {JerkBrakeUp};
+				Train.Cars[i].Specs.JerkBrakeDown = new double[] {JerkBrakeDown};
 				Train.Cars[i].Specs.CoefficientOfStaticFriction = CoefficientOfStaticFriction;
 				Train.Cars[i].Specs.CoefficientOfRollingResistance = CoefficientOfRollingResistance;
 				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;

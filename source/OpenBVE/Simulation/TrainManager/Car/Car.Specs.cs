@@ -25,10 +25,11 @@
 			}
 
 			internal double AccelerationCurveMaximum;
-			internal double JerkPowerUp;
-			internal double JerkPowerDown;
-			internal double JerkBrakeUp;
-			internal double JerkBrakeDown;
+			internal double[] JerkPowerUp;
+			internal double[] JerkPowerDown;
+			internal double[] JerkBrakeUp;
+			internal double[] JerkBrakeDown;
+
 			/// brake
 			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;

@@ -13,6 +13,8 @@ namespace OpenBve.Parsers.Train
 		{
 			double driverZ = 0.0;
 			string interiorFile = string.Empty;
+			XmlNode performanceNode = null;
+			string performanceDataFile = string.Empty;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -199,6 +201,13 @@ namespace OpenBve.Parsers.Train
 						}
 						interiorFile = cv;
 						break;
+					case "performance":
+						if (Train != TrainManager.PlayerTrain)
+						{
+							break;
+						}
+						performanceNode = c;
+						break;
 				}
 			}
 			//Driver position is measured from the front of the car
@@ -235,8 +244,38 @@ namespace OpenBve.Parsers.Train
 					Interface.AddMessage(Interface.MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
 				}
 			}
-
-			
+			//Attempt to load performance data for this car
+			if (performanceNode != null)
+			{
+				if (!Train.Cars[Car].Specs.IsMotorCar)
+				{
+					Interface.AddMessage(Interface.MessageType.Warning, false, "Car " + Car + " has performance data defined, but is not a motor car in XML file " + fileName);
+					return;
+				}
+				if (performanceNode.ChildNodes.OfType<XmlElement>().Any())
+				{
+					ParsePerformanceNode(performanceNode, fileName, Car, ref Train, ref CarObjects, ref BogieObjects);
+				}
+				else if (!String.IsNullOrEmpty(performanceNode.InnerText))
+				{
+					try
+					{
+						string childFile = OpenBveApi.Path.CombineFile(currentPath, performanceNode.InnerText);
+						XmlDocument childXML = new XmlDocument();
+						childXML.Load(childFile);
+						XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Performance");
+						//We need to save and restore the current path to make relative paths within the child file work correctly
+						string savedPath = currentPath;
+						currentPath = System.IO.Path.GetDirectoryName(childFile);
+						ParsePerformanceNode(childNodes[0], fileName, Car, ref Train, ref CarObjects, ref BogieObjects);
+						currentPath = savedPath;
+					}
+					catch
+					{
+						Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Car XML file specified in " + performanceNode.InnerText);
+					}
+				}
+			}
 		}
 	}
 }

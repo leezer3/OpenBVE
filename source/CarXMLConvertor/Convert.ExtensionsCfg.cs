@@ -424,6 +424,20 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<MotorCar>True</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
+				newLines.Add("<Performance>");
+				newLines.Add("<Power>");
+				newLines.Add("<DelayUp>" + ConvertTrainDat.DelayPowerUp + "</DelayUp>");
+				newLines.Add("<DelayDown>" + ConvertTrainDat.DelayPowerDown + "</DelayDown>");
+				newLines.Add("<JerkUp>" + ConvertTrainDat.JerkPowerUp + "</JerkUp>");
+				newLines.Add("<JerkDown>" + ConvertTrainDat.JerkPowerDown + "</JerkDown>");
+				newLines.Add("</Power>");
+				newLines.Add("<Brake>");
+				newLines.Add("<DelayUp>" + ConvertTrainDat.DelayBrakeUp + "</DelayUp>");
+				newLines.Add("<DelayDown>" + ConvertTrainDat.DelayBrakeDown + "</DelayDown>");
+				newLines.Add("<JerkUp>" + ConvertTrainDat.JerkBrakeUp + "</JerkUp>");
+				newLines.Add("<JerkDown>" + ConvertTrainDat.JerkBrakeDown + "</JerkDown>");
+				newLines.Add("</Brake>");
+				newLines.Add("</Performance>");
 			}
 			else
 			{
@@ -495,6 +509,23 @@ namespace CarXmlConvertor
 				{
 					newLines.Add("<MotorCar>True</MotorCar>");
 					newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
+					if (SingleFile == true)
+					{
+						newLines.Add("<Performance>");
+						newLines.Add("<Power>");
+						newLines.Add("<DelayUp>" + ConvertTrainDat.DelayPowerUp + "</DelayUp>");
+						newLines.Add("<DelayDown>" + ConvertTrainDat.DelayPowerDown + "</DelayDown>");
+						newLines.Add("</Power>");
+						newLines.Add("<Brake>");
+						newLines.Add("<DelayUp>" + ConvertTrainDat.DelayBrakeUp + "</DelayUp>");
+						newLines.Add("<DelayDown>" + ConvertTrainDat.DelayBrakeDown + "</DelayDown>");
+						newLines.Add("</Brake>");
+						newLines.Add("</Performance>");
+					}
+					else
+					{
+
+					}
 				}
 				else
 				{
