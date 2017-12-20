@@ -19,11 +19,13 @@ namespace CarXmlConvertor
 			mainForm = form;
 			if (!System.IO.File.Exists(FileName))
 			{
+				mainForm.updateLogBoxText += "INFO: No extensions.cfg file was detected- Generating default XML." + Environment.NewLine;
 				//No extensions.cfg file exists, so just spin up a default XML file
 				GenerateDefaultXML();
 			}
 			else
 			{
+				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
 				CarInfos = new Car[ConvertTrainDat.NumberOfCars];
 				ReadExtensionsCfg();
 				GenerateExtensionsCfgXML();

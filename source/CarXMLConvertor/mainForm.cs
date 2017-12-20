@@ -37,7 +37,7 @@ namespace CarXmlConvertor
 					updateLogBoxText += "Aborting....";
 					return;
 				}
-		        updateLogBoxText += "Overwriting...." + Environment.NewLine;
+		        
 			}
 	        if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertSoundCfg.FileName), "sound.xml")))
 	        {
@@ -47,7 +47,8 @@ namespace CarXmlConvertor
 			        updateLogBoxText += "Aborting....";
 					return;
 		        }
-	        }
+		        updateLogBoxText += "Overwriting...." + Environment.NewLine;
+			}
 	        updateLogBoxText += "Loading existing sound.cfg file " + ConvertSoundCfg.FileName + Environment.NewLine;
 			ConvertSoundCfg.Process(this);
 	        if (System.IO.File.Exists(Path.CombineFile(System.IO.Path.GetDirectoryName(ConvertExtensionsCfg.FileName), "train.xml")))
@@ -68,7 +69,6 @@ namespace CarXmlConvertor
 	        {
 				updateLogBoxText += "INFO: Using a train.xml file with child car files." + Environment.NewLine;
 			}
-	        updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
 			ConvertExtensionsCfg.Process(this);
 	        updateLogBoxText += "Processing complete.";
 		}
@@ -82,14 +82,7 @@ namespace CarXmlConvertor
 	            ConvertTrainDat.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "train.dat");
 				ConvertSoundCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "sound.cfg");
 	            ConvertExtensionsCfg.FileName = Path.CombineFile(folderBrowserDialog.SelectedPath, "extensions.cfg");
-				//TODO:
-				//Check for all train components when the above is complete
-				//Error checking??
-				if (!System.IO.File.Exists(ConvertSoundCfg.FileName))
-                {
-                    return;
-                }
-                textBox1.Text = folderBrowserDialog.SelectedPath;
+	            textBox1.Text = folderBrowserDialog.SelectedPath;
             }
         }
     }

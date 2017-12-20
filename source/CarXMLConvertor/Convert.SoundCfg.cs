@@ -25,6 +25,10 @@ namespace CarXmlConvertor
 		internal static string FileName;
         internal static void Process(MainForm form)
         {
+	        if (!System.IO.File.Exists(FileName))
+	        {
+		        return;
+	        }
 	        mainForm = form;
             panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
