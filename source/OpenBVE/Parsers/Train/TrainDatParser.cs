@@ -243,12 +243,66 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
-										case 0: JerkPowerUp = 0.01 * a; break;
-										case 1: JerkPowerDown = 0.01 * a; break;
-										case 2: JerkBrakeUp = 0.01 * a; break;
-										case 3: JerkBrakeDown = 0.01 * a; break;
-										case 4: BrakeCylinderUp = 1000.0 * a; break;
-										case 5: BrakeCylinderDown = 1000.0 * a; break;
+									case 0:
+										if (a != 0)
+										{
+											JerkPowerUp = 0.01 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "JerkPowerUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
+									case 1:
+										if (a != 0)
+										{
+											JerkPowerDown = 0.01 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "JerkPowerDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
+									case 2:
+										if (a != 0)
+										{
+											JerkBrakeUp = 0.01 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "JerkBrakeUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
+									case 3:
+										if (a != 0)
+										{
+											JerkBrakeDown = 0.01 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "JerkBrakeDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
+									case 4:
+										if (a >= 0)
+										{
+											BrakeCylinderUp = 1000.0 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderUp is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
+									case 5:
+										if (a >= 0)
+										{
+											BrakeCylinderDown = 1000.0 * a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderDown is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -568,8 +622,9 @@ namespace OpenBve {
 			}
 			// acceleration curves
 			double MaximumAcceleration = 0.0;
-			if (AccelerationCurves.Length != Train.Specs.MaximumPowerNotch)
+			if (AccelerationCurves.Length != Train.Specs.MaximumPowerNotch && !FileName.ToLowerInvariant().EndsWith("compatibility\\pretrain\\train.dat"))
 			{
+				//NOTE: The compatibility train.dat is only used to load some properties, hence this warning does not apply
 				Interface.AddMessage(Interface.MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Specs.MaximumPowerNotch + " power notches in " + FileName);
 			}
 			
