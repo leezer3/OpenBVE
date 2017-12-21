@@ -27,6 +27,7 @@ namespace CarXmlConvertor
 			{
 				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
 				CarInfos = new Car[ConvertTrainDat.NumberOfCars];
+				Couplers = new Coupler[ConvertTrainDat.NumberOfCars -1];
 				ReadExtensionsCfg();
 				GenerateExtensionsCfgXML();
 			}
@@ -55,8 +56,15 @@ namespace CarXmlConvertor
 			internal string Object;
 		}
 
+		private struct Coupler
+		{
+			internal double Minimum;
+			internal double Maximum;
+		}
+
 
 		private static Car[] CarInfos;
+		private static Coupler[] Couplers;
 	
 
 		internal static void ReadExtensionsCfg()
@@ -183,16 +191,17 @@ namespace CarXmlConvertor
 									}
 								}
 							}
-							/*
 							else if (Lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 							{
 								// coupler
 								string t = Lines[i].Substring(8, Lines[i].Length - 9);
-								int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
+								int n;
+								if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
 								{
-									if (n >= 0 & n < Train.Couplers.Length)
+									if (n >= 0 & n < ConvertTrainDat.NumberOfCars - 1)
 									{
-										i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
+										i++;
+										while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
 										{
 											if (Lines[i].Length != 0)
 											{
@@ -204,62 +213,42 @@ namespace CarXmlConvertor
 													switch (a.ToLowerInvariant())
 													{
 														case "distances":
-														{
-															int k = b.IndexOf(',');
-															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd();
-																string d = b.Substring(k + 1).TrimStart();
-																double min, max;
-																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min))
+																int k = b.IndexOf(',');
+																if (k >= 0)
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max))
-																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																else if (min > max)
-																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																else
-																{
-																	Train.Couplers[n].MinimumDistanceBetweenCars = min;
-																	Train.Couplers[n].MaximumDistanceBetweenCars = max;
+																	string c = b.Substring(0, k).TrimEnd();
+																	string d = b.Substring(k + 1).TrimStart();
+																	double min = 0, max = 0;
+																	if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min))
+																	{
+																		//Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																	else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max))
+																	{
+																		//Interface.AddMessage(Interface.MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																	else if (min > max)
+																	{
+																		//Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																	Couplers[n] = new Coupler
+																	{
+																		Minimum = min,
+																		Maximum = max
+																	};
 																}
 															}
-															else
-															{
-																Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															}
-														}
-															break;
-														default:
-															Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															break;
 													}
-												}
-												else
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												}
 											}
 											i++;
 										}
 										i--;
 									}
-									else
-									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index " + t + " does not reference an existing coupler at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
-								}
-								else
-								{
-									Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							}
-							*/
 							else if (Lines[i].StartsWith("[bogie", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 							{
 								// car
@@ -359,6 +348,13 @@ namespace CarXmlConvertor
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
 			{
+				if (i != 0)
+				{
+					newLines.Add("<Coupler>");
+					newLines.Add("<MinimumDistance>" + Couplers[i -1].Minimum + "</MinimumDistance>");
+					newLines.Add("<MaximumDistance>" + Couplers[i - 1].Maximum + "</MaximumDistance>");
+					newLines.Add("</Coupler>");
+				}
 				if (SingleFile == true)
 				{
 					GenerateCarXML(ref newLines, i);

@@ -21,45 +21,54 @@ namespace OpenBve.Parsers.Train
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			if (currentXML.DocumentElement != null)
 			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Car");
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
 					Interface.AddMessage(Interface.MessageType.Error, false, "No car nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty train.xml file");
 				}
-				//Use the index here for easy access to the car count
+				int currentCar = 0;
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
-					if (i > Train.Cars.Length)
+					switch (DocumentNodes[i].Name.ToLowerInvariant())
 					{
-						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
-						break;
+						case "car":
+							if (currentCar > Train.Cars.Length)
+							{
+								Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
+								break;
+							}
+							if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
+							{
+								ParseCarNode(DocumentNodes[i], fileName, currentCar, ref Train, ref CarObjects, ref BogieObjects);
+							}
+							else if (!String.IsNullOrEmpty(DocumentNodes[i].InnerText))
+							{
+								try
+								{
+									string childFile = OpenBveApi.Path.CombineFile(currentPath, DocumentNodes[i].InnerText);
+									XmlDocument childXML = new XmlDocument();
+									childXML.Load(childFile);
+									XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Car");
+									//We need to save and restore the current path to make relative paths within the child file work correctly
+									string savedPath = currentPath;
+									currentPath = System.IO.Path.GetDirectoryName(childFile);
+									ParseCarNode(childNodes[0], fileName, currentCar, ref Train, ref CarObjects, ref BogieObjects);
+									currentPath = savedPath;
+								}
+								catch
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+								}
+							}
+							currentCar++;
+							break;
+						case "coupler":
+							break;
 					}
-					if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
-					{
-						ParseCarNode(DocumentNodes[i], fileName, i, ref Train, ref CarObjects, ref BogieObjects);
-					}
-					else if (!String.IsNullOrEmpty(DocumentNodes[i].InnerText))
-					{
-						try
-						{
-							string childFile = OpenBveApi.Path.CombineFile(currentPath, DocumentNodes[i].InnerText);
-							XmlDocument childXML = new XmlDocument();
-							childXML.Load(childFile);
-							XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Car");
-							//We need to save and restore the current path to make relative paths within the child file work correctly
-							string savedPath = currentPath;
-							currentPath = System.IO.Path.GetDirectoryName(childFile);
-							ParseCarNode(childNodes[0], fileName, i, ref Train, ref CarObjects, ref BogieObjects);
-							currentPath = savedPath;
-						}
-						catch
-						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
-						}
-					}
-					if (i == DocumentNodes.Count && i < Train.Cars.Length)
+					
+					if (i == DocumentNodes.Count && currentCar < Train.Cars.Length)
 					{
 						//If this is the case, the number of motor cars is the primary thing which may get confused....
 						//Not a lot to be done about this until a full replacement is built for the train.dat file & we can dump it entirely
