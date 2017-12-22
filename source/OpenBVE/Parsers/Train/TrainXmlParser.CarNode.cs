@@ -247,11 +247,6 @@ namespace OpenBve.Parsers.Train
 			//Attempt to load performance data for this car
 			if (performanceNode != null)
 			{
-				if (!Train.Cars[Car].Specs.IsMotorCar)
-				{
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Car " + Car + " has performance data defined, but is not a motor car in XML file " + fileName);
-					return;
-				}
 				if (performanceNode.ChildNodes.OfType<XmlElement>().Any())
 				{
 					ParsePerformanceNode(performanceNode, fileName, Car, ref Train, ref CarObjects, ref BogieObjects);

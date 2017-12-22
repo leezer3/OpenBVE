@@ -64,12 +64,35 @@ namespace OpenBve.Parsers.Train
 							}
 						}
 						break;
+					case "staticfriction":
+						if (!double.TryParse(c.InnerText, out Train.Cars[Car].Specs.CoefficientOfStaticFriction))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "The CoefficientOfStaticFriction "+ c.InnerText + " was invalid for car " + Car);
+						}
+						break;
+					case "rollingresistance":
+						if (!double.TryParse(c.InnerText, out Train.Cars[Car].Specs.CoefficientOfRollingResistance))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "The CoefficientOfRollingResistance " + c.InnerText + " was invalid for car " + Car);
+						}
+						break;
+					case "aerodynamicdrag":
+						if (!double.TryParse(c.InnerText, out Train.Cars[Car].Specs.CoefficientOfStaticFriction))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "The CoefficientOfAerodynamicDrag " + c.InnerText + " was invalid for car " + Car);
+						}
+						break;
 				}
 			}
 		}
 
 		private static void ParsePowerNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
 		{
+			if (!Train.Cars[Car].Specs.IsMotorCar)
+			{
+				Interface.AddMessage(Interface.MessageType.Warning, false, "Car " + Car + " has MotorPerformance data defined, but is not a motor car in XML file " + fileName);
+				return;
+			}
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				string[] splitStrings;

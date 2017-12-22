@@ -21,6 +21,9 @@ namespace CarXmlConvertor
 		internal static double JerkPowerDown = 10.0;
 		internal static double JerkBrakeUp = 10.0;
 		internal static double JerkBrakeDown = 10.0;
+		internal static double CoefficientOfStaticFriction = 0.35;
+		internal static double CoefficientOfRollingResistance = 0.0025;
+		internal static double AerodynamicDragCoefficient = 1.1;
 		private static int NumberOfMotorCars;
 		private static int NumberOfTrailerCars;
 		private static bool FrontCarIsMotorCar;
@@ -152,6 +155,37 @@ namespace CarXmlConvertor
 									case 3: JerkBrakeDown = 0.01 * a; break;
 									//case 4: BrakeCylinderUp = 1000.0 * a; break;
 									//case 5: BrakeCylinderDown = 1000.0 * a; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
+					case "#performance":
+					case "#deceleration":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 1:
+										if (a > 0.0)
+										{
+											CoefficientOfStaticFriction = a;
+										}
+										break;
+									case 3:
+										if (a > 0.0)
+										{
+											CoefficientOfRollingResistance = a;
+										}
+										break;
+									case 4:
+										if (a > 0.0)
+										{
+											AerodynamicDragCoefficient = a;
+										}
+										break;
 								}
 							}
 							i++; n++;

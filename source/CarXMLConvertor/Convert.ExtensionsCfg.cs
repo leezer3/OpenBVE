@@ -433,13 +433,17 @@ namespace CarXmlConvertor
 				newLines.Add("<JerkUp>" + ConvertTrainDat.JerkBrakeUp + "</JerkUp>");
 				newLines.Add("<JerkDown>" + ConvertTrainDat.JerkBrakeDown + "</JerkDown>");
 				newLines.Add("</Brake>");
-				newLines.Add("</Performance>");
 			}
 			else
 			{
 				newLines.Add("<MotorCar>False</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.TrailerCarMass + "</Mass>");
+				newLines.Add("<Performance>");
 			}
+			newLines.Add("<StaticFriction>"+ ConvertTrainDat.CoefficientOfStaticFriction + "</StaticFriction>");
+			newLines.Add("<RollingResistance>" + ConvertTrainDat.CoefficientOfRollingResistance + "</RollingResistance>");
+			newLines.Add("<AerodynamicDrag>" + ConvertTrainDat.AerodynamicDragCoefficient + "</AerodynamicDrag>");
+			newLines.Add("</Performance>");
 			if (CarInfos[i].AxlesDefined == true)
 			{
 				newLines.Add("<FrontAxle>" + CarInfos[i].FrontAxle + "</FrontAxle>");
