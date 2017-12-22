@@ -72,6 +72,7 @@ namespace OpenBve.Parsers.Train
 		{
 			foreach (XmlNode c in Node.ChildNodes)
 			{
+				string[] splitStrings;
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
@@ -81,31 +82,24 @@ namespace OpenBve.Parsers.Train
 					 */
 					case "delayup":
 						Train.Specs.DelayPowerUp = new double[Train.Specs.MaximumPowerNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
+							Train.Specs.DelayPowerUp[i] = 0;
+							if (i < splitStrings.Length)
 							{
-								Train.Specs.DelayPowerUp[i] = 0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayPowerUp[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayPowerUp[i]))
-									{
-										Train.Specs.DelayPowerUp[i] = 0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
-									}
+									Train.Specs.DelayPowerUp[i] = 0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
 								}
 							}
 						}
 						break;
 					case "delaydown":
 						Train.Specs.DelayPowerDown = new double[Train.Specs.MaximumPowerNotch];
-						if (c.InnerText.IndexOf(';') != -1)
-						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
 							{
 								Train.Specs.DelayPowerDown[i] = 0;
 								if (i < splitStrings.Length)
@@ -117,44 +111,35 @@ namespace OpenBve.Parsers.Train
 									}
 								}
 							}
-						}
 						break;
 					case "jerkup":
 						Train.Cars[Car].Specs.JerkPowerUp = new double[Train.Specs.MaximumPowerNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
+							Train.Cars[Car].Specs.JerkPowerUp[i] = 10.0;
+							if (i < splitStrings.Length)
 							{
-								Train.Cars[Car].Specs.JerkPowerUp[i] = 10.0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkPowerUp[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkPowerUp[i]))
-									{
-										Train.Cars[Car].Specs.JerkPowerUp[i] = 10.0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for PowerJerkUp, Notch " + i);
-									}
+									Train.Cars[Car].Specs.JerkPowerUp[i] = 10.0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for PowerJerkUp, Notch " + i);
 								}
 							}
 						}
 						break;
 					case "jerkdown":
 						Train.Cars[Car].Specs.JerkPowerDown = new double[Train.Specs.MaximumPowerNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumPowerNotch; i++)
+							Train.Cars[Car].Specs.JerkPowerDown[i] = 10.0;
+							if (i < splitStrings.Length)
 							{
-								Train.Cars[Car].Specs.JerkPowerDown[i] = 10.0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkPowerDown[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkPowerDown[i]))
-									{
-										Train.Cars[Car].Specs.JerkPowerDown[i] = 10.0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for PowerJerkDown, Notch " + i);
-									}
+									Train.Cars[Car].Specs.JerkPowerDown[i] = 10.0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for PowerJerkDown, Notch " + i);
 								}
 							}
 						}
@@ -167,6 +152,7 @@ namespace OpenBve.Parsers.Train
 		{
 			foreach (XmlNode c in Node.ChildNodes)
 			{
+				string[] splitStrings;
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
@@ -176,80 +162,64 @@ namespace OpenBve.Parsers.Train
 					 */
 					case "delayup":
 						Train.Specs.DelayBrakeUp = new double[Train.Specs.MaximumBrakeNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
+							Train.Specs.DelayBrakeUp[i] = 0;
+							if (i < splitStrings.Length)
 							{
-								Train.Specs.DelayBrakeUp[i] = 0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayBrakeUp[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayBrakeUp[i]))
-									{
-										Train.Specs.DelayBrakeUp[i] = 0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
-									}
+									Train.Specs.DelayBrakeUp[i] = 0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
 								}
 							}
 						}
 						break;
 					case "delaydown":
 						Train.Specs.DelayBrakeDown = new double[Train.Specs.MaximumBrakeNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
+							Train.Specs.DelayBrakeDown[i] = 0;
+							if (i < splitStrings.Length)
 							{
-								Train.Specs.DelayBrakeDown[i] = 0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayBrakeDown[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Specs.DelayBrakeDown[i]))
-									{
-										Train.Specs.DelayBrakeDown[i] = 0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
-									}
+									Train.Specs.DelayBrakeDown[i] = 0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid delay " + c.InnerText + " specified for PowerDelayUp, Notch " + i);
 								}
 							}
 						}
 						break;
 					case "jerkup":
 						Train.Cars[Car].Specs.JerkBrakeUp = new double[Train.Specs.MaximumBrakeNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
+							Train.Cars[Car].Specs.JerkBrakeUp[i] = 10.0;
+							if (i < splitStrings.Length)
 							{
-								Train.Cars[Car].Specs.JerkBrakeUp[i] = 10.0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkBrakeUp[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkBrakeUp[i]))
-									{
-										Train.Cars[Car].Specs.JerkBrakeUp[i] = 10.0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for BrakeJerkUp, Notch " + i);
-									}
+									Train.Cars[Car].Specs.JerkBrakeUp[i] = 10.0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for BrakeJerkUp, Notch " + i);
 								}
 							}
 						}
 						break;
 					case "jerkdown":
 						Train.Cars[Car].Specs.JerkBrakeDown = new double[Train.Specs.MaximumBrakeNotch];
-						if (c.InnerText.IndexOf(';') != -1)
+						splitStrings = c.InnerText.Split(';');
+						for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
 						{
-							string[] splitStrings = c.InnerText.Split(';');
-
-							for (int i = 0; i < Train.Specs.MaximumBrakeNotch; i++)
+							Train.Cars[Car].Specs.JerkBrakeDown[i] = 10.0;
+							if (i < splitStrings.Length)
 							{
-								Train.Cars[Car].Specs.JerkBrakeDown[i] = 10.0;
-								if (i < splitStrings.Length)
+								if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkBrakeDown[i]))
 								{
-									if (!double.TryParse(splitStrings[i].Trim(), out Train.Cars[Car].Specs.JerkBrakeDown[i]))
-									{
-										Train.Cars[Car].Specs.JerkBrakeDown[i] = 10.0;
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for BrakeJerkDown, Notch " + i);
-									}
+									Train.Cars[Car].Specs.JerkBrakeDown[i] = 10.0;
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid value " + c.InnerText + " specified for BrakeJerkDown, Notch " + i);
 								}
 							}
 						}
