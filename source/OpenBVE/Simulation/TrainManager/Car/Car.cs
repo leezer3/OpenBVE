@@ -1051,9 +1051,23 @@ namespace OpenBve
 				double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 				double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 				double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-				double cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
-				double cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
-				double cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
+				double cx, cy, cz;
+				if (this.HasInteriorView)
+				{
+					cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
+					cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
+					cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
+				}
+				else
+				{
+					/*
+					 * If we do not have an interior view, base the camera update on the driver car
+					 */
+					Vector3 d = this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
+					cx = rx + sx * d.X + ux * d.Y + dx * d.Z;
+					cy = ry + sy * d.X + uy * d.Y + dy * d.Z;
+					cz = rz + sz * d.X + uz * d.Y + dz * d.Z;
+				}
 				World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
 				World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
 				World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
