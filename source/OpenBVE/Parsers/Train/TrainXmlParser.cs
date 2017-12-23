@@ -78,6 +78,7 @@ namespace OpenBve.Parsers.Train
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != World.CameraRestrictionMode.NotSpecified)
 				{
 					World.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
+					World.UpdateViewingDistances();
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)
