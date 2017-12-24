@@ -806,7 +806,23 @@ namespace OpenBve
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
+												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
+												{
+													if (ForceTextureRepeatX && ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+													}
+													else if (ForceTextureRepeatX)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+													}
+													else if (ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+													}
+												}
 											}
+											
 										}
 										else
 										{
