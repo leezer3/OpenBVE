@@ -247,6 +247,63 @@ namespace OpenBve.Parsers.Train
 							}
 						}
 						break;
+					case "cylinder":
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "maximumpressure":
+									if (!double.TryParse(cc.InnerText.Trim(), out Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceMaximumPressure))
+									{
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceMaximumPressure = 44000;
+										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid BrakeCylinderMaximumServicePressure " + c.InnerText + " specified for Car " + Car);
+									}
+									break;
+								case "emergencypressure":
+									if (!double.TryParse(cc.InnerText.Trim(), out Train.Cars[Car].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure))
+									{
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceMaximumPressure = 44000;
+										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid BrakeCylinderEmergencyPressure " + c.InnerText + " specified for Car " + Car);
+									}
+									break;
+								case "pressureincreaserate":
+									double bpUp;
+									if (!double.TryParse(cc.InnerText.Trim(), out bpUp))
+									{
+										if (Train.Cars[Car].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+										{
+											Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceChargeRate = 300000.0;
+											Train.Cars[Car].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = 300000.0;
+										}
+										else
+										{
+											Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceChargeRate = 90000.0;
+											Train.Cars[Car].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = 300000.0;
+										}
+										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid BrakeCylinderPressureIncreaseRate " + c.InnerText + " specified for Car " + Car);
+										break;
+									}
+									if (Train.Cars[Car].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+									{
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceChargeRate = bpUp;
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = bpUp;
+									}
+									else
+									{
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderServiceChargeRate = bpUp * 0.3;
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = bpUp;
+									}
+									break;
+								case "pressuredecreaserate":
+									if (!double.TryParse(cc.InnerText.Trim(), out Train.Cars[Car].Specs.AirBrake.BrakeCylinderReleaseRate))
+									{
+										Train.Cars[Car].Specs.AirBrake.BrakeCylinderReleaseRate = 200000.0;
+										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid BrakeCylinderPressureDecreaseRate " + c.InnerText + " specified for Car " + Car);
+									}
+									break;
+							}
+						}
+						break;
 				}
 			}
 		}
