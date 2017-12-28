@@ -333,7 +333,7 @@ namespace OpenBve {
 			internal int CarIndex;
 		}
 		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
-			if (CurrentTrack.Elements.Length == 0) return;
+			if (CurrentTrack.Elements == null || CurrentTrack.Elements.Length == 0) return;
 			int i = Follower.LastTrackElement;
 			while (i >= 0 && NewTrackPosition < CurrentTrack.Elements[i].StartingTrackPosition) {
 				double ta = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
