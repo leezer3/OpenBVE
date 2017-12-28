@@ -29,6 +29,7 @@
 ↷ <a href="#performance">6. Performance</a><br />
 ↷ <a href="#tips">7. Tips</a><br />
 ↷ <a href="#examples">8. Example functions</a><br />
+↷ <a href="#grammar">9. Formal Grammar</a><br />
 <br /><a name="overview" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 1. Overview</font><hr />
@@ -270,6 +271,7 @@ All operations treat 0 as false and any other value as true, and return 1 for tr
 <table><tr style="height: 2px;"><td /></tr></table>
 From highest precedence to lowest. Operators of same precedence are evaluated left to right in the order in they occur in the formula.<br /><br />
 <table style="border-collapse: collapse;">
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">a[...]</td></tr>
 <tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">- (Minus)</td></tr>
 <tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>/</tt></td></tr>
 <tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>*</tt></td></tr>
@@ -737,6 +739,52 @@ StateFunction = if[trackDistance&gt;DISTANCE | section==0, 0, if[value&lt;0.5, v
 </tr>
 </table>
 
+<a name="grammar" />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<font size="+1" color="#0080FF">■ 9. Formal Grammar</font><hr />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td>
+
+The formal grammar for the language may not match up perfectly with the implimentation included in OpenBVE. An example is a*-b which is valid under the grammar but the parser rejects it.
+</td></tr></table>
+<div style="float: left; overflow:auto; width: 100%; height: 100%">
+<div style="width:960px;">
+<table>
+<tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed">
+<tt>
+&lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;xor_expression&gt; "" &lt;expression&gt;     | &lt;xor_expression&gt;</br>
+&lt;xor_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;or_expression&gt;  "^" &lt;xor_expression&gt; | &lt;or_expression&gt;</br>
+&lt;or_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;not_expression&gt; "|" &lt;or_expression&gt;  | &lt;not_expression&gt;</br>
+</br>
+&lt;not_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= "!" &lt;equal_expression&gt; | &lt;equal_expression&gt;</br>
+</br>
+&lt;equal_expression&gt;&nbsp;&nbsp;::= &lt;plus_expression&gt; "==" &lt;equal_expression&gt; | &lt;plus_expression&gt; "!=" &lt;equal_expression&gt; |</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&gt;"  &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;"  &lt;equal_expression&gt; | </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt;</br>
+
+&lt;plus_expression&gt;&nbsp;&nbsp;&nbsp;::= &lt;times_expression&gt; "+" &lt;plus_expression&gt;  | &lt;times_expression&gt; "-" &lt;plus_expression&gt; | &lt;times_expression&gt;</br>
+
+&lt;times_expression&gt;&nbsp;&nbsp;::= &lt;divide_expression&gt; "*" &lt;times_expression&gt;  | &lt;divide_expression&gt;</br>
+&lt;divide_expression&gt;&nbsp;::= &lt;minus_expression&gt;  "/" &lt;divide_expression&gt; | &lt;minus_expression&gt;</br>
+</br>
+&lt;minus_expression&gt;&nbsp;&nbsp;::= "-" &lt;function_call&gt; | &lt;function_call&gt;</br>
+&lt;function_call&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;name&gt; "[" &lt;expression&gt; ("," &lt;expression&gt;)* "]" | &lt;term&gt;</br>
+</br>
+&lt;term&gt;&nbsp;&nbsp;&nbsp;::= "(" &lt;expression&gt; ")" | &lt;name&gt; | &lt;number&gt;</br>
+&lt;number&gt;&nbsp;::= &lt;digit&gt;*</br>
+&lt;name&gt;&nbsp;&nbsp;&nbsp;::= &lt;letter&gt; (&lt;letter&gt; | &lt;digit&gt;)*</br>
+</br>
+&lt;letter&gt;&nbsp;::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" |</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" |</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" |</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"</br>
+&lt;digit&gt;&nbsp;&nbsp;::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"</br>
+</br>
+</tt></td>
+</tr>
+</table>
+</div></div>
 </body>
 
 <!-- Mirrored from www.trainsimframework.org/develop/object_animated.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:30:47 GMT -->
