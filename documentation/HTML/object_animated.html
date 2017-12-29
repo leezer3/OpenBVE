@@ -307,7 +307,7 @@ From highest precedence to lowest. Operators of same precedence are evaluated le
 <table style="border-collapse: collapse;">
 <tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Function</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Description</th></tr>
 <tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>Reciprocal[<em>x</em>]</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Returns the reciprocal, equal to 1&#47;<em>x</em></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>Power[<em>a</em>,<em>b</em>,...]</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Returns <em>a</em> raised to the <em>b</em><sup>th</sup> power. <em>b</em> must be a non-negative number. For consistency, Power[0,<em>b</em>] always returns 1, even in the degenerate case Power[0,0], and <em>a</em> being negative always returns 0.</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>Power[<em>a</em>,<em>b</em>,...]</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">Returns <em>a</em> raised to the <em>b</em><sup>th</sup> power. <em>b</em> must be a non-negative number. For consistency, Power[0,<em>b</em>] always returns 1, even in the degenerate case Power[0,0], and <em>a</em> being negative always returns 0. Adding more arguments will create a chain. Power[a,b,c] will return <em>a</em><sup><em>b</em><sup><em>c</em></sup></sup>.</td></tr>
 </table><br />
 <table><tr style="height: 4px;"><td /></tr></table>
 <font color="#0080FF">● Numeric functions</font>
@@ -753,20 +753,20 @@ The formal grammar for the language may not match up perfectly with the implimen
 <tr>
 <td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed">
 <tt>
-&lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;xor_expression&gt; "" &lt;expression&gt;     | &lt;xor_expression&gt;</br>
-&lt;xor_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;or_expression&gt;  "^" &lt;xor_expression&gt; | &lt;or_expression&gt;</br>
-&lt;or_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;not_expression&gt; "|" &lt;or_expression&gt;  | &lt;not_expression&gt;</br>
+&lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;xor_expression&gt; "" &lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp; | &lt;xor_expression&gt;</br>
+&lt;xor_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;or_expression&gt;&nbsp; "^" &lt;xor_expression&gt; | &lt;or_expression&gt;</br>
+&lt;or_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;not_expression&gt; "|" &lt;or_expression&gt;&nbsp; | &lt;not_expression&gt;</br>
 </br>
 &lt;not_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= "!" &lt;equal_expression&gt; | &lt;equal_expression&gt;</br>
 </br>
 &lt;equal_expression&gt;&nbsp;&nbsp;::= &lt;plus_expression&gt; "==" &lt;equal_expression&gt; | &lt;plus_expression&gt; "!=" &lt;equal_expression&gt; |</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&gt;"  &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;"  &lt;equal_expression&gt; | </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&gt;"&nbsp; &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;"&nbsp; &lt;equal_expression&gt; | </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt;</br>
-
-&lt;plus_expression&gt;&nbsp;&nbsp;&nbsp;::= &lt;times_expression&gt; "+" &lt;plus_expression&gt;  | &lt;times_expression&gt; "-" &lt;plus_expression&gt; | &lt;times_expression&gt;</br>
-
-&lt;times_expression&gt;&nbsp;&nbsp;::= &lt;divide_expression&gt; "*" &lt;times_expression&gt;  | &lt;divide_expression&gt;</br>
-&lt;divide_expression&gt;&nbsp;::= &lt;minus_expression&gt;  "/" &lt;divide_expression&gt; | &lt;minus_expression&gt;</br>
+</br>
+&lt;plus_expression&gt;&nbsp;&nbsp;&nbsp;::= &lt;times_expression&gt; "+" &lt;plus_expression&gt;&nbsp; | &lt;times_expression&gt; "-" &lt;plus_expression&gt; | &lt;times_expression&gt;</br>
+</br>
+&lt;times_expression&gt;&nbsp;&nbsp;::= &lt;divide_expression&gt; "*" &lt;times_expression&gt;&nbsp; | &lt;divide_expression&gt;</br>
+&lt;divide_expression&gt;&nbsp;::= &lt;minus_expression&gt;&nbsp; "/" &lt;divide_expression&gt; | &lt;minus_expression&gt;</br>
 </br>
 &lt;minus_expression&gt;&nbsp;&nbsp;::= "-" &lt;function_call&gt; | &lt;function_call&gt;</br>
 &lt;function_call&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;name&gt; "[" &lt;expression&gt; ("," &lt;expression&gt;)* "]" | &lt;term&gt;</br>
