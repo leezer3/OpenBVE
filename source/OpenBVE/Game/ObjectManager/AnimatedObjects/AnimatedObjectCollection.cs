@@ -10,6 +10,7 @@ namespace OpenBve
 		{
 			/// <summary>The objects that this collection contains</summary>
 			internal AnimatedObject[] Objects;
+			internal WorldObject[] Sounds;
 
 			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
@@ -80,6 +81,27 @@ namespace OpenBve
 						}
 					}
 				}
+				if (this.Sounds == null)
+				{
+					return;
+				}
+				for (int i = 0; i < Sounds.Length; i++)
+				{
+					if (this.Sounds[i] == null)
+					{
+						continue;
+					}
+					var snd = this.Sounds[i] as WorldSound;
+					if (snd != null)
+					{
+						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					}
+					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
+					if (snd2 != null)
+					{
+						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+					}
+				}
 			}
 
 			internal override void OptimizeObject(bool PreserveVerticies)
@@ -88,6 +110,10 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Objects[i].States.Length; j++)
 					{
+						if (Objects[i].States[j].Object == null)
+						{
+							continue;
+						}
 						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
 					}
 				}

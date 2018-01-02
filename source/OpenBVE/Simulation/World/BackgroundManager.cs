@@ -43,9 +43,9 @@ namespace OpenBve
 			/// <summary>Whether the texture's aspect ratio should be maintained</summary>
 			internal bool KeepAspectRatio;
 			/// <summary>The time taken to transition to this background</summary>
-			internal double TransitionTime;
+			internal readonly double TransitionTime;
 			/// <summary> The time at which this background should be displayed (Expressed as the number of seconds since midnight)</summary>
-			internal double Time;
+			internal readonly double Time;
 			/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
@@ -130,7 +130,7 @@ namespace OpenBve
 		internal class DynamicBackground : BackgroundHandle
 		{
 			/// <summary>The array of backgrounds for this dynamic background</summary>
-			internal StaticBackground[] Backgrounds;
+			internal readonly StaticBackground[] Backgrounds;
 			/// <summary>The current background in use</summary>
 			internal int CurrentBackgroundIndex = 0;
 
@@ -237,7 +237,7 @@ namespace OpenBve
 		internal class BackgroundObject : BackgroundHandle
 		{
 			/// <summary>The object used for this background (NOTE: Static objects only)</summary>
-			internal ObjectManager.StaticObject ObjectBackground;
+			internal readonly ObjectManager.StaticObject ObjectBackground;
 
 			internal double ClipDistance = 0;
 

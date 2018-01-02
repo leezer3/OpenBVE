@@ -20,20 +20,17 @@ namespace OpenBve
 		 * 
 		 * Package manipulation is handled by the OpenBveApi.Packages namespace
 		 */
-		internal static bool creatingPackage = false;
-		internal PackageType newPackageType;
-		internal string ImageFile;
-		internal BackgroundWorker workerThread = new BackgroundWorker();
-		internal bool RemoveFromDatabase = true;
-		internal Package dependantPackage;
-		internal List<string> selectedDependacies = new List<string>();
-		internal bool ProblemEncountered = false;
-		internal bool listPopulating;
+		private static bool creatingPackage = false;
+		private PackageType newPackageType;
+		private string ImageFile;
+		private BackgroundWorker workerThread = new BackgroundWorker();
+		private bool RemoveFromDatabase = true;
+		private Package dependantPackage;
+		private List<string> selectedDependacies = new List<string>();
+		private bool ProblemEncountered = false;
+		private bool listPopulating;
 
-
-
-
-		internal void RefreshPackages()
+		private void RefreshPackages()
 		{
 			if (Database.SaveDatabase() == false)
 			{

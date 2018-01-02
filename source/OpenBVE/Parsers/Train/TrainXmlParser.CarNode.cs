@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace OpenBve.Parsers.Train
 {
+	using System;
+	using System.Text;
+
 	partial class TrainXmlParser
 	{
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
 		{
+			double driverZ = 0.0;
+			string interiorFile = string.Empty;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
@@ -151,8 +156,87 @@ namespace OpenBve.Parsers.Train
 							}
 						}
 						break;
+					case "driverposition":
+						string[] splitText = c.InnerText.Split(',');
+						if (splitText.Length != 3)
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						Train.Cars[Car].Driver = new Vector3();
+						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out Train.Cars[Car].Driver.X))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitText[1], out Train.Cars[Car].Driver.Y))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "Driver position Y was invalid for Car " + Car + " in XML file " + fileName);
+						}
+						if (!NumberFormats.TryParseDoubleVb6(splitText[2], out driverZ))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);
+						}
+						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
+						break;
+					case "interiorview":
+						if (Train != TrainManager.PlayerTrain)
+						{
+							break;
+						}
+						Train.Cars[Car].HasInteriorView = true;
+						if (Car != Train.DriverCar)
+						{
+							Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
+							Train.Cars[Car].CarSections[0] = new TrainManager.CarSection();
+							Train.Cars[Car].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
+							Train.Cars[Car].CarSections[0].Overlay = true;
+						}
+						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+						if (!System.IO.File.Exists(cv))
+						{
+							Interface.AddMessage(Interface.MessageType.Warning, false, "Interior view file was invalid for Car " + Car + " in XML file " + fileName);
+							break;
+						}
+						interiorFile = cv;
+						break;
 				}
 			}
+			//Driver position is measured from the front of the car
+			//As there is no set order, this needs to be done after the loop
+			if (interiorFile != String.Empty)
+			{
+				
+				if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
+				{
+					//Only supports panel2.cfg format
+					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
+					Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.On;
+				}
+				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
+				{
+					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
+					try
+					{
+						for (int i = 0; i < a.Objects.Length; i++)
+						{
+							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+						}
+						Train.Cars[Car].CarSections[0].Elements = a.Objects;
+						Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
+					}
+					catch
+					{
+						Program.RestartArguments = " ";
+						Loading.Cancel = true;
+					}
+				}
+				else
+				{
+					Interface.AddMessage(Interface.MessageType.Warning, false, "Interior view file is not supported for Car " + Car + " in XML file " + fileName);
+				}
+			}
+
+			
 		}
 	}
 }

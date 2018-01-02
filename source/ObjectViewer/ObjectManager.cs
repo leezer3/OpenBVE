@@ -805,11 +805,15 @@ namespace OpenBve
             }
             else
             {
-                ObjectManager.Objects[i] = null;
-                ObjectManager.Objects[i] = new StaticObject();
-                ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[] { };
-                ObjectManager.Objects[i].Mesh.Materials = new World.MeshMaterial[] { };
-                ObjectManager.Objects[i].Mesh.Vertices = new World.Vertex[] { };
+	            ObjectManager.Objects[i] = new StaticObject
+		        {
+					Mesh =
+				    {
+						Faces = new World.MeshFace[] { },
+						Materials = new World.MeshMaterial[] { },
+						Vertices = new World.Vertex[] { }
+					}
+		        };
             }
             Object.CurrentState = StateIndex;
             if (Show)

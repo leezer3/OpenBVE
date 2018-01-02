@@ -21,13 +21,13 @@
 		internal class TransponderEvent : GeneralEvent
 		{
 			/// <summary>The type of transponder</summary>
-			internal int Type;
+			internal readonly int Type;
 			/// <summary>An optional data parameter passed to plugins recieving this event</summary>
-			internal int Data;
+			internal readonly int Data;
 			/// <summary>The index of the section this is attached to</summary>
-			internal int SectionIndex;
+			private readonly int SectionIndex;
 			/// <summary>Whether the section index this transponder returns is that of the first red section ahead of the train</summary>
-			internal bool ClipToFirstRedSection;
+			private readonly bool ClipToFirstRedSection;
 
 			internal TransponderEvent(double trackPositionDelta, int type, int data, int sectionIndex, bool clipToFirstRedSection)
 			{

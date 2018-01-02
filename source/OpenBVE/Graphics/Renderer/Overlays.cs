@@ -1355,12 +1355,12 @@ namespace OpenBve
 				case "score":
 					if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 					{
-						t = Game.CurrentScore.Value.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
-						if (Game.CurrentScore.Value < 0)
+						t = Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
+						if (Game.CurrentScore.CurrentValue < 0)
 						{
 							sc = MessageColor.Red;
 						}
-						else if (Game.CurrentScore.Value > 0)
+						else if (Game.CurrentScore.CurrentValue > 0)
 						{
 							sc = MessageColor.Green;
 						}
@@ -1556,7 +1556,7 @@ namespace OpenBve
 			string[] Lines = new string[] {
 				"=system",
 				"fps: " + Game.InfoFrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
-				"score: " + Game.CurrentScore.Value.ToString(Culture),
+				"score: " + Game.CurrentScore.CurrentValue.ToString(Culture),
 				"",
 				"=train",
 				"speed: " + (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) * 3.6).ToString("0.00", Culture) + " km/h",

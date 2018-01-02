@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-
+using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve {
-	using System.IO;
-
-	using Path = OpenBveApi.Path;
-
 	internal partial class CsvRwRouteParser {
 		/// <summary>An abstract signal - All signals must inherit from this class</summary>
 		private abstract class SignalData { }
@@ -42,19 +38,26 @@ namespace OpenBve {
 		private class AnimatedObjectSignalData : SignalData {
 			internal ObjectManager.AnimatedObjectCollection Objects;
 		}
-		
 
-		
+		internal static string ObjectPath;
+		internal static string SoundPath;
+		internal static string TrainPath;
 
 		// parse route
-		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
+		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly) {
 			// initialize data
+
+			/*
+			 * Store paths for later use
+			 */
+			ObjectPath = objectPath;
+			SoundPath = soundPath;
+			TrainPath = trainPath;
 			freeObjCount = 0;
 			railtypeCount = 0;
 			Game.UnitOfSpeed = "km/h";
 			Game.SpeedConversionFactor = 0.0;
 			Game.RouteInformation.RouteBriefing = null;
-//		    customLoadScreen = false;
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
@@ -311,7 +314,6 @@ namespace OpenBve {
 				Game.Sections[0].CurrentAspect = 0;
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
-				Game.Sections[0].SignalIndices = new int[] {};
 				Game.Sections[0].StationIndex = -1;
 				Game.Sections[0].TrackPosition = 0;
 				Game.Sections[0].Trains = new TrainManager.Train[] {};
@@ -322,7 +324,7 @@ namespace OpenBve {
 				Data.SignalSpeeds = new double[]
 				{0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
 			}
-			ParseRouteForData(FileName, IsRW, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
+			ParseRouteForData(FileName, IsRW, Encoding, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
 
@@ -336,7 +338,7 @@ namespace OpenBve {
 
 		// parse route for data
 		
-		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, ref RouteData Data, bool PreviewOnly) {
+		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Expression[] Expressions;
@@ -348,7 +350,7 @@ namespace OpenBve {
 			Data.UnitOfSpeed = 0.277777777777778;
 			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength, PreviewOnly);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
-			ParseRouteForData(FileName, IsRW, Encoding, Expressions, TrainPath, ObjectPath, SoundPath, UnitOfLength, ref Data, PreviewOnly);
+			ParseRouteForData(FileName, IsRW, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
 			Game.RouteUnitOfLength = UnitOfLength;
 		}
 
@@ -1029,7 +1031,7 @@ namespace OpenBve {
 		private static int railtypeCount = 0;
 
 		// parse route for data
-		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, string TrainPath, string ObjectPath, string SoundPath, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
@@ -2555,6 +2557,11 @@ namespace OpenBve {
 						} else if (Number < 0.0) {
 							Interface.AddMessage(Interface.MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else {
+							if (Interface.CurrentOptions.EnableBveTsHacks && IsRW && Number == 4535545100)
+							{
+								//WMATA Red line has an erroneous track position causing an out of memory cascade
+								Number = 45355;
+							}
 							Data.TrackPosition = Number;
 							BlockIndex = (int)Math.Floor(Number / Data.BlockInterval + 0.001);
 							if (Data.FirstUsedBlock == -1) Data.FirstUsedBlock = BlockIndex;
@@ -3087,7 +3094,6 @@ namespace OpenBve {
 														int pp = p;
 														while (pp < Arguments[i].Length)
 														{
-															pp++;
 															if (char.IsLetter(Arguments[i][pp]))
 															{
 																Arguments[i] = Arguments[i].Substring(0, p);
@@ -3095,6 +3101,7 @@ namespace OpenBve {
 																Array.Resize(ref aspects, i + 1);
 																break;
 															}
+															pp++;
 														}
 													}
 												}

@@ -17,6 +17,8 @@ namespace OpenBve {
 		internal static bool Cancel;
 		/// <summary>Whether loading is complete</summary>
 		internal static bool Complete;
+		/// <summary>True when the simulation has been completely setup</summary>
+		internal static bool SimulationSetup;
 		/// <summary>Whether there is currently a job waiting to complete in the main game loop</summary>
 		internal static bool JobAvailable = false;
 		private static Thread Loader;
@@ -249,38 +251,38 @@ namespace OpenBve {
 					// door open/close speed
 					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
 						if (TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency <= 0.0) {
-							if (TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer != null & TrainManager.Trains[k].Cars[i].Sounds.DoorOpenR.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer);
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorOpenR.Buffer);
-								double a = TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer.Duration;
-								double b = TrainManager.Trains[k].Cars[i].Sounds.DoorOpenR.Buffer.Duration;
+							if (TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer != null & TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer);
+								double a = TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer.Duration;
+								double b = TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-							} else if (TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer);
-								double a = TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer.Duration;
+							} else if (TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								double a = TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
-							} else if (TrainManager.Trains[k].Cars[i].Sounds.DoorOpenR.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorOpenL.Buffer);
-								double b = TrainManager.Trains[k].Cars[i].Sounds.DoorOpenR.Buffer.Duration;
+							} else if (TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								double b = TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
 							} else {
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = 0.8;
 							}
 						}
 						if (TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency <= 0.0) {
-							if (TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer != null & TrainManager.Trains[k].Cars[i].Sounds.DoorCloseR.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer);
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorCloseR.Buffer);
-								double a = TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer.Duration;
-								double b = TrainManager.Trains[k].Cars[i].Sounds.DoorCloseR.Buffer.Duration;
+							if (TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer != null & TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer);
+								double a = TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer.Duration;
+								double b = TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
-							} else if (TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer);
-								double a = TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer.Duration;
+							} else if (TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								double a = TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
-							} else if (TrainManager.Trains[k].Cars[i].Sounds.DoorCloseR.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Sounds.DoorCloseL.Buffer);
-								double b = TrainManager.Trains[k].Cars[i].Sounds.DoorCloseR.Buffer.Duration;
+							} else if (TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer != null) {
+								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								double b = TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
 							} else {
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = 0.8;
@@ -300,13 +302,8 @@ namespace OpenBve {
 						TrainManager.Trains[k].Cars[i].Specs.DoorClosePitch = 1.0;
 					}
 				}
-				for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
-					TrainManager.Trains[k].Cars[i].FrontAxle.Follower.Train = TrainManager.Trains[k];
-					TrainManager.Trains[k].Cars[i].RearAxle.Follower.Train = TrainManager.Trains[k];
-					TrainManager.Trains[k].Cars[i].BeaconReceiver.Train = TrainManager.Trains[k];
-				}
 				// add panel section
-				if (k == TrainManager.PlayerTrain.TrainIndex) {
+				if (k == TrainManager.PlayerTrain.TrainIndex) {	
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0] = new TrainManager.CarSection();
 					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
@@ -330,6 +327,7 @@ namespace OpenBve {
 					{
 						ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, TrainManager.Trains[k]);
 					}
+					World.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					//Stores the current array index of the bogie object to add
 					//Required as there are two bogies per car, and we're using a simple linear array....

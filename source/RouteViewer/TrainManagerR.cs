@@ -8,6 +8,8 @@
 using OpenBveApi.Math;
 
 namespace OpenBve {
+	using System;
+
 	internal static class TrainManager {
 
 // Silence the absurd amount of unused variable warnings
@@ -162,8 +164,11 @@ namespace OpenBve {
 			internal bool Loop;
 		}
 		internal struct CarSound {
-			internal int SoundBufferIndex;
-			internal int SoundSourceIndex;
+			/// <summary>The sound buffer to play</summary>
+			internal Sounds.SoundBuffer Buffer;
+			/// <summary>The source of the sound within the car</summary>
+			internal Sounds.SoundSource Source;
+			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
 		}
 		internal struct MotorSoundTableEntry {
@@ -263,6 +268,40 @@ namespace OpenBve {
 			internal bool Derailed;
 			internal bool Topples;
 			internal CarBrightness Brightness;
+
+			internal void CreateWorldCoordinates(double CarX, double CarY, double CarZ, out double PositionX, out double PositionY, out double PositionZ, out double DirectionX, out double DirectionY, out double DirectionZ)
+			{
+				DirectionX = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				DirectionY = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				DirectionZ = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = DirectionX * DirectionX + DirectionY * DirectionY + DirectionZ * DirectionZ;
+				if (t != 0.0)
+				{
+					t = 1.0 / Math.Sqrt(t);
+					DirectionX *= t; DirectionY *= t; DirectionZ *= t;
+					double ux = Up.X;
+					double uy = Up.Y;
+					double uz = Up.Z;
+					double sx = DirectionZ * uy - DirectionY * uz;
+					double sy = DirectionX * uz - DirectionZ * ux;
+					double sz = DirectionY * ux - DirectionX * uy;
+					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+					PositionX = rx + sx * CarX + ux * CarY + DirectionX * CarZ;
+					PositionY = ry + sy * CarX + uy * CarY + DirectionY * CarZ;
+					PositionZ = rz + sz * CarX + uz * CarY + DirectionZ * CarZ;
+				}
+				else
+				{
+					PositionX = FrontAxle.Follower.WorldPosition.X;
+					PositionY = FrontAxle.Follower.WorldPosition.Y;
+					PositionZ = FrontAxle.Follower.WorldPosition.Z;
+					DirectionX = 0.0;
+					DirectionY = 1.0;
+					DirectionZ = 0.0;
+				}
+			}
 		}
 
 		// train

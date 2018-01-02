@@ -12,15 +12,20 @@ namespace CarXmlConvertor
 		internal static string FileName;
 		internal static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 
-		internal static void Process()
+		private static MainForm mainForm;
+
+		internal static void Process(MainForm form)
 		{
+			mainForm = form;
 			if (!System.IO.File.Exists(FileName))
 			{
+				mainForm.updateLogBoxText += "INFO: No extensions.cfg file was detected- Generating default XML." + Environment.NewLine;
 				//No extensions.cfg file exists, so just spin up a default XML file
 				GenerateDefaultXML();
 			}
 			else
 			{
+				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
 				CarInfos = new Car[ConvertTrainDat.NumberOfCars];
 				ReadExtensionsCfg();
 				GenerateExtensionsCfgXML();
@@ -363,9 +368,10 @@ namespace CarXmlConvertor
 					TabbedList carLines = new TabbedList();
 					GenerateCarXML(ref carLines, i);
 					carLines.Add("</openBVE>");
+					string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
 					try
 					{
-						string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Car" + i + ".xml");
+						
 						using (StreamWriter sw = new StreamWriter(fileOut))
 						{
 							foreach (String s in carLines.Lines)
@@ -375,6 +381,7 @@ namespace CarXmlConvertor
 					}
 					catch
 					{
+						mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
 						MessageBox.Show("An error occured whilst writing the new XML file for car " + i + ". \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						return;
 					}
@@ -457,6 +464,19 @@ namespace CarXmlConvertor
 				newLines.Add("<Reversed>" + CarInfos[i].RearBogie.Reversed + "</Reversed>");
 				newLines.Add("</RearBogie>");
 			}
+			if (i == ConvertTrainDat.DriverCar)
+			{
+				if(System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel.animated")))
+				{
+					newLines.Add("<InteriorView>panel.animated</InteriorView>" );
+					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+				}
+				else if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
+				{
+					newLines.Add("<InteriorView>panel2.cfg</InteriorView>");
+					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
+				}
+			}
 			newLines.Add("</Car>");
 		}
 
@@ -486,9 +506,10 @@ namespace CarXmlConvertor
 				newLines.Add("</Car>");
 			}
 			newLines.Add("</Train>");
+			newLines.Add("</openBVE>");
+			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 			try
 			{
-				string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Train.xml");
 				using (StreamWriter sw = new StreamWriter(fileOut))
 				{
 					foreach (String s in newLines.Lines)
@@ -497,10 +518,10 @@ namespace CarXmlConvertor
 			}
 			catch
 			{
+				mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
 				MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
-			MessageBox.Show("Conversion succeeded.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 	}
 }

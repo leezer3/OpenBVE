@@ -213,7 +213,7 @@ namespace OpenBve
 								{
 									m.MessageEarlyTime = EarlyTime;
 									m.MessageEarlyText = EarlyText;
-									m.MessageColor = EarlyColor;
+									m.MessageEarlyColor = EarlyColor;
 								}
 								else
 								{

@@ -16,10 +16,17 @@ namespace OpenBve
 			internal double Length;
 			/// <summary>Front axle about which the car pivots</summary>
 			internal Axle FrontAxle;
-			internal Bogie FrontBogie;
 			/// <summary>Rear axle about which the car pivots</summary>
 			internal Axle RearAxle;
+			/// <summary>The front bogie</summary>
+			internal Bogie FrontBogie;
+			/// <summary>The rear bogie</summary>
 			internal Bogie RearBogie;
+			/// <summary>The horns attached to this car</summary>
+			internal Horn[] Horns;
+			/// <summary>The doors for this car</summary>
+			internal Door[] Doors;
+
 			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
@@ -46,6 +53,12 @@ namespace OpenBve
 			internal Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
 			internal int Index;
+			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
+			internal World.CameraRestrictionMode CameraRestrictionMode = World.CameraRestrictionMode.NotSpecified;
+			/// <summary>Stores the camera interior camera alignment for this car</summary>
+			internal World.CameraAlignment InteriorCamera;
+
+			internal bool HasInteriorView = false;
 
 			internal struct CarBrightness
 			{
@@ -60,6 +73,9 @@ namespace OpenBve
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
+				FrontAxle.Follower.Train = train;
+				RearAxle.Follower.Train = train;
+				BeaconReceiver.Train = train;
 			}
 
 			/// <summary>Moves the car</summary>
@@ -133,6 +149,237 @@ namespace OpenBve
 				BeaconReceiver.Update(b, false, false);
 			}
 
+			internal void CreateWorldCoordinates(double CarX, double CarY, double CarZ, out double PositionX, out double PositionY, out double PositionZ, out double DirectionX, out double DirectionY, out double DirectionZ)
+			{
+				DirectionX = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				DirectionY = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				DirectionZ = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = DirectionX * DirectionX + DirectionY * DirectionY + DirectionZ * DirectionZ;
+				if (t != 0.0)
+				{
+					t = 1.0 / Math.Sqrt(t);
+					DirectionX *= t; DirectionY *= t; DirectionZ *= t;
+					double ux = Up.X;
+					double uy = Up.Y;
+					double uz = Up.Z;
+					double sx = DirectionZ * uy - DirectionY * uz;
+					double sy = DirectionX * uz - DirectionZ * ux;
+					double sz = DirectionY * ux - DirectionX * uy;
+					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+					PositionX = rx + sx * CarX + ux * CarY + DirectionX * CarZ;
+					PositionY = ry + sy * CarX + uy * CarY + DirectionY * CarZ;
+					PositionZ = rz + sz * CarX + uz * CarY + DirectionZ * CarZ;
+				}
+				else
+				{
+					PositionX = FrontAxle.Follower.WorldPosition.X;
+					PositionY = FrontAxle.Follower.WorldPosition.Y;
+					PositionZ = FrontAxle.Follower.WorldPosition.Z;
+					DirectionX = 0.0;
+					DirectionY = 1.0;
+					DirectionZ = 0.0;
+				}
+			}
+
+			internal void UpdateRunSounds(double TimeElapsed)
+			{
+				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
+				double speed = Math.Abs(Specs.CurrentSpeed);
+				if (Derailed)
+				{
+					speed = 0.0;
+				}
+				double pitch = speed * factor;
+				double basegain;
+				if (Specs.CurrentSpeed == 0.0)
+				{
+					if (Index != 0)
+					{
+						Sounds.RunNextReasynchronizationPosition = baseTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+					}
+				}
+				else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
+				{
+					double distance = Math.Abs(FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
+					const double minDistance = 150.0;
+					const double maxDistance = 750.0;
+					if (distance > minDistance)
+					{
+						if (FrontAxle.RunIndex < Sounds.Run.Length)
+						{
+							Sounds.SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
+							if (buffer != null)
+							{
+								double duration = OpenBve.Sounds.GetDuration(buffer);
+								if (duration > 0.0)
+								{
+									double offset = distance > maxDistance ? 25.0 : 300.0;
+									Sounds.RunNextReasynchronizationPosition = duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / duration);
+								}
+							}
+						}
+					}
+				}
+				if (FrontAxle.Follower.TrackPosition >= Sounds.RunNextReasynchronizationPosition)
+				{
+					Sounds.RunNextReasynchronizationPosition = double.MaxValue;
+					basegain = 0.0;
+				}
+				else
+				{
+					basegain = speed < 2.77777777777778 ? 0.36 * speed : 1.0;
+				}
+				for (int j = 0; j < Sounds.Run.Length; j++)
+				{
+					if (j == RearAxle.RunIndex | j == RearAxle.RunIndex)
+					{
+						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
+						if (Sounds.RunVolume[j] > 1.0) Sounds.RunVolume[j] = 1.0;
+					}
+					else
+					{
+						Sounds.RunVolume[j] -= 3.0 * TimeElapsed;
+						if (Sounds.RunVolume[j] < 0.0) Sounds.RunVolume[j] = 0.0;
+					}
+					double gain = basegain * Sounds.RunVolume[j];
+					if (OpenBve.Sounds.IsPlaying(Sounds.Run[j].Source))
+					{
+						if (pitch > 0.01 & gain > 0.001)
+						{
+							Sounds.Run[j].Source.Pitch = pitch;
+							Sounds.Run[j].Source.Volume = gain;
+						}
+						else
+						{
+							OpenBve.Sounds.StopSound(Sounds.Run[j].Source);
+						}
+					}
+					else if (pitch > 0.02 & gain > 0.01)
+					{
+						Sounds.SoundBuffer buffer = Sounds.Run[j].Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
+							Sounds.Run[j].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
+						}
+					}
+				}
+			}
+
+			internal void UpdateMotorSounds(double TimeElapsed)
+			{
+				if (!this.Specs.IsMotorCar)
+				{
+					return;
+				}
+				OpenBveApi.Math.Vector3 pos = Sounds.Motor.Position;
+				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
+				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
+				int odir = Sounds.Motor.CurrentAccelerationDirection;
+				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
+				for (int h = 0; h < 2; h++)
+				{
+					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
+					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
+					if (odir > 0 & ndir <= 0)
+					{
+						if (j < Sounds.Motor.Tables.Length)
+						{
+							OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+							Sounds.Motor.Tables[j].Source = null;
+							Sounds.Motor.Tables[j].Buffer = null;
+						}
+					}
+					else if (odir < 0 & ndir >= 0)
+					{
+						if (k < Sounds.Motor.Tables.Length)
+						{
+							OpenBve.Sounds.StopSound(Sounds.Motor.Tables[k].Source);
+							Sounds.Motor.Tables[k].Source = null;
+							Sounds.Motor.Tables[k].Buffer = null;
+						}
+					}
+					if (ndir != 0)
+					{
+						if (ndir < 0) j = k;
+						if (j < Sounds.Motor.Tables.Length)
+						{
+							int idx2 = idx;
+							if (idx2 >= Sounds.Motor.Tables[j].Entries.Length)
+							{
+								idx2 = Sounds.Motor.Tables[j].Entries.Length - 1;
+							}
+							if (idx2 >= 0)
+							{
+								Sounds.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
+								Sounds.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
+								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
+								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
+								if (ndir == 1)
+								{
+									// power
+									double max = Specs.AccelerationCurveMaximum;
+									if (max != 0.0)
+									{
+										double cur = Specs.CurrentAccelerationOutput;
+										if (cur < 0.0) cur = 0.0;
+										gain *= Math.Pow(cur / max, 0.25);
+									}
+								}
+								else if (ndir == -1)
+								{
+									// brake
+									double max = Specs.BrakeDecelerationAtServiceMaximumPressure(this.baseTrain.Specs.CurrentBrakeNotch.Actual);
+									if (max != 0.0)
+									{
+										double cur = -Specs.CurrentAccelerationOutput;
+										if (cur < 0.0) cur = 0.0;
+										gain *= Math.Pow(cur / max, 0.25);
+									}
+								}
+								if (obuf != nbuf)
+								{
+									OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+									if (nbuf != null)
+									{
+										Sounds.Motor.Tables[j].Source = OpenBve.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, Index, true);
+										Sounds.Motor.Tables[j].Buffer = nbuf;
+									}
+									else
+									{
+										Sounds.Motor.Tables[j].Source = null;
+										Sounds.Motor.Tables[j].Buffer = null;
+									}
+								}
+								else if (nbuf != null)
+								{
+									if (Sounds.Motor.Tables[j].Source != null)
+									{
+										Sounds.Motor.Tables[j].Source.Pitch = pitch;
+										Sounds.Motor.Tables[j].Source.Volume = gain;
+									}
+								}
+								else
+								{
+									OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+									Sounds.Motor.Tables[j].Source = null;
+									Sounds.Motor.Tables[j].Buffer = null;
+								}
+							}
+							else
+							{
+								OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+								Sounds.Motor.Tables[j].Source = null;
+								Sounds.Motor.Tables[j].Buffer = null;
+							}
+						}
+					}
+				}
+				Sounds.Motor.CurrentAccelerationDirection = ndir;
+			}
+
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
 			/// <param name="currentObject">The object to add to the car sections array</param>
 			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
@@ -164,8 +411,8 @@ namespace OpenBve
 			}
 
 			/// <summary>Changes the currently visible car section</summary>
-			/// <param name="SectionIndex">The index of the new car section to display</param>
-			internal void ChangeCarSection(int SectionIndex)
+			/// <param name="newCarSection">The type of new car section to display</param>
+			internal void ChangeCarSection(CarSectionType newCarSection)
 			{
 				for (int i = 0; i < CarSections.Length; i++)
 				{
@@ -175,23 +422,72 @@ namespace OpenBve
 						Renderer.HideObject(o);
 					}
 				}
-				if (SectionIndex >= 0)
+				switch (newCarSection)
 				{
-					CarSections[SectionIndex].Initialize(true);
-					for (int j = 0; j < CarSections[SectionIndex].Elements.Length; j++)
-					{
-						int o = CarSections[SectionIndex].Elements[j].ObjectIndex;
-						if (CarSections[SectionIndex].Overlay)
+					case CarSectionType.NotVisible:
+						this.CurrentCarSection = -1;
+						break;
+					case CarSectionType.Interior:
+						if (this.HasInteriorView && this.CarSections.Length > 0)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+							this.CurrentCarSection = 0;
+							this.CarSections[0].Initialize(true);
+							for (int j = 0; j < CarSections[0].Elements.Length; j++)
+							{
+								int o = CarSections[0].Elements[j].ObjectIndex;
+								if (CarSections[0].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
 						}
-						else
+						this.CurrentCarSection = -1;
+						break;
+					case CarSectionType.Exterior:
+						if (this.HasInteriorView && this.CarSections.Length > 1)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+							this.CurrentCarSection = 1;
+							this.CarSections[1].Initialize(true);
+							for (int j = 0; j < CarSections[1].Elements.Length; j++)
+							{
+								int o = CarSections[1].Elements[j].ObjectIndex;
+								if (CarSections[1].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
 						}
-					}
+						else if(!this.HasInteriorView && this.CarSections.Length > 0)
+						{
+							this.CurrentCarSection = 0;
+							this.CarSections[0].Initialize(true);
+							for (int j = 0; j < CarSections[0].Elements.Length; j++)
+							{
+								int o = CarSections[0].Elements[j].ObjectIndex;
+								if (CarSections[0].Overlay)
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+								}
+								else
+								{
+									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+								}
+							}
+							break;
+						}
+						this.CurrentCarSection = -1;
+						break;
 				}
-				CurrentCarSection = SectionIndex;
 				//When changing car section, do not apply damping
 				//This stops objects from spinning if the last position before they were hidden is different
 				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);
@@ -702,7 +998,7 @@ namespace OpenBve
 					pitch = Sounds.FlangePitch;
 					for (int i = 0; i < Sounds.Flange.Length; i++)
 					{
-						if (i == Sounds.FrontAxleFlangeIndex | i == Sounds.RearAxleFlangeIndex)
+						if (i == this.FrontAxle.FlangeIndex | i == this.RearAxle.FlangeIndex)
 						{
 							Sounds.FlangeVolume[i] += TimeElapsed;
 							if (Sounds.FlangeVolume[i] > 1.0) Sounds.FlangeVolume[i] = 1.0;
@@ -736,6 +1032,49 @@ namespace OpenBve
 						}
 					}
 				}
+			}
+
+			/// <summary>Updates the position of the camera relative to this car</summary>
+			internal void UpdateCamera()
+			{
+				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+				dx *= t; dy *= t; dz *= t;
+				double ux = Up.X;
+				double uy = Up.Y;
+				double uz = Up.Z;
+				double sx = dz * uy - dy * uz;
+				double sy = dx * uz - dz * ux;
+				double sz = dy * ux - dx * uy;
+				double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
+				double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
+				double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
+				double cx, cy, cz;
+				if (this.HasInteriorView)
+				{
+					cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
+					cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
+					cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
+				}
+				else
+				{
+					/*
+					 * If we do not have an interior view, base the camera update on the driver car
+					 */
+					Vector3 d = this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
+					cx = rx + sx * d.X + ux * d.Y + dx * d.Z;
+					cy = ry + sy * d.X + uy * d.Y + dy * d.Z;
+					cz = rz + sz * d.X + uz * d.Y + dz * d.Z;
+				}
+				World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
+				World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
+				World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
+				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
+				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
+				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
+				World.CameraTrackFollower.Update(tp, false, false);
 			}
 		}
 	}

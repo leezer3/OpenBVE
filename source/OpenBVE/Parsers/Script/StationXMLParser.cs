@@ -286,7 +286,7 @@ namespace OpenBve
 										}
 										if (File.Exists(depSound))
 										{
-											station.ArrivalSoundBuffer = Sounds.RegisterBuffer(depSound, depRadius);
+											station.DepartureSoundBuffer = Sounds.RegisterBuffer(depSound, depRadius);
 										}
 										else
 										{

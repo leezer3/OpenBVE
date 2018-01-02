@@ -302,7 +302,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_FOLDERS  := . Audio Game Game/Events Game/Events/EventTypes Game/ObjectManager Game/ObjectManager/AnimatedObjects Game/TrackManager Graphics Graphics/Renderer Interface OldCode Parsers Parsers/Object/BVE Parsers/Object/Generic Parsers/Object/Loksim3D Parsers/Panel Parsers/Routes Parsers/Route/BVE Parsers/Script Parsers/SoundConfiguration Parsers/Train Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Car Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Plugins System/Program System/Translations UserInterface
+OPEN_BVE_FOLDERS  := . Audio Game Game/AI Game/Events Game/Events/EventTypes Game/ObjectManager Game/ObjectManager/AnimatedObjects Game/Score Game/TrackManager Graphics Graphics/Renderer Interface OldCode Parsers Parsers/Object/BVE Parsers/Object/Generic Parsers/Object/Loksim3D Parsers/Panel Parsers/Routes Parsers/Route/BVE Parsers/Script Parsers/SoundConfiguration Parsers/Train Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Car Simulation/TrainManager/Motor Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Plugins System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
 OPEN_BVE_SRC      := $(filter-out "$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs",$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
@@ -484,7 +484,7 @@ $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE) $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE): $(TEXTU
 # RouteViewer #
 ###############
 
-ROUTE_VIEWER_FOLDERS  := . Parsers Properties System
+ROUTE_VIEWER_FOLDERS  := . Audio Parsers Properties System System/Functions
 ROUTE_VIEWER_FOLDERS  := $(addprefix $(ROUTE_VIEWER_ROOT)/, $(ROUTE_VIEWER_FOLDERS))
 ROUTE_VIEWER_SRC      := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 ROUTE_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))

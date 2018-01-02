@@ -597,9 +597,9 @@ namespace OpenBve {
 						if (Train != null) {
 							double a = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -614,9 +614,9 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -629,9 +629,9 @@ namespace OpenBve {
 						if (Train != null) {
 							double a = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].Direction == -1 & Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].Direction == -1 & Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -646,9 +646,9 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].Direction == -1 & Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].Direction == -1 & Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -661,9 +661,9 @@ namespace OpenBve {
 						if (Train != null) {
 							double a = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].Direction == 1 & Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].Direction == 1 & Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -678,9 +678,9 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.Doors[k].Direction == 1 & Train.Cars[j].Specs.Doors[k].State > a) {
-										a = Train.Cars[j].Specs.Doors[k].State;
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[k].Direction == 1 & Train.Cars[j].Doors[k].State > a) {
+										a = Train.Cars[j].Doors[k].State;
 									}
 								}
 							}
@@ -693,7 +693,7 @@ namespace OpenBve {
 						if (Train != null) {
 							bool q = false;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened) {
+								if (Train.Cars[j].Doors[0].AnticipatedOpen) {
 									q = true;
 									break;
 								}
@@ -709,8 +709,8 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.AnticipatedLeftDoorsOpened) {
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[0].AnticipatedOpen) {
 										q = true;
 										break;
 									}
@@ -725,7 +725,7 @@ namespace OpenBve {
 						if (Train != null) {
 							bool q = false;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened) {
+								if (Train.Cars[j].Doors[1].AnticipatedOpen) {
 									q = true;
 									break;
 								}
@@ -741,8 +741,8 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								for (int k = 0; k < Train.Cars[j].Specs.Doors.Length; k++) {
-									if (Train.Cars[j].Specs.AnticipatedRightDoorsOpened) {
+								for (int k = 0; k < Train.Cars[j].Doors.Length; k++) {
+									if (Train.Cars[j].Doors[1].AnticipatedOpen) {
 										q = true;
 										break;
 									}
@@ -756,7 +756,7 @@ namespace OpenBve {
 					case Instructions.LeftDoorButton:
 						if (Train != null)
 						{
-							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.Doors[0].ButtonPressed ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Doors[0].ButtonPressed ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -766,7 +766,7 @@ namespace OpenBve {
 					case Instructions.RightDoorButton:
 						if (Train != null)
 						{
-							Function.Stack[s] = Train.Cars[Train.DriverCar].Specs.Doors[1].ButtonPressed ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Cars[Train.DriverCar].Doors[1].ButtonPressed ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -865,9 +865,9 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.Klaxon:
-						if (Train != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns != null)
+						if (Train != null && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns != null)
 						{
-							for (int j = 0; j < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns.Length; j++)
+							for (int j = 0; j < TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns.Length; j++)
 							{
 								/* Return the index of the currently playing horn sound
 								 *
@@ -875,12 +875,12 @@ namespace OpenBve {
 								 * 2 ==> Secondary horn
 								 * 3 ==> Music horn
 								 */
-								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[j].Source))
+								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[j].Source))
 								{
 									Function.Stack[s] = j + 1;
 									break;
 								}
-								if (j == TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns.Length -1)
+								if (j == TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns.Length -1)
 								{
 									Function.Stack[s] = 0.0;
 								}
@@ -894,7 +894,7 @@ namespace OpenBve {
 					case Instructions.PrimaryKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[0].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[0].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -904,7 +904,7 @@ namespace OpenBve {
 					case Instructions.SecondaryKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[1].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[1].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -914,7 +914,7 @@ namespace OpenBve {
 					case Instructions.MusicKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.Horns[2].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[2].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -1352,19 +1352,17 @@ namespace OpenBve {
 			} else {
 				if (Expression.EndsWith("]")) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-				} else {
-					double value;
-					if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
-						return Expression;
-					} else {
-						for (int j = 0; j < Expression.Length; j++) {
-							if (!char.IsLetterOrDigit(Expression[j]) && Expression[j] != ':') {
-								throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
-							}
-						}
-						return Expression;
+				}
+				double value;
+				if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
+					return Expression;
+				}
+				for (int j = 0; j < Expression.Length; j++) {
+					if (!char.IsLetterOrDigit(Expression[j]) && Expression[j] != ':') {
+						throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
 					}
 				}
+				return Expression;
 			}
 			string f = Expression.Substring(0, i);
 			string s = Expression.Substring(i + 1, Expression.Length - i - 2);

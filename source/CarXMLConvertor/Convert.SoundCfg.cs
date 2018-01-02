@@ -10,6 +10,7 @@ namespace CarXmlConvertor
 {
     class ConvertSoundCfg
     {
+	    private static MainForm mainForm;
 	    internal static Vector3 DriverPosition = new Vector3(0, 1, 0);
 	    //3D center of the car
 	    internal static Vector3 center = new Vector3(0.0, 0.0, 0.0);
@@ -22,8 +23,13 @@ namespace CarXmlConvertor
 		//Positioned at the position of the panel / 3D cab (Remember that the panel is just an object in the world...)
 	    internal static Vector3 panel;
 		internal static string FileName;
-        internal static void Process()
+        internal static void Process(MainForm form)
         {
+	        if (!System.IO.File.Exists(FileName))
+	        {
+		        return;
+	        }
+	        mainForm = form;
             panel = new Vector3(DriverPosition.X, DriverPosition.Y, DriverPosition.Z + 1.0);
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
 	        TabbedList newLines = new TabbedList();
@@ -41,6 +47,7 @@ namespace CarXmlConvertor
             }
             if (Lines.Length < 1 || string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
             {
+	            mainForm.updateLogBoxText += "Invalid sound.cfg format string " + Lines[0] + Environment.NewLine;
                 MessageBox.Show("Invalid sound.cfg format declaration.");
                 return;
             }
@@ -777,9 +784,10 @@ namespace CarXmlConvertor
             }
             newLines.Add("</CarSounds>");
             newLines.Add("</openBVE>");
-            try
+	        string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
+			try
             {
-                string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "sound.xml");
+                
                 using (StreamWriter sw = new StreamWriter(fileOut))
                 {
                     foreach (String s in newLines.Lines)
@@ -788,10 +796,10 @@ namespace CarXmlConvertor
             }
             catch
             {
+	            mainForm.updateLogBoxText += "Error writing file " + fileOut + Environment.NewLine;
                 MessageBox.Show("An error occured whilst writing the new XML file. \r\n Please check for write permissions.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
-            MessageBox.Show("Conversion succeeded.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -65,6 +65,13 @@ namespace OpenBve {
             return elapsedTime;
         }
 
+	    /// <summary>Gets the current environment tick count</summary>
+	    /// <returns></returns>
+	    public static int GetClockTicks()
+	    {
+		    return Environment.TickCount;
+	    }
 
-    }
+
+	}
 }

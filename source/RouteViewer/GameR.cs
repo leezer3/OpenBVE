@@ -184,7 +184,7 @@ namespace OpenBve {
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
-			SoundManager.StopAllSounds(true);
+			Sounds.StopAllSounds();
 			GC.Collect();
 		}
 
@@ -216,9 +216,9 @@ namespace OpenBve {
 		internal struct Station {
 			internal string Name;
 			internal double ArrivalTime;
-			internal int ArrivalSoundIndex;
+			internal Sounds.SoundBuffer ArrivalSoundBuffer;
 			internal double DepartureTime;
-			internal int DepartureSoundIndex;
+			internal Sounds.SoundBuffer DepartureSoundBuffer;
 			internal double StopTime;
 			internal Vector3 SoundOrigin;
 			internal StationStopMode StopMode;
@@ -265,7 +265,6 @@ namespace OpenBve {
 			internal const bool TrainReachedStopPoint = false;
 			internal int StationIndex;
 			internal bool Invisible;
-			internal int[] SignalIndices;
 			internal double TrackPosition;
 			internal SectionType Type;
 			internal SectionAspect[] Aspects;

@@ -3,6 +3,7 @@
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
+		/// <summary>The set of sounds attached to a car</summary>
 		internal struct CarSounds
 		{
 			internal MotorSound Motor;
@@ -23,19 +24,11 @@
 			internal bool CpLoopStarted;
 			internal CarSound CpStart;
 			internal double CpStartTimeStarted;
-			/// <summary>Played once when the left doors close</summary>
-			internal CarSound DoorCloseL;
-			/// <summary>Played once when the right doors close</summary>
-			internal CarSound DoorCloseR;
-			/// <summary>Played once when the left doors open</summary>
-			internal CarSound DoorOpenL;
-			/// <summary>Played once when the right doors open</summary>
-			internal CarSound DoorOpenR;
 			internal CarSound EmrBrake;
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
 			internal CarSound Halt;
-			internal Horn[] Horns;
+			
 			internal CarSound Loop;
 			internal CarSound MasterControllerUp;
 			internal CarSound MasterControllerDown;
@@ -45,8 +38,6 @@
 			internal CarSound PilotLampOn;
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
-			internal CarSound[] PointFrontAxle;
-			internal CarSound[] PointRearAxle;
 			internal CarSound Rub;
 			internal CarSound ReverserOn;
 			internal CarSound ReverserOff;
@@ -57,10 +48,6 @@
 			internal CarSound SpringR;
 			internal CarSound[] Plugin;
 			internal CarSound[] RequestStop;
-			internal int FrontAxleRunIndex;
-			internal int RearAxleRunIndex;
-			internal int FrontAxleFlangeIndex;
-			internal int RearAxleFlangeIndex;
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}

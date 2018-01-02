@@ -17,9 +17,11 @@ namespace CarXmlConvertor
 		private static int NumberOfTrailerCars;
 		private static bool FrontCarIsMotorCar;
 		internal static bool[] MotorCars;
-
-		internal static void Process()
+		internal static int DriverCar = 0;
+		private static System.Windows.Forms.Form mainForm;
+		internal static void Process(Form form)
 		{
+			mainForm = form;
 			if (!System.IO.File.Exists(FileName))
 			{
 				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -42,6 +44,7 @@ namespace CarXmlConvertor
 									case 0: ConvertSoundCfg.DriverPosition.X = 0.001 * a; break;
 									case 1: ConvertSoundCfg.DriverPosition.Y = 0.001 * a; break;
 									case 2: ConvertSoundCfg.DriverPosition.Z = 0.001 * a; break;
+									case 3: DriverCar = (int)Math.Round(a); break;
 								}
 							}
 							i++; n++;

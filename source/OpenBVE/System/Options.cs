@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Globalization;
 using OpenBveApi.Packages;
 
@@ -159,15 +160,19 @@ namespace OpenBve
 			/// <summary>Whether to prefer the native OpenTK operating system backend</summary>
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
-			internal bool RailDriverMPH = true;
+			internal bool RailDriverMPH;
 			/// <summary>Enables / disables various hacks for BVE related content</summary>
-			internal bool EnableBveTsHacks = true;
+			internal bool EnableBveTsHacks;
 			/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
-			internal bool OldTransparencyMode = true;
+			internal bool OldTransparencyMode;
 
 			internal TimeTableMode TimeTableStyle;
 
 			internal CompressionType packageCompressionType;
+			/*
+			 * Only relevant in developer mode, not saved
+			 */
+			internal bool ShowEvents = false;
 			/*
 			 * Note: Disabling texture resizing may produce artifacts at the edges of textures,
 			 * and may display issues with certain graphics cards.
@@ -662,8 +667,19 @@ namespace OpenBve
 									} break;
 								case "routeencodings":
 									{
-										int a = System.Text.Encoding.UTF8.CodePage;
-										int.TryParse(Key, NumberStyles.Integer, Culture, out a);
+										int a;
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										{
+											a = System.Text.Encoding.UTF8.CodePage;
+										}
+										try
+										{
+											System.Text.Encoding e = Encoding.GetEncoding(a);
+										}
+										catch
+										{
+											a = System.Text.Encoding.UTF8.CodePage;
+										}
 										int n = Interface.CurrentOptions.RouteEncodings.Length;
 										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, n + 1);
 										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
@@ -671,8 +687,19 @@ namespace OpenBve
 									} break;
 								case "trainencodings":
 									{
-										int a = System.Text.Encoding.UTF8.CodePage;
-										int.TryParse(Key, NumberStyles.Integer, Culture, out a);
+										int a;
+										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
+										{
+											a = System.Text.Encoding.UTF8.CodePage;
+										}
+										try
+										{
+											System.Text.Encoding e = Encoding.GetEncoding(a);
+										}
+										catch
+										{
+											a = System.Text.Encoding.UTF8.CodePage;
+										}
 										int n = Interface.CurrentOptions.TrainEncodings.Length;
 										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, n + 1);
 										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;

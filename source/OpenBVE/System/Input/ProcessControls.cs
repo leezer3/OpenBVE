@@ -541,11 +541,9 @@ namespace OpenBve
 										// camera: interior
 										MainLoop.SaveCameraSettings();
 										bool lookahead = false;
-										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead &
-											World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 										{
-											Game.AddMessage(
-												Interface.GetInterfaceString("notification_interior_lookahead"),
+											Game.AddMessage(Interface.GetInterfaceString("notification_interior_lookahead"),
 												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											lookahead = true;
@@ -558,22 +556,33 @@ namespace OpenBve
 										}
 										World.CameraMode = World.CameraViewMode.Interior;
 										MainLoop.RestoreCameraSettings();
-										for (int j = 0; j <= TrainManager.PlayerTrain.DriverCar; j++)
+										bool returnToCab = false;
+										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											if (TrainManager.PlayerTrain.Cars[j].CarSections.Length != 0)
+											if (j == World.CameraCar)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
+												if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+												{
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+													World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+												}
+												else
+												{
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+													returnToCab = true;
+												}
 											}
 											else
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
 											}
 										}
-										for (int j = TrainManager.PlayerTrain.DriverCar + 1;
-											j < TrainManager.PlayerTrain.Cars.Length;
-											j++)
+										if (returnToCab)
 										{
-											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
+											//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
+											World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+											World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 										}
 										//Hide bogies
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -605,27 +614,9 @@ namespace OpenBve
 										SaveCameraSettings();
 										World.CameraMode = World.CameraViewMode.Exterior;
 										RestoreCameraSettings();
-										if (TrainManager.PlayerTrain.Cars.Length >= 1 && TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CarSections.Length >= 2)
-										{
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
-											}
-										else
-										{
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
-										}
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											if (j != TrainManager.PlayerTrain.DriverCar)
-											{
-												if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
-												}
-												else
-												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
-												}
-											}
+											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
 										}
 										//Make bogies visible
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -671,29 +662,9 @@ namespace OpenBve
 											}
 										}
 										RestoreCameraSettings();
-										if (TrainManager.PlayerTrain.Cars.Length >= 1 &&
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
-												.CarSections.Length >= 2)
-										{
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
-											}
-										else
-										{
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
-											}
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											if (j != TrainManager.PlayerTrain.DriverCar)
-											{
-												if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
-												}
-												else
-												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
-												}
-											}
+											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
 										}
 
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -739,30 +710,9 @@ namespace OpenBve
 											World.CameraCurrentAlignment.Zoom = 0.0;
 											World.CameraAlignmentDirection = new World.CameraAlignment();
 											World.CameraAlignmentSpeed = new World.CameraAlignment();
-											if (TrainManager.PlayerTrain.Cars.Length >= 1 &&
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
-													.CarSections.Length >= 2)
-											{
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
-											}
-											else
-											{
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
-											}
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (j != TrainManager.PlayerTrain.DriverCar)
-												{
-													if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
-													}
-													else
-													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
-
-													}
-												}
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
 											}
 
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -809,30 +759,9 @@ namespace OpenBve
 											World.CameraCurrentAlignment.Zoom = 0.0;
 											World.CameraAlignmentDirection = new World.CameraAlignment();
 											World.CameraAlignmentSpeed = new World.CameraAlignment();
-											if (TrainManager.PlayerTrain.Cars.Length >= 1 &&
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]
-													.CarSections.Length >= 2)
-											{
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(1);
-											}
-											else
-											{
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(-1);
-											}
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (j != TrainManager.PlayerTrain.DriverCar)
-												{
-													if (TrainManager.PlayerTrain.Cars[j].CarSections.Length >= 1)
-													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(0);
-
-													}
-													else
-													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(-1);
-													}
-												}
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
 											}
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
@@ -1201,9 +1130,9 @@ namespace OpenBve
 										int j = Interface.CurrentControls[i].Command == Interface.Command.HornPrimary
 											? 0 : Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
 										int d = TrainManager.PlayerTrain.DriverCar;
-											if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
+											if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 											{
-												TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Play();
+												TrainManager.PlayerTrain.Cars[d].Horns[j].Play();
 												if (TrainManager.PlayerTrain.Plugin != null)
 												{
 													TrainManager.PlayerTrain.Plugin.HornBlow(j == 0
@@ -1217,7 +1146,7 @@ namespace OpenBve
 										break;
 									case Interface.Command.DoorsLeft:
 										// doors: left
-										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed)
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed)
 										{
 											return;
 										}
@@ -1245,11 +1174,11 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.LeftDoors);
 										}
 										//Set door button to pressed in the driver's car
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = true;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = true;
 										break;
 									case Interface.Command.DoorsRight:
 										// doors: right
-										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed)
+										if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed)
 										{
 											return;
 										}
@@ -1276,7 +1205,7 @@ namespace OpenBve
 										{
 											TrainManager.PlayerTrain.Plugin.KeyDown(VirtualKeys.RightDoors);
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = true;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = true;
 										break;
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
@@ -1390,6 +1319,9 @@ namespace OpenBve
 										// option: normals
 										Renderer.OptionNormals = !Renderer.OptionNormals;
 										Renderer.StaticOpaqueForceUpdate = true;
+										break;
+									case Interface.Command.ShowEvents:
+										Interface.CurrentOptions.ShowEvents = !Interface.CurrentOptions.ShowEvents;
 										break;
 									case Interface.Command.MiscAI:
 										// option: AI
@@ -1658,21 +1590,21 @@ namespace OpenBve
 											? 0
 											: Interface.CurrentControls[i].Command == Interface.Command.HornSecondary ? 1 : 2;
 										int d = TrainManager.PlayerTrain.DriverCar;
-										if (TrainManager.PlayerTrain.Cars[d].Sounds.Horns.Length > j)
+										if (TrainManager.PlayerTrain.Cars[d].Horns.Length > j)
 										{
 											//Required for detecting the end of the loop and triggering the stop sound
-											TrainManager.PlayerTrain.Cars[d].Sounds.Horns[j].Stop();
+											TrainManager.PlayerTrain.Cars[d].Horns[j].Stop();
 										}
 										break;
 									case Interface.Command.DoorsLeft:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[0].ButtonPressed = false;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[0].ButtonPressed = false;
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.LeftDoors);
 										}
 										break;
 									case Interface.Command.DoorsRight:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.Doors[1].ButtonPressed = false;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = false;
 										if (TrainManager.PlayerTrain.Plugin != null)
 										{
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.RightDoors);

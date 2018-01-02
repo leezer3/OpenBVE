@@ -153,6 +153,7 @@ namespace OpenBve
 			}
 			GL.Disable(EnableCap.DepthTest);
 			UpdateBackground(TimeElapsed);
+			RenderEvents(World.AbsoluteCameraPosition);
 			// fog
 			float aa = Game.CurrentFog.Start;
 			float bb = Game.CurrentFog.End;

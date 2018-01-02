@@ -490,9 +490,9 @@ namespace OpenBve {
 									}
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[StateFiles.Length];
 									bool ForceTextureRepeatX = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
-										Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
-									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
-										Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
+									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
+									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
+									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++) {
 										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
 										if (StateFiles[k] != null) {
@@ -511,6 +511,21 @@ namespace OpenBve {
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
 								}
 								ObjectCount++;
+							}
+							break;
+						case "[sound]":
+						case "[statechangesound]":
+							//Only show the sound nag once per route, otherwise this could cause spam...
+							if (!Program.SoundError)
+							{
+								Interface.AddMessage(Interface.MessageType.Information, false, "Animated objects containing sounds are only supported in openBVE v1.5.2.4+");
+								Interface.AddMessage(Interface.MessageType.Information, false, "Object Viewer does not support sounds. Please use the main game to test these!");
+								Program.SoundError = true;
+							}
+							i++;
+							while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
+							{
+								i++;
 							}
 							break;
 						default:

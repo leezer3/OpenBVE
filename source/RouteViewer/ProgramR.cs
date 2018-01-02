@@ -41,6 +41,8 @@ namespace OpenBve {
 		internal static bool[] SkipArgs;
 
 		internal static int ReloadTexture = -1;
+
+		internal static bool SoundError = false;
 		
 		// keys
 		private static bool ShiftPressed = false;
@@ -53,10 +55,15 @@ namespace OpenBve {
 		// mouse
 		internal static int MouseButton;
 
+		/// <summary>The host API used by this program.</summary>
+		internal static Host CurrentHost = null;
+
 		// main
 		[STAThread]
 		internal static void Main(string[] args)
 		{
+			CurrentHost = new Host();
+			
 			commandLineArguments = args;
 			Options.LoadOptions();
 			Interface.CurrentOptions.UseSound = true;
@@ -78,6 +85,7 @@ namespace OpenBve {
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
+			Plugins.LoadPlugins();
 			// command line arguments
 			SkipArgs = new bool[args.Length];
 			if (args.Length != 0) {
@@ -119,7 +127,7 @@ namespace OpenBve {
 			currentGameWindow.Run();
 			//Unload
 			TextureManager.UnuseAllTextures();
-			SoundManager.Deinitialize();
+			Sounds.Deinitialize();
 		}
 
 		// reset camera
@@ -511,7 +519,7 @@ namespace OpenBve {
 					CpuReducedMode = false;
 					break;
 				case Key.M:
-					SoundManager.Mute = !SoundManager.Mute;
+					//SoundManager.Mute = !SoundManager.Mute;
 					break;
 				case Key.Plus:
 				case Key.KeypadPlus:

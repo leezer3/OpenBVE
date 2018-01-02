@@ -127,6 +127,7 @@
 			internal bool FullSpeed;
 		}
 		private enum SoundType { World, TrainStatic, TrainDynamic }
+
 		private struct Sound
 		{
 			internal double TrackPosition;

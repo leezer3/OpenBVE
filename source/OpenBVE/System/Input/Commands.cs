@@ -150,13 +150,14 @@ namespace OpenBve {
 			DebugNormals,
 			/// <summary>Shows or hides debug information on the brake-system performance</summary>
 			DebugBrakeSystems,
-
+			/// <summary>Shows or hides a visual representation of all events on the track</summary>
+			ShowEvents,
 			/*
 			 * The following keys must be handled by the train-plugin.
 			 * They have no specified purpose.
 			 * 
 			 */
-			
+
 			/// <summary>The security (Plugin) S-Key</summary>
 			[Obsolete("Please use the function specific keys. These are largely maintained for backwards compatibility")]
 			SecurityS,
@@ -311,7 +312,7 @@ namespace OpenBve {
 				cmdname = cmdname.Substring(8).ToUpperInvariant();
 			VirtualKeys key;
 			if (!Enum.TryParse(cmdname, out key))
-				throw new ArgumentException("VirtualKeys does not contain following key: " +
+				throw new ArgumentException("VirtualKeys does not contain the following key: " +
 					cmdname, "cmd");
 			return key;
 		}

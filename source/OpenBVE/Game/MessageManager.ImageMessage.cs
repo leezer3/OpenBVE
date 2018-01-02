@@ -81,7 +81,7 @@
 		internal class MarkerImage : Message
 		{
 			/// <summary>The texture to be displayed</summary>
-			internal Textures.Texture Texture;
+			private readonly Textures.Texture Texture;
 
 			internal MarkerImage(Textures.Texture texture)
 			{

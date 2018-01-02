@@ -224,19 +224,19 @@ namespace OpenBve
 										{
 											case "openleft":
 											case "leftopen":
-												ParseNode(cc, out car.Sounds.DoorOpenL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[0].OpenSound, left, SoundCfgParser.smallRadius);
 												break;
 											case "openright":
 											case "rightopen":
-												ParseNode(cc, out car.Sounds.DoorOpenR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[1].OpenSound, right, SoundCfgParser.smallRadius);
 												break;
 											case "closeleft":
 											case "leftclose":
-												ParseNode(cc, out car.Sounds.DoorCloseL, left, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[0].CloseSound, left, SoundCfgParser.smallRadius);
 												break;
 											case "closeright":
 											case "rightclose":
-												ParseNode(cc, out car.Sounds.DoorCloseR, right, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.Doors[1].CloseSound, right, SoundCfgParser.smallRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -268,15 +268,15 @@ namespace OpenBve
 										{
 											case "primary":
 												//Primary horn
-												ParseHornNode(cc, out car.Sounds.Horns[0], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[0], front, SoundCfgParser.largeRadius);
 												break;
 											case "secondary":
 												//Secondary horn
-												ParseHornNode(cc, out car.Sounds.Horns[1], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[1], front, SoundCfgParser.largeRadius);
 												break;
 											case "music":
 												//Music horn
-												ParseHornNode(cc, out car.Sounds.Horns[2], front, SoundCfgParser.largeRadius);
+												ParseHornNode(cc, out car.Horns[2], front, SoundCfgParser.largeRadius);
 												break;
 											default:
 												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -365,7 +365,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointFrontAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.FrontAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "pointrearaxle":
 								case "switchrearaxle":
@@ -374,7 +374,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.Sounds.PointRearAxle, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									ParseArrayNode(c, out car.RearAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
 									break;
 								case "reverser":
 								case "reverserhandle":

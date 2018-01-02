@@ -19,9 +19,11 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
-				Objects = new ObjectManager.AnimatedObject[4]
+				Objects = new ObjectManager.AnimatedObject[4],
+				Sounds = new ObjectManager.WorldObject[4]
 			};
 			int ObjectCount = 0;
+			int SoundCount = 0;
 			// load file
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			bool rpnUsed = false;
@@ -202,6 +204,7 @@ namespace OpenBve
 								int StateFunctionLine = -1;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
+									string Folder;
 									if (Lines[i].Length != 0)
 									{
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -244,7 +247,7 @@ namespace OpenBve
 														string[] s = b.Split(',');
 														if (s.Length >= 1)
 														{
-															string Folder = System.IO.Path.GetDirectoryName(FileName);
+															Folder = System.IO.Path.GetDirectoryName(FileName);
 															StateFiles = new string[s.Length];
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
@@ -763,6 +766,7 @@ namespace OpenBve
 									i++;
 								}
 								i--;
+
 								if (StateFiles != null)
 								{
 									// create the object
@@ -790,9 +794,9 @@ namespace OpenBve
 									}
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[StateFiles.Length];
 									bool ForceTextureRepeatX = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
-										Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
-									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
-										Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
+									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
+									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
+									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++)
 									{
 										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
@@ -802,7 +806,23 @@ namespace OpenBve
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
+												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
+												{
+													if (ForceTextureRepeatX && ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+													}
+													else if (ForceTextureRepeatX)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+													}
+													else if (ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+													}
+												}
 											}
+											
 										}
 										else
 										{
@@ -866,6 +886,470 @@ namespace OpenBve
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
 								}
 								ObjectCount++;
+							}
+							break;
+						case "[sound]":
+							{
+								double pitch = 1.0, volume = 1.0, radius = 30.0;
+								FunctionScripts.FunctionScript TrackFollowerFunction = null;
+								FunctionScripts.FunctionScript PitchFunction = null;
+								FunctionScripts.FunctionScript VolumeFunction = null;
+								i++;
+								if (Result.Sounds.Length == SoundCount)
+								{
+									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+								}
+								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								string fileName = null;
+								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
+								{
+									if (Lines[i].Length != 0)
+									{
+										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+										if (j > 0)
+										{
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											switch (a.ToLowerInvariant())
+											{
+												case "position":
+													{
+														string[] s = b.Split(',');
+														if (s.Length == 3)
+														{
+															double x, y, z;
+															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else
+															{
+																Position = new Vector3(x, y, z);
+															}
+														}
+														else
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														}
+													}
+													break;
+												case "filename":
+													{
+														string Folder = System.IO.Path.GetDirectoryName(FileName);
+														fileName = OpenBveApi.Path.CombineFile(Folder, b);
+														if (!System.IO.File.Exists(fileName))
+														{
+															fileName = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															if (!System.IO.File.Exists(fileName))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																fileName = null;
+															}
+														}
+													}
+													break;
+												case "radius":
+													{
+														if (!Double.TryParse(b, out radius))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															radius = 30.0;
+														}
+													}
+													break;
+												case "pitch":
+													{
+														if (!Double.TryParse(b, out pitch))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															pitch = 1.0;
+														}
+													}
+													break;
+												case "volume":
+													{
+														if (!Double.TryParse(b, out volume))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															volume = 1.0;
+														}
+													}
+													break;
+												case "translatexdirection":
+												case "translateydirection":
+												case "translatezdirection":
+													{
+														string[] s = b.Split(',');
+														if (s.Length == 3)
+														{
+															double x, y, z;
+															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else
+															{
+																switch (a.ToLowerInvariant())
+																{
+																	case "translatexdirection":
+																		Result.Objects[ObjectCount].TranslateXDirection = new Vector3(x, y, z);
+																		break;
+																	case "translateydirection":
+																		Result.Objects[ObjectCount].TranslateYDirection = new Vector3(x, y, z);
+																		break;
+																	case "translatezdirection":
+																		Result.Objects[ObjectCount].TranslateZDirection = new Vector3(x, y, z);
+																		break;
+																}
+															}
+														}
+														else
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														}
+													}
+													break;
+												case "translatexfunction":
+													try
+													{
+														double X;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out X))
+														{
+															Position.X = X;
+															//A function script must be evaluated every frame, no matter if it is a constant value
+															//If we add this to the position instead, this gives a minor speedup
+															break;
+														}
+														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "translatexscript":
+													try
+													{
+														Result.Objects[ObjectCount].TranslateXScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "translateyfunction":
+													try
+													{
+														double Y;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Y))
+														{
+															Position.Y = Y;
+															//A function script must be evaluated every frame, no matter if it is a constant value
+															//If we add this to the position instead, this gives a minor speedup
+															break;
+														}
+														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "translateyscript":
+													try
+													{
+														Result.Objects[ObjectCount].TranslateYScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "translatezfunction":
+													try
+													{
+														double Z;
+														if (double.TryParse(b, NumberStyles.Float, Culture, out Z))
+														{
+															Position.Z = Z;
+															//A function script must be evaluated every frame, no matter if it is a constant value
+															//If we add this to the position instead, this gives a minor speedup
+															break;
+														}
+														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "translatezscript":
+													try
+													{
+														Result.Objects[ObjectCount].TranslateZScriptFile = OpenBveApi.Path.CombineDirectory(System.IO.Path.GetDirectoryName(FileName), b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "trackfollowerfunction":
+													try
+													{
+														TrackFollowerFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "pitchfunction":
+													try
+													{
+														PitchFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												case "volumefunction":
+													try
+													{
+														VolumeFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+													}
+													catch (Exception ex)
+													{
+														Interface.AddMessage(Interface.MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													}
+													break;
+												default:
+													Interface.AddMessage(Interface.MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													break;
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											return null;
+										}
+									}
+									i++;
+								}
+								i--;
+								if (fileName != null)
+								{
+									ObjectManager.WorldSound snd = new ObjectManager.WorldSound();
+									snd.Buffer = Sounds.RegisterBuffer(fileName, radius);
+									snd.currentPitch = pitch;
+									snd.currentVolume = volume;
+									snd.Position = Position;
+									snd.TrackFollowerFunction = TrackFollowerFunction;
+									snd.PitchFunction = PitchFunction;
+									snd.VolumeFunction = VolumeFunction;
+									Result.Sounds[SoundCount] = snd;
+									SoundCount++;
+								}
+								
+							}
+							break;
+						case "[statechangesound]":
+							{
+								double pitch = 1.0, volume = 1.0, radius = 30.0;
+								bool singleBuffer = false, playOnShow = true, playOnHide = true;
+								i++;
+								if (Result.Sounds.Length == SoundCount)
+								{
+									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+								}
+								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								string[] fileNames = new string[0];
+								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
+								{
+									if (Lines[i].Length != 0)
+									{
+										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+										if (j > 0)
+										{
+											string a = Lines[i].Substring(0, j).TrimEnd();
+											string b = Lines[i].Substring(j + 1).TrimStart();
+											switch (a.ToLowerInvariant())
+											{
+												case "position":
+													{
+														string[] s = b.Split(',');
+														if (s.Length == 3)
+														{
+															double x, y, z;
+															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															}
+															else
+															{
+																Position = new Vector3(x, y, z);
+															}
+														}
+														else
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														}
+													}
+													break;
+												case "filename":
+													{
+														singleBuffer = true;
+														string Folder = System.IO.Path.GetDirectoryName(FileName);
+														fileNames = new string[] {OpenBveApi.Path.CombineFile(Folder, b)};
+														if (!System.IO.File.Exists(fileNames[0]))
+														{
+															fileNames[0] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															if (!System.IO.File.Exists(fileNames[0]))
+															{
+																Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																fileNames[0] = null;
+															}
+														}
+													}
+													break;
+												case "filenames":
+													{
+														string Folder = System.IO.Path.GetDirectoryName(FileName);
+														string[] splitFiles = b.Split(',');
+														fileNames = new string[splitFiles.Length];
+														for (int k = 0; k < splitFiles.Length; k++)
+														{
+															if (splitFiles[k].Trim().Length == 0)
+															{
+																continue;
+															}
+															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim());
+															if (!System.IO.File.Exists(fileNames[k]))
+															{
+																fileNames[k] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+																if (!System.IO.File.Exists(fileNames[k]))
+																{
+																	Interface.AddMessage(Interface.MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	fileNames[k] = null;
+																}
+															}
+														}
+														
+													}
+													break;
+												case "radius":
+													{
+														if (!Double.TryParse(b, out radius))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															radius = 30.0;
+														}
+													}
+													break;
+												case "pitch":
+													{
+														if (!Double.TryParse(b, out pitch))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															pitch = 1.0;
+														}
+													}
+													break;
+												case "volume":
+													{
+														if (!Double.TryParse(b, out volume))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															volume = 1.0;
+														}
+													}
+													break;
+												case "playonshow":
+													{
+														if (b.ToLowerInvariant() == "true" || b == "1")
+														{
+															playOnShow = true;
+														}
+														else
+														{
+															playOnShow = false;
+														}
+													}
+													break;
+												case "playonhide":
+													{
+														if (b.ToLowerInvariant() == "true" || b == "1")
+														{
+															playOnHide = true;
+														}
+														else
+														{
+															playOnHide = false;
+														}
+													}
+													break;
+												default:
+													Interface.AddMessage(Interface.MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													break;
+											}
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											return null;
+										}
+									}
+									i++;
+								}
+								i--;
+								if (fileNames.Length != 0 && ObjectCount > 0)
+								{
+									ObjectManager.AnimatedWorldObjectStateSound snd = new ObjectManager.AnimatedWorldObjectStateSound();
+									snd.Object = Result.Objects[ObjectCount -1].Clone();
+									snd.Buffers = new Sounds.SoundBuffer[fileNames.Length];
+									for (int j = 0; j < fileNames.Length; j++)
+									{
+										if (fileNames[j] != null)
+										{
+											snd.Buffers[j] = Sounds.RegisterBuffer(fileNames[j], radius);
+										}
+									}
+									snd.currentPitch = pitch;
+									snd.currentVolume = volume;
+									snd.Position = Position;
+									snd.SingleBuffer = singleBuffer;
+									snd.PlayOnShow = playOnShow;
+									snd.PlayOnHide = playOnHide;
+									Result.Sounds[SoundCount] = snd;
+									SoundCount++;
+									Result.Objects[ObjectCount] = null;
+									ObjectCount--;
+								}
+
 							}
 							break;
 						default:

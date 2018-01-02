@@ -46,14 +46,14 @@ namespace OpenBve
 						}
 						Game.ScoreLogCount = Reader.ReadInt32();
 						Game.ScoreLogs = new Game.ScoreLog[Game.ScoreLogCount];
-						Game.CurrentScore.Value = 0;
+						Game.CurrentScore.CurrentValue = 0;
 						for (int i = 0; i < Game.ScoreLogCount; i++)
 						{
 							Game.ScoreLogs[i].Time = Reader.ReadDouble();
 							Game.ScoreLogs[i].Position = Reader.ReadDouble();
 							Game.ScoreLogs[i].Value = Reader.ReadInt32();
 							Game.ScoreLogs[i].TextToken = (Game.ScoreTextToken)Reader.ReadInt16();
-							Game.CurrentScore.Value += Game.ScoreLogs[i].Value;
+							Game.CurrentScore.CurrentValue += Game.ScoreLogs[i].Value;
 						}
 						Game.CurrentScore.Maximum = Reader.ReadInt32();
 						Identifier = new byte[] { 95, 102, 105, 108, 101, 69, 78, 68 };

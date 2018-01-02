@@ -89,7 +89,7 @@ namespace OpenBve
 				Builder.Append('═', TotalWidth);
 				Builder.Append("╣\n");
 				{
-					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.Value / (double)Game.CurrentScore.Maximum;
+					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
 					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
@@ -104,7 +104,7 @@ namespace OpenBve
 					Builder.Append('║');
 					Builder.Append((" " + GetInterfaceString("log_mode") + " " + s).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
-					Builder.Append((" " + GetInterfaceString("log_score") + " " + Game.CurrentScore.Value.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
+					Builder.Append((" " + GetInterfaceString("log_score") + " " + Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture)).PadRight(TotalWidth, ' '));
 					Builder.Append("║\n║");
 					Builder.Append((" " + GetInterfaceString("log_rating") + " " + GetInterfaceString("rating_" + index.ToString(Culture)) + " (" + (100.0 * ratio).ToString("0.00") + "%)").PadRight(TotalWidth, ' '));
 					Builder.Append("║\n");

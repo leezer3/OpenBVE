@@ -96,13 +96,12 @@ namespace OpenBve
 			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
 			{
 				//Update the in-car camera based upon the current driver car (Cabview or passenger view)
-				//TODO: Additional available in-car views will be implemented with the new train format
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
 			else if (World.CameraMode == World.CameraViewMode.Exterior)
 			{
 				//Update the camera position based upon the relative car position
-				TrainManager.UpdateCamera(TrainManager.PlayerTrain, World.CameraCar);
+				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
 			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 			{
@@ -263,7 +262,7 @@ namespace OpenBve
 						}
 					}
 				}
-				Game.UpdateScore(TimeElapsed);
+				Game.CurrentScore.Update(TimeElapsed);
 				Game.UpdateMessages();
 				Game.UpdateScoreMessages(TimeElapsed);
 			}
@@ -498,14 +497,14 @@ namespace OpenBve
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
-							TrainManager.Trains[i].Cars[j].Specs.AnticipatedLeftDoorsOpened = true;
+							TrainManager.Trains[i].Cars[j].Doors[0].AnticipatedOpen = true;
 						}
 					}
 					if (Game.Stations[s].OpenRightDoors)
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
-							TrainManager.Trains[i].Cars[j].Specs.AnticipatedRightDoorsOpened = true;
+							TrainManager.Trains[i].Cars[j].Doors[1].AnticipatedOpen = true;
 						}
 					}
 				}
@@ -577,10 +576,9 @@ namespace OpenBve
 				World.CameraMode = World.CameraViewMode.InteriorLookAhead;
 			}
 			//Place the initial camera in the driver car
-			TrainManager.UpdateCamera(TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar);
+			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			World.CameraTrackFollower.Update(-1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
-			World.CameraSavedInterior = new World.CameraAlignment();
 			World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			World.CameraSavedTrack = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - 10.0, 1.0);
 			// signalling sections
@@ -704,6 +702,7 @@ namespace OpenBve
 			RenderRealTimeElapsed = 0.0;
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
+			Loading.SimulationSetup = true;
 		}
 
 		private void LoadingScreenLoop()

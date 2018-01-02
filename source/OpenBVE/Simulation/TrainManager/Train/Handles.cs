@@ -22,10 +22,9 @@ namespace OpenBve
 			/// <summary>The delayed handle state changes</summary>
 			internal HandleChange[] DelayedChanges;
 			/// <summary>Adds a delayed handle state change</summary>
-			/// <param name="Train">The train to add the delayed state change to</param>
 			/// <param name="Value">The value to add or subtract</param>
 			/// <param name="Delay">The delay in seconds</param>
-			internal void AddChange(Train Train, int Value, double Delay)
+			internal void AddChange(int Value, double Delay)
 			{
 				int n = DelayedChanges.Length;
 				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
@@ -56,10 +55,9 @@ namespace OpenBve
 			/// <summary>The delayed handle state changes</summary>
 			internal HandleChange[] DelayedChanges;
 			/// <summary>Adds a delayed handle state change</summary>
-			/// <param name="Train">The train to add the delayed state change to</param>
 			/// <param name="Value">The value to add or subtract</param>
 			/// <param name="Delay">The delay in seconds</param>
-			internal void AddChange(Train Train, int Value, double Delay)
+			internal void AddChange(int Value, double Delay)
 			{
 				int n = DelayedChanges.Length;
 				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);

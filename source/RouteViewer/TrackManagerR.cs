@@ -236,16 +236,16 @@ namespace OpenBve {
         // sound
         internal static bool SuppressSoundEvents = false;
         internal class SoundEvent : GeneralEvent {
-            internal int SoundIndex;
+            internal Sounds.SoundBuffer SoundBuffer;
             internal bool PlayerTrainOnly;
             internal bool Once;
             internal bool Dynamic;
             internal Vector3 Position;
             internal double Speed;
-            internal SoundEvent(double TrackPositionDelta, int SoundIndex, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
+            internal SoundEvent(double TrackPositionDelta, Sounds.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
-                this.SoundIndex = SoundIndex;
+                this.SoundBuffer = SoundBuffer;
                 this.PlayerTrainOnly = PlayerTrainOnly;
                 this.Once = Once;
                 this.Dynamic = Dynamic;
@@ -333,7 +333,7 @@ namespace OpenBve {
 			internal int CarIndex;
 		}
 		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
-			if (CurrentTrack.Elements.Length == 0) return;
+			if (CurrentTrack.Elements == null || CurrentTrack.Elements.Length == 0) return;
 			int i = Follower.LastTrackElement;
 			while (i >= 0 && NewTrackPosition < CurrentTrack.Elements[i].StartingTrackPosition) {
 				double ta = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;

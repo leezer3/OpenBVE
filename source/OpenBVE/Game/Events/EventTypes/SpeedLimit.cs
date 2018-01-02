@@ -8,8 +8,8 @@ namespace OpenBve
 		/// <summary>Is called when the speed limit upon the track change</summary>
 		internal class LimitChangeEvent : GeneralEvent
 		{
-			internal double PreviousSpeedLimit;
-			internal double NextSpeedLimit;
+			internal readonly double PreviousSpeedLimit;
+			internal readonly double NextSpeedLimit;
 			internal LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;

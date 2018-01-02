@@ -63,6 +63,7 @@ namespace OpenBve
 			//This section holds parameters used by the track following function
 			internal double FrontAxlePosition = 1;
 			internal double RearAxlePosition = -1;
+
 			/// <summary>Checks whether this object contains any functions</summary>
 			internal bool IsFreeOfFunctions()
 			{
@@ -83,7 +84,10 @@ namespace OpenBve
 				for (int i = 0; i < this.States.Length; i++)
 				{
 					Result.States[i].Position = this.States[i].Position;
-					Result.States[i].Object = this.States[i].Object.Clone();
+					if (this.States[i].Object != null)
+					{
+						Result.States[i].Object = this.States[i].Object.Clone();
+					}
 				}
 				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();
 				Result.FrontAxlePosition = this.FrontAxlePosition;
@@ -815,71 +819,128 @@ namespace OpenBve
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
-					Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
 				World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
-				AnimatedWorldObjects[a] = new AnimatedWorldObject
-				{
-					Position = Position,
-					Direction = FinalTransformation.Z,
-					Up = FinalTransformation.Y,
-					Side = FinalTransformation.X,
-					Object = this.Clone()
-				};
-				AnimatedWorldObjects[a].Object.ObjectIndex = CreateDynamicObject();
-				AnimatedWorldObjects[a].SectionIndex = SectionIndex;
-				AnimatedWorldObjects[a].TrackPosition = TrackPosition;
+				
 				//Place track followers if required
 				if (TrackFollowerFunction != null)
 				{
-					AnimatedWorldObjects[a].FollowsTrack = true;
-					AnimatedWorldObjects[a].FrontAxleFollower.TrackPosition = TrackPosition + FrontAxlePosition;
-					AnimatedWorldObjects[a].RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
-					AnimatedWorldObjects[a].FrontAxlePosition = FrontAxlePosition;
-					AnimatedWorldObjects[a].RearAxlePosition = RearAxlePosition;
-					AnimatedWorldObjects[a].FrontAxleFollower.UpdateWorldCoordinates(false);
-					AnimatedWorldObjects[a].RearAxleFollower.UpdateWorldCoordinates(false);
-
-				}
-				for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++)
-				{
-					if (AnimatedWorldObjects[a].Object.States[i].Object == null)
+					var o = this.Clone();
+					o.ObjectIndex = CreateDynamicObject();
+					TrackFollowingObject currentObject = new TrackFollowingObject
 					{
-						AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject
+						Position = Position,
+						Direction = FinalTransformation.Z,
+						Up = FinalTransformation.Y,
+						Side = FinalTransformation.X,
+						Object = o,
+						SectionIndex = SectionIndex,
+						TrackPosition = TrackPosition,
+					};
+					
+					currentObject.FrontAxleFollower.TrackPosition = TrackPosition + FrontAxlePosition;
+					currentObject.RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
+					currentObject.FrontAxlePosition = FrontAxlePosition;
+					currentObject.RearAxlePosition = RearAxlePosition;
+					currentObject.FrontAxleFollower.UpdateWorldCoordinates(false);
+					currentObject.RearAxleFollower.UpdateWorldCoordinates(false);
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						if (currentObject.Object.States[i].Object == null)
 						{
-							Mesh =
+							currentObject.Object.States[i].Object = new StaticObject
 							{
-								Faces = new World.MeshFace[] {},
-								Materials = new World.MeshMaterial[] {},
-								Vertices = new World.Vertex[] {}
-							},
-							RendererIndex = -1
-						};
+								Mesh =
+								{
+									Faces = new World.MeshFace[] {},
+									Materials = new World.MeshMaterial[] {},
+									Vertices = new World.Vertex[] {}
+								},
+								RendererIndex = -1
+							};
+						}
 					}
+					double r = 0.0;
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+						{
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						}
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
+						{
+							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
+							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
+							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
+							double t = x * x + y * y + z * z;
+							if (t > r) r = t;
+						}
+					}
+					currentObject.Radius = Math.Sqrt(r);
+					currentObject.Visible = false;
+					currentObject.Object.Initialize(0, false, false);
+					AnimatedWorldObjects[a] = currentObject;
 				}
-				double r = 0.0;
-				for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++)
+				else
 				{
-					for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials.Length; j++)
+					var o = this.Clone();
+					o.ObjectIndex = CreateDynamicObject();
+					AnimatedWorldObject currentObject = new AnimatedWorldObject
 					{
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
-						AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
-					}
-					for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++)
+						Position = Position,
+						Direction = FinalTransformation.Z,
+						Up = FinalTransformation.Y,
+						Side = FinalTransformation.X,
+						Object = o,
+						SectionIndex = SectionIndex,
+						TrackPosition = TrackPosition,
+					};
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
 					{
-						double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-						double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-						double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-						double t = x * x + y * y + z * z;
-						if (t > r) r = t;
+						if (currentObject.Object.States[i].Object == null)
+						{
+							currentObject.Object.States[i].Object = new StaticObject
+							{
+								Mesh =
+								{
+									Faces = new World.MeshFace[] {},
+									Materials = new World.MeshMaterial[] {},
+									Vertices = new World.Vertex[] {}
+								},
+								RendererIndex = -1
+							};
+						}
 					}
+					double r = 0.0;
+					for (int i = 0; i < currentObject.Object.States.Length; i++)
+					{
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+						{
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.R * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.G * Brightness);
+							currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						}
+						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
+						{
+							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
+							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
+							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
+							double t = x * x + y * y + z * z;
+							if (t > r) r = t;
+						}
+					}
+					currentObject.Radius = Math.Sqrt(r);
+					currentObject.Visible = false;
+					currentObject.Object.Initialize(0, false, false);
+					AnimatedWorldObjects[a] = currentObject;
 				}
-				AnimatedWorldObjects[a].Radius = Math.Sqrt(r);
-				AnimatedWorldObjects[a].Visible = false;
-				AnimatedWorldObjects[a].Object.Initialize(0, false, false);
 				AnimatedWorldObjectsUsed++;
 			}
 		}
+
+		
 	}
 }

@@ -1600,7 +1600,7 @@ namespace OpenBve
 				{
 					case "Frame Root":
 						//This is just a placeholder around the other templates
-						ProcessStructure(FileName, f, out Object, LoadMode, ForceTextureRepeatX, ForceTextureRepeatX);
+						ProcessStructure(FileName, f, out Object, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 						break;
 					case "Mesh":
 						{
