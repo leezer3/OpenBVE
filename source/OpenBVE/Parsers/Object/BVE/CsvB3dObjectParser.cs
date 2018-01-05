@@ -1001,6 +1001,30 @@ namespace OpenBve {
 			// finalize object
 			ApplyMeshBuilder(ref Object, Builder);
 			Object.Mesh.CreateNormals();
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				int k = Object.Mesh.Faces[i].Material;
+				Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+				if (Object.Mesh.Materials[k].DaytimeTexture != null | Object.Mesh.Materials[k].NighttimeTexture != null)
+				{
+					if (Object.Mesh.Materials[k].WrapMode == null)
+					{
+						for (int v = 0; v < Object.Mesh.Vertices.Length; v++)
+						{
+							if (Object.Mesh.Vertices[v].TextureCoordinates.X < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+							}
+							if (Object.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+							}
+						}
+						Object.Mesh.Materials[k].WrapMode = wrap;
+					}
+				}
+			}
+
 			return Object;
 		}
 

@@ -814,11 +814,12 @@ namespace OpenBve
 													}
 													else if (ForceTextureRepeatX)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+
 													}
 													else if (ForceTextureRepeatY)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode |= Textures.OpenGlTextureWrapMode.ClampRepeat;
 													}
 												}
 											}
