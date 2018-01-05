@@ -548,7 +548,7 @@ namespace OpenBve
 			{
 				factor = 1.0f;
 				if (!BlendEnabled) GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 				if (FogEnabled)
 				{
 					GL.Disable(EnableCap.Fog);
@@ -748,7 +748,7 @@ namespace OpenBve
 			// finalize
 			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive)
 			{
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				if (!BlendEnabled) GL.Disable(EnableCap.Blend);
 				if (FogEnabled)
 				{

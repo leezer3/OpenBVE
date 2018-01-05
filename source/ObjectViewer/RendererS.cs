@@ -171,7 +171,7 @@ namespace OpenBve
                 GL.Enable(EnableCap.Texture2D);
                 TexturingEnabled = true;
             }
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
             GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
@@ -367,7 +367,7 @@ namespace OpenBve
             }
             if (OptionCoordinateSystem)
             {
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
                 RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
@@ -463,7 +463,7 @@ namespace OpenBve
             {
                 factor = 1.0f;
                 if (!BlendEnabled) GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
                 if (FogEnabled)
                 {
                     GL.Disable(EnableCap.Fog);
@@ -670,7 +670,7 @@ namespace OpenBve
             // finalize
             if (Material.BlendMode == World.MeshMaterialBlendMode.Additive)
             {
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 if (!BlendEnabled) GL.Disable(EnableCap.Blend);
                 if (FogEnabled)
                 {
@@ -726,7 +726,7 @@ namespace OpenBve
         {
             // initialize
             GL.Disable(EnableCap.DepthTest);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend);
             GL.MatrixMode(MatrixMode.Projection);
             GL.PushMatrix();
@@ -888,19 +888,19 @@ namespace OpenBve
                 int t = Fonts.GetTextureIndex(FontType, b);
                 double w = (double)TextureManager.Textures[t].ClipWidth;
                 double h = (double)TextureManager.Textures[t].ClipHeight;
-                GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
+                GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
                 GL.Color3(A, A, A);
                 RenderOverlayTexture(t, x, y, x + w, y + h);
                 if (Shadow)
                 {
                     RenderOverlayTexture(t, x + c, y + c, x + w, y + h);
                 }
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
                 GL.Color4(R, G, B, A);
                 RenderOverlayTexture(t, x, y, x + w, y + h);
                 x += Fonts.Characters[Font][b].Width;
             }
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
 
         // render overlay texture

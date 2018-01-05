@@ -139,7 +139,7 @@ namespace OpenBve {
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 0.0f);
 			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.Texture2D); TexturingEnabled = true;
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.DepthFunc(DepthFunction.Lequal);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
 			GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
@@ -442,7 +442,7 @@ namespace OpenBve {
 			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive) {
 				factor = 1.0f;
 				if (!BlendEnabled) GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 				if (FogEnabled) {
 					GL.Disable(EnableCap.Fog);
 				}
@@ -601,7 +601,7 @@ namespace OpenBve {
 			}
 			// finalize
 			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive) {
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				if (!BlendEnabled) GL.Disable(EnableCap.Blend);
 				if (FogEnabled) {
 					GL.Enable(EnableCap.Fog);
@@ -926,7 +926,7 @@ namespace OpenBve {
 		// render overlays
 		private static void RenderOverlays(double TimeElapsed) {
 			// initialize
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Blend);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();

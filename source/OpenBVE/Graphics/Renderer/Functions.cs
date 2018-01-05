@@ -18,7 +18,7 @@ namespace OpenBve
             GL.Enable(EnableCap.CullFace); CullEnabled = true;
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
             GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Disable(EnableCap.Blend); BlendEnabled = false;
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
@@ -116,7 +116,7 @@ namespace OpenBve
             GL.ClearColor(Color4.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.Hint(HintTarget.FogHint, HintMode.Fastest);
             GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
@@ -134,7 +134,7 @@ namespace OpenBve
             Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend); BlendEnabled = true;
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
             GL.Disable(EnableCap.Fog);
