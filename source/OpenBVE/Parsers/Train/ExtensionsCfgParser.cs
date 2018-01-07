@@ -5,7 +5,7 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train, bool LoadObjects)
 		{
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -73,7 +73,10 @@ namespace OpenBve {
 													} else {
 														string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 														if (System.IO.File.Exists(File)) {
-															CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+															if (LoadObjects)
+															{
+																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+															}
 														} else {
 															Interface.AddMessage(Interface.MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
@@ -125,7 +128,10 @@ namespace OpenBve {
 																} else {
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 																	if (System.IO.File.Exists(File)) {
-																		CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		if (LoadObjects)
+																		{
+																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		}
 																	} else {
 																		Interface.AddMessage(Interface.MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
@@ -292,7 +298,10 @@ namespace OpenBve {
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 																	if (System.IO.File.Exists(File))
 																	{
-																		BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		if (LoadObjects)
+																		{
+																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		}
 																	}
 																	else
 																	{
@@ -397,12 +406,13 @@ namespace OpenBve {
 						}
 					}
 				}
+
 				// check for car objects and reverse if necessary
 				int carObjects = 0;
 				for (int i = 0; i < Train.Cars.Length; i++) {
 					if (CarObjects[i] != null) {
 						carObjects++;
-						if (CarObjectsReversed[i]) {
+						if (CarObjectsReversed[i] && LoadObjects) {
 							{
 								// reverse axle positions
 								double temp = Train.Cars[i].FrontAxle.Position;
@@ -443,7 +453,7 @@ namespace OpenBve {
 					if (BogieObjects[i] != null)
 					{
 						bogieObjects++;
-						if (BogieObjectsReversed[i])
+						if (BogieObjectsReversed[i] && LoadObjects)
 						{
 							{
 								// reverse axle positions

@@ -44,6 +44,7 @@ namespace OpenBve
 			internal int MaxPowerNotchWidth = 48;
 			internal int MaxBrakeNotchWidth = 48;
 			internal int MaxReverserWidth = 48;
+			internal string TrainFolder;
 
 			internal void Initialize()
 			{
