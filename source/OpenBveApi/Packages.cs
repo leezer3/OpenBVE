@@ -544,9 +544,9 @@ namespace OpenBveApi.Packages
 	public class ProgressReport : EventArgs
 	{
 		/// <summary>The current progress percentage</summary>
-		public int Progress {get;private set;}
+		public int Progress { get; }
 		/// <summary>The file currently being processed</summary>
-		public string CurrentFile { get; private set; }
+		public string CurrentFile { get; }
 		/// <summary>The progress report</summary>
 		public ProgressReport(int progress, string file)
 		{
@@ -559,12 +559,12 @@ namespace OpenBveApi.Packages
 	public class ProblemReport : EventArgs
 	{
 		/// <summary>The current progress percentage</summary>
-		public int Progress { get; private set; }
+		public int Progress { get; }
 		/// <summary>The file currently being processed</summary>
-		public string CurrentFile { get; private set; }
+		public string CurrentFile { get; }
 
 		/// <summary>The file currently being processed</summary>
-		public Exception Exception { get; private set; }
+		public Exception Exception { get; }
 		/// <summary>The progress report</summary>
 		public ProblemReport(int progress, string file, Exception ex)
 		{
