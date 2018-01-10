@@ -128,9 +128,8 @@ namespace OpenBve
 								{
 									if (obj[j] != null)
 									{
-										if (obj[j] is ObjectManager.StaticObject)
+										if (obj[j] is ObjectManager.StaticObject s)
 										{
-											ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length)
 											{

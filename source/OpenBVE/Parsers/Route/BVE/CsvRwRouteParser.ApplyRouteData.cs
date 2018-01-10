@@ -1197,9 +1197,8 @@ namespace OpenBve
 									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
 									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
 									double tpos = Data.Blocks[i].Signal[k].TrackPosition;
-									if (sd is AnimatedObjectSignalData)
+									if (sd is AnimatedObjectSignalData aosd)
 									{
-										AnimatedObjectSignalData aosd = (AnimatedObjectSignalData)sd;
 										aosd.Objects.CreateObject(wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 									}
 									else if (sd is CompatibilitySignalData)
@@ -1614,9 +1613,8 @@ namespace OpenBve
 					{
 						if (!atc)
 						{
-							if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+							if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent station)
 							{
-								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 								if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Atc)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[i].Events, TrackManager.CurrentTrack.Elements[i].Events.Length + 2);
@@ -1628,10 +1626,9 @@ namespace OpenBve
 						}
 						else
 						{
-							if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+							if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent station1)
 							{
-								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Ats)
+								if (Game.Stations[station1.StationIndex].SafetySystem == Game.SafetySystem.Ats)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[i].Events, TrackManager.CurrentTrack.Elements[i].Events.Length + 2);
 									TrackManager.CurrentTrack.Elements[i].Events[TrackManager.CurrentTrack.Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);

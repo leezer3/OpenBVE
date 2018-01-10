@@ -125,9 +125,8 @@ namespace OpenBve
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection();
-				if (currentObject is ObjectManager.StaticObject)
+				if (currentObject is ObjectManager.StaticObject s)
 				{
-					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
 					{

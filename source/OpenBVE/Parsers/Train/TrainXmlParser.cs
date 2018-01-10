@@ -134,10 +134,9 @@ namespace OpenBve.Parsers.Train
 								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
 								Train.Cars[i].RearAxle.Position = -temp;
 							}
-							if (CarObjects[i] is ObjectManager.StaticObject)
+							if (CarObjects[i] is ObjectManager.StaticObject obj1)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
-								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
+								CsvB3dObjectParser.ApplyScale(obj1, -1.0, 1.0, -1.0);
 							}
 							else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection)
 							{
@@ -192,10 +191,9 @@ namespace OpenBve.Parsers.Train
 									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
-							if (BogieObjects[i] is ObjectManager.StaticObject)
+							if (BogieObjects[i] is ObjectManager.StaticObject obj1)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
-								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
+								CsvB3dObjectParser.ApplyScale(obj1, -1.0, 1.0, -1.0);
 							}
 							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
 							{

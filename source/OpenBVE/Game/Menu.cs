@@ -631,9 +631,8 @@ namespace OpenBve
 				//			case Interface.Command.MenuBack:	// ESC:	managed above
 				//				break;
 				case Interface.Command.MenuEnter:   // ENTER
-					if (menu.Items[menu.Selection] is MenuCommand)
+					if (menu.Items[menu.Selection] is MenuCommand menuItem)
 					{
-						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
 						switch (menuItem.Tag)
 						{
 							// menu management commands
@@ -670,9 +669,9 @@ namespace OpenBve
 								MainLoop.Quit = true;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION
-								PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
+								PushMenu(MenuType.Control, menuItem.Data);
 								isCustomisingControl = true;
-								CustomControlIdx = ((MenuCommand)menu.Items[menu.Selection]).Data;
+								CustomControlIdx = menuItem.Data;
 								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
