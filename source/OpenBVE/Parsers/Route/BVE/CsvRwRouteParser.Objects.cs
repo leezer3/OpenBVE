@@ -10,12 +10,14 @@
 		/// <returns>The mirrored copy</returns>
 		private static ObjectManager.UnifiedObject GetMirroredObject(ObjectManager.UnifiedObject Prototype)
 		{
-			if (Prototype is ObjectManager.StaticObject s)
+			if (Prototype is ObjectManager.StaticObject)
 			{
+				ObjectManager.StaticObject s = (ObjectManager.StaticObject)Prototype;
 				return GetMirroredStaticObject(s);
 			}
-			if (Prototype is ObjectManager.AnimatedObjectCollection a)
+			if (Prototype is ObjectManager.AnimatedObjectCollection)
 			{
+				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
 				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 				{
 					Objects = new ObjectManager.AnimatedObject[a.Objects.Length]

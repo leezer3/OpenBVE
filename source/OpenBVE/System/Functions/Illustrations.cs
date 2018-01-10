@@ -162,8 +162,10 @@ namespace OpenBve {
 					// for each track element, look for a StationStartEvent
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i+n0].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i+n0].Events[j] is TrackManager.StationStartEvent e)
+						if (TrackManager.CurrentTrack.Elements[i+n0].Events[j] is TrackManager.StationStartEvent)
 						{
+							TrackManager.StationStartEvent e =
+								(TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i+n0].Events[j];
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
@@ -199,8 +201,9 @@ namespace OpenBve {
 			{
 				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 				{
-					if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent e)
+					if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
 					{
+						TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 						if (Game.Stations[e.StationIndex].Name != string.Empty)
 						{
 							double x = TrackManager.CurrentTrack.Elements[i].WorldPosition.X;
@@ -235,8 +238,9 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent e)
+						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
+							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 							if (Game.Stations[e.StationIndex].Name != string.Empty)
 							{
 								double x = TrackManager.CurrentTrack.Elements[i].WorldPosition.X;
@@ -438,8 +442,9 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent e)
+						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
+							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 							if (Game.Stations[e.StationIndex].Name != string.Empty)
 							{
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);

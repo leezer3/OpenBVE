@@ -280,7 +280,7 @@ namespace OpenBve {
 				int i = listviewControls.SelectedIndices[0];
 				int j = comboboxKeyboardKey.SelectedIndex;
 
-				Interface.KeyInfo k = comboboxKeyboardKey.Items[j] is Interface.KeyInfo info ? info : new Interface.KeyInfo();
+				Interface.KeyInfo k = comboboxKeyboardKey.Items[j] is Interface.KeyInfo ? (Interface.KeyInfo) comboboxKeyboardKey.Items[j] : new Interface.KeyInfo();
 				Interface.CurrentControls[i].Key = k.Key;
 				UpdateControlListElement(listviewControls.Items[i], i, true); 
 			}

@@ -367,8 +367,9 @@ namespace OpenBve
 							if (tp + lookahead <= stp) break;
 							for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent e && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
 								{
+									TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 									{
 										int s = GetStopIndex(e.StationIndex, Train.Cars.Length);
@@ -394,13 +395,14 @@ namespace OpenBve
 							if (tp + lookahead <= stp) break;
 							for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.LimitChangeEvent e1)
+								if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.LimitChangeEvent)
 								{
 									// speed limit
-									if (e1.NextSpeedLimit < spd)
+									TrackManager.LimitChangeEvent e = (TrackManager.LimitChangeEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
+									if (e.NextSpeedLimit < spd)
 									{
-										double dist = stp + e1.TrackPositionDelta - tp;
-										double edec = (spd * spd - e1.NextSpeedLimit * e1.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
+										double dist = stp + e.TrackPositionDelta - tp;
+										double edec = (spd * spd - e.NextSpeedLimit * e.NextSpeedLimit * this.CurrentSpeedFactor) / (2.0 * dist);
 										if (edec > dec) dec = edec;
 									}
 								}
