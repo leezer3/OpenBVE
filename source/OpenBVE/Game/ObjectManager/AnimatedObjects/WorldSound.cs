@@ -43,7 +43,10 @@ namespace OpenBve
 				};
 				snd.currentTrackPosition = trackPosition;
 				snd.Follower.Update(trackPosition, true, true);
-				snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
+				if (this.TrackFollowerFunction != null)
+				{
+					snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
+				}
 				AnimatedWorldObjects[a] = snd;
 				AnimatedWorldObjectsUsed++;
 			}
