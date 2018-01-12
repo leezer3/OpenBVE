@@ -66,6 +66,10 @@ namespace OpenBve
 				if (MainLoop.Quit)
 				{
 					Close();
+					if (Program.CurrentlyRunningOnMono)
+					{
+						Environment.Exit(0);
+					}
 				}
 				//If the menu state has not changed, don't update the rendered simulation
 				return;
@@ -133,6 +137,10 @@ namespace OpenBve
 			if (MainLoop.Quit)
 			{
 				Program.currentGameWindow.Exit();
+				if (Program.CurrentlyRunningOnMono)
+				{
+					Environment.Exit(0);
+				}				
 			}
 			Renderer.UpdateLighting();
 			Renderer.RenderScene(TimeElapsed);

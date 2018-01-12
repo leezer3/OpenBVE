@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
@@ -1353,8 +1354,19 @@ namespace OpenBve {
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
 			Application.DoEvents();
+			if (Program.CurrentlyRunningOnMono)
+			{
+				//On some systems, the process *still* seems to hang around, so explicity issue the Environment.Exit() call
+				//https://github.com/leezer3/OpenBVE/issues/213
+				Environment.Exit(0);
+			}
 		}
 
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+			//Call the explicit closing method
+			buttonClose_Click(this, e);
+		}
 
 
 		// ======
