@@ -10,10 +10,15 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-
+		internal enum QuitMode
+		{
+			ContinueGame = 0,
+			QuitProgram = 1,
+			ExitToMenu = 2
+		}
 		// declarations
 		internal static bool LimitFramerate = false;
-		internal static bool Quit = false;
+		internal static QuitMode Quit = QuitMode.ContinueGame;
 		/// <summary>BlockKeyRepeat should be set to 'true' whilst processing a KeyUp or KeyDown event.</summary>
 		internal static bool BlockKeyRepeat;
 		/// <summary>The current simulation time-factor</summary>
@@ -87,7 +92,7 @@ namespace OpenBve
 
 		private static void OpenTKQuit(object sender, CancelEventArgs e)
 		{
-			Quit = true;
+			Quit = QuitMode.QuitProgram;
 		}
 
 		/********************

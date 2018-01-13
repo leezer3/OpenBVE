@@ -705,11 +705,13 @@ namespace OpenBve
 		// =====
 
 		// start
+		private readonly object StartGame = new Object();
+
 		private void buttonStart_Click(object sender, EventArgs e) {
 			if (Result.RouteFile != null & Result.TrainFolder != null) {
 				if (System.IO.File.Exists(Result.RouteFile) & System.IO.Directory.Exists(Result.TrainFolder)) {
 					Result.Start = true;
-					this.Close();
+					buttonClose_Click(StartGame, e);
 					//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 					//This fixes the main form failing to close on Linux
 					Application.DoEvents();

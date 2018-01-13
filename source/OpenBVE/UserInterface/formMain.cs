@@ -1346,15 +1346,19 @@ namespace OpenBve {
 			}
 		}
 
-
-		// close
+		private bool Closing = false;
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Closing = true;
+			if (sender != null)
+			{
+				//Don't cause an infinite loop
+				this.Close();
+			}
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
 			Application.DoEvents();
-			if (Program.CurrentlyRunningOnMono)
+			if (Program.CurrentlyRunningOnMono && sender != StartGame)
 			{
 				//On some systems, the process *still* seems to hang around, so explicity issue the Environment.Exit() call
 				//https://github.com/leezer3/OpenBVE/issues/213
@@ -1364,8 +1368,12 @@ namespace OpenBve {
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
+			if (Closing)
+			{
+				return;
+			}
 			//Call the explicit closing method
-			buttonClose_Click(this, e);
+			buttonClose_Click(null, e);
 		}
 
 

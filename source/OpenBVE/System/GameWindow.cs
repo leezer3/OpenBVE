@@ -63,10 +63,10 @@ namespace OpenBve
 				//Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
-				if (MainLoop.Quit)
+				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 				{
 					Close();
-					if (Program.CurrentlyRunningOnMono)
+					if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
 					{
 						Environment.Exit(0);
 					}
@@ -134,10 +134,10 @@ namespace OpenBve
 			}
 
 			World.CameraAlignmentDirection = new World.CameraAlignment();
-			if (MainLoop.Quit)
+			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
 				Program.currentGameWindow.Exit();
-				if (Program.CurrentlyRunningOnMono)
+				if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
 				{
 					Environment.Exit(0);
 				}				
