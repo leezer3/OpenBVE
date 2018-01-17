@@ -1357,6 +1357,7 @@ namespace OpenBve {
 			}
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
+			formMain_FormClosing(sender, new FormClosingEventArgs(CloseReason.UserClosing, false));
 			Application.DoEvents();
 			if (Program.CurrentlyRunningOnMono && sender != StartGame)
 			{
