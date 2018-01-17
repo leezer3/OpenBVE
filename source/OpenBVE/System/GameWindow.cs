@@ -316,6 +316,12 @@ namespace OpenBve
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
+
+			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentlyRunningOnMono)
+			{
+				//More forcefully close under Mono, stuff *still* hanging around....
+				Environment.Exit(0);
+			}
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
