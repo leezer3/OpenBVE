@@ -2519,7 +2519,7 @@ namespace OpenBve {
 				}
 			}
 			//Check for any special-cased fixes we might need
-			CheckRouteSpecificFixes(FileName, ref Data);
+			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = 0.3333 + (double)j * progressFactor;

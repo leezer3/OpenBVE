@@ -4,7 +4,7 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data)
+		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions)
 		{
 			if (Interface.CurrentOptions.EnableBveTsHacks == false)
 			{
@@ -51,6 +51,22 @@ namespace OpenBve
 					{
 						Data.IgnorePitchRoll = true;
 						Interface.AddMessage(Interface.MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
+					}
+					break;
+				case 14297:
+					//目蒲線普.csv
+					//Trackwork on exit to second station is broken without this
+					if (Game.RouteComment == "東急目蒲線\r\n奥沢-多摩川園\r\nver1.01\r\n\r\n(C)2004　こば")
+					{
+						if (Expressions[596].Text == ".rail 1;7.5:0")
+						{
+							Expressions[596].Text = ".rail 1;7.5;0";
+						}
+
+						if (Expressions[600].Text == ".rail 1;5.5:0")
+						{
+							Expressions[600].Text = ".rail 1;5.5;0";
+						}
 					}
 					break;
 			}
