@@ -70,6 +70,20 @@ namespace OpenBve {
 			}
 		}
 
+		private static bool IsCommand(string Text)
+		{
+			switch (Text.Trim().ToLowerInvariant())
+			{
+				case "rotate":
+				case "translate":
+				case "vertex":
+					return true;
+				
+			}
+
+			return false;
+		}
+
 		// read object
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
@@ -177,10 +191,34 @@ namespace OpenBve {
 						Arguments[0] = Arguments[0].Substring(j + 1).TrimStart();
 					} else {
 						Command = Arguments[0];
+						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							if (!Interface.CurrentOptions.EnableBveTsHacks || !IsCommand(Command))
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							}
+							else
+							{
+								resetArguments = false;
+							}
 						}
-						Arguments = new string[] { };
+						if (resetArguments)
+						{
+							Arguments = new string[] { };
+						}
+						else
+						{
+							/*
+							 * This handles object files where the author has omitted the FIRST number in a statement, e.g.
+							 * rotate ,,1,30
+							 *
+							 * As this is missing, we don't detect it as a command
+							 *
+							 * Traffic light poles broken in the Neustadt tram routes without this
+							 */
+							Arguments[0] = string.Empty;
+						}
+
 					}
 				} else if (Arguments.Length != 0) {
 					// csv
