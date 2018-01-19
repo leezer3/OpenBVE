@@ -57,6 +57,7 @@ namespace OpenBve
 				this.KeepAspectRatio = KeepAspectRatio;
 				this.TransitionTime = 0.8;
 				this.Time = -1;
+				this.Mode = BackgroundTransitionMode.FadeIn;
 			}
 
 			/// <summary>Creates a new static background</summary>

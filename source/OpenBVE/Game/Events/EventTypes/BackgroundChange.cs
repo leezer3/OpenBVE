@@ -24,10 +24,12 @@
 					if (Direction < 0)
 					{
 						BackgroundManager.TargetBackground = this.PreviousBackground;
+						BackgroundManager.TargetBackground.Countdown = 0;
 					}
 					else if (Direction > 0)
 					{
 						BackgroundManager.TargetBackground = this.NextBackground;
+						BackgroundManager.TargetBackground.Countdown = 0;
 					}
 				}
 			}

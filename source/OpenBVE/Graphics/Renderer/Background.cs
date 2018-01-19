@@ -59,6 +59,10 @@ namespace OpenBve
 				return;
 			}
 			//Update the target background
+			if (BackgroundManager.TargetBackground is BackgroundManager.StaticBackground)
+			{
+				BackgroundManager.TargetBackground.Countdown += TimeElapsed;
+			}
 			BackgroundManager.TargetBackground.UpdateBackground(TimeElapsed, true);
 			switch (BackgroundManager.TargetBackground.Mode)
 			{
