@@ -31,7 +31,7 @@ namespace OpenBve
 					Interface.AddMessage(Interface.MessageType.Error, false, "No marker nodes defined in XML file " + fileName);
 					return false;
 				}
-				marker = new CsvRwRouteParser.Marker();
+				//marker = new CsvRwRouteParser.Marker();
 				foreach (XmlNode n in DocumentNodes)
 				{
 					if (n.ChildNodes.OfType<XmlElement>().Any())
@@ -192,7 +192,17 @@ namespace OpenBve
 						}
 						if (EndingPosition != Double.PositiveInfinity)
 						{
-							marker.EndingPosition = EndingPosition;
+							if (Math.Abs(EndingPosition) == EndingPosition)
+							{
+								//Positive
+								marker.EndingPosition = marker.StartingPosition + EndingPosition;
+							}
+							else
+							{
+								//Negative
+								marker.EndingPosition = marker.StartingPosition;
+								marker.StartingPosition -= EndingPosition;
+							}
 						}
 						MessageManager.TextureMessage t = new MessageManager.TextureMessage();
 						MessageManager.GeneralMessage m = new MessageManager.GeneralMessage();

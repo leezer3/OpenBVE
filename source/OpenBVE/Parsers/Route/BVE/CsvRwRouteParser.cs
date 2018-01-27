@@ -4278,6 +4278,7 @@ namespace OpenBve {
 													if (System.IO.File.Exists(f) && f.ToLowerInvariant().EndsWith(".xml"))
 													{
 														Marker m = new Marker();
+														m.StartingPosition = Data.TrackPosition;
 														if (MarkerScriptParser.ReadMarkerXML(f, ref m))
 														{
 															int nn = Data.Markers.Length;
