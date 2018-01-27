@@ -60,6 +60,7 @@ namespace OpenBve
 												EarlyText = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
@@ -100,6 +101,7 @@ namespace OpenBve
 												Text = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
@@ -134,6 +136,7 @@ namespace OpenBve
 												LateText = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
