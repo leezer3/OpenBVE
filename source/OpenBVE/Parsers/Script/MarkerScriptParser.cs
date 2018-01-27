@@ -118,6 +118,9 @@ namespace OpenBve
 											case "color":
 												OnTimeColor = ParseColor(cc.InnerText, fileName);
 												break;
+											case "time":
+												Interface.AddMessage(Interface.MessageType.Error, false, "OnTime should not contain a TIME declaration in " + fileName);
+												break;
 										}
 									}
 									break;
