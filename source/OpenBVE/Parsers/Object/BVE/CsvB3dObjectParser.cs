@@ -543,6 +543,61 @@ namespace OpenBve {
 									ApplyShear(Object, dx, dy, dz, sx, sy, sz, r);
 								}
 							} break;
+						case "mirror":
+						case "mirrorall":
+							{
+								if (Arguments.Length > 6)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+								double vx = 0.0, vy = 0.0, vz = 0.0;
+								double nx = 0.0, ny = 0.0, nz = 0.0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vx = 0.0;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vy = 0.0;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vz = 0.0;
+								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nx = 0.0;
+								}
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									ny = 0.0;
+								}
+								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nz = 0.0;
+								}
+
+								if (Arguments.Length < 4)
+								{
+									nx = vx;
+									ny = vy;
+									nz = vz;
+								}
+								ApplyMirror(Builder, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								if (cmd == "mirrorall")
+								{
+									ApplyMirror(Object, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								}
+
+							}
+							break;
 						case "generatenormals":
 						case "[texture]":
 							if (cmd == "generatenormals" & IsB3D) {
@@ -1268,6 +1323,122 @@ namespace OpenBve {
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
 					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
+				}
+			}
+		}
+
+		private static void ApplyMirror(MeshBuilder Builder, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		{
+			for (int i = 0; i < Builder.Vertices.Length; i++)
+			{
+				if (vX)
+				{
+					Builder.Vertices[i].Coordinates.X *= -1;
+				}
+				if (vY)
+				{
+					Builder.Vertices[i].Coordinates.Y *= -1;
+				}
+				if (vZ)
+				{
+					Builder.Vertices[i].Coordinates.Z *= -1;
+				}
+			}
+			for (int i = 0; i < Builder.Faces.Length; i++)
+			{
+				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
+				{
+					if (nX)
+					{
+						Builder.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+					if (nY)
+					{
+						Builder.Faces[i].Vertices[j].Normal.Y *= -1;
+					}
+					if (nZ)
+					{
+						Builder.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+				}
+			}
+			int numFlips = 0;
+			if (vX)
+			{
+				numFlips++;
+			}
+			if (vY)
+			{
+				numFlips++;
+			}
+			if (vZ)
+			{
+				numFlips++;
+			}
+
+			if (numFlips % 2 != 0)
+			{
+				for (int i = 0; i < Builder.Faces.Length; i++)
+				{
+					Array.Reverse(Builder.Faces[i].Vertices);
+				}
+			}
+		}
+
+		private static void ApplyMirror(ObjectManager.StaticObject Object, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		{
+			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
+			{
+				if (vX)
+				{
+					Object.Mesh.Vertices[i].Coordinates.X *= -1;
+				}
+				if (vY)
+				{
+					Object.Mesh.Vertices[i].Coordinates.Y *= -1;
+				}
+				if (vZ)
+				{
+					Object.Mesh.Vertices[i].Coordinates.Z *= -1;
+				}
+			}
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				for (int j = 0; j < Object.Mesh.Faces[i].Vertices.Length; j++)
+				{
+					if (nX)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+					if (nY)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.Y *= -1;
+					}
+					if (nZ)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+				}
+			}
+			int numFlips = 0;
+			if (vX)
+			{
+				numFlips++;
+			}
+			if (vY)
+			{
+				numFlips++;
+			}
+			if (vZ)
+			{
+				numFlips++;
+			}
+
+			if (numFlips % 2 != 0)
+			{
+				for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+				{
+					Array.Reverse(Object.Mesh.Faces[i].Vertices);
 				}
 			}
 		}
