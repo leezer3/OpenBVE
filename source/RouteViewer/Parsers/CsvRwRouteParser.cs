@@ -4305,9 +4305,29 @@ namespace OpenBve {
 												idx = 0;
 											}
 											int dir = 0;
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out dir)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												dir = 0;
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+											{
+												switch (Arguments[1].ToUpperInvariant().Trim())
+												{
+													case "L":
+													case "-1":
+														dir = -1;
+														break;
+													case "0":
+														dir = 0;
+														break;
+													case "R":
+													case "1":
+														dir = 1;
+														break;
+													default:
+														if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															dir = 0;
+														}
+														break;
+												}
 											}
 											int sttype = 0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype)) {
@@ -4368,9 +4388,30 @@ namespace OpenBve {
 												idx = 0;
 											}
 											int dir = 0;
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out dir)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Dike at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												dir = 0;
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+											{
+												switch (Arguments[1].ToUpperInvariant().Trim())
+												{
+													case "L":
+													case "-1":
+														dir = -1;
+														break;
+													case "0":
+														dir = 0;
+														break;
+													case "R":
+													case "1":
+														dir = 1;
+														break;
+													default:
+														if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Dike at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															dir = 0;
+														}
+
+														break;
+												}
 											}
 											int sttype = 0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype)) {
