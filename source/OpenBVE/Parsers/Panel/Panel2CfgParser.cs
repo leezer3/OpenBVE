@@ -19,6 +19,8 @@ namespace OpenBve {
 		/// <param name="Car">The car index to add the panel to</param>
 		internal static void ParsePanel2Config(string PanelFile, string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train, int Car)
 		{
+			//Train name, used for hacks detection
+			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, PanelFile);
@@ -125,10 +127,26 @@ namespace OpenBve {
 														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenterY)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (Interface.CurrentOptions.EnableBveTsHacks && PanelBottom == 768 && PanelResolution == 1024 && PanelCenterY == 229)
+														if (Interface.CurrentOptions.EnableBveTsHacks)
 														{
-															//HACK: Workaround for Martin Finken's BVE4 trams panel center causing borked zoom
-															PanelCenterY = 350;
+															switch (PanelCenterY)
+															{
+																case 229:
+																	if (PanelBottom == 768 && PanelResolution == 1024)
+																	{
+																		// Martin Finken's BVE4 trams: Broken initial zoom
+																		PanelCenterY = 350;
+																	}
+																	break;
+																case 255:
+																	if (PanelBottom == 1024 && PanelResolution == 1024 && trainName == "LT1938" )
+																	{
+																		// LT1938 stock: Broken initial zoom
+																		PanelCenterY = 350;
+																	}
+																	break;
+															}
+															
 														}
 													} else {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
@@ -145,6 +163,19 @@ namespace OpenBve {
 														}
 														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOriginY)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														}
+														if (Interface.CurrentOptions.EnableBveTsHacks)
+														{
+															switch (trainName)
+															{
+																case "8171BETA":
+																	if (PanelResolution == 768 && PanelOriginY == 256)
+																	{
+																		// 81-71: Bust panel origin means a flying cab....
+																		PanelOriginY = 0;
+																	}
+																	break;
+															}
 														}
 													} else {
 														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
