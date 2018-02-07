@@ -53,6 +53,14 @@ namespace OpenBve
 						Interface.AddMessage(Interface.MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
 					}
 					break;
+				case 86723:
+					//Zwolle-Vlissingen.rw
+					if (Game.RouteComment == "Zwolle - Vlissingen \n(Part Two of Groningen-Vlissingen)\nEarly Evening Express")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
+					}
+					break;
 				case 14297:
 					//目蒲線普.csv
 					//Trackwork on exit to second station is broken without this
