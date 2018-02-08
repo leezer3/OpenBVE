@@ -78,7 +78,21 @@ namespace OpenBve {
 											case "right":
 												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelRight)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												} break;
+												}
+
+												if (Interface.CurrentOptions.EnableBveTsHacks)
+												{
+													switch ((int) PanelRight)
+													{
+														case 1696:
+															if (PanelResolution == 1024 && trainName == "TOQ2000CN1EXP10" || trainName == "TOQ8500CS8EXP10")
+															{
+																PanelRight = 1024;
+															}
+															break;
+													}
+												}
+												break;
 											case "top":
 												if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out PanelTop)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
