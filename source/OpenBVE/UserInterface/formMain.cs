@@ -1487,6 +1487,12 @@ namespace OpenBve {
 				}
 				if (System.IO.File.Exists(File))
 				{
+					System.IO.FileInfo f = new System.IO.FileInfo(File);
+					if (f.Length == 0)
+					{
+						Box.Image = Box.ErrorImage;
+						return;
+					}
 					try
 					{
 						Box.Image = Image.FromFile(File);
