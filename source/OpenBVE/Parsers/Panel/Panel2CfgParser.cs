@@ -129,7 +129,7 @@ namespace OpenBve {
 														}
 														if (Interface.CurrentOptions.EnableBveTsHacks)
 														{
-															switch (PanelCenterY)
+															switch ((int)PanelCenterY)
 															{
 																case 229:
 																	if (PanelBottom == 768 && PanelResolution == 1024)
