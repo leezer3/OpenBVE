@@ -22,7 +22,7 @@ namespace OpenBve
             GL.Disable(EnableCap.Blend); BlendEnabled = false;
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f }); EmissiveEnabled = false;
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
             SetAlphaFunc(AlphaFunction.Greater, 0.9f);
         }
 
