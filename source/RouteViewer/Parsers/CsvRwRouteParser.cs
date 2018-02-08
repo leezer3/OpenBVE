@@ -4650,6 +4650,7 @@ namespace OpenBve {
 										}
 									} break;
 								case "track.back":
+								case "track.background":
 									{
 										if (!PreviewOnly) {
 											int typ = 0;
