@@ -674,7 +674,10 @@ namespace OpenBve
 										}
 										try
 										{
-											System.Text.Encoding e = Encoding.GetEncoding(a);
+#pragma warning disable CS0219
+//Used to check that the parsed integer is a valid codepage
+											Encoding e = Encoding.GetEncoding(a);
+#pragma warning restore CS0219
 										}
 										catch
 										{
@@ -694,7 +697,10 @@ namespace OpenBve
 										}
 										try
 										{
-											System.Text.Encoding e = Encoding.GetEncoding(a);
+#pragma warning disable CS0219
+//Used to check that the parsed integer is a valid codepage
+											Encoding e = Encoding.GetEncoding(a);
+#pragma warning restore CS0219
 										}
 										catch
 										{
