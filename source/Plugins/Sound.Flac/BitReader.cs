@@ -7,13 +7,13 @@ namespace Flac {
 		// --- members ---
 		
 		/// <summary>The array of bytes from which is read.</summary>
-		internal byte[] Bytes;
+		internal readonly byte[] Bytes;
 		
 		/// <summary>The byte position from which will be read next.</summary>
 		internal int BytePosition;
 		
 		/// <summary>The bit position in the current byte from which will be read next. Values can range from 7 (most-significant bit) to 0 (least-significant bit).</summary>
-		internal int BitPosition;
+		private int BitPosition;
 		
 		
 		// --- constructors ---

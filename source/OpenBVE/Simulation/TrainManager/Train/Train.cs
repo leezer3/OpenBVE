@@ -44,6 +44,7 @@ namespace OpenBve
 			internal int MaxPowerNotchWidth = 48;
 			internal int MaxBrakeNotchWidth = 48;
 			internal int MaxReverserWidth = 48;
+			internal string TrainFolder;
 
 			internal void Initialize()
 			{
@@ -712,8 +713,6 @@ namespace OpenBve
 							Cars[i].Specs.CurrentPerceivedSpeed += rate * (double)Math.Sign(diff);
 						}
 					}
-					// perceived traveled distance
-					Cars[i].Specs.CurrentPerceivedTraveledDistance += Math.Abs(Cars[i].Specs.CurrentPerceivedSpeed) * TimeElapsed;
 					// calculate new speed
 					{
 						int d = Math.Sign(Cars[i].Specs.CurrentSpeed);

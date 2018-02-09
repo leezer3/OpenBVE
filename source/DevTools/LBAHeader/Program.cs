@@ -26,12 +26,33 @@ namespace LBAHeader
 				Console.WriteLine("No suitable executables found....");
 				return;
 			}
+			AddLbaFlag(f);
+			f = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(f), "RouteViewer.exe");
+			if (!System.IO.File.Exists(f))
+			{
+				//Not found, log this rather than crashing
+				Console.WriteLine("RouteViewer executable not found....");
+				return;
+			}
+			AddLbaFlag(f);
+		}
+
+		static void AddLbaFlag(string f)
+		{
 			Console.WriteLine("Adding LBA Flag to executable {0}", f);
-			data = File.ReadAllBytes(f);
-			var offset = BitConverter.ToInt32(data, 0x3c);
-			//Set LBA Flag for the file supplied via Arguments[0]
-			data[offset + 4 + 18] |= 0x20;
-			File.WriteAllBytes(args[0], data);
+			try
+			{
+				data = File.ReadAllBytes(f);
+				var offset = BitConverter.ToInt32(data, 0x3c);
+				//Set LBA Flag for the file supplied via Arguments[0]
+				data[offset + 4 + 18] |= 0x20;
+				File.WriteAllBytes(f, data);
+			}
+			catch
+			{
+				Console.WriteLine("A problem occured whilst attempting to set the LBA flag for executable " + f);
+			}
+			
 		}
 	}
 }

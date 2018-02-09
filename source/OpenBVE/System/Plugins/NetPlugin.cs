@@ -10,7 +10,7 @@ namespace OpenBve {
 		
 		// sound handle
 		internal class SoundHandleEx : SoundHandle {
-			internal Sounds.SoundSource Source;
+			internal readonly Sounds.SoundSource Source;
 			internal SoundHandleEx(double volume, double pitch, Sounds.SoundSource source) {
 				base.MyVolume = volume;
 				base.MyPitch = pitch;

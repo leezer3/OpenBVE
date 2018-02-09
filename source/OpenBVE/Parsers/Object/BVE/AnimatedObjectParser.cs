@@ -814,11 +814,28 @@ namespace OpenBve
 													}
 													else if (ForceTextureRepeatX)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case Textures.OpenGlTextureWrapMode.ClampRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																break;
+															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+																break;
+														}
+														
 													}
 													else if (ForceTextureRepeatY)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case Textures.OpenGlTextureWrapMode.RepeatClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																break;
+															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+																break;
+														}
 													}
 												}
 											}

@@ -40,7 +40,6 @@ namespace OpenBve
 		internal static bool LightingEnabled = false;
 		internal static bool FogEnabled = false;
 		internal static bool TexturingEnabled = false;
-		private static bool EmissiveEnabled = false;
 
 		// options
 		internal static bool OptionLighting = true;
@@ -548,7 +547,7 @@ namespace OpenBve
 			{
 				factor = 1.0f;
 				if (!BlendEnabled) GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 				if (FogEnabled)
 				{
 					GL.Disable(EnableCap.Fog);
@@ -612,12 +611,10 @@ namespace OpenBve
 			if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0)
 			{
 				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
-				EmissiveEnabled = true;
 			}
-			else// if (EmissiveEnabled)
+			else
 			{
 				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-				EmissiveEnabled = false;
 			}
 			if (Material.DaytimeTexture != null)
 			{
@@ -709,12 +706,10 @@ namespace OpenBve
 				if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0)
 				{
 					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
-					EmissiveEnabled = true;
 				}
-				else// if (EmissiveEnabled)
+				else
 				{
 					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-					EmissiveEnabled = false;
 				}
 				for (int j = 0; j < Face.Vertices.Length; j++)
 				{
@@ -748,7 +743,7 @@ namespace OpenBve
 			// finalize
 			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive)
 			{
-				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				if (!BlendEnabled) GL.Disable(EnableCap.Blend);
 				if (FogEnabled)
 				{

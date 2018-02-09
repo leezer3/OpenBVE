@@ -7,7 +7,7 @@ namespace Plugin {
 		
 		/// <summary>Represents a looping sound.</summary>
 		internal class Sound {
-			internal int Index;
+			internal readonly int Index;
 			internal SoundHandle Handle;
 			internal bool IsToBePlayed;
 			internal Sound(int index) {
@@ -22,31 +22,31 @@ namespace Plugin {
 		
 		// --- members ---
 		
-		private PlaySoundDelegate PlaySound;
+		private readonly PlaySoundDelegate PlaySound;
 		
 		
 		// --- looping sounds ---
 		
-		internal Sound AtsBell;
+		internal readonly Sound AtsBell;
 
-		internal Sound AtsChime;
+		internal readonly Sound AtsChime;
 		
-		internal Sound Eb;
+		internal readonly Sound Eb;
 
-		private Sound[] LoopingSounds;
+		private readonly Sound[] LoopingSounds;
 		
 		
 		// --- play once sounds ---
 		
-		internal Sound AtsPBell;
+		internal readonly Sound AtsPBell;
 		
-		internal Sound AtcBell;
+		internal readonly Sound AtcBell;
 		
-		internal Sound ToAts;
+		internal readonly Sound ToAts;
 		
-		internal Sound ToAtc;
+		internal readonly Sound ToAtc;
 		
-		private Sound[] PlayOnceSounds;
+		private readonly Sound[] PlayOnceSounds;
 		
 		
 		// --- constructors ---

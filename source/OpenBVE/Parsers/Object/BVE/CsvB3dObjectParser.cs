@@ -70,6 +70,20 @@ namespace OpenBve {
 			}
 		}
 
+		private static bool IsCommand(string Text)
+		{
+			switch (Text.Trim().ToLowerInvariant())
+			{
+				case "rotate":
+				case "translate":
+				case "vertex":
+					return true;
+				
+			}
+
+			return false;
+		}
+
 		// read object
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
@@ -177,10 +191,34 @@ namespace OpenBve {
 						Arguments[0] = Arguments[0].Substring(j + 1).TrimStart();
 					} else {
 						Command = Arguments[0];
+						bool resetArguments = true;
 						if (Arguments.Length != 1) {
-							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							if (!Interface.CurrentOptions.EnableBveTsHacks || !IsCommand(Command))
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							}
+							else
+							{
+								resetArguments = false;
+							}
 						}
-						Arguments = new string[] { };
+						if (resetArguments)
+						{
+							Arguments = new string[] { };
+						}
+						else
+						{
+							/*
+							 * This handles object files where the author has omitted the FIRST number in a statement, e.g.
+							 * rotate ,,1,30
+							 *
+							 * As this is missing, we don't detect it as a command
+							 *
+							 * Traffic light poles broken in the Neustadt tram routes without this
+							 */
+							Arguments[0] = string.Empty;
+						}
+
 					}
 				} else if (Arguments.Length != 0) {
 					// csv
@@ -505,6 +543,61 @@ namespace OpenBve {
 									ApplyShear(Object, dx, dy, dz, sx, sy, sz, r);
 								}
 							} break;
+						case "mirror":
+						case "mirrorall":
+							{
+								if (Arguments.Length > 6)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+
+								double vx = 0.0, vy = 0.0, vz = 0.0;
+								double nx = 0.0, ny = 0.0, nz = 0.0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vx = 0.0;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vy = 0.0;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vz = 0.0;
+								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nx = 0.0;
+								}
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									ny = 0.0;
+								}
+								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nz = 0.0;
+								}
+
+								if (Arguments.Length < 4)
+								{
+									nx = vx;
+									ny = vy;
+									nz = vz;
+								}
+								ApplyMirror(Builder, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								if (cmd == "mirrorall")
+								{
+									ApplyMirror(Object, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								}
+
+							}
+							break;
 						case "generatenormals":
 						case "[texture]":
 							if (cmd == "generatenormals" & IsB3D) {
@@ -1001,6 +1094,30 @@ namespace OpenBve {
 			// finalize object
 			ApplyMeshBuilder(ref Object, Builder);
 			Object.Mesh.CreateNormals();
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				int k = Object.Mesh.Faces[i].Material;
+				Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+				if (Object.Mesh.Materials[k].DaytimeTexture != null | Object.Mesh.Materials[k].NighttimeTexture != null)
+				{
+					if (Object.Mesh.Materials[k].WrapMode == null)
+					{
+						for (int v = 0; v < Object.Mesh.Vertices.Length; v++)
+						{
+							if (Object.Mesh.Vertices[v].TextureCoordinates.X < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+							}
+							if (Object.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+							}
+						}
+						Object.Mesh.Materials[k].WrapMode = wrap;
+					}
+				}
+			}
+
 			return Object;
 		}
 
@@ -1206,6 +1323,122 @@ namespace OpenBve {
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
 					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
+				}
+			}
+		}
+
+		private static void ApplyMirror(MeshBuilder Builder, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		{
+			for (int i = 0; i < Builder.Vertices.Length; i++)
+			{
+				if (vX)
+				{
+					Builder.Vertices[i].Coordinates.X *= -1;
+				}
+				if (vY)
+				{
+					Builder.Vertices[i].Coordinates.Y *= -1;
+				}
+				if (vZ)
+				{
+					Builder.Vertices[i].Coordinates.Z *= -1;
+				}
+			}
+			for (int i = 0; i < Builder.Faces.Length; i++)
+			{
+				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
+				{
+					if (nX)
+					{
+						Builder.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+					if (nY)
+					{
+						Builder.Faces[i].Vertices[j].Normal.Y *= -1;
+					}
+					if (nZ)
+					{
+						Builder.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+				}
+			}
+			int numFlips = 0;
+			if (vX)
+			{
+				numFlips++;
+			}
+			if (vY)
+			{
+				numFlips++;
+			}
+			if (vZ)
+			{
+				numFlips++;
+			}
+
+			if (numFlips % 2 != 0)
+			{
+				for (int i = 0; i < Builder.Faces.Length; i++)
+				{
+					Array.Reverse(Builder.Faces[i].Vertices);
+				}
+			}
+		}
+
+		private static void ApplyMirror(ObjectManager.StaticObject Object, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		{
+			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
+			{
+				if (vX)
+				{
+					Object.Mesh.Vertices[i].Coordinates.X *= -1;
+				}
+				if (vY)
+				{
+					Object.Mesh.Vertices[i].Coordinates.Y *= -1;
+				}
+				if (vZ)
+				{
+					Object.Mesh.Vertices[i].Coordinates.Z *= -1;
+				}
+			}
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				for (int j = 0; j < Object.Mesh.Faces[i].Vertices.Length; j++)
+				{
+					if (nX)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+					if (nY)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.Y *= -1;
+					}
+					if (nZ)
+					{
+						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+					}
+				}
+			}
+			int numFlips = 0;
+			if (vX)
+			{
+				numFlips++;
+			}
+			if (vY)
+			{
+				numFlips++;
+			}
+			if (vZ)
+			{
+				numFlips++;
+			}
+
+			if (numFlips % 2 != 0)
+			{
+				for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+				{
+					Array.Reverse(Object.Mesh.Faces[i].Vertices);
 				}
 			}
 		}

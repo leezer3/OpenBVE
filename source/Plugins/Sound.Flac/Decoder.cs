@@ -108,7 +108,7 @@ namespace Flac {
 					}
 					//Blocking strategy: Determines whether this is a fixed or variable blockstream size
 					uint blockingStrategy = reader.ReadBit();
-					if(blockingStrategy < 0 || blockingStrategy > 1)
+					if(blockingStrategy > 1)
 					{
 						throw new InvalidDataException();
 					}

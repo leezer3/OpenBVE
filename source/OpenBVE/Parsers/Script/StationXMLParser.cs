@@ -23,7 +23,6 @@ namespace OpenBve
 			//Load the object's XML file 
 			currentXML.Load(fileName);
 			string Path = System.IO.Path.GetDirectoryName(fileName);
-			double[] UnitOfLength = { 1.0 };
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{

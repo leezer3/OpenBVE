@@ -2519,7 +2519,7 @@ namespace OpenBve {
 				}
 			}
 			//Check for any special-cased fixes we might need
-			CheckRouteSpecificFixes(FileName, ref Data);
+			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = 0.3333 + (double)j * progressFactor;
@@ -4098,9 +4098,29 @@ namespace OpenBve {
 												idx = 0;
 											}
 											int dir = 0;
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out dir)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												dir = 0;
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
+												switch (Arguments[1].ToUpperInvariant().Trim())
+												{
+													case "L":
+													case "-1":
+														dir = -1;
+														break;
+													case "0":
+														dir = 0;
+														break;
+													case "R":
+													case "1":
+														dir = 1;
+														break;
+													default:
+														if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															dir = 0;
+														}
+
+														break;
+												}
 											}
 											int sttype = 0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype)) {
@@ -4185,9 +4205,29 @@ namespace OpenBve {
 												idx = 0;
 											}
 											int dir = 0;
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out dir)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Dike at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												dir = 0;
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0)
+											{
+												switch (Arguments[1].ToUpperInvariant().Trim())
+												{
+													case "L":
+													case "-1":
+														dir = -1;
+														break;
+													case "0":
+														dir = 0;
+														break;
+													case "R":
+													case "1":
+														dir = 1;
+														break;
+													default:
+														if (!NumberFormats.TryParseIntVb6(Arguments[1], out dir))
+														{
+															Interface.AddMessage(Interface.MessageType.Error, false, "Direction is invalid in Track.Dike at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+															dir = 0;
+														}
+														break;
+												}
 											}
 											int sttype = 0;
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out sttype)) {
@@ -4195,7 +4235,7 @@ namespace OpenBve {
 												sttype = 0;
 											}
 											if (sttype < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DikeStructureIndex is expected to be a non-negative integer in Track.Wall at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "DikeStructureIndex is expected to be a non-negative integer in Track.DikeL at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												sttype = 0;
 											}
 											if (dir < 0 && !Data.Structure.DikeL.ContainsKey(sttype) || dir > 0 && !Data.Structure.DikeR.ContainsKey(sttype) || dir == 0 && (!Data.Structure.DikeL.ContainsKey(sttype) && !Data.Structure.DikeR.ContainsKey(sttype))) {
@@ -4278,6 +4318,7 @@ namespace OpenBve {
 													if (System.IO.File.Exists(f) && f.ToLowerInvariant().EndsWith(".xml"))
 													{
 														Marker m = new Marker();
+														m.StartingPosition = Data.TrackPosition;
 														if (MarkerScriptParser.ReadMarkerXML(f, ref m))
 														{
 															int nn = Data.Markers.Length;
@@ -4533,6 +4574,7 @@ namespace OpenBve {
 										}
 									} break;
 								case "track.back":
+								case "track.background":
 									{
 										if (!PreviewOnly) {
 											int typ = 0;

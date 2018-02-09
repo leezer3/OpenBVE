@@ -162,7 +162,7 @@ namespace OpenBve
 					/*
 					 * In the first pass, mask off the background with pure black.
 					 * */
-					GL.BlendFunc(BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcColor);
+					GL.BlendFunc(BlendingFactor.Zero, BlendingFactor.OneMinusSrcColor);
 					GL.Begin(PrimitiveType.Polygon);
 					GL.Color4(color.A, color.A, color.A, 1.0f);
 					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
@@ -180,7 +180,7 @@ namespace OpenBve
 					/*
 					 * In the second pass, add the character onto the background.
 					 * */
-					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					GL.Begin(PrimitiveType.Polygon);
 					GL.Color4(color.R, color.G, color.B, color.A);
 					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
@@ -199,7 +199,7 @@ namespace OpenBve
 				left += data.TypographicSize.Width;
 			}
 			GL.Disable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha); // HACK //
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); // HACK //
 		}
 
 		/// <summary>Renders a string to the screen.</summary>

@@ -28,7 +28,7 @@ namespace OpenBve
 		    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb,
 			    PixelType.UnsignedByte, Renderer.PixelBuffer);
 		    Renderer.PixelBufferOpenGlTextureIndex = a[0];
-		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, 0, 0, w, h, 0);
+		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, w, h, 0);
 	    }
 
 	    /// <summary>This function renderers full-screen motion blur if selected</summary>
@@ -59,7 +59,7 @@ namespace OpenBve
                     factor = 0.0f;
                 }
                 // initialize
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 if (!BlendEnabled)
                 {
                     GL.Enable(EnableCap.Blend);
@@ -104,7 +104,7 @@ namespace OpenBve
             // retrieve buffer
             {
                 GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
-                GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb8, 0, 0, w, h, 0);
+                GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, w, h, 0);
             }
         }
     }

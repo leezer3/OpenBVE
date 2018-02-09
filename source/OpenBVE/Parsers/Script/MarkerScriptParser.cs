@@ -31,7 +31,7 @@ namespace OpenBve
 					Interface.AddMessage(Interface.MessageType.Error, false, "No marker nodes defined in XML file " + fileName);
 					return false;
 				}
-				marker = new CsvRwRouteParser.Marker();
+				//marker = new CsvRwRouteParser.Marker();
 				foreach (XmlNode n in DocumentNodes)
 				{
 					if (n.ChildNodes.OfType<XmlElement>().Any())
@@ -60,6 +60,7 @@ namespace OpenBve
 												EarlyText = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
@@ -100,6 +101,7 @@ namespace OpenBve
 												Text = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
@@ -115,6 +117,9 @@ namespace OpenBve
 												break;
 											case "color":
 												OnTimeColor = ParseColor(cc.InnerText, fileName);
+												break;
+											case "time":
+												Interface.AddMessage(Interface.MessageType.Error, false, "OnTime should not contain a TIME declaration in " + fileName);
 												break;
 										}
 									}
@@ -134,6 +139,7 @@ namespace OpenBve
 												LateText = cc.InnerText;
 												break;
 											case "texture":
+											case "image":
 												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
 												if (System.IO.File.Exists(f))
 												{
@@ -186,7 +192,17 @@ namespace OpenBve
 						}
 						if (EndingPosition != Double.PositiveInfinity)
 						{
-							marker.EndingPosition = EndingPosition;
+							if (Math.Abs(EndingPosition) == EndingPosition)
+							{
+								//Positive
+								marker.EndingPosition = marker.StartingPosition + EndingPosition;
+							}
+							else
+							{
+								//Negative
+								marker.EndingPosition = marker.StartingPosition;
+								marker.StartingPosition -= EndingPosition;
+							}
 						}
 						MessageManager.TextureMessage t = new MessageManager.TextureMessage();
 						MessageManager.GeneralMessage m = new MessageManager.GeneralMessage();

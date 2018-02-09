@@ -150,13 +150,19 @@ namespace OpenBve
 
 		internal static void ProcessKeyboard()
 		{
+			if (Interface.CurrentOptions.UseJoysticks)
+			{
+				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
+				{
+					JoystickManager.AttachedJoysticks[k].Poll();
+				}
+			}
 			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{
 					for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
 					{
-						JoystickManager.AttachedJoysticks[k].Poll();
 						int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{

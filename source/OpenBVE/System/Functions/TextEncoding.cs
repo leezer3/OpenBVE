@@ -76,7 +76,7 @@ namespace OpenBve
 		/// <returns>The character encoding, or unknown</returns>
 		internal static Encoding GetEncodingFromFile(string File)
 		{
-			if (File == null)
+			if (File == null || !System.IO.File.Exists(File))
 			{
 				return Encoding.Unknown;
 			}
