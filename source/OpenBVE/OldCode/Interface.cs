@@ -901,7 +901,20 @@ namespace OpenBve {
 								n = 4;
 							}
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
-								uint s; if (uint.TryParse(Expression.Substring(i + 3, n - 2), NumberStyles.None, Culture, out s)) {
+								uint s;
+								string ss = Expression.Substring(i + 3, n - 2);
+								if (Interface.CurrentOptions.EnableBveTsHacks)
+								{
+									/*
+									 * Handles values in the following format:
+									 * HH.MM.SS
+									 */
+									if (ss.StartsWith("."))
+									{
+										ss = ss.Substring(1, ss.Length - 1);
+									}
+								}
+								if (uint.TryParse(ss, NumberStyles.None, Culture, out s)) {
 									Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;
 									return true;
 								}
