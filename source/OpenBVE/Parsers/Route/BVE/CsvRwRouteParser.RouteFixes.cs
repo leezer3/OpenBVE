@@ -61,6 +61,44 @@ namespace OpenBve
 						Interface.AddMessage(Interface.MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
 					}
 					break;
+				case 101882:
+				case 101930:
+				case 102150:
+				case 102405:
+				case 102493:
+				case 102575:				
+					//Sanbie-663-bve4.csv
+					if (Game.RouteComment == "Linea Santhià-Biella completa Km 26.724. Partenza ore 13:22 Arrivo 13:51 Non ferma a Brianco. \r\n Line Santhià-Biella  Departure: Santhià  Arrival: Biella km 26.724. The train doesn't stops at Brianco.")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					}
+					//Sanbie-663-nonstop-bve4.csv
+					//Sanbie-663-rain-nonstop-bve4.csv
+					if (Game.RouteComment == "Linea Santhià-Biella completa Km 26.724. Partenza ore 07:37 Arrivo 07:58 Non fa fermate intermedie. \r\n Line Santhià-Biella  Departure: Santhià Arrival: Biella km 26.724. Non stop train.")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					}
+					//Sanbie-773-bve4.csv
+					if (Game.RouteComment == "Linea Santhià-Biella completa Km 26.724. Partenza ore 13:22 Arrivo 13:51 Non ferma a Brianco. \r\n Line Santhià-Biella  Departure: Santhià  Arrival: Biella km 26.724. The train doesn't stops at Brianco.Variant of Peter Shotz")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					}
+					//Sanbie-773-nonstop-bve4.csv
+					if (Game.RouteComment == "Linea Santhià-Biella completa Km 26.724. Partenza ore 07:37 Arrivo 07:58 Non fa fermate intermedie. \r\n Line Santhià-Biella  Departure: Santhià Arrival: Biella km 26.724. Non stop train. variant of Peter Shotz.")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					}
+					//Sanbie-773-rain-nonstop-bve4.csv
+					if (Game.RouteComment == "Linea Santhià-Biella completa Km 26.724. Partenza ore 07:37 Arrivo 07:58 Non fa fermate intermedie. \r\n Line Santhià-Biella  Departure: Santhià Arrival: Biella km 26.724. Non stop train. variant of Peter Shotz. Rain.")
+					{
+						Data.IgnorePitchRoll = true;
+						Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					}
+					break;
 				case 14297:
 					//目蒲線普.csv
 					//Trackwork on exit to second station is broken without this
