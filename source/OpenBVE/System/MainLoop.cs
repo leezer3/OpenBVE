@@ -221,137 +221,141 @@ namespace OpenBve
 			//Traverse the controls array
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick)
+				if (Interface.CurrentControls[i].Method != Interface.ControlMethod.Joystick)
 				{
-					if (!OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected) continue;
-					switch (Interface.CurrentControls[i].Component)
-					{
-						case Interface.JoystickComponent.Axis:
-							var axisState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetAxis(Interface.CurrentControls[i].Element);
-							//= OpenTK.Input.Joystick.GetState(Interface.CurrentControls[i].Device).GetAxis(Interface.CurrentControls[i].Element);
-							if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
+					continue;
+				}
+
+				if (JoystickManager.AttachedJoysticks.Length == 0 || !OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
+				{
+					continue;
+				}
+				switch (Interface.CurrentControls[i].Component)
+				{
+					case Interface.JoystickComponent.Axis:
+						var axisState = JoystickManager.GetAxis(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element);
+						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
+						{
+							Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
+							if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogHalf)
 							{
-								Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
-								if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogHalf)
+								if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
 								{
-									if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
-									{
-										axisState = Math.Abs(axisState);
-										if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
-										{
-											Interface.CurrentControls[i].AnalogState = 0.0;
-										}
-										else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
-										{
-											Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
-										}
-										else
-										{
-											Interface.CurrentControls[i].AnalogState = 1.0;
-										}
-									}
-								}
-								else if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogFull)
-								{
-									axisState *= (float)Interface.CurrentControls[i].Direction;
-									if (axisState > -Interface.CurrentOptions.JoystickAxisThreshold & axisState < Interface.CurrentOptions.JoystickAxisThreshold)
+									axisState = Math.Abs(axisState);
+									if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
 									{
 										Interface.CurrentControls[i].AnalogState = 0.0;
 									}
 									else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
 									{
-										if (axisState < 0.0)
-										{
-											Interface.CurrentControls[i].AnalogState = (axisState + Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
-										}
-										else if (axisState > 0.0)
-										{
-											Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
-										}
-										else
-										{
-											Interface.CurrentControls[i].AnalogState = 0.0;
-										}
+										Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
 									}
 									else
 									{
-										Interface.CurrentControls[i].AnalogState = (double)Math.Sign(axisState);
+										Interface.CurrentControls[i].AnalogState = 1.0;
 									}
 								}
-								else
+							}
+							else if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogFull)
+							{
+								axisState *= (float)Interface.CurrentControls[i].Direction;
+								if (axisState > -Interface.CurrentOptions.JoystickAxisThreshold & axisState < Interface.CurrentOptions.JoystickAxisThreshold)
 								{
-									if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
+									Interface.CurrentControls[i].AnalogState = 0.0;
+								}
+								else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
+								{
+									if (axisState < 0.0)
 									{
-										axisState = Math.Abs(axisState);
-										if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
-										{
-											axisState = 0.0f;
-										}
-										else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
-										{
-											axisState = (float)((axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold));
-										}
-										else
-										{
-											axisState = 1.0f;
-										}
-										if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.ReleasedAcknowledged)
-										{
-											if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-										}
-										else
-										{
-											if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-										}
+										Interface.CurrentControls[i].AnalogState = (axisState + Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+									}
+									else if (axisState > 0.0)
+									{
+										Interface.CurrentControls[i].AnalogState = (axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold);
+									}
+									else
+									{
+										Interface.CurrentControls[i].AnalogState = 0.0;
+									}
+								}
+								else
+								{
+									Interface.CurrentControls[i].AnalogState = (double)Math.Sign(axisState);
+								}
+							}
+							else
+							{
+								if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
+								{
+									axisState = Math.Abs(axisState);
+									if (axisState < Interface.CurrentOptions.JoystickAxisThreshold)
+									{
+										axisState = 0.0f;
+									}
+									else if (Interface.CurrentOptions.JoystickAxisThreshold != 1.0)
+									{
+										axisState = (float)((axisState - Interface.CurrentOptions.JoystickAxisThreshold) / (1.0 - Interface.CurrentOptions.JoystickAxisThreshold));
+									}
+									else
+									{
+										axisState = 1.0f;
+									}
+									if (Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.Released | Interface.CurrentControls[i].DigitalState == Interface.DigitalControlState.ReleasedAcknowledged)
+									{
+										if (axisState > 0.67) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+									}
+									else
+									{
+										if (axisState < 0.33) Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
 									}
 								}
 							}
-							break;
-						case Interface.JoystickComponent.Button:
-							//Load the current state
-							var buttonState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetButton(Interface.CurrentControls[i].Element);
-							//Test whether the state is the same as the last frame
-							if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
+						}
+						break;
+					case Interface.JoystickComponent.Button:
+						//Load the current state
+						var buttonState = JoystickManager.GetButton(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element);
+						//Test whether the state is the same as the last frame
+						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
+						{
+							if (buttonState == ButtonState.Pressed)
 							{
-								if (buttonState == ButtonState.Pressed)
-								{
-									Interface.CurrentControls[i].AnalogState = 1.0;
-									Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-									AddControlRepeat(i);
-								}
-								else
-								{
-									Interface.CurrentControls[i].AnalogState = 0.0;
-									Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-									RemoveControlRepeat(i);
-								}
-								//Store the state
-								Interface.CurrentControls[i].LastState = buttonState.ToString();
+								Interface.CurrentControls[i].AnalogState = 1.0;
+								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+								AddControlRepeat(i);
 							}
-							break;
-						case Interface.JoystickComponent.Hat:
-							//Load the current state
-							var hatState = JoystickManager.AttachedJoysticks[Interface.CurrentControls[i].Device].GetHat(Interface.CurrentControls[i].Element).Position;
-							//Test if the state is the same as last frame
-							if (hatState.ToString() != Interface.CurrentControls[i].LastState)
+							else
 							{
-								if ((int)hatState == Interface.CurrentControls[i].Direction)
-								{
-									Interface.CurrentControls[i].AnalogState = 1.0;
-									Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-									AddControlRepeat(i);
-								}
-								else
-								{
-									Interface.CurrentControls[i].AnalogState = 0.0;
-									Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-									RemoveControlRepeat(i);
-								}
-								//Store the state
-								Interface.CurrentControls[i].LastState = hatState.ToString();
+								Interface.CurrentControls[i].AnalogState = 0.0;
+								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+								RemoveControlRepeat(i);
 							}
-							break;
-					}
+							//Store the state
+							Interface.CurrentControls[i].LastState = buttonState.ToString();
+						}
+						break;
+					case Interface.JoystickComponent.Hat:
+						//Load the current state
+						var hatState = JoystickManager.GetHat(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element).Position;
+						//Test if the state is the same as last frame
+						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
+						{
+							if ((int)hatState == Interface.CurrentControls[i].Direction)
+							{
+								Interface.CurrentControls[i].AnalogState = 1.0;
+								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
+								AddControlRepeat(i);
+							}
+							else
+							{
+								Interface.CurrentControls[i].AnalogState = 0.0;
+								Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
+								RemoveControlRepeat(i);
+							}
+							//Store the state
+							Interface.CurrentControls[i].LastState = hatState.ToString();
+						}
+						break;
 				}
 			}
 		}

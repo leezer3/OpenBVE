@@ -138,6 +138,31 @@ namespace OpenBve {
 
 		}
 
+		internal static ButtonState GetButton(int Device, int Button)
+		{
+			if (Device < AttachedJoysticks.Length)
+			{
+				return AttachedJoysticks[Device].GetButton(Button);
+			}
+			return ButtonState.Released;
+		}
 
+		internal static double GetAxis(int Device, int Axis)
+		{
+			if (Device < AttachedJoysticks.Length)
+			{
+				return AttachedJoysticks[Device].GetAxis(Axis);
+			}
+			return 0.0;
+		}
+
+		internal static JoystickHatState GetHat(int Device, int Hat)
+		{
+			if (Device < AttachedJoysticks.Length)
+			{
+				return AttachedJoysticks[Device].GetHat(Hat);
+			}
+			return new JoystickHatState();
+		}
 	}
 }
