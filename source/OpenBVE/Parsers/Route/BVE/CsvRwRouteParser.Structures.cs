@@ -157,6 +157,20 @@
 			internal double Pitch;
 			internal double Roll;
 		}
+		private struct DestinationEvent
+		{
+			internal double TrackPosition;
+			internal int Type;
+			internal bool TriggerOnce;
+			internal int BeaconStructureIndex;
+			internal int NextDestination;
+			internal int PreviousDestination;
+			internal double X;
+			internal double Y;
+			internal double Yaw;
+			internal double Pitch;
+			internal double Roll;
+		}
 		private struct PointOfInterest
 		{
 			internal double TrackPosition;
@@ -196,6 +210,7 @@
 			internal Stop[] Stop;
 			internal Sound[] Sound;
 			internal Transponder[] Transponder;
+			internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
 			internal TrackManager.TrackElement CurrentTrackState;
 			internal double Pitch;

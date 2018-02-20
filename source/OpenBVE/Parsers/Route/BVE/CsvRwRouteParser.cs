@@ -71,6 +71,7 @@ namespace OpenBve {
 				Data.Blocks[0].Section = new Section[] {};
 				Data.Blocks[0].Sound = new Sound[] {};
 				Data.Blocks[0].Transponder = new Transponder[] {};
+				Data.Blocks[0].DestinationChanges = new DestinationEvent[] {};
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
 				Data.Markers = new Marker[] {};
 				Data.RequestStops = new StopRequest[] { };
@@ -1667,6 +1668,24 @@ namespace OpenBve {
 											}
 										}
 									} break;
+								case "train.destination":
+									{
+										if (PreviewOnly)
+										{
+											if (Arguments.Length < 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else
+											{
+												if (!NumberFormats.TryParseIntVb6(Arguments[0], out Game.InitialDestination))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Destination is expected to be an Integer in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												}
+											}
+										}
+									}
+									break;
 									// structure
 								case "structure.rail":
 									{
@@ -2673,6 +2692,7 @@ namespace OpenBve {
 								case "route.developerid":
 								case "train.folder":
 								case "train.file":
+								case "train.destination":
 								case "train.run":
 								case "train.rail":
 								case "train.flange":
@@ -3282,6 +3302,102 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
 										}
 									} break;
+								case "track.destination":
+									{
+										if (!PreviewOnly)
+										{
+											int type = 0;
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Type is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												type = 0;
+											}
+											if (type < -1 || type > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Type is expected to be in the range of -1 to 1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else
+											{
+												int structure = 0, nextDestination = 0, previousDestination = 0, triggerOnce = 0;
+												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = 0;
+												}
+												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out nextDestination))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "NextDestination is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													nextDestination = 0;
+												}
+												if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out previousDestination))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "PreviousDestination is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													previousDestination = 0;
+												}
+												if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out triggerOnce))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "TriggerOnce is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													previousDestination = 0;
+												}
+												if (structure < -1)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = -1;
+												}
+												else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = -1;
+												}
+												if (triggerOnce < 0 || triggerOnce > 1)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													triggerOnce = 0;
+												}
+												double x = 0.0, y = 0.0;
+												double yaw = 0.0, pitch = 0.0, roll = 0.0;
+												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out x))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													x = 0.0;
+												}
+												if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], UnitOfLength, out y))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													y = 0.0;
+												}
+												if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out yaw))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Yaw is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													yaw = 0.0;
+												}
+												if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out pitch))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Pitch is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													pitch = 0.0;
+												}
+												if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out roll))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Roll is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													roll = 0.0;
+												}
+												int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
+												Array.Resize<DestinationEvent>(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
+												Data.Blocks[BlockIndex].DestinationChanges[n].TrackPosition = Data.TrackPosition;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Type = type;
+												Data.Blocks[BlockIndex].DestinationChanges[n].TriggerOnce = triggerOnce != 0;
+												Data.Blocks[BlockIndex].DestinationChanges[n].PreviousDestination = previousDestination;
+												Data.Blocks[BlockIndex].DestinationChanges[n].BeaconStructureIndex = structure;
+												Data.Blocks[BlockIndex].DestinationChanges[n].NextDestination = nextDestination;
+												Data.Blocks[BlockIndex].DestinationChanges[n].X = x;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Y = y;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Yaw = yaw * 0.0174532925199433;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Pitch = pitch * 0.0174532925199433;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Roll = roll * 0.0174532925199433;
+											}
+										}
+									}
+									break;
 								case "track.beacon":
 									{
 										if (!PreviewOnly) {
@@ -3291,7 +3407,7 @@ namespace OpenBve {
 												type = 0;
 											}
 											if (type < 0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "Type is expected to be non-positive in Track.Beacon at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												Interface.AddMessage(Interface.MessageType.Error, false, "Type is expected to be non-negative in Track.Beacon at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												int structure = 0, section = 0, optional = 0;
 												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure)) {

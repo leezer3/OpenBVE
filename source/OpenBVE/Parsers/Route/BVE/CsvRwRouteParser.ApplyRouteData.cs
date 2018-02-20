@@ -1157,6 +1157,27 @@ namespace OpenBve
 									}
 								}
 							}
+							for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
+							{
+								ObjectManager.UnifiedObject obj = null;
+								int b = Data.Blocks[i].DestinationChanges[k].BeaconStructureIndex;
+								if (b >= 0 & Data.Structure.Beacon.ContainsKey(b))
+								{
+									obj = Data.Structure.Beacon[b];
+								}
+								if (obj != null)
+								{
+									double dx = Data.Blocks[i].DestinationChanges[k].X;
+									double dy = Data.Blocks[i].DestinationChanges[k].Y;
+									double dz = Data.Blocks[i].DestinationChanges[k].TrackPosition - StartingDistance;
+									Vector3 wpos = pos;
+									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
+									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
+									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+									double tpos = Data.Blocks[i].DestinationChanges[k].TrackPosition;
+									obj.CreateObject(wpos, RailTransformation, new World.Transformation(Data.Blocks[i].DestinationChanges[k].Yaw, Data.Blocks[i].DestinationChanges[k].Pitch, Data.Blocks[i].DestinationChanges[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+								}
+							}
 						}
 						// sections/signals/transponders
 						if (j == 0)
@@ -1499,6 +1520,15 @@ namespace OpenBve
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.TransponderEvent(d, Data.Blocks[i].Transponder[j].Type, Data.Blocks[i].Transponder[j].Data, s, Data.Blocks[i].Transponder[j].ClipToFirstRedSection);
 							Data.Blocks[i].Transponder[j].Type = -1;
 						}
+					}
+					// Destination Change Evvents
+					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
+					{
+						int n = i - Data.FirstUsedBlock;
+						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
+						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - TrackManager.CurrentTrack.Elements[n].StartingTrackPosition;
+						TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
 					}
 				}
 			}

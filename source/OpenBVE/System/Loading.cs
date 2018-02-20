@@ -214,7 +214,7 @@ namespace OpenBve {
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
-				TrainManager.Trains[k] = new TrainManager.Train {TrainIndex = k};
+				TrainManager.Trains[k] = new TrainManager.Train {TrainIndex = k, Destination = Game.InitialDestination};
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0) {
 					TrainManager.Trains[k].State = TrainManager.TrainState.Bogus;
 				} else {
