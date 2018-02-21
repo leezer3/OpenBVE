@@ -666,6 +666,8 @@ namespace OpenBveApi.Runtime {
 		private readonly CameraViewMode MyCameraViewMode;
 		/// <summary>The current interface language code.</summary>
 		private readonly string MyLanguageCode;
+		/// <summary>The current destination code</summary>
+		private int CurrentDestination;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="vehicle">The state of the train.</param>
@@ -677,7 +679,8 @@ namespace OpenBveApi.Runtime {
 		/// <param name="stations">The current route's list of stations.</param>
 		/// <param name="cameraView">The current camera view mode</param>
 		/// <param name="languageCode">The current language code</param>
-		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, DoorInterlockStates doorinterlock, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode) {
+		/// <param name="destination">The current destination</param>
+		public ElapseData(VehicleState vehicle, PrecedingVehicleState precedingVehicle, Handles handles, DoorInterlockStates doorinterlock, Time totalTime, Time elapsedTime, List<Station> stations, CameraViewMode cameraView, string languageCode, int destination) {
 			this.MyVehicle = vehicle;
 			this.MyPrecedingVehicle = precedingVehicle;
 			this.MyHandles = handles;
@@ -688,6 +691,7 @@ namespace OpenBveApi.Runtime {
 			this.MyStations = stations;
 			this.MyCameraViewMode = cameraView;
 			this.MyLanguageCode = languageCode;
+			this.CurrentDestination = destination;
 		}
 
 
@@ -778,6 +782,14 @@ namespace OpenBveApi.Runtime {
 			get
 			{
 				return this.MyLanguageCode;
+			}
+		}
+		/// <summary>Gets the destination variable as set by the plugin</summary>
+		public int Destination
+		{
+			get
+			{
+				return this.CurrentDestination;
 			}
 		}
 	}
