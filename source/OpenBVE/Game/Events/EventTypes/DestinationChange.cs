@@ -5,11 +5,14 @@
 		/// <summary>Called when a train passes over a destination change event</summary>
 		internal class DestinationEvent : GeneralEvent
 		{
-			/// <summary>An optional data parameter passed to plugins recieving this event</summary>
+			/// <summary>The destination value to set when passing over this event forwards, or -1 to disable</summary>
 			internal readonly int NextDestination;
+			/// <summary>The destination value to set when passing over this event backwards, or -1 to disable</summary>
 			internal readonly int PreviousDestination;
+			/// <summary>Whether this event should trigger once or multiple times</summary>
 			internal readonly bool TriggerOnce;
-			internal int Type;
+			/// <summary>Whether this event is triggered by AI only (-1), both (0) or player only (1)</summary>
+			internal readonly int Type;
 
 			internal DestinationEvent(double trackPositionDelta, int type, int nextDestination, int previousDestination, bool triggerOnce)
 			{
