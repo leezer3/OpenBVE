@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -39,6 +39,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevTools", "DevTools", "{3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarXMLConvertor", "source\CarXMLConvertor\CarXMLConvertor.csproj", "{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBve.Tests", "Tests\OpenBve.Tests.csproj", "{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,6 +200,18 @@ Global
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|x86.Build.0 = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Debug|x86.Build.0 = Debug|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{844BB77E-DC64-4405-8E20-8BA0EFCEAE7D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,5 +223,8 @@ Global
 		{15142E7B-35F5-4E81-AA18-79C4D60B4C26} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{E9B64673-65B7-4D77-A4DB-4B441A7C9197} = {3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF9D9023-8499-47CB-A371-870A0E911645}
 	EndGlobalSection
 EndGlobal
