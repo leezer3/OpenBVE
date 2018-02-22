@@ -441,6 +441,7 @@ namespace OpenBve {
 			//internal bool Disposed;
 			//internal bool IsBogusTrain;
 			internal Car[] Cars;
+			internal int Destination;
 			//internal Coupler[] Couplers;
 			internal int DriverCar;
 			internal TrainSpecs Specs;

@@ -15,7 +15,7 @@ namespace OpenBve {
 			CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
 			LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
 			TimeSecondsSinceMidnight, CameraDistance,CameraView,
-			TrainCars,
+			TrainCars, TrainDestination,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
 			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Odometer, OdometerOfCar,
@@ -280,6 +280,13 @@ namespace OpenBve {
 					case Instructions.TrainCars:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Cars.Length;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.TrainDestination:
+						if (Train != null) {
+							Function.Stack[s] = (double)Train.Destination;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -2394,6 +2401,10 @@ namespace OpenBve {
 						case "cars":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainCars;
+							n++; s++; if (s >= m) m = s; break;
+						case "destination":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.TrainDestination;
 							n++; s++; if (s >= m) m = s; break;
 						case "speed":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);

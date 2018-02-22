@@ -21,6 +21,9 @@ namespace OpenBve
 			internal TrainPassengers Passengers;
 			internal int LastStation;
 			internal int Station;
+
+			internal int Destination = -1;
+
 			internal bool StationFrontCar;
 			internal bool StationRearCar;
 			internal TrainStopState StationState;
@@ -41,9 +44,13 @@ namespace OpenBve
 			internal string[] PowerNotchDescriptions;
 			internal string[] BrakeNotchDescriptions;
 			internal string[] ReverserDescriptions;
+			/// <summary>The max width used in px for the power notch HUD string</summary>
 			internal int MaxPowerNotchWidth = 48;
+			/// <summary>The max width used in px for the brake notch HUD string</summary>
 			internal int MaxBrakeNotchWidth = 48;
+			/// <summary>The max width used in px for the reverser HUD string</summary>
 			internal int MaxReverserWidth = 48;
+			/// <summary>The absolute on-disk path to the train's folder</summary>
 			internal string TrainFolder;
 
 			internal void Initialize()

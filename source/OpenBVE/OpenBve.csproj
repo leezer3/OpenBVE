@@ -127,6 +127,7 @@
     <Compile Include="Game\Events\EventTypes\SpeedLimit.cs" />
     <Compile Include="Game\Events\EventTypes\Station.cs" />
     <Compile Include="Game\Events\EventTypes\TrackEnd.cs" />
+    <Compile Include="Game\Events\EventTypes\DestinationChange.cs" />
     <Compile Include="Game\Events\EventTypes\Transponder.cs" />
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.SignalData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
     <Compile Include="Parsers\Script\StationXMLParser.cs" />
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
