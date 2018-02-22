@@ -1521,7 +1521,7 @@ namespace OpenBve
 							Data.Blocks[i].Transponder[j].Type = -1;
 						}
 					}
-					// Destination Change Evvents
+					// Destination Change Events
 					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
