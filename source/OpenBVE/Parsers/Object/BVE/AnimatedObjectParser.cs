@@ -814,25 +814,26 @@ namespace OpenBve
 													}
 													else if (ForceTextureRepeatX)
 													{
+														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
 															case Textures.OpenGlTextureWrapMode.ClampRepeat:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
 																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
 																break;
 														}
-														
 													}
 													else if (ForceTextureRepeatY)
 													{
+														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
 															case Textures.OpenGlTextureWrapMode.RepeatClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
 																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
 																break;
 														}
