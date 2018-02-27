@@ -913,9 +913,9 @@ namespace OpenBve
 								FunctionScripts.FunctionScript PitchFunction = null;
 								FunctionScripts.FunctionScript VolumeFunction = null;
 								i++;
-								if (Result.Sounds.Length == SoundCount)
+								if (Result.Sounds.Length >= SoundCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+									Array.Resize<ObjectManager.WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 								string fileName = null;
