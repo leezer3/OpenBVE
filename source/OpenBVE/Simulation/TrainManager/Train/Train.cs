@@ -161,7 +161,7 @@ namespace OpenBve
 									}
 									else
 									{
-										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
+										this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 									}
 
 								}
