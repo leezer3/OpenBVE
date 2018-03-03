@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -84,6 +86,44 @@ namespace OpenBve {
 			return false;
 		}
 
+		private static readonly string[] CsvCommands =
+		{
+			"createmeshbuilder",
+			"addvertex",
+			"addface", //No need to add Face2, as this is a substring of it
+			"setcolor",
+			"translate",
+			"rotate",
+			"generatenormals", //Useless, but might have a second column
+			"loadtexture",
+			"settexturecoordinates",
+			"setemissivecolor",
+			"setdecaltransparentcolor"
+		};
+
+		private static int SecondIndexOfAny(string testString, string[] values)
+		{
+			if (testString == null)
+			{
+				return -1;
+			}
+			int first = -1;
+			foreach (string item in values) {
+				int offset = testString.IndexOf(item, StringComparison.CurrentCultureIgnoreCase);
+				if (offset >= 0) {
+					//Found a command in the string
+					foreach (string secondItem in values) {
+						int secondOffset = testString.IndexOf(secondItem, offset + 1, StringComparison.CurrentCultureIgnoreCase);
+						if (secondOffset >= 0) {
+							//Found a second command in the string so return this offset
+							return secondOffset;
+						}
+					}
+				}
+			}
+			return first;
+		}
+
 		// read object
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
@@ -106,12 +146,28 @@ namespace OpenBve {
 				}
 			};
 			// read lines
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			if (!IsB3D && Interface.CurrentOptions.EnableBveTsHacks)
+			{
+				/*
+				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
+				 */
+				for (int i = 0; i < Lines.Count; i++)
+				{
+					int idx = SecondIndexOfAny(Lines[i], CsvCommands);
+					if (idx != -1)
+					{
+						Lines[i] = Lines[i].Substring(0, idx);
+						string s = Lines[i].Substring(idx);
+						Lines.Add(s);
+					}
+				}
+			}
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
 			bool CommentStarted = false;
-			for (int i = 0; i < Lines.Length; i++) {
+			for (int i = 0; i < Lines.Count; i++) {
 				{
 					// Strip OpenBVE original standard comments
 					int j = Lines[i].IndexOf(';');
