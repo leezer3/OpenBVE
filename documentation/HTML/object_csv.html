@@ -34,6 +34,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#scale">Scale, ScaleAll</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#rotate">Rotate, RotateAll</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#shear">Shear, ShearAll</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#mirror">Mirror, MirrorAll</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#setcolor">SetColor</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#setemissivecolor">SetEmissiveColor</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="#setblendmode">SetBlendMode</a><br />
@@ -209,6 +210,16 @@ The <b>Rotate</b> command rotates all vertices that have been created so far in 
 </font></td></tr></table>
 The <b>Shear</b> command performs a <a href="http://en.wikipedia.org/wiki/Shear_mapping">shear mapping</a> for all vertices that have been created so far in the current CreateMeshBuilder section. The <b>ShearAll</b> command not only affects the vertices generated in the current CreateMeshBuilder section, but also those created in previous CreateMeshBuilder sections. This is useful to insert at the end of the file in order to shear the whole object.<br /><br /><img src="../Images/illustration_shear.png" alt="" />
 <br /><br />The shear mapping is performed around the origin. Loosely speaking, the object is sliced into planes along the direction D and then displaced along the direction S. Typically, D and S are perpendicular. D and S are always normalized. If <em>Ratio</em> is 0, no transformation is performed. If D and S are perpendicular, a <em>Ratio</em> of 1 corresponds to a slope of 45 degrees.<br /><br /><hr />
+<br /><br /><a name="mirror" />
+<br /><table border="0"><tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Mirror</b>, <em>X</em>, <em>Y</em>, <em>Z</em><br />
+<b>MirrorAll</b>, <em>X</em>, <em>Y</em>, <em>Z</em></font></td></tr></table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>X</em></b>: Whether the x-axis should be mirrored. The default value is 0 (false).<br />
+<b><em>Y</em></b>: Whether the y-axis should be mirrored. The default value is 0 (false).<br />
+<b><em>Z</em></b>: Whether the z-axis should be mirrored. The default value is 0 (false).<br />
+</font></td></tr></table>
+The <b>Mirror</b> command mirrors all vertices that have been created so far in the current CreateMeshBuilder section via the AddVertex, Cube or Cylinder commands. Subsequent vertices are not affected. The direction(s) to mirror are specified via the <em>X</em>, <em>Y</em> and <em>Z</em> values. You can use as many Mirror commands as desired in a CreateMeshBuilder section.<br><br> The <b>MirrorAll</b> command not only affects the vertices generated in the current CreateMeshBuilder section, but also those created in previous CreateMeshBuilder sections. This is useful to insert at the end of the file in order to mirror the whole object.<br /><br /><hr />
 <br /><br /><a name="setcolor" />
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
