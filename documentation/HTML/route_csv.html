@@ -778,11 +778,25 @@ phi = 0</tt></td>
 In the formulas above, <a href="http://functions.wolfram.com/ElementaryFunctions/Cos/02"><em>cos(x)</em></a> represents the cosine, <a href="http://functions.wolfram.com/ElementaryFunctions/Sin/02"><em>sin(x)</em></a> the sine, <a href="http://functions.wolfram.com/ElementaryFunctions/ArcTan/02"><em>arctan(x)</em></a> the inverse tangent, <a href="http://functions.wolfram.com/ElementaryFunctions/ArcTan2/02"><em>arctan(x,y)</em></a> the two-argument inverse tangent and <a href="http://functions.wolfram.com/ElementaryFunctions/Sqrt/02"><em>sqrt(x)</em></a> the square root. The formulas can be used to convert between spherical and cartesian coordinates if working with either one seems more intuitive than working with the other one. The formulas also serve as the official documentation on how the light direction is mathematically defined (using radians for the trigonometric functions).<br /><br /><hr />
 <table border="0">
 <tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.InitialViewpoint</b> <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: An integer defining the initial camera viewpoint mode. The following values are valid:<br />
+<em>0</em> : The camera will be placed in the cab. (Default)<br>
+<em>1</em> : The camera will be placed in 'Track Camera' mode.<br>
+<em>2</em> : The camera will be placed in 'Flyby Camera' mode.<br>
+<em>3</em> : The camera will be placed in 'Flyby Zooming Camera' mode.
+</font></td></tr></table>
+This command allows the route developer to place the inital camera in one of the alternate camera modes.<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#606060"><b>Route.DeveloperID</b></font></td></tr></table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font color="#808080">
 This command is ignored by openBVE.
 </font></td></tr></table>
+
 <br /><a name="train" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 6. The Train namespace</font><hr />
