@@ -161,6 +161,14 @@ namespace OpenBve
 									}
 									else
 									{
+										/*
+										 * HACK: Load in exterior mode first to ensure everything is cached
+										 * before switching immediately to not visible
+										 * https://github.com/leezer3/OpenBVE/issues/226
+										 * Stuff like the R142A really needs to downsize the textures supplied,
+										 * but we have no control over external factors....
+										 */
+										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 										this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 									}
 
