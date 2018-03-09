@@ -703,6 +703,96 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
+			switch (Game.InitialViewpoint)
+			{
+				case 1:
+					//Switch camera to exterior
+					MainLoop.SaveCameraSettings();
+					World.CameraMode = World.CameraViewMode.Exterior;
+					MainLoop.RestoreCameraSettings();
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+					}
+					//Make bogies visible
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+					}
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateViewingDistances();
+					break;
+				case 2:
+					//Switch camera to track
+					MainLoop.SaveCameraSettings();
+					World.CameraMode = World.CameraViewMode.Track;
+					MainLoop.RestoreCameraSettings();
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+					}
+
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+					}
+
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateViewingDistances();
+					break;
+				case 3:
+					//Switch camera to flyby
+					MainLoop.SaveCameraSettings();
+					World.CameraMode = World.CameraViewMode.FlyBy;
+					MainLoop.RestoreCameraSettings();
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+					}
+
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+					}
+
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateViewingDistances();
+					break;
+				case 4:
+					//Switch camera to flyby
+					MainLoop.SaveCameraSettings();
+					World.CameraMode = World.CameraViewMode.FlyByZooming;
+					MainLoop.RestoreCameraSettings();
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+					}
+
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
+						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
+					}
+
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					World.UpdateAbsoluteCamera(0.0);
+					World.UpdateViewingDistances();
+					break;
+			}
 		}
 
 		private void LoadingScreenLoop()

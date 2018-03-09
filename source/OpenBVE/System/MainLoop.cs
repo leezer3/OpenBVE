@@ -361,7 +361,7 @@ namespace OpenBve
 		}
 
 		// save camera setting
-		private static void SaveCameraSettings()
+		internal static void SaveCameraSettings()
 		{
 			switch (World.CameraMode)
 			{
@@ -381,7 +381,7 @@ namespace OpenBve
 		}
 
 		// restore camera setting
-		private static void RestoreCameraSettings()
+		internal static void RestoreCameraSettings()
 		{
 			switch (World.CameraMode)
 			{

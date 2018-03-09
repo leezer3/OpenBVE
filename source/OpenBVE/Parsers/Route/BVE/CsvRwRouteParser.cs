@@ -1545,6 +1545,50 @@ namespace OpenBve {
 										Interface.AddMessage(Interface.MessageType.Error, false, "Dynamic lighting XML file not found at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									}
 									break;
+								case "route.initialviewpoint":
+									if (Arguments.Length < 1)
+									{
+										Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										int cv = -1;
+										if (!NumberFormats.TryParseIntVb6(Arguments[0], out cv))
+										{
+											switch (Arguments[0].ToLowerInvariant())
+											{
+												case "cab":
+													cv = 0;
+													break;
+												case "exterior":
+													cv = 1;
+													break;
+												case "track":
+													cv = 2;
+													break;
+												case "flyby":
+													cv = 3;
+													break;
+												case "flybyzooming":
+													cv = 4;
+													break;
+												default:
+													cv = 0;
+													Interface.AddMessage(Interface.MessageType.Error, false, Command + " is invalid at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													break;
+											}
+										}
+
+										if (cv >= 0 && cv < 4)
+										{
+											Game.InitialViewpoint = cv;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, Command + " is invalid at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+									}
+									break;
 									// train
 								case "train.folder":
 								case "train.file":

@@ -63,6 +63,8 @@ namespace OpenBve {
 		/// <summary>The initial destination for any train within the game</summary>
 		internal static int InitialDestination = -1;
 
+		internal static int InitialViewpoint = 0;
+
 		// ================================
 
         /// <summary>Call this function to reset the game</summary>
