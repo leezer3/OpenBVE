@@ -399,6 +399,7 @@ namespace OpenBve {
 		internal class Train {
 			internal TrainState State;
 			internal Car[] Cars;
+			internal int Destination;
 			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;

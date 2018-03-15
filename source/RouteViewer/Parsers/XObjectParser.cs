@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using System.Linq;
 
 namespace OpenBve
 {
@@ -161,7 +162,9 @@ namespace OpenBve
 			//Root frame around the model itself
 			new Template("Frame Root", new string[] { "[...]" }),
 			//Presumably appears around each Mesh (??), Blender exported models
-			new Template("Frame", new string[] { "[...]" })
+			new Template("Frame", new string[] { "[...]" }),
+			//Transforms the mesh, UNSUPPORTED 
+			new Template("FrameTransformMatrix", new string[] { "[...]" }),
 		};
 
 		// data
@@ -243,6 +246,9 @@ namespace OpenBve
 						}
 					}
 				}
+				//Convert runs of whitespace to single
+				var list = Lines[i].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s));
+				Lines[i] = string.Join(" ", list);
 			}
 
 			//Preprocess the string array to get the variants to something we understand....
@@ -345,6 +351,7 @@ namespace OpenBve
 				case "meshtexturecoords":
 				case "meshnormals":
 				case "texturefilename":
+				case "frametransformmatrix":
 					return true;
 			}
 
@@ -1638,6 +1645,7 @@ namespace OpenBve
 				switch (f.Name)
 				{
 					case "Frame Root":
+					case "Frame":
 						//This is just a placeholder around the other templates
 						ProcessStructure(FileName, f, out Object, LoadMode, ForceTextureRepeatX, ForceTextureRepeatX);
 						break;

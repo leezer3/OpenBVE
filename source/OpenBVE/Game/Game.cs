@@ -60,6 +60,10 @@ namespace OpenBve {
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
         /// <summary>The name of the current train</summary>
 		internal static string TrainName = "";
+		/// <summary>The initial destination for any train within the game</summary>
+		internal static int InitialDestination = -1;
+
+		internal static int InitialViewpoint = 0;
 
 		// ================================
 

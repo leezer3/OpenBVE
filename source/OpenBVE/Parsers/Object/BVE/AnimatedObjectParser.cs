@@ -814,25 +814,26 @@ namespace OpenBve
 													}
 													else if (ForceTextureRepeatX)
 													{
+														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
 															case Textures.OpenGlTextureWrapMode.ClampRepeat:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
 																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
 																break;
 														}
-														
 													}
 													else if (ForceTextureRepeatY)
 													{
+														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
 															case Textures.OpenGlTextureWrapMode.RepeatClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampClamp;
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.RepeatRepeat:
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
 																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
 																break;
 														}
@@ -912,9 +913,9 @@ namespace OpenBve
 								FunctionScripts.FunctionScript PitchFunction = null;
 								FunctionScripts.FunctionScript VolumeFunction = null;
 								i++;
-								if (Result.Sounds.Length == SoundCount)
+								if (Result.Sounds.Length >= SoundCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+									Array.Resize<ObjectManager.WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
 								string fileName = null;

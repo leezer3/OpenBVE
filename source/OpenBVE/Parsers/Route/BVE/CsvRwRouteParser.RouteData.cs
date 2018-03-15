@@ -122,6 +122,7 @@ namespace OpenBve
 							Blocks[i].Section = new Section[] { };
 							Blocks[i].Sound = new Sound[] { };
 							Blocks[i].Transponder = new Transponder[] { };
+							Blocks[i].DestinationChanges = new DestinationEvent[] { };
 							Blocks[i].RailFreeObj = new FreeObj[][] { };
 							Blocks[i].GroundFreeObj = new FreeObj[] { };
 							Blocks[i].PointsOfInterest = new PointOfInterest[] { };

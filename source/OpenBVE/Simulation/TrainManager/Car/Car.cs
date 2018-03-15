@@ -404,7 +404,7 @@ namespace OpenBve
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
-						CarSections[j].Elements[h] = a.Objects[h];
+						CarSections[j].Elements[h] = a.Objects[h].Clone();
 						CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
 					}
 				}

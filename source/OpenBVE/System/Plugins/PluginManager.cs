@@ -154,7 +154,7 @@ namespace OpenBve {
 				 * 
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode, this.Train.Destination);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
@@ -165,6 +165,7 @@ namespace OpenBve {
 				 * */
 				this.PluginValid = true;
 				SetHandles(data.Handles, true);
+				this.Train.Destination = data.Destination;
 			}
 			/// <summary>Gets the driver handles.</summary>
 			/// <returns>The driver handles.</returns>

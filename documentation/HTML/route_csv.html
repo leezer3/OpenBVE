@@ -778,11 +778,25 @@ phi = 0</tt></td>
 In the formulas above, <a href="http://functions.wolfram.com/ElementaryFunctions/Cos/02"><em>cos(x)</em></a> represents the cosine, <a href="http://functions.wolfram.com/ElementaryFunctions/Sin/02"><em>sin(x)</em></a> the sine, <a href="http://functions.wolfram.com/ElementaryFunctions/ArcTan/02"><em>arctan(x)</em></a> the inverse tangent, <a href="http://functions.wolfram.com/ElementaryFunctions/ArcTan2/02"><em>arctan(x,y)</em></a> the two-argument inverse tangent and <a href="http://functions.wolfram.com/ElementaryFunctions/Sqrt/02"><em>sqrt(x)</em></a> the square root. The formulas can be used to convert between spherical and cartesian coordinates if working with either one seems more intuitive than working with the other one. The formulas also serve as the official documentation on how the light direction is mathematically defined (using radians for the trigonometric functions).<br /><br /><hr />
 <table border="0">
 <tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Route.InitialViewpoint</b> <em>Value</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Value</em></b>: An integer defining the initial camera viewpoint mode. The following values are valid:<br />
+<em>0</em> : The camera will be placed in the cab. (Default)<br>
+<em>1</em> : The camera will be placed in 'Track Camera' mode.<br>
+<em>2</em> : The camera will be placed in 'Flyby Camera' mode.<br>
+<em>3</em> : The camera will be placed in 'Flyby Zooming Camera' mode.
+</font></td></tr></table>
+This command allows the route developer to place the inital camera in one of the alternate camera modes.<br /><br /><hr />
+<table border="0">
+<tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#606060"><b>Route.DeveloperID</b></font></td></tr></table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font color="#808080">
 This command is ignored by openBVE.
 </font></td></tr></table>
+
 <br /><a name="train" />
 <br /><table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ 6. The Train namespace</font><hr />
@@ -2136,6 +2150,27 @@ This command places an environmental sound effect at the specified location. The
 
 </font></td></tr></table>
 This command places a bumper. The train can collide with the bumper in both the forward and backward directions. Place this command at the beginning and the end of the route. An object is not automatically created, so use Track.FreeObj to create a visual representation of the bumper if necessary.
+
+<table><tr style="height: 2px;"><td /></tr></table>
+<hr />
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.Destination</b> <em>Type</em>; <em>BeaconStructureIndex</em>; <em>NextDestination</em>; <em>PreviousDestination</em>; <em>TriggerOnce</em>; <font color="green"><em>X</em></font>; <font color="green"><em>Y</em></font>; <em>Yaw</em>; <em>Pitch</em>; <em>Roll</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>Type</em></b>: Defines the types of trains for which this destination setter applies: <em>-1</em> for AI trains only, <em>0</em> for all trains and <em>1</em> for the player train only.<br />
+<b><em>BeaconStructureIndex</em></b>: A non-negative integer representing the object to be placed as defined via Structure.Beacon, or -1 to not place any object.<br />
+<b><em>NextDestination</em></b>: An integer representing the destination value set when passing over this beacon in a forwards direction, or <em>-1</em> to disable.<br />
+<b><em>PreviousDestination</em></b>: An integer representing the destination value set when passing over this beacon in a reverse direction, or <em>-1</em> to disable.<br />
+<b><em>TriggerOnce</em></b>: If set to <em>0</em>, this beacon will be triggered by all valid trains which pass over it. If set to <em>1</em>, it will be triggered by the first valid train only.<br />
+<b><font color="green"><em>X</em></font></b>: The X-coordinate at which to place the object, <b>by default</b> measured in <b>meters</b>. The default value is 0.<br />
+<b><font color="green"><em>Y</em></font></b>: The Y-coordinate at which to place the object, <b>by default</b> measured in <b>meters</b>. The default value is 0.<br />
+<b><em>Yaw</em></b>: The angle in degrees by which the object is rotated in the XZ-plane in clock-wise order when viewed from above. The default value is 0.<br />
+<b><em>Pitch</em></b>: The angle in degrees by which the object is rotated in the YZ-plane in clock-wise order when viewed from the left. The default value is 0.<br />
+<b><em>Roll</em></b>: The angle in degrees by which the object is rotated in the XY-plane in clock-wise order when viewed from behind. The default value is 0.
+</font></td></tr></table>
+This command places a special beacon, which sets the destination variable, available for use by plugins and animated objects. The object must have been loaded via Structure.Beacon(<em>BeaconStructureIndex</em>) prior to using this command.<br /><br /><hr />
 </body>
 
 <!-- Mirrored from www.trainsimframework.org/develop/route_csv.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 05 May 2012 22:30:55 GMT -->
