@@ -1,4 +1,4 @@
-version: '0.0.0-{build}'
+version: '1.5.3.2-{build}'
 
 image: 
   - Visual Studio 2013
@@ -19,7 +19,7 @@ install:
   - cmd: git submodule update --init --recursive
 
 before_build:
-  - cmd: cd C:\projects\openbve
+  - cmd: cd C:\projects\OpenBVE
 
 build:
   project: C:\projects\OpenBVE\OpenBVE.sln
