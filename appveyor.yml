@@ -1,0 +1,25 @@
+version: '0.0.0-{build}'
+
+image: 
+	- Visual Studio 2013
+	- Visual Studio 2015
+	- Visual Studio 2017
+
+platform:
+	- AnyCPU
+
+init:
+	- cmd: msbuild /version
+ 
+configuration:
+	- Debug
+	- Release
+
+install:
+	- cmd: git submodule update --init --recursive
+
+before_build:
+	- cmd: cd C:\projects\openbve
+
+build:
+	project: C:\projects\OpenBVE\OpenBVE.sln
