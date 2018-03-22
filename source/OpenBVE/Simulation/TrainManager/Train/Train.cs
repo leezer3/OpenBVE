@@ -169,7 +169,11 @@ namespace OpenBve
 										 * but we have no control over external factors....
 										 */
 										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-										this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+										if (this == PlayerTrain)
+										{
+											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
+
+										}
 									}
 
 								}
