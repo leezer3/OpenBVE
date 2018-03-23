@@ -24,6 +24,9 @@ before_build:
 build:
   project: C:\projects\OpenBVE\OpenBVE.sln
 
+on_success:
+  - cmd: "C:\\Program Files (x86)\\Inno Setup 5\\iss.exe" /q C:\projects\OpenBVE\installers\windows\openbve.iss
+
 notifications:
   - provider: Email
     on_build_success: false
