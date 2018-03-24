@@ -50,6 +50,8 @@ namespace OpenBve {
 
 		private bool RailDriverInit = false;
 
+		internal static int RailDriverIndex = -1;
+
 		// --- functions ---
 
 		/// <returns>Call this function to refresh the list of available joysticks and thier capabilities</returns>
@@ -129,6 +131,7 @@ namespace OpenBve {
 								devices[i].SetupInterface();
 								devices[i].SetDataCallback(this);
 								devices[i].SetErrorCallback(this);
+								RailDriverIndex = l;
 							}
 							break;
 					}

@@ -220,6 +220,20 @@ namespace OpenBve {
 								break;
 						}
 						break;
+					case ControlMethod.RailDriver:
+						Builder.Append("raildriver, 0, ");
+						switch (controlsToSave[i].Component) {
+							case JoystickComponent.Axis:
+								Builder.Append("axis, " + controlsToSave[i].Element.ToString(Culture) + ", " + controlsToSave[i].Direction.ToString(Culture));
+								break;
+							case JoystickComponent.Button:
+								Builder.Append("button, " + controlsToSave[i].Element.ToString(Culture));
+								break;
+							default:
+								Builder.Append("invalid");
+								break;
+						}
+						break;
 				}
 				Builder.Append("\n");
 			}
@@ -405,10 +419,47 @@ namespace OpenBve {
 											}
 										}
 
-									}
-										  
-									
-										  
+									}	  
+								}
+								else if (Method == "raildriver" & Terms.Length >= 4) {
+									int Device;
+									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
+										string Component = Terms[3].ToLowerInvariant();
+										if (Component == "axis" & Terms.Length == 6)
+										{
+											int CurrentAxis;
+											if (Int32.TryParse(Terms[4], out CurrentAxis))
+											{
+												int Direction;
+												if (int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Direction))
+												{
+
+													Controls[Length].Method = ControlMethod.RailDriver;
+													Controls[Length].Device = Device;
+													Controls[Length].Component = JoystickComponent.Axis;
+													Controls[Length].Element = CurrentAxis;
+													Controls[Length].Direction = Direction;
+													Controls[Length].Modifier = KeyboardModifier.None;
+													Valid = true;
+												}
+											}
+										}
+										else if (Component == "button" & Terms.Length == 5)
+										{
+											int CurrentButton;
+											if (Int32.TryParse(Terms[4], out CurrentButton))
+											{
+												Controls[Length].Method = ControlMethod.RailDriver;
+												Controls[Length].Device = Device;
+												Controls[Length].Component = JoystickComponent.Button;
+												Controls[Length].Element = CurrentButton;
+												Controls[Length].Direction = 0;
+												Controls[Length].Modifier = KeyboardModifier.None;
+												Valid = true;
+											}
+										}
+
+									}	  
 								}
 
 								if (!Valid) {

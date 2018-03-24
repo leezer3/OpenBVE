@@ -1375,15 +1375,26 @@ namespace OpenBve {
 			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
+
 				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
 				{
-						JoystickManager.AttachedJoysticks[k].Poll();
-						int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
+					JoystickManager.AttachedJoysticks[k].Poll();
+					bool railDriver = JoystickManager.AttachedJoysticks[k] is JoystickManager.Raildriver;
+					int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{
 							double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
 							if (a < -0.75)
 							{
+								if (railDriver)
+								{
+									if (i == 4)
+									{
+										//Bail-off lever, starts at negative
+										continue;
+									}
+								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								}
 								Interface.CurrentControls[j].Device = k;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
@@ -1395,6 +1406,10 @@ namespace OpenBve {
 							}
 							if (a > 0.75)
 							{
+								if (railDriver)
+								{
+									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								}
 								Interface.CurrentControls[j].Device = k;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
 								Interface.CurrentControls[j].Element = i;
@@ -1410,6 +1425,10 @@ namespace OpenBve {
 						{
 							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
 							{
+								if (railDriver)
+								{
+									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								}
 								Interface.CurrentControls[j].Device = k;
 								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
 								Interface.CurrentControls[j].Element = i;

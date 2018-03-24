@@ -13,7 +13,9 @@ namespace OpenBve
             /// <summary>This control is activated using a keyboard button</summary>
             Keyboard = 1,
             /// <summary>This control is activated using a joystick axis or button</summary>
-            Joystick = 2
+            Joystick = 2,
+	        /// <summary>This control is activated using the RailDriver cab controller</summary>
+			RailDriver = 3
         }
 
         /// <summary>Keyboard modifiers</summary>
