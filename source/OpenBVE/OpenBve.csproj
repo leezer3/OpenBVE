@@ -480,7 +480,7 @@
     <TransformOutOfDateOnly>true</TransformOutOfDateOnly>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">set textTemplatingPath="%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -if %25textTemplatingPath%25=="\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" set textTemplatingPath="%25CommonProgramFiles%25\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\texttransform.exe" -%25textTemplatingPath%25 "$(ProjectDir)\Properties\AssemblyInfo.tt"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
