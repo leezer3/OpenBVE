@@ -964,7 +964,10 @@ namespace OpenBve {
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
-			Train.Cars[DriverCar].HasInteriorView = true;
+			if (Train == TrainManager.PlayerTrain)
+			{
+				Train.Cars[DriverCar].HasInteriorView = true;
+			}
 			// couplers
 			Train.Couplers = new TrainManager.Coupler[Cars - 1];
 			for (int i = 0; i < Train.Couplers.Length; i++) {
