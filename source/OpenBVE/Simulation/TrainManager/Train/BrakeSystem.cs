@@ -758,13 +758,19 @@ namespace OpenBve
 				switch (Train.Specs.EbHandlesAction)
 				{
 					case EbHandleBehaviour.PowerNeutral:
-						TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						if (!Train.Specs.SingleHandle)
+						{
+							TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						}
 						break;
 					case EbHandleBehaviour.ReverserNeutral:
 						TrainManager.ApplyReverser(Train, 0, false);
 						break;
 					case EbHandleBehaviour.PowerReverserNeutral:
-						TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						if (!Train.Specs.SingleHandle)
+						{
+							TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						}
 						TrainManager.ApplyReverser(Train, 0, false);
 						break;
 				}
