@@ -402,7 +402,7 @@ namespace OpenBve {
 									if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
 										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
 									} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Specs.CurrentReverser.Actual;
+										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
 									} else {
 										Function.Stack[s] = 0.0;
 									}
@@ -422,7 +422,7 @@ namespace OpenBve {
 								if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
 									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
 								} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Specs.CurrentReverser.Actual;
+									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
 								} else {
 									Function.Stack[s - 1] = 0.0;
 								}
@@ -783,14 +783,14 @@ namespace OpenBve {
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {
-							Function.Stack[s] = (double)Train.Specs.CurrentReverser.Driver;
+							Function.Stack[s] = (double)Train.Handles.Reverser.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
 					case Instructions.PowerNotch:
 						if (Train != null) {
-							Function.Stack[s] = (double)Train.Specs.CurrentPowerNotch.Driver;
+							Function.Stack[s] = (double)Train.Handles.Power.Driver;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -805,9 +805,9 @@ namespace OpenBve {
 					case Instructions.BrakeNotch:
 						if (Train != null) {
 							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-								Function.Stack[s] = (double)Train.Specs.AirBrake.Handle.Driver;
+								Function.Stack[s] = (double)Train.Handles.AirBrake.Handle.Driver;
 							} else {
-								Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver;
+								Function.Stack[s] = (double)Train.Handles.Brake.Driver;
 							}
 						} else {
 							Function.Stack[s] = 0.0;
@@ -827,24 +827,24 @@ namespace OpenBve {
 					case Instructions.BrakeNotchLinear:
 						if (Train != null) {
 							if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-								if (Train.Specs.CurrentEmergencyBrake.Driver) {
+								if (Train.Handles.EmergencyBrake.Driver) {
 									Function.Stack[s] = 3.0;
 								} else {
-									Function.Stack[s] = (double)Train.Specs.AirBrake.Handle.Driver;
+									Function.Stack[s] = (double)Train.Handles.AirBrake.Handle.Driver;
 								}
 							} else if (Train.Specs.HasHoldBrake) {
-								if (Train.Specs.CurrentEmergencyBrake.Driver) {
+								if (Train.Handles.EmergencyBrake.Driver) {
 									Function.Stack[s] = (double)Train.Specs.MaximumBrakeNotch + 2.0;
-								} else if (Train.Specs.CurrentBrakeNotch.Driver > 0) {
-									Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver + 1.0;
+								} else if (Train.Handles.Brake.Driver > 0) {
+									Function.Stack[s] = (double)Train.Handles.Brake.Driver + 1.0;
 								} else {
-									Function.Stack[s] = Train.Specs.CurrentHoldBrake.Driver ? 1.0 : 0.0;
+									Function.Stack[s] = Train.Handles.HoldBrake.Driver ? 1.0 : 0.0;
 								}
 							} else {
-								if (Train.Specs.CurrentEmergencyBrake.Driver) {
+								if (Train.Handles.EmergencyBrake.Driver) {
 									Function.Stack[s] = (double)Train.Specs.MaximumBrakeNotch + 1.0;
 								} else {
-									Function.Stack[s] = (double)Train.Specs.CurrentBrakeNotch.Driver;
+									Function.Stack[s] = (double)Train.Handles.Brake.Driver;
 								}
 							}
 						} else {
@@ -866,7 +866,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.EmergencyBrake:
 						if (Train != null) {
-							Function.Stack[s] = Train.Specs.CurrentEmergencyBrake.Driver ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Handles.EmergencyBrake.Driver ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -937,7 +937,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.HoldBrake:
 						if (Train != null) {
-							Function.Stack[s] = Train.Specs.CurrentHoldBrake.Driver ? 1.0 : 0.0;
+							Function.Stack[s] = Train.Handles.HoldBrake.Driver ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s] = 0.0;
 						}

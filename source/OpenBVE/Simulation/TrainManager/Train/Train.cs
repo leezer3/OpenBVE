@@ -12,6 +12,8 @@ namespace OpenBve
 		{
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
+
+			internal Handles Handles;
 			internal int TrainIndex;
 			internal TrainState State;
 			internal Car[] Cars;
@@ -251,126 +253,126 @@ namespace OpenBve
 				// delayed handles
 				{
 					// power notch
-					if (Specs.CurrentPowerNotch.DelayedChanges.Length == 0)
+					if (Handles.Power.DelayedChanges.Length == 0)
 					{
-						if (Specs.CurrentPowerNotch.Safety < Specs.CurrentPowerNotch.Actual)
+						if (Handles.Power.Safety < Handles.Power.Actual)
 						{
 							if (Specs.PowerNotchReduceSteps <= 1)
 							{
-								Specs.CurrentPowerNotch.AddChange(Specs.CurrentPowerNotch.Actual - 1, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerDown));
+								Handles.Power.AddChange(Handles.Power.Actual - 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
 							}
-							else if (Specs.CurrentPowerNotch.Safety + Specs.PowerNotchReduceSteps <= Specs.CurrentPowerNotch.Actual | Specs.CurrentPowerNotch.Safety == 0)
+							else if (Handles.Power.Safety + Specs.PowerNotchReduceSteps <= Handles.Power.Actual | Handles.Power.Safety == 0)
 							{
-								Specs.CurrentPowerNotch.AddChange(Specs.CurrentPowerNotch.Safety, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerDown));
+								Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
 							}
 						}
-						else if (Specs.CurrentPowerNotch.Safety > Specs.CurrentPowerNotch.Actual)
+						else if (Handles.Power.Safety > Handles.Power.Actual)
 						{
-							Specs.CurrentPowerNotch.AddChange(Specs.CurrentPowerNotch.Actual + 1, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerUp));
+							Handles.Power.AddChange(Handles.Power.Actual + 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerUp));
 						}
 					}
 					else
 					{
-						int m = Specs.CurrentPowerNotch.DelayedChanges.Length - 1;
-						if (Specs.CurrentPowerNotch.Safety < Specs.CurrentPowerNotch.DelayedChanges[m].Value)
+						int m = Handles.Power.DelayedChanges.Length - 1;
+						if (Handles.Power.Safety < Handles.Power.DelayedChanges[m].Value)
 						{
-							Specs.CurrentPowerNotch.AddChange(Specs.CurrentPowerNotch.Safety, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerDown));
+							Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
 						}
-						else if (Specs.CurrentPowerNotch.Safety > Specs.CurrentPowerNotch.DelayedChanges[m].Value)
+						else if (Handles.Power.Safety > Handles.Power.DelayedChanges[m].Value)
 						{
-							Specs.CurrentPowerNotch.AddChange(Specs.CurrentPowerNotch.Safety, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerUp));
+							Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerUp));
 						}
 					}
-					if (Specs.CurrentPowerNotch.DelayedChanges.Length >= 1)
+					if (Handles.Power.DelayedChanges.Length >= 1)
 					{
-						if (Specs.CurrentPowerNotch.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
+						if (Handles.Power.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
 						{
-							Specs.CurrentPowerNotch.Actual = Specs.CurrentPowerNotch.DelayedChanges[0].Value;
-							Specs.CurrentPowerNotch.RemoveChanges(1);
+							Handles.Power.Actual = Handles.Power.DelayedChanges[0].Value;
+							Handles.Power.RemoveChanges(1);
 						}
 					}
 				}
 				{
 					// brake notch
-					int sec = Specs.CurrentEmergencyBrake.Safety ? Specs.MaximumBrakeNotch : Specs.CurrentBrakeNotch.Safety;
-					if (Specs.CurrentBrakeNotch.DelayedChanges.Length == 0)
+					int sec = Handles.EmergencyBrake.Safety ? Specs.MaximumBrakeNotch : Handles.Brake.Safety;
+					if (Handles.Brake.DelayedChanges.Length == 0)
 					{
-						if (sec < Specs.CurrentBrakeNotch.Actual)
+						if (sec < Handles.Brake.Actual)
 						{
-							Specs.CurrentBrakeNotch.AddChange(Specs.CurrentBrakeNotch.Actual - 1, GetDelay(Specs.CurrentPowerNotch.Actual, Specs.DelayPowerDown));
+							Handles.Brake.AddChange(Handles.Brake.Actual - 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
 						}
-						else if (sec > Specs.CurrentBrakeNotch.Actual)
+						else if (sec > Handles.Brake.Actual)
 						{
-							Specs.CurrentBrakeNotch.AddChange(Specs.CurrentBrakeNotch.Actual + 1, GetDelay(Specs.CurrentBrakeNotch.Actual, Specs.DelayBrakeUp));
+							Handles.Brake.AddChange(Handles.Brake.Actual + 1, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeUp));
 						}
 					}
 					else
 					{
-						int m = Specs.CurrentBrakeNotch.DelayedChanges.Length - 1;
-						if (sec < Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
+						int m = Handles.Brake.DelayedChanges.Length - 1;
+						if (sec < Handles.Brake.DelayedChanges[m].Value)
 						{
-							Specs.CurrentBrakeNotch.AddChange(sec, GetDelay(Specs.CurrentBrakeNotch.Actual, Specs.DelayBrakeDown));
+							Handles.Brake.AddChange(sec, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeDown));
 						}
-						else if (sec > Specs.CurrentBrakeNotch.DelayedChanges[m].Value)
+						else if (sec > Handles.Brake.DelayedChanges[m].Value)
 						{
-							Specs.CurrentBrakeNotch.AddChange(sec, GetDelay(Specs.CurrentBrakeNotch.Actual, Specs.DelayBrakeUp));
+							Handles.Brake.AddChange(sec, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeUp));
 						}
 					}
-					if (Specs.CurrentBrakeNotch.DelayedChanges.Length >= 1)
+					if (Handles.Brake.DelayedChanges.Length >= 1)
 					{
-						if (Specs.CurrentBrakeNotch.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
+						if (Handles.Brake.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
 						{
-							Specs.CurrentBrakeNotch.Actual = Specs.CurrentBrakeNotch.DelayedChanges[0].Value;
-							Specs.CurrentBrakeNotch.RemoveChanges(1);
+							Handles.Brake.Actual = Handles.Brake.DelayedChanges[0].Value;
+							Handles.Brake.RemoveChanges(1);
 						}
 					}
 				}
 				{
 					// air brake handle
-					if (Specs.AirBrake.Handle.DelayedValue != AirBrakeHandleState.Invalid)
+					if (Handles.AirBrake.Handle.DelayedValue != AirBrakeHandleState.Invalid)
 					{
-						if (Specs.AirBrake.Handle.DelayedTime <= Game.SecondsSinceMidnight)
+						if (Handles.AirBrake.Handle.DelayedTime <= Game.SecondsSinceMidnight)
 						{
-							Specs.AirBrake.Handle.Actual = Specs.AirBrake.Handle.DelayedValue;
-							Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Invalid;
+							Handles.AirBrake.Handle.Actual = Handles.AirBrake.Handle.DelayedValue;
+							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Invalid;
 						}
 					}
 					else
 					{
-						if (Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Release & Specs.AirBrake.Handle.Actual != AirBrakeHandleState.Release)
+						if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Release & Handles.AirBrake.Handle.Actual != AirBrakeHandleState.Release)
 						{
-							Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Release;
-							Specs.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
+							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Release;
+							Handles.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
 						}
-						else if (Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Service & Specs.AirBrake.Handle.Actual != AirBrakeHandleState.Service)
+						else if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Service & Handles.AirBrake.Handle.Actual != AirBrakeHandleState.Service)
 						{
-							Specs.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Service;
-							Specs.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
+							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Service;
+							Handles.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
 						}
-						else if (Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Lap)
+						else if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Lap)
 						{
-							Specs.AirBrake.Handle.Actual = AirBrakeHandleState.Lap;
+							Handles.AirBrake.Handle.Actual = AirBrakeHandleState.Lap;
 						}
 					}
 				}
 				{
 					// emergency brake
-					if (Specs.CurrentEmergencyBrake.Safety & !Specs.CurrentEmergencyBrake.Actual)
+					if (Handles.EmergencyBrake.Safety & !Handles.EmergencyBrake.Actual)
 					{
 						double t = Game.SecondsSinceMidnight;
-						if (t < Specs.CurrentEmergencyBrake.ApplicationTime) Specs.CurrentEmergencyBrake.ApplicationTime = t;
-						if (Specs.CurrentEmergencyBrake.ApplicationTime <= Game.SecondsSinceMidnight)
+						if (t < Handles.EmergencyBrake.ApplicationTime) Handles.EmergencyBrake.ApplicationTime = t;
+						if (Handles.EmergencyBrake.ApplicationTime <= Game.SecondsSinceMidnight)
 						{
-							Specs.CurrentEmergencyBrake.Actual = true;
-							Specs.CurrentEmergencyBrake.ApplicationTime = double.MaxValue;
+							Handles.EmergencyBrake.Actual = true;
+							Handles.EmergencyBrake.ApplicationTime = double.MaxValue;
 						}
 					}
-					else if (!Specs.CurrentEmergencyBrake.Safety)
+					else if (!Handles.EmergencyBrake.Safety)
 					{
-						Specs.CurrentEmergencyBrake.Actual = false;
+						Handles.EmergencyBrake.Actual = false;
 					}
 				}
-				Specs.CurrentHoldBrake.Actual = Specs.CurrentHoldBrake.Driver;
+				Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 				// update speeds
 				UpdateSpeeds(TimeElapsed);
 				// Update Run and Motor sounds
@@ -390,11 +392,11 @@ namespace OpenBve
 					bool breaker;
 					if (Cars[DriverCar].Specs.BrakeType == CarBrakeType.AutomaticAirBrake)
 					{
-						breaker = Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Safety >= 1 & Specs.AirBrake.Handle.Safety == AirBrakeHandleState.Release & !Specs.CurrentEmergencyBrake.Safety & !Specs.CurrentHoldBrake.Actual;
+						breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Release & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 					}
 					else
 					{
-						breaker = Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Safety >= 1 & Specs.CurrentBrakeNotch.Safety == 0 & !Specs.CurrentEmergencyBrake.Safety & !Specs.CurrentHoldBrake.Actual;
+						breaker = Handles.Reverser.Actual != 0 & Handles.Power.Safety >= 1 & Handles.Brake.Safety == 0 & !Handles.EmergencyBrake.Safety & !Handles.HoldBrake.Actual;
 					}
 					if (breaker & !Cars[DriverCar].Sounds.BreakerResumed)
 					{
@@ -424,7 +426,7 @@ namespace OpenBve
 				// signals
 				if (CurrentSectionLimit == 0.0)
 				{
-					if (Specs.CurrentEmergencyBrake.Driver & Specs.CurrentAverageSpeed > -0.03 & Specs.CurrentAverageSpeed < 0.03)
+					if (Handles.EmergencyBrake.Driver & Specs.CurrentAverageSpeed > -0.03 & Specs.CurrentAverageSpeed < 0.03)
 					{
 						CurrentSectionLimit = 6.94444444444444;
 						if (this == PlayerTrain)
@@ -508,14 +510,14 @@ namespace OpenBve
 						{
 							if (DecelerationDueToMotor[i] == 0.0)
 							{
-								if (Specs.CurrentReverser.Actual != 0 & Specs.CurrentPowerNotch.Actual > 0 & !Specs.CurrentHoldBrake.Actual & !Specs.CurrentEmergencyBrake.Actual)
+								if (Handles.Reverser.Actual != 0 & Handles.Power.Actual > 0 & !Handles.HoldBrake.Actual & !Handles.EmergencyBrake.Actual)
 								{
 									// target acceleration
-									if (Specs.CurrentPowerNotch.Actual - 1 < Cars[i].Specs.AccelerationCurves.Length)
+									if (Handles.Power.Actual - 1 < Cars[i].Specs.AccelerationCurves.Length)
 									{
 										// Load factor is a constant 1.0 for anything prior to BVE5
 										// This will need to be changed when the relevant branch is merged in
-										a = Cars[i].Specs.AccelerationCurves[Specs.CurrentPowerNotch.Actual - 1].GetAccelerationOutput((double)Specs.CurrentReverser.Actual * Cars[i].Specs.CurrentSpeed, 1.0);
+										a = Cars[i].Specs.AccelerationCurves[Handles.Power.Actual - 1].GetAccelerationOutput((double)Handles.Reverser.Actual * Cars[i].Specs.CurrentSpeed, 1.0);
 									}
 									else
 									{
@@ -534,7 +536,7 @@ namespace OpenBve
 									else
 									{
 										Cars[i].FrontAxle.CurrentWheelSlip = true;
-										wheelspin += (double)Specs.CurrentReverser.Actual * a * Cars[i].Specs.MassCurrent;
+										wheelspin += (double)Handles.Reverser.Actual * a * Cars[i].Specs.MassCurrent;
 									}
 									if (a < wheelSlipAccelerationMotorRear)
 									{
@@ -543,13 +545,13 @@ namespace OpenBve
 									else
 									{
 										Cars[i].RearAxle.CurrentWheelSlip = true;
-										wheelspin += (double)Specs.CurrentReverser.Actual * a * Cars[i].Specs.MassCurrent;
+										wheelspin += (double)Handles.Reverser.Actual * a * Cars[i].Specs.MassCurrent;
 									}
 									// Update readhesion device
 									this.Cars[i].Specs.ReAdhesionDevice.Update(a);
 									// Update constant speed device
 
-									this.Cars[i].Specs.ConstSpeed.Update(ref a, this.Specs.CurrentConstSpeed, this.Specs.CurrentReverser.Actual);
+									this.Cars[i].Specs.ConstSpeed.Update(ref a, this.Specs.CurrentConstSpeed, this.Handles.Reverser.Actual);
 									
 									// finalize
 									if (wheelspin != 0.0) a = 0.0;
@@ -670,12 +672,12 @@ namespace OpenBve
 						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Game.RouteAccelerationDueToGravity;
 					}
 					// motor
-					if (Specs.CurrentReverser.Actual != 0)
+					if (Handles.Reverser.Actual != 0)
 					{
 						double factor = Cars[i].Specs.MassEmpty / Cars[i].Specs.MassCurrent;
 						if (Cars[i].Specs.CurrentAccelerationOutput > 0.0)
 						{
-							PowerRollingCouplerAcceleration += (double)Specs.CurrentReverser.Actual * Cars[i].Specs.CurrentAccelerationOutput * factor;
+							PowerRollingCouplerAcceleration += (double)Handles.Reverser.Actual * Cars[i].Specs.CurrentAccelerationOutput * factor;
 						}
 						else
 						{

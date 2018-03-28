@@ -94,7 +94,7 @@ namespace OpenBve
 					TrainManager.UnderailTrains();
 					TrackManager.SuppressSoundEvents = false;
 				}
-				if (train.Specs.CurrentEmergencyBrake.Driver)
+				if (train.Handles.EmergencyBrake.Driver)
 				{
 					TrainManager.ApplyNotch(train, 0, false, 0, true);
 				}
