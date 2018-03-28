@@ -592,6 +592,25 @@ A non-negative integer indicating how many notches the power handle needs to be 
 If the value is set to <em>PowerNotches</em>, the driver needs to reset the power notch to neutral before the power is actually reduced. If the driver wanted to go from power notch P4 to power notch P3, it would be first required to move down to neutral. When going down from P4 over P3, P2 and P1, the internal power output will still resemble power notch P4 during that time. Only once the neutral position is reached will the power output be actually reduced to zero. The driver could then increase the power to P3 as initially desired.
 </td></tr></table>
 <table><tr style="height: 4px;"><td /></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><em>EbHandleBehaviour</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>EbHandleBehaviour</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: No action is taken.<br />
+<b>1</b>: The <b>Power</b> handle is returned to neutral.<br />
+<b>2</b>: The <b>Reverser</b> handle is returned to neutral.<br />
+<b>3</b>: Both the <b>Power</b> and the <b>Reverser</b> handle are returned to neutral.
+</font></td></tr></table>
+This entry defines the behaviour of the Power and Reverser handles when the Emergency Brake is applied.<br>
+<b><em>Note:</b></em> Requires openBVE 1.5.3.3 or higher. [Will be silently ignored in older versions]<br /><br />
 <br /><table>
 <tr>
 <td width="16" valign="top" /><td>
