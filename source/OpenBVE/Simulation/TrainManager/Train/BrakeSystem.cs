@@ -753,6 +753,23 @@ namespace OpenBve
 			Train.Specs.CurrentEmergencyBrake.Driver = true;
 			Train.Specs.CurrentHoldBrake.Driver = false;
 			Train.Specs.CurrentConstSpeed = false;
+			if (Train.Specs.CurrentEmergencyBrake.Driver)
+			{
+				switch (Train.Specs.EbHandlesAction)
+				{
+					case EbHandleBehaviour.PowerNeutral:
+						TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						break;
+					case EbHandleBehaviour.ReverserNeutral:
+						TrainManager.ApplyReverser(Train, 0, false);
+						break;
+					case EbHandleBehaviour.PowerReverserNeutral:
+						TrainManager.ApplyNotch(Train, 0, false, 0, true);
+						TrainManager.ApplyReverser(Train, 0, false);
+						break;
+				}
+			}
+
 			// plugin
 			if (Train.Plugin == null) return;
 			Train.Plugin.UpdatePower();

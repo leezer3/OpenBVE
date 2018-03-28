@@ -102,6 +102,7 @@ namespace OpenBve {
 			Train.Specs.PassAlarm = TrainManager.PassAlarmType.None;
 			Train.Specs.DoorOpenMode = TrainManager.DoorMode.AutomaticManualOverride;
 			Train.Specs.DoorCloseMode = TrainManager.DoorMode.AutomaticManualOverride;
+			Train.Specs.EbHandlesAction = TrainManager.EbHandleBehaviour.NoAction;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new TrainManager.MotorSoundTableEntry[16];
@@ -375,19 +376,27 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
-										case 0: Train.Specs.SingleHandle = a == 1; break;
-										case 1:
-											if (a >= 0)
-											{
-												Train.Specs.MaximumPowerNotch = a;
-											}
-											else
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
-											}
+									case 0: Train.Specs.SingleHandle = a == 1; break;
+									case 1:
+										if (a >= 0)
+										{
+											Train.Specs.MaximumPowerNotch = a;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+									break;
+									case 2: Train.Specs.MaximumBrakeNotch = a; break;
+									case 3: Train.Specs.PowerNotchReduceSteps = a; break;
+									case 4:
+										if (a > 0 || a < 3)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "EbHandleBehaviour is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											break;
+										}
+										Train.Specs.EbHandlesAction = (TrainManager.EbHandleBehaviour) a;
 										break;
-										case 2: Train.Specs.MaximumBrakeNotch = a; break;
-										case 3: Train.Specs.PowerNotchReduceSteps = a; break;
 								}
 							} i++; n++;
 						} i--; break;

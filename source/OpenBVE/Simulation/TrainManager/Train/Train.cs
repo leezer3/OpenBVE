@@ -38,7 +38,7 @@ namespace OpenBve
 			internal int CurrentSectionIndex;
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
-			internal double InternalTimerTimeElapsed;
+			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
 			internal string[] PowerNotchDescriptions;

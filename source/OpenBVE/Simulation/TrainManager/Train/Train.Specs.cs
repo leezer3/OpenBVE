@@ -34,6 +34,7 @@
 			internal DoorMode DoorCloseMode;
 			internal DoorInterlockStates DoorInterlockState;
 			internal bool DoorClosureAttempted;
+			internal EbHandleBehaviour EbHandlesAction;
 		}
 	}
 }

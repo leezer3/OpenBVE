@@ -126,15 +126,24 @@ namespace TrainEditor {
 				Separate = 0,
 				Combined = 1
 			}
+			internal enum EbHandleBehaviour
+			{
+				NoAction = 0,
+				PowerNeutral = 1,
+				ReverserNeutral = 2,
+				PowerReverserNeutral = 3
+			}
 			internal HandleTypes HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
+			internal EbHandleBehaviour HandleBehaviour;
 			internal Handle() {
 				this.HandleType = HandleTypes.Separate;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
+				this.HandleBehaviour = EbHandleBehaviour.NoAction;
 			}
 		}
 		
@@ -500,6 +509,9 @@ namespace TrainEditor {
 									case 3:
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
+									case 4:
+										if (a <= 0 && a > 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -738,6 +750,7 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.PowerNotches.ToString(Culture).PadRight(n, ' ') + "; PowerNotches");
 			b.AppendLine(t.Handle.BrakeNotches.ToString(Culture).PadRight(n, ' ') + "; BrakeNotches");
 			b.AppendLine(t.Handle.PowerNotchReduceSteps.ToString(Culture).PadRight(n, ' ') + "; PowerNotchReduceSteps");
+			b.AppendLine(((int)t.Handle.HandleBehaviour).ToString(Culture).PadRight(n, ' ') + "; EbHandleBehaviour (1.5.3.3+)");
 			b.AppendLine("#CAB");
 			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
 			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");

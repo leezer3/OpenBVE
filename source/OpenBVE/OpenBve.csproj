@@ -240,6 +240,7 @@
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
+    <Compile Include="Simulation\TrainManager\Train\EbHandleBehaviour.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
