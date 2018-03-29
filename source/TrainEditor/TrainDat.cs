@@ -319,13 +319,39 @@ namespace TrainEditor {
 				}
 			}
 			bool ver1220000 = false;
+			const int currentVersion = 1530;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length != 0) {
 					string s = Lines[i].ToLowerInvariant();
-					if (s == "bve1220000") {
-						ver1220000 = true;
-					} else if (s != "bve2000000" & s != "openbve") {
-						MessageBox.Show("The format of the train.dat is not recognized.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					switch (s)
+					{
+						case "bve1200000":
+						case "bve1210000":
+						case "bve1220000":
+							ver1220000 = true;
+							break;
+						case "bve2000000":
+						case "openbve":
+							//No action
+							break;
+						default:
+							if (s.ToLowerInvariant().StartsWith("openbve"))
+							{
+								string tt = s.Substring(7, s.Length - 7);
+								int v;
+								if (int.TryParse(tt, out v))
+								{
+									if (v > currentVersion)
+									{
+										MessageBox.Show("The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
+									}
+								}
+								else
+								{
+									MessageBox.Show("The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+								}
+							}
+							break;
 					}
 					break;
 				}

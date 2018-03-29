@@ -36,7 +36,7 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			
+			const int currentVersion = 1530;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					string t = Lines[i].ToLowerInvariant();
@@ -58,8 +58,29 @@ namespace OpenBve {
 							currentFormat = TrainDatFormats.openBVE;
 							break;
 						default:
-							currentFormat = TrainDatFormats.Unsupported;
-							Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+							if (t.ToLowerInvariant().StartsWith("openbve"))
+							{
+								string tt = t.Substring(7, t.Length - 7);
+								int v;
+								if (NumberFormats.TryParseIntVb6(tt, out v))
+								{
+									currentFormat = TrainDatFormats.openBVE;
+									if (v > currentVersion)
+									{
+										Interface.AddMessage(Interface.MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
+									}
+								}
+								else
+								{
+									currentFormat = TrainDatFormats.Unsupported;
+									Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+								}
+							}
+							else
+							{
+								currentFormat = TrainDatFormats.Unsupported;
+								Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+							}
 							break;
 					}
 					break;
