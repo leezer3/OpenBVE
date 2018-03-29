@@ -183,7 +183,24 @@
     <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
-    <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
+	<Compile Include="Graphics\Renderer\Overlays.ATS.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.Debug.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.Functions.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.GameMessages.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.HUD.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
