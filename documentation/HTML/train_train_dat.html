@@ -63,7 +63,9 @@ The first line in the train.dat is expected to be an identifier indicating the v
 <font size="-1"><em>Version 1.22 is being used:</em></font>
 </td></tr><tr>
 <td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
-<tt>BVE1220000</tt></td>
+<tt>BVE1200000</br>
+BVE1210000</br>
+BVE1220000</tt></td>
 </tr>
 </table>
 <br /><table>
@@ -74,6 +76,16 @@ The first line in the train.dat is expected to be an identifier indicating the v
 <td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
 <tt>BVE2000000<br />
 OPENBVE</tt></td>
+</tr>
+</table>
+<br /> From Version <b>1.5.3.3</b> onwards, the <em>OPENBVE</em> identifier may optionally be followed by the minimum version number of openBVE required, e.g.
+<table>
+<tr>
+<td width="16" valign="top" /><td>
+<font size="-1"><em>openBVE 1.5.3.0 is required:</em></font>
+</td></tr><tr>
+<td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed;">
+<tt>OPENBVE1530</td>
 </tr>
 </table>
 <br />Any other value will be reported as being non-supported and version 2.0 will be assumed. The selected version number affects the parsing of the #ACCELERATION section, which is explained later on.<br /><br /><a name="syntax" />
