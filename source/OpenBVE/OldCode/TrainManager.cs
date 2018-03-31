@@ -559,7 +559,7 @@ namespace OpenBve
 		internal static void ApplyNotch(Train Train, int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative)
 		{
 			// determine notch
-			int p = PowerRelative ? PowerValue + Train.Specs.CurrentPowerNotch.Driver : PowerValue;
+			int p = PowerRelative ? PowerValue + Train.Handles.Power.Driver : PowerValue;
 			if (p < 0)
 			{
 				p = 0;
@@ -568,7 +568,7 @@ namespace OpenBve
 			{
 				p = Train.Specs.MaximumPowerNotch;
 			}
-			int b = BrakeRelative ? BrakeValue + Train.Specs.CurrentBrakeNotch.Driver : BrakeValue;
+			int b = BrakeRelative ? BrakeValue + Train.Handles.Brake.Driver : BrakeValue;
 			if (b < 0)
 			{
 				b = 0;
@@ -578,7 +578,7 @@ namespace OpenBve
 				b = Train.Specs.MaximumBrakeNotch;
 			}
 			// power sound
-			if (p < Train.Specs.CurrentPowerNotch.Driver)
+			if (p < Train.Handles.Power.Driver)
 			{
 				if (p > 0)
 				{
@@ -601,7 +601,7 @@ namespace OpenBve
 					}
 				}
 			}
-			else if (p > Train.Specs.CurrentPowerNotch.Driver)
+			else if (p > Train.Handles.Power.Driver)
 			{
 				if (p < Train.Specs.MaximumPowerNotch)
 				{
@@ -625,7 +625,7 @@ namespace OpenBve
 				}
 			}
 			// brake sound
-			if (b < Train.Specs.CurrentBrakeNotch.Driver)
+			if (b < Train.Handles.Brake.Driver)
 			{
 				// brake release
 				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Brake.Buffer;
@@ -655,7 +655,7 @@ namespace OpenBve
 					}
 				}
 			}
-			else if (b > Train.Specs.CurrentBrakeNotch.Driver)
+			else if (b > Train.Handles.Brake.Driver)
 			{
 				// brake
 				Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.BrakeHandleApply.Buffer;
@@ -670,8 +670,8 @@ namespace OpenBve
 			{
 				if (b != 0) p = 0;
 			}
-			Train.Specs.CurrentPowerNotch.Driver = p;
-			Train.Specs.CurrentBrakeNotch.Driver = b;
+			Train.Handles.Power.Driver = p;
+			Train.Handles.Brake.Driver = b;
 			Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 			// plugin
 			if (Train.Plugin != null)

@@ -183,7 +183,24 @@
     <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
-    <Compile Include="Graphics\Renderer\Overlays.Functions.cs" />
+	<Compile Include="Graphics\Renderer\Overlays.ATS.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.Debug.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.Functions.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.GameMessages.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.HUD.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
+		<DependentUpon>Overlays.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
@@ -240,6 +257,7 @@
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
+    <Compile Include="Simulation\TrainManager\Train\EbHandleBehaviour.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
@@ -248,6 +266,7 @@
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />

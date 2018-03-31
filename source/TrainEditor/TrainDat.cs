@@ -126,15 +126,24 @@ namespace TrainEditor {
 				Separate = 0,
 				Combined = 1
 			}
+			internal enum EbHandleBehaviour
+			{
+				NoAction = 0,
+				PowerNeutral = 1,
+				ReverserNeutral = 2,
+				PowerReverserNeutral = 3
+			}
 			internal HandleTypes HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
+			internal EbHandleBehaviour HandleBehaviour;
 			internal Handle() {
 				this.HandleType = HandleTypes.Separate;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
+				this.HandleBehaviour = EbHandleBehaviour.NoAction;
 			}
 		}
 		
@@ -292,6 +301,8 @@ namespace TrainEditor {
 			}
 		}
 
+		const int currentVersion = 1530;
+
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
 		/// <param name="FileName">The train.dat file to load.</param>
@@ -310,13 +321,39 @@ namespace TrainEditor {
 				}
 			}
 			bool ver1220000 = false;
+			
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length != 0) {
 					string s = Lines[i].ToLowerInvariant();
-					if (s == "bve1220000") {
-						ver1220000 = true;
-					} else if (s != "bve2000000" & s != "openbve") {
-						MessageBox.Show("The format of the train.dat is not recognized.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					switch (s)
+					{
+						case "bve1200000":
+						case "bve1210000":
+						case "bve1220000":
+							ver1220000 = true;
+							break;
+						case "bve2000000":
+						case "openbve":
+							//No action
+							break;
+						default:
+							if (s.ToLowerInvariant().StartsWith("openbve"))
+							{
+								string tt = s.Substring(7, s.Length - 7);
+								int v;
+								if (int.TryParse(tt, out v))
+								{
+									if (v > currentVersion)
+									{
+										MessageBox.Show("The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
+									}
+								}
+								else
+								{
+									MessageBox.Show("The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+								}
+							}
+							break;
 					}
 					break;
 				}
@@ -499,6 +536,9 @@ namespace TrainEditor {
 										break;
 									case 3:
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
+										break;
+									case 4:
+										if (a <= 0 && a > 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
 										break;
 								}
 							} i++; n++;
@@ -692,7 +732,7 @@ namespace TrainEditor {
 		internal static void Save(string FileName, Train t) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Text.StringBuilder b = new System.Text.StringBuilder();
-			b.AppendLine("OPENBVE");
+			b.AppendLine("OPENBVE" + currentVersion);
 			b.AppendLine("#ACCELERATION");
 			if (t.Acceleration.Entries.Length > t.Handle.PowerNotches) {
 				Array.Resize<Acceleration.Entry>(ref t.Acceleration.Entries, t.Handle.PowerNotches);
@@ -738,6 +778,7 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.PowerNotches.ToString(Culture).PadRight(n, ' ') + "; PowerNotches");
 			b.AppendLine(t.Handle.BrakeNotches.ToString(Culture).PadRight(n, ' ') + "; BrakeNotches");
 			b.AppendLine(t.Handle.PowerNotchReduceSteps.ToString(Culture).PadRight(n, ' ') + "; PowerNotchReduceSteps");
+			b.AppendLine(((int)t.Handle.HandleBehaviour).ToString(Culture).PadRight(n, ' ') + "; EbHandleBehaviour (1.5.3.3+)");
 			b.AppendLine("#CAB");
 			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
 			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");

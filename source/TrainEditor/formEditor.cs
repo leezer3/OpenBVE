@@ -52,6 +52,10 @@ namespace TrainEditor {
 			comboboxDoorCloseMode.Items.Add("Automatic");
 			comboboxDoorCloseMode.Items.Add("Manual");
 			comboboxSoundIndex.Items.Add("None");
+			comboBoxHandleBehaviour.Items.Add("No Action");
+			comboBoxHandleBehaviour.Items.Add("Return Power to neutral");
+			comboBoxHandleBehaviour.Items.Add("Return Reverser to neutral");
+			comboBoxHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
 				comboboxSoundIndex.Items.Add(i.ToString(culture));
@@ -195,6 +199,7 @@ namespace TrainEditor {
 				textboxBrakeNotches.Focus();
 				return false;
 			}
+			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;

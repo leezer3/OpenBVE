@@ -5,7 +5,7 @@
 	{
 		internal struct TrainSpecs
 		{
-			internal ReverserHandle CurrentReverser;
+			
 			internal double CurrentAverageSpeed;
 			internal double CurrentAverageAcceleration;
 			internal double CurrentAirPressure;
@@ -15,16 +15,15 @@
 			internal bool SingleHandle;
 			internal int PowerNotchReduceSteps;
 			internal int MaximumPowerNotch;
-			internal PowerHandle CurrentPowerNotch;
+			
 			internal int MaximumBrakeNotch;
-			internal BrakeHandle CurrentBrakeNotch;
-			internal EmergencyHandle CurrentEmergencyBrake;
+			
 			internal bool HasHoldBrake;
-			internal HoldBrakeHandle CurrentHoldBrake;
+			
 			internal DefaultSafetySystems DefaultSafetySystems;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal TrainAirBrake AirBrake;
+			
 			internal double[] DelayPowerUp;
 			internal double[] DelayPowerDown;
 			internal double[] DelayBrakeUp;
@@ -34,6 +33,7 @@
 			internal DoorMode DoorCloseMode;
 			internal DoorInterlockStates DoorInterlockState;
 			internal bool DoorClosureAttempted;
+			internal EbHandleBehaviour EbHandlesAction;
 		}
 	}
 }
