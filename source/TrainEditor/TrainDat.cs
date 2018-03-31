@@ -301,6 +301,8 @@ namespace TrainEditor {
 			}
 		}
 
+		const int currentVersion = 1530;
+
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
 		/// <param name="FileName">The train.dat file to load.</param>
@@ -319,7 +321,7 @@ namespace TrainEditor {
 				}
 			}
 			bool ver1220000 = false;
-			const int currentVersion = 1530;
+			
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length != 0) {
 					string s = Lines[i].ToLowerInvariant();
@@ -730,7 +732,7 @@ namespace TrainEditor {
 		internal static void Save(string FileName, Train t) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Text.StringBuilder b = new System.Text.StringBuilder();
-			b.AppendLine("OPENBVE");
+			b.AppendLine("OPENBVE" + currentVersion);
 			b.AppendLine("#ACCELERATION");
 			if (t.Acceleration.Entries.Length > t.Handle.PowerNotches) {
 				Array.Resize<Acceleration.Entry>(ref t.Acceleration.Entries, t.Handle.PowerNotches);
