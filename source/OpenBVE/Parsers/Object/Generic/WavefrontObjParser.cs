@@ -415,6 +415,22 @@ namespace OpenBve
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				if (mm == 0)
+				{
+					if (Object.Mesh.Materials.Length == 0)
+					{
+						/*
+						 * If the object has no materials defined at all, we need to add one
+						 */
+						Array.Resize(ref Object.Mesh.Materials, 1);
+						Object.Mesh.Materials[0] = new World.MeshMaterial();
+						Object.Mesh.Materials[0].Color = new Color32(255,255,255);
+						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
+						Object.Mesh.Materials[0].DaytimeTexture = null;
+						Object.Mesh.Materials[0].NighttimeTexture = null;
+						mm++;
+					}
+				}
 				if (Builder.Materials.Length > 0)
 				{
 					Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
