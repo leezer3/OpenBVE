@@ -470,6 +470,12 @@ namespace OpenBve
 								}
 								else
 								{
+									if (Template.Name == "MeshMaterialList")
+									{
+										//A MeshMaterialList can also end with two semi-colons
+										Position--;
+										return true;
+									}
 									Interface.AddMessage(Interface.MessageType.Error, false, "Unexpected semicolon encountered in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
