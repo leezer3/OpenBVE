@@ -119,9 +119,17 @@ namespace OpenBve {
 		}
 
 		// ================================
-
+		internal enum InterpolationMode
+		{
+			NearestNeighbor,
+			Bilinear,
+			NearestNeighborMipmapped,
+			BilinearMipmapped,
+			TrilinearMipmapped,
+			AnisotropicFiltering
+		}
 		internal struct Options {
-			internal TextureManager.InterpolationMode Interpolation;
+			internal InterpolationMode Interpolation;
             internal Renderer.TransparencyMode TransparencyMode;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;

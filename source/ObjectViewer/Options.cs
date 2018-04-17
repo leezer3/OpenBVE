@@ -79,13 +79,13 @@ namespace OpenBve
                                         case "interpolation":
                                             switch (Value.ToLowerInvariant())
                                             {
-                                                case "nearestneighbor": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor; break;
-                                                case "bilinear": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear; break;
-                                                case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped; break;
-                                                case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
-                                                case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped; break;
-                                                case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering; break;
-                                                default: Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
+                                                case "nearestneighbor": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighbor; break;
+                                                case "bilinear": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.Bilinear; break;
+                                                case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighborMipmapped; break;
+                                                case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped; break;
+                                                case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.TrilinearMipmapped; break;
+                                                case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.AnisotropicFiltering; break;
+                                                default: Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped; break;
                                             } break;
                                         case "anisotropicfilteringlevel":
                                             {

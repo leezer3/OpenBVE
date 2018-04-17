@@ -2112,54 +2112,20 @@ namespace OpenBve {
 								bool transparent;
 								if (Materials[j].TextureFilename != null)
 								{
-									TextureManager.TextureWrapMode WrapX, WrapY;
-									if (ForceTextureRepeatX)
-									{
-										WrapX = TextureManager.TextureWrapMode.Repeat;
-									}
-									else
-									{
-										WrapX = TextureManager.TextureWrapMode.ClampToEdge;
-									}
-									if (ForceTextureRepeatY)
-									{
-										WrapY = TextureManager.TextureWrapMode.Repeat;
-									}
-									else
-									{
-										WrapY = TextureManager.TextureWrapMode.ClampToEdge;
-									}
-									if (WrapX != TextureManager.TextureWrapMode.Repeat | WrapY != TextureManager.TextureWrapMode.Repeat)
-									{
-										for (int k = 0; k < nFaces; k++)
-										{
-											for (int h = 0; h < Faces[k].Length; h++)
-											{
-												if (Vertices[Faces[k][h]].TextureCoordinates.X < 0.0 | Vertices[Faces[k][h]].TextureCoordinates.X > 1.0)
-												{
-													WrapX = TextureManager.TextureWrapMode.Repeat;
-												}
-												if (Vertices[Faces[k][h]].TextureCoordinates.Y < 0.0 | Vertices[Faces[k][h]].TextureCoordinates.Y > 1.0)
-												{
-													WrapY = TextureManager.TextureWrapMode.Repeat;
-												}
-											}
-										}
-									}
-									int tday = TextureManager.RegisterTexture(Materials[j].TextureFilename, new Color24(0, 0, 0), 1, TextureManager.TextureLoadMode.Normal, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal, 0, 0, 0, 0);
-									Object.Mesh.Materials[mm + j].DaytimeTextureIndex = tday;
+									Textures.RegisterTexture(Materials[j].TextureFilename, new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Object.Mesh.Materials[mm + j].DaytimeTexture);
+									//Textures.UnloadTexture(Object.Mesh.Materials[mm + j].DaytimeTexture);
 									transparent = true;
 								}
 								else
 								{
-									Object.Mesh.Materials[mm + j].DaytimeTextureIndex = -1;
+									Object.Mesh.Materials[mm + j].DaytimeTexture = null;
 									transparent = false;
 								}
 								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
 								Object.Mesh.Materials[mm + j].TransparentColor = new Color24(0, 0, 0);
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
-								Object.Mesh.Materials[mm + j].NighttimeTextureIndex = -1;
+								Object.Mesh.Materials[mm + j].NighttimeTexture = null;
 								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;
 								Object.Mesh.Materials[mm + j].GlowAttenuationData = 0;
 							}

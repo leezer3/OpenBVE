@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Text;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
@@ -51,6 +52,8 @@ namespace OpenBve {
 
         internal static GameWindow currentGameWindow;
         internal static GraphicsMode currentGraphicsMode;
+
+		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
 		// main
 	    [STAThread]
 	    internal static void Main(string[] args)
@@ -73,9 +76,12 @@ namespace OpenBve {
 	            CurrentPlatform = Platform.Windows;
 	        }
 	        CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
+			CurrentHost = new Host();
+		    
 	        // file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
 	        FileSystem.CreateFileSystem();
+		    Plugins.LoadPlugins();
 	        // command line arguments
 	        SkipArgs = new bool[args.Length];
 	        if (args.Length != 0)
@@ -130,7 +136,7 @@ namespace OpenBve {
 	        currentGameWindow.Title = "Object Viewer";
 	        currentGameWindow.Run();
 	        // quit
-	        TextureManager.UnuseAllTextures();
+	        Textures.UnloadAllTextures();
 
 	    }
 
@@ -202,8 +208,8 @@ namespace OpenBve {
 			ReducedMode = false;
 			LightingRelative = -1.0;
 			Game.Reset();
-			TextureManager.UnuseAllTextures();
-			Fonts.Initialize();
+			Textures.UnloadAllTextures();
+			//Fonts.Initialize();
 			Interface.ClearMessages();
 			for (int i = 0; i < Files.Length; i++)
 			{
@@ -307,8 +313,8 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                TextureManager.UnuseAllTextures();
-	                Fonts.Initialize();
+	                Textures.UnloadAllTextures();
+	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
 	                {
@@ -350,8 +356,7 @@ namespace OpenBve {
 			            ReducedMode = false;
 			            LightingRelative = -1.0;
 			            Game.Reset();
-			            TextureManager.UnuseAllTextures();
-			            Fonts.Initialize();
+			            Textures.UnloadAllTextures();
 			            Interface.ClearMessages();
 			            for (int i = 0; i < Files.Length; i++)
 			            {
@@ -402,8 +407,8 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                TextureManager.UnuseAllTextures();
-	                Fonts.Initialize();
+	                Textures.UnloadAllTextures();
+	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                Files = new string[] {};
 	                break;

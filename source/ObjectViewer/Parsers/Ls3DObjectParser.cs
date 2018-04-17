@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -486,111 +487,109 @@ namespace OpenBve
             return Object;
         }
         private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
-        {
-            if (Builder.Faces.Length != 0)
-            {
-                int mf = Object.Mesh.Faces.Length;
-                int mm = Object.Mesh.Materials.Length;
-                int mv = Object.Mesh.Vertices.Length;
-                Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
-                Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-                Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
-                for (int i = 0; i < Builder.Vertices.Length; i++)
-                {
-                    Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
-                }
-                for (int i = 0; i < Builder.Faces.Length; i++)
-                {
-                    Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-                    for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
-                    {
-                        Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-                    }
-                    Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-                }
-                for (int i = 0; i < Builder.Materials.Length; i++)
-                {
-                    Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
-                    Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-                    Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-                    TextureManager.TextureWrapMode WrapX, WrapY;
-                    if (ForceTextureRepeatX)
-                    {
-                        WrapX = TextureManager.TextureWrapMode.Repeat;
-                    }
-                    else
-                    {
-                        WrapX = TextureManager.TextureWrapMode.ClampToEdge;
-                    }
-                    if (ForceTextureRepeatY)
-                    {
-                        WrapY = TextureManager.TextureWrapMode.Repeat;
-                    }
-                    else
-                    {
-                        WrapY = TextureManager.TextureWrapMode.ClampToEdge;
-                    }
-                    if (WrapX != TextureManager.TextureWrapMode.Repeat | WrapY != TextureManager.TextureWrapMode.Repeat)
-                    {
-                        for (int j = 0; j < Builder.Vertices.Length; j++)
-                        {
-                            if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0)
-                            {
-                                WrapX = TextureManager.TextureWrapMode.Repeat;
-                            }
-                            if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0)
-                            {
-                                WrapY = TextureManager.TextureWrapMode.Repeat;
-                            }
-                        }
-                    }
-                    if (Builder.Materials[i].DaytimeTexture != null)
-                    {
-	                    int tday;
-						
-
-	                    if (!string.IsNullOrEmpty(Builder.Materials[i].TransparencyTexture))
-	                    {
-		                    Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
-		                    Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
-							Bitmap Alpha = new Bitmap(Builder.Materials[i].TransparencyTexture);
-		                    if (Alpha.Size != Main.Size)
-		                    {
-			                    Alpha = ResizeImage(Alpha, Main.Size.Width, Main.Size.Height);
-		                    }
-		                    Bitmap texture = MergeAlphaBitmap(Main, Alpha);
-							//Dispose of main and alpha
-		                    Main.Dispose();
-		                    Alpha.Dispose();
-							tday = TextureManager.RegisterTexture(texture, true);
-	                    }
-	                    else
-	                    {
-							tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+		{
+			if (Builder.Faces.Length != 0)
+			{
+				int mf = Object.Mesh.Faces.Length;
+				int mm = Object.Mesh.Materials.Length;
+				int mv = Object.Mesh.Vertices.Length;
+				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
+				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
+				for (int i = 0; i < Builder.Vertices.Length; i++)
+				{
+					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
+				}
+				for (int i = 0; i < Builder.Faces.Length; i++)
+				{
+					Object.Mesh.Faces[mf + i] = Builder.Faces[i];
+					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
+					{
+						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+					}
+					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+				}
+				for (int i = 0; i < Builder.Materials.Length; i++)
+				{
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
+					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
+					Textures.OpenGlTextureWrapMode WrapX, WrapY;
+					if (ForceTextureRepeatX)
+					{
+						WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+					}
+					else
+					{
+						WrapX = Textures.OpenGlTextureWrapMode.ClampClamp;
+					}
+					if (ForceTextureRepeatY)
+					{
+						WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+					}
+					else
+					{
+						WrapY = Textures.OpenGlTextureWrapMode.ClampClamp;
+					}
+					if (WrapX != Textures.OpenGlTextureWrapMode.RepeatRepeat | WrapY != Textures.OpenGlTextureWrapMode.RepeatRepeat)
+					{
+						for (int j = 0; j < Builder.Vertices.Length; j++)
+						{
+							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0)
+							{
+								WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+							}
+							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0)
+							{
+								WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+							}
 						}
-						
-                        Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
-                    }
-                    else
-                    {
-                        Object.Mesh.Materials[mm + i].DaytimeTextureIndex = -1;
-                    }
-                    Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
-                    if (Builder.Materials[i].NighttimeTexture != null)
-                    {
-		                int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
-	                    Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
-                    }
-                    else
-                    {
-                        Object.Mesh.Materials[mm + i].NighttimeTextureIndex = -1;
-                    }
-                    Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-                    Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
-                    Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-                }
-            }
-        }
+					}
+					if (Builder.Materials[i].DaytimeTexture != null)
+					{
+						Textures.Texture tday;
+						if (Builder.Materials[i].TransparencyTexture != null)
+						{
+							Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
+							Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
+							Bitmap Alpha = new Bitmap(Builder.Materials[i].TransparencyTexture);
+							if (Alpha.Size != Main.Size)
+							{
+								Alpha = ResizeImage(Alpha, Main.Size.Width, Main.Size.Height);
+							}
+							Bitmap texture = MergeAlphaBitmap(Main, Alpha);
+							//Dispose of both main and alpha
+							Main.Dispose();
+							Alpha.Dispose();
+							tday = Textures.RegisterTexture(texture);
+						}
+						else
+						{
+							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tday);
+						}
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+					}
+					else
+					{
+						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
+					if (Builder.Materials[i].NighttimeTexture != null)
+					{
+						Textures.Texture tnight;
+						Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tnight);
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tnight;
+					}
+					else
+					{
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
+					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
+					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
+				}
+			}
+		}
 
 	    private static Bitmap MergeAlphaBitmap(Bitmap Main, Bitmap Alpha)
 	    {

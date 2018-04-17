@@ -57,8 +57,8 @@ namespace OpenBve {
 			internal Color32 Color;
 			internal Color24 TransparentColor;
 			internal Color24 EmissiveColor;
-			internal int DaytimeTextureIndex;
-			internal int NighttimeTextureIndex;
+			internal Textures.Texture DaytimeTexture;
+			internal Textures.Texture NighttimeTexture;
 			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
 			internal byte DaytimeNighttimeBlend;
 			internal MeshMaterialBlendMode BlendMode;
@@ -66,14 +66,15 @@ namespace OpenBve {
 			internal ushort GlowAttenuationData;
 			internal const int EmissiveColorMask = 1;
 			internal const int TransparentColorMask = 2;
+			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			// operators
 			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
 				if (A.Flags != B.Flags) return false;
 				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return false;
 				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return false;
 				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return false;
-				if (A.DaytimeTextureIndex != B.DaytimeTextureIndex) return false;
-				if (A.NighttimeTextureIndex != B.NighttimeTextureIndex) return false;
+				if (A.DaytimeTexture != B.DaytimeTexture) return false;
+				if (A.NighttimeTexture != B.NighttimeTexture) return false;
 				if (A.BlendMode != B.BlendMode) return false;
 				if (A.GlowAttenuationData != B.GlowAttenuationData) return false;
 				return true;
@@ -83,8 +84,8 @@ namespace OpenBve {
 				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return true;
 				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return true;
 				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return true;
-				if (A.DaytimeTextureIndex != B.DaytimeTextureIndex) return true;
-				if (A.NighttimeTextureIndex != B.NighttimeTextureIndex) return true;
+				if (A.DaytimeTexture != B.DaytimeTexture) return true;
+				if (A.NighttimeTexture != B.NighttimeTexture) return true;
 				if (A.BlendMode != B.BlendMode) return true;
 				if (A.GlowAttenuationData != B.GlowAttenuationData) return true;
 				return false;
@@ -199,8 +200,8 @@ namespace OpenBve {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTextureIndex = -1;
-				this.Materials[0].NighttimeTextureIndex = -1;
+				this.Materials[0].DaytimeTexture = null;
+				this.Materials[0].NighttimeTexture = null;
 				this.Faces = new MeshFace[1];
 				this.Faces[0].Material = 0;
 				this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
@@ -216,8 +217,8 @@ namespace OpenBve {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTextureIndex = -1;
-				this.Materials[0].NighttimeTextureIndex = -1;
+				this.Materials[0].DaytimeTexture = null;
+				this.Materials[0].NighttimeTexture = null;
 				this.Faces = new MeshFace[FaceVertices.Length];
 				for (int i = 0; i < FaceVertices.Length; i++) {
 					this.Faces[i] = new MeshFace(FaceVertices[i]);
@@ -537,7 +538,29 @@ namespace OpenBve {
 			}
 		}
 
-		// rotate
+		/// <summary>Rotates one vector based upon a second vector, input as induvidual co-ordinates</summary>
+		/// <param name="p">The vector to rotate</param>
+		/// <param name="dx">The X co-ordinate of the second vector</param>
+		/// <param name="dy">The Y co-ordinate of the second vector</param>
+		/// <param name="dz">The Z co-ordinate of the second vector</param>
+		/// <param name="cosa">The Cosine of the angle to rotate by</param>
+		/// <param name="sina">The Sine of the angle to rotate by</param>
+		internal static void Rotate(ref Vector3 p, double dx, double dy, double dz, double cosa, double sina)
+		{
+			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
+			dx *= t; dy *= t; dz *= t;
+			double oc = 1.0 - cosa;
+			double Opt1 = oc * dx * dy;
+			double Opt2 = sina * dz;
+			double Opt3 = oc * dy * dz;
+			double Opt4 = sina * dx;
+			double Opt5 = sina * dy;
+			double Opt6 = oc * dx * dz;
+			double x = (cosa + oc * dx * dx) * p.X + (Opt1 - Opt2) * p.Y + (Opt6 + Opt5) * p.Z;
+			double y = (cosa + oc * dy * dy) * p.Y + (Opt1 + Opt2) * p.X + (Opt3 - Opt4) * p.Z;
+			double z = (cosa + oc * dz * dz) * p.Z + (Opt6 - Opt5) * p.X + (Opt3 + Opt4) * p.Y;
+			p.X = x; p.Y = y; p.Z = z;
+		}
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
 			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
 			dx *= t; dy *= t; dz *= t;

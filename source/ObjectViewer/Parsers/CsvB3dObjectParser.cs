@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using OpenBveApi.Math;
-using OpenBveApi.Textures;
+using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -20,12 +21,13 @@ namespace OpenBve {
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
+			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
+			internal string Text;
 			internal Color TextColor;
 			internal Color BackgroundColor;
 			internal string Font;
-			internal Vector2 TextPadding;
-			internal string Text;
+			internal Vector2 TextPadding; 
 			internal Material() {
 				this.Color = new Color32(255, 255, 255, 255);
 				this.EmissiveColor = new Color24(0, 0, 0);
@@ -40,6 +42,7 @@ namespace OpenBve {
 				this.BackgroundColor = System.Drawing.Color.White;
 				this.TextPadding = new Vector2(0, 0);
 				this.Font = "Arial";
+				this.WrapMode = null;
 			}
 			internal Material(Material Prototype) {
 				this.Color = Prototype.Color;
@@ -55,6 +58,7 @@ namespace OpenBve {
 				this.BackgroundColor = Prototype.BackgroundColor;
 				this.TextPadding = Prototype.TextPadding;
 				this.Font = Prototype.Font;
+				this.WrapMode = Prototype.WrapMode;
 			}
 		}
 		private class MeshBuilder {
@@ -66,6 +70,20 @@ namespace OpenBve {
 				this.Faces = new World.MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
+		}
+
+		private static bool IsCommand(string Text)
+		{
+			switch (Text.Trim().ToLowerInvariant())
+			{
+				case "rotate":
+				case "translate":
+				case "vertex":
+					return true;
+				
+			}
+
+			return false;
 		}
 
 		private static readonly string[] CsvCommands =
@@ -111,36 +129,24 @@ namespace OpenBve {
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
+		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
+		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new World.Vertex[] { };
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
+			{
+				Mesh =
+				{
+					Faces = new World.MeshFace[] {},
+					Materials = new World.MeshMaterial[] {},
+					Vertices = new World.Vertex[] {}
+				}
+			};
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
-			if (!IsB3D)
-			{
-				/*
-				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
-				 */
-				for (int i = 0; i < Lines.Count; i++)
-				{
-					int idx = SecondIndexOfAny(Lines[i], CsvCommands);
-					if (idx != -1)
-					{
-						Lines[i] = Lines[i].Substring(0, idx);
-						string s = Lines[i].Substring(idx);
-						Lines.Add(s);
-					}
-				}
-			}
-
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
@@ -149,20 +155,26 @@ namespace OpenBve {
 				{
 					// Strip OpenBVE original standard comments
 					int j = Lines[i].IndexOf(';');
-					if (j >= 0) {
+					if (j >= 0)
+					{
 						Lines[i] = Lines[i].Substring(0, j);
 					}
 					// Strip double backslash comments
 					int k = Lines[i].IndexOf("//", StringComparison.Ordinal);
 					if (k >= 0)
 					{
+						if (IsPotentialPath(Lines[i]))
+						{
+							//HACK: Handles malformed potential paths
+							continue;
+						}
 						Lines[i] = Lines[i].Substring(0, k);
 					}
 					//Strip star backslash comments
 					if (!CommentStarted)
 					{
 						int l = Lines[i].IndexOf("/*", StringComparison.Ordinal);
-						if(l >= 0)
+						if (l >= 0)
 						{
 							CommentStarted = true;
 							string Part1 = Lines[i].Substring(0, l);
@@ -170,7 +182,7 @@ namespace OpenBve {
 							string Part2 = "";
 							if (m >= 0)
 							{
-								Part2 = Lines[i].Substring(m + 2, Lines[i].Length -2);
+								Part2 = Lines[i].Substring(m + 2, Lines[i].Length - 2);
 							}
 							Lines[i] = String.Concat(Part1, Part2);
 						}
@@ -219,7 +231,34 @@ namespace OpenBve {
 						Arguments[0] = Arguments[0].Substring(j + 1).TrimStart();
 					} else {
 						Command = Arguments[0];
-						Arguments = new string[] { };
+						bool resetArguments = true;
+						if (Arguments.Length != 1) {
+							if (!IsCommand(Command))
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid syntax at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							}
+							else
+							{
+								resetArguments = false;
+							}
+						}
+						if (resetArguments)
+						{
+							Arguments = new string[] { };
+						}
+						else
+						{
+							/*
+							 * This handles object files where the author has omitted the FIRST number in a statement, e.g.
+							 * rotate ,,1,30
+							 *
+							 * As this is missing, we don't detect it as a command
+							 *
+							 * Traffic light poles broken in the Neustadt tram routes without this
+							 */
+							Arguments[0] = string.Empty;
+						}
+
 					}
 				} else if (Arguments.Length != 0) {
 					// csv
@@ -247,7 +286,7 @@ namespace OpenBve {
 								if (Arguments.Length > 0) {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+								ApplyMeshBuilder(ref Object, Builder);
 								Builder = new MeshBuilder();
 								Normals = new Vector3[4];
 							} break;
@@ -337,8 +376,7 @@ namespace OpenBve {
 									if (q) {
 										int f = Builder.Faces.Length;
 										Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new World.MeshFace();
-										Builder.Faces[f].Vertices = new World.MeshFaceVertex[Arguments.Length];
+										Builder.Faces[f] = new World.MeshFace {Vertices = new World.MeshFaceVertex[Arguments.Length]};
 										while (Builder.Vertices.Length > Normals.Length) {
 											Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 										}
@@ -547,58 +585,59 @@ namespace OpenBve {
 							} break;
 						case "mirror":
 						case "mirrorall":
-						{
-							if (Arguments.Length > 6)
 							{
-								Interface.AddMessage(Interface.MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-							}
+								if (Arguments.Length > 6)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 
-							double vx = 0.0, vy = 0.0, vz = 0.0;
-							double nx = 0.0, ny = 0.0, nz = 0.0;
-							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								vx = 0.0;
-							}
-							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								vy = 0.0;
-							}
-							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								vz = 0.0;
-							}
-							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								nx = 0.0;
-							}
-							if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								ny = 0.0;
-							}
-							if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz))
-							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								nz = 0.0;
-							}
+								double vx = 0.0, vy = 0.0, vz = 0.0;
+								double nx = 0.0, ny = 0.0, nz = 0.0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vx = 0.0;
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vy = 0.0;
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									vz = 0.0;
+								}
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nx = 0.0;
+								}
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									ny = 0.0;
+								}
+								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz))
+								{
+									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									nz = 0.0;
+								}
 
-							if (Arguments.Length < 4)
-							{
-								nx = vx;
-								ny = vy;
-								nz = vz;
-							}
-							ApplyMirror(Builder, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
-							if (cmd == "mirrorall")
-							{
-								ApplyMirror(Object, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
-							}
+								if (Arguments.Length < 4)
+								{
+									nx = vx;
+									ny = vy;
+									nz = vz;
+								}
+								ApplyMirror(Builder, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								if (cmd == "mirrorall")
+								{
+									ApplyMirror(Object, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+								}
 
-						} break;
+							}
+							break;
 						case "generatenormals":
 						case "[texture]":
 							if (cmd == "generatenormals" & IsB3D) {
@@ -650,14 +689,17 @@ namespace OpenBve {
 								int m = Builder.Materials.Length;
 								Array.Resize<Material>(ref Builder.Materials, m << 1);
 								for (int j = m; j < Builder.Materials.Length; j++) {
-									Builder.Materials[j] = new Material(Builder.Materials[j - m]);
-									Builder.Materials[j].Color = new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-									Builder.Materials[j].BlendMode = Builder.Materials[0].BlendMode;
-									Builder.Materials[j].GlowAttenuationData = Builder.Materials[0].GlowAttenuationData;
-									Builder.Materials[j].DaytimeTexture = Builder.Materials[0].DaytimeTexture;
-									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
-									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
-									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+									Builder.Materials[j] = new Material(Builder.Materials[j - m])
+									{
+										Color = new Color32((byte) r, (byte) g, (byte) b, (byte) a),
+										BlendMode = Builder.Materials[0].BlendMode,
+										GlowAttenuationData = Builder.Materials[0].GlowAttenuationData,
+										DaytimeTexture = Builder.Materials[0].DaytimeTexture,
+										NighttimeTexture = Builder.Materials[0].NighttimeTexture,
+										TransparentColor = Builder.Materials[0].TransparentColor,
+										TransparentColorUsed = Builder.Materials[0].TransparentColorUsed,
+										WrapMode = Builder.Materials[0].WrapMode
+									};
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;
@@ -708,6 +750,7 @@ namespace OpenBve {
 									Builder.Materials[j].NighttimeTexture = Builder.Materials[0].NighttimeTexture;
 									Builder.Materials[j].TransparentColor = Builder.Materials[0].TransparentColor;
 									Builder.Materials[j].TransparentColorUsed = Builder.Materials[0].TransparentColorUsed;
+									Builder.Materials[j].WrapMode = Builder.Materials[0].WrapMode;
 								}
 								for (int j = 0; j < Builder.Faces.Length; j++) {
 									Builder.Faces[j].Material += (ushort)m;
@@ -755,8 +798,7 @@ namespace OpenBve {
 						case "setblendmode":
 						case "blendmode":
 							{
-								if ((cmd == "setblendmode" || cmd == "setblendingmode") & IsB3D)
-								{
+								if ((cmd == "setblendmode" || cmd == "setblendingmode") & IsB3D) {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "SetBlendMode is not a supported command - did you mean BlendMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "blendmode" & !IsB3D) {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "BlendMode is not a supported command - did you mean SetBlendMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -802,8 +844,47 @@ namespace OpenBve {
 							} break;
 						case "setwrapmode":
 						case "wrapmode":
-							Interface.AddMessage(Interface.MessageType.Information, false, "The Command " + Command + " is only supported in the main openBVE program at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-							break;
+							{
+								if (cmd == "setwrapmode" & IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "SetWrapMode is not a supported command - did you mean WrapMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else if (cmd == "wrapmode" & !IsB3D)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "WrapMode is not a supported command - did you mean SetWrapMode? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length > 3)
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								Textures.OpenGlTextureWrapMode? wrapmode = null;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0)
+								{
+									switch (Arguments[0].ToLowerInvariant())
+									{
+										case "clampclamp":
+											wrapmode = Textures.OpenGlTextureWrapMode.ClampClamp;
+											break;
+										case "clamprepeat":
+											wrapmode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+											break;
+										case "repeatclamp":
+											wrapmode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+											break;
+										case "repeatrepeat":
+											wrapmode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+											break;
+										default:
+											Interface.AddMessage(Interface.MessageType.Error, false, "The given WrapMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											wrapmode = null;
+											break;
+									}
+								}
+								for (int j = 0; j < Builder.Materials.Length; j++)
+								{
+									Builder.Materials[j].WrapMode = wrapmode;
+								}
+							} break;
 						case "loadtexture":
 						case "load":
 							{
@@ -914,7 +995,7 @@ namespace OpenBve {
 								if (cmd == "setbackgroundcolor" & IsB3D)
 								{
 									Interface.AddMessage(Interface.MessageType.Warning, false,
-									  "SetBackgroundColor is not a supported command - did you mean TextColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									  "SetBackgroundColor is not a supported command - did you mean BackgroundColor? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								else if (cmd == "backgroundcolor" & !IsB3D)
 								{
@@ -1028,17 +1109,52 @@ namespace OpenBve {
 								}
 							} break;
 						default:
-							if (Command.Length != 0) {
-								Interface.AddMessage(Interface.MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-							}
+							Interface.AddMessage(Interface.MessageType.Error, false, "The command " + Command + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							break;
 					}
 				}
 			}
 			// finalize object
-			ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
-			World.CreateNormals(ref Object.Mesh);
+			ApplyMeshBuilder(ref Object, Builder);
+			//Object.Mesh.CreateNormals();
+			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
+			{
+				int k = Object.Mesh.Faces[i].Material;
+				Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+				if (Object.Mesh.Materials[k].DaytimeTexture != null | Object.Mesh.Materials[k].NighttimeTexture != null)
+				{
+					if (Object.Mesh.Materials[k].WrapMode == null)
+					{
+						for (int v = 0; v < Object.Mesh.Vertices.Length; v++)
+						{
+							if (Object.Mesh.Vertices[v].TextureCoordinates.X < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+							}
+							if (Object.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f | Object.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+							{
+								wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+							}
+						}
+						Object.Mesh.Materials[k].WrapMode = wrap;
+					}
+				}
+			}
+
 			return Object;
+		}
+
+		private static bool IsPotentialPath(string Line)
+		{
+			string[] Images = {".bmp", ".gif" ,".jpg", ".jpeg", ".png"};
+			for (int i = 0; i < Images.Length; i++)
+			{
+				if (Line.IndexOf(Images[i], StringComparison.OrdinalIgnoreCase) >= 0)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		// create cube
@@ -1213,11 +1329,11 @@ namespace OpenBve {
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			for (int i = 0; i < Builder.Vertices.Length; i++) {
-				World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+				World.Rotate(ref Builder.Vertices[i].Coordinates, x, y, z, cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++) {
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++) {
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal, x, y, z, cosa, sina);
 				}
 			}
 		}
@@ -1225,11 +1341,11 @@ namespace OpenBve {
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, x, y, z, cosa, sina);
+				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
 			}
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal.X, ref Object.Mesh.Faces[j].Vertices[k].Normal.Y, ref Object.Mesh.Faces[j].Vertices[k].Normal.Z, x, y, z, cosa, sina);
+					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
 				}
 			}
 		}
@@ -1405,7 +1521,7 @@ namespace OpenBve {
 		}
 		
 		// apply mesh builder
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder) {
 			if (Builder.Faces.Length != 0) {
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
@@ -1427,30 +1543,9 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					TextureManager.TextureWrapMode WrapX, WrapY;
-					if (ForceTextureRepeatX) {
-						WrapX = TextureManager.TextureWrapMode.Repeat;
-					} else {
-						WrapX = TextureManager.TextureWrapMode.ClampToEdge;
-					}
-					if (ForceTextureRepeatY) {
-						WrapY = TextureManager.TextureWrapMode.Repeat;
-					} else {
-						WrapY = TextureManager.TextureWrapMode.ClampToEdge;
-					}
-					if (WrapX != TextureManager.TextureWrapMode.Repeat | WrapY != TextureManager.TextureWrapMode.Repeat) {
-						for (int j = 0; j < Builder.Vertices.Length; j++) {
-							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0) {
-								WrapX = TextureManager.TextureWrapMode.Repeat;
-							}
-							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0) {
-								WrapY = TextureManager.TextureWrapMode.Repeat;
-							}
-						}
-					}
 					if (Builder.Materials[i].DaytimeTexture != null || Builder.Materials[i].Text != null)
 					{
-						int tday;
+						Textures.Texture tday;
 						if (Builder.Materials[i].Text != null)
 						{
 							Bitmap bitmap = null;
@@ -1459,29 +1554,49 @@ namespace OpenBve {
 								bitmap = new Bitmap(Builder.Materials[i].DaytimeTexture);
 							}
 							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Builder.Materials[i].Text, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
-							tday = TextureManager.RegisterTexture(texture, Builder.Materials[i].TransparentColor);
+							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)));
 						}
 						else
 						{
-							tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture,Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte) 1 : (byte) 0, WrapX,WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+							if (Builder.Materials[i].TransparentColorUsed)
+							{
+								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture,
+									new OpenBveApi.Textures.TextureParameters(null,new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G,Builder.Materials[i].TransparentColor.B)), out tday);
 
+							}
+							else
+							{
+								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
+							}
 						}
-						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
-					} else {
-						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = -1;
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+					}
+					else
+					{
+						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
 					}
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null) {
-						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
-						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
+						Textures.Texture tnight;
+						if (Builder.Materials[i].TransparentColorUsed) {
+							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
+						} else {
+							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, out tnight);
+						}
+						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					} else {
-						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = -1;
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 					}
 					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[mm + i].WrapMode = Builder.Materials[i].WrapMode;
 				}
 			}
 		}
+
+
+		
 	}
+
 }
