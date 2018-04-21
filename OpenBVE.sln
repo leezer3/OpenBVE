@@ -40,7 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevTools", "DevTools", "{3D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarXMLConvertor", "source\CarXMLConvertor\CarXMLConvertor.csproj", "{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Dds", "source\plugins\Texture.Dds\Texture.Dds.csproj", "{EEC75E83-E284-44E0-B321-3F5C6512074F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Dds", "source\Plugins\Texture.Dds\Texture.Dds.csproj", "{EEC75E83-E284-44E0-B321-3F5C6512074F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
