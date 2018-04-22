@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevTools", "DevTools", "{3D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarXMLConvertor", "source\CarXMLConvertor\CarXMLConvertor.csproj", "{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Dds", "source\Plugins\Texture.Dds\Texture.Dds.csproj", "{EEC75E83-E284-44E0-B321-3F5C6512074F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +208,18 @@ Global
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{55901EEC-6FB3-4FB6-BDD9-C0E1042F3FBB}.Release|x86.Build.0 = Release|Any CPU
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|Any CPU.Build.0 = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|x86.ActiveCfg = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Debug|x86.Build.0 = Debug|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|Any CPU.ActiveCfg = Release|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|Any CPU.Build.0 = Release|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|Mixed Platforms.Build.0 = Release|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|x86.ActiveCfg = Release|x86
+		{EEC75E83-E284-44E0-B321-3F5C6512074F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -217,6 +231,7 @@ Global
 		{15142E7B-35F5-4E81-AA18-79C4D60B4C26} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{06D89847-9C7A-47D5-8C7A-95AEBFFF5F1E} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{E9B64673-65B7-4D77-A4DB-4B441A7C9197} = {3D6660F8-52D2-4A30-8F1E-1922DDCF10F9}
+		{EEC75E83-E284-44E0-B321-3F5C6512074F} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}
