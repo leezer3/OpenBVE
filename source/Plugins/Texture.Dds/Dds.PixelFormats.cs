@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Plugin
+﻿namespace Plugin
 {
 	/// <summary>Various pixel formats/compressors used by the DDS image.</summary>
 	internal enum PixelFormat

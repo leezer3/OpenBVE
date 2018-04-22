@@ -505,7 +505,7 @@ $(RELEASE_DIR)/$(TEXTURE_DDS_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) $(RELEASE_DIR)/$(TEXTURE_DDS_FILE): $(TEXTURE_DDS_SRC) $(TEXTURE_DDS_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_DDS_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TEXTURE_DDS_OUT) /target:library $(TEXTURE_DDS_SRC) $(ARGS) $(TEXTURE_DDS_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(TEXTURE_DDS_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll $(addprefix /resource:, $(TEXTURE_DDS_RESOURCE))
 
 ###############
 # RouteViewer #
