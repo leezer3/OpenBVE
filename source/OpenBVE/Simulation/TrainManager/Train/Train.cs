@@ -299,7 +299,7 @@ namespace OpenBve
 					{
 						if (sec < Handles.Brake.Actual)
 						{
-							Handles.Brake.AddChange(Handles.Brake.Actual - 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
+							Handles.Brake.AddChange(Handles.Brake.Actual - 1, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeDown));
 						}
 						else if (sec > Handles.Brake.Actual)
 						{
