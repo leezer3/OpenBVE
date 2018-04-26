@@ -81,7 +81,7 @@ namespace OpenBveApi.Math {
 		public static bool TryParseDouble(string Expression, double[] UnitFactors, out double Value)
 		{
 			double a;
-			if (double.TryParse(Expression, NumberStyles.Any, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;
@@ -122,7 +122,7 @@ namespace OpenBveApi.Math {
 		public static bool TryParseDoubleVb6(string Expression, double[] UnitFactors, out double Value)
 		{
 			double a;
-			if (double.TryParse(Expression, NumberStyles.Any, CultureInfo.InvariantCulture, out a))
+			if (double.TryParse(Expression, NumberStyles.Number, CultureInfo.InvariantCulture, out a))
 			{
 				Value = a * UnitFactors[UnitFactors.Length - 1];
 				return true;

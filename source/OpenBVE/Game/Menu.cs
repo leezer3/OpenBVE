@@ -284,6 +284,19 @@ namespace OpenBve
 										break;
 								}
 								break;
+							case Interface.ControlMethod.RailDriver:
+								str = "RailDriver [" + loadedControl.Component + " " + loadedControl.Element + "]";
+								switch (loadedControl.Component)
+								{
+									case Interface.JoystickComponent.FullAxis:
+									case Interface.JoystickComponent.Axis:
+										str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
+										break;
+									case Interface.JoystickComponent.Invalid:
+										str = Interface.GetInterfaceString("menu_joystick_notavailable");
+										break;
+								}
+								break;
 							case Interface.ControlMethod.Invalid:
 								str = Interface.GetInterfaceString("menu_joystick_notavailable");
 								break;
@@ -479,7 +492,14 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Joystick;
+				if (JoystickManager.AttachedJoysticks[device] is JoystickManager.Raildriver)
+				{
+					Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.RailDriver;
+				}
+				else
+				{
+					Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.Joystick;
+				}
 				Interface.CurrentControls[CustomControlIdx].Device = device;
 				Interface.CurrentControls[CustomControlIdx].Component = component;
 				Interface.CurrentControls[CustomControlIdx].Element = element;

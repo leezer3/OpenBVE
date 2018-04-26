@@ -1978,9 +1978,9 @@ namespace OpenBve
         internal static StaticObject CloneObject(StaticObject Prototype)
         {
             if (Prototype == null) return null;
-            return CloneObject(Prototype, -1, -1);
+            return CloneObject(Prototype, null, null);
         }
-        internal static StaticObject CloneObject(StaticObject Prototype, int DaytimeTextureIndex, int NighttimeTextureIndex)
+        internal static StaticObject CloneObject(StaticObject Prototype, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture)
         {
             if (Prototype == null) return null;
             StaticObject Result = new StaticObject();
@@ -2010,13 +2010,13 @@ namespace OpenBve
             for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
             {
                 Result.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-                if (DaytimeTextureIndex >= 0)
+                if (DaytimeTexture != null)
                 {
-                    Result.Mesh.Materials[j].DaytimeTextureIndex = DaytimeTextureIndex;
+                    Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
                 }
-                if (NighttimeTextureIndex >= 0)
+                if (NighttimeTexture != null)
                 {
-                    Result.Mesh.Materials[j].NighttimeTextureIndex = NighttimeTextureIndex;
+                    Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
                 }
             }
             return Result;

@@ -11,3 +11,7 @@ tab_width = 4
 
 [*.cs]
 csharp_preserve_single_line_blocks = false
+
+[*.yml]
+indent_style = space
+indent_size = 2

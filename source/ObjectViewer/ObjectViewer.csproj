@@ -75,10 +75,13 @@
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Hosts.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
+    <Compile Include="Plugins.cs" />
+    <Compile Include="Renderer.Strings.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />
@@ -97,6 +100,8 @@
     <Compile Include="RendererS.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="TextureManager.cs" />
+    <Compile Include="Textures.Texture.cs" />
+    <Compile Include="Textures.TextureOrigin.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
     <Compile Include="WorldS.cs" />

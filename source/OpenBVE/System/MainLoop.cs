@@ -221,19 +221,35 @@ namespace OpenBve
 			//Traverse the controls array
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
-				if (Interface.CurrentControls[i].Method != Interface.ControlMethod.Joystick)
+				int currentDevice = Interface.CurrentControls[i].Device;
+				//Check to see if our device is currently available
+				switch (Interface.CurrentControls[i].Method)
 				{
-					continue;
+					case Interface.ControlMethod.Joystick:
+						if (JoystickManager.AttachedJoysticks.Length == 0 || Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
+						{
+							//Not currently connected
+							continue;
+						}
+						break;
+					case Interface.ControlMethod.RailDriver:
+						if (JoystickManager.RailDriverIndex == -1)
+						{
+							//Not currently connected
+							continue;
+						}
+						currentDevice = JoystickManager.RailDriverIndex;
+						break;
+					default:
+						//Not a joystick / RD
+						continue;
 				}
 
-				if (JoystickManager.AttachedJoysticks.Length == 0 || !OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
-				{
-					continue;
-				}
+				
 				switch (Interface.CurrentControls[i].Component)
 				{
 					case Interface.JoystickComponent.Axis:
-						var axisState = JoystickManager.GetAxis(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element);
+						var axisState = JoystickManager.GetAxis(currentDevice, Interface.CurrentControls[i].Element);
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
 							Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
@@ -314,7 +330,7 @@ namespace OpenBve
 						break;
 					case Interface.JoystickComponent.Button:
 						//Load the current state
-						var buttonState = JoystickManager.GetButton(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element);
+						var buttonState = JoystickManager.GetButton(currentDevice, Interface.CurrentControls[i].Element);
 						//Test whether the state is the same as the last frame
 						if (buttonState.ToString() != Interface.CurrentControls[i].LastState)
 						{
@@ -336,7 +352,7 @@ namespace OpenBve
 						break;
 					case Interface.JoystickComponent.Hat:
 						//Load the current state
-						var hatState = JoystickManager.GetHat(Interface.CurrentControls[i].Device, Interface.CurrentControls[i].Element).Position;
+						var hatState = JoystickManager.GetHat(currentDevice, Interface.CurrentControls[i].Element).Position;
 						//Test if the state is the same as last frame
 						if (hatState.ToString() != Interface.CurrentControls[i].LastState)
 						{

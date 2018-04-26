@@ -30,7 +30,7 @@ namespace OpenBve {
 					// data
 					if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard) {
 						radiobuttonKeyboard.Checked = true;
-					} else if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick) {
+					} else if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick || Interface.CurrentControls[i].Method == Interface.ControlMethod.RailDriver) {
 						radiobuttonJoystick.Checked = true;
 					} else {
 						radiobuttonKeyboard.Checked = false;
@@ -181,6 +181,25 @@ namespace OpenBve {
 						} else {
 							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_hat_invalid");
 						} break;
+				}
+				return t;
+			} 
+			if (Interface.CurrentControls[Index].Method == Interface.ControlMethod.RailDriver) {
+
+				string t = "RailDriver";
+				switch (Interface.CurrentControls[Index].Component) {
+					case Interface.JoystickComponent.Axis:
+						t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis").Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
+						if (Interface.CurrentControls[Index].Direction == -1) {
+							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis_negative");
+						} else if (Interface.CurrentControls[Index].Direction == 1) {
+							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis_positive");
+						} else {
+							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis_invalid");
+						} break;
+					case Interface.JoystickComponent.Button:
+						t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_button").Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
+						break;
 				}
 				return t;
 			} 

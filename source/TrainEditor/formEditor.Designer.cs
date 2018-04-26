@@ -229,6 +229,9 @@
 			this.buttonNew = new System.Windows.Forms.Button();
 			this.pictureboxLogo = new System.Windows.Forms.PictureBox();
 			this.labelLineVertical = new System.Windows.Forms.Label();
+			this.groupBoxOther = new System.Windows.Forms.GroupBox();
+			this.comboBoxHandleBehaviour = new System.Windows.Forms.ComboBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.tabcontrolTabs.SuspendLayout();
 			this.tabpagePropertiesOne.SuspendLayout();
 			this.groupboxPressure.SuspendLayout();
@@ -263,13 +266,14 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).BeginInit();
 			this.panelPane.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
+			this.groupBoxOther.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabcontrolTabs
 			// 
 			this.tabcontrolTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabcontrolTabs.Controls.Add(this.tabpagePropertiesOne);
 			this.tabcontrolTabs.Controls.Add(this.tabpagePropertiesTwo);
 			this.tabcontrolTabs.Controls.Add(this.tabpageAcceleration);
@@ -342,7 +346,7 @@
 			// labelBrakePipeNormalPressure
 			// 
 			this.labelBrakePipeNormalPressure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakePipeNormalPressure.Location = new System.Drawing.Point(8, 112);
 			this.labelBrakePipeNormalPressure.Name = "labelBrakePipeNormalPressure";
 			this.labelBrakePipeNormalPressure.Size = new System.Drawing.Size(216, 16);
@@ -425,7 +429,7 @@
 			// labelMainReservoirMaximumPressure
 			// 
 			this.labelMainReservoirMaximumPressure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMainReservoirMaximumPressure.Location = new System.Drawing.Point(8, 88);
 			this.labelMainReservoirMaximumPressure.Name = "labelMainReservoirMaximumPressure";
 			this.labelMainReservoirMaximumPressure.Size = new System.Drawing.Size(216, 16);
@@ -436,7 +440,7 @@
 			// labelMainReservoirMinimumPressure
 			// 
 			this.labelMainReservoirMinimumPressure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMainReservoirMinimumPressure.Location = new System.Drawing.Point(8, 64);
 			this.labelMainReservoirMinimumPressure.Name = "labelMainReservoirMinimumPressure";
 			this.labelMainReservoirMinimumPressure.Size = new System.Drawing.Size(216, 16);
@@ -447,7 +451,7 @@
 			// labelBrakeCylinderEmergencyMaximumPressure
 			// 
 			this.labelBrakeCylinderEmergencyMaximumPressure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(8, 40);
 			this.labelBrakeCylinderEmergencyMaximumPressure.Name = "labelBrakeCylinderEmergencyMaximumPressure";
 			this.labelBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(216, 16);
@@ -458,7 +462,7 @@
 			// labelBrakeCylinderServiceMaximumPressure
 			// 
 			this.labelBrakeCylinderServiceMaximumPressure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(8, 16);
 			this.labelBrakeCylinderServiceMaximumPressure.Name = "labelBrakeCylinderServiceMaximumPressure";
 			this.labelBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(216, 16);
@@ -532,7 +536,7 @@
 			// labelBrakeCylinderDown
 			// 
 			this.labelBrakeCylinderDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeCylinderDown.Location = new System.Drawing.Point(8, 136);
 			this.labelBrakeCylinderDown.Name = "labelBrakeCylinderDown";
 			this.labelBrakeCylinderDown.Size = new System.Drawing.Size(136, 16);
@@ -543,7 +547,7 @@
 			// labelBrakeCylinderUp
 			// 
 			this.labelBrakeCylinderUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeCylinderUp.Location = new System.Drawing.Point(8, 112);
 			this.labelBrakeCylinderUp.Name = "labelBrakeCylinderUp";
 			this.labelBrakeCylinderUp.Size = new System.Drawing.Size(136, 16);
@@ -626,7 +630,7 @@
 			// labelJerkBrakeDown
 			// 
 			this.labelJerkBrakeDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelJerkBrakeDown.Location = new System.Drawing.Point(8, 88);
 			this.labelJerkBrakeDown.Name = "labelJerkBrakeDown";
 			this.labelJerkBrakeDown.Size = new System.Drawing.Size(136, 16);
@@ -637,7 +641,7 @@
 			// labelJerkBrakeUp
 			// 
 			this.labelJerkBrakeUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelJerkBrakeUp.Location = new System.Drawing.Point(8, 64);
 			this.labelJerkBrakeUp.Name = "labelJerkBrakeUp";
 			this.labelJerkBrakeUp.Size = new System.Drawing.Size(136, 16);
@@ -648,7 +652,7 @@
 			// labelJerkPowerDown
 			// 
 			this.labelJerkPowerDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelJerkPowerDown.Location = new System.Drawing.Point(8, 40);
 			this.labelJerkPowerDown.Name = "labelJerkPowerDown";
 			this.labelJerkPowerDown.Size = new System.Drawing.Size(136, 16);
@@ -659,7 +663,7 @@
 			// labelJerkPowerUp
 			// 
 			this.labelJerkPowerUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelJerkPowerUp.Location = new System.Drawing.Point(8, 16);
 			this.labelJerkPowerUp.Name = "labelJerkPowerUp";
 			this.labelJerkPowerUp.Size = new System.Drawing.Size(136, 16);
@@ -763,7 +767,7 @@
 			// labelDelayBrakeDown
 			// 
 			this.labelDelayBrakeDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDelayBrakeDown.Location = new System.Drawing.Point(8, 88);
 			this.labelDelayBrakeDown.Name = "labelDelayBrakeDown";
 			this.labelDelayBrakeDown.Size = new System.Drawing.Size(136, 16);
@@ -774,7 +778,7 @@
 			// labelDelayBrakeUp
 			// 
 			this.labelDelayBrakeUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDelayBrakeUp.Location = new System.Drawing.Point(8, 64);
 			this.labelDelayBrakeUp.Name = "labelDelayBrakeUp";
 			this.labelDelayBrakeUp.Size = new System.Drawing.Size(136, 16);
@@ -785,7 +789,7 @@
 			// labelDelayPowerDown
 			// 
 			this.labelDelayPowerDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDelayPowerDown.Location = new System.Drawing.Point(8, 40);
 			this.labelDelayPowerDown.Name = "labelDelayPowerDown";
 			this.labelDelayPowerDown.Size = new System.Drawing.Size(136, 16);
@@ -796,7 +800,7 @@
 			// labelDelayPowerUp
 			// 
 			this.labelDelayPowerUp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDelayPowerUp.Location = new System.Drawing.Point(8, 16);
 			this.labelDelayPowerUp.Name = "labelDelayPowerUp";
 			this.labelDelayPowerUp.Size = new System.Drawing.Size(136, 16);
@@ -824,7 +828,7 @@
 			// textboxPowerNotchReduceSteps
 			// 
 			this.textboxPowerNotchReduceSteps.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxPowerNotchReduceSteps.Location = new System.Drawing.Point(168, 88);
 			this.textboxPowerNotchReduceSteps.Name = "textboxPowerNotchReduceSteps";
 			this.textboxPowerNotchReduceSteps.Size = new System.Drawing.Size(160, 20);
@@ -842,7 +846,7 @@
 			// textboxBrakeNotches
 			// 
 			this.textboxBrakeNotches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxBrakeNotches.Location = new System.Drawing.Point(168, 64);
 			this.textboxBrakeNotches.Name = "textboxBrakeNotches";
 			this.textboxBrakeNotches.Size = new System.Drawing.Size(160, 20);
@@ -860,7 +864,7 @@
 			// textboxPowerNotches
 			// 
 			this.textboxPowerNotches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxPowerNotches.Location = new System.Drawing.Point(168, 40);
 			this.textboxPowerNotches.Name = "textboxPowerNotches";
 			this.textboxPowerNotches.Size = new System.Drawing.Size(160, 20);
@@ -878,7 +882,7 @@
 			// comboboxHandleType
 			// 
 			this.comboboxHandleType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxHandleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxHandleType.FormattingEnabled = true;
 			this.comboboxHandleType.Location = new System.Drawing.Point(168, 16);
@@ -932,7 +936,7 @@
 			// comboboxBrakeControlSystem
 			// 
 			this.comboboxBrakeControlSystem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxBrakeControlSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxBrakeControlSystem.FormattingEnabled = true;
 			this.comboboxBrakeControlSystem.Location = new System.Drawing.Point(8, 72);
@@ -943,7 +947,7 @@
 			// comboboxBrakeType
 			// 
 			this.comboboxBrakeType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxBrakeType.FormattingEnabled = true;
 			this.comboboxBrakeType.Location = new System.Drawing.Point(8, 32);
@@ -954,7 +958,7 @@
 			// labelBrakeControlSpeed
 			// 
 			this.labelBrakeControlSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeControlSpeed.Location = new System.Drawing.Point(8, 104);
 			this.labelBrakeControlSpeed.Name = "labelBrakeControlSpeed";
 			this.labelBrakeControlSpeed.Size = new System.Drawing.Size(216, 16);
@@ -974,7 +978,7 @@
 			// labelBrakeType
 			// 
 			this.labelBrakeType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelBrakeType.Location = new System.Drawing.Point(8, 16);
 			this.labelBrakeType.Name = "labelBrakeType";
 			this.labelBrakeType.Size = new System.Drawing.Size(320, 16);
@@ -1003,7 +1007,7 @@
 			// textboxAerodynamicDragCoefficient
 			// 
 			this.textboxAerodynamicDragCoefficient.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxAerodynamicDragCoefficient.Location = new System.Drawing.Point(168, 88);
 			this.textboxAerodynamicDragCoefficient.Name = "textboxAerodynamicDragCoefficient";
 			this.textboxAerodynamicDragCoefficient.Size = new System.Drawing.Size(104, 20);
@@ -1021,7 +1025,7 @@
 			// textboxCoefficientOfRollingResistance
 			// 
 			this.textboxCoefficientOfRollingResistance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxCoefficientOfRollingResistance.Location = new System.Drawing.Point(168, 64);
 			this.textboxCoefficientOfRollingResistance.Name = "textboxCoefficientOfRollingResistance";
 			this.textboxCoefficientOfRollingResistance.Size = new System.Drawing.Size(104, 20);
@@ -1039,7 +1043,7 @@
 			// textboxCoefficientOfStaticFriction
 			// 
 			this.textboxCoefficientOfStaticFriction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxCoefficientOfStaticFriction.Location = new System.Drawing.Point(168, 40);
 			this.textboxCoefficientOfStaticFriction.Name = "textboxCoefficientOfStaticFriction";
 			this.textboxCoefficientOfStaticFriction.Size = new System.Drawing.Size(104, 20);
@@ -1067,7 +1071,7 @@
 			// textboxDeceleration
 			// 
 			this.textboxDeceleration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxDeceleration.Location = new System.Drawing.Point(168, 16);
 			this.textboxDeceleration.Name = "textboxDeceleration";
 			this.textboxDeceleration.Size = new System.Drawing.Size(56, 20);
@@ -1084,6 +1088,7 @@
 			// 
 			// tabpagePropertiesTwo
 			// 
+			this.tabpagePropertiesTwo.Controls.Add(this.groupBoxOther);
 			this.tabpagePropertiesTwo.Controls.Add(this.groupboxCar);
 			this.tabpagePropertiesTwo.Controls.Add(this.groupboxCab);
 			this.tabpagePropertiesTwo.Controls.Add(this.groupboxDevice);
@@ -1155,7 +1160,7 @@
 			// labelCenterOfGravityHeight
 			// 
 			this.labelCenterOfGravityHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelCenterOfGravityHeight.Location = new System.Drawing.Point(8, 208);
 			this.labelCenterOfGravityHeight.Name = "labelCenterOfGravityHeight";
 			this.labelCenterOfGravityHeight.Size = new System.Drawing.Size(160, 16);
@@ -1184,7 +1189,7 @@
 			// labelUnexposedFrontalArea
 			// 
 			this.labelUnexposedFrontalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelUnexposedFrontalArea.Location = new System.Drawing.Point(8, 256);
 			this.labelUnexposedFrontalArea.Name = "labelUnexposedFrontalArea";
 			this.labelUnexposedFrontalArea.Size = new System.Drawing.Size(160, 16);
@@ -1313,7 +1318,7 @@
 			// labelExposedFrontalArea
 			// 
 			this.labelExposedFrontalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelExposedFrontalArea.Location = new System.Drawing.Point(8, 232);
 			this.labelExposedFrontalArea.Name = "labelExposedFrontalArea";
 			this.labelExposedFrontalArea.Size = new System.Drawing.Size(160, 16);
@@ -1324,7 +1329,7 @@
 			// labelHeightOfACar
 			// 
 			this.labelHeightOfACar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelHeightOfACar.Location = new System.Drawing.Point(8, 184);
 			this.labelHeightOfACar.Name = "labelHeightOfACar";
 			this.labelHeightOfACar.Size = new System.Drawing.Size(160, 16);
@@ -1335,7 +1340,7 @@
 			// labelWidthOfACar
 			// 
 			this.labelWidthOfACar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelWidthOfACar.Location = new System.Drawing.Point(8, 160);
 			this.labelWidthOfACar.Name = "labelWidthOfACar";
 			this.labelWidthOfACar.Size = new System.Drawing.Size(160, 16);
@@ -1346,7 +1351,7 @@
 			// labelFrontCarIsMotorCar
 			// 
 			this.labelFrontCarIsMotorCar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelFrontCarIsMotorCar.Location = new System.Drawing.Point(8, 136);
 			this.labelFrontCarIsMotorCar.Name = "labelFrontCarIsMotorCar";
 			this.labelFrontCarIsMotorCar.Size = new System.Drawing.Size(160, 16);
@@ -1357,7 +1362,7 @@
 			// labelLengthOfACar
 			// 
 			this.labelLengthOfACar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelLengthOfACar.Location = new System.Drawing.Point(8, 112);
 			this.labelLengthOfACar.Name = "labelLengthOfACar";
 			this.labelLengthOfACar.Size = new System.Drawing.Size(160, 16);
@@ -1376,7 +1381,7 @@
 			// labelNumberOfTrailerCars
 			// 
 			this.labelNumberOfTrailerCars.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNumberOfTrailerCars.Location = new System.Drawing.Point(8, 88);
 			this.labelNumberOfTrailerCars.Name = "labelNumberOfTrailerCars";
 			this.labelNumberOfTrailerCars.Size = new System.Drawing.Size(160, 16);
@@ -1387,7 +1392,7 @@
 			// labelTrailerCarMass
 			// 
 			this.labelTrailerCarMass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTrailerCarMass.Location = new System.Drawing.Point(8, 64);
 			this.labelTrailerCarMass.Name = "labelTrailerCarMass";
 			this.labelTrailerCarMass.Size = new System.Drawing.Size(160, 16);
@@ -1406,7 +1411,7 @@
 			// labelNumberOfMotorCars
 			// 
 			this.labelNumberOfMotorCars.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNumberOfMotorCars.Location = new System.Drawing.Point(8, 40);
 			this.labelNumberOfMotorCars.Name = "labelNumberOfMotorCars";
 			this.labelNumberOfMotorCars.Size = new System.Drawing.Size(160, 16);
@@ -1417,7 +1422,7 @@
 			// labelMotorCarMass
 			// 
 			this.labelMotorCarMass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMotorCarMass.Location = new System.Drawing.Point(8, 16);
 			this.labelMotorCarMass.Name = "labelMotorCarMass";
 			this.labelMotorCarMass.Size = new System.Drawing.Size(160, 16);
@@ -1456,7 +1461,7 @@
 			// labelDriverCar
 			// 
 			this.labelDriverCar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDriverCar.Location = new System.Drawing.Point(8, 88);
 			this.labelDriverCar.Name = "labelDriverCar";
 			this.labelDriverCar.Size = new System.Drawing.Size(160, 16);
@@ -1521,7 +1526,7 @@
 			// labelZ
 			// 
 			this.labelZ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelZ.Location = new System.Drawing.Point(8, 64);
 			this.labelZ.Name = "labelZ";
 			this.labelZ.Size = new System.Drawing.Size(160, 16);
@@ -1532,7 +1537,7 @@
 			// labelY
 			// 
 			this.labelY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelY.Location = new System.Drawing.Point(8, 40);
 			this.labelY.Name = "labelY";
 			this.labelY.Size = new System.Drawing.Size(160, 16);
@@ -1543,7 +1548,7 @@
 			// labelX
 			// 
 			this.labelX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelX.Location = new System.Drawing.Point(8, 16);
 			this.labelX.Name = "labelX";
 			this.labelX.Size = new System.Drawing.Size(160, 16);
@@ -1591,7 +1596,7 @@
 			// labelDoorCloseMode
 			// 
 			this.labelDoorCloseMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDoorCloseMode.Location = new System.Drawing.Point(8, 208);
 			this.labelDoorCloseMode.Name = "labelDoorCloseMode";
 			this.labelDoorCloseMode.Size = new System.Drawing.Size(160, 16);
@@ -1612,7 +1617,7 @@
 			// labelDoorOpenMode
 			// 
 			this.labelDoorOpenMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelDoorOpenMode.Location = new System.Drawing.Point(8, 184);
 			this.labelDoorOpenMode.Name = "labelDoorOpenMode";
 			this.labelDoorOpenMode.Size = new System.Drawing.Size(160, 16);
@@ -1633,7 +1638,7 @@
 			// labelAts
 			// 
 			this.labelAts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAts.Location = new System.Drawing.Point(8, 16);
 			this.labelAts.Name = "labelAts";
 			this.labelAts.Size = new System.Drawing.Size(160, 16);
@@ -1654,7 +1659,7 @@
 			// labelPassAlarm
 			// 
 			this.labelPassAlarm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelPassAlarm.Location = new System.Drawing.Point(8, 160);
 			this.labelPassAlarm.Name = "labelPassAlarm";
 			this.labelPassAlarm.Size = new System.Drawing.Size(160, 16);
@@ -1675,7 +1680,7 @@
 			// labelReAdhesionDevice
 			// 
 			this.labelReAdhesionDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelReAdhesionDevice.Location = new System.Drawing.Point(8, 136);
 			this.labelReAdhesionDevice.Name = "labelReAdhesionDevice";
 			this.labelReAdhesionDevice.Size = new System.Drawing.Size(160, 16);
@@ -1696,7 +1701,7 @@
 			// labelHoldBrake
 			// 
 			this.labelHoldBrake.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelHoldBrake.Location = new System.Drawing.Point(8, 112);
 			this.labelHoldBrake.Name = "labelHoldBrake";
 			this.labelHoldBrake.Size = new System.Drawing.Size(160, 16);
@@ -1717,7 +1722,7 @@
 			// labelConstSpeed
 			// 
 			this.labelConstSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelConstSpeed.Location = new System.Drawing.Point(8, 88);
 			this.labelConstSpeed.Name = "labelConstSpeed";
 			this.labelConstSpeed.Size = new System.Drawing.Size(160, 16);
@@ -1738,7 +1743,7 @@
 			// labelEb
 			// 
 			this.labelEb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelEb.Location = new System.Drawing.Point(8, 64);
 			this.labelEb.Name = "labelEb";
 			this.labelEb.Size = new System.Drawing.Size(160, 16);
@@ -1759,7 +1764,7 @@
 			// labelAtc
 			// 
 			this.labelAtc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAtc.Location = new System.Drawing.Point(8, 40);
 			this.labelAtc.Name = "labelAtc";
 			this.labelAtc.Size = new System.Drawing.Size(160, 16);
@@ -1785,8 +1790,8 @@
 			// pictureboxAcceleration
 			// 
 			this.pictureboxAcceleration.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureboxAcceleration.BackColor = System.Drawing.Color.Transparent;
 			this.pictureboxAcceleration.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.pictureboxAcceleration.Location = new System.Drawing.Point(8, 8);
@@ -1818,7 +1823,7 @@
 			// textboxAccelerationMaxY
 			// 
 			this.textboxAccelerationMaxY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxAccelerationMaxY.Location = new System.Drawing.Point(48, 128);
 			this.textboxAccelerationMaxY.Name = "textboxAccelerationMaxY";
 			this.textboxAccelerationMaxY.Size = new System.Drawing.Size(40, 20);
@@ -1829,7 +1834,7 @@
 			// labelAccelerationMaxY
 			// 
 			this.labelAccelerationMaxY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAccelerationMaxY.Location = new System.Drawing.Point(8, 128);
 			this.labelAccelerationMaxY.Name = "labelAccelerationMaxY";
 			this.labelAccelerationMaxY.Size = new System.Drawing.Size(40, 16);
@@ -1850,7 +1855,7 @@
 			// textboxAccelerationMaxX
 			// 
 			this.textboxAccelerationMaxX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxAccelerationMaxX.Location = new System.Drawing.Point(48, 104);
 			this.textboxAccelerationMaxX.Name = "textboxAccelerationMaxX";
 			this.textboxAccelerationMaxX.Size = new System.Drawing.Size(40, 20);
@@ -1861,7 +1866,7 @@
 			// labelAccelerationMaxX
 			// 
 			this.labelAccelerationMaxX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelAccelerationMaxX.Location = new System.Drawing.Point(8, 104);
 			this.labelAccelerationMaxX.Name = "labelAccelerationMaxX";
 			this.labelAccelerationMaxX.Size = new System.Drawing.Size(40, 16);
@@ -1933,7 +1938,7 @@
 			// textboxE
 			// 
 			this.textboxE.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxE.Location = new System.Drawing.Point(64, 160);
 			this.textboxE.Name = "textboxE";
 			this.textboxE.Size = new System.Drawing.Size(72, 20);
@@ -1953,7 +1958,7 @@
 			// textboxV2
 			// 
 			this.textboxV2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxV2.Location = new System.Drawing.Point(8, 136);
 			this.textboxV2.Name = "textboxV2";
 			this.textboxV2.Size = new System.Drawing.Size(72, 20);
@@ -1983,7 +1988,7 @@
 			// textboxV1
 			// 
 			this.textboxV1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxV1.Location = new System.Drawing.Point(8, 96);
 			this.textboxV1.Name = "textboxV1";
 			this.textboxV1.Size = new System.Drawing.Size(72, 20);
@@ -2013,7 +2018,7 @@
 			// textboxA1
 			// 
 			this.textboxA1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxA1.Location = new System.Drawing.Point(8, 72);
 			this.textboxA1.Name = "textboxA1";
 			this.textboxA1.Size = new System.Drawing.Size(72, 20);
@@ -2023,7 +2028,7 @@
 			// labelA0
 			// 
 			this.labelA0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelA0.AutoSize = true;
 			this.labelA0.Location = new System.Drawing.Point(8, 16);
 			this.labelA0.Name = "labelA0";
@@ -2045,7 +2050,7 @@
 			// textboxA0
 			// 
 			this.textboxA0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxA0.Location = new System.Drawing.Point(8, 32);
 			this.textboxA0.Name = "textboxA0";
 			this.textboxA0.Size = new System.Drawing.Size(72, 20);
@@ -2158,7 +2163,7 @@
 			// textboxMotorMaxYVolume
 			// 
 			this.textboxMotorMaxYVolume.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxMotorMaxYVolume.Location = new System.Drawing.Point(96, 216);
 			this.textboxMotorMaxYVolume.Name = "textboxMotorMaxYVolume";
 			this.textboxMotorMaxYVolume.Size = new System.Drawing.Size(40, 20);
@@ -2169,7 +2174,7 @@
 			// textboxMotorMaxYPitch
 			// 
 			this.textboxMotorMaxYPitch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxMotorMaxYPitch.Location = new System.Drawing.Point(96, 192);
 			this.textboxMotorMaxYPitch.Name = "textboxMotorMaxYPitch";
 			this.textboxMotorMaxYPitch.Size = new System.Drawing.Size(40, 20);
@@ -2180,7 +2185,7 @@
 			// textboxMotorMaxX
 			// 
 			this.textboxMotorMaxX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxMotorMaxX.Location = new System.Drawing.Point(56, 112);
 			this.textboxMotorMaxX.Name = "textboxMotorMaxX";
 			this.textboxMotorMaxX.Size = new System.Drawing.Size(40, 20);
@@ -2191,7 +2196,7 @@
 			// textboxMotorMinX
 			// 
 			this.textboxMotorMinX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxMotorMinX.Location = new System.Drawing.Point(56, 88);
 			this.textboxMotorMinX.Name = "textboxMotorMinX";
 			this.textboxMotorMinX.Size = new System.Drawing.Size(40, 20);
@@ -2230,7 +2235,7 @@
 			// labelMotorInfo
 			// 
 			this.labelMotorInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelMotorInfo.Location = new System.Drawing.Point(8, 24);
 			this.labelMotorInfo.Name = "labelMotorInfo";
 			this.labelMotorInfo.Size = new System.Drawing.Size(128, 56);
@@ -2282,7 +2287,7 @@
 			// comboboxSoundIndex
 			// 
 			this.comboboxSoundIndex.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboboxSoundIndex.FormattingEnabled = true;
 			this.comboboxSoundIndex.Location = new System.Drawing.Point(24, 40);
 			this.comboboxSoundIndex.Name = "comboboxSoundIndex";
@@ -2327,8 +2332,8 @@
 			// splitMotorPB
 			// 
 			this.splitMotorPB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitMotorPB.Location = new System.Drawing.Point(8, 8);
 			this.splitMotorPB.Name = "splitMotorPB";
 			// 
@@ -2442,7 +2447,7 @@
 			// panelPane
 			// 
 			this.panelPane.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.panelPane.BackColor = System.Drawing.Color.Silver;
 			this.panelPane.Controls.Add(this.labelLineHorizontal);
 			this.panelPane.Controls.Add(this.buttonClose);
@@ -2459,7 +2464,7 @@
 			// labelLineHorizontal
 			// 
 			this.labelLineHorizontal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-									| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelLineHorizontal.BackColor = System.Drawing.Color.White;
 			this.labelLineHorizontal.Location = new System.Drawing.Point(0, 75);
 			this.labelLineHorizontal.Name = "labelLineHorizontal";
@@ -2537,12 +2542,44 @@
 			// labelLineVertical
 			// 
 			this.labelLineVertical.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-									| System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelLineVertical.BackColor = System.Drawing.Color.White;
 			this.labelLineVertical.Location = new System.Drawing.Point(120, 0);
 			this.labelLineVertical.Name = "labelLineVertical";
 			this.labelLineVertical.Size = new System.Drawing.Size(2, 480);
 			this.labelLineVertical.TabIndex = 13;
+			// 
+			// groupBoxOther
+			// 
+			this.groupBoxOther.Controls.Add(this.comboBoxHandleBehaviour);
+			this.groupBoxOther.Controls.Add(this.label1);
+			this.groupBoxOther.Location = new System.Drawing.Point(296, 257);
+			this.groupBoxOther.Name = "groupBoxOther";
+			this.groupBoxOther.Size = new System.Drawing.Size(347, 166);
+			this.groupBoxOther.TabIndex = 3;
+			this.groupBoxOther.TabStop = false;
+			this.groupBoxOther.Text = "Other";
+			// 
+			// comboBoxHandleBehaviour
+			// 
+			this.comboBoxHandleBehaviour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxHandleBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxHandleBehaviour.FormattingEnabled = true;
+			this.comboBoxHandleBehaviour.Location = new System.Drawing.Point(168, 19);
+			this.comboBoxHandleBehaviour.Name = "comboBoxHandleBehaviour";
+			this.comboBoxHandleBehaviour.Size = new System.Drawing.Size(160, 21);
+			this.comboBoxHandleBehaviour.TabIndex = 13;
+			// 
+			// label1
+			// 
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label1.Location = new System.Drawing.Point(8, 19);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(160, 16);
+			this.label1.TabIndex = 12;
+			this.label1.Text = "EbHandlesBehaviour:";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// formEditor
 			// 
@@ -2606,7 +2643,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).EndInit();
 			this.panelPane.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).EndInit();
+			this.groupBoxOther.ResumeLayout(false);
 			this.ResumeLayout(false);
+
 		}
 		private System.Windows.Forms.Label labelDriverCar;
 		private System.Windows.Forms.TextBox textboxDriverCar;
@@ -2816,7 +2855,9 @@
 		private System.Windows.Forms.Label labelUnexposedFrontalAreaUnit;
 		private System.Windows.Forms.TextBox textboxUnexposedFrontalArea;
 		private System.Windows.Forms.Label labelUnexposedFrontalArea;
-
+		private System.Windows.Forms.GroupBox groupBoxOther;
+		private System.Windows.Forms.ComboBox comboBoxHandleBehaviour;
+		private System.Windows.Forms.Label label1;
 	}
 }
 

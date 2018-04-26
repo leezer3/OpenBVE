@@ -470,6 +470,12 @@ namespace OpenBve
 								}
 								else
 								{
+									if (Template.Name == "MeshMaterialList")
+									{
+										//A MeshMaterialList can also end with two semi-colons
+										Position--;
+										return true;
+									}
 									Interface.AddMessage(Interface.MessageType.Error, false, "Unexpected semicolon encountered in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
@@ -667,8 +673,11 @@ namespace OpenBve
 								{
 									Position++;
 									break;
-								}
-								else if (!char.IsWhiteSpace(Content, Position))
+								} else if (Content[Position] == '}' && Position == Content.Length -1 && Template.Members[m].StartsWith("MeshFace")) {
+									// A mesh has been provided, but no faces etc.
+									// Usually found in null objects
+									break;
+								} else if (!char.IsWhiteSpace(Content, Position))
 								{
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;

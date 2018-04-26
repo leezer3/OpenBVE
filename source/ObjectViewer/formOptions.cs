@@ -27,7 +27,7 @@ namespace OpenBve
 
         private void button1_Click(object sender, EventArgs e)
         {
-            TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+            Interface.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
             int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
             int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
@@ -35,22 +35,22 @@ namespace OpenBve
             switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighbor;
                     break;
                 case 1:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.Bilinear;
                     break;
                 case 2:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighborMipmapped;
                     break;
                 case 3:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped;
                     break;
                 case 4:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.TrilinearMipmapped;
                     break;
                 case 5:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering;
+                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.AnisotropicFiltering;
                     break;
             }
             //Ansiotropic filtering level
@@ -86,8 +86,7 @@ namespace OpenBve
                     Program.ReducedMode = false;
                     Program.LightingRelative = -1.0;
                     Game.Reset();
-                    TextureManager.UnuseAllTextures();
-                    Fonts.Initialize();
+                    Textures.UnloadAllTextures();
                     Interface.ClearMessages();
                     for (int i = 0; i < Program.Files.Length; i++)
                     {
@@ -109,7 +108,7 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
+            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.Bilinear;
             Options.SaveOptions();
             this.Close();
         }

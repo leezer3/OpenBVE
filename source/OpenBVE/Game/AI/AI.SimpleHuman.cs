@@ -200,11 +200,11 @@ namespace OpenBve
 							{
 								b = Train.Specs.MaximumBrakeNotch;
 							}
-							if (Train.Specs.CurrentBrakeNotch.Driver < b)
+							if (Train.Handles.Brake.Driver < b)
 							{
 								TrainManager.ApplyNotch(Train, 0, true, 1, true);
 							}
-							else if (Train.Specs.CurrentBrakeNotch.Driver > b)
+							else if (Train.Handles.Brake.Driver > b)
 							{
 								TrainManager.ApplyNotch(Train, 0, true, -1, true);
 							}
@@ -259,9 +259,9 @@ namespace OpenBve
 					if (Train.Cars[Train.DriverCar].FrontAxle.CurrentWheelSlip | Train.Cars[Train.DriverCar].RearAxle.CurrentWheelSlip)
 					{
 						// react to wheel slip
-						if (Train.Specs.CurrentPowerNotch.Driver > 1)
+						if (Train.Handles.Power.Driver > 1)
 						{
-							this.PowerNotchAtWhichWheelSlipIsObserved = Train.Specs.CurrentPowerNotch.Driver;
+							this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.Driver;
 							TrainManager.ApplyNotch(Train, -1, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							this.CurrentInterval = 2.5;
@@ -312,7 +312,7 @@ namespace OpenBve
 					double decelerationCruise;   /* power below this deceleration, cruise above */
 					double decelerationStart;    /* brake above this deceleration, cruise below */
 					double decelerationStep;     /* the deceleration step per brake notch */
-					double BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Specs.CurrentBrakeNotch.Actual);
+					double BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
@@ -701,7 +701,7 @@ namespace OpenBve
 						if (decdiff < -decelerationStep)
 						{
 							// brake start
-							if (Train.Specs.CurrentPowerNotch.Driver == 0)
+							if (Train.Handles.Power.Driver == 0)
 							{
 								TrainManager.ApplyNotch(Train, 0, true, 1, true);
 								TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Service);
@@ -729,7 +729,7 @@ namespace OpenBve
 							CurrentInterval *= 1.2;
 							if (CurrentInterval > 1.0) CurrentInterval = 1.0;
 						}
-						if (Train.Specs.CurrentPowerNotch.Driver == 0 & Train.Specs.CurrentBrakeNotch.Driver == 0)
+						if (Train.Handles.Power.Driver == 0 & Train.Handles.Brake.Driver == 0)
 						{
 							TrainManager.ApplyHoldBrake(Train, Train.Specs.HasHoldBrake);
 						}
@@ -744,7 +744,7 @@ namespace OpenBve
 						BrakeMode = false;
 						TrainManager.ApplyNotch(Train, -1, true, -1, true);
 						TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
-						if (Train.Specs.CurrentPowerNotch.Driver == 0 & Train.Specs.CurrentBrakeNotch.Driver == 0)
+						if (Train.Handles.Power.Driver == 0 & Train.Handles.Brake.Driver == 0)
 						{
 							TrainManager.ApplyHoldBrake(Train, Train.Specs.HasHoldBrake);
 						}
@@ -775,9 +775,9 @@ namespace OpenBve
 						if (spd < powerstart)
 						{
 							// power start (under-speed)
-							if (Train.Specs.CurrentBrakeNotch.Driver == 0)
+							if (Train.Handles.Brake.Driver == 0)
 							{
-								if (Train.Specs.CurrentPowerNotch.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
+								if (Train.Handles.Power.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
 								{
 									TrainManager.ApplyNotch(Train, 1, true, 0, true);
 								}
@@ -789,11 +789,11 @@ namespace OpenBve
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
 							if (double.IsPositiveInfinity(powerstart))
 							{
-								CurrentInterval = 0.3 + 0.1 * Train.Specs.CurrentPowerNotch.Driver;
+								CurrentInterval = 0.3 + 0.1 * Train.Handles.Power.Driver;
 							}
 							else
 							{
-								double p = (double)Train.Specs.CurrentPowerNotch.Driver / (double)Train.Specs.MaximumPowerNotch;
+								double p = (double)Train.Handles.Power.Driver / (double)Train.Specs.MaximumPowerNotch;
 								CurrentInterval = 0.3 + 15.0 * p / (powerstart - spd + 1.0);
 							}
 							if (CurrentInterval > 1.3) CurrentInterval = 1.3;
@@ -809,11 +809,11 @@ namespace OpenBve
 						else if (acc < acclim)
 						{
 							// power start (under-acceleration)
-							if (Train.Specs.CurrentBrakeNotch.Driver == 0)
+							if (Train.Handles.Brake.Driver == 0)
 							{
-								if (Train.Specs.CurrentPowerNotch.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
+								if (Train.Handles.Power.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
 								{
-									if (Train.Specs.CurrentPowerNotch.Driver == Train.Specs.CurrentPowerNotch.Actual)
+									if (Train.Handles.Power.Driver == Train.Handles.Power.Actual)
 									{
 										TrainManager.ApplyNotch(Train, 1, true, 0, true);
 									}
@@ -831,11 +831,11 @@ namespace OpenBve
 							// keep power
 							TrainManager.ApplyNotch(Train, 0, true, -1, true);
 							TrainManager.ApplyAirBrakeHandle(Train, TrainManager.AirBrakeHandleState.Release);
-							if (Train.Specs.CurrentPowerNotch.Driver != 0)
+							if (Train.Handles.Power.Driver != 0)
 							{
 								Train.Specs.CurrentConstSpeed = Train.Specs.HasConstSpeed;
 							}
-							if (Train.Specs.CurrentPowerNotch.Driver == 0 & Train.Specs.CurrentBrakeNotch.Driver == 0)
+							if (Train.Handles.Power.Driver == 0 & Train.Handles.Brake.Driver == 0)
 							{
 								TrainManager.ApplyHoldBrake(Train, Train.Specs.HasHoldBrake);
 							}

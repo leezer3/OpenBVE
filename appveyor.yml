@@ -1,0 +1,35 @@
+version: '1.5.3.2-{build}'
+
+image: 
+  - Visual Studio 2017
+  - Visual Studio 2015
+  - Visual Studio 2013
+
+platform:
+  - x86
+
+init:
+  - cmd: msbuild /version
+ 
+configuration:
+  - Debug
+  - Release
+
+install:
+  - cmd: git submodule update --init --recursive
+
+before_build:
+  - cmd: cd C:\projects\OpenBVE
+
+build:
+  project: C:\projects\OpenBVE\OpenBVE.sln
+
+after_build:
+  - cmd: "if \"%CONFIGURATION%\"==\"Release\" if \"%APPVEYOR_BUILD_WORKER_IMAGE%\"==\"Visual Studio 2017\" if \"%APPVEYOR_REPO_TAG%\" == \"true\" \"powershell C:/projects/OpenBVE/WindowsInstaller.ps1 \"%APPVEYOR_REPO_TAG_NAME%\"\""
+  - cmd: "if \"%CONFIGURATION%\"==\"Release\" if \"%APPVEYOR_BUILD_WORKER_IMAGE%\"==\"Visual Studio 2017\" \"C:/Program Files (x86)/Inno Setup 5/iscc.exe\" /q C:/projects/OpenBVE/installers/windows/openbve.iss"
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false

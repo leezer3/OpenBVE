@@ -304,7 +304,7 @@ namespace OpenBve
             Renderer.Initialize();
             Renderer.InitializeLighting();
             //SwapBuffers();
-            Fonts.Initialize();
+            //Fonts.Initialize();
             Program.UpdateViewport();
             // command line arguments
             // if (commandLineArgs != null)
