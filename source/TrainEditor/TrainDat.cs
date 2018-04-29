@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace TrainEditor {
@@ -48,15 +49,15 @@ namespace TrainEditor {
 		// delay
 		/// <summary>The Delay section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.</summary>
 		internal class Delay {
-			internal double DelayPowerUp;
-			internal double DelayPowerDown;
-			internal double DelayBrakeUp;
-			internal double DelayBrakeDown;
+			internal double[] DelayPowerUp;
+			internal double[] DelayPowerDown;
+			internal double[] DelayBrakeUp;
+			internal double[] DelayBrakeDown;
 			internal Delay() {
-				this.DelayPowerUp = 0.0;
-				this.DelayPowerDown = 0.0;
-				this.DelayBrakeUp = 0.0;
-				this.DelayBrakeDown = 0.0;
+				this.DelayPowerUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayPowerDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayBrakeUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayBrakeDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 			}
 		}
 		
@@ -301,7 +302,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 1530;
+		const int currentVersion = 1534;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -439,22 +440,42 @@ namespace TrainEditor {
 						} i--; break;
 					case "#delay":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
-							double a; if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
+							double a;
+							if (double.TryParse(Lines[i], System.Globalization.NumberStyles.Float, Culture, out a)) {
 								switch (n) {
 									case 0:
-										if(a >= 0.0) t.Delay.DelayPowerUp = a;
+										if(a >= 0.0) t.Delay.DelayPowerUp = new double[] { a };
 										break;
 									case 1:
-										if(a >= 0.0) t.Delay.DelayPowerDown = a;
+										if(a >= 0.0) t.Delay.DelayPowerDown = new double[] { a };
 										break;
 									case 2:
-										if(a >= 0.0) t.Delay.DelayBrakeUp = a;
+										if(a >= 0.0) t.Delay.DelayBrakeUp = new double[] { a };
 										break;
 									case 3:
-										if(a >= 0.0) t.Delay.DelayBrakeDown = a;
+										if(a >= 0.0) t.Delay.DelayBrakeDown = new double[] { a };
 										break;
 								}
-							} i++; n++;
+							}
+							else if (Lines[i].IndexOf(',') != -1)
+							{
+								switch (n)
+								{
+									case 0:
+										t.Delay.DelayPowerUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
+									case 1:
+										t.Delay.DelayPowerDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
+									case 2:
+										t.Delay.DelayBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
+									case 3:
+										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
+								}
+							}
+							i++; n++;
 						} i--; break;
 					case "#move":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase)) {
@@ -699,6 +720,25 @@ namespace TrainEditor {
 						break;
 				}
 			}
+
+			if (t.Delay.DelayPowerUp.Length < t.Handle.PowerNotches)
+			{
+				int l = t.Delay.DelayPowerUp.Length;
+				Array.Resize(ref t.Delay.DelayPowerUp, t.Handle.PowerNotches);
+				for (int i = l + 1; i < t.Delay.DelayPowerUp.Length; i++)
+				{
+					t.Delay.DelayPowerUp[i] = 0;
+				}
+			}
+			if (t.Delay.DelayPowerDown.Length < t.Handle.PowerNotches)
+			{
+				int l = t.Delay.DelayPowerDown.Length;
+				Array.Resize(ref t.Delay.DelayPowerDown, t.Handle.PowerNotches);
+				for (int i = l + 1; i < t.Delay.DelayPowerDown.Length; i++)
+				{
+					t.Delay.DelayPowerDown[i] = 0;
+				}
+			}
 			if (t.Pressure.BrakePipeNormalPressure <= 0.0) {
 				if (t.Brake.BrakeType == Brake.BrakeTypes.AutomaticAirBrake) {
 					t.Pressure.BrakePipeNormalPressure = t.Pressure.BrakeCylinderEmergencyMaximumPressure + 0.75 * (t.Pressure.MainReservoirMinimumPressure - t.Pressure.BrakeCylinderEmergencyMaximumPressure);
@@ -752,10 +792,10 @@ namespace TrainEditor {
 			b.AppendLine(t.Performance.CoefficientOfRollingResistance.ToString(Culture).PadRight(n, ' ') + "; CoefficientOfRollingResistance");
 			b.AppendLine(t.Performance.AerodynamicDragCoefficient.ToString(Culture).PadRight(n, ' ') + "; AerodynamicDragCoefficient");
 			b.AppendLine("#DELAY");
-			b.AppendLine(t.Delay.DelayPowerUp.ToString(Culture).PadRight(n, ' ') + "; DelayPowerUp");
-			b.AppendLine(t.Delay.DelayPowerDown.ToString(Culture).PadRight(n, ' ') + "; DelayPowerDown");
-			b.AppendLine(t.Delay.DelayBrakeUp.ToString(Culture).PadRight(n, ' ') + "; DelayBrakeUp");
-			b.AppendLine(t.Delay.DelayBrakeDown.ToString(Culture).PadRight(n, ' ') + "; DelayBrakeDown");
+			b.AppendLine(string.Join(",", t.Delay.DelayPowerUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayPowerUp");
+			b.AppendLine(string.Join(",", t.Delay.DelayPowerDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayPowerDown");
+			b.AppendLine(string.Join(",", t.Delay.DelayBrakeUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeUp");
+			b.AppendLine(string.Join(",", t.Delay.DelayBrakeDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeDown");
 			b.AppendLine("#MOVE");
 			b.AppendLine(t.Move.JerkPowerUp.ToString(Culture).PadRight(n, ' ') + "; JerkPowerUp");
 			b.AppendLine(t.Move.JerkPowerDown.ToString(Culture).PadRight(n, ' ') + "; JerkPowerDown");

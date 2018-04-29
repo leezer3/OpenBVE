@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -36,7 +37,8 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 1530;
+			const int currentVersion = 1534;
+			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					string t = Lines[i].ToLowerInvariant();
@@ -61,11 +63,10 @@ namespace OpenBve {
 							if (t.ToLowerInvariant().StartsWith("openbve"))
 							{
 								string tt = t.Substring(7, t.Length - 7);
-								int v;
-								if (NumberFormats.TryParseIntVb6(tt, out v))
+								if (NumberFormats.TryParseIntVb6(tt, out myVersion))
 								{
 									currentFormat = TrainDatFormats.openBVE;
-									if (v > currentVersion)
+									if (myVersion > currentVersion)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
 									}
@@ -247,17 +248,45 @@ namespace OpenBve {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0:
-											Train.Specs.DelayPowerUp = new[] { a };
+											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+											{
+												Train.Specs.DelayPowerUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											}
+											else
+											{
+												Train.Specs.DelayPowerUp = new[] { a };
+											}
 											break;
 										case 1:
-											Train.Specs.DelayPowerDown = new[] { a };
-										break;
+											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+											{
+												Train.Specs.DelayPowerDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											}
+											else
+											{
+												Train.Specs.DelayPowerDown = new[] { a };
+											}
+											break;
 										case 2:
-											Train.Specs.DelayBrakeUp = new[] { a };
-										break;
+											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+											{
+												Train.Specs.DelayBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											}
+											else
+											{
+												Train.Specs.DelayBrakeUp = new[] { a };
+											}
+											break;
 										case 3:
-											Train.Specs.DelayBrakeDown = new[] { a };
-										break;
+											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+											{
+												Train.Specs.DelayBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											}
+											else
+											{
+												Train.Specs.DelayBrakeDown = new[] { a };
+											}
+											break;
 								}
 							} i++; n++;
 						} i--; break;

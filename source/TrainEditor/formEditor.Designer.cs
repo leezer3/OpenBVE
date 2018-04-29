@@ -62,14 +62,6 @@
 			this.labelJerkPowerDown = new System.Windows.Forms.Label();
 			this.labelJerkPowerUp = new System.Windows.Forms.Label();
 			this.groupboxDelay = new System.Windows.Forms.GroupBox();
-			this.labelDelayBrakeDownUnit = new System.Windows.Forms.Label();
-			this.textboxDelayBrakeDown = new System.Windows.Forms.TextBox();
-			this.labelDelayBrakeUpUnit = new System.Windows.Forms.Label();
-			this.textboxDelayBrakeUp = new System.Windows.Forms.TextBox();
-			this.labelDelayPowerDownUnit = new System.Windows.Forms.Label();
-			this.textboxDelayPowerDown = new System.Windows.Forms.TextBox();
-			this.labelDelayPowerUpUnit = new System.Windows.Forms.Label();
-			this.textboxDelayPowerUp = new System.Windows.Forms.TextBox();
 			this.labelDelayBrakeDown = new System.Windows.Forms.Label();
 			this.labelDelayBrakeUp = new System.Windows.Forms.Label();
 			this.labelDelayPowerDown = new System.Windows.Forms.Label();
@@ -77,9 +69,7 @@
 			this.groupboxHandle = new System.Windows.Forms.GroupBox();
 			this.textboxPowerNotchReduceSteps = new System.Windows.Forms.TextBox();
 			this.labelPowerNotchReduceSteps = new System.Windows.Forms.Label();
-			this.textboxBrakeNotches = new System.Windows.Forms.TextBox();
 			this.labelBrakeNotches = new System.Windows.Forms.Label();
-			this.textboxPowerNotches = new System.Windows.Forms.TextBox();
 			this.labelPowerNotches = new System.Windows.Forms.Label();
 			this.comboboxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
@@ -102,6 +92,9 @@
 			this.textboxDeceleration = new System.Windows.Forms.TextBox();
 			this.labelDeceleration = new System.Windows.Forms.Label();
 			this.tabpagePropertiesTwo = new System.Windows.Forms.TabPage();
+			this.groupBoxOther = new System.Windows.Forms.GroupBox();
+			this.comboBoxHandleBehaviour = new System.Windows.Forms.ComboBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.groupboxCar = new System.Windows.Forms.GroupBox();
 			this.labelCenterOfGravityHeightUnit = new System.Windows.Forms.Label();
 			this.textboxCenterOfGravityHeight = new System.Windows.Forms.TextBox();
@@ -229,9 +222,12 @@
 			this.buttonNew = new System.Windows.Forms.Button();
 			this.pictureboxLogo = new System.Windows.Forms.PictureBox();
 			this.labelLineVertical = new System.Windows.Forms.Label();
-			this.groupBoxOther = new System.Windows.Forms.GroupBox();
-			this.comboBoxHandleBehaviour = new System.Windows.Forms.ComboBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.buttonSetDelayPowerUp = new System.Windows.Forms.Button();
+			this.buttonSetDelayPowerDown = new System.Windows.Forms.Button();
+			this.buttonSetDelayBrakeUp = new System.Windows.Forms.Button();
+			this.buttonSetDelayBrakeDown = new System.Windows.Forms.Button();
+			this.numericUpDownPowerNotches = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownBrakeNotches = new System.Windows.Forms.NumericUpDown();
 			this.tabcontrolTabs.SuspendLayout();
 			this.tabpagePropertiesOne.SuspendLayout();
 			this.groupboxPressure.SuspendLayout();
@@ -241,6 +237,7 @@
 			this.groupboxBrake.SuspendLayout();
 			this.groupboxPerformance.SuspendLayout();
 			this.tabpagePropertiesTwo.SuspendLayout();
+			this.groupBoxOther.SuspendLayout();
 			this.groupboxCar.SuspendLayout();
 			this.groupboxCab.SuspendLayout();
 			this.groupboxDevice.SuspendLayout();
@@ -251,14 +248,17 @@
 			this.tabpageMotor.SuspendLayout();
 			this.groupboxMotorPreview.SuspendLayout();
 			this.groupboxMotorEdit.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorPB)).BeginInit();
 			this.splitMotorPB.Panel1.SuspendLayout();
 			this.splitMotorPB.Panel2.SuspendLayout();
 			this.splitMotorPB.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorP)).BeginInit();
 			this.splitMotorP.Panel1.SuspendLayout();
 			this.splitMotorP.Panel2.SuspendLayout();
 			this.splitMotorP.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorP1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorP2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorB)).BeginInit();
 			this.splitMotorB.Panel1.SuspendLayout();
 			this.splitMotorB.Panel2.SuspendLayout();
 			this.splitMotorB.SuspendLayout();
@@ -266,7 +266,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).BeginInit();
 			this.panelPane.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
-			this.groupBoxOther.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabcontrolTabs
@@ -673,14 +674,10 @@
 			// 
 			// groupboxDelay
 			// 
-			this.groupboxDelay.Controls.Add(this.labelDelayBrakeDownUnit);
-			this.groupboxDelay.Controls.Add(this.textboxDelayBrakeDown);
-			this.groupboxDelay.Controls.Add(this.labelDelayBrakeUpUnit);
-			this.groupboxDelay.Controls.Add(this.textboxDelayBrakeUp);
-			this.groupboxDelay.Controls.Add(this.labelDelayPowerDownUnit);
-			this.groupboxDelay.Controls.Add(this.textboxDelayPowerDown);
-			this.groupboxDelay.Controls.Add(this.labelDelayPowerUpUnit);
-			this.groupboxDelay.Controls.Add(this.textboxDelayPowerUp);
+			this.groupboxDelay.Controls.Add(this.buttonSetDelayBrakeDown);
+			this.groupboxDelay.Controls.Add(this.buttonSetDelayBrakeUp);
+			this.groupboxDelay.Controls.Add(this.buttonSetDelayPowerDown);
+			this.groupboxDelay.Controls.Add(this.buttonSetDelayPowerUp);
 			this.groupboxDelay.Controls.Add(this.labelDelayBrakeDown);
 			this.groupboxDelay.Controls.Add(this.labelDelayBrakeUp);
 			this.groupboxDelay.Controls.Add(this.labelDelayPowerDown);
@@ -691,78 +688,6 @@
 			this.groupboxDelay.TabIndex = 1;
 			this.groupboxDelay.TabStop = false;
 			this.groupboxDelay.Text = "Delay";
-			// 
-			// labelDelayBrakeDownUnit
-			// 
-			this.labelDelayBrakeDownUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDelayBrakeDownUnit.Location = new System.Drawing.Point(200, 88);
-			this.labelDelayBrakeDownUnit.Name = "labelDelayBrakeDownUnit";
-			this.labelDelayBrakeDownUnit.Size = new System.Drawing.Size(72, 16);
-			this.labelDelayBrakeDownUnit.TabIndex = 11;
-			this.labelDelayBrakeDownUnit.Text = "s";
-			this.labelDelayBrakeDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textboxDelayBrakeDown
-			// 
-			this.textboxDelayBrakeDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxDelayBrakeDown.Location = new System.Drawing.Point(144, 88);
-			this.textboxDelayBrakeDown.Name = "textboxDelayBrakeDown";
-			this.textboxDelayBrakeDown.Size = new System.Drawing.Size(56, 20);
-			this.textboxDelayBrakeDown.TabIndex = 10;
-			// 
-			// labelDelayBrakeUpUnit
-			// 
-			this.labelDelayBrakeUpUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDelayBrakeUpUnit.Location = new System.Drawing.Point(200, 64);
-			this.labelDelayBrakeUpUnit.Name = "labelDelayBrakeUpUnit";
-			this.labelDelayBrakeUpUnit.Size = new System.Drawing.Size(72, 16);
-			this.labelDelayBrakeUpUnit.TabIndex = 8;
-			this.labelDelayBrakeUpUnit.Text = "s";
-			this.labelDelayBrakeUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textboxDelayBrakeUp
-			// 
-			this.textboxDelayBrakeUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxDelayBrakeUp.Location = new System.Drawing.Point(144, 64);
-			this.textboxDelayBrakeUp.Name = "textboxDelayBrakeUp";
-			this.textboxDelayBrakeUp.Size = new System.Drawing.Size(56, 20);
-			this.textboxDelayBrakeUp.TabIndex = 7;
-			// 
-			// labelDelayPowerDownUnit
-			// 
-			this.labelDelayPowerDownUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDelayPowerDownUnit.Location = new System.Drawing.Point(200, 40);
-			this.labelDelayPowerDownUnit.Name = "labelDelayPowerDownUnit";
-			this.labelDelayPowerDownUnit.Size = new System.Drawing.Size(72, 16);
-			this.labelDelayPowerDownUnit.TabIndex = 5;
-			this.labelDelayPowerDownUnit.Text = "s";
-			this.labelDelayPowerDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textboxDelayPowerDown
-			// 
-			this.textboxDelayPowerDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxDelayPowerDown.Location = new System.Drawing.Point(144, 40);
-			this.textboxDelayPowerDown.Name = "textboxDelayPowerDown";
-			this.textboxDelayPowerDown.Size = new System.Drawing.Size(56, 20);
-			this.textboxDelayPowerDown.TabIndex = 4;
-			// 
-			// labelDelayPowerUpUnit
-			// 
-			this.labelDelayPowerUpUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDelayPowerUpUnit.Location = new System.Drawing.Point(200, 16);
-			this.labelDelayPowerUpUnit.Name = "labelDelayPowerUpUnit";
-			this.labelDelayPowerUpUnit.Size = new System.Drawing.Size(72, 16);
-			this.labelDelayPowerUpUnit.TabIndex = 2;
-			this.labelDelayPowerUpUnit.Text = "s";
-			this.labelDelayPowerUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textboxDelayPowerUp
-			// 
-			this.textboxDelayPowerUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxDelayPowerUp.Location = new System.Drawing.Point(144, 16);
-			this.textboxDelayPowerUp.Name = "textboxDelayPowerUp";
-			this.textboxDelayPowerUp.Size = new System.Drawing.Size(56, 20);
-			this.textboxDelayPowerUp.TabIndex = 1;
 			// 
 			// labelDelayBrakeDown
 			// 
@@ -810,11 +735,11 @@
 			// 
 			// groupboxHandle
 			// 
+			this.groupboxHandle.Controls.Add(this.numericUpDownBrakeNotches);
+			this.groupboxHandle.Controls.Add(this.numericUpDownPowerNotches);
 			this.groupboxHandle.Controls.Add(this.textboxPowerNotchReduceSteps);
 			this.groupboxHandle.Controls.Add(this.labelPowerNotchReduceSteps);
-			this.groupboxHandle.Controls.Add(this.textboxBrakeNotches);
 			this.groupboxHandle.Controls.Add(this.labelBrakeNotches);
-			this.groupboxHandle.Controls.Add(this.textboxPowerNotches);
 			this.groupboxHandle.Controls.Add(this.labelPowerNotches);
 			this.groupboxHandle.Controls.Add(this.comboboxHandleType);
 			this.groupboxHandle.Controls.Add(this.labelHandleType);
@@ -843,15 +768,6 @@
 			this.labelPowerNotchReduceSteps.Text = "PowerNotchReduceSteps:";
 			this.labelPowerNotchReduceSteps.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textboxBrakeNotches
-			// 
-			this.textboxBrakeNotches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxBrakeNotches.Location = new System.Drawing.Point(168, 64);
-			this.textboxBrakeNotches.Name = "textboxBrakeNotches";
-			this.textboxBrakeNotches.Size = new System.Drawing.Size(160, 20);
-			this.textboxBrakeNotches.TabIndex = 5;
-			// 
 			// labelBrakeNotches
 			// 
 			this.labelBrakeNotches.Location = new System.Drawing.Point(8, 64);
@@ -860,15 +776,6 @@
 			this.labelBrakeNotches.TabIndex = 4;
 			this.labelBrakeNotches.Text = "BrakeNotches:";
 			this.labelBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textboxPowerNotches
-			// 
-			this.textboxPowerNotches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textboxPowerNotches.Location = new System.Drawing.Point(168, 40);
-			this.textboxPowerNotches.Name = "textboxPowerNotches";
-			this.textboxPowerNotches.Size = new System.Drawing.Size(160, 20);
-			this.textboxPowerNotches.TabIndex = 3;
 			// 
 			// labelPowerNotches
 			// 
@@ -1099,6 +1006,38 @@
 			this.tabpagePropertiesTwo.TabIndex = 2;
 			this.tabpagePropertiesTwo.Text = "Properties (2)";
 			this.tabpagePropertiesTwo.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxOther
+			// 
+			this.groupBoxOther.Controls.Add(this.comboBoxHandleBehaviour);
+			this.groupBoxOther.Controls.Add(this.label1);
+			this.groupBoxOther.Location = new System.Drawing.Point(296, 257);
+			this.groupBoxOther.Name = "groupBoxOther";
+			this.groupBoxOther.Size = new System.Drawing.Size(347, 166);
+			this.groupBoxOther.TabIndex = 3;
+			this.groupBoxOther.TabStop = false;
+			this.groupBoxOther.Text = "Other";
+			// 
+			// comboBoxHandleBehaviour
+			// 
+			this.comboBoxHandleBehaviour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxHandleBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxHandleBehaviour.FormattingEnabled = true;
+			this.comboBoxHandleBehaviour.Location = new System.Drawing.Point(168, 19);
+			this.comboBoxHandleBehaviour.Name = "comboBoxHandleBehaviour";
+			this.comboBoxHandleBehaviour.Size = new System.Drawing.Size(160, 21);
+			this.comboBoxHandleBehaviour.TabIndex = 13;
+			// 
+			// label1
+			// 
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label1.Location = new System.Drawing.Point(8, 19);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(160, 16);
+			this.label1.TabIndex = 12;
+			this.label1.Text = "EbHandlesBehaviour:";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupboxCar
 			// 
@@ -2549,37 +2488,81 @@
 			this.labelLineVertical.Size = new System.Drawing.Size(2, 480);
 			this.labelLineVertical.TabIndex = 13;
 			// 
-			// groupBoxOther
+			// buttonSetDelayPowerUp
 			// 
-			this.groupBoxOther.Controls.Add(this.comboBoxHandleBehaviour);
-			this.groupBoxOther.Controls.Add(this.label1);
-			this.groupBoxOther.Location = new System.Drawing.Point(296, 257);
-			this.groupBoxOther.Name = "groupBoxOther";
-			this.groupBoxOther.Size = new System.Drawing.Size(347, 166);
-			this.groupBoxOther.TabIndex = 3;
-			this.groupBoxOther.TabStop = false;
-			this.groupBoxOther.Text = "Other";
+			this.buttonSetDelayPowerUp.Location = new System.Drawing.Point(150, 13);
+			this.buttonSetDelayPowerUp.Name = "buttonSetDelayPowerUp";
+			this.buttonSetDelayPowerUp.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetDelayPowerUp.TabIndex = 10;
+			this.buttonSetDelayPowerUp.Text = "Set";
+			this.buttonSetDelayPowerUp.UseVisualStyleBackColor = true;
+			this.buttonSetDelayPowerUp.Click += new System.EventHandler(this.buttonSetDelayPowerUp_Click);
 			// 
-			// comboBoxHandleBehaviour
+			// buttonSetDelayPowerDown
 			// 
-			this.comboBoxHandleBehaviour.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.comboBoxHandleBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxHandleBehaviour.FormattingEnabled = true;
-			this.comboBoxHandleBehaviour.Location = new System.Drawing.Point(168, 19);
-			this.comboBoxHandleBehaviour.Name = "comboBoxHandleBehaviour";
-			this.comboBoxHandleBehaviour.Size = new System.Drawing.Size(160, 21);
-			this.comboBoxHandleBehaviour.TabIndex = 13;
+			this.buttonSetDelayPowerDown.Location = new System.Drawing.Point(150, 37);
+			this.buttonSetDelayPowerDown.Name = "buttonSetDelayPowerDown";
+			this.buttonSetDelayPowerDown.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetDelayPowerDown.TabIndex = 11;
+			this.buttonSetDelayPowerDown.Text = "Set";
+			this.buttonSetDelayPowerDown.UseVisualStyleBackColor = true;
+			this.buttonSetDelayPowerDown.Click += new System.EventHandler(this.buttonSetDelayPowerDown_Click);
 			// 
-			// label1
+			// buttonSetDelayBrakeUp
 			// 
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.label1.Location = new System.Drawing.Point(8, 19);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(160, 16);
-			this.label1.TabIndex = 12;
-			this.label1.Text = "EbHandlesBehaviour:";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.buttonSetDelayBrakeUp.Location = new System.Drawing.Point(150, 61);
+			this.buttonSetDelayBrakeUp.Name = "buttonSetDelayBrakeUp";
+			this.buttonSetDelayBrakeUp.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetDelayBrakeUp.TabIndex = 12;
+			this.buttonSetDelayBrakeUp.Text = "Set";
+			this.buttonSetDelayBrakeUp.UseVisualStyleBackColor = true;
+			this.buttonSetDelayBrakeUp.Click += new System.EventHandler(this.buttonSetDelayBrakeUp_Click);
+			// 
+			// buttonSetDelayBrakeDown
+			// 
+			this.buttonSetDelayBrakeDown.Location = new System.Drawing.Point(150, 85);
+			this.buttonSetDelayBrakeDown.Name = "buttonSetDelayBrakeDown";
+			this.buttonSetDelayBrakeDown.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetDelayBrakeDown.TabIndex = 13;
+			this.buttonSetDelayBrakeDown.Text = "Set";
+			this.buttonSetDelayBrakeDown.UseVisualStyleBackColor = true;
+			this.buttonSetDelayBrakeDown.Click += new System.EventHandler(this.buttonSetDelayBrakeDown_Click);
+			// 
+			// numericUpDownPowerNotches
+			// 
+			this.numericUpDownPowerNotches.Location = new System.Drawing.Point(168, 40);
+			this.numericUpDownPowerNotches.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownPowerNotches.Name = "numericUpDownPowerNotches";
+			this.numericUpDownPowerNotches.Size = new System.Drawing.Size(160, 20);
+			this.numericUpDownPowerNotches.TabIndex = 8;
+			this.numericUpDownPowerNotches.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownPowerNotches.ValueChanged += new System.EventHandler(this.numericUpDownPowerNotches_ValueChanged);
+			// 
+			// numericUpDownBrakeNotches
+			// 
+			this.numericUpDownBrakeNotches.Location = new System.Drawing.Point(168, 64);
+			this.numericUpDownBrakeNotches.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownBrakeNotches.Name = "numericUpDownBrakeNotches";
+			this.numericUpDownBrakeNotches.Size = new System.Drawing.Size(160, 20);
+			this.numericUpDownBrakeNotches.TabIndex = 9;
+			this.numericUpDownBrakeNotches.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownBrakeNotches.ValueChanged += new System.EventHandler(this.numericUpDownBrakeNotches_ValueChanged);
 			// 
 			// formEditor
 			// 
@@ -2603,7 +2586,6 @@
 			this.groupboxMove.ResumeLayout(false);
 			this.groupboxMove.PerformLayout();
 			this.groupboxDelay.ResumeLayout(false);
-			this.groupboxDelay.PerformLayout();
 			this.groupboxHandle.ResumeLayout(false);
 			this.groupboxHandle.PerformLayout();
 			this.groupboxBrake.ResumeLayout(false);
@@ -2611,6 +2593,7 @@
 			this.groupboxPerformance.ResumeLayout(false);
 			this.groupboxPerformance.PerformLayout();
 			this.tabpagePropertiesTwo.ResumeLayout(false);
+			this.groupBoxOther.ResumeLayout(false);
 			this.groupboxCar.ResumeLayout(false);
 			this.groupboxCar.PerformLayout();
 			this.groupboxCab.ResumeLayout(false);
@@ -2630,20 +2613,24 @@
 			this.groupboxMotorEdit.PerformLayout();
 			this.splitMotorPB.Panel1.ResumeLayout(false);
 			this.splitMotorPB.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorPB)).EndInit();
 			this.splitMotorPB.ResumeLayout(false);
 			this.splitMotorP.Panel1.ResumeLayout(false);
 			this.splitMotorP.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorP)).EndInit();
 			this.splitMotorP.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorP1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorP2)).EndInit();
 			this.splitMotorB.Panel1.ResumeLayout(false);
 			this.splitMotorB.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitMotorB)).EndInit();
 			this.splitMotorB.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).EndInit();
 			this.panelPane.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).EndInit();
-			this.groupBoxOther.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -2732,14 +2719,6 @@
 		private System.Windows.Forms.Label labelDelayPowerDown;
 		private System.Windows.Forms.Label labelDelayBrakeUp;
 		private System.Windows.Forms.Label labelDelayBrakeDown;
-		private System.Windows.Forms.TextBox textboxDelayPowerUp;
-		private System.Windows.Forms.Label labelDelayPowerUpUnit;
-		private System.Windows.Forms.TextBox textboxDelayPowerDown;
-		private System.Windows.Forms.Label labelDelayPowerDownUnit;
-		private System.Windows.Forms.TextBox textboxDelayBrakeUp;
-		private System.Windows.Forms.Label labelDelayBrakeUpUnit;
-		private System.Windows.Forms.TextBox textboxDelayBrakeDown;
-		private System.Windows.Forms.Label labelDelayBrakeDownUnit;
 		private System.Windows.Forms.Label labelCoefficientOfRollingResistance;
 		private System.Windows.Forms.TextBox textboxCoefficientOfRollingResistance;
 		private System.Windows.Forms.Label labelBrakeCylinderDownUnit;
@@ -2842,9 +2821,7 @@
 		private System.Windows.Forms.GroupBox groupboxHandle;
 		private System.Windows.Forms.TextBox textboxPowerNotchReduceSteps;
 		private System.Windows.Forms.Label labelPowerNotchReduceSteps;
-		private System.Windows.Forms.TextBox textboxBrakeNotches;
 		private System.Windows.Forms.Label labelBrakeNotches;
-		private System.Windows.Forms.TextBox textboxPowerNotches;
 		private System.Windows.Forms.Label labelPowerNotches;
 		private System.Windows.Forms.ComboBox comboboxHandleType;
 		private System.Windows.Forms.Label labelHandleType;
@@ -2858,6 +2835,12 @@
 		private System.Windows.Forms.GroupBox groupBoxOther;
 		private System.Windows.Forms.ComboBox comboBoxHandleBehaviour;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button buttonSetDelayPowerUp;
+		private System.Windows.Forms.Button buttonSetDelayBrakeDown;
+		private System.Windows.Forms.Button buttonSetDelayBrakeUp;
+		private System.Windows.Forms.Button buttonSetDelayPowerDown;
+		private System.Windows.Forms.NumericUpDown numericUpDownBrakeNotches;
+		private System.Windows.Forms.NumericUpDown numericUpDownPowerNotches;
 	}
 }
 
