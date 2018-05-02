@@ -2317,10 +2317,10 @@ namespace OpenBve {
 														if (Arguments.Length > 2) {
 															Interface.AddMessage(Interface.MessageType.Warning, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														}
-														string f;
+														string f = Arguments[0];
 														try
 														{
-															f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+															LocateObject(ref f, ObjectPath);
 														}
 														catch
 														{
@@ -2372,8 +2372,10 @@ namespace OpenBve {
 															if (Arguments.Length >= 2 && Arguments[1].Length != 0) {
 																if (Path.ContainsInvalidChars(Arguments[1])) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																} else {
-																	f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[1]);
+																} else
+																{
+																	f = Arguments[1];
+																	LocateObject(ref f, ObjectPath);
 																	Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 																	if (Signal.GlowObject != null) {
 																		Signal.GlowTextures = LoadAllTextures(f, true);
@@ -2415,6 +2417,15 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp")) {
 														//Default background textures supplied with Uchibo for BVE1 / BVE2, so map to something that's not totally black
 														f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
+													}
+
+													if (!System.IO.File.Exists(f) && Interface.CurrentOptions.EnableBveTsHacks)
+													{
+														if (Arguments[0].StartsWith("Midland Suburban Line", StringComparison.InvariantCultureIgnoreCase))
+														{
+															Arguments[0] = "Midland Suburban Line Objects" + Arguments[0].Substring(21);
+															f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+														}
 													}
 													if (!System.IO.File.Exists(f)) {														
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
