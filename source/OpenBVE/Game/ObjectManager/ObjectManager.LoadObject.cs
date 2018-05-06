@@ -133,6 +133,9 @@ namespace OpenBve
 				case ".obj":
 					Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
+				case ".s":
+					Result = BinaryShapeParser.ReadObject(FileName);
+					break;
 				default:
 					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
 					return null;

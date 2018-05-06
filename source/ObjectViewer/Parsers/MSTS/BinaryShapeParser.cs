@@ -1,0 +1,1383 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Text;
+using OpenBveApi.Math;
+using OpenBveApi.Colors;
+using OpenBveApi.Textures;
+using SharpCompress.Compressor.Deflate;
+
+namespace OpenBve
+{
+	class BinaryShapeParser
+	{
+		struct Matrix
+		{
+			internal string Name;
+			internal Vector3 A;
+			internal Vector3 B;
+			internal Vector3 C;
+			internal Vector3 D;
+		}
+
+		struct Texture
+		{
+			internal string fileName;
+			internal int filterMode;
+			internal int mipmapLODBias;
+			internal Color32 borderColor;
+		}
+
+		struct PrimitiveState
+		{
+			internal string Name;
+			internal UInt32 Flags;
+			internal int Shader;
+			internal int[] Textures;
+			/*
+			 * Unlikely to be able to support these at present
+			 * However, read and see if we can hack common ones
+			 */
+			internal float ZBias;
+			internal int vertexStates;
+			internal int alphaTestMode;
+			internal int lightCfgIdx;
+			internal int zBufferMode;
+		}
+
+		struct VertexStates
+		{
+			internal uint flags; //Describes specular and some other stuff, unlikely to be supported
+			internal int hierarchyID; //The hierarchy ID of the top-level transform matrix, remember that they chain
+			internal int lightingMatrixID;
+			internal int lightingConfigIdx;
+			internal uint lightingFlags;
+			internal int matrix2ID; //Optional
+		}
+
+		struct VertexSet
+		{
+			internal int hierarchyIndex;
+			internal int startVertex;
+			internal int numVerticies;
+		}
+
+		class Vertex
+		{
+			internal Vector3 Coordinates;
+			internal Vector3 Normal;
+			
+			public Vertex(Vector3 c, Vector3 n)
+			{
+				this.Coordinates = new Vector3(c.X, c.Y, c.Z);
+				this.Normal = new Vector3(n.X, n.Y, n.Z);
+			}
+		}
+
+		private class Material {
+			internal Color32 Color;
+			internal Color24 EmissiveColor;
+			internal bool EmissiveColorUsed;
+			internal Color24 TransparentColor;
+			internal bool TransparentColorUsed;
+			internal string DaytimeTexture;
+			internal string NighttimeTexture;
+			internal World.MeshMaterialBlendMode BlendMode;
+			internal Textures.OpenGlTextureWrapMode? WrapMode;
+			internal ushort GlowAttenuationData;
+			internal string Text;
+			internal Color TextColor;
+			internal Color BackgroundColor;
+			internal string Font;
+			internal Vector2 TextPadding; 
+			internal Material() {
+				this.Color = new Color32(255, 255, 255, 255);
+				this.EmissiveColor = new Color24(0, 0, 0);
+				this.EmissiveColorUsed = false;
+				this.TransparentColor = new Color24(0, 0, 0);
+				this.TransparentColorUsed = false;
+				this.DaytimeTexture = null;
+				this.NighttimeTexture = null;
+				this.BlendMode = World.MeshMaterialBlendMode.Normal;
+				this.GlowAttenuationData = 0;
+				this.TextColor = System.Drawing.Color.Black;
+				this.BackgroundColor = System.Drawing.Color.White;
+				this.TextPadding = new Vector2(0, 0);
+				this.Font = "Arial";
+				this.WrapMode = null;
+			}
+			internal Material(Material Prototype) {
+				this.Color = Prototype.Color;
+				this.EmissiveColor = Prototype.EmissiveColor;
+				this.EmissiveColorUsed = Prototype.EmissiveColorUsed;
+				this.TransparentColor = Prototype.TransparentColor;
+				this.TransparentColorUsed = Prototype.TransparentColorUsed;
+				this.DaytimeTexture = Prototype.DaytimeTexture;
+				this.NighttimeTexture = Prototype.NighttimeTexture;
+				this.BlendMode = Prototype.BlendMode;
+				this.GlowAttenuationData = Prototype.GlowAttenuationData;
+				this.TextColor = Prototype.TextColor;
+				this.BackgroundColor = Prototype.BackgroundColor;
+				this.TextPadding = Prototype.TextPadding;
+				this.Font = Prototype.Font;
+				this.WrapMode = Prototype.WrapMode;
+			}
+		}
+		private class MeshBuilder {
+			internal World.Vertex[] Vertices;
+			internal World.MeshFace[] Faces;
+			internal Material[] Materials;
+			internal double LODValue = 0;
+			internal MeshBuilder() {
+				this.Vertices = new World.Vertex[] { };
+				this.Faces = new World.MeshFace[] { };
+				this.Materials = new Material[] { new Material() };
+			}
+
+			internal void Apply(out ObjectManager.StaticObject Object) {
+			Object = new ObjectManager.StaticObject
+				{
+					Mesh =
+					{
+						Faces = new World.MeshFace[] {},
+						Materials = new World.MeshMaterial[] {},
+						Vertices = new World.Vertex[] {}
+					}
+				};
+			if (Faces.Length != 0) {
+				int mf = Object.Mesh.Faces.Length;
+				int mm = Object.Mesh.Materials.Length;
+				int mv = Object.Mesh.Vertices.Length;
+				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+				for (int i = 0; i < Vertices.Length; i++) {
+					Object.Mesh.Vertices[mv + i] = Vertices[i];
+				}
+				for (int i = 0; i < Faces.Length; i++) {
+					Object.Mesh.Faces[mf + i] = Faces[i];
+					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++) {
+						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+					}
+					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+				}
+				for (int i = 0; i < Materials.Length; i++) {
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
+					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
+					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
+					{
+						Textures.Texture tday;
+						if (Materials[i].Text != null)
+						{
+							Bitmap bitmap = null;
+							if (Materials[i].DaytimeTexture != null)
+							{
+								bitmap = new Bitmap(Materials[i].DaytimeTexture);
+							}
+							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
+							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)));
+						}
+						else
+						{
+							if (Materials[i].TransparentColorUsed)
+							{
+								Textures.RegisterTexture(Materials[i].DaytimeTexture,
+									new OpenBveApi.Textures.TextureParameters(null,
+										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
+											Materials[i].TransparentColor.B)), out tday);
+							}
+							else
+							{
+								Textures.RegisterTexture(Materials[i].DaytimeTexture, out tday);
+							}
+						}
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+					}
+					else
+					{
+						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
+					if (Materials[i].NighttimeTexture != null) {
+						Textures.Texture tnight;
+						if (Materials[i].TransparentColorUsed) {
+							Textures.RegisterTexture(Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
+						} else {
+							Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
+						}
+						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
+					} else {
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
+					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
+					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;
+				}
+			}
+		}
+		}
+
+		private static List<string> textureCoords = new List<string>();
+		private static List<Vector3> points = new List<Vector3>();
+		private static List<Vector3> normals = new List<Vector3>();
+		private static List<Vector2> uv_points = new List<Vector2>(); //texture coords
+		private static List<Matrix> matrices = new List<Matrix>();
+		private static List<string> images = new List<string>();
+		private static List<Texture> textures = new List<Texture>();
+		private static List<PrimitiveState> prim_states = new List<PrimitiveState>();
+		private static List<VertexStates> vtx_states = new List<VertexStates>();
+
+		private static ObjectManager.StaticObject obj = null;
+		private static ObjectManager.AnimatedObjectCollection Result;
+		private static string currentFolder;
+		private static int ObjectCount = 0;
+
+		private static MeshBuilder Builder = null;
+		private static Vector3[] Normals = null;
+		private static List<Vector2> TextureCoords = new List<Vector2>();
+		private static Vector3 pos = new Vector3(0, 0, 0);
+		private static List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
+
+		private static double currentLOD;
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
+		{
+			Result = new ObjectManager.AnimatedObjectCollection
+			{
+				Objects = new ObjectManager.AnimatedObject[4]
+			};
+
+			currentFolder = System.IO.Path.GetDirectoryName(fileName);
+			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+
+            byte[] buffer = new byte[34];
+            fb.Read(buffer, 0, 2);
+
+            bool unicode = (buffer[0] == 0xFF && buffer[1] == 0xFE);
+
+            string headerString;
+            if (unicode)
+            {
+                fb.Read(buffer, 0, 32);
+                headerString = System.Text.Encoding.Unicode.GetString(buffer, 0, 16);
+            }
+            else
+            {
+                fb.Read(buffer, 2, 14);
+                headerString = System.Text.Encoding.ASCII.GetString(buffer, 0, 8);
+            }
+
+            // SIMISA@F  means compressed
+            // SIMISA@@  means uncompressed
+            if (headerString.StartsWith("SIMISA@F"))
+            {
+				fb = new ZlibStream(fb, SharpCompress.Compressor.CompressionMode.Decompress);
+            }
+            else if (headerString.StartsWith("\r\nSIMISA"))
+            {
+                // ie us1rd2l1000r10d.s, we are going to allow this but warn
+                Console.Error.WriteLine("Improper header in " + fileName);
+                fb.Read(buffer, 0, 4);
+            }
+            else if (!headerString.StartsWith("SIMISA@@"))
+            {
+                throw new System.Exception("Unrecognized shape file header " + headerString + " in " + fileName);
+            }
+
+            // Read SubHeader
+            string subHeader;
+            if (unicode)
+            {
+                fb.Read(buffer, 0, 32);
+                subHeader = Encoding.Unicode.GetString(buffer, 0, 16);
+            }
+            else
+            {
+                fb.Read(buffer, 0, 16);
+                subHeader = System.Text.Encoding.ASCII.GetString(buffer, 0, 8);
+            }
+
+            // Select for binary vs text content
+            if (subHeader[7] == 't')
+            {
+                //return new UnicodeFileReader(fb, file, unicode ? Encoding.Unicode : Encoding.ASCII);
+            }
+            else if (subHeader[7] != 'b')
+            {
+                throw new Exception("Unrecognized subHeader \"" + subHeader + "\" in " + fileName);
+            }
+			KujuTokenID currentToken;
+			using (BinaryReader reader = new BinaryReader(fb))
+			{
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.shape)
+				{
+					throw new Exception(); //Shape definition
+				}
+
+				reader.ReadUInt16();
+				reader.ReadUInt32();
+				reader.ReadByte();
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.shape_header)
+				{
+					throw new Exception("Expected the shape_header token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				uint remainingBytes = reader.ReadUInt32();
+				reader.ReadBytes((int) remainingBytes); //Should be all zeroes
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.volumes)
+				{
+					throw new Exception("Expected the volumes token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				byte[] newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.shader_names)
+				{
+					throw new Exception("Expected the shader_names token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.texture_filter_names)
+				{
+					throw new Exception("Expected the texture_filter_names token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.points)
+				{
+					throw new Exception("Expected the points token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.points);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.uv_points)
+				{
+					throw new Exception("Expected the uv_points token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.uv_points);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.normals)
+				{
+					throw new Exception("Expected the normals token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.normals);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.sort_vectors)
+				{
+					throw new Exception("Expected the sort_vectors token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.colours)
+				{
+					throw new Exception("Expected the colours token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.matrices)
+				{
+					throw new Exception("Expected the matricies token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.matrices);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.images)
+				{
+					throw new Exception("Expected the images token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.images);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.textures)
+				{
+					throw new Exception("Expected the textures token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.textures);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.light_materials)
+				{
+					throw new Exception("Expected the light_materials token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.light_model_cfgs)
+				{
+					throw new Exception("Expected the light_model_cfgs token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.vtx_states)
+				{
+					throw new Exception("Expected the vtx_states token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.vtx_states);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.prim_states)
+				{
+					throw new Exception("Expected the prim_states token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.prim_states);
+				currentToken = (KujuTokenID) reader.ReadUInt16();
+				if (currentToken != KujuTokenID.lod_controls)
+				{
+					throw new Exception("Expected the lod_controls token, got " + currentToken);
+				}
+
+				reader.ReadUInt16();
+				remainingBytes = reader.ReadUInt32();
+				newBytes = reader.ReadBytes((int) remainingBytes);
+				ReadSubBlock(newBytes, KujuTokenID.lod_controls);
+
+			}
+			Array.Resize(ref Result.Objects, meshBuilders.Count);
+			for (int i = 0; i < Result.Objects.Length; i++)
+			{
+				Result.Objects[i] = new ObjectManager.AnimatedObject();
+				Result.Objects[i].States = new ObjectManager.AnimatedObjectState[1];
+				ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
+				meshBuilders[i].Apply(out aos.Object);
+				aos.Position = new Vector3(0,0,0);
+				Result.Objects[i].States[0] = aos;
+				int j = i;
+				while (j > 0)
+				{
+					j--;
+					if (meshBuilders[j].LODValue < meshBuilders[i].LODValue)
+					{
+						break;
+					}
+				}
+
+				if (j != 0)
+				{
+					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + meshBuilders[i].LODValue + ",if[cameraDistance >" + meshBuilders[j].LODValue + ",0,-1],-1]");
+				}
+				else
+				{
+					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + meshBuilders[i].LODValue + ",0,-1]");
+				}
+			}
+			return Result;
+		}
+
+		private static int currentPrimitiveState = -1;
+		private static List<Vertex> currentVertices = new List<Vertex>();
+		private static List<VertexSet> currentVertexSets = new List<VertexSet>();
+
+		private static int[] currentHierarchy;
+
+		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken)
+		{
+			float x, y, z;
+			Vector3 point;
+			KujuTokenID currentToken = KujuTokenID.error;
+			uint remainingBytes = 0;
+			byte[] newBytes;
+			uint flags;
+			string blockLabel = string.Empty;
+			using (MemoryStream stream = new MemoryStream(blockBytes))
+			{
+				using (BinaryReader reader = new BinaryReader(stream))
+				{
+					int length = reader.ReadByte();
+					if (length > 0)
+					{
+						//Note: For most blocks, the label length will be zero
+						byte[] buff = new byte[length * 2];
+						int i = 0;
+						while (i < length * 2)
+						{
+							buff[i] = reader.ReadByte();
+							i++;
+						}
+
+						blockLabel = System.Text.Encoding.Unicode.GetString(buff, 0, length * 2);
+					}
+
+					switch (blockToken)
+					{
+						case KujuTokenID.vtx_state:
+							flags = reader.ReadUInt32();
+							int matrix1 = reader.ReadInt32();
+							int lightMaterialIdx = reader.ReadInt32();
+							int lightStateCfgIdx = reader.ReadInt32();
+							uint lightFlags = reader.ReadUInt32();
+							int matrix2 = -1;
+							if (stream.Length - stream.Position > 1)
+							{
+								matrix2 = reader.ReadInt32();
+							}
+
+							VertexStates vs = new VertexStates();
+							vs.flags = flags;
+							vs.hierarchyID = matrix1;
+							vs.lightingMatrixID = lightMaterialIdx;
+							vs.lightingConfigIdx = lightStateCfgIdx;
+							vs.lightingFlags = lightFlags;
+							vs.matrix2ID = matrix2;
+							vtx_states.Add(vs);
+							break;
+						case KujuTokenID.vtx_states:
+							int vtxStateCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (vtxStateCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.vtx_state)
+								{
+									throw new Exception("Expected the vtx_state token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.vtx_state);
+								vtxStateCount--;
+							}
+
+							break;
+						case KujuTokenID.prim_state:
+							flags = reader.ReadUInt32();
+							int shader = reader.ReadInt32();
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.tex_idxs)
+							{
+								throw new Exception("Expected the tex_idxs token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							reader.ReadUInt32();
+							reader.ReadByte();
+							int[] texIdxs = new int[reader.ReadInt32()];
+							for (int i = 0; i < texIdxs.Length; i++)
+							{
+								texIdxs[i] = reader.ReadInt32();
+							}
+
+							float zBias = reader.ReadSingle();
+							int vertexStates = reader.ReadInt32();
+							int alphaTestMode = reader.ReadInt32();
+							int lightCfgIdx = reader.ReadInt32();
+							int zBufferMode = reader.ReadInt32();
+							PrimitiveState p = new PrimitiveState();
+							p.Name = blockLabel;
+							p.Flags = flags;
+							p.Shader = shader;
+							p.Textures = texIdxs;
+							p.ZBias = zBias;
+							p.vertexStates = vertexStates;
+							p.alphaTestMode = alphaTestMode;
+							p.lightCfgIdx = lightCfgIdx;
+							p.zBufferMode = zBufferMode;
+							prim_states.Add(p);
+							break;
+						case KujuTokenID.prim_states:
+							int primStateCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (primStateCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.prim_state)
+								{
+									throw new Exception("Expected the prim_state token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.prim_state);
+								primStateCount--;
+							}
+
+							break;
+						case KujuTokenID.texture:
+							int imageIDX = (int) reader.ReadUInt32();
+							int filterMode = (int) reader.ReadUInt32();
+							float mipmapLODBias = reader.ReadSingle();
+							uint borderColor = 0xff000000U;
+							if (stream.Length - stream.Position > 1)
+							{
+								borderColor = reader.ReadUInt32();
+							}
+
+							//Unpack border color
+							float r, g, b, a;
+							r = borderColor % 256;
+							g = (borderColor / 256) % 256;
+							b = (borderColor / 256 / 256) % 256;
+							a = (borderColor / 256 / 256 / 256) % 256;
+							Texture t = new Texture();
+							t.fileName = images[imageIDX];
+							t.filterMode = filterMode;
+							t.mipmapLODBias = (int) mipmapLODBias;
+							t.borderColor = new Color32((byte) r, (byte) g, (byte) b, (byte) a);
+							textures.Add(t);
+							break;
+						case KujuTokenID.textures:
+							int textureCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (textureCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.texture)
+								{
+									throw new Exception("Expected the texture token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.texture);
+								textureCount--;
+							}
+
+							break;
+						case KujuTokenID.image:
+							int imageLength = reader.ReadUInt16();
+							if (imageLength > 0)
+							{
+								//Note: For most blocks, the label length will be zero
+								byte[] buff = new byte[imageLength * 2];
+								int i = 0;
+								while (i < imageLength * 2)
+								{
+									buff[i] = reader.ReadByte();
+									i++;
+								}
+
+								images.Add(System.Text.Encoding.Unicode.GetString(buff, 0, imageLength * 2));
+							}
+							else
+							{
+								images.Add(string.Empty); //Not sure this is valid, but let's be on the safe side
+							}
+
+							break;
+						case KujuTokenID.images:
+							int imageCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (imageCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.image)
+								{
+									throw new Exception("Expected the image token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.image);
+								imageCount--;
+							}
+
+							break;
+						case KujuTokenID.cullable_prims:
+							int numPrims = reader.ReadInt32();
+							int numFlatSections = reader.ReadInt32();
+							int numPrimIdxs = reader.ReadInt32();
+							break;
+						case KujuTokenID.geometry_info:
+							int faceNormals = reader.ReadInt32();
+							int txLightCommands = reader.ReadInt32();
+							int nodeXTrilistIdxs = reader.ReadInt32();
+							int trilistIdxs = reader.ReadInt32();
+							int lineListIdxs = reader.ReadInt32();
+							nodeXTrilistIdxs = reader.ReadInt32(); //Duped, or is the first one actually something else?
+							int trilists = reader.ReadInt32();
+							int lineLists = reader.ReadInt32();
+							int pointLists = reader.ReadInt32();
+							int nodeXTrilists = reader.ReadInt32();
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.geometry_nodes)
+							{
+								throw new Exception("Expected the geometry_nodes token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_nodes);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.geometry_node_map)
+							{
+								throw new Exception("Expected the geometry_node_map token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_node_map);
+							break;
+						case KujuTokenID.geometry_node_map:
+							int[] geometryNodes = new int[reader.ReadInt32()];
+							for (int i = 0; i < geometryNodes.Length; i++)
+							{
+								geometryNodes[i] = reader.ReadInt32();
+							}
+
+							break;
+						case KujuTokenID.geometry_node:
+							int n_txLightCommands = reader.ReadInt32();
+							int n_nodeXTxLightCmds = reader.ReadInt32();
+							int n_trilists = reader.ReadInt32();
+							int n_lineLists = reader.ReadInt32();
+							int n_pointLists = reader.ReadInt32();
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.cullable_prims)
+							{
+								throw new Exception("Expected the cullable_prims token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.cullable_prims);
+							break;
+						case KujuTokenID.geometry_nodes:
+							int geometryNodeCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (geometryNodeCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.geometry_node)
+								{
+									throw new Exception("Expected the geometry_node token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.geometry_node);
+								geometryNodeCount--;
+							}
+
+							break;
+						case KujuTokenID.point:
+							x = reader.ReadSingle();
+							y = reader.ReadSingle();
+							z = reader.ReadSingle();
+							point = new Vector3(x, y, z);
+							points.Add(point);
+							break;
+						case KujuTokenID.vector:
+							x = reader.ReadSingle();
+							y = reader.ReadSingle();
+							z = reader.ReadSingle();
+							point = new Vector3(x, y, z);
+							normals.Add(point);
+							break;
+						case KujuTokenID.points:
+							int pointCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (pointCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.point)
+								{
+									throw new Exception("Expected the point token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.point);
+								pointCount--;
+							}
+
+							break;
+						case KujuTokenID.uv_point:
+							x = reader.ReadSingle();
+							y = reader.ReadSingle();
+							var uv_point = new Vector2(x, y);
+							uv_points.Add(uv_point);
+							break;
+						case KujuTokenID.uv_points:
+							int uvPointCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (uvPointCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.uv_point)
+								{
+									throw new Exception("Expected the uv_point token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.uv_point);
+								uvPointCount--;
+							}
+
+							break;
+						case KujuTokenID.matrices:
+							int matrixCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (matrixCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.matrix)
+								{
+									throw new Exception("Expected the matrix token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.matrix);
+								matrixCount--;
+							}
+
+							break;
+						case KujuTokenID.matrix:
+							Matrix currentMatrix = new Matrix();
+							currentMatrix.Name = blockLabel;
+							currentMatrix.A = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+							currentMatrix.B = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+							currentMatrix.C = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+							currentMatrix.D = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+							matrices.Add(currentMatrix);
+							break;
+						case KujuTokenID.normals:
+							int normalCount = reader.ReadUInt16();
+							reader.ReadUInt16();
+							while (normalCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.vector)
+								{
+									throw new Exception("Expected the vector token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.vector);
+								normalCount--;
+							}
+
+							break;
+						case KujuTokenID.distance_levels_header:
+							int DLevBias = reader.ReadInt16();
+							break;
+						case KujuTokenID.distance_levels:
+							int distanceLevelCount = reader.ReadInt16();
+							reader.ReadUInt16();
+							while (distanceLevelCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.distance_level)
+								{
+									throw new Exception("Expected the distance_level token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.distance_level);
+								distanceLevelCount--;
+							}
+
+							break;
+						case KujuTokenID.distance_level_header:
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.dlevel_selection)
+							{
+								throw new Exception("Expected the dlevel_selection token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.dlevel_selection);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.hierarchy)
+							{
+								throw new Exception("Expected the hierarchy token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.hierarchy);
+							break;
+						case KujuTokenID.distance_level:
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.distance_level_header)
+							{
+								throw new Exception("Expected the distance_level_header token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.distance_level_header);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.sub_objects)
+							{
+								throw new Exception("Expected the sub_objects token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.sub_objects);
+							break;
+						case KujuTokenID.dlevel_selection:
+							currentLOD = reader.ReadSingle();
+							break;
+						case KujuTokenID.hierarchy:
+							currentHierarchy = new int[reader.ReadInt32()];
+							for (int i = 0; i < currentHierarchy.Length; i++)
+							{
+								currentHierarchy[i] = reader.ReadInt32();
+							}
+
+							break;
+						case KujuTokenID.lod_control:
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.distance_levels_header)
+							{
+								throw new Exception("Expected the distance_levels_header token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.distance_levels_header);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.distance_levels)
+							{
+								throw new Exception("Expected the distance_levels token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.distance_levels);
+							break;
+						case KujuTokenID.lod_controls:
+							int lodCount = reader.ReadInt16();
+							reader.ReadUInt16();
+							while (lodCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.lod_control)
+								{
+									throw new Exception("Expected the lod_control token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.lod_control);
+								lodCount--;
+							}
+
+							break;
+						case KujuTokenID.primitives:
+							int capacity = reader.ReadInt32(); //Count of the number of entries in the block, not the number of primitives
+							while (capacity > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								switch (currentToken)
+								{
+									case KujuTokenID.prim_state_idx:
+										ReadSubBlock(newBytes, KujuTokenID.prim_state_idx);
+										break;
+									case KujuTokenID.indexed_trilist:
+										ReadSubBlock(newBytes, KujuTokenID.indexed_trilist);
+										break;
+									default:
+										throw new Exception("Unexpected primitive type, got " + currentToken);
+								}
+
+								capacity--;
+							}
+
+							//Flush the texture coords *after* all vertex sets have been written
+							if (textureCoords.Count > 0)
+							{
+								if (currentPrimitiveState != -1)
+								{
+									//TODO: Only supports the first texture
+									Builder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+									Builder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+								}
+								textureCoords.Clear();
+							}
+
+							break;
+						case KujuTokenID.prim_state_idx:
+							currentPrimitiveState = reader.ReadInt32();
+							break;
+						case KujuTokenID.indexed_trilist:
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.vertex_idxs)
+							{
+								throw new Exception("Expected the vertex_idxs token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_idxs);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.normal_idxs)
+							{
+								throw new Exception("Expected the normal_idxs token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.normal_idxs);
+							break;
+						case KujuTokenID.sub_object:
+							if (Builder != null)
+							{
+								meshBuilders.Add(Builder);
+							}
+							Builder = new MeshBuilder();
+							Builder.LODValue = currentLOD;
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.sub_object_header)
+							{
+								throw new Exception("Expected the sub_object_header token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.sub_object_header);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.vertices)
+							{
+								throw new Exception("Expected the vertices token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.vertices);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.vertex_sets)
+							{
+								throw new Exception("Expected the vertex_sets token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_sets);
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.primitives)
+							{
+								throw new Exception("Expected the primitives token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.primitives);
+							break;
+						case KujuTokenID.sub_objects:
+							int subObjectCount = reader.ReadInt16();
+							reader.ReadUInt16();
+							while (subObjectCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.sub_object)
+								{
+									throw new Exception("Expected the sub_object token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.sub_object);
+								subObjectCount--;
+							}
+
+							break;
+						case KujuTokenID.sub_object_header:
+							flags = reader.ReadUInt32();
+							int sortVectorIdx = reader.ReadInt32();
+							int volIdx = reader.ReadInt32();
+							uint sourceVertexFormatFlags = reader.ReadUInt32();
+							uint destinationVertexFormatFlags = reader.ReadUInt32();
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.geometry_info)
+							{
+								throw new Exception("Expected the geometry_info token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_info);
+							/*
+							 * Optional stuff, need to check if we're running off the end of the stream before reading each block
+							 */
+							if (stream.Length - stream.Position > 1)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.subobject_shaders)
+								{
+									throw new Exception("Expected the subobject_shaders token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.subobject_shaders);
+							}
+
+							if (stream.Length - stream.Position > 1)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.subobject_light_cfgs)
+								{
+									throw new Exception("Expected the subobject_light_cfgs token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.subobject_light_cfgs);
+							}
+
+							if (stream.Length - stream.Position > 1)
+							{
+								int subObjectID = reader.ReadInt32();
+							}
+
+							break;
+						case KujuTokenID.subobject_light_cfgs:
+							int[] subobject_light_cfgs = new int[reader.ReadInt32()];
+							for (int i = 0; i < subobject_light_cfgs.Length; i++)
+							{
+								subobject_light_cfgs[i] = reader.ReadInt32();
+							}
+
+							break;
+						case KujuTokenID.subobject_shaders:
+							int[] subobject_shaders = new int[reader.ReadInt32()];
+							for (int i = 0; i < subobject_shaders.Length; i++)
+							{
+								subobject_shaders[i] = reader.ReadInt32();
+							}
+
+							break;
+						case KujuTokenID.vertices:
+							int vertexCount = reader.ReadInt16();
+							reader.ReadUInt16();
+							while (vertexCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.vertex)
+								{
+									throw new Exception("Expected the vertex token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.vertex);
+								vertexCount--;
+							}
+
+							break;
+						case KujuTokenID.vertex:
+							flags = reader.ReadUInt32(); //Various control variables, not supported
+							int myPoint = reader.ReadInt32(); //Index to points array
+							int myNormal = reader.ReadInt32(); //Index to normals array
+
+							Vertex v = new Vertex(points[myPoint], normals[myNormal]);
+							currentVertices.Add(v);
+							uint Color1 = reader.ReadUInt32();
+							uint Color2 = reader.ReadUInt32();
+							currentToken = (KujuTokenID) reader.ReadUInt16();
+							if (currentToken != KujuTokenID.vertex_uvs)
+							{
+								throw new Exception("Expected the vertex_uvs token, got " + currentToken);
+							}
+
+							reader.ReadUInt16();
+							remainingBytes = reader.ReadUInt32();
+							newBytes = reader.ReadBytes((int) remainingBytes);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_uvs);
+							break;
+						case KujuTokenID.vertex_idxs:
+							int remainingVertex = reader.ReadInt32() / 3;
+							int idx = Builder.Faces.Length;
+							Array.Resize(ref Builder.Faces, remainingVertex + idx);
+							while (remainingVertex > 0)
+							{
+								int v1 = reader.ReadInt32();
+								int v2 = reader.ReadInt32();
+								int v3 = reader.ReadInt32();
+								Builder.Faces[idx] = new World.MeshFace();
+								Builder.Faces[idx].Vertices = new World.MeshFaceVertex[3];
+								Builder.Faces[idx].Vertices[0].Index = (ushort)v1;
+								Builder.Faces[idx].Vertices[0].Normal = Normals[v1];
+								Builder.Faces[idx].Vertices[1].Index = (ushort)v2;
+								Builder.Faces[idx].Vertices[1].Normal = Normals[v2];
+								Builder.Faces[idx].Vertices[2].Index = (ushort)v3;
+								Builder.Faces[idx].Vertices[2].Normal = Normals[v3];
+								remainingVertex--;
+								idx++;
+							}
+
+							break;
+						case KujuTokenID.vertex_set:
+							int hierarchyIndex = reader.ReadInt32(); //Index to the final hiearchy chain member
+							int setStartVertexIndex = reader.ReadInt32(); //First vertex
+							int setVertexCount = reader.ReadInt32(); //Total number of vert
+							VertexSet vts = new VertexSet();
+							vts.hierarchyIndex = hierarchyIndex;
+							vts.startVertex = setStartVertexIndex;
+							vts.numVerticies = setVertexCount;
+							currentVertexSets.Add(vts);
+							break;
+						case KujuTokenID.vertex_sets:
+							currentVertexSets.Clear();
+							int vertexSetCount = reader.ReadInt16();
+							reader.ReadUInt16();
+							while (vertexSetCount > 0)
+							{
+								currentToken = (KujuTokenID) reader.ReadUInt16();
+								if (currentToken != KujuTokenID.vertex_set)
+								{
+									throw new Exception("Expected the vertex_set token, got " + currentToken);
+								}
+
+								reader.ReadUInt16();
+								remainingBytes = reader.ReadUInt32();
+								newBytes = reader.ReadBytes((int) remainingBytes);
+								ReadSubBlock(newBytes, KujuTokenID.vertex_set);
+								vertexSetCount--;
+							}
+
+							//We now need to transform our verticies
+							for (int i = 0; i < currentVertices.Count; i++)
+							{
+								for (int j = 0; j < currentVertexSets.Count; j++)
+								{
+									if (currentVertexSets[j].startVertex <= i && currentVertexSets[j].startVertex + currentVertexSets[j].numVerticies > i)
+									{
+										List<int> matrixChain = new List<int>();
+										int hi = currentVertexSets[j].hierarchyIndex - 1;
+										if (hi != -1)
+										{
+											matrixChain.Add(hi);
+											while (hi != -1)
+											{
+												hi = currentHierarchy[hi];
+												if (hi == -1)
+												{
+													break;
+												}
+
+												matrixChain.Insert(0, hi);
+											}
+										}
+
+										for (int k = 0; k < matrixChain.Count; k++)
+										{
+											currentVertices[i].Coordinates += matrices[matrixChain[k]].D;
+										}
+
+										break;
+									}
+								}
+							}
+
+							Array.Resize(ref Builder.Vertices, currentVertices.Count);
+							Array.Resize(ref Normals, currentVertices.Count);
+							for (int i = 0; i < currentVertices.Count; i++)
+							{
+								Builder.Vertices[i].Coordinates = currentVertices[i].Coordinates;
+								Builder.Vertices[i].TextureCoordinates = TextureCoords[i];
+								Normals[i] = currentVertices[i].Normal;
+							}
+
+							currentVertices.Clear();
+							TextureCoords.Clear();
+							break;
+						case KujuTokenID.vertex_uvs:
+							int[] vertex_uvs = new int[reader.ReadInt32()];
+							for (int i = 0; i < vertex_uvs.Length; i++)
+							{
+								vertex_uvs[i] = reader.ReadInt32();
+							}
+
+							TextureCoords.Add(uv_points[vertex_uvs[0]]);
+							//Looks as if vertex_uvs should always be of length 1, thus:
+							textureCoords.Add("Coordinates " + textureCoords.Count + ", " + uv_points[vertex_uvs[0]]);
+							break;
+					}
+				}
+			}
+		}
+	}
+}
