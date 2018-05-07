@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
-using OpenBveApi.Textures;
 using SharpCompress.Compressor.Deflate;
 
 namespace OpenBve
@@ -79,48 +77,29 @@ namespace OpenBve
 			internal Color32 Color;
 			internal Color24 EmissiveColor;
 			internal bool EmissiveColorUsed;
-			internal Color24 TransparentColor;
-			internal bool TransparentColorUsed;
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
 			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
-			internal string Text;
-			internal Color TextColor;
-			internal Color BackgroundColor;
-			internal string Font;
-			internal Vector2 TextPadding; 
 			internal Material() {
 				this.Color = new Color32(255, 255, 255, 255);
 				this.EmissiveColor = new Color24(0, 0, 0);
 				this.EmissiveColorUsed = false;
-				this.TransparentColor = new Color24(0, 0, 0);
-				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
-				this.TextColor = System.Drawing.Color.Black;
-				this.BackgroundColor = System.Drawing.Color.White;
-				this.TextPadding = new Vector2(0, 0);
-				this.Font = "Arial";
 				this.WrapMode = null;
 			}
 			internal Material(Material Prototype) {
 				this.Color = Prototype.Color;
 				this.EmissiveColor = Prototype.EmissiveColor;
 				this.EmissiveColorUsed = Prototype.EmissiveColorUsed;
-				this.TransparentColor = Prototype.TransparentColor;
-				this.TransparentColorUsed = Prototype.TransparentColorUsed;
 				this.DaytimeTexture = Prototype.DaytimeTexture;
 				this.NighttimeTexture = Prototype.NighttimeTexture;
 				this.BlendMode = Prototype.BlendMode;
 				this.GlowAttenuationData = Prototype.GlowAttenuationData;
-				this.TextColor = Prototype.TextColor;
-				this.BackgroundColor = Prototype.BackgroundColor;
-				this.TextPadding = Prototype.TextPadding;
-				this.Font = Prototype.Font;
 				this.WrapMode = Prototype.WrapMode;
 			}
 		}
@@ -163,36 +142,12 @@ namespace OpenBve
 					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
 				}
 				for (int i = 0; i < Materials.Length; i++) {
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | 0);
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
-					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
-					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
+					if (Materials[i].DaytimeTexture != null)
 					{
 						Textures.Texture tday;
-						if (Materials[i].Text != null)
-						{
-							Bitmap bitmap = null;
-							if (Materials[i].DaytimeTexture != null)
-							{
-								bitmap = new Bitmap(Materials[i].DaytimeTexture);
-							}
-							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
-							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)));
-						}
-						else
-						{
-							if (Materials[i].TransparentColorUsed)
-							{
-								Textures.RegisterTexture(Materials[i].DaytimeTexture,
-									new OpenBveApi.Textures.TextureParameters(null,
-										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
-											Materials[i].TransparentColor.B)), out tday);
-							}
-							else
-							{
-								Textures.RegisterTexture(Materials[i].DaytimeTexture, out tday);
-							}
-						}
+						Textures.RegisterTexture(Materials[i].DaytimeTexture, out tday);
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 					}
 					else
@@ -202,11 +157,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null) {
 						Textures.Texture tnight;
-						if (Materials[i].TransparentColorUsed) {
-							Textures.RegisterTexture(Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
-						} else {
-							Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
-						}
+						Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					} else {
 						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
@@ -220,7 +171,6 @@ namespace OpenBve
 		}
 		}
 
-		private static List<string> textureCoords = new List<string>();
 		private static List<Vector3> points = new List<Vector3>();
 		private static List<Vector3> normals = new List<Vector3>();
 		private static List<Vector2> uv_points = new List<Vector2>(); //texture coords
@@ -1053,19 +1003,12 @@ namespace OpenBve
 
 								capacity--;
 							}
-
-							//Flush the texture coords *after* all vertex sets have been written
-							if (textureCoords.Count > 0)
+							if (currentPrimitiveState != -1)
 							{
-								if (currentPrimitiveState != -1)
-								{
-									//TODO: Only supports the first texture
-									Builder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
-									Builder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
-								}
-								textureCoords.Clear();
+								//TODO: Only supports the first texture
+								Builder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+								Builder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
 							}
-
 							break;
 						case KujuTokenID.prim_state_idx:
 							currentPrimitiveState = reader.ReadInt32();
@@ -1370,10 +1313,8 @@ namespace OpenBve
 							{
 								vertex_uvs[i] = reader.ReadInt32();
 							}
-
-							TextureCoords.Add(uv_points[vertex_uvs[0]]);
 							//Looks as if vertex_uvs should always be of length 1, thus:
-							textureCoords.Add("Coordinates " + textureCoords.Count + ", " + uv_points[vertex_uvs[0]]);
+							TextureCoords.Add(uv_points[vertex_uvs[0]]);
 							break;
 					}
 				}
