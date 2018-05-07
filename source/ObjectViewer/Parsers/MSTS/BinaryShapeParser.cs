@@ -72,7 +72,7 @@ namespace OpenBve
 				this.Normal = new Vector3(n.X, n.Y, n.Z);
 			}
 		}
-
+		
 		private class Material {
 			internal Color32 Color;
 			internal Color24 EmissiveColor;
@@ -171,29 +171,29 @@ namespace OpenBve
 		}
 		}
 
-		private static List<Vector3> points = new List<Vector3>();
-		private static List<Vector3> normals = new List<Vector3>();
-		private static List<Vector2> uv_points = new List<Vector2>(); //texture coords
-		private static List<Matrix> matrices = new List<Matrix>();
-		private static List<string> images = new List<string>();
-		private static List<Texture> textures = new List<Texture>();
-		private static List<PrimitiveState> prim_states = new List<PrimitiveState>();
-		private static List<VertexStates> vtx_states = new List<VertexStates>();
-
-		private static ObjectManager.StaticObject obj = null;
-		private static ObjectManager.AnimatedObjectCollection Result;
-		private static string currentFolder;
-		private static int ObjectCount = 0;
-
-		private static MeshBuilder Builder = null;
-		private static Vector3[] Normals = null;
-		private static List<Vector2> TextureCoords = new List<Vector2>();
-		private static Vector3 pos = new Vector3(0, 0, 0);
-		private static List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
+		private class MsTsShape
+		{
+			internal List<Vector3> points = new List<Vector3>();
+			internal List<Vector3> normals = new List<Vector3>();
+			internal List<Vector2> uv_points = new List<Vector2>(); //texture coords
+			internal List<Matrix> matrices = new List<Matrix>();
+			internal List<string> images = new List<string>();
+			internal List<Texture> textures = new List<Texture>();
+			internal List<PrimitiveState> prim_states = new List<PrimitiveState>();
+			internal List<VertexStates> vtx_states = new List<VertexStates>();
+			internal ObjectManager.StaticObject obj = null;
+			internal Vector3[] Normals = null;
+			internal List<Vector2> TextureCoords = new List<Vector2>();
+			internal MeshBuilder currentMeshBuilder = null;
+			internal List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
+		}
 
 		private static double currentLOD;
+		private static string currentFolder;
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
 		{
+			ObjectManager.AnimatedObjectCollection Result;
+			MsTsShape shape = new MsTsShape();
 			Result = new ObjectManager.AnimatedObjectCollection
 			{
 				Objects = new ObjectManager.AnimatedObject[4]
@@ -315,7 +315,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.points);
+				ReadSubBlock(newBytes, KujuTokenID.points, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.uv_points)
 				{
@@ -325,7 +325,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.uv_points);
+				ReadSubBlock(newBytes, KujuTokenID.uv_points, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.normals)
 				{
@@ -335,7 +335,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.normals);
+				ReadSubBlock(newBytes, KujuTokenID.normals, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.sort_vectors)
 				{
@@ -363,7 +363,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.matrices);
+				ReadSubBlock(newBytes, KujuTokenID.matrices, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.images)
 				{
@@ -373,7 +373,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.images);
+				ReadSubBlock(newBytes, KujuTokenID.images, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.textures)
 				{
@@ -383,7 +383,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.textures);
+				ReadSubBlock(newBytes, KujuTokenID.textures, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.light_materials)
 				{
@@ -411,7 +411,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.vtx_states);
+				ReadSubBlock(newBytes, KujuTokenID.vtx_states, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.prim_states)
 				{
@@ -421,7 +421,7 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.prim_states);
+				ReadSubBlock(newBytes, KujuTokenID.prim_states, ref shape);
 				currentToken = (KujuTokenID) reader.ReadUInt16();
 				if (currentToken != KujuTokenID.lod_controls)
 				{
@@ -431,23 +431,23 @@ namespace OpenBve
 				reader.ReadUInt16();
 				remainingBytes = reader.ReadUInt32();
 				newBytes = reader.ReadBytes((int) remainingBytes);
-				ReadSubBlock(newBytes, KujuTokenID.lod_controls);
+				ReadSubBlock(newBytes, KujuTokenID.lod_controls, ref shape);
 
 			}
-			Array.Resize(ref Result.Objects, meshBuilders.Count);
+			Array.Resize(ref Result.Objects,shape.meshBuilders.Count);
 			for (int i = 0; i < Result.Objects.Length; i++)
 			{
 				Result.Objects[i] = new ObjectManager.AnimatedObject();
 				Result.Objects[i].States = new ObjectManager.AnimatedObjectState[1];
 				ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-				meshBuilders[i].Apply(out aos.Object);
+				shape.meshBuilders[i].Apply(out aos.Object);
 				aos.Position = new Vector3(0,0,0);
 				Result.Objects[i].States[0] = aos;
 				int j = i;
 				while (j > 0)
 				{
 					j--;
-					if (meshBuilders[j].LODValue < meshBuilders[i].LODValue)
+					if (shape.meshBuilders[j].LODValue < shape.meshBuilders[i].LODValue)
 					{
 						break;
 					}
@@ -455,11 +455,11 @@ namespace OpenBve
 
 				if (j != 0)
 				{
-					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + meshBuilders[i].LODValue + ",if[cameraDistance >" + meshBuilders[j].LODValue + ",0,-1],-1]");
+					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.meshBuilders[i].LODValue + ",if[cameraDistance >" + shape.meshBuilders[j].LODValue + ",0,-1],-1]");
 				}
 				else
 				{
-					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + meshBuilders[i].LODValue + ",0,-1]");
+					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.meshBuilders[i].LODValue + ",0,-1]");
 				}
 			}
 			return Result;
@@ -471,7 +471,7 @@ namespace OpenBve
 
 		private static int[] currentHierarchy;
 
-		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken)
+		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken, ref MsTsShape shape)
 		{
 			float x, y, z;
 			Vector3 point;
@@ -520,7 +520,7 @@ namespace OpenBve
 							vs.lightingConfigIdx = lightStateCfgIdx;
 							vs.lightingFlags = lightFlags;
 							vs.matrix2ID = matrix2;
-							vtx_states.Add(vs);
+							shape.vtx_states.Add(vs);
 							break;
 						case KujuTokenID.vtx_states:
 							int vtxStateCount = reader.ReadUInt16();
@@ -536,7 +536,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.vtx_state);
+								ReadSubBlock(newBytes, KujuTokenID.vtx_state, ref shape);
 								vtxStateCount--;
 							}
 
@@ -574,7 +574,7 @@ namespace OpenBve
 							p.alphaTestMode = alphaTestMode;
 							p.lightCfgIdx = lightCfgIdx;
 							p.zBufferMode = zBufferMode;
-							prim_states.Add(p);
+							shape.prim_states.Add(p);
 							break;
 						case KujuTokenID.prim_states:
 							int primStateCount = reader.ReadUInt16();
@@ -590,7 +590,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.prim_state);
+								ReadSubBlock(newBytes, KujuTokenID.prim_state, ref shape);
 								primStateCount--;
 							}
 
@@ -612,11 +612,11 @@ namespace OpenBve
 							b = (borderColor / 256 / 256) % 256;
 							a = (borderColor / 256 / 256 / 256) % 256;
 							Texture t = new Texture();
-							t.fileName = images[imageIDX];
+							t.fileName = shape.images[imageIDX];
 							t.filterMode = filterMode;
 							t.mipmapLODBias = (int) mipmapLODBias;
 							t.borderColor = new Color32((byte) r, (byte) g, (byte) b, (byte) a);
-							textures.Add(t);
+							shape.textures.Add(t);
 							break;
 						case KujuTokenID.textures:
 							int textureCount = reader.ReadUInt16();
@@ -632,7 +632,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.texture);
+								ReadSubBlock(newBytes, KujuTokenID.texture, ref shape);
 								textureCount--;
 							}
 
@@ -650,11 +650,11 @@ namespace OpenBve
 									i++;
 								}
 
-								images.Add(System.Text.Encoding.Unicode.GetString(buff, 0, imageLength * 2));
+								shape.images.Add(System.Text.Encoding.Unicode.GetString(buff, 0, imageLength * 2));
 							}
 							else
 							{
-								images.Add(string.Empty); //Not sure this is valid, but let's be on the safe side
+								shape.images.Add(string.Empty); //Not sure this is valid, but let's be on the safe side
 							}
 
 							break;
@@ -672,7 +672,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.image);
+								ReadSubBlock(newBytes, KujuTokenID.image, ref shape);
 								imageCount--;
 							}
 
@@ -702,7 +702,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.geometry_nodes);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_nodes, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.geometry_node_map)
 							{
@@ -712,7 +712,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.geometry_node_map);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_node_map, ref shape);
 							break;
 						case KujuTokenID.geometry_node_map:
 							int[] geometryNodes = new int[reader.ReadInt32()];
@@ -737,7 +737,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.cullable_prims);
+							ReadSubBlock(newBytes, KujuTokenID.cullable_prims, ref shape);
 							break;
 						case KujuTokenID.geometry_nodes:
 							int geometryNodeCount = reader.ReadUInt16();
@@ -753,7 +753,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.geometry_node);
+								ReadSubBlock(newBytes, KujuTokenID.geometry_node, ref shape);
 								geometryNodeCount--;
 							}
 
@@ -763,14 +763,14 @@ namespace OpenBve
 							y = reader.ReadSingle();
 							z = reader.ReadSingle();
 							point = new Vector3(x, y, z);
-							points.Add(point);
+							shape.points.Add(point);
 							break;
 						case KujuTokenID.vector:
 							x = reader.ReadSingle();
 							y = reader.ReadSingle();
 							z = reader.ReadSingle();
 							point = new Vector3(x, y, z);
-							normals.Add(point);
+							shape.normals.Add(point);
 							break;
 						case KujuTokenID.points:
 							int pointCount = reader.ReadUInt16();
@@ -786,7 +786,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.point);
+								ReadSubBlock(newBytes, KujuTokenID.point, ref shape);
 								pointCount--;
 							}
 
@@ -795,7 +795,7 @@ namespace OpenBve
 							x = reader.ReadSingle();
 							y = reader.ReadSingle();
 							var uv_point = new Vector2(x, y);
-							uv_points.Add(uv_point);
+							shape.uv_points.Add(uv_point);
 							break;
 						case KujuTokenID.uv_points:
 							int uvPointCount = reader.ReadUInt16();
@@ -811,7 +811,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.uv_point);
+								ReadSubBlock(newBytes, KujuTokenID.uv_point, ref shape);
 								uvPointCount--;
 							}
 
@@ -830,7 +830,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.matrix);
+								ReadSubBlock(newBytes, KujuTokenID.matrix, ref shape);
 								matrixCount--;
 							}
 
@@ -842,7 +842,7 @@ namespace OpenBve
 							currentMatrix.B = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 							currentMatrix.C = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 							currentMatrix.D = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-							matrices.Add(currentMatrix);
+							shape.matrices.Add(currentMatrix);
 							break;
 						case KujuTokenID.normals:
 							int normalCount = reader.ReadUInt16();
@@ -858,7 +858,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.vector);
+								ReadSubBlock(newBytes, KujuTokenID.vector, ref shape);
 								normalCount--;
 							}
 
@@ -880,7 +880,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.distance_level);
+								ReadSubBlock(newBytes, KujuTokenID.distance_level, ref shape);
 								distanceLevelCount--;
 							}
 
@@ -895,7 +895,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.dlevel_selection);
+							ReadSubBlock(newBytes, KujuTokenID.dlevel_selection, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.hierarchy)
 							{
@@ -905,7 +905,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.hierarchy);
+							ReadSubBlock(newBytes, KujuTokenID.hierarchy, ref shape);
 							break;
 						case KujuTokenID.distance_level:
 							currentToken = (KujuTokenID) reader.ReadUInt16();
@@ -917,7 +917,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.distance_level_header);
+							ReadSubBlock(newBytes, KujuTokenID.distance_level_header, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.sub_objects)
 							{
@@ -927,7 +927,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.sub_objects);
+							ReadSubBlock(newBytes, KujuTokenID.sub_objects, ref shape);
 							break;
 						case KujuTokenID.dlevel_selection:
 							currentLOD = reader.ReadSingle();
@@ -950,7 +950,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.distance_levels_header);
+							ReadSubBlock(newBytes, KujuTokenID.distance_levels_header, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.distance_levels)
 							{
@@ -960,7 +960,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.distance_levels);
+							ReadSubBlock(newBytes, KujuTokenID.distance_levels, ref shape);
 							break;
 						case KujuTokenID.lod_controls:
 							int lodCount = reader.ReadInt16();
@@ -976,7 +976,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.lod_control);
+								ReadSubBlock(newBytes, KujuTokenID.lod_control, ref shape);
 								lodCount--;
 							}
 
@@ -992,10 +992,10 @@ namespace OpenBve
 								switch (currentToken)
 								{
 									case KujuTokenID.prim_state_idx:
-										ReadSubBlock(newBytes, KujuTokenID.prim_state_idx);
+										ReadSubBlock(newBytes, KujuTokenID.prim_state_idx, ref shape);
 										break;
 									case KujuTokenID.indexed_trilist:
-										ReadSubBlock(newBytes, KujuTokenID.indexed_trilist);
+										ReadSubBlock(newBytes, KujuTokenID.indexed_trilist, ref shape);
 										break;
 									default:
 										throw new Exception("Unexpected primitive type, got " + currentToken);
@@ -1006,8 +1006,8 @@ namespace OpenBve
 							if (currentPrimitiveState != -1)
 							{
 								//TODO: Only supports the first texture
-								Builder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
-								Builder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,textures[prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+								shape.currentMeshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+								shape.currentMeshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
 							}
 							break;
 						case KujuTokenID.prim_state_idx:
@@ -1023,7 +1023,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.vertex_idxs);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_idxs, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.normal_idxs)
 							{
@@ -1033,15 +1033,15 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.normal_idxs);
+							ReadSubBlock(newBytes, KujuTokenID.normal_idxs, ref shape);
 							break;
 						case KujuTokenID.sub_object:
-							if (Builder != null)
+							if (shape.currentMeshBuilder != null)
 							{
-								meshBuilders.Add(Builder);
+								shape.meshBuilders.Add(shape.currentMeshBuilder);
 							}
-							Builder = new MeshBuilder();
-							Builder.LODValue = currentLOD;
+							shape.currentMeshBuilder = new MeshBuilder();
+							shape.currentMeshBuilder.LODValue = currentLOD;
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.sub_object_header)
 							{
@@ -1051,7 +1051,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.sub_object_header);
+							ReadSubBlock(newBytes, KujuTokenID.sub_object_header, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.vertices)
 							{
@@ -1061,7 +1061,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.vertices);
+							ReadSubBlock(newBytes, KujuTokenID.vertices, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.vertex_sets)
 							{
@@ -1071,7 +1071,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.vertex_sets);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_sets, ref shape);
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.primitives)
 							{
@@ -1081,7 +1081,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.primitives);
+							ReadSubBlock(newBytes, KujuTokenID.primitives, ref shape);
 							break;
 						case KujuTokenID.sub_objects:
 							int subObjectCount = reader.ReadInt16();
@@ -1097,7 +1097,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.sub_object);
+								ReadSubBlock(newBytes, KujuTokenID.sub_object, ref shape);
 								subObjectCount--;
 							}
 
@@ -1117,7 +1117,7 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.geometry_info);
+							ReadSubBlock(newBytes, KujuTokenID.geometry_info, ref shape);
 							/*
 							 * Optional stuff, need to check if we're running off the end of the stream before reading each block
 							 */
@@ -1132,7 +1132,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.subobject_shaders);
+								ReadSubBlock(newBytes, KujuTokenID.subobject_shaders, ref shape);
 							}
 
 							if (stream.Length - stream.Position > 1)
@@ -1146,7 +1146,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.subobject_light_cfgs);
+								ReadSubBlock(newBytes, KujuTokenID.subobject_light_cfgs, ref shape);
 							}
 
 							if (stream.Length - stream.Position > 1)
@@ -1185,7 +1185,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.vertex);
+								ReadSubBlock(newBytes, KujuTokenID.vertex, ref shape);
 								vertexCount--;
 							}
 
@@ -1195,7 +1195,7 @@ namespace OpenBve
 							int myPoint = reader.ReadInt32(); //Index to points array
 							int myNormal = reader.ReadInt32(); //Index to normals array
 
-							Vertex v = new Vertex(points[myPoint], normals[myNormal]);
+							Vertex v = new Vertex(shape.points[myPoint], shape.normals[myNormal]);
 							currentVertices.Add(v);
 							uint Color1 = reader.ReadUInt32();
 							uint Color2 = reader.ReadUInt32();
@@ -1208,25 +1208,25 @@ namespace OpenBve
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.vertex_uvs);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_uvs, ref shape);
 							break;
 						case KujuTokenID.vertex_idxs:
 							int remainingVertex = reader.ReadInt32() / 3;
-							int idx = Builder.Faces.Length;
-							Array.Resize(ref Builder.Faces, remainingVertex + idx);
+							int idx = shape.currentMeshBuilder.Faces.Length;
+							Array.Resize(ref shape.currentMeshBuilder.Faces, remainingVertex + idx);
 							while (remainingVertex > 0)
 							{
 								int v1 = reader.ReadInt32();
 								int v2 = reader.ReadInt32();
 								int v3 = reader.ReadInt32();
-								Builder.Faces[idx] = new World.MeshFace();
-								Builder.Faces[idx].Vertices = new World.MeshFaceVertex[3];
-								Builder.Faces[idx].Vertices[0].Index = (ushort)v1;
-								Builder.Faces[idx].Vertices[0].Normal = Normals[v1];
-								Builder.Faces[idx].Vertices[1].Index = (ushort)v2;
-								Builder.Faces[idx].Vertices[1].Normal = Normals[v2];
-								Builder.Faces[idx].Vertices[2].Index = (ushort)v3;
-								Builder.Faces[idx].Vertices[2].Normal = Normals[v3];
+								shape.currentMeshBuilder.Faces[idx] = new World.MeshFace();
+								shape.currentMeshBuilder.Faces[idx].Vertices = new World.MeshFaceVertex[3];
+								shape.currentMeshBuilder.Faces[idx].Vertices[0].Index = (ushort)v1;
+								shape.currentMeshBuilder.Faces[idx].Vertices[0].Normal = shape.Normals[v1];
+								shape.currentMeshBuilder.Faces[idx].Vertices[1].Index = (ushort)v2;
+								shape.currentMeshBuilder.Faces[idx].Vertices[1].Normal = shape.Normals[v2];
+								shape.currentMeshBuilder.Faces[idx].Vertices[2].Index = (ushort)v3;
+								shape.currentMeshBuilder.Faces[idx].Vertices[2].Normal = shape.Normals[v3];
 								remainingVertex--;
 								idx++;
 							}
@@ -1257,7 +1257,7 @@ namespace OpenBve
 								reader.ReadUInt16();
 								remainingBytes = reader.ReadUInt32();
 								newBytes = reader.ReadBytes((int) remainingBytes);
-								ReadSubBlock(newBytes, KujuTokenID.vertex_set);
+								ReadSubBlock(newBytes, KujuTokenID.vertex_set, ref shape);
 								vertexSetCount--;
 							}
 
@@ -1287,7 +1287,7 @@ namespace OpenBve
 
 										for (int k = 0; k < matrixChain.Count; k++)
 										{
-											currentVertices[i].Coordinates += matrices[matrixChain[k]].D;
+											currentVertices[i].Coordinates += shape.matrices[matrixChain[k]].D;
 										}
 
 										break;
@@ -1295,17 +1295,17 @@ namespace OpenBve
 								}
 							}
 
-							Array.Resize(ref Builder.Vertices, currentVertices.Count);
-							Array.Resize(ref Normals, currentVertices.Count);
+							Array.Resize(ref shape.currentMeshBuilder.Vertices, currentVertices.Count);
+							Array.Resize(ref shape.Normals, currentVertices.Count);
 							for (int i = 0; i < currentVertices.Count; i++)
 							{
-								Builder.Vertices[i].Coordinates = currentVertices[i].Coordinates;
-								Builder.Vertices[i].TextureCoordinates = TextureCoords[i];
-								Normals[i] = currentVertices[i].Normal;
+								shape.currentMeshBuilder.Vertices[i].Coordinates = currentVertices[i].Coordinates;
+								shape.currentMeshBuilder.Vertices[i].TextureCoordinates = shape.TextureCoords[i];
+								shape.Normals[i] = currentVertices[i].Normal;
 							}
 
 							currentVertices.Clear();
-							TextureCoords.Clear();
+							shape.TextureCoords.Clear();
 							break;
 						case KujuTokenID.vertex_uvs:
 							int[] vertex_uvs = new int[reader.ReadInt32()];
@@ -1314,7 +1314,7 @@ namespace OpenBve
 								vertex_uvs[i] = reader.ReadInt32();
 							}
 							//Looks as if vertex_uvs should always be of length 1, thus:
-							TextureCoords.Add(uv_points[vertex_uvs[0]]);
+							shape.TextureCoords.Add(shape.uv_points[vertex_uvs[0]]);
 							break;
 					}
 				}
