@@ -186,9 +186,12 @@ namespace OpenBve
 			internal List<Vector2> TextureCoords = new List<Vector2>();
 			internal MeshBuilder currentMeshBuilder = null;
 			internal List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
+			internal double currentLOD;
+			internal int currentPrimitiveState = -1;
+			internal int[] currentHierarchy;
 		}
 
-		private static double currentLOD;
+		
 		private static string currentFolder;
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
 		{
@@ -465,12 +468,9 @@ namespace OpenBve
 			return Result;
 		}
 
-		private static int currentPrimitiveState = -1;
 		private static List<Vertex> currentVertices = new List<Vertex>();
 		private static List<VertexSet> currentVertexSets = new List<VertexSet>();
-
-		private static int[] currentHierarchy;
-
+		
 		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken, ref MsTsShape shape)
 		{
 			float x, y, z;
@@ -930,13 +930,13 @@ namespace OpenBve
 							ReadSubBlock(newBytes, KujuTokenID.sub_objects, ref shape);
 							break;
 						case KujuTokenID.dlevel_selection:
-							currentLOD = reader.ReadSingle();
+							shape.currentLOD = reader.ReadSingle();
 							break;
 						case KujuTokenID.hierarchy:
-							currentHierarchy = new int[reader.ReadInt32()];
-							for (int i = 0; i < currentHierarchy.Length; i++)
+							shape.currentHierarchy = new int[reader.ReadInt32()];
+							for (int i = 0; i < shape.currentHierarchy.Length; i++)
 							{
-								currentHierarchy[i] = reader.ReadInt32();
+								shape.currentHierarchy[i] = reader.ReadInt32();
 							}
 
 							break;
@@ -1003,15 +1003,15 @@ namespace OpenBve
 
 								capacity--;
 							}
-							if (currentPrimitiveState != -1)
+							if (shape.currentPrimitiveState != -1)
 							{
 								//TODO: Only supports the first texture
-								shape.currentMeshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
-								shape.currentMeshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[currentPrimitiveState].Textures[0]].fileName + ".png");
+								shape.currentMeshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
+								shape.currentMeshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
 							}
 							break;
 						case KujuTokenID.prim_state_idx:
-							currentPrimitiveState = reader.ReadInt32();
+							shape.currentPrimitiveState = reader.ReadInt32();
 							break;
 						case KujuTokenID.indexed_trilist:
 							currentToken = (KujuTokenID) reader.ReadUInt16();
@@ -1041,7 +1041,7 @@ namespace OpenBve
 								shape.meshBuilders.Add(shape.currentMeshBuilder);
 							}
 							shape.currentMeshBuilder = new MeshBuilder();
-							shape.currentMeshBuilder.LODValue = currentLOD;
+							shape.currentMeshBuilder.LODValue = shape.currentLOD;
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.sub_object_header)
 							{
@@ -1275,7 +1275,7 @@ namespace OpenBve
 											matrixChain.Add(hi);
 											while (hi != -1)
 											{
-												hi = currentHierarchy[hi];
+												hi = shape.currentHierarchy[hi];
 												if (hi == -1)
 												{
 													break;
