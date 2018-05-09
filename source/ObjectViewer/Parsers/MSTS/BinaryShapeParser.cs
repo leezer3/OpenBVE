@@ -173,25 +173,88 @@ namespace OpenBve
 
 		private class MsTsShape
 		{
+			/// <summary>The points used by this shape</summary>
 			internal List<Vector3> points = new List<Vector3>();
+			/// <summary>The normal vectors used by this shape</summary>
 			internal List<Vector3> normals = new List<Vector3>();
-			internal List<Vector2> uv_points = new List<Vector2>(); //texture coords
+			/// <summary>The texture-coordinates used by this shape</summary>
+			internal List<Vector2> uv_points = new List<Vector2>();
 			internal List<Matrix> matrices = new List<Matrix>();
 			internal List<string> images = new List<string>();
 			internal List<Texture> textures = new List<Texture>();
 			internal List<PrimitiveState> prim_states = new List<PrimitiveState>();
 			internal List<VertexStates> vtx_states = new List<VertexStates>();
-			internal ObjectManager.StaticObject obj = null;
 			internal Vector3[] Normals = null;
 			internal List<Vector2> TextureCoords = new List<Vector2>();
 			internal MeshBuilder currentMeshBuilder = null;
 			internal List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
 			internal double currentLOD;
 			internal int currentPrimitiveState = -1;
-			internal int[] currentHierarchy;
 		}
 
-		
+		private class LOD
+		{
+			internal LOD(double distance)
+			{
+				this.viewingDistance = distance;
+				this.subObjects = new List<SubObject>();
+			}
+
+			internal readonly double viewingDistance;
+			internal List<SubObject> subObjects;
+			internal int[] hierarchy;
+		}
+
+		private class SubObject
+		{
+			internal SubObject()
+			{
+				this.verticies = new List<Vertex>();
+				this.vertexSets = new List<VertexSet>();
+			}
+
+			internal void TransformVerticies(List<Matrix> matrices)
+			{
+				//TODO: This moves the verticies
+				//We should actually split them and the associated faces and use position within our animated object instead
+				//This however works when we have no animation supported as per currently
+				for (int i = 0; i < verticies.Count; i++)
+				{
+					for (int j = 0; j < vertexSets.Count; j++)
+					{
+						if (vertexSets[j].startVertex <= i && vertexSets[j].startVertex + vertexSets[j].numVerticies > i)
+						{
+							List<int> matrixChain = new List<int>();
+							int hi = vertexSets[j].hierarchyIndex - 1;
+							if (hi != -1)
+							{
+								matrixChain.Add(hi);
+								while (hi != -1)
+								{
+									hi = currentLOD.hierarchy[hi];
+									if (hi == -1)
+									{
+										break;
+									}
+
+									matrixChain.Insert(0, hi);
+								}
+							}
+
+							for (int k = 0; k < matrixChain.Count; k++)
+							{
+								verticies[i].Coordinates += matrices[matrixChain[k]].D;
+							}
+
+							break;
+						}
+					}
+				}
+			}
+			internal List<Vertex> verticies;
+			internal List<VertexSet> vertexSets;
+		}
+
 		private static string currentFolder;
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
 		{
@@ -202,7 +265,7 @@ namespace OpenBve
 				Objects = new ObjectManager.AnimatedObject[4]
 			};
 
-			currentFolder = System.IO.Path.GetDirectoryName(fileName);
+			currentFolder = Path.GetDirectoryName(fileName);
 			Stream fb = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
             byte[] buffer = new byte[34];
@@ -214,12 +277,12 @@ namespace OpenBve
             if (unicode)
             {
                 fb.Read(buffer, 0, 32);
-                headerString = System.Text.Encoding.Unicode.GetString(buffer, 0, 16);
+                headerString = Encoding.Unicode.GetString(buffer, 0, 16);
             }
             else
             {
                 fb.Read(buffer, 2, 14);
-                headerString = System.Text.Encoding.ASCII.GetString(buffer, 0, 8);
+                headerString = Encoding.ASCII.GetString(buffer, 0, 8);
             }
 
             // SIMISA@F  means compressed
@@ -236,7 +299,7 @@ namespace OpenBve
             }
             else if (!headerString.StartsWith("SIMISA@@"))
             {
-                throw new System.Exception("Unrecognized shape file header " + headerString + " in " + fileName);
+                throw new Exception("Unrecognized shape file header " + headerString + " in " + fileName);
             }
 
             // Read SubHeader
@@ -249,7 +312,7 @@ namespace OpenBve
             else
             {
                 fb.Read(buffer, 0, 16);
-                subHeader = System.Text.Encoding.ASCII.GetString(buffer, 0, 8);
+                subHeader = Encoding.ASCII.GetString(buffer, 0, 8);
             }
 
             // Select for binary vs text content
@@ -468,8 +531,7 @@ namespace OpenBve
 			return Result;
 		}
 
-		private static List<Vertex> currentVertices = new List<Vertex>();
-		private static List<VertexSet> currentVertexSets = new List<VertexSet>();
+		private static LOD currentLOD;
 		
 		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken, ref MsTsShape shape)
 		{
@@ -931,12 +993,13 @@ namespace OpenBve
 							break;
 						case KujuTokenID.dlevel_selection:
 							shape.currentLOD = reader.ReadSingle();
+							currentLOD = new LOD(shape.currentLOD);
 							break;
 						case KujuTokenID.hierarchy:
-							shape.currentHierarchy = new int[reader.ReadInt32()];
-							for (int i = 0; i < shape.currentHierarchy.Length; i++)
+							currentLOD.hierarchy = new int[reader.ReadInt32()];
+							for (int i = 0; i < currentLOD.hierarchy.Length; i++)
 							{
-								shape.currentHierarchy[i] = reader.ReadInt32();
+								currentLOD.hierarchy[i] = reader.ReadInt32();
 							}
 
 							break;
@@ -1103,6 +1166,7 @@ namespace OpenBve
 
 							break;
 						case KujuTokenID.sub_object_header:
+							currentLOD.subObjects.Add(new SubObject());
 							flags = reader.ReadUInt32();
 							int sortVectorIdx = reader.ReadInt32();
 							int volIdx = reader.ReadInt32();
@@ -1196,7 +1260,7 @@ namespace OpenBve
 							int myNormal = reader.ReadInt32(); //Index to normals array
 
 							Vertex v = new Vertex(shape.points[myPoint], shape.normals[myNormal]);
-							currentVertices.Add(v);
+							currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Add(v);
 							uint Color1 = reader.ReadUInt32();
 							uint Color2 = reader.ReadUInt32();
 							currentToken = (KujuTokenID) reader.ReadUInt16();
@@ -1240,10 +1304,9 @@ namespace OpenBve
 							vts.hierarchyIndex = hierarchyIndex;
 							vts.startVertex = setStartVertexIndex;
 							vts.numVerticies = setVertexCount;
-							currentVertexSets.Add(vts);
+							currentLOD.subObjects[currentLOD.subObjects.Count -1].vertexSets.Add(vts);
 							break;
 						case KujuTokenID.vertex_sets:
-							currentVertexSets.Clear();
 							int vertexSetCount = reader.ReadInt16();
 							reader.ReadUInt16();
 							while (vertexSetCount > 0)
@@ -1262,49 +1325,16 @@ namespace OpenBve
 							}
 
 							//We now need to transform our verticies
-							for (int i = 0; i < currentVertices.Count; i++)
+							currentLOD.subObjects[currentLOD.subObjects.Count -1].TransformVerticies(shape.matrices);
+
+							Array.Resize(ref shape.currentMeshBuilder.Vertices, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
+							Array.Resize(ref shape.Normals, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
+							for (int i = 0; i < currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count; i++)
 							{
-								for (int j = 0; j < currentVertexSets.Count; j++)
-								{
-									if (currentVertexSets[j].startVertex <= i && currentVertexSets[j].startVertex + currentVertexSets[j].numVerticies > i)
-									{
-										List<int> matrixChain = new List<int>();
-										int hi = currentVertexSets[j].hierarchyIndex - 1;
-										if (hi != -1)
-										{
-											matrixChain.Add(hi);
-											while (hi != -1)
-											{
-												hi = shape.currentHierarchy[hi];
-												if (hi == -1)
-												{
-													break;
-												}
-
-												matrixChain.Insert(0, hi);
-											}
-										}
-
-										for (int k = 0; k < matrixChain.Count; k++)
-										{
-											currentVertices[i].Coordinates += shape.matrices[matrixChain[k]].D;
-										}
-
-										break;
-									}
-								}
-							}
-
-							Array.Resize(ref shape.currentMeshBuilder.Vertices, currentVertices.Count);
-							Array.Resize(ref shape.Normals, currentVertices.Count);
-							for (int i = 0; i < currentVertices.Count; i++)
-							{
-								shape.currentMeshBuilder.Vertices[i].Coordinates = currentVertices[i].Coordinates;
+								shape.currentMeshBuilder.Vertices[i].Coordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Coordinates;
 								shape.currentMeshBuilder.Vertices[i].TextureCoordinates = shape.TextureCoords[i];
-								shape.Normals[i] = currentVertices[i].Normal;
+								shape.Normals[i] = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Normal;
 							}
-
-							currentVertices.Clear();
 							shape.TextureCoords.Clear();
 							break;
 						case KujuTokenID.vertex_uvs:
