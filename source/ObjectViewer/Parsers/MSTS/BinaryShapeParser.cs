@@ -175,11 +175,9 @@ namespace OpenBve
 			internal List<Texture> textures = new List<Texture>();
 			internal List<PrimitiveState> prim_states = new List<PrimitiveState>();
 			internal List<VertexStates> vtx_states = new List<VertexStates>();
-			internal Vector3[] Normals = null;
-			internal MeshBuilder currentMeshBuilder = null;
-			internal List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
-			internal double currentLOD;
+			internal List<LOD> LODs = new List<LOD>();
 			internal int currentPrimitiveState = -1;
+			internal int totalObjects = 0;
 		}
 
 		private class LOD
@@ -201,6 +199,7 @@ namespace OpenBve
 			{
 				this.verticies = new List<Vertex>();
 				this.vertexSets = new List<VertexSet>();
+				this.faces = new List<int[]>();
 				this.meshBuilder = new MeshBuilder();
 			}
 
@@ -243,17 +242,27 @@ namespace OpenBve
 				}
 			}
 
-			internal void CreateMeshBuilder()
+			internal void CreateMeshBuilder(double lodValue)
 			{
+				meshBuilder.LODValue = lodValue;
 				for (int i = 0; i < verticies.Count; i++)
 				{
 					meshBuilder.Vertices[i].Coordinates = verticies[i].Coordinates;
 					meshBuilder.Vertices[i].TextureCoordinates = verticies[i].TextureCoordinates;
-					//shape.Normals[i] = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Normal;
+					Array.Resize(ref meshBuilder.Faces, faces.Count);
+					for (int j = 0; j < faces.Count; j++)
+					{
+						meshBuilder.Faces[j] = new World.MeshFace(faces[j]);
+						for (int k = 0; k < faces[j].Length; k++)
+						{
+							meshBuilder.Faces[j].Vertices[k].Normal = verticies[faces[j][k]].Normal;
+						}
+					}
 				}
 			}
 			internal List<Vertex> verticies;
 			internal List<VertexSet> vertexSets;
+			internal List<int[]> faces;
 
 			internal MeshBuilder meshBuilder;
 		}
@@ -503,32 +512,40 @@ namespace OpenBve
 				ReadSubBlock(newBytes, KujuTokenID.lod_controls, ref shape);
 
 			}
-			Array.Resize(ref Result.Objects,shape.meshBuilders.Count);
-			for (int i = 0; i < Result.Objects.Length; i++)
+			Array.Resize(ref Result.Objects,shape.totalObjects);
+			int idx = 0;
+			double[] previousLODs = new double[shape.totalObjects];
+			for (int i = 0; i < shape.LODs.Count; i++)
 			{
-				Result.Objects[i] = new ObjectManager.AnimatedObject();
-				Result.Objects[i].States = new ObjectManager.AnimatedObjectState[1];
-				ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-				shape.meshBuilders[i].Apply(out aos.Object);
-				aos.Position = new Vector3(0,0,0);
-				Result.Objects[i].States[0] = aos;
-				int j = i;
-				while (j > 0)
+				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					j--;
-					if (shape.meshBuilders[j].LODValue < shape.meshBuilders[i].LODValue)
+					Result.Objects[idx] = new ObjectManager.AnimatedObject();
+					Result.Objects[idx].States = new ObjectManager.AnimatedObjectState[1];
+					ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
+					shape.LODs[i].subObjects[j].meshBuilder.Apply(out aos.Object);
+					aos.Position = new Vector3(0,0,0);
+					Result.Objects[idx].States[0] = aos;
+					previousLODs[idx] = shape.LODs[i].subObjects[j].meshBuilder.LODValue;
+					int k = idx;
+					while (k > 0)
 					{
-						break;
+						if (previousLODs[k] < shape.LODs[i].subObjects[j].meshBuilder.LODValue)
+						{
+							break;
+						}
+						k--;
+						
 					}
-				}
+					if (k != 0)
+					{
+						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].subObjects[j].meshBuilder.LODValue + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]");
+					}
+					else
+					{
+						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].subObjects[j].meshBuilder.LODValue + ",0,-1]");
+					}
 
-				if (j != 0)
-				{
-					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.meshBuilders[i].LODValue + ",if[cameraDistance >" + shape.meshBuilders[j].LODValue + ",0,-1],-1]");
-				}
-				else
-				{
-					Result.Objects[i].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.meshBuilders[i].LODValue + ",0,-1]");
+					idx++;
 				}
 			}
 			return Result;
@@ -999,10 +1016,10 @@ namespace OpenBve
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
 							ReadSubBlock(newBytes, KujuTokenID.sub_objects, ref shape);
+							shape.LODs.Add(currentLOD);
 							break;
 						case KujuTokenID.dlevel_selection:
-							shape.currentLOD = reader.ReadSingle();
-							currentLOD = new LOD(shape.currentLOD);
+							currentLOD = new LOD(reader.ReadSingle());
 							break;
 						case KujuTokenID.hierarchy:
 							currentLOD.hierarchy = new int[reader.ReadInt32()];
@@ -1078,8 +1095,8 @@ namespace OpenBve
 							if (shape.currentPrimitiveState != -1)
 							{
 								//TODO: Only supports the first texture
-								shape.currentMeshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
-								shape.currentMeshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
 							}
 							break;
 						case KujuTokenID.prim_state_idx:
@@ -1108,12 +1125,6 @@ namespace OpenBve
 							ReadSubBlock(newBytes, KujuTokenID.normal_idxs, ref shape);
 							break;
 						case KujuTokenID.sub_object:
-							if (shape.currentMeshBuilder != null)
-							{
-								shape.meshBuilders.Add(shape.currentMeshBuilder);
-							}
-							shape.currentMeshBuilder = new MeshBuilder();
-							shape.currentMeshBuilder.LODValue = shape.currentLOD;
 							currentToken = (KujuTokenID) reader.ReadUInt16();
 							if (currentToken != KujuTokenID.sub_object_header)
 							{
@@ -1172,10 +1183,10 @@ namespace OpenBve
 								ReadSubBlock(newBytes, KujuTokenID.sub_object, ref shape);
 								subObjectCount--;
 							}
-
 							break;
 						case KujuTokenID.sub_object_header:
 							currentLOD.subObjects.Add(new SubObject());
+							shape.totalObjects++;
 							flags = reader.ReadUInt32();
 							int sortVectorIdx = reader.ReadInt32();
 							int volIdx = reader.ReadInt32();
@@ -1285,25 +1296,18 @@ namespace OpenBve
 							break;
 						case KujuTokenID.vertex_idxs:
 							int remainingVertex = reader.ReadInt32() / 3;
-							int idx = shape.currentMeshBuilder.Faces.Length;
-							Array.Resize(ref shape.currentMeshBuilder.Faces, remainingVertex + idx);
+							int idx = currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Faces.Length;
+							Array.Resize(ref currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Faces, remainingVertex + idx);
 							while (remainingVertex > 0)
 							{
 								int v1 = reader.ReadInt32();
 								int v2 = reader.ReadInt32();
 								int v3 = reader.ReadInt32();
-								shape.currentMeshBuilder.Faces[idx] = new World.MeshFace();
-								shape.currentMeshBuilder.Faces[idx].Vertices = new World.MeshFaceVertex[3];
-								shape.currentMeshBuilder.Faces[idx].Vertices[0].Index = (ushort)v1;
-								shape.currentMeshBuilder.Faces[idx].Vertices[0].Normal = shape.Normals[v1];
-								shape.currentMeshBuilder.Faces[idx].Vertices[1].Index = (ushort)v2;
-								shape.currentMeshBuilder.Faces[idx].Vertices[1].Normal = shape.Normals[v2];
-								shape.currentMeshBuilder.Faces[idx].Vertices[2].Index = (ushort)v3;
-								shape.currentMeshBuilder.Faces[idx].Vertices[2].Normal = shape.Normals[v3];
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].faces.Add(new int[] { v1, v2, v3 });
 								remainingVertex--;
 								idx++;
 							}
-
+							currentLOD.subObjects[currentLOD.subObjects.Count -1].CreateMeshBuilder(currentLOD.viewingDistance);
 							break;
 						case KujuTokenID.vertex_set:
 							int hierarchyIndex = reader.ReadInt32(); //Index to the final hiearchy chain member
@@ -1336,13 +1340,11 @@ namespace OpenBve
 							//We now need to transform our verticies
 							currentLOD.subObjects[currentLOD.subObjects.Count -1].TransformVerticies(shape.matrices);
 
-							Array.Resize(ref shape.currentMeshBuilder.Vertices, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
-							Array.Resize(ref shape.Normals, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
+							Array.Resize(ref currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
 							for (int i = 0; i < currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count; i++)
 							{
-								shape.currentMeshBuilder.Vertices[i].Coordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Coordinates;
-								shape.currentMeshBuilder.Vertices[i].TextureCoordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].TextureCoordinates;
-								shape.Normals[i] = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Normal;
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices[i].Coordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Coordinates;
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices[i].TextureCoordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].TextureCoordinates;
 							}
 							break;
 						case KujuTokenID.vertex_uvs:
