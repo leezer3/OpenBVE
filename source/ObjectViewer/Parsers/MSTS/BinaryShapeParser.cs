@@ -65,6 +65,7 @@ namespace OpenBve
 		{
 			internal Vector3 Coordinates;
 			internal Vector3 Normal;
+			internal Vector2 TextureCoordinates;
 			
 			public Vertex(Vector3 c, Vector3 n)
 			{
@@ -91,16 +92,6 @@ namespace OpenBve
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.WrapMode = null;
-			}
-			internal Material(Material Prototype) {
-				this.Color = Prototype.Color;
-				this.EmissiveColor = Prototype.EmissiveColor;
-				this.EmissiveColorUsed = Prototype.EmissiveColorUsed;
-				this.DaytimeTexture = Prototype.DaytimeTexture;
-				this.NighttimeTexture = Prototype.NighttimeTexture;
-				this.BlendMode = Prototype.BlendMode;
-				this.GlowAttenuationData = Prototype.GlowAttenuationData;
-				this.WrapMode = Prototype.WrapMode;
 			}
 		}
 		private class MeshBuilder {
@@ -185,7 +176,6 @@ namespace OpenBve
 			internal List<PrimitiveState> prim_states = new List<PrimitiveState>();
 			internal List<VertexStates> vtx_states = new List<VertexStates>();
 			internal Vector3[] Normals = null;
-			internal List<Vector2> TextureCoords = new List<Vector2>();
 			internal MeshBuilder currentMeshBuilder = null;
 			internal List<MeshBuilder> meshBuilders = new List<MeshBuilder>();
 			internal double currentLOD;
@@ -211,6 +201,7 @@ namespace OpenBve
 			{
 				this.verticies = new List<Vertex>();
 				this.vertexSets = new List<VertexSet>();
+				this.meshBuilder = new MeshBuilder();
 			}
 
 			internal void TransformVerticies(List<Matrix> matrices)
@@ -251,8 +242,20 @@ namespace OpenBve
 					}
 				}
 			}
+
+			internal void CreateMeshBuilder()
+			{
+				for (int i = 0; i < verticies.Count; i++)
+				{
+					meshBuilder.Vertices[i].Coordinates = verticies[i].Coordinates;
+					meshBuilder.Vertices[i].TextureCoordinates = verticies[i].TextureCoordinates;
+					//shape.Normals[i] = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Normal;
+				}
+			}
 			internal List<Vertex> verticies;
 			internal List<VertexSet> vertexSets;
+
+			internal MeshBuilder meshBuilder;
 		}
 
 		private static string currentFolder;
@@ -532,8 +535,14 @@ namespace OpenBve
 		}
 
 		private static LOD currentLOD;
-		
+
 		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken, ref MsTsShape shape)
+		{
+			Vertex v = null; //Crappy, but there we go.....
+			ReadSubBlock(blockBytes, blockToken, ref shape, ref v);
+		}
+
+		private static void ReadSubBlock(byte[] blockBytes, KujuTokenID blockToken, ref MsTsShape shape, ref Vertex vertex)
 		{
 			float x, y, z;
 			Vector3 point;
@@ -1260,7 +1269,7 @@ namespace OpenBve
 							int myNormal = reader.ReadInt32(); //Index to normals array
 
 							Vertex v = new Vertex(shape.points[myPoint], shape.normals[myNormal]);
-							currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Add(v);
+							
 							uint Color1 = reader.ReadUInt32();
 							uint Color2 = reader.ReadUInt32();
 							currentToken = (KujuTokenID) reader.ReadUInt16();
@@ -1268,11 +1277,11 @@ namespace OpenBve
 							{
 								throw new Exception("Expected the vertex_uvs token, got " + currentToken);
 							}
-
 							reader.ReadUInt16();
 							remainingBytes = reader.ReadUInt32();
 							newBytes = reader.ReadBytes((int) remainingBytes);
-							ReadSubBlock(newBytes, KujuTokenID.vertex_uvs, ref shape);
+							ReadSubBlock(newBytes, KujuTokenID.vertex_uvs, ref shape, ref v);
+							currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Add(v);
 							break;
 						case KujuTokenID.vertex_idxs:
 							int remainingVertex = reader.ReadInt32() / 3;
@@ -1332,10 +1341,9 @@ namespace OpenBve
 							for (int i = 0; i < currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count; i++)
 							{
 								shape.currentMeshBuilder.Vertices[i].Coordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Coordinates;
-								shape.currentMeshBuilder.Vertices[i].TextureCoordinates = shape.TextureCoords[i];
+								shape.currentMeshBuilder.Vertices[i].TextureCoordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].TextureCoordinates;
 								shape.Normals[i] = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Normal;
 							}
-							shape.TextureCoords.Clear();
 							break;
 						case KujuTokenID.vertex_uvs:
 							int[] vertex_uvs = new int[reader.ReadInt32()];
@@ -1344,7 +1352,7 @@ namespace OpenBve
 								vertex_uvs[i] = reader.ReadInt32();
 							}
 							//Looks as if vertex_uvs should always be of length 1, thus:
-							shape.TextureCoords.Add(shape.uv_points[vertex_uvs[0]]);
+							vertex.TextureCoordinates = shape.uv_points[vertex_uvs[0]];
 							break;
 					}
 				}
