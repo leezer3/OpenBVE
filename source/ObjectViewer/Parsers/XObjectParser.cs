@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using System.Linq;
 
 namespace OpenBve {
@@ -130,7 +131,10 @@ namespace OpenBve {
 			new Template("TextureFilename", new string[] { "string" }),
 			new Template("MeshTextureCoords", new string[] { "DWORD", "Coords2d[0]" }),
 			new Template("Coords2d", new string[] { "float", "float" }),
+			new Template("MeshVertexColors", new string[] { "DWORD","VertexColor[0]"}),
 			new Template("MeshNormals", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]" }),
+			// Index , ColorRGBA
+			new Template("VertexColor", new string[] { "DWORD", "ColorRGBA" }),
 			//Root frame around the model itself
 			new Template("Frame Root", new string[] { "[...]" }),
 			//Presumably appears around each Mesh (??), Blender exported models
@@ -156,7 +160,7 @@ namespace OpenBve {
 		private static Structure[] LoadedMaterials;
 
 		// get template
-		private static Template GetTemplate(string Name) {
+		private static Template GetTemplate(string Name, bool binary) {
 			for (int i = 0; i < Templates.Length; i++) {
 				if (Templates[i].Name == Name) {
 					return Templates[i];
@@ -285,6 +289,7 @@ namespace OpenBve {
 				case "template meshtexturecoords":
 				case "template meshnormals":
 				case "template texturefilename":
+				case "template meshvertexcolors":
 				case "frametransformmatrix":
 					return true;
 			}
@@ -309,6 +314,7 @@ namespace OpenBve {
 				case "coords2d":
 				case "meshtexturecoords":
 				case "meshnormals":
+				case "meshvertexcolors":
 				case "texturefilename":
 				case "frametransformmatrix":
 					return true;
@@ -341,7 +347,7 @@ namespace OpenBve {
 								string s = Content.Substring(i, Position - i).Trim();
 								Structure o;
 								Position++;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s), false, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s, false), false, out o)) {
 									return false;
 								} Position--;
 								i = Position + 1;
@@ -363,7 +369,7 @@ namespace OpenBve {
 								string s = Content.Substring(i, Position - i).Trim();
 								Structure o;
 								Position++;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s), false, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s, false), false, out o)) {
 									return false;
 								} Position--;
 								if (!IsDefaultTemplate(s))
@@ -522,7 +528,7 @@ namespace OpenBve {
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else {
 						// non-primitive array
-						Template t = GetTemplate(r);
+						Template t = GetTemplate(r, false);
 						Structure[] o = new Structure[h];
 						if (h == 0) {
 							// empty array
@@ -617,8 +623,17 @@ namespace OpenBve {
 								} else if (Content[Position] == ';' || Content[Position] == ',') {
 									string s = Content.Substring(i, Position - i).Trim();
 									double a; if (!double.TryParse(s, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out a)) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "float could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
-										return false;
+										if (s != string.Empty)
+										{
+											//Handle omitted entries which are still in a valid format
+											//May break elsewhere, but if so we're no further back anyways
+											Interface.AddMessage(Interface.MessageType.Error, false, "float could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
+											return false;
+										}
+										else
+										{
+											a = 0.0;
+										}
 									}
 									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = a;
@@ -757,7 +772,7 @@ namespace OpenBve {
 						default:
 							{
 								Structure o;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(Template.Members[m]), true, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(Template.Members[m], false), true, out o)) {
 									return false;
 								}
 								while (Position < Content.Length) {
@@ -979,7 +994,7 @@ namespace OpenBve {
 								return false;
 							}
 							Structure o;
-							if (!ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Name), false, ref Cache, out o)) {
+							if (!ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Name, true), false, ref Cache, out o)) {
 								return false;
 							}
 							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
@@ -1109,7 +1124,7 @@ namespace OpenBve {
 						// template array
 						Structure[] o = new Structure[h];
 						for (int i = 0; i < h; i++) {
-							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(r), true, ref Cache, out o[i]);
+							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(r, true), true, ref Cache, out o[i]);
 						}
 						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
@@ -1235,7 +1250,7 @@ namespace OpenBve {
 						default:
 							// inlined template expected
 							Structure o;
-							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Template.Members[m]), true, ref Cache, out o);
+							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Template.Members[m], true), true, ref Cache, out o);
 							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = o;
 							break;
@@ -1273,7 +1288,7 @@ namespace OpenBve {
 			Object = new ObjectManager.StaticObject();
 			Object.Mesh.Faces = new World.MeshFace[] { };
 			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new World.Vertex[] { };
+			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// file
 			for (int i = 0; i < Structure.Data.Length; i++) {
 				Structure f = Structure.Data[i] as Structure;
@@ -1340,7 +1355,7 @@ namespace OpenBve {
 								return false;
 							}
 							// collect vertices
-							World.Vertex[] Vertices = new World.Vertex[nVertices];
+							VertexTemplate[] Vertices = new VertexTemplate[nVertices];
 							for (int j = 0; j < nVertices; j++)
 							{
 								if (vertices[j].Name != "Vector")
@@ -1371,7 +1386,7 @@ namespace OpenBve {
 								double x = (double)vertices[j].Data[0];
 								double y = (double)vertices[j].Data[1];
 								double z = (double)vertices[j].Data[2];
-								Vertices[j].Coordinates = new Vector3(x, y, z);
+								Vertices[j] = new Vertex(new Vector3(x,y,z));
 							}
 							// collect faces
 							int[][] Faces = new int[nFaces][];
@@ -1485,6 +1500,8 @@ namespace OpenBve {
 											//If we've found a mesh, assume that the normals and co-ords have been declared or omitted for the previous mesh
 											cf = true;
 											cn = true;
+											break;
+										case "MeshVertexColors":
 											break;
 										default:
 											continue;
@@ -1945,6 +1962,75 @@ namespace OpenBve {
 											}
 										}
 										break;
+									case "MeshVertexColors":
+										if (g.Data.Length == 0)
+										{
+											continue;
+										}
+										if (g.Data.Length != 2)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "MeshVertexColors is expected to have 2 arguments in Mesh in x object file " + FileName);
+											return false;
+										}
+										else if (!(g.Data[0] is int))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "nVertexColors is expected to be a DWORD in MeshTextureCoords in Mesh in x object file " + FileName);
+											return false;
+										}
+										else if (!(g.Data[1] is Structure[]))
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "vertexColors[nVertexColors] is expected to be a Structure array in MeshVertexColors in Mesh in x object file " + FileName);
+											return false;
+										}
+
+										Structure[] structures = g.Data[1] as Structure[];
+										for (int k = 0; k < structures.Length; k++)
+										{
+											if (!(structures[k].Data[0] is int))
+											{
+												//Message: Expected to be vertex index
+												continue;
+											}
+											int idx = (int)structures[k].Data[0];
+											if (!(structures[k].Data[1] is Structure))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "vertexColors[" + idx + "] is expected to be a ColorRGBA array in MeshVertexColors in Mesh in x object file " + FileName);
+												continue;
+											}
+
+											Structure colorStructure = structures[k].Data[1] as Structure;
+											if (colorStructure.Data.Length != 4)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "vertexColors[" + idx + "] is expected to have 4 arguments in MeshVertexColors in Mesh in x object file " + FileName);
+												continue;
+											}
+											if (!(colorStructure.Data[0] is double))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "R is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												continue;
+											}
+											if (!(colorStructure.Data[1] is double))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "G is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												continue;
+											}
+											if (!(colorStructure.Data[2] is double))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "B is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												continue;
+											}
+											if (!(colorStructure.Data[3] is double))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "A is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												continue;
+											}
+											
+											double red = (double)colorStructure.Data[0], green = (double)colorStructure.Data[1], blue = (double)colorStructure.Data[2], alpha = (double)colorStructure.Data[3];
+
+											OpenBveApi.Colors.Color128 c = new Color128((float)red, (float)green, (float)blue, (float)alpha);
+											Vertices[idx] = new ColoredVertex((Vertex)Vertices[idx], c);
+										}
+										break;
 									case "MeshNormals":
 										{
 											// meshnormals
@@ -2105,7 +2191,7 @@ namespace OpenBve {
 							int mv = Object.Mesh.Vertices.Length;
 							Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
 							Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-							Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+							Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 							for (int j = 0; j < Materials.Length; j++)
 							{
 								bool emissive = Materials[j].emissiveColor.R != 0 | Materials[j].emissiveColor.G != 0 | Materials[j].emissiveColor.B != 0;

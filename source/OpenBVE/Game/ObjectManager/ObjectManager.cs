@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -88,7 +89,7 @@ namespace OpenBve
 				{
 					Faces = new World.MeshFace[] {},
 					Materials = new World.MeshMaterial[] {},
-					Vertices = new World.Vertex[] {}
+					Vertices = new VertexTemplate[] {}
 				},
 				Dynamic = true
 			};

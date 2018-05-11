@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -37,12 +38,19 @@ namespace OpenBve
 					StartingDistance = StartingDistance,
 					EndingDistance = EndingDistance,
 					Dynamic = Dynamic,
-					Mesh = { Vertices = new World.Vertex[Mesh.Vertices.Length] }
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
 				};
 				// vertices
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					Result.Mesh.Vertices[j] = Mesh.Vertices[j];
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
 				}
 				// faces
 				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
@@ -89,12 +97,19 @@ namespace OpenBve
 					StartingDistance = StartingDistance,
 					EndingDistance = EndingDistance,
 					Dynamic = Dynamic,
-					Mesh = { Vertices = new World.Vertex[Mesh.Vertices.Length] }
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
 				};
 				// vertices
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					Result.Mesh.Vertices[j] = Mesh.Vertices[j];
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
 				}
 				// faces
 				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
@@ -128,7 +143,7 @@ namespace OpenBve
 				int mv = Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Mesh.Faces, mf + Add.Mesh.Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
-				Array.Resize<World.Vertex>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+				Array.Resize<VertexTemplate>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
 				for (int i = 0; i < Add.Mesh.Faces.Length; i++)
 				{
 					Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
@@ -144,7 +159,15 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
 				{
-					Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
+					if (Add.Mesh.Vertices[i] is ColoredVertex)
+					{
+						Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex)Add.Mesh.Vertices[i]);
+					}
+					else
+					{
+						Mesh.Vertices[mv + i] = new Vertex((Vertex)Add.Mesh.Vertices[i]);
+					}
+					
 				}
 			}
 
@@ -152,11 +175,18 @@ namespace OpenBve
 			{
 				StartingDistance = float.MaxValue;
 				EndingDistance = float.MinValue;
-				Mesh.Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length];
+				Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
 				// vertices
 				for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
 				{
-					Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
+					if (Prototype.Mesh.Vertices[j] is ColoredVertex)
+					{
+						Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Prototype.Mesh.Vertices[j]);
+					}
+					else
+					{
+						Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
+					}
 					if (AccurateObjectDisposal)
 					{
 						World.Rotate(ref Mesh.Vertices[j].Coordinates.X, ref Mesh.Vertices[j].Coordinates.Y, ref Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
@@ -608,7 +638,7 @@ namespace OpenBve
 				// finalize arrays
 				if (v != Mesh.Vertices.Length)
 				{
-					Array.Resize<World.Vertex>(ref Mesh.Vertices, v);
+					Array.Resize<VertexTemplate>(ref Mesh.Vertices, v);
 				}
 				if (m != Mesh.Materials.Length)
 				{
