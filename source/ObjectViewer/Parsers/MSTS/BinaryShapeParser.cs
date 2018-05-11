@@ -94,94 +94,58 @@ namespace OpenBve
 				this.WrapMode = null;
 			}
 		}
-		private class MeshBuilder {
-			internal World.Vertex[] Vertices;
-			internal World.MeshFace[] Faces;
-			internal Material[] Materials;
-			internal double LODValue = 0;
-			internal MeshBuilder() {
-				this.Vertices = new World.Vertex[] { };
-				this.Faces = new World.MeshFace[] { };
-				this.Materials = new Material[] { new Material() };
-			}
-
-			internal void Apply(out ObjectManager.StaticObject Object) {
-			Object = new ObjectManager.StaticObject
-				{
-					Mesh =
-					{
-						Faces = new World.MeshFace[] {},
-						Materials = new World.MeshMaterial[] {},
-						Vertices = new World.Vertex[] {}
-					}
-				};
-			if (Faces.Length != 0) {
-				int mf = Object.Mesh.Faces.Length;
-				int mm = Object.Mesh.Materials.Length;
-				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Vertices.Length);
-				for (int i = 0; i < Vertices.Length; i++) {
-					Object.Mesh.Vertices[mv + i] = Vertices[i];
-				}
-				for (int i = 0; i < Faces.Length; i++) {
-					Object.Mesh.Faces[mf + i] = Faces[i];
-					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++) {
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Materials.Length; i++) {
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | 0);
-					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
-					if (Materials[i].DaytimeTexture != null)
-					{
-						Textures.Texture tday;
-						Textures.RegisterTexture(Materials[i].DaytimeTexture, out tday);
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
-					if (Materials[i].NighttimeTexture != null) {
-						Textures.Texture tnight;
-						Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
-						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-					} else {
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
-					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;
-				}
-			}
-		}
-		}
-
+		
 		private class MsTsShape
 		{
+			internal MsTsShape()
+			{
+				points = new List<Vector3>();
+				normals = new List<Vector3>();
+				uv_points = new List<Vector2>();
+				matrices = new List<Matrix>();
+				images = new List<string>();
+				textures = new List<Texture>();
+				prim_states = new List<PrimitiveState>();
+				vtx_states = new List<VertexStates>();
+				LODs = new List<LOD>();
+			}
+
+			// Global variables used by all LODs
+
 			/// <summary>The points used by this shape</summary>
-			internal List<Vector3> points = new List<Vector3>();
+			internal readonly List<Vector3> points;
 			/// <summary>The normal vectors used by this shape</summary>
-			internal List<Vector3> normals = new List<Vector3>();
+			internal readonly List<Vector3> normals;
 			/// <summary>The texture-coordinates used by this shape</summary>
-			internal List<Vector2> uv_points = new List<Vector2>();
-			internal List<Matrix> matrices = new List<Matrix>();
-			internal List<string> images = new List<string>();
-			internal List<Texture> textures = new List<Texture>();
-			internal List<PrimitiveState> prim_states = new List<PrimitiveState>();
-			internal List<VertexStates> vtx_states = new List<VertexStates>();
-			internal List<LOD> LODs = new List<LOD>();
+			internal readonly List<Vector2> uv_points;
+			/// <summary>The matrices used to transform components of this shape</summary>
+			internal List<Matrix> matrices;
+			/// <summary>The filenames of all textures used by this shape</summary>
+			internal List<string> images;
+			/// <summary>The textures used, with associated parameters</summary>
+			/// <remarks>Allows the alpha testing mode to be set etc. so that the same image file can be reused</remarks>
+			internal List<Texture> textures;
+			/// <summary>Contains the shader, texture etc. used by the primitive</summary>
+			/// <remarks>Largely unsupported other than the texture name at the minute</remarks>
+			internal List<PrimitiveState> prim_states;
+
+			internal List<VertexStates> vtx_states;
+			
+			// The list of LODs actually containing the objects
+
+			/// <summary>The list of all LODs from the model</summary>
+			internal List<LOD> LODs;
+
+			// Control variables
+
 			internal int currentPrimitiveState = -1;
 			internal int totalObjects = 0;
 		}
 
 		private class LOD
 		{
+			/// <summary>Creates a new LOD</summary>
+			/// <param name="distance">The maximum viewing distance for this LOD</param>
 			internal LOD(double distance)
 			{
 				this.viewingDistance = distance;
@@ -189,7 +153,7 @@ namespace OpenBve
 			}
 
 			internal readonly double viewingDistance;
-			internal List<SubObject> subObjects;
+			internal readonly List<SubObject> subObjects;
 			internal int[] hierarchy;
 		}
 
@@ -200,7 +164,8 @@ namespace OpenBve
 				this.verticies = new List<Vertex>();
 				this.vertexSets = new List<VertexSet>();
 				this.faces = new List<int[]>();
-				this.meshBuilder = new MeshBuilder();
+				this.materials = new List<Material>();
+				materials.Add(new Material());
 			}
 
 			internal void TransformVerticies(List<Matrix> matrices)
@@ -242,29 +207,86 @@ namespace OpenBve
 				}
 			}
 
-			internal void CreateMeshBuilder(double lodValue)
+			internal void Apply(out ObjectManager.StaticObject Object)
 			{
-				meshBuilder.LODValue = lodValue;
-				for (int i = 0; i < verticies.Count; i++)
+				Object = new ObjectManager.StaticObject
 				{
-					meshBuilder.Vertices[i].Coordinates = verticies[i].Coordinates;
-					meshBuilder.Vertices[i].TextureCoordinates = verticies[i].TextureCoordinates;
-					Array.Resize(ref meshBuilder.Faces, faces.Count);
-					for (int j = 0; j < faces.Count; j++)
+					Mesh =
 					{
-						meshBuilder.Faces[j] = new World.MeshFace(faces[j]);
-						for (int k = 0; k < faces[j].Length; k++)
+						Faces = new World.MeshFace[] { },
+						Materials = new World.MeshMaterial[] { },
+						Vertices = new World.Vertex[] { }
+					}
+				};
+				if (faces.Count != 0)
+				{
+					int mf = Object.Mesh.Faces.Length;
+					int mm = Object.Mesh.Materials.Length;
+					int mv = Object.Mesh.Vertices.Length;
+					Array.Resize(ref Object.Mesh.Faces, mf + faces.Count);
+					Array.Resize(ref Object.Mesh.Materials, mm + materials.Count);
+					Array.Resize(ref Object.Mesh.Vertices, mv + verticies.Count);
+					for (int i = 0; i < verticies.Count; i++)
+					{
+						Object.Mesh.Vertices[mv + i] = new World.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+					}
+
+					for (int i = 0; i < faces.Count; i++)
+					{
+						Object.Mesh.Faces[i] = new World.MeshFace(faces[i]);
+						Object.Mesh.Faces[i].Material = 0;
+						for (int k = 0; k < faces[i].Length; k++)
 						{
-							meshBuilder.Faces[j].Vertices[k].Normal = verticies[faces[j][k]].Normal;
+							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i][k]].Normal;
 						}
+
+						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
+						{
+							Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+						}
+
+						Object.Mesh.Faces[mf + i].Material += (ushort) mm;
+					}
+
+					for (int i = 0; i < materials.Count; i++)
+					{
+						Object.Mesh.Materials[mm + i].Flags = (byte) ((materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | 0);
+						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
+						if (materials[i].DaytimeTexture != null)
+						{
+							Textures.Texture tday;
+							Textures.RegisterTexture(materials[i].DaytimeTexture, out tday);
+							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+						}
+						else
+						{
+							Object.Mesh.Materials[mm + i].DaytimeTexture = null;
+						}
+
+						Object.Mesh.Materials[mm + i].EmissiveColor = materials[i].EmissiveColor;
+						if (materials[i].NighttimeTexture != null)
+						{
+							Textures.Texture tnight;
+							Textures.RegisterTexture(materials[i].NighttimeTexture, out tnight);
+							Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
+						}
+						else
+						{
+							Object.Mesh.Materials[mm + i].NighttimeTexture = null;
+						}
+
+						Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
+						Object.Mesh.Materials[mm + i].BlendMode = materials[i].BlendMode;
+						Object.Mesh.Materials[mm + i].GlowAttenuationData = materials[i].GlowAttenuationData;
+						Object.Mesh.Materials[mm + i].WrapMode = materials[i].WrapMode;
 					}
 				}
 			}
-			internal List<Vertex> verticies;
-			internal List<VertexSet> vertexSets;
-			internal List<int[]> faces;
 
-			internal MeshBuilder meshBuilder;
+			internal readonly List<Vertex> verticies;
+			internal readonly List<VertexSet> vertexSets;
+			internal readonly List<int[]> faces;
+			internal readonly List<Material> materials;
 		}
 
 		private static string currentFolder;
@@ -522,14 +544,14 @@ namespace OpenBve
 					Result.Objects[idx] = new ObjectManager.AnimatedObject();
 					Result.Objects[idx].States = new ObjectManager.AnimatedObjectState[1];
 					ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-					shape.LODs[i].subObjects[j].meshBuilder.Apply(out aos.Object);
+					shape.LODs[i].subObjects[j].Apply(out aos.Object);
 					aos.Position = new Vector3(0,0,0);
 					Result.Objects[idx].States[0] = aos;
-					previousLODs[idx] = shape.LODs[i].subObjects[j].meshBuilder.LODValue;
+					previousLODs[idx] = shape.LODs[i].viewingDistance;
 					int k = idx;
 					while (k > 0)
 					{
-						if (previousLODs[k] < shape.LODs[i].subObjects[j].meshBuilder.LODValue)
+						if (previousLODs[k] < shape.LODs[i].viewingDistance)
 						{
 							break;
 						}
@@ -538,11 +560,11 @@ namespace OpenBve
 					}
 					if (k != 0)
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].subObjects[j].meshBuilder.LODValue + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]");
+						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]");
 					}
 					else
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].subObjects[j].meshBuilder.LODValue + ",0,-1]");
+						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]");
 					}
 
 					idx++;
@@ -1095,8 +1117,8 @@ namespace OpenBve
 							if (shape.currentPrimitiveState != -1)
 							{
 								//TODO: Only supports the first texture
-								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
-								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
+								currentLOD.subObjects[currentLOD.subObjects.Count -1].materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder,shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
 							}
 							break;
 						case KujuTokenID.prim_state_idx:
@@ -1296,8 +1318,6 @@ namespace OpenBve
 							break;
 						case KujuTokenID.vertex_idxs:
 							int remainingVertex = reader.ReadInt32() / 3;
-							int idx = currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Faces.Length;
-							Array.Resize(ref currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Faces, remainingVertex + idx);
 							while (remainingVertex > 0)
 							{
 								int v1 = reader.ReadInt32();
@@ -1305,9 +1325,7 @@ namespace OpenBve
 								int v3 = reader.ReadInt32();
 								currentLOD.subObjects[currentLOD.subObjects.Count -1].faces.Add(new int[] { v1, v2, v3 });
 								remainingVertex--;
-								idx++;
 							}
-							currentLOD.subObjects[currentLOD.subObjects.Count -1].CreateMeshBuilder(currentLOD.viewingDistance);
 							break;
 						case KujuTokenID.vertex_set:
 							int hierarchyIndex = reader.ReadInt32(); //Index to the final hiearchy chain member
@@ -1339,13 +1357,6 @@ namespace OpenBve
 
 							//We now need to transform our verticies
 							currentLOD.subObjects[currentLOD.subObjects.Count -1].TransformVerticies(shape.matrices);
-
-							Array.Resize(ref currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices, currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count);
-							for (int i = 0; i < currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies.Count; i++)
-							{
-								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices[i].Coordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].Coordinates;
-								currentLOD.subObjects[currentLOD.subObjects.Count -1].meshBuilder.Vertices[i].TextureCoordinates = currentLOD.subObjects[currentLOD.subObjects.Count -1].verticies[i].TextureCoordinates;
-							}
 							break;
 						case KujuTokenID.vertex_uvs:
 							int[] vertex_uvs = new int[reader.ReadInt32()];
