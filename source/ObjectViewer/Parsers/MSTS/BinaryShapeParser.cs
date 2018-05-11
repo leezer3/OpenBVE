@@ -5,6 +5,13 @@ using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using SharpCompress.Compressor.Deflate;
+// Stop ReSharper complaining about unused stuff:
+// We need to load this sequentially anyway, and
+// hopefully this will be used un a later build
+
+// ReSharper disable NotAccessedField.Local
+// ReSharper disable RedundantAssignment
+// ReSharper disable UnusedVariable
 
 namespace OpenBve
 {
@@ -119,22 +126,22 @@ namespace OpenBve
 			/// <summary>The texture-coordinates used by this shape</summary>
 			internal readonly List<Vector2> uv_points;
 			/// <summary>The matrices used to transform components of this shape</summary>
-			internal List<Matrix> matrices;
+			internal readonly List<Matrix> matrices;
 			/// <summary>The filenames of all textures used by this shape</summary>
-			internal List<string> images;
+			internal readonly List<string> images;
 			/// <summary>The textures used, with associated parameters</summary>
 			/// <remarks>Allows the alpha testing mode to be set etc. so that the same image file can be reused</remarks>
-			internal List<Texture> textures;
+			internal readonly List<Texture> textures;
 			/// <summary>Contains the shader, texture etc. used by the primitive</summary>
 			/// <remarks>Largely unsupported other than the texture name at the minute</remarks>
-			internal List<PrimitiveState> prim_states;
+			internal readonly List<PrimitiveState> prim_states;
 
-			internal List<VertexStates> vtx_states;
+			internal readonly List<VertexStates> vtx_states;
 			
 			// The list of LODs actually containing the objects
 
 			/// <summary>The list of all LODs from the model</summary>
-			internal List<LOD> LODs;
+			internal readonly List<LOD> LODs;
 
 			// Control variables
 
@@ -292,9 +299,8 @@ namespace OpenBve
 		private static string currentFolder;
 		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
 		{
-			ObjectManager.AnimatedObjectCollection Result;
 			MsTsShape shape = new MsTsShape();
-			Result = new ObjectManager.AnimatedObjectCollection
+			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
 				Objects = new ObjectManager.AnimatedObject[4]
 			};
