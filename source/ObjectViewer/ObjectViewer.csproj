@@ -83,7 +83,8 @@
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Parsers\MSTS\BinaryShapeParser.cs" />
+    <Compile Include="Parsers\MSTS\ShapeParser.cs" />
+    <Compile Include="Parsers\MSTS\FileReaders.cs" />
     <Compile Include="Parsers\MSTS\Tokens.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Plugins.cs" />

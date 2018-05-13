@@ -204,7 +204,8 @@
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
-    <Compile Include="Parsers\Object\MSTS\BinaryShapeParser.cs" />
+    <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
+    <Compile Include="Parsers\Object\MSTS\FileReaders.cs" />
     <Compile Include="Parsers\Object\MSTS\Tokens.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />

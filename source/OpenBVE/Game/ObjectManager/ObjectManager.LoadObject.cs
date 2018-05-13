@@ -134,7 +134,7 @@ namespace OpenBve
 					Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".s":
-					Result = BinaryShapeParser.ReadObject(FileName);
+					Result = MsTsShapeParser.ReadObject(FileName);
 					break;
 				default:
 					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
@@ -202,6 +202,7 @@ namespace OpenBve
 					Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".animated":
+				case ".s":
 					Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 					return null;
 				case ".obj":
