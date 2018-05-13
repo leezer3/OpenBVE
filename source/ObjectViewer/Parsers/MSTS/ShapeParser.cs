@@ -87,7 +87,6 @@ namespace OpenBve
 			internal Color24 EmissiveColor;
 			internal bool EmissiveColorUsed;
 			internal string DaytimeTexture;
-			internal string NighttimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
 			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
@@ -98,12 +97,10 @@ namespace OpenBve
 				this.EmissiveColor = new Color24(0, 0, 0);
 				this.EmissiveColorUsed = false;
 				this.DaytimeTexture = null;
-				this.NighttimeTexture = null;
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.WrapMode = null;
-				this.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texture);
-				this.NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texture);
+				this.DaytimeTexture = texture;
 			}
 		}
 
@@ -287,8 +284,10 @@ namespace OpenBve
 
 					for (int i = 0; i < materials.Count; i++)
 					{
-						Object.Mesh.Materials[mm + i].Flags = (byte) ((materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | 0);
+						Object.Mesh.Materials[mm + i].Flags = 0;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
+						Object.Mesh.Materials[mm + i].TransparentColor = new Color24(0,0,0);
+						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
 							Textures.Texture tday;
@@ -301,19 +300,8 @@ namespace OpenBve
 						}
 
 						Object.Mesh.Materials[mm + i].EmissiveColor = materials[i].EmissiveColor;
-						if (materials[i].NighttimeTexture != null)
-						{
-							Textures.Texture tnight;
-							Textures.RegisterTexture(materials[i].NighttimeTexture, out tnight);
-							Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-						}
-						else
-						{
-							Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-						}
-
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 						Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-						Object.Mesh.Materials[mm + i].BlendMode = materials[i].BlendMode;
 						Object.Mesh.Materials[mm + i].GlowAttenuationData = materials[i].GlowAttenuationData;
 						Object.Mesh.Materials[mm + i].WrapMode = materials[i].WrapMode;
 					}
@@ -897,7 +885,21 @@ namespace OpenBve
 						{
 							case KujuTokenID.prim_state_idx:
 								ParseBlock(newBlock, ref shape);
-								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName));
+								string txF = null;
+								try
+								{
+									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
+									if (!File.Exists(txF))
+									{
+										Interface.AddMessage(Interface.MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
+										txF = null;
+									}
+								}
+								catch
+								{
+									Interface.AddMessage(Interface.MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
+								}
+								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(txF));
 								break;
 							case KujuTokenID.indexed_trilist:
 								ParseBlock(newBlock, ref shape);
