@@ -92,7 +92,7 @@ namespace OpenBve
 			internal Textures.OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
 
-			internal Material()
+			internal Material(string texture)
 			{
 				this.Color = new Color32(255, 255, 255, 255);
 				this.EmissiveColor = new Color24(0, 0, 0);
@@ -102,6 +102,28 @@ namespace OpenBve
 				this.BlendMode = World.MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.WrapMode = null;
+				this.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texture);
+				this.NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder, texture);
+			}
+		}
+
+		private struct Face
+		{
+			internal int[] Vertices;
+			internal int Material;
+
+			internal Face(int[] vertices, int material)
+			{
+				Vertices = vertices;
+				if (material == -1)
+				{
+					Material = 0;
+				}
+				else
+				{
+					Material = material;
+				}
+				
 			}
 		}
 
@@ -173,9 +195,8 @@ namespace OpenBve
 			{
 				this.verticies = new List<Vertex>();
 				this.vertexSets = new List<VertexSet>();
-				this.faces = new List<int[]>();
+				this.faces = new List<Face>();
 				this.materials = new List<Material>();
-				materials.Add(new Material());
 			}
 
 			internal void TransformVerticies(List<Matrix> matrices)
@@ -191,7 +212,7 @@ namespace OpenBve
 						{
 							List<int> matrixChain = new List<int>();
 							int hi = vertexSets[j].hierarchyIndex - 1;
-							if (hi != -1)
+							if (hi != -1 && hi < matrices.Count)
 							{
 								matrixChain.Add(hi);
 								while (hi != -1)
@@ -204,6 +225,12 @@ namespace OpenBve
 
 									matrixChain.Insert(0, hi);
 								}
+							}
+							else
+							{
+								//Unsure of the cause of this, matrix appears to be invalid
+								i = vertexSets[j].startVertex + vertexSets[j].numVerticies;
+								matrixChain.Clear();
 							}
 
 							for (int k = 0; k < matrixChain.Count; k++)
@@ -243,11 +270,11 @@ namespace OpenBve
 
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new World.MeshFace(faces[i]);
-						Object.Mesh.Faces[i].Material = 0;
-						for (int k = 0; k < faces[i].Length; k++)
+						Object.Mesh.Faces[i] = new World.MeshFace(faces[i].Vertices);
+						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
+						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
-							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i][k]].Normal;
+							Object.Mesh.Faces[i].Vertices[k].Normal = verticies[faces[i].Vertices[k]].Normal;
 						}
 
 						for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
@@ -295,7 +322,7 @@ namespace OpenBve
 
 			internal readonly List<Vertex> verticies;
 			internal readonly List<VertexSet> vertexSets;
-			internal readonly List<int[]> faces;
+			internal readonly List<Face> faces;
 			internal readonly List<Material> materials;
 		}
 
@@ -776,7 +803,6 @@ namespace OpenBve
 						ParseBlock(newBlock, ref shape);
 						matrixCount--;
 					}
-
 					break;
 				case KujuTokenID.matrix:
 					Matrix currentMatrix = new Matrix();
@@ -871,6 +897,7 @@ namespace OpenBve
 						{
 							case KujuTokenID.prim_state_idx:
 								ParseBlock(newBlock, ref shape);
+								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName));
 								break;
 							case KujuTokenID.indexed_trilist:
 								ParseBlock(newBlock, ref shape);
@@ -881,14 +908,7 @@ namespace OpenBve
 
 						capacity--;
 					}
-
-					if (shape.currentPrimitiveState != -1)
-					{
-						//TODO: Only supports the first texture
-						currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials[0].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
-						currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials[0].NighttimeTexture = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + ".png");
-					}
-
+					
 					break;
 				case KujuTokenID.prim_state_idx:
 					shape.currentPrimitiveState = block.ReadInt32();
@@ -1004,7 +1024,8 @@ namespace OpenBve
 						int v1 = block.ReadInt32();
 						int v2 = block.ReadInt32();
 						int v3 = block.ReadInt32();
-						currentLOD.subObjects[currentLOD.subObjects.Count - 1].faces.Add(new int[] {v1, v2, v3});
+
+						currentLOD.subObjects[currentLOD.subObjects.Count - 1].faces.Add(new Face(new int[] {v1, v2, v3}, currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Count -1));
 						remainingVertex--;
 					}
 
