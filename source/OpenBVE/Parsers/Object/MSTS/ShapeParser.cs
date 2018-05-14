@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using SharpCompress.Compressor.Deflate;
+using OpenBve.Formats.MsTs;
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
 // hopefully this will be used un a later build

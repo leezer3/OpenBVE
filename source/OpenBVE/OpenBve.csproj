@@ -205,8 +205,6 @@
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
-    <Compile Include="Parsers\Object\MSTS\FileReaders.cs" />
-    <Compile Include="Parsers\Object\MSTS\Tokens.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
@@ -468,6 +466,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.MsTs\Formats.Msts.csproj">
+      <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
+      <Name>OpenBve.Formats.Msts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
