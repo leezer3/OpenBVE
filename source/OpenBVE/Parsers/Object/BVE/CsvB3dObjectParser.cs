@@ -6,6 +6,7 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -62,11 +63,11 @@ namespace OpenBve {
 			}
 		}
 		private class MeshBuilder {
-			internal World.Vertex[] Vertices;
+			internal VertexTemplate[] Vertices;
 			internal World.MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder() {
-				this.Vertices = new World.Vertex[] { };
+				this.Vertices = new VertexTemplate[] { };
 				this.Faces = new World.MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
@@ -217,7 +218,7 @@ namespace OpenBve {
 				{
 					Faces = new World.MeshFace[] {},
 					Materials = new World.MeshMaterial[] {},
-					Vertices = new World.Vertex[] {}
+					Vertices = new VertexTemplate[] {}
 				}
 			};
 			// read lines
@@ -419,11 +420,11 @@ namespace OpenBve {
 									nz = 0.0;
 								}
 								World.Normalize(ref nx, ref ny, ref nz);
-								Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+								Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
 									Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 								}
-								Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+								Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(vx, vy, vz);
 								Normals[Builder.Vertices.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
 							} break;
 						case "addface":
@@ -1268,15 +1269,15 @@ namespace OpenBve {
 		// create cube
 		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
 			int v = Builder.Vertices.Length;
-			Array.Resize<World.Vertex>(ref Builder.Vertices, v + 8);
-			Builder.Vertices[v + 0].Coordinates = new Vector3(sx, sy, -sz);
-			Builder.Vertices[v + 1].Coordinates = new Vector3(sx, -sy, -sz);
-			Builder.Vertices[v + 2].Coordinates = new Vector3(-sx, -sy, -sz);
-			Builder.Vertices[v + 3].Coordinates = new Vector3(-sx, sy, -sz);
-			Builder.Vertices[v + 4].Coordinates = new Vector3(sx, sy, sz);
-			Builder.Vertices[v + 5].Coordinates = new Vector3(sx, -sy, sz);
-			Builder.Vertices[v + 6].Coordinates = new Vector3(-sx, -sy, sz);
-			Builder.Vertices[v + 7].Coordinates = new Vector3(-sx, sy, sz);
+			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 8);
+			Builder.Vertices[v + 0] = new Vertex(sx, sy, -sz);
+			Builder.Vertices[v + 1] = new Vertex(sx, -sy, -sz);
+			Builder.Vertices[v + 2] = new Vertex(-sx, -sy, -sz);
+			Builder.Vertices[v + 3] = new Vertex(-sx, sy, -sz);
+			Builder.Vertices[v + 4] = new Vertex(sx, sy, sz);
+			Builder.Vertices[v + 5] = new Vertex(sx, -sy, sz);
+			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
+			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
 			int f = Builder.Faces.Length;
 			Array.Resize<World.MeshFace>(ref Builder.Faces, f + 6);
 			Builder.Faces[f + 0].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 3) };
@@ -1298,7 +1299,7 @@ namespace OpenBve {
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
 			int v = Builder.Vertices.Length;
-			Array.Resize<World.Vertex>(ref Builder.Vertices, v + 2 * n);
+			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 2 * n);
 			Vector3[] Normals = new Vector3[2 * n];
 			double d = 2.0 * Math.PI / (double)n;
 			double g = 0.5 * h;
@@ -1314,8 +1315,8 @@ namespace OpenBve {
 				double lz = dz * r2;
 				double ux = dx * r1;
 				double uz = dz * r1;
-				Builder.Vertices[v + 2 * i + 0].Coordinates = new Vector3(ux, g, uz);
-				Builder.Vertices[v + 2 * i + 1].Coordinates = new Vector3(lx, -g, lz);
+				Builder.Vertices[v + 2 * i + 0] = new Vertex(ux, g, uz);
+				Builder.Vertices[v + 2 * i + 1] = new Vertex(lx, -g, lz);
 				double nx = dx * ns, ny = 0.0, nz = dz * ns;
 				double sx, sy, sz;
 				World.Cross(nx, ny, nz, 0.0, 1.0, 0.0, out sx, out sy, out sz);

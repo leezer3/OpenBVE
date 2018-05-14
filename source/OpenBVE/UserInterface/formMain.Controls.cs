@@ -189,7 +189,31 @@ namespace OpenBve {
 				string t = "RailDriver";
 				switch (Interface.CurrentControls[Index].Component) {
 					case Interface.JoystickComponent.Axis:
-						t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis").Replace("[index]", (Interface.CurrentControls[Index].Element + 1).ToString(Culture));
+						switch (Interface.CurrentControls[Index].Element)
+						{
+							case 0:
+								t += Separator + "Reverser";
+								break;
+							case 1:
+								t += Separator + "Combined Power / Brake";
+								break;
+							case 2:
+								t += Separator + "Auto-Brake";
+								break;
+							case 3:
+								t += Separator + "Independant Brake";
+								break;
+							case 4:
+								t += Separator + "Bail-Off";
+								break;
+							case 5:
+								t += Separator + "Wiper Switch";
+								break;
+							case 6:
+								t += Separator + "Light Switch";
+								break;
+						}
+						
 						if (Interface.CurrentControls[Index].Direction == -1) {
 							t += Separator + Interface.GetInterfaceString("controls_assignment_joystick_axis_negative");
 						} else if (Interface.CurrentControls[Index].Direction == 1) {

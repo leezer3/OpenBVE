@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Objects;
+
+namespace OpenBve
 {
 	internal static partial class Renderer
 	{
@@ -10,7 +12,7 @@
 		/// <param name="CameraY">The Y-position of the camera</param>
 		/// <param name="CameraZ">The Z-position of the camera</param>
 		/// <returns></returns>
-		private static double GetDistanceFactor(World.Vertex[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
+		private static double GetDistanceFactor(VertexTemplate[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
 		{
 			if (Face.Vertices.Length == 0)
 			{

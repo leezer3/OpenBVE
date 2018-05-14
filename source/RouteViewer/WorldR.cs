@@ -8,45 +8,10 @@
 using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	public static class World {
-		// vertices
-		/// <summary>Represents a vertex consisting of 3D coordinates and 2D texture coordinates.</summary>
-		internal struct Vertex {
-			internal Vector3 Coordinates;
-			internal Vector2 TextureCoordinates;
-			internal Vertex(double X, double Y, double Z) {
-				this.Coordinates = new Vector3(X, Y, Z);
-				this.TextureCoordinates = new Vector2(0.0f, 0.0f);
-			}
-			internal Vertex(Vector3 Coordinates, Vector2 TextureCoordinates) {
-				this.Coordinates = Coordinates;
-				this.TextureCoordinates = TextureCoordinates;
-			}
-			internal static bool Equals(Vertex A, Vertex B) {
-				if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-				if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-				return true;
-			}
-			// operators
-			public static bool operator ==(Vertex A, Vertex B) {
-				if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-				if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-				return true;
-			}
-			public static bool operator !=(Vertex A, Vertex B) {
-				if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return true;
-				if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return true;
-				return false;
-			}
-			public override int GetHashCode() {
-				return base.GetHashCode();
-			}
-			public override bool Equals(object obj) {
-				return base.Equals(obj);
-			}
-		}
 
 		// mesh material
 		/// <summary>Represents material properties.</summary>
@@ -188,13 +153,13 @@ namespace OpenBve {
 		// mesh
 		/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
 		internal struct Mesh {
-			internal Vertex[] Vertices;
+			internal VertexTemplate[] Vertices;
 			internal MeshMaterial[] Materials;
 			internal MeshFace[] Faces;
 			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 			/// <param name="Vertices">The vertices that make up one face.</param>
 			/// <param name="Color">The color to be applied on the face.</param>
-			internal Mesh(Vertex[] Vertices, Color32 Color) {
+			internal Mesh(VertexTemplate[] Vertices, Color32 Color) {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
@@ -211,7 +176,7 @@ namespace OpenBve {
 			/// <param name="Vertices">The vertices used.</param>
 			/// <param name="FaceVertices">A list of faces represented by a list of references to vertices.</param>
 			/// <param name="Color">The color to be applied on all of the faces.</param>
-			internal Mesh(Vertex[] Vertices, int[][] FaceVertices, Color32 Color) {
+			internal Mesh(VertexTemplate[] Vertices, int[][] FaceVertices, Color32 Color) {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;

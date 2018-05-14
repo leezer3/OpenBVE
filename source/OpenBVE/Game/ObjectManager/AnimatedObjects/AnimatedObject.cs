@@ -1,6 +1,7 @@
 ﻿using System;
 using CSScriptLibrary;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -144,10 +145,18 @@ namespace OpenBve
 				if (t >= 0 && States[t].Object != null)
 				{
 					int m = States[t].Object.Mesh.Vertices.Length;
-					ObjectManager.Objects[i].Mesh.Vertices = new World.Vertex[m];
+					ObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
 					for (int k = 0; k < m; k++)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k] = States[t].Object.Mesh.Vertices[k];
+						if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
+						{
+							ObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
+						}
+						else
+						{
+							ObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
+						}
+						
 					}
 					m = States[t].Object.Mesh.Faces.Length;
 					ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[m];
@@ -173,7 +182,7 @@ namespace OpenBve
 						{
 							Faces = new World.MeshFace[] {},
 							Materials = new World.MeshMaterial[] {},
-							Vertices = new World.Vertex[] {}
+							Vertices = new VertexTemplate[] {}
 						}
 					};
 				}
@@ -855,7 +864,7 @@ namespace OpenBve
 								{
 									Faces = new World.MeshFace[] {},
 									Materials = new World.MeshMaterial[] {},
-									Vertices = new World.Vertex[] {}
+									Vertices = new VertexTemplate[] {}
 								},
 								RendererIndex = -1
 							};
@@ -908,7 +917,7 @@ namespace OpenBve
 								{
 									Faces = new World.MeshFace[] {},
 									Materials = new World.MeshMaterial[] {},
-									Vertices = new World.Vertex[] {}
+									Vertices = new VertexTemplate[] {}
 								},
 								RendererIndex = -1
 							};

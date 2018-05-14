@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
+using OpenBveApi.Objects;
 using SharpCompress.Compressor.Deflate;
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
@@ -249,7 +250,7 @@ namespace OpenBve
 					{
 						Faces = new World.MeshFace[] { },
 						Materials = new World.MeshMaterial[] { },
-						Vertices = new World.Vertex[] { }
+						Vertices = new VertexTemplate[] { }
 					}
 				};
 				if (faces.Count != 0)
@@ -262,7 +263,7 @@ namespace OpenBve
 					Array.Resize(ref Object.Mesh.Vertices, mv + verticies.Count);
 					for (int i = 0; i < verticies.Count; i++)
 					{
-						Object.Mesh.Vertices[mv + i] = new World.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+						Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
 					}
 
 					for (int i = 0; i < faces.Count; i++)
