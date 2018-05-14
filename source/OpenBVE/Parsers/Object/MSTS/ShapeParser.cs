@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
+using OpenBveApi.Objects;
 using SharpCompress.Compressor.Deflate;
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
@@ -208,7 +209,7 @@ namespace OpenBve
 						if (vertexSets[j].startVertex <= i && vertexSets[j].startVertex + vertexSets[j].numVerticies > i)
 						{
 							List<int> matrixChain = new List<int>();
-							int hi = vertexSets[j].hierarchyIndex - 1;
+							int hi = vertexSets[j].hierarchyIndex;
 							if (hi != -1 && hi < matrices.Count)
 							{
 								matrixChain.Add(hi);
@@ -249,7 +250,7 @@ namespace OpenBve
 					{
 						Faces = new World.MeshFace[] { },
 						Materials = new World.MeshMaterial[] { },
-						Vertices = new World.Vertex[] { }
+						Vertices = new VertexTemplate[] { }
 					}
 				};
 				if (faces.Count != 0)
@@ -262,7 +263,7 @@ namespace OpenBve
 					Array.Resize(ref Object.Mesh.Vertices, mv + verticies.Count);
 					for (int i = 0; i < verticies.Count; i++)
 					{
-						Object.Mesh.Vertices[mv + i] = new World.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
+						Object.Mesh.Vertices[mv + i] = new OpenBveApi.Objects.Vertex(verticies[i].Coordinates, verticies[i].TextureCoordinates);
 					}
 
 					for (int i = 0; i < faces.Count; i++)
@@ -1033,11 +1034,12 @@ namespace OpenBve
 
 					break;
 				case KujuTokenID.vertex_set:
-					int hierarchyIndex = block.ReadInt32(); //Index to the final hiearchy chain member
+					int vertexStateIndex = block.ReadInt32(); //Index to the vtx_states member
+					int hierarchy = shape.vtx_states[vertexStateIndex].hierarchyID; //Now pull the hierachy ID out
 					int setStartVertexIndex = block.ReadInt32(); //First vertex
 					int setVertexCount = block.ReadInt32(); //Total number of vert
 					VertexSet vts = new VertexSet();
-					vts.hierarchyIndex = hierarchyIndex;
+					vts.hierarchyIndex = hierarchy;
 					vts.startVertex = setStartVertexIndex;
 					vts.numVerticies = setVertexCount;
 					currentLOD.subObjects[currentLOD.subObjects.Count - 1].vertexSets.Add(vts);

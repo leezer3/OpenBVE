@@ -79,7 +79,7 @@ namespace OpenBve {
 				int mv = Object.Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 				for (int i = 0; i < Vertices.Length; i++) {
 					Object.Mesh.Vertices[mv + i] = Vertices[i];
 				}

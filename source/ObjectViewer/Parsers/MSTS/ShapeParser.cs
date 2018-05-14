@@ -209,7 +209,7 @@ namespace OpenBve
 						if (vertexSets[j].startVertex <= i && vertexSets[j].startVertex + vertexSets[j].numVerticies > i)
 						{
 							List<int> matrixChain = new List<int>();
-							int hi = vertexSets[j].hierarchyIndex - 1;
+							int hi = vertexSets[j].hierarchyIndex;
 							if (hi != -1 && hi < matrices.Count)
 							{
 								matrixChain.Add(hi);
@@ -1034,11 +1034,12 @@ namespace OpenBve
 
 					break;
 				case KujuTokenID.vertex_set:
-					int hierarchyIndex = block.ReadInt32(); //Index to the final hiearchy chain member
+					int vertexStateIndex = block.ReadInt32(); //Index to the vtx_states member
+					int hierarchy = shape.vtx_states[vertexStateIndex].hierarchyID; //Now pull the hierachy ID out
 					int setStartVertexIndex = block.ReadInt32(); //First vertex
 					int setVertexCount = block.ReadInt32(); //Total number of vert
 					VertexSet vts = new VertexSet();
-					vts.hierarchyIndex = hierarchyIndex;
+					vts.hierarchyIndex = hierarchy;
 					vts.startVertex = setStartVertexIndex;
 					vts.numVerticies = setVertexCount;
 					currentLOD.subObjects[currentLOD.subObjects.Count - 1].vertexSets.Add(vts);
