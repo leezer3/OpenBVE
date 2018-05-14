@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarXMLConvertor", "source\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Dds", "source\Plugins\Texture.Dds\Texture.Dds.csproj", "{EEC75E83-E284-44E0-B321-3F5C6512074F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.Msts", "source\Plugins\Formats.MsTs\Formats.Msts.csproj", "{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.Msts", "source\Plugins\Formats.Msts\Formats.Msts.csproj", "{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
