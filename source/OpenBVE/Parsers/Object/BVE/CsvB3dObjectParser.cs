@@ -553,7 +553,7 @@ namespace OpenBve {
 								}
 								ApplyTranslation(Builder, x, y, z);
 								if (cmd == "translateall") {
-									ApplyTranslation(Object, x, y, z);
+									Object.ApplyTranslation(x, y, z);
 								}
 							} break;
 						case "scale":
@@ -586,7 +586,7 @@ namespace OpenBve {
 								}
 								ApplyScale(Builder, x, y, z);
 								if (cmd == "scaleall") {
-									ApplyScale(Object, x, y, z);
+									Object.ApplyScale(x, y, z);
 								}
 							} break;
 						case "rotate":
@@ -627,7 +627,7 @@ namespace OpenBve {
 									a *= 0.0174532925199433;
 									ApplyRotation(Builder, x, y, z, a);
 									if (cmd == "rotateall") {
-										ApplyRotation(Object, x, y, z, a);
+										Object.ApplyRotation(x, y, z, a);
 									}
 								}
 							} break;
@@ -672,7 +672,7 @@ namespace OpenBve {
 								World.Normalize(ref sx, ref sy, ref sz);
 								ApplyShear(Builder, dx, dy, dz, sx, sy, sz, r);
 								if (cmd == "shearall") {
-									ApplyShear(Object, dx, dy, dz, sx, sy, sz, r);
+									Object.ApplyShear(dx, dy, dz, sx, sy, sz, r);
 								}
 							} break;
 						case "mirror":
@@ -725,7 +725,7 @@ namespace OpenBve {
 								ApplyMirror(Builder, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
 								if (cmd == "mirrorall")
 								{
-									ApplyMirror(Object, vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
+									Object.ApplyMirror(vx != 0, vy != 0, vz != 0, nx != 0, ny != 0, nz != 0);
 								}
 
 							}
@@ -1358,14 +1358,7 @@ namespace OpenBve {
 				Builder.Vertices[i].Coordinates.Z += z;
 			}
 		}
-		private static void ApplyTranslation(ObjectManager.StaticObject Object, double x, double y, double z) {
-			for (int i = 0; i < Object.Mesh.Vertices.Length; i++) {
-				Object.Mesh.Vertices[i].Coordinates.X += x;
-				Object.Mesh.Vertices[i].Coordinates.Y += y;
-				Object.Mesh.Vertices[i].Coordinates.Z += z;
-			}
-		}
-
+		
 		// apply scale
 		private static void ApplyScale(MeshBuilder Builder, double x, double y, double z) {
 			float rx = (float)(1.0 / x);
@@ -1399,39 +1392,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static void ApplyScale(ObjectManager.StaticObject Object, double x, double y, double z) {
-			float rx = (float)(1.0 / x);
-			float ry = (float)(1.0 / y);
-			float rz = (float)(1.0 / z);
-			float rx2 = rx * rx;
-			float ry2 = ry * ry;
-			float rz2 = rz * rz;
-			bool reverse = x * y * z < 0.0;
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				Object.Mesh.Vertices[j].Coordinates.X *= x;
-				Object.Mesh.Vertices[j].Coordinates.Y *= y;
-				Object.Mesh.Vertices[j].Coordinates.Z *= z;
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					double nx2 = Object.Mesh.Faces[j].Vertices[k].Normal.X * Object.Mesh.Faces[j].Vertices[k].Normal.X;
-					double ny2 = Object.Mesh.Faces[j].Vertices[k].Normal.Y * Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-					double nz2 = Object.Mesh.Faces[j].Vertices[k].Normal.Z * Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
-					if (u != 0.0) {
-						u = (float)Math.Sqrt((double)((nx2 + ny2 + nz2) / u));
-						Object.Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
-					}
-				}
-			}
-			if (reverse) {
-				for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-					Object.Mesh.Faces[j].Flip();
-				}
-			}
-		}
+		
 
 		// apply rotation
 		private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a) {
@@ -1446,18 +1407,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void ApplyRotation(ObjectManager.StaticObject Object, double x, double y, double z, double a) {
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
-				}
-			}
-		}
+		
 
 		private static void ApplyMirror(MeshBuilder Builder, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
 		{
@@ -1517,63 +1467,7 @@ namespace OpenBve {
 			}
 		}
 
-		private static void ApplyMirror(ObjectManager.StaticObject Object, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
-		{
-			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
-			{
-				if (vX)
-				{
-					Object.Mesh.Vertices[i].Coordinates.X *= -1;
-				}
-				if (vY)
-				{
-					Object.Mesh.Vertices[i].Coordinates.Y *= -1;
-				}
-				if (vZ)
-				{
-					Object.Mesh.Vertices[i].Coordinates.Z *= -1;
-				}
-			}
-			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
-			{
-				for (int j = 0; j < Object.Mesh.Faces[i].Vertices.Length; j++)
-				{
-					if (nX)
-					{
-						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
-					}
-					if (nY)
-					{
-						Object.Mesh.Faces[i].Vertices[j].Normal.Y *= -1;
-					}
-					if (nZ)
-					{
-						Object.Mesh.Faces[i].Vertices[j].Normal.X *= -1;
-					}
-				}
-			}
-			int numFlips = 0;
-			if (vX)
-			{
-				numFlips++;
-			}
-			if (vY)
-			{
-				numFlips++;
-			}
-			if (vZ)
-			{
-				numFlips++;
-			}
-
-			if (numFlips % 2 != 0)
-			{
-				for (int i = 0; i < Object.Mesh.Faces.Length; i++)
-				{
-					Array.Reverse(Object.Mesh.Faces[i].Vertices);
-				}
-			}
-		}
+		
 
 		// apply shear
 		private static void ApplyShear(MeshBuilder Builder, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
@@ -1601,34 +1495,6 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void ApplyShear(ObjectManager.StaticObject Object, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				double n = r * (dx * Object.Mesh.Vertices[j].Coordinates.X + dy * Object.Mesh.Vertices[j].Coordinates.Y + dz * Object.Mesh.Vertices[j].Coordinates.Z);
-				Object.Mesh.Vertices[j].Coordinates.X += sx * n;
-				Object.Mesh.Vertices[j].Coordinates.Y += sy * n;
-				Object.Mesh.Vertices[j].Coordinates.Z += sz * n;
-			}
-			double ux, uy, uz;
-			World.Cross(sx, sy, sz, dx, dy, dz, out ux, out uy, out uz);
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					if (Object.Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f) {
-						double nx = (double)Object.Mesh.Faces[j].Vertices[k].Normal.X;
-						double ny = (double)Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-						double nz = (double)Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-						double n = r * (sx * nx + sy * ny + sz * nz);
-						nx -= dx * n;
-						ny -= dy * n;
-						nz -= dz * n;
-						World.Normalize(ref nx, ref ny, ref nz);
-						Object.Mesh.Faces[j].Vertices[k].Normal.X = (float)nx;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Y = (float)ny;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Z = (float)nz;
-					}
-				}
-			}
-		}
-		
 		// apply mesh builder
 		
 

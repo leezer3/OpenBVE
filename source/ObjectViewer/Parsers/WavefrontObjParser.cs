@@ -221,7 +221,7 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int v = Builder.Vertices.FindIndex(a => a == vertices[k]);
+							int v = Builder.Vertices.FindIndex(a => a.Equals(vertices[k]));
 							if (v != -1)
 							{
 								Vertices[k].Index = (ushort)v;

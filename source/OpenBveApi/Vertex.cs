@@ -10,6 +10,77 @@ namespace OpenBveApi.Objects
 		public Vector3 Coordinates;
 		/// <summary>The texture co-ordinates for the vertex</summary>
 		public Vector2 TextureCoordinates;
+
+		/// <summary>Tests if this vertex template is equal to the supplied object</summary>
+		/// <param name="obj">The supplied object</param>
+		/// <returns>Trye if they are equal, false otherwise</returns>
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+
+			if (obj.GetType() != GetType())
+			{
+				return false;
+			}
+
+			return obj.Equals(this);
+		}
+
+
+		/// <summary>Tests if two verticies are equal</summary>
+		/// <param name="A">The first vertex</param>
+		/// <param name="B">The second vertex</param>
+		/// <returns>True if they are equal, false otherwise</returns>
+		public static bool operator ==(VertexTemplate A, VertexTemplate B)
+		{
+			if ((object)A != null)
+			{
+				return A.Equals(B);
+			}
+			if ((object)B != null)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		/// <summary>Tests if two verticies are not equal</summary>
+		/// <param name="A">The first vertex</param>
+		/// <param name="B">The second vertex</param>
+		/// <returns>True if they are equal, false otherwise</returns>
+		public static bool operator !=(VertexTemplate A, VertexTemplate B)
+		{
+			if ((object)A != null)
+			{
+				return !A.Equals(B);
+			}
+			if ((object)B != null)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Returns the hashcode for this instance.
+		/// </summary>
+		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				// ReSharper disable NonReadonlyMemberInGetHashCode
+				var hashCode = Coordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				return hashCode;
+			}
+		}
 	}
 
 	/// <summary>A plain vertex</summary>
@@ -58,40 +129,43 @@ namespace OpenBveApi.Objects
 		/// <param name="A">The first vertex</param>
 		/// <param name="B">The second vertex</param>
 		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool Equals(Vertex A, Vertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-			return true;
+		public static bool Equals(Vertex A, Vertex B)
+		{
+			return A.Equals(B);
 		}
 
-		/// <summary>Tests if two verticies are equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
-		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool operator ==(Vertex A, Vertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-			return true;
-		}
-
-		/// <summary>Tests if two verticies are not equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
-		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool operator !=(Vertex A, Vertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return true;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return true;
-			return false;
-		}
-
-		/// <summary>Gets the hash code</summary>
-		/// <returns>The hash code</returns>
-		public override int GetHashCode() {
-			return base.GetHashCode();
-		}
-
+		/// <summary>Tests if this vertex is equal to the supplied object</summary>
+		/// <param name="obj">The supplied object</param>
+		/// <returns>Trye if they are equal, false otherwise</returns>
 		public override bool Equals(object obj) {
-			return base.Equals(obj);
+			if (obj == null)
+			{
+				return false;
+			}
+
+			Vertex v = obj as Vertex;
+			if (v == null) return false;
+			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
+			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			return true;
+		}
+
+		/// <summary>
+		/// Returns the hashcode for this instance.
+		/// </summary>
+		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				// ReSharper disable NonReadonlyMemberInGetHashCode
+				var hashCode = Coordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				return hashCode;
+			}
 		}
 	}
 
@@ -140,47 +214,43 @@ namespace OpenBveApi.Objects
 			this.Color = v.Color;
 		}
 
-		/// <summary>Tests if two verticies are equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
-		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool Equals(ColoredVertex A, ColoredVertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-			if (A.Color != B.Color) return false;
-			return true;
-		}
-
-		/// <summary>Tests if two verticies are equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
-		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool operator ==(ColoredVertex A, ColoredVertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return false;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return false;
-			if (A.Color != B.Color) return false;
-			return true;
-		}
-
-		/// <summary>Tests if two verticies are not equal</summary>
-		/// <param name="A">The first vertex</param>
-		/// <param name="B">The second vertex</param>
-		/// <returns>True if they are equal, false otherwise</returns>
-		public static bool operator !=(ColoredVertex A, ColoredVertex B) {
-			if (A.Coordinates.X != B.Coordinates.X | A.Coordinates.Y != B.Coordinates.Y | A.Coordinates.Z != B.Coordinates.Z) return true;
-			if (A.TextureCoordinates.X != B.TextureCoordinates.X | A.TextureCoordinates.Y != B.TextureCoordinates.Y) return true;
-			if (A.Color != B.Color) return false;
-			return false;
-		}
-
-		/// <summary>Gets the hash code</summary>
-		/// <returns>The hash code</returns>
-		public override int GetHashCode() {
-			return base.GetHashCode();
-		}
-
+		/// <summary>Tests if this vertex is equal to the supplied object</summary>
+		/// <param name="obj">The supplied object</param>
+		/// <returns>Trye if they are equal, false otherwise</returns>
 		public override bool Equals(object obj) {
-			return base.Equals(obj);
+			if (obj == null)
+			{
+				return false;
+			}
+
+			ColoredVertex v = obj as ColoredVertex;
+			if (v == null) return false;
+			if (v.Coordinates.X != Coordinates.X | v.Coordinates.Y != Coordinates.Y | v.Coordinates.Z != Coordinates.Z) return false;
+			if (v.TextureCoordinates.X != TextureCoordinates.X | v.TextureCoordinates.Y != TextureCoordinates.Y) return false;
+			if (v.Color != Color) return false;
+			return true;
+		}
+
+		/// <summary>
+		/// Returns the hashcode for this instance.
+		/// </summary>
+		/// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				// ReSharper disable NonReadonlyMemberInGetHashCode
+				var hashCode = Coordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Coordinates.Z.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.X.GetHashCode();
+				hashCode = (hashCode * 397) ^ TextureCoordinates.Y.GetHashCode();
+				hashCode = (hashCode * 397) ^ Color.R.GetHashCode();
+				hashCode = (hashCode * 397) ^ Color.G.GetHashCode();
+				hashCode = (hashCode * 397) ^ Color.B.GetHashCode();
+				hashCode = (hashCode * 397) ^ Color.A.GetHashCode();
+				return hashCode;
+			}
 		}
 	}
 }

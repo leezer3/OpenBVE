@@ -137,7 +137,7 @@ namespace OpenBve.Parsers.Train
 							if (CarObjects[i] is ObjectManager.StaticObject)
 							{
 								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
-								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
+								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
 							else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection)
 							{
@@ -146,7 +146,7 @@ namespace OpenBve.Parsers.Train
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
-										CsvB3dObjectParser.ApplyScale(obj.Objects[j].States[h].Object, -1.0, 1.0, -1.0);
+										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;
 									}
@@ -195,7 +195,7 @@ namespace OpenBve.Parsers.Train
 							if (BogieObjects[i] is ObjectManager.StaticObject)
 							{
 								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
-								CsvB3dObjectParser.ApplyScale(obj, -1.0, 1.0, -1.0);
+								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
 							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
 							{
@@ -204,7 +204,7 @@ namespace OpenBve.Parsers.Train
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
-										CsvB3dObjectParser.ApplyScale(obj.Objects[j].States[h].Object, -1.0, 1.0, -1.0);
+										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;
 									}
