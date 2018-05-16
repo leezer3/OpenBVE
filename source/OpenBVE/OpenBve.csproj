@@ -183,27 +183,28 @@
     <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
-	<Compile Include="Graphics\Renderer\Overlays.ATS.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+    <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.Debug.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.Functions.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.GameMessages.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.HUD.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
+    <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
@@ -465,6 +466,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
+      <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
+      <Name>OpenBve.Formats.Msts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

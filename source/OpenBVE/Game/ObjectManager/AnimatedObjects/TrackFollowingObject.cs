@@ -19,11 +19,11 @@ namespace OpenBve
 			internal TrackManager.TrackFollower RearAxleFollower;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
-#pragma warning disable CS0649
+#pragma warning disable 0649
 //TODO: Track following objects currently do not take into account toppling or cant, reserved for future use
 			internal double CurrentRollDueToTopplingAngle;
 			internal double CurrentRollDueToCantAngle;
-#pragma warning restore CS0649       
+#pragma warning restore 0649       
 
 			internal override void Update(double TimeElapsed, bool ForceUpdate)
 			{

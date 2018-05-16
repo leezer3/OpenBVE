@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -37,12 +38,19 @@ namespace OpenBve
 					StartingDistance = StartingDistance,
 					EndingDistance = EndingDistance,
 					Dynamic = Dynamic,
-					Mesh = { Vertices = new World.Vertex[Mesh.Vertices.Length] }
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
 				};
 				// vertices
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					Result.Mesh.Vertices[j] = Mesh.Vertices[j];
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
 				}
 				// faces
 				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
@@ -89,12 +97,19 @@ namespace OpenBve
 					StartingDistance = StartingDistance,
 					EndingDistance = EndingDistance,
 					Dynamic = Dynamic,
-					Mesh = { Vertices = new World.Vertex[Mesh.Vertices.Length] }
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
 				};
 				// vertices
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					Result.Mesh.Vertices[j] = Mesh.Vertices[j];
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
 				}
 				// faces
 				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
@@ -128,7 +143,7 @@ namespace OpenBve
 				int mv = Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Mesh.Faces, mf + Add.Mesh.Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
-				Array.Resize<World.Vertex>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+				Array.Resize<VertexTemplate>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
 				for (int i = 0; i < Add.Mesh.Faces.Length; i++)
 				{
 					Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
@@ -144,7 +159,179 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
 				{
-					Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
+					if (Add.Mesh.Vertices[i] is ColoredVertex)
+					{
+						Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex)Add.Mesh.Vertices[i]);
+					}
+					else
+					{
+						Mesh.Vertices[mv + i] = new Vertex((Vertex)Add.Mesh.Vertices[i]);
+					}
+					
+				}
+			}
+
+			internal void ApplyScale(double x, double y, double z)
+			{
+				float rx = (float)(1.0 / x);
+				float ry = (float)(1.0 / y);
+				float rz = (float)(1.0 / z);
+				float rx2 = rx * rx;
+				float ry2 = ry * ry;
+				float rz2 = rz * rz;
+				bool reverse = x * y * z < 0.0;
+				for (int j = 0; j < Mesh.Vertices.Length; j++) {
+					Mesh.Vertices[j].Coordinates.X *= x;
+					Mesh.Vertices[j].Coordinates.Y *= y;
+					Mesh.Vertices[j].Coordinates.Z *= z;
+				}
+				for (int j = 0; j < Mesh.Faces.Length; j++) {
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++) {
+						double nx2 = Mesh.Faces[j].Vertices[k].Normal.X * Mesh.Faces[j].Vertices[k].Normal.X;
+						double ny2 = Mesh.Faces[j].Vertices[k].Normal.Y * Mesh.Faces[j].Vertices[k].Normal.Y;
+						double nz2 = Mesh.Faces[j].Vertices[k].Normal.Z * Mesh.Faces[j].Vertices[k].Normal.Z;
+						double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
+						if (u != 0.0) {
+							u = (float)Math.Sqrt((double)((nx2 + ny2 + nz2) / u));
+							Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
+							Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
+							Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
+						}
+					}
+				}
+				if (reverse) {
+					for (int j = 0; j < Mesh.Faces.Length; j++) {
+						Mesh.Faces[j].Flip();
+					}
+				}
+			}
+
+			internal void ApplyRotation(double x, double y, double z, double a)
+			{
+				double cosa = Math.Cos(a);
+				double sina = Math.Sin(a);
+				for (int j = 0; j < Mesh.Vertices.Length; j++)
+				{
+					World.Rotate(ref Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
+				}
+				for (int j = 0; j < Mesh.Faces.Length; j++)
+				{
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+					{
+						World.Rotate(ref Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
+					}
+				}
+			}
+
+			internal void ApplyTranslation(double x, double y, double z)
+			{
+				for (int i = 0; i < Mesh.Vertices.Length; i++)
+				{
+					Mesh.Vertices[i].Coordinates.X += x;
+					Mesh.Vertices[i].Coordinates.Y += y;
+					Mesh.Vertices[i].Coordinates.Z += z;
+				}
+			}
+
+			internal void ApplyMirror(bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+			{
+				for (int i = 0; i < Mesh.Vertices.Length; i++)
+				{
+					if (vX)
+					{
+						Mesh.Vertices[i].Coordinates.X *= -1;
+					}
+
+					if (vY)
+					{
+						Mesh.Vertices[i].Coordinates.Y *= -1;
+					}
+
+					if (vZ)
+					{
+						Mesh.Vertices[i].Coordinates.Z *= -1;
+					}
+				}
+
+				for (int i = 0; i < Mesh.Faces.Length; i++)
+				{
+					for (int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
+					{
+						if (nX)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+						}
+
+						if (nY)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.Y *= -1;
+						}
+
+						if (nZ)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+						}
+					}
+				}
+
+				int numFlips = 0;
+				if (vX)
+				{
+					numFlips++;
+				}
+
+				if (vY)
+				{
+					numFlips++;
+				}
+
+				if (vZ)
+				{
+					numFlips++;
+				}
+
+				if (numFlips % 2 != 0)
+				{
+					for (int i = 0; i < Mesh.Faces.Length; i++)
+					{
+						Array.Reverse(Mesh.Faces[i].Vertices);
+					}
+				}
+			}
+
+			internal void ApplyShear(double dx, double dy, double dz, double sx, double sy, double sz, double r)
+			{
+				for (int j = 0; j < Mesh.Vertices.Length; j++)
+				{
+					double n = r * (dx * Mesh.Vertices[j].Coordinates.X + dy * Mesh.Vertices[j].Coordinates.Y + dz * Mesh.Vertices[j].Coordinates.Z);
+					Mesh.Vertices[j].Coordinates.X += sx * n;
+					Mesh.Vertices[j].Coordinates.Y += sy * n;
+					Mesh.Vertices[j].Coordinates.Z += sz * n;
+				}
+
+				// ReSharper disable NotAccessedVariable
+				double ux, uy, uz;
+				// ReSharper restore NotAccessedVariable
+				World.Cross(sx, sy, sz, dx, dy, dz, out ux, out uy, out uz);
+				for (int j = 0; j < Mesh.Faces.Length; j++)
+				{
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+					{
+						if (Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f)
+						{
+							double nx = (double) Mesh.Faces[j].Vertices[k].Normal.X;
+							double ny = (double) Mesh.Faces[j].Vertices[k].Normal.Y;
+							double nz = (double) Mesh.Faces[j].Vertices[k].Normal.Z;
+							double n = r * (sx * nx + sy * ny + sz * nz);
+							nx -= dx * n;
+							ny -= dy * n;
+							nz -= dz * n;
+							World.Normalize(ref nx, ref ny, ref nz);
+							Mesh.Faces[j].Vertices[k].Normal.X = (float) nx;
+							Mesh.Faces[j].Vertices[k].Normal.Y = (float) ny;
+							Mesh.Faces[j].Vertices[k].Normal.Z = (float) nz;
+						}
+					}
 				}
 			}
 
@@ -152,11 +339,18 @@ namespace OpenBve
 			{
 				StartingDistance = float.MaxValue;
 				EndingDistance = float.MinValue;
-				Mesh.Vertices = new World.Vertex[Prototype.Mesh.Vertices.Length];
+				Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
 				// vertices
 				for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
 				{
-					Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
+					if (Prototype.Mesh.Vertices[j] is ColoredVertex)
+					{
+						Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Prototype.Mesh.Vertices[j]);
+					}
+					else
+					{
+						Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
+					}
 					if (AccurateObjectDisposal)
 					{
 						World.Rotate(ref Mesh.Vertices[j].Coordinates.X, ref Mesh.Vertices[j].Coordinates.Y, ref Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
@@ -608,7 +802,7 @@ namespace OpenBve
 				// finalize arrays
 				if (v != Mesh.Vertices.Length)
 				{
-					Array.Resize<World.Vertex>(ref Mesh.Vertices, v);
+					Array.Resize<VertexTemplate>(ref Mesh.Vertices, v);
 				}
 				if (m != Mesh.Materials.Length)
 				{

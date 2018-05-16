@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -189,7 +190,7 @@ namespace OpenBve
 					{
 						Mesh = new World.Mesh
 						{
-							Vertices = new World.Vertex[0],
+							Vertices = new VertexTemplate[0],
 							Faces = new World.MeshFace[0],
 							Materials = new World.MeshMaterial[0]
 						}

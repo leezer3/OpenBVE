@@ -5,6 +5,9 @@ image:
   - Visual Studio 2015
   - Visual Studio 2013
 
+skip_commits:
+  message: /\[ci skip\]/
+  
 platform:
   - x86
 

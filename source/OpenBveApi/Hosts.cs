@@ -99,17 +99,7 @@ namespace OpenBveApi.Hosts {
 		public virtual bool RegisterSound(Sounds.Sound sound, out SoundHandle handle) {
 			handle = null;
 			return false;
-		}
-		
-		/// <summary>Loads an object and returns the object data.</summary>
-		/// <param name="path">The path to the file or folder that contains the object.</param>
-		/// <param name="obj">Receives the object.</param>
-		/// <returns>Whether loading the object was successful.</returns>
-		public virtual bool LoadObject(string path, out AbstractObject obj) {
-			obj = null;
-			return false;
-		}
-		
+		}		
 	}
 	
 }

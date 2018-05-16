@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -55,12 +56,12 @@ namespace OpenBve
 		}
 		private class MeshBuilder
 		{
-			internal World.Vertex[] Vertices;
+			internal VertexTemplate[] Vertices;
 			internal World.MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
-				this.Vertices = new World.Vertex[] { };
+				this.Vertices = new VertexTemplate[] { };
 				this.Faces = new World.MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
@@ -82,14 +83,14 @@ namespace OpenBve
 				{
 					Faces = new World.MeshFace[] { },
 					Materials = new World.MeshMaterial[] { },
-					Vertices = new World.Vertex[] { }
+					Vertices = new VertexTemplate[] { }
 				}
 			};
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
 			bool PropertiesFound = false;
 
-			World.Vertex[] tempVertices = new World.Vertex[0];
+			VertexTemplate[] tempVertices = new VertexTemplate[0];
 			Vector3[] tempNormals = new Vector3[0];
 			Color24 transparentColor = new Color24();
 			string tday = null;
@@ -305,17 +306,17 @@ namespace OpenBve
 											}
 											World.Normalize(ref nx, ref ny, ref nz);
 											//Resize temp arrays
-											Array.Resize<World.Vertex>(ref tempVertices, tempVertices.Length + 1);
+											Array.Resize<VertexTemplate>(ref tempVertices, tempVertices.Length + 1);
 											Array.Resize<Vector3>(ref tempNormals, tempNormals.Length + 1);
 											//Add vertex and normals to temp array
-											tempVertices[tempVertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+											tempVertices[tempVertices.Length - 1] = new Vertex(vx, vy, vz);
 											tempNormals[tempNormals.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
-											Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+											Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
 											while (Builder.Vertices.Length >= Normals.Length)
 											{
 												Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 											}
-											Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+											Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(vx, vy, vz);
 											Normals[Builder.Vertices.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
 										}
 									}
@@ -357,9 +358,9 @@ namespace OpenBve
 														continue;
 													}
 													//Add one to the actual vertex array
-													Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+													Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
 													//Set coordinates
-													Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = tempVertices[currentVertex].Coordinates;
+													Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(tempVertices[currentVertex].Coordinates);
 													//Set the vertex index
 													Builder.Faces[f].Vertices[j].Index = (ushort)(Builder.Vertices.Length - 1);
 													//Set the normals
@@ -492,10 +493,10 @@ namespace OpenBve
 				int mv = Object.Mesh.Vertices.Length;
 				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
+				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
 				for (int i = 0; i < Builder.Vertices.Length; i++)
 				{
-					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
+					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
 				}
 				for (int i = 0; i < Builder.Faces.Length; i++)
 				{

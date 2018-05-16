@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -56,12 +57,12 @@ namespace OpenBve
         }
         private class MeshBuilder
         {
-            internal World.Vertex[] Vertices;
+            internal VertexTemplate[] Vertices;
             internal World.MeshFace[] Faces;
             internal Material[] Materials;
             internal MeshBuilder()
             {
-                this.Vertices = new World.Vertex[] { };
+                this.Vertices = new VertexTemplate[] { };
                 this.Faces = new World.MeshFace[] { };
                 this.Materials = new Material[] { new Material() };
             }
@@ -83,12 +84,12 @@ namespace OpenBve
             ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Faces = new World.MeshFace[] { };
 			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new World.Vertex[] { };
+			Object.Mesh.Vertices = new VertexTemplate[] { };
             MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
             bool PropertiesFound = false;
 
-            World.Vertex[] tempVertices = new World.Vertex[0];
+            VertexTemplate[] tempVertices = new VertexTemplate[0];
             Vector3[] tempNormals = new Vector3[0];
             Color24 transparentColor = new Color24();
             string tday = null;
@@ -308,17 +309,17 @@ namespace OpenBve
                                             }
                                             World.Normalize(ref nx, ref ny, ref nz);
 											//Resize temp arrays
-                                            Array.Resize<World.Vertex>(ref tempVertices, tempVertices.Length + 1);
+                                            Array.Resize<VertexTemplate>(ref tempVertices, tempVertices.Length + 1);
                                             Array.Resize<Vector3>(ref tempNormals, tempNormals.Length + 1);
                                             //Add vertex and normals to temp array
-                                            tempVertices[tempVertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+                                            tempVertices[tempVertices.Length - 1] = new Vertex(vx, vy, vz);
                                             tempNormals[tempNormals.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
-                                            Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+                                            Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
                                             while (Builder.Vertices.Length >= Normals.Length)
                                             {
                                                 Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
                                             }
-                                            Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+                                            Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(vx, vy, vz);
                                             Normals[Builder.Vertices.Length - 1] = new Vector3((float) nx, (float) ny, (float) nz);
                                         }
                                     }
@@ -360,9 +361,9 @@ namespace OpenBve
 														continue;
 													}
                                                     //Add one to the actual vertex array
-                                                    Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+                                                    Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
                                                     //Set coordinates
-                                                    Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = tempVertices[currentVertex].Coordinates;
+                                                    Builder.Vertices[Builder.Vertices.Length - 1]= new Vertex(tempVertices[currentVertex].Coordinates);
                                                     //Set the vertex index
                                                     Builder.Faces[f].Vertices[j].Index = (ushort)(Builder.Vertices.Length - 1);
                                                     //Set the normals
@@ -487,71 +488,42 @@ namespace OpenBve
             return Object;
         }
         private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
-		{
-			if (Builder.Faces.Length != 0)
-			{
-				int mf = Object.Mesh.Faces.Length;
-				int mm = Object.Mesh.Materials.Length;
-				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
-				for (int i = 0; i < Builder.Vertices.Length; i++)
-				{
-					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
-				}
-				for (int i = 0; i < Builder.Faces.Length; i++)
-				{
-					Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
-					{
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Builder.Materials.Length; i++)
-				{
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
-					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					Textures.OpenGlTextureWrapMode WrapX, WrapY;
-					if (ForceTextureRepeatX)
-					{
-						WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
-					}
-					else
-					{
-						WrapX = Textures.OpenGlTextureWrapMode.ClampClamp;
-					}
-					if (ForceTextureRepeatY)
-					{
-						WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
-					}
-					else
-					{
-						WrapY = Textures.OpenGlTextureWrapMode.ClampClamp;
-					}
-					if (WrapX != Textures.OpenGlTextureWrapMode.RepeatRepeat | WrapY != Textures.OpenGlTextureWrapMode.RepeatRepeat)
-					{
-						for (int j = 0; j < Builder.Vertices.Length; j++)
-						{
-							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0)
-							{
-								WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
-							}
-							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0)
-							{
-								WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
-							}
-						}
-					}
-					if (Builder.Materials[i].DaytimeTexture != null)
-					{
-						Textures.Texture tday;
-						if (Builder.Materials[i].TransparencyTexture != null)
-						{
-							Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
-							Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
+        {
+            if (Builder.Faces.Length != 0)
+            {
+                int mf = Object.Mesh.Faces.Length;
+                int mm = Object.Mesh.Materials.Length;
+                int mv = Object.Mesh.Vertices.Length;
+                Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
+                Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+                Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
+                for (int i = 0; i < Builder.Vertices.Length; i++)
+                {
+                    Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
+                }
+                for (int i = 0; i < Builder.Faces.Length; i++)
+                {
+                    Object.Mesh.Faces[mf + i] = Builder.Faces[i];
+                    for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
+                    {
+                        Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+                    }
+                    Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+                }
+                for (int i = 0; i < Builder.Materials.Length; i++)
+                {
+                    Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+                    Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
+                    Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
+                    if (Builder.Materials[i].DaytimeTexture != null)
+                    {
+	                    Textures.Texture tday;
+						
+
+	                    if (!string.IsNullOrEmpty(Builder.Materials[i].TransparencyTexture))
+	                    {
+		                    Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
+		                    Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
 							Bitmap Alpha = new Bitmap(Builder.Materials[i].TransparencyTexture);
 							if (Alpha.Size != Main.Size)
 							{

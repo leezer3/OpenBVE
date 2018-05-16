@@ -12,6 +12,7 @@ using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -483,7 +484,7 @@ namespace OpenBve
 	        int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
             RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
         }
-        private static void RenderFace(ref World.MeshMaterial Material, World.Vertex[] Vertices, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
+        private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
         {
 	        // texture
 	        Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.RepeatRepeat;
@@ -627,6 +628,11 @@ namespace OpenBve
 					for (int j = 0; j < Face.Vertices.Length; j++)
 					{
 						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
+	                    if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
+	                    {
+		                    ColoredVertex v = (ColoredVertex)Vertices[Face.Vertices[j].Index];
+							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+	                    }
 						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
 					}
 				}
@@ -1211,7 +1217,7 @@ namespace OpenBve
         }
 
         // get distance factor
-        private static double GetDistanceFactor(World.Vertex[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
+        private static double GetDistanceFactor(VertexTemplate[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
         {
             if (Face.Vertices.Length != 0)
             {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using OpenBveApi;
-using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
+using OpenBveApi;
+using OpenBveApi.Colors;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -62,14 +63,90 @@ namespace OpenBve {
 			}
 		}
 		private class MeshBuilder {
-			internal World.Vertex[] Vertices;
+			internal VertexTemplate[] Vertices;
 			internal World.MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder() {
-				this.Vertices = new World.Vertex[] { };
+				this.Vertices = new VertexTemplate[] { };
 				this.Faces = new World.MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
+
+			internal void Apply(ref ObjectManager.StaticObject Object) {
+			if (Faces.Length != 0) {
+				int mf = Object.Mesh.Faces.Length;
+				int mm = Object.Mesh.Materials.Length;
+				int mv = Object.Mesh.Vertices.Length;
+				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
+				for (int i = 0; i < Vertices.Length; i++) {
+					Object.Mesh.Vertices[mv + i] = Vertices[i];
+				}
+				for (int i = 0; i < Faces.Length; i++) {
+					Object.Mesh.Faces[mf + i] = Faces[i];
+					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++) {
+						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
+					}
+					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
+				}
+				for (int i = 0; i < Materials.Length; i++) {
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
+					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
+					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
+					{
+						Textures.Texture tday;
+						if (Materials[i].Text != null)
+						{
+							Bitmap bitmap = null;
+							if (Materials[i].DaytimeTexture != null)
+							{
+								bitmap = new Bitmap(Materials[i].DaytimeTexture);
+							}
+							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
+							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)));
+						}
+						else
+						{
+							if (Materials[i].TransparentColorUsed)
+							{
+								Textures.RegisterTexture(Materials[i].DaytimeTexture,
+									new OpenBveApi.Textures.TextureParameters(null,
+										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
+											Materials[i].TransparentColor.B)), out tday);
+							}
+							else
+							{
+								Textures.RegisterTexture(Materials[i].DaytimeTexture, out tday);
+							}
+						}
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
+					}
+					else
+					{
+						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
+					if (Materials[i].NighttimeTexture != null) {
+						Textures.Texture tnight;
+						if (Materials[i].TransparentColorUsed) {
+							Textures.RegisterTexture(Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
+						} else {
+							Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
+						}
+						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
+					} else {
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
+					}
+					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
+					Object.Mesh.Materials[mm + i].BlendMode = Materials[i].BlendMode;
+					Object.Mesh.Materials[mm + i].GlowAttenuationData = Materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[mm + i].WrapMode = Materials[i].WrapMode;
+				}
+			}
+		}
+
 		}
 
 		private static bool IsCommand(string Text)
@@ -136,17 +213,29 @@ namespace OpenBve {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] {},
-					Materials = new World.MeshMaterial[] {},
-					Vertices = new World.Vertex[] {}
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			Object.Mesh.Faces = new World.MeshFace[] { };
+			Object.Mesh.Materials = new World.MeshMaterial[] { };
+			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			if (!IsB3D)
+			{
+				/*
+				 * Handles multi-column CSV objects [Hide behind the hacks option in the main program]
+				 */
+				for (int i = 0; i < Lines.Count; i++)
+				{
+					int idx = SecondIndexOfAny(Lines[i], CsvCommands);
+					if (idx != -1)
+					{
+						Lines[i] = Lines[i].Substring(0, idx);
+						string s = Lines[i].Substring(idx);
+						Lines.Add(s);
+					}
+				}
+			}
+
 			// parse lines
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
@@ -286,7 +375,7 @@ namespace OpenBve {
 								if (Arguments.Length > 0) {
 									Interface.AddMessage(Interface.MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								ApplyMeshBuilder(ref Object, Builder);
+								Builder.Apply(ref Object);
 								Builder = new MeshBuilder();
 								Normals = new Vector3[4];
 							} break;
@@ -328,11 +417,11 @@ namespace OpenBve {
 									nz = 0.0;
 								}
 								World.Normalize(ref nx, ref ny, ref nz);
-								Array.Resize<World.Vertex>(ref Builder.Vertices, Builder.Vertices.Length + 1);
+								Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
 									Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 								}
-								Builder.Vertices[Builder.Vertices.Length - 1].Coordinates = new Vector3(vx, vy, vz);
+								Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(new Vector3(vx, vy, vz));
 								Normals[Builder.Vertices.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
 							} break;
 						case "addface":
@@ -1115,8 +1204,8 @@ namespace OpenBve {
 				}
 			}
 			// finalize object
-			ApplyMeshBuilder(ref Object, Builder);
-			//Object.Mesh.CreateNormals();
+			Builder.Apply(ref Object);
+			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{
 				int k = Object.Mesh.Faces[i].Material;
@@ -1160,15 +1249,15 @@ namespace OpenBve {
 		// create cube
 		private static void CreateCube(ref MeshBuilder Builder, double sx, double sy, double sz) {
 			int v = Builder.Vertices.Length;
-			Array.Resize<World.Vertex>(ref Builder.Vertices, v + 8);
-			Builder.Vertices[v + 0].Coordinates = new Vector3(sx, sy, -sz);
-			Builder.Vertices[v + 1].Coordinates = new Vector3(sx, -sy, -sz);
-			Builder.Vertices[v + 2].Coordinates = new Vector3(-sx, -sy, -sz);
-			Builder.Vertices[v + 3].Coordinates = new Vector3(-sx, sy, -sz);
-			Builder.Vertices[v + 4].Coordinates = new Vector3(sx, sy, sz);
-			Builder.Vertices[v + 5].Coordinates = new Vector3(sx, -sy, sz);
-			Builder.Vertices[v + 6].Coordinates = new Vector3(-sx, -sy, sz);
-			Builder.Vertices[v + 7].Coordinates = new Vector3(-sx, sy, sz);
+			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 8);
+			Builder.Vertices[v + 0] = new Vertex(new Vector3(sx, sy, -sz));
+			Builder.Vertices[v + 1] = new Vertex(new Vector3(sx, -sy, -sz));
+			Builder.Vertices[v + 2] = new Vertex(new Vector3(-sx, -sy, -sz));
+			Builder.Vertices[v + 3] = new Vertex(new Vector3(-sx, sy, -sz));
+			Builder.Vertices[v + 4] = new Vertex(new Vector3(sx, sy, sz));
+			Builder.Vertices[v + 5] = new Vertex(new Vector3(sx, -sy, sz));
+			Builder.Vertices[v + 6] = new Vertex(new Vector3(-sx, -sy, sz));
+			Builder.Vertices[v + 7] = new Vertex(new Vector3(-sx, sy, sz));
 			int f = Builder.Faces.Length;
 			Array.Resize<World.MeshFace>(ref Builder.Faces, f + 6);
 			Builder.Faces[f + 0].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 3) };
@@ -1190,7 +1279,7 @@ namespace OpenBve {
 			double ns = h >= 0.0 ? 1.0 : -1.0;
 			// initialization
 			int v = Builder.Vertices.Length;
-			Array.Resize<World.Vertex>(ref Builder.Vertices, v + 2 * n);
+			Array.Resize<VertexTemplate>(ref Builder.Vertices, v + 2 * n);
 			Vector3[] Normals = new Vector3[2 * n];
 			double d = 2.0 * Math.PI / (double)n;
 			double g = 0.5 * h;
@@ -1206,8 +1295,8 @@ namespace OpenBve {
 				double lz = dz * r2;
 				double ux = dx * r1;
 				double uz = dz * r1;
-				Builder.Vertices[v + 2 * i + 0].Coordinates = new Vector3(ux, g, uz);
-				Builder.Vertices[v + 2 * i + 1].Coordinates = new Vector3(lx, -g, lz);
+				Builder.Vertices[v + 2 * i + 0] = new Vertex(new Vector3(ux, g, uz));
+				Builder.Vertices[v + 2 * i + 1] = new Vertex(new Vector3(lx, -g, lz));
 				double nx = dx * ns, ny = 0.0, nz = dz * ns;
 				double sx, sy, sz;
 				World.Cross(nx, ny, nz, 0.0, 1.0, 0.0, out sx, out sy, out sz);
@@ -1519,84 +1608,6 @@ namespace OpenBve {
 				}
 			}
 		}
-		
-		// apply mesh builder
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder) {
-			if (Builder.Faces.Length != 0) {
-				int mf = Object.Mesh.Faces.Length;
-				int mm = Object.Mesh.Materials.Length;
-				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
-				for (int i = 0; i < Builder.Vertices.Length; i++) {
-					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
-				}
-				for (int i = 0; i < Builder.Faces.Length; i++) {
-					Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-					for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++) {
-						Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Builder.Materials.Length; i++) {
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
-					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					if (Builder.Materials[i].DaytimeTexture != null || Builder.Materials[i].Text != null)
-					{
-						Textures.Texture tday;
-						if (Builder.Materials[i].Text != null)
-						{
-							Bitmap bitmap = null;
-							if (Builder.Materials[i].DaytimeTexture != null)
-							{
-								bitmap = new Bitmap(Builder.Materials[i].DaytimeTexture);
-							}
-							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Builder.Materials[i].Text, Builder.Materials[i].Font, 12, Builder.Materials[i].BackgroundColor, Builder.Materials[i].TextColor, Builder.Materials[i].TextPadding);
-							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)));
-						}
-						else
-						{
-							if (Builder.Materials[i].TransparentColorUsed)
-							{
-								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture,
-									new OpenBveApi.Textures.TextureParameters(null,new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G,Builder.Materials[i].TransparentColor.B)), out tday);
-
-							}
-							else
-							{
-								Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
-							}
-						}
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
-					if (Builder.Materials[i].NighttimeTexture != null) {
-						Textures.Texture tnight;
-						if (Builder.Materials[i].TransparentColorUsed) {
-							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
-						} else {
-							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, out tnight);
-						}
-						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
-					} else {
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
-					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = Builder.Materials[i].WrapMode;
-				}
-			}
-		}
-
-
-		
 	}
 
 }
