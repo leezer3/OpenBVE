@@ -14,7 +14,7 @@ using OpenBve.Formats.MsTs;
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
-#pragma warning disable CS2019
+#pragma warning disable 2019
 namespace OpenBve
 {
 	class MsTsShapeParser
@@ -1075,4 +1075,4 @@ namespace OpenBve
 		}
 	}
 }
-#pragma warning restore CS2019
+#pragma warning restore 2019
