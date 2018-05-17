@@ -108,9 +108,7 @@ namespace OpenBve
 						a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 					}
 					Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
 					World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-					World.UpdateViewingDistances();
 				}
 				catch
 				{
@@ -119,48 +117,60 @@ namespace OpenBve
 					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
 					Loading.Cancel = true;
+					return;
 				}
+				
 			}
-			else
+			var Panel2 = false;
+			try
 			{
-				var Panel2 = false;
-				try
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+				if (System.IO.File.Exists(File))
 				{
-					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
-					if (System.IO.File.Exists(File))
-					{
-						Program.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-						World.CameraRestriction = World.CameraRestrictionMode.On;
-					}
-					else
-					{
-						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							Program.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-							World.CameraRestriction = World.CameraRestrictionMode.On;
-						}
-						else
-						{
-							World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-						}
-					}
+					Program.AppendToLogFile("Loading train panel: " + File);
+					Panel2 = true;
+					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+					World.CameraRestriction = World.CameraRestrictionMode.On;
+					return;
 				}
-				catch
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
+				if (System.IO.File.Exists(File))
 				{
-					var currentError = Interface.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
+					Program.AppendToLogFile("Loading train panel: " + File);
+					PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
+					World.CameraRestriction = World.CameraRestrictionMode.On;
 				}
 
 			}
+			catch
+			{
+				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				Loading.Cancel = true;
+				return;
+			}
+			try
+			{
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cvf");
+				if (MSTSCabviewFileParser.ParseCabViewFile(File, Encoding, Train))
+				{
+					Program.AppendToLogFile("Loading train panel: " + File);
+					World.CameraRestriction = World.CameraRestrictionMode.On;
+					return;
+				}
+			}
+			catch (Exception e)
+			{
+				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				currentError = currentError.Replace("[file]", "panel.cvf");
+				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				Loading.Cancel = true;
+			}
+			MessageBox.Show("No supported panels found.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
 		}
 		
 		// get resistance
