@@ -75,6 +75,11 @@ namespace OpenBve.Formats.MsTs
 		/// <returns>The new block</returns>
 		/// <remarks>The type of the new block will always match that of the base block</remarks>
 		public abstract Block ReadSubBlock(KujuTokenID[] validTokens);
+
+		/// <summary>Reads any sub-block from the enclosing block</summary>
+		/// <returns>The new block</returns>
+		/// <remarks>The type of the new block will always match that of the base block</remarks>
+		public abstract Block ReadSubBlock();
 	}
 
 	/// <inheritdoc />
@@ -130,6 +135,15 @@ namespace OpenBve.Formats.MsTs
 				throw new Exception("Expected one of the following tokens: " + validTokens + ", got " + currentToken);
 			}
 
+			myReader.ReadUInt16();
+			uint remainingBytes = myReader.ReadUInt32();
+			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
+			return new BinaryBlock(newBytes, currentToken);
+		}
+
+		public override Block ReadSubBlock()
+		{
+			KujuTokenID currentToken = (KujuTokenID) myReader.ReadUInt16();
 			myReader.ReadUInt16();
 			uint remainingBytes = myReader.ReadUInt32();
 			byte[] newBytes = myReader.ReadBytes((int) remainingBytes);
@@ -366,6 +380,68 @@ namespace OpenBve.Formats.MsTs
 			throw new Exception("Unexpected end of block in " + Token);
 		}
 
+		public override Block ReadSubBlock()
+		{
+			startPosition = currentPosition;
+			string s = String.Empty;
+			while (currentPosition < myText.Length)
+			{
+				if (myText[currentPosition] == '(')
+				{
+					int l = currentPosition - startPosition;
+					s = myText.Substring(startPosition, l).Trim();
+					currentPosition++;
+					break;
+				}
+
+				currentPosition++;
+			}
+
+			if (string.IsNullOrWhiteSpace(s))
+			{
+				throw new Exception();
+			}
+
+			KujuTokenID currentToken;
+			int ws = s.IndexOf(' ');
+			if (ws != -1)
+			{
+				//The block has the optional label
+				Label = s.Substring(ws, s.Length - ws).Trim();
+				s = s.Substring(0, ws);
+			}
+
+			if (!Enum.TryParse(s, true, out currentToken))
+			{
+				throw new Exception("Unrecognised token " + s);
+			}
+			
+			int level = 0;
+			while (currentPosition < myText.Length)
+			{
+				if (myText[currentPosition] == '(')
+				{
+					level++;
+				}
+
+				if (myText[currentPosition] == ')')
+				{
+					currentPosition++;
+					if (level == 0)
+					{
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
+					}
+
+					level--;
+
+				}
+
+				currentPosition++;
+			}
+
+			throw new Exception("Unexpected end of block in " + Token);
+		}
+
 
 		private int startPosition;
 
@@ -514,15 +590,35 @@ namespace OpenBve.Formats.MsTs
 			}
 
 			startPosition = currentPosition;
-			while (!char.IsWhiteSpace(myText[currentPosition]))
+			if (myText[currentPosition] == '"')
 			{
+				//Quote enclosed string
 				currentPosition++;
-			}
+				startPosition++;
+				while (myText[currentPosition] != '"')
+				{
+					currentPosition++;
+				}
 
-			int l = currentPosition - startPosition;
-			if (l > 0)
+				int l = currentPosition - startPosition;
+				currentPosition++;
+				if (l > 0)
+				{
+					return myText.Substring(startPosition, l).Trim();
+				}
+			}
+			else
 			{
-				return myText.Substring(startPosition, l).Trim();
+				while (!char.IsWhiteSpace(myText[currentPosition]))
+				{
+					currentPosition++;
+				}
+
+				int l = currentPosition - startPosition;
+				if (l > 0)
+				{
+					return myText.Substring(startPosition, l).Trim();
+				}
 			}
 
 			return string.Empty;
