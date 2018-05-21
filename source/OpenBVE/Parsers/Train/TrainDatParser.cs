@@ -434,10 +434,21 @@ namespace OpenBve {
 										}
 										else
 										{
+											Train.Specs.MaximumPowerNotch = 8;
 											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 									break;
-									case 2: Train.Specs.MaximumBrakeNotch = a; break;
+									case 2:
+										if (a >= 0)
+										{
+											Train.Specs.MaximumBrakeNotch = a;
+										}
+										else
+										{
+											Train.Specs.MaximumBrakeNotch = 8;
+											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
 									case 3: Train.Specs.PowerNotchReduceSteps = a; break;
 									case 4:
 										if (a > 0 || a < 3)
@@ -638,8 +649,17 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
 				TrailerCarMass = 1.0;
 			}
-			if (Train.Specs.MaximumPowerNotch <= 0) Train.Specs.MaximumPowerNotch = 8;
-			if (Train.Specs.MaximumBrakeNotch <= 0) Train.Specs.MaximumBrakeNotch = 8;
+
+			if (Train.Specs.MaximumPowerNotch == 0)
+			{
+				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);
+				Train.Specs.MaximumPowerNotch = 8;
+			}
+			if (Train.Specs.MaximumBrakeNotch == 0)
+			{
+				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
+				Train.Specs.MaximumBrakeNotch = 8;
+			}
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
