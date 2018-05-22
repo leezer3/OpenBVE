@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -27,70 +28,25 @@ namespace OpenBve
 			/// <summary>ATC should be used</summary>
 			Atc = 1
 		}
-		internal enum StationStopMode
+		
+		internal class Station : OpenBveApi.Runtime.Station
 		{
-			/// <summary>All trains stop at this station</summary>
-			AllStop = 0,
-			/// <summary>All trains pass this station</summary>
-			AllPass = 1,
-			/// <summary>The player train stops at this station, AI trains do not</summary>
-			PlayerStop = 2,
-			/// <summary>The player train passes this station, AI trains stop</summary>
-			PlayerPass = 3,
-			/// <summary>This station is a random request stop for all trains</summary>
-			AllRequestStop = 4,
-			/// <summary>This station is a random request stop for the player train only</summary>
-			PlayerRequestStop = 5
-
-
-		}
-
-		/// <summary>Defines the available station types</summary>
-		internal enum StationType
-		{
-			Normal = 0,
-			ChangeEnds = 1,
-			Terminal = 2,
-			RequestStop = 3
-		}
-
-		/// <summary>Defines a station</summary>
-		internal struct Station
-		{
-			/// <summary>The textual name of the station displayed in-game</summary>
-			internal string Name;
-			/// <summary>The expected arrival time at this station, expressed in seconds after midnight on the first day</summary>
-			internal double ArrivalTime;
-			/// <summary>The sound buffer to be played when the train arrives at this station</summary>
-			internal Sounds.SoundBuffer ArrivalSoundBuffer;
-			/// <summary>The expected departure time from this station, expressed in seconds after midnight on the first day</summary>
-			internal double DepartureTime;
-			/// <summary>The sound buffer to be played before the doors close pre-departure</summary>
-			internal Sounds.SoundBuffer DepartureSoundBuffer;
-			/// <summary>The minimum time in seconds trains must stop for at this station</summary>
-			internal double StopTime;
-			internal Vector3 SoundOrigin;
-			/// <summary>Defines which trains will stop at this station</summary>
-			internal StationStopMode StopMode;
-			/// <summary>The type of this station</summary>
-			internal StationType StationType;
-			/// <summary>Whether the signal associated with this station is held at red until the scheduled departure time</summary>
-			internal bool ForceStopSignal;
-			/// <summary>Whether the left doors should open</summary>
-			internal bool OpenLeftDoors;
-			/// <summary>Whether the right doors should open</summary>
-			internal bool OpenRightDoors;
-			/// <summary>The safety system in use from this station onwards</summary>
-			internal SafetySystem SafetySystem;
-			/// <summary>The available stop points for this station</summary>
-			internal StationStop[] Stops;
 			/// <summary>The ratio of passengers at this station (100 is a standard, fully loaded train)</summary>
 			internal double PassengerRatio;
 			/// <summary>The timetable to be shown from this point onwards (Daytime)</summary>
 			internal Textures.Texture TimetableDaytimeTexture;
 			/// <summary>The timetable to be shown from this point onwards (Nighttime)</summary>
 			internal Textures.Texture TimetableNighttimeTexture;
-			internal double DefaultTrackPosition;
+			/// <summary>The origin vector for the arrival and departure sounds </summary>
+			internal Vector3 SoundOrigin;
+			/// <summary>The sound buffer to be played when the train arrives at this station</summary>
+			internal Sounds.SoundBuffer ArrivalSoundBuffer;
+			/// <summary>The sound buffer to be played before the doors close pre-departure</summary>
+			internal Sounds.SoundBuffer DepartureSoundBuffer;
+			/// <summary>The safety system in use from this station onwards</summary>
+			internal SafetySystem SafetySystem;
+			/// <summary>The available stop points for this station</summary>
+			internal StationStop[] Stops;
 		}
 		internal static Station[] Stations = new Station[] { };
 

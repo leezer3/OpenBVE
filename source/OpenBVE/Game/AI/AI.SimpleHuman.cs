@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -157,7 +158,7 @@ namespace OpenBve
 				{
 					// door opened or boarding at station
 					this.PowerNotchAtWhichWheelSlipIsObserved = Train.Specs.MaximumPowerNotch + 1;
-					if (Train.Station >= 0 && Stations[Train.Station].StationType != StationType.Normal && Stations[Train.Station].StationType != StationType.RequestStop && Train == TrainManager.PlayerTrain)
+					if (Train.Station >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain)
 					{
 						// player's terminal station
 						if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
@@ -240,7 +241,7 @@ namespace OpenBve
 					}
 					CurrentInterval = 1.0;
 				}
-				else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].StationType != StationType.Normal && Stations[Train.Station].StationType != StationType.RequestStop && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
+				else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
 					if (Train.Plugin != null || Train.Plugin.LastReverser == -2)

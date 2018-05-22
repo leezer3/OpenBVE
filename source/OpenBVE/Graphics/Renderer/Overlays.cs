@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -136,7 +137,7 @@ namespace OpenBve
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
 			//Fade to black on change ends
-			if (TrainManager.PlayerTrain.Station >= 0 && Game.Stations[TrainManager.PlayerTrain.Station].StationType == Game.StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+			if (TrainManager.PlayerTrain.Station >= 0 && Game.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
 			{
 				double time = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight;
 				if (time < 1.0)

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 using OpenTK;
 using OpenTK.Graphics;
 using GL = OpenTK.Graphics.OpenGL.GL;
@@ -361,7 +362,7 @@ namespace OpenBve
 						PlayerFirstStationIndex = i;
 					}
 				}
-				if (Game.Stations[i].StopMode == Game.StationStopMode.AllStop | Game.Stations[i].StopMode == Game.StationStopMode.PlayerStop & Game.Stations[i].Stops.Length != 0)
+				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerStop & Game.Stations[i].Stops.Length != 0)
 				{
 					if (f == false)
 					{
@@ -448,7 +449,7 @@ namespace OpenBve
 			double OtherFirstStationTime = 0.0;
 			for (int i = 0; i < Game.Stations.Length; i++)
 			{
-				if (Game.Stations[i].StopMode == Game.StationStopMode.AllStop | Game.Stations[i].StopMode == Game.StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
+				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
 					int s = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
@@ -527,7 +528,7 @@ namespace OpenBve
 			{
 				if (i != PlayerFirstStationIndex & Game.PlayerStopsAtStation(i))
 				{
-					if (i == 0 || Game.Stations[i - 1].StationType != Game.StationType.ChangeEnds)
+					if (i == 0 || Game.Stations[i - 1].Type != StationType.ChangeEnds)
 					{
 						Game.CurrentScore.Maximum += Game.ScoreValueStationArrival;
 					}

@@ -4,6 +4,7 @@ using System.Globalization;
 using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -3739,28 +3740,26 @@ namespace OpenBve {
 									{
 										CurrentStation++;
 										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation].Name = string.Empty;
-										Game.Stations[CurrentStation].StopMode = Game.StationStopMode.AllStop;
-										Game.Stations[CurrentStation].StationType = Game.StationType.Normal;
+										Game.Stations[CurrentStation] = new Game.Station();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 											Game.Stations[CurrentStation].Name = Arguments[0];
 										}
 										double arr = -1.0, dep = -1.0;
 										if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
 											if (string.Equals(Arguments[1], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.AllPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
 											} else if (string.Equals(Arguments[1], "B", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 											} else if (Arguments[1].StartsWith("B:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
 											} else if (string.Equals(Arguments[1], "S", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerStop;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 											} else if (Arguments[1].StartsWith("S:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerStop;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
@@ -3772,17 +3771,17 @@ namespace OpenBve {
 										}
 										if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.Terminal;
+												Game.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.Terminal;
+												Game.Stations[CurrentStation].Type = StationType.Terminal;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
 											} else if (string.Equals(Arguments[2], "C", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.ChangeEnds;
+												Game.Stations[CurrentStation].Type = StationType.ChangeEnds;
 											} else if (Arguments[2].StartsWith("C:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.ChangeEnds;
+												Game.Stations[CurrentStation].Type = StationType.ChangeEnds;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
@@ -3925,7 +3924,7 @@ namespace OpenBve {
 												}
 											}
 										}
-										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == Game.StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == Game.StationStopMode.AllStop)) {
+										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
 										Game.Stations[CurrentStation].ArrivalTime = arr;
@@ -3951,28 +3950,26 @@ namespace OpenBve {
 									{
 										CurrentStation++;
 										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation].Name = string.Empty;
-										Game.Stations[CurrentStation].StopMode = Game.StationStopMode.AllStop;
-										Game.Stations[CurrentStation].StationType = Game.StationType.Normal;
+										Game.Stations[CurrentStation] = new Game.Station();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 											Game.Stations[CurrentStation].Name = Arguments[0];
 										}
 										double arr = -1.0, dep = -1.0;
 										if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
 											if (string.Equals(Arguments[1], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.AllPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
 											} else if (string.Equals(Arguments[1], "B", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 											} else if (Arguments[1].StartsWith("B:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerPass;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
 											} else if (string.Equals(Arguments[1], "S", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerStop;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 											} else if (Arguments[1].StartsWith("S:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StopMode = Game.StationStopMode.PlayerStop;
+												Game.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
@@ -3984,17 +3981,17 @@ namespace OpenBve {
 										}
 										if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.Terminal;
+												Game.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.Terminal;
+												Game.Stations[CurrentStation].Type = StationType.Terminal;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
 											} else if (string.Equals(Arguments[2], "C", StringComparison.OrdinalIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.ChangeEnds;
+												Game.Stations[CurrentStation].Type = StationType.ChangeEnds;
 											} else if (Arguments[2].StartsWith("C:", StringComparison.InvariantCultureIgnoreCase)) {
-												Game.Stations[CurrentStation].StationType = Game.StationType.ChangeEnds;
+												Game.Stations[CurrentStation].Type = StationType.ChangeEnds;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
@@ -4039,7 +4036,7 @@ namespace OpenBve {
 												}
 											}
 										}
-										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == Game.StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == Game.StationStopMode.AllStop)) {
+										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
 										Game.Stations[CurrentStation].ArrivalTime = arr;
@@ -4070,11 +4067,12 @@ namespace OpenBve {
 									}
 									CurrentStation++;
 									Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
+									Game.Stations[CurrentStation] = new Game.Station();
 									StopRequest sr = new StopRequest();
 									sr.TrackPosition = Data.TrackPosition;
 									sr.StationIndex = CurrentStation;
 									Game.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
-									if (Game.Stations[CurrentStation].StationType == Game.StationType.RequestStop)
+									if (Game.Stations[CurrentStation].Type == StationType.RequestStop)
 									{
 										int l = Data.RequestStops.Length;
 										Array.Resize<StopRequest> (ref Data.RequestStops, l + 1);

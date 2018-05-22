@@ -378,29 +378,6 @@ namespace OpenBveApi.Runtime {
 		}
 	}
 
-	/// <summary>Represents a station.</summary>
-	public class Station
-	{
-		/// <summary>The name of the station.</summary>
-		public string Name;
-		/// <summary>The expected arrival time.</summary>
-		public double ArrivalTime;
-		/// <summary>The expected departure time.</summary>
-		public double DepartureTime;
-		/// <summary>The expected time stopped.</summary>
-		public double StopTime;
-		/// <summary>Whether the next signal is held red until departure.</summary>
-		public bool ForceStopSignal;
-		/// <summary>Whether the left doors are to open.</summary>
-		public bool OpenLeftDoors;
-		/// <summary>Whether the right doors are to open.</summary>
-		public bool OpenRightDoors;
-		/// <summary>The track position of this station.</summary>
-		public double DefaultTrackPosition;
-		/// <summary>The stop position applicable to the current train.</summary>
-		public double StopPosition;
-	}
-	
 	/// <summary>Represents the current state of the train.</summary>
 	public class VehicleState {
 		// --- members ---

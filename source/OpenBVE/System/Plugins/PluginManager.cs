@@ -86,18 +86,7 @@ namespace OpenBve {
 						{
 							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
 						}
-						Station i = new Station
-						{
-							Name = selectedStation.Name,
-							ArrivalTime = selectedStation.ArrivalTime,
-							DepartureTime = selectedStation.DepartureTime,
-							StopTime = selectedStation.StopTime,
-							OpenLeftDoors = selectedStation.OpenLeftDoors,
-							OpenRightDoors = selectedStation.OpenRightDoors,
-							ForceStopSignal = selectedStation.ForceStopSignal,
-							DefaultTrackPosition = selectedStation.DefaultTrackPosition,
-							StopPosition = stopPosition
-						};
+						Station i = new Station(selectedStation, stopPosition);
 						currentRouteStations.Add(i);
 						s++;
 					}

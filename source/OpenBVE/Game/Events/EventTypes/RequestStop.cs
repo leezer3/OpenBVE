@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -71,7 +72,7 @@ namespace OpenBve
 						if (Program.RandomNumberGenerator.Next(0, 100) <= stop.Probability)
 						{
 							//We have hit our probability roll
-							if (Game.Stations[StationIndex].StopMode == Game.StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == Game.StationStopMode.PlayerRequestStop))
+							if (Game.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop))
 							{
 
 								//If our train can stop at this station, set it's index accordingly

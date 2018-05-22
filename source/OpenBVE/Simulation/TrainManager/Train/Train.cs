@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -121,7 +122,7 @@ namespace OpenBve
 					{
 						for (int i = 0; i < Game.Stations.Length; i++)
 						{
-							if (Game.Stations[i].StopMode == Game.StationStopMode.AllStop | Game.Stations[i].StopMode == Game.StationStopMode.PlayerPass)
+							if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass)
 							{
 								if (Game.Stations[i].ArrivalTime >= 0.0)
 								{
