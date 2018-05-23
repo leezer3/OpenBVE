@@ -374,7 +374,8 @@ namespace OpenBve
 					{
 						emergency = Train.Handles.EmergencyBrake.Actual;
 					}
-					double targetPressure; if (emergency)
+					double targetPressure;
+					if (emergency)
 					{
 						//If EB is selected, then target pressure must be that required for EB
 						targetPressure = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
@@ -382,7 +383,31 @@ namespace OpenBve
 					else
 					{
 						//Otherwise [BVE2 / BVE4 train.dat format] work out target pressure as a proportion of the max notch:
-						targetPressure = (double)Train.Handles.Brake.Actual / (double)Train.Specs.MaximumBrakeNotch;
+						targetPressure = (double)Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+						switch (Train.Handles.LocoBrake.BrakeType)
+						{
+							case LocoBrakeType.Combined:
+								if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+								{
+									double locoTargetPressure = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+									targetPressure = Math.Max(locoTargetPressure, targetPressure);
+								}
+								break;
+							case LocoBrakeType.Independant:
+								if (CarIndex == Train.DriverCar)
+								{
+									//The locomotive brake is independant, so if the driver car return it's 
+									targetPressure = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+								}
+								break;
+							case LocoBrakeType.Blocking:
+								if (Train.Handles.LocoBrake.Actual != 0)
+								{
+									//The locomotive brake application has blocked the release of the train brakes
+									targetPressure = 1.0;
+								}
+								break;
+						}
 						targetPressure *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 					}
 					if (Train.Cars[CarIndex].Specs.IsMotorCar & !Train.Handles.EmergencyBrake.Actual & Train.Handles.Reverser.Actual != 0)
@@ -401,12 +426,47 @@ namespace OpenBve
 								//Motor is used to brake the train, until not enough deceleration, at which point the air brake is also used
 								double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 								double pr = targetPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-								double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+								double b;
+								if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+								{
+									b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);
+								}
+								else
+								{
+									b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+								}
+
 								double d = b - a;
 								if (d > 0.0)
 								{
 									//Deceleration provided by the motor is not enough, so increase the BC target pressure
-									targetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+									targetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);;
+									switch (Train.Handles.LocoBrake.BrakeType)
+									{
+										case LocoBrakeType.Combined:
+											if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+											{
+												double locoTargetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);;
+												targetPressure = Math.Max(locoTargetPressure, targetPressure);
+											}
+
+											break;
+										case LocoBrakeType.Independant:
+											if (CarIndex == Train.DriverCar)
+											{
+												//The locomotive brake is independant, so if the driver car return it's 
+												targetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);;
+											}
+
+											break;
+										case LocoBrakeType.Blocking:
+											if (Train.Handles.LocoBrake.Actual != 0)
+											{
+												//The locomotive brake application has blocked the release of the train brakes
+												targetPressure = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);
+											}
+											break;
+									}
 									if (targetPressure > 1.0) targetPressure = 1.0;
 									targetPressure *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 								}
@@ -490,7 +550,33 @@ namespace OpenBve
 				}
 				else
 				{
-					p = (double)Train.Handles.Brake.Actual / (double)Train.Specs.MaximumBrakeNotch;
+					p = (double)Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+					switch (Train.Handles.LocoBrake.BrakeType)
+					{
+						case LocoBrakeType.Combined:
+							if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+							{
+								double locoTargetPressure = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+								p = Math.Max(locoTargetPressure, p);
+							}
+
+							break;
+						case LocoBrakeType.Independant:
+							if (CarIndex == Train.DriverCar)
+							{
+								//The locomotive brake is independant, so if the driver car return it's 
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+
+							break;
+						case LocoBrakeType.Blocking:
+							if (Train.Handles.LocoBrake.Actual != 0)
+							{
+								//The locomotive brake application has blocked the release of the train brakes
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+							break;
+					}
 					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 				}
 				if (!Train.Handles.EmergencyBrake.Actual & Train.Handles.Reverser.Actual != 0)
@@ -506,15 +592,29 @@ namespace OpenBve
 						else if (Train.Cars[CarIndex].Specs.ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
 						{
 							// delay-filling control
-							// Variable f is never used, so don't calculate it
-							//double f = (double)Train.Handles.CurrentBrakeNotch.Actual / (double)Train.Specs.MaximumBrakeNotch;
 							double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 							double pr = p / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-							double b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+							double b;
+							if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+							{
+								b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);
+							}
+							else
+							{
+								b = pr * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+							}
 							double d = b - a;
 							if (d > 0.0)
 							{
-								p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+								if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+								{
+									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);
+								}
+								else
+								{
+									p = d / Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+								}
+
 								if (p > 1.0) p = 1.0;
 								p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 							}
@@ -589,7 +689,33 @@ namespace OpenBve
 				}
 				else
 				{
-					p = (double)Train.Handles.Brake.Actual / (double)Train.Specs.MaximumBrakeNotch;
+					p = (double)Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+					switch (Train.Handles.LocoBrake.BrakeType)
+					{
+						case LocoBrakeType.Combined:
+							if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+							{
+								double locoTargetPressure = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+								p = Math.Max(locoTargetPressure, p);
+							}
+
+							break;
+						case LocoBrakeType.Independant:
+							if (CarIndex == Train.DriverCar)
+							{
+								//The locomotive brake is independant, so if the driver car return it's 
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+
+							break;
+						case LocoBrakeType.Blocking:
+							if (Train.Handles.LocoBrake.Actual != 0)
+							{
+								//The locomotive brake application has blocked the release of the train brakes
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+							break;
+					}
 					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 				}
 				if (p + Tolerance < Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure)
@@ -621,13 +747,40 @@ namespace OpenBve
 			}
 			else if (Train.Cars[CarIndex].Specs.BrakeType == CarBrakeType.ElectricCommandBrake)
 			{
-				double p; if (Train.Handles.EmergencyBrake.Actual)
+				double p;
+				if (Train.Handles.EmergencyBrake.Actual)
 				{
 					p = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
 				}
 				else
 				{
-					p = (double)Train.Handles.Brake.Actual / (double)Train.Specs.MaximumBrakeNotch;
+					p = (double)Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+					switch (Train.Handles.LocoBrake.BrakeType)
+					{
+						case LocoBrakeType.Combined:
+							if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+							{
+								double locoTargetPressure = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+								p = Math.Max(locoTargetPressure, p);
+							}
+
+							break;
+						case LocoBrakeType.Independant:
+							if (CarIndex == Train.DriverCar)
+							{
+								//The locomotive brake is independant, so if the driver car return it's 
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+
+							break;
+						case LocoBrakeType.Blocking:
+							if (Train.Handles.LocoBrake.Actual != 0)
+							{
+								//The locomotive brake application has blocked the release of the train brakes
+								p = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.LocoBrake.MaximumNotch;
+							}
+							break;
+					}
 					p *= Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
 				}
 				Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure = p;
@@ -665,11 +818,28 @@ namespace OpenBve
 			}
 			// deceleration provided by brake
 			double pressureratio = Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure / Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-			DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+			if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+			{
+				DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.LocoBrake.Actual);
+			}
+			else
+			{
+				DecelerationDueToBrake = pressureratio * Train.Cars[CarIndex].Specs.BrakeDecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual);
+			}
+			
 			// deceleration provided by motor
 			if (Train.Cars[CarIndex].Specs.BrakeType != CarBrakeType.AutomaticAirBrake && Math.Abs(Train.Cars[CarIndex].Specs.CurrentSpeed) >= Train.Cars[CarIndex].Specs.BrakeControlSpeed & Train.Handles.Reverser.Actual != 0 & !Train.Handles.EmergencyBrake.Actual)
 			{
-				double f = (double)Train.Handles.Brake.Actual / (double)Train.Specs.MaximumBrakeNotch;
+				double f;
+				if (Train.Handles.LocoBrake.Actual != 0 && CarIndex == Train.DriverCar)
+				{
+					f = (double)Train.Handles.LocoBrake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+				}
+				else
+				{
+					f = (double)Train.Handles.Brake.Actual / (double)Train.Handles.Brake.MaximumNotch;
+				}
+				
 				double a = Train.Cars[CarIndex].Specs.MotorDeceleration;
 				DecelerationDueToMotor = f * a;
 			}
@@ -748,28 +918,28 @@ namespace OpenBve
 				}
 			}
 			// apply
-			ApplyNotch(Train, 0, !Train.Specs.SingleHandle, Train.Specs.MaximumBrakeNotch, true);
+			Train.ApplyNotch(0, !Train.Handles.SingleHandle, Train.Handles.Brake.MaximumNotch, true);
 			ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
 			Train.Handles.EmergencyBrake.Driver = true;
 			Train.Handles.HoldBrake.Driver = false;
 			Train.Specs.CurrentConstSpeed = false;
 			if (Train.Handles.EmergencyBrake.Driver)
 			{
-				switch (Train.Specs.EbHandlesAction)
+				switch (Train.Handles.EmergencyBrake.OtherHandlesBehaviour)
 				{
 					case EbHandleBehaviour.PowerNeutral:
-						if (!Train.Specs.SingleHandle)
+						if (!Train.Handles.SingleHandle)
 						{
-							TrainManager.ApplyNotch(Train, 0, false, 0, true);
+							Train.ApplyNotch(0, false, 0, true);
 						}
 						break;
 					case EbHandleBehaviour.ReverserNeutral:
 						TrainManager.ApplyReverser(Train, 0, false);
 						break;
 					case EbHandleBehaviour.PowerReverserNeutral:
-						if (!Train.Specs.SingleHandle)
+						if (!Train.Handles.SingleHandle)
 						{
-							TrainManager.ApplyNotch(Train, 0, false, 0, true);
+							Train.ApplyNotch(0, false, 0, true);
 						}
 						TrainManager.ApplyReverser(Train, 0, false);
 						break;
@@ -796,7 +966,7 @@ namespace OpenBve
 					Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
 				}
 				// apply
-				ApplyNotch(Train, 0, !Train.Specs.SingleHandle, Train.Specs.MaximumBrakeNotch, true);
+				Train.ApplyNotch(0, !Train.Handles.SingleHandle, Train.Handles.Brake.MaximumNotch, true);
 				ApplyAirBrakeHandle(Train, AirBrakeHandleState.Service);
 				Train.Handles.EmergencyBrake.Driver = false;
 				// plugin

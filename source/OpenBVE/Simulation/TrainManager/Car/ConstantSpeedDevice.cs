@@ -23,7 +23,7 @@
 			/// <param name="Acceleration">The current acceleration output of the train</param>
 			/// <param name="Enabled">Whether the constant speed device is enabled (As this refers to the whole train)</param>
 			/// <param name="ReverserPosition">The current position of the reverser handle</param>
-			internal void Update(ref double Acceleration, bool Enabled, int ReverserPosition)
+			internal void Update(ref double Acceleration, bool Enabled, ReverserPosition ReverserPosition)
 			{
 				if (!Enabled)
 				{

@@ -56,6 +56,10 @@ namespace OpenBve {
 			HornMusic,
 			/// <summary>Enables or disables the constant-speed device</summary>
 			DeviceConstSpeed,
+			/// <summary>Increases the locomotive brake notch</summary>
+			LocoBrakeIncrease,
+			/// <summary>Decreases the locomotive brake notch</summary>
+			LocoBrakeDecrease,
 
 			//Simulation controls
 			/// <summary>Change to the interior (Cab) camera mode</summary>

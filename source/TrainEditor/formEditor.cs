@@ -56,6 +56,7 @@ namespace TrainEditor {
 			comboBoxHandleBehaviour.Items.Add("Return Power to neutral");
 			comboBoxHandleBehaviour.Items.Add("Return Reverser to neutral");
 			comboBoxHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxLocoBrakeType.SelectedIndex = 0;
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
 				comboboxSoundIndex.Items.Add(i.ToString(culture));
@@ -1394,6 +1395,16 @@ namespace TrainEditor {
 			this.setDelay(ref this.Train.Delay.DelayBrakeDown, "DelayBrakeDown");
 		}
 
+		private void buttonLocoBrakeDelayUp_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, "DelayLocoBrakeUp");
+		}
+
+		private void buttonLocoBrakeDelayDown_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, "DelayLocoBrakeDown");
+		}
+
 		private void setDelay(ref double[] delayValues, string delayType)
     {
       using (Form formDelay = new Form())
@@ -1493,6 +1504,16 @@ namespace TrainEditor {
 					Train.Delay.DelayBrakeDown[i] = 0.0;
 				}
 			}
+		}
+
+		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+		}
+
+		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
 		}
 	}
 }

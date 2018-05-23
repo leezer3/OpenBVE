@@ -37,7 +37,7 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 1534;
+			const int currentVersion = 1535;
 			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -124,7 +124,11 @@ namespace OpenBve {
 			Train.Specs.PassAlarm = TrainManager.PassAlarmType.None;
 			Train.Specs.DoorOpenMode = TrainManager.DoorMode.AutomaticManualOverride;
 			Train.Specs.DoorCloseMode = TrainManager.DoorMode.AutomaticManualOverride;
-			Train.Specs.EbHandlesAction = TrainManager.EbHandleBehaviour.NoAction;
+			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
+			Train.Handles.AirBrake.Handle = new TrainManager.AirBrakeHandle();
+			Train.Handles.HasLocoBrake = false;
+			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
+			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new TrainManager.MotorSoundTableEntry[16];
@@ -246,47 +250,63 @@ namespace OpenBve {
 					case "#delay":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
-								switch (n) {
-										case 0:
-											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
-											{
-												Train.Specs.DelayPowerUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
-											}
-											else
-											{
-												Train.Specs.DelayPowerUp = new[] { a };
-											}
-											break;
-										case 1:
-											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
-											{
-												Train.Specs.DelayPowerDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
-											}
-											else
-											{
-												Train.Specs.DelayPowerDown = new[] { a };
-											}
-											break;
-										case 2:
-											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
-											{
-												Train.Specs.DelayBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
-											}
-											else
-											{
-												Train.Specs.DelayBrakeUp = new[] { a };
-											}
-											break;
-										case 3:
-											if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
-											{
-												Train.Specs.DelayBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
-											}
-											else
-											{
-												Train.Specs.DelayBrakeDown = new[] { a };
-											}
-											break;
+								switch (n)
+								{
+									case 0:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											powerDelayUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											powerDelayUp = new[] {a};
+										}
+
+										break;
+									case 1:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											powerDelayDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											powerDelayDown = new[] {a};
+										}
+
+										break;
+									case 2:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											brakeDelayUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											brakeDelayUp = new[] {a};
+										}
+
+										break;
+									case 3:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											brakeDelayDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											brakeDelayDown = new[] {a};
+										}
+										break;
+									case 4:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											Train.Handles.LocoBrake.DelayUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										break;
+									case 5:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
+										{
+											Train.Handles.LocoBrake.DelayDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -426,37 +446,56 @@ namespace OpenBve {
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
 							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
-									case 0: Train.Specs.SingleHandle = a == 1; break;
+									case 0: Train.Handles.SingleHandle = a == 1; break;
 									case 1:
 										if (a >= 0)
 										{
-											Train.Specs.MaximumPowerNotch = a;
+											powerNotches = a;
 										}
 										else
 										{
-											Train.Specs.MaximumPowerNotch = 8;
+											powerNotches = 8;
 											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 									break;
 									case 2:
 										if (a >= 0)
 										{
-											Train.Specs.MaximumBrakeNotch = a;
+											brakeNotches = a;
 										}
 										else
 										{
-											Train.Specs.MaximumBrakeNotch = 8;
+											brakeNotches = 8;
 											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
-									case 3: Train.Specs.PowerNotchReduceSteps = a; break;
+									case 3:
+										powerReduceSteps = a;
+										break;
 									case 4:
 										if (a > 0 || a < 3)
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "EbHandleBehaviour is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
 										}
-										Train.Specs.EbHandlesAction = (TrainManager.EbHandleBehaviour) a;
+										Train.Handles.EmergencyBrake.OtherHandlesBehaviour = (TrainManager.EbHandleBehaviour) a;
+										break;
+									case 5:
+										Train.Handles.HasLocoBrake = true;
+										if (a >= 0)
+										{
+											
+											locoBrakeNotches = a;
+										}
+										else
+										{
+											locoBrakeNotches = 8;
+											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfLocoBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										
+										break;
+									case 6:
+										Train.Handles.LocoBrake.BrakeType = (TrainManager.LocoBrakeType)a;
 										break;
 								}
 							} i++; n++;
@@ -561,7 +600,7 @@ namespace OpenBve {
 									case 3:
 										Train.Specs.HasConstSpeed = a == 1.0; break;
 									case 4:
-										Train.Specs.HasHoldBrake = a == 1.0; break;
+										Train.Handles.HasHoldBrake = a == 1.0; break;
 									case 5:
 										ReAdhesionDevice = (int)Math.Round(a); break;
 									case 7:
@@ -650,16 +689,23 @@ namespace OpenBve {
 				TrailerCarMass = 1.0;
 			}
 
-			if (Train.Specs.MaximumPowerNotch == 0)
+			if (powerNotches == 0)
 			{
 				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);
-				Train.Specs.MaximumPowerNotch = 8;
+				powerNotches = 8;
 			}
-			if (Train.Specs.MaximumBrakeNotch == 0)
+			if (brakeNotches == 0)
 			{
 				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
-				Train.Specs.MaximumBrakeNotch = 8;
+				brakeNotches = 8;
 			}
+			Train.Handles.Power = new TrainManager.PowerHandle(powerNotches, powerDelayUp, powerDelayDown);
+			if (powerReduceSteps != -1)
+			{
+				Train.Handles.Power.ReduceSteps = powerReduceSteps;
+			}
+			Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
+			Train.Handles.LocoBrake = new TrainManager.LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
@@ -701,13 +747,13 @@ namespace OpenBve {
 			}
 			// acceleration curves
 			double MaximumAcceleration = 0.0;
-			if (AccelerationCurves.Length != Train.Specs.MaximumPowerNotch && !FileName.ToLowerInvariant().EndsWith("compatibility\\pretrain\\train.dat"))
+			if (AccelerationCurves.Length != Train.Handles.Power.MaximumNotch && !FileName.ToLowerInvariant().EndsWith("compatibility\\pretrain\\train.dat"))
 			{
 				//NOTE: The compatibility train.dat is only used to load some properties, hence this warning does not apply
-				Interface.AddMessage(Interface.MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Specs.MaximumPowerNotch + " power notches in " + FileName);
+				Interface.AddMessage(Interface.MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Handles.Power.MaximumNotch + " power notches in " + FileName);
 			}
 			
-			for (int i = 0; i < Math.Min(AccelerationCurves.Length, Train.Specs.MaximumPowerNotch); i++) {
+			for (int i = 0; i < Math.Min(AccelerationCurves.Length, Train.Handles.Power.MaximumNotch); i++) {
 				bool errors = false;
 				if (AccelerationCurves[i].StageZeroAcceleration <= 0.0) {
 					AccelerationCurves[i].StageZeroAcceleration = 1.0;
@@ -805,8 +851,8 @@ namespace OpenBve {
 				Train.Cars[i].Specs.AirBrake.StraightAirPipeServiceRate = 300000.0;
 				Train.Cars[i].Specs.AirBrake.StraightAirPipeEmergencyRate = 400000.0;
 			}
-			if (Train.Specs.HasHoldBrake & Train.Specs.MaximumBrakeNotch > 1) {
-				Train.Specs.MaximumBrakeNotch--;
+			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
+				Train.Handles.Brake.MaximumNotch--;
 			}
 			// apply train attributes
 			Train.Handles.Reverser.Driver = 0;
@@ -821,8 +867,8 @@ namespace OpenBve {
 			Train.Handles.Brake.DelayedChanges = new TrainManager.HandleChange[] { };
 			Train.Handles.EmergencyBrake.ApplicationTime = double.MaxValue;
 			if (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-				Train.Specs.SingleHandle = false;
-				Train.Specs.HasHoldBrake = false;
+				Train.Handles.SingleHandle = false;
+				Train.Handles.HasHoldBrake = false;
 			}
 			// starting mode
 			if (Game.TrainStart == Game.TrainStartMode.ServiceBrakesAts) {
@@ -836,15 +882,15 @@ namespace OpenBve {
 				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				int notch = (int)Math.Round(0.7 * Train.Specs.MaximumBrakeNotch);
+				int notch = (int)Math.Round(0.7 * Train.Handles.Brake.MaximumNotch);
 				Train.Handles.Brake.Driver = notch;
 				Train.Handles.Brake.Safety = notch;
 				Train.Handles.Brake.Actual = notch;
 				Train.Handles.EmergencyBrake.Driver = false;
 				Train.Handles.EmergencyBrake.Safety = false;
 				Train.Handles.EmergencyBrake.Actual = false;
-				Train.Handles.Reverser.Driver = 1;
-				Train.Handles.Reverser.Actual = 1;
+				Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
+				Train.Handles.Reverser.Actual = TrainManager.ReverserPosition.Forwards;
 			} else if (Game.TrainStart == Game.TrainStartMode.EmergencyBrakesAts) {
 				for (int i = 0; i < Cars; i++) {
 					Train.Cars[i].Specs.AirBrake.AuxillaryReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
@@ -856,9 +902,9 @@ namespace OpenBve {
 				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.Brake.Driver = Train.Specs.MaximumBrakeNotch;
-				Train.Handles.Brake.Safety = Train.Specs.MaximumBrakeNotch;
-				Train.Handles.Brake.Actual = Train.Specs.MaximumBrakeNotch;
+				Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
+				Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
+				Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 				Train.Handles.EmergencyBrake.Driver = true;
 				Train.Handles.EmergencyBrake.Safety = true;
 				Train.Handles.EmergencyBrake.Actual = true;
@@ -873,9 +919,9 @@ namespace OpenBve {
 				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
 				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.Brake.Driver = Train.Specs.MaximumBrakeNotch;
-				Train.Handles.Brake.Safety = Train.Specs.MaximumBrakeNotch;
-				Train.Handles.Brake.Actual = Train.Specs.MaximumBrakeNotch;
+				Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
+				Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
+				Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
 				Train.Handles.EmergencyBrake.Driver = true;
 				Train.Handles.EmergencyBrake.Safety = true;
 				Train.Handles.EmergencyBrake.Actual = true;

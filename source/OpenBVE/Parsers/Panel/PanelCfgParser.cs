@@ -1094,18 +1094,18 @@ namespace OpenBve {
 												}
 											}
 											if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-												int maxpow = Train.Specs.MaximumPowerNotch;
+												int maxpow = Train.Handles.Power.MaximumNotch;
 												int em = maxpow + 3;
 												Train.Cars[Train.DriverCar].CarSections[0].Elements[k].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > " + maxpow.ToString(Culture) + " BrakeNotch + " + maxpow.ToString(Culture) + " powerNotch - ? ?");
 											} else {
-												if (Train.Specs.HasHoldBrake) {
-													int em = Train.Specs.MaximumPowerNotch + 2 + Train.Specs.MaximumBrakeNotch;
-													int maxpow = Train.Specs.MaximumPowerNotch;
+												if (Train.Handles.HasHoldBrake) {
+													int em = Train.Handles.Power.MaximumNotch + 2 + Train.Handles.Brake.MaximumNotch;
+													int maxpow = Train.Handles.Power.MaximumNotch;
 													int maxpowp1 = maxpow + 1;
 													Train.Cars[Train.DriverCar].CarSections[0].Elements[k].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("emergencyBrake " + em.ToString(Culture) + " holdBrake " + maxpowp1.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpowp1.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ? ?");
 												} else {
-													int em = Train.Specs.MaximumPowerNotch + 1 + Train.Specs.MaximumBrakeNotch;
-													int maxpow = Train.Specs.MaximumPowerNotch;
+													int em = Train.Handles.Power.MaximumNotch + 1 + Train.Handles.Brake.MaximumNotch;
+													int maxpow = Train.Handles.Power.MaximumNotch;
 													Train.Cars[Train.DriverCar].CarSections[0].Elements[k].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("emergencyBrake " + em.ToString(Culture) + " brakeNotch 0 > brakeNotch " + maxpow.ToString(Culture) + " + " + maxpow.ToString(Culture) + " powerNotch - ? ?");
 												}
 											}

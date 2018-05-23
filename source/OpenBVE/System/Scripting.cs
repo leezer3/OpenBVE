@@ -502,7 +502,7 @@ namespace OpenBve
             public static int reverserNotch(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                return Train.Handles.Reverser.Driver;
+                return (int)Train.Handles.Reverser.Driver;
             }
 
             /// <summary>Returns the driver's selected power notch for the selected train</summary>
@@ -520,7 +520,7 @@ namespace OpenBve
             public static int powerNotches(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                return Train.Specs.MaximumPowerNotch;
+                return Train.Handles.Power.MaximumNotch;
             }
 
             /// <summary>Returns the driver's selected brake notch for the selected train</summary>
@@ -538,7 +538,7 @@ namespace OpenBve
             public static int brakeNotches(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                return Train.Specs.MaximumBrakeNotch;
+                return Train.Handles.Brake.MaximumNotch;
             }
 
             /// <summary>Returns the driver's selected brake notch (Including EB) for the selected train</summary>
@@ -555,11 +555,11 @@ namespace OpenBve
                     }
                     return (int) Train.Handles.AirBrake.Handle.Driver;
                 }
-                if (Train.Specs.HasHoldBrake)
+                if (Train.Handles.HasHoldBrake)
                 {
                     if (Train.Handles.EmergencyBrake.Driver)
                     {
-                        return (int) Train.Specs.MaximumBrakeNotch + 2;
+                        return (int) Train.Handles.Brake.MaximumNotch + 2;
                     }
                     if (Train.Handles.Brake.Driver > 0)
                     {
@@ -569,7 +569,7 @@ namespace OpenBve
                 }
                 if (Train.Handles.EmergencyBrake.Driver)
                 {
-                    return (int) Train.Specs.MaximumBrakeNotch + 1;
+                    return (int) Train.Handles.Brake.MaximumNotch + 1;
                 }
                 return (int) Train.Handles.Brake.Driver;
             }
@@ -584,11 +584,11 @@ namespace OpenBve
                 {
                     return 3;
                 }
-                if (Train.Specs.HasHoldBrake)
+                if (Train.Handles.HasHoldBrake)
                 {
                     return 2;
                 }
-                return Train.Specs.MaximumBrakeNotch + 1;
+                return Train.Handles.Brake.MaximumNotch + 1;
             }
 
             /// <summary>Returns whether EB is active for the selected train</summary>
@@ -624,7 +624,7 @@ namespace OpenBve
             public static bool hasHoldBrake(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                return Train.Specs.HasHoldBrake;
+                return Train.Handles.HasHoldBrake;
             }
 
             /// <summary>Whether the constant speed devicee is currently active for the selected train</summary>

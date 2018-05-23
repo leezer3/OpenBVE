@@ -57,6 +57,7 @@ namespace OpenBve {
                                             case "power": Interface.QuickReferences.HandlePower = b; break;
                                             case "powernull": Interface.QuickReferences.HandlePowerNull = b; break;
                                             case "brake": Interface.QuickReferences.HandleBrake = b; break;
+	                                        case "locobrake": Interface.QuickReferences.HandleLocoBrake = b; break;
                                             case "brakenull": Interface.QuickReferences.HandleBrakeNull = b; break;
                                             case "release": Interface.QuickReferences.HandleRelease = b; break;
                                             case "lap": Interface.QuickReferences.HandleLap = b; break;
@@ -167,6 +168,7 @@ namespace OpenBve {
                                             case "power": QuickReference.HandlePower = b; break;
                                             case "powernull": QuickReference.HandlePowerNull = b; break;
                                             case "brake": QuickReference.HandleBrake = b; break;
+	                                        case "locobrake": QuickReference.HandleLocoBrake = b; break;
                                             case "brakenull": QuickReference.HandleBrakeNull = b; break;
                                             case "release": QuickReference.HandleRelease = b; break;
                                             case "lap": QuickReference.HandleLap = b; break;
