@@ -29,7 +29,7 @@ namespace OpenBve {
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
 			LeftDoorButton, RightDoorButton,
-			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
+			ReverserNotch, PowerNotch, PowerNotches, LocoBrakeNotch, LocoBrakeNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon, PrimaryKlaxon, SecondaryKlaxon, MusicKlaxon,
 			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
@@ -798,6 +798,20 @@ namespace OpenBve {
 					case Instructions.PowerNotches:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Handles.Power.MaximumNotch;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.LocoBrakeNotch:
+						if (Train != null) {
+							Function.Stack[s] = (double)Train.Handles.LocoBrake.Driver;
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
+					case Instructions.LocoBrakeNotches:
+						if (Train != null) {
+							Function.Stack[s] = (double)Train.Handles.LocoBrake.MaximumNotch;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -2583,6 +2597,10 @@ namespace OpenBve {
 						case "brakenotch":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeNotch;
+							n++; s++; if (s >= m) m = s; break;
+						case "locobrakenotch":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.LocoBrakeNotch;
 							n++; s++; if (s >= m) m = s; break;
 						case "brakenotches":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);

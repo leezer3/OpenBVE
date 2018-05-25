@@ -128,7 +128,7 @@ namespace OpenBve {
 			Train.Handles.AirBrake.Handle = new TrainManager.AirBrakeHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
-			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1;
+			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new TrainManager.MotorSoundTableEntry[16];
@@ -495,7 +495,7 @@ namespace OpenBve {
 										
 										break;
 									case 6:
-										Train.Handles.LocoBrake.BrakeType = (TrainManager.LocoBrakeType)a;
+										locoBrakeType = a;
 										break;
 								}
 							} i++; n++;
@@ -706,6 +706,7 @@ namespace OpenBve {
 			}
 			Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
 			Train.Handles.LocoBrake = new TrainManager.LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
+			Train.Handles.LocoBrake.BrakeType = (TrainManager.LocoBrakeType) locoBrakeType;
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
