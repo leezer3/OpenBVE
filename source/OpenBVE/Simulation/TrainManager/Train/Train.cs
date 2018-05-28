@@ -1,5 +1,8 @@
-﻿using OpenBveApi.Colors;
+﻿using System.Globalization;
+using System.Reflection;
+using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -45,6 +48,7 @@ namespace OpenBve
 			internal bool Derailed;
 			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
 			internal string[] PowerNotchDescriptions;
+			internal string[] LocoBrakeNotchDescriptions;
 			internal string[] BrakeNotchDescriptions;
 			internal string[] ReverserDescriptions;
 			/// <summary>The max width used in px for the power notch HUD string</summary>
@@ -108,6 +112,205 @@ namespace OpenBve
 					Game.UpdateSection(Game.Sections.Length - 1);
 				}
 			}
+
+			/// <summary>Applies a power and / or brake notch to this train</summary>
+			/// <param name="PowerValue">The power notch value</param>
+			/// <param name="PowerRelative">Whether this is relative to the current notch</param>
+			/// <param name="BrakeValue">The brake notch value</param>
+			/// <param name="BrakeRelative">Whether this is relative to the current notch</param>
+			internal void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative)
+			{
+				// determine notch
+				int p = PowerRelative ? PowerValue + Handles.Power.Driver : PowerValue;
+				if (p < 0)
+				{
+					p = 0;
+				}
+				else if (p > Handles.Power.MaximumNotch)
+				{
+					p = Handles.Power.MaximumNotch;
+				}
+
+				int b = BrakeRelative ? BrakeValue + Handles.Brake.Driver : BrakeValue;
+				if (b < 0)
+				{
+					b = 0;
+				}
+				else if (b > Handles.Brake.MaximumNotch)
+				{
+					b = Handles.Brake.MaximumNotch;
+				}
+
+				// power sound
+				if (p < Handles.Power.Driver)
+				{
+					if (p > 0)
+					{
+						// down (not min)
+						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerDown.Buffer;
+						if (buffer != null)
+						{
+							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerDown.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+					else
+					{
+						// min
+						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerMin.Buffer;
+						if (buffer != null)
+						{
+							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerMin.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+				}
+				else if (p > Handles.Power.Driver)
+				{
+					if (p < Handles.Power.MaximumNotch)
+					{
+						// up (not max)
+						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerUp.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.MasterControllerUp.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+					else
+					{
+						// max
+						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerMax.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.MasterControllerMax.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+				}
+
+				// brake sound
+				if (b < Handles.Brake.Driver)
+				{
+					// brake release
+					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+					}
+
+					if (b > 0)
+					{
+						// brake release (not min)
+						buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+					else
+					{
+						// brake min
+						buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+				}
+				else if (b > Handles.Brake.Driver)
+				{
+					// brake
+					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
+						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+					}
+				}
+
+				// apply notch
+				if (Handles.SingleHandle)
+				{
+					if (b != 0) p = 0;
+				}
+
+				Handles.Power.Driver = p;
+				Handles.Brake.Driver = b;
+				Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
+				// plugin
+				if (Plugin != null)
+				{
+					Plugin.UpdatePower();
+					Plugin.UpdateBrake();
+				}
+			}
+
+			/// <summary>Applies a loco brake notch to this train</summary>
+			/// <param name="NotchValue">The loco brake notch value</param>
+			/// <param name="Relative">Whether this is relative to the current notch</param>
+			internal void ApplyLocoBrakeNotch(int NotchValue, bool Relative)
+			{
+				int b = Relative ? NotchValue + Handles.LocoBrake.Driver : NotchValue;
+				if (b < 0)
+				{
+					b = 0;
+				}
+				else if (b > Handles.LocoBrake.MaximumNotch)
+				{
+					b = Handles.LocoBrake.MaximumNotch;
+				}
+
+				// brake sound 
+				if (b < Handles.LocoBrake.Driver)
+				{
+					// brake release 
+					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
+						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+					}
+
+					if (b > 0)
+					{
+						// brake release (not min) 
+						buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+					else
+					{
+						// brake min 
+						buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+						if (buffer != null)
+						{
+							OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
+							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						}
+					}
+				}
+				else if (b > Handles.LocoBrake.Driver)
+				{
+					// brake 
+					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+					if (buffer != null)
+					{
+						OpenBveApi.Math.Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
+						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+					}
+				}
+
+				Handles.LocoBrake.Driver = b;
+				Handles.LocoBrake.Actual = b;
+			}
+
 
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
@@ -186,7 +389,7 @@ namespace OpenBve
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
-										OpenBveApi.Math.Vector3 pos = Cars[j].Sounds.Loop.Position;
+										Vector3 pos = Cars[j].Sounds.Loop.Position;
 										Cars[j].Sounds.Loop.Source = Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, j, true);
 									}
 								}
@@ -202,7 +405,7 @@ namespace OpenBve
 					{
 						if (Specs.CurrentAverageSpeed > CurrentRouteLimit)
 						{
-							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, double.PositiveInfinity, null);
+							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 						if (CurrentSectionLimit == 0.0)
 						{
@@ -210,7 +413,7 @@ namespace OpenBve
 						}
 						else if (Specs.CurrentAverageSpeed > CurrentSectionLimit)
 						{
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 					}
 					if (AI != null)
@@ -252,127 +455,10 @@ namespace OpenBve
 				UpdateTrainStation(this, TimeElapsed);
 				UpdateTrainDoors(this, TimeElapsed);
 				// delayed handles
-				{
-					// power notch
-					if (Handles.Power.DelayedChanges.Length == 0)
-					{
-						if (Handles.Power.Safety < Handles.Power.Actual)
-						{
-							if (Specs.PowerNotchReduceSteps <= 1)
-							{
-								Handles.Power.AddChange(Handles.Power.Actual - 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
-							}
-							else if (Handles.Power.Safety + Specs.PowerNotchReduceSteps <= Handles.Power.Actual | Handles.Power.Safety == 0)
-							{
-								Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
-							}
-						}
-						else if (Handles.Power.Safety > Handles.Power.Actual)
-						{
-							Handles.Power.AddChange(Handles.Power.Actual + 1, GetDelay(Handles.Power.Actual, Specs.DelayPowerUp));
-						}
-					}
-					else
-					{
-						int m = Handles.Power.DelayedChanges.Length - 1;
-						if (Handles.Power.Safety < Handles.Power.DelayedChanges[m].Value)
-						{
-							Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerDown));
-						}
-						else if (Handles.Power.Safety > Handles.Power.DelayedChanges[m].Value)
-						{
-							Handles.Power.AddChange(Handles.Power.Safety, GetDelay(Handles.Power.Actual, Specs.DelayPowerUp));
-						}
-					}
-					if (Handles.Power.DelayedChanges.Length >= 1)
-					{
-						if (Handles.Power.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
-						{
-							Handles.Power.Actual = Handles.Power.DelayedChanges[0].Value;
-							Handles.Power.RemoveChanges(1);
-						}
-					}
-				}
-				{
-					// brake notch
-					int sec = Handles.EmergencyBrake.Safety ? Specs.MaximumBrakeNotch : Handles.Brake.Safety;
-					if (Handles.Brake.DelayedChanges.Length == 0)
-					{
-						if (sec < Handles.Brake.Actual)
-						{
-							Handles.Brake.AddChange(Handles.Brake.Actual - 1, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeDown));
-						}
-						else if (sec > Handles.Brake.Actual)
-						{
-							Handles.Brake.AddChange(Handles.Brake.Actual + 1, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeUp));
-						}
-					}
-					else
-					{
-						int m = Handles.Brake.DelayedChanges.Length - 1;
-						if (sec < Handles.Brake.DelayedChanges[m].Value)
-						{
-							Handles.Brake.AddChange(sec, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeDown));
-						}
-						else if (sec > Handles.Brake.DelayedChanges[m].Value)
-						{
-							Handles.Brake.AddChange(sec, GetDelay(Handles.Brake.Actual, Specs.DelayBrakeUp));
-						}
-					}
-					if (Handles.Brake.DelayedChanges.Length >= 1)
-					{
-						if (Handles.Brake.DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
-						{
-							Handles.Brake.Actual = Handles.Brake.DelayedChanges[0].Value;
-							Handles.Brake.RemoveChanges(1);
-						}
-					}
-				}
-				{
-					// air brake handle
-					if (Handles.AirBrake.Handle.DelayedValue != AirBrakeHandleState.Invalid)
-					{
-						if (Handles.AirBrake.Handle.DelayedTime <= Game.SecondsSinceMidnight)
-						{
-							Handles.AirBrake.Handle.Actual = Handles.AirBrake.Handle.DelayedValue;
-							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Invalid;
-						}
-					}
-					else
-					{
-						if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Release & Handles.AirBrake.Handle.Actual != AirBrakeHandleState.Release)
-						{
-							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Release;
-							Handles.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
-						}
-						else if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Service & Handles.AirBrake.Handle.Actual != AirBrakeHandleState.Service)
-						{
-							Handles.AirBrake.Handle.DelayedValue = AirBrakeHandleState.Service;
-							Handles.AirBrake.Handle.DelayedTime = Game.SecondsSinceMidnight;
-						}
-						else if (Handles.AirBrake.Handle.Safety == AirBrakeHandleState.Lap)
-						{
-							Handles.AirBrake.Handle.Actual = AirBrakeHandleState.Lap;
-						}
-					}
-				}
-				{
-					// emergency brake
-					if (Handles.EmergencyBrake.Safety & !Handles.EmergencyBrake.Actual)
-					{
-						double t = Game.SecondsSinceMidnight;
-						if (t < Handles.EmergencyBrake.ApplicationTime) Handles.EmergencyBrake.ApplicationTime = t;
-						if (Handles.EmergencyBrake.ApplicationTime <= Game.SecondsSinceMidnight)
-						{
-							Handles.EmergencyBrake.Actual = true;
-							Handles.EmergencyBrake.ApplicationTime = double.MaxValue;
-						}
-					}
-					else if (!Handles.EmergencyBrake.Safety)
-					{
-						Handles.EmergencyBrake.Actual = false;
-					}
-				}
+				Handles.Power.Update();
+				Handles.Brake.Update();
+				Handles.AirBrake.Handle.Update();
+				Handles.EmergencyBrake.Update();
 				Handles.HoldBrake.Actual = Handles.HoldBrake.Driver;
 				// update speeds
 				UpdateSpeeds(TimeElapsed);
@@ -434,7 +520,7 @@ namespace OpenBve
 						{
 							string s = Interface.GetInterfaceString("message_signal_proceed");
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
-							s = s.Replace("[speed]", a.ToString("0", System.Globalization.CultureInfo.InvariantCulture));
+							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
 							Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
 						}
@@ -811,7 +897,7 @@ namespace OpenBve
 								p = i;
 							}
 						}
-						double SecondDistance = double.MaxValue;
+						double SecondDistance = Double.MaxValue;
 						for (int i = p - 1; i <= p + 1; i++)
 						{
 							if (i >= 0 & i < Cars.Length & i != p)

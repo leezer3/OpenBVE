@@ -135,6 +135,7 @@ namespace OpenBve
 			internal string HandlePower;
 			internal string HandlePowerNull;
 			internal string HandleBrake;
+			internal string HandleLocoBrake;
 			internal string HandleBrakeNull;
 			internal string HandleRelease;
 			internal string HandleLap;

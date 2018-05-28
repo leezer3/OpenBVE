@@ -53,11 +53,15 @@ namespace TrainEditor {
 			internal double[] DelayPowerDown;
 			internal double[] DelayBrakeUp;
 			internal double[] DelayBrakeDown;
+			internal double[] DelayLocoBrakeUp;
+			internal double[] DelayLocoBrakeDown;
 			internal Delay() {
 				this.DelayPowerUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 				this.DelayPowerDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 				this.DelayBrakeUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 				this.DelayBrakeDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayLocoBrakeUp = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
+				this.DelayLocoBrakeDown = new double[] { 0.0, 0.0, 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0  };
 			}
 		}
 		
@@ -134,17 +138,28 @@ namespace TrainEditor {
 				ReverserNeutral = 2,
 				PowerReverserNeutral = 3
 			}
+
+			internal enum LocoBrakeType
+			{
+				Combined = 0,
+				Independant = 1, 
+				Blocking = 2
+			}
 			internal HandleTypes HandleType;
 			internal int PowerNotches;
 			internal int BrakeNotches;
 			internal int PowerNotchReduceSteps;
 			internal EbHandleBehaviour HandleBehaviour;
+			internal LocoBrakeType LocoBrake;
+			internal int LocoBrakeNotches;
 			internal Handle() {
 				this.HandleType = HandleTypes.Separate;
 				this.PowerNotches = 8;
 				this.BrakeNotches = 8;
 				this.PowerNotchReduceSteps = 0;
+				this.LocoBrakeNotches = 0;
 				this.HandleBehaviour = EbHandleBehaviour.NoAction;
+				this.LocoBrake = LocoBrakeType.Combined;
 			}
 		}
 		
@@ -302,7 +317,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 1534;
+		const int currentVersion = 1535;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -473,6 +488,12 @@ namespace TrainEditor {
 									case 3:
 										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
 										break;
+									case 4:
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
+									case 5:
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										break;
 								}
 							}
 							i++; n++;
@@ -560,6 +581,12 @@ namespace TrainEditor {
 										break;
 									case 4:
 										if (a <= 0 && a > 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										break;
+									case 5:
+										if (b > 0) t.Handle.LocoBrakeNotches = b;
+										break;
+									case 6:
+										if (a <= 0 && a > 3) t.Handle.LocoBrake = (Handle.LocoBrakeType) b;
 										break;
 								}
 							} i++; n++;
@@ -796,6 +823,8 @@ namespace TrainEditor {
 			b.AppendLine(string.Join(",", t.Delay.DelayPowerDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayPowerDown");
 			b.AppendLine(string.Join(",", t.Delay.DelayBrakeUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeUp");
 			b.AppendLine(string.Join(",", t.Delay.DelayBrakeDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayBrakeDown");
+			b.AppendLine(string.Join(",", t.Delay.DelayLocoBrakeUp.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayLocoBrakeUp (1.5.3.4+)");
+			b.AppendLine(string.Join(",", t.Delay.DelayLocoBrakeDown.Select(d => d.ToString(Culture)).ToList()).PadRight(n, ' ') + "; DelayLocoBrakeDown (1.5.3.4+)");
 			b.AppendLine("#MOVE");
 			b.AppendLine(t.Move.JerkPowerUp.ToString(Culture).PadRight(n, ' ') + "; JerkPowerUp");
 			b.AppendLine(t.Move.JerkPowerDown.ToString(Culture).PadRight(n, ' ') + "; JerkPowerDown");
@@ -819,6 +848,8 @@ namespace TrainEditor {
 			b.AppendLine(t.Handle.BrakeNotches.ToString(Culture).PadRight(n, ' ') + "; BrakeNotches");
 			b.AppendLine(t.Handle.PowerNotchReduceSteps.ToString(Culture).PadRight(n, ' ') + "; PowerNotchReduceSteps");
 			b.AppendLine(((int)t.Handle.HandleBehaviour).ToString(Culture).PadRight(n, ' ') + "; EbHandleBehaviour (1.5.3.3+)");
+			b.AppendLine(t.Handle.LocoBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; LocoBrakeNotches (1.5.3.4+)");
+			b.AppendLine(((int)t.Handle.LocoBrake).ToString(Culture).PadRight(n, ' ') + "; LocoBrakeType (1.5.3.4+)");
 			b.AppendLine("#CAB");
 			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
 			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");

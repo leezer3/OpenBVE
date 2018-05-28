@@ -83,7 +83,7 @@ namespace OpenBve
 					Element.TransitionState = 0.0;
 					break;
 				case "power":
-					if (TrainManager.PlayerTrain.Specs.SingleHandle)
+					if (TrainManager.PlayerTrain.Handles.SingleHandle)
 					{
 						return;
 					}
@@ -115,7 +115,7 @@ namespace OpenBve
 					Element.TransitionState = 0.0;
 					break;
 				case "brake":
-					if (TrainManager.PlayerTrain.Specs.SingleHandle)
+					if (TrainManager.PlayerTrain.Handles.SingleHandle)
 					{
 						return;
 					}
@@ -212,9 +212,9 @@ namespace OpenBve
 						else
 						{
 							sc = MessageColor.Orange;
-							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && ((TrainManager.PlayerTrain.Specs.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 2 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length) || (!TrainManager.PlayerTrain.Specs.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 1 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)))
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && ((TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 2 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length) || (!TrainManager.PlayerTrain.Handles.HasHoldBrake && TrainManager.PlayerTrain.Handles.Brake.Driver + 1 < TrainManager.PlayerTrain.BrakeNotchDescriptions.Length)))
 							{
-								t = TrainManager.PlayerTrain.Specs.HasHoldBrake ? TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 2] : TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 1];
+								t = TrainManager.PlayerTrain.Handles.HasHoldBrake ? TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 2] : TrainManager.PlayerTrain.BrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.Brake.Driver + 1];
 							}
 							else
 							{
@@ -225,8 +225,40 @@ namespace OpenBve
 					}
 					Element.TransitionState = 0.0;
 					break;
+				case "locobrake":
+					if (!TrainManager.PlayerTrain.Handles.HasLocoBrake)
+					{
+						return;
+					}
+					if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == 0)
+					{
+						sc = MessageColor.Gray;
+						if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length > 1)
+						{
+							t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[1];
+						}
+						else
+						{
+							t = Interface.QuickReferences.HandleBrakeNull;
+						}
+					}
+					else
+					{
+						sc = MessageColor.Orange;
+						if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.Driver < TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length)
+						{
+							t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.LocoBrake.Driver];
+						}
+						else
+						{
+							t = Interface.QuickReferences.HandleLocoBrake + TrainManager.PlayerTrain.Handles.LocoBrake.Driver.ToString(Culture);
+						}
+							
+					}
+					Element.TransitionState = 0.0;
+					break;
 				case "single":
-					if (!TrainManager.PlayerTrain.Specs.SingleHandle)
+					if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 					{
 						return;
 					}

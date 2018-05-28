@@ -258,16 +258,25 @@
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
-    <Compile Include="Simulation\TrainManager\Train\EbHandleBehaviour.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.States.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Eb.Behaviour.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Abstract.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Brake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.EmergencyBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.HoldBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Power.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
     <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
@@ -439,6 +448,7 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

@@ -96,11 +96,11 @@ namespace OpenBve
 				}
 				if (train.Handles.EmergencyBrake.Driver)
 				{
-					TrainManager.ApplyNotch(train, 0, false, 0, true);
+					train.ApplyNotch(0, false, 0, true);
 				}
 				else
 				{
-					TrainManager.ApplyNotch(train, 0, false, train.Specs.MaximumBrakeNotch, false);
+					train.ApplyNotch(0, false, train.Handles.Brake.MaximumNotch, false);
 					TrainManager.ApplyAirBrakeHandle(train, TrainManager.AirBrakeHandleState.Service);
 				}
 				if (Game.Sections.Length > 0)

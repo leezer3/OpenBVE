@@ -1062,6 +1062,9 @@ namespace OpenBve {
 				case "bc":
 					Maximum /= 0.001;
 					return "if[BrakeCylinder < " + Maximum + ", if[BrakeCylinder >  " + Minimum + ", (BrakeCylinder * .001) " + " * " + range + ", 0]," + ftc + "]";
+				case "locobrakecylinder":
+					Maximum /= 0.001;
+					return "if[BrakeCylinder["+ Train.DriverCar + "] < " + Maximum + ", if[BrakeCylinder["+ Train.DriverCar + "] >  " + Minimum + ", (BrakeCylinder["+ Train.DriverCar + "] * .001) " + " * " + range + ", 0]," + ftc + "]";
 				case "mr":
 					Maximum /= 0.001;
 					return "if[MainReservoir < " + Maximum + ", if[MainReservoir >  " + Minimum + ", (MainReservoir * .001) " + " * " + range + ", 0]," + ftc + "]";
@@ -1071,6 +1074,9 @@ namespace OpenBve {
 				case "bp":
 					Maximum /= 0.001;
 					return "if[BrakePipe < " + Maximum + ", if[BrakePipe >  " + Minimum + ", (BrakePipe * .001) " + " * " + range + ", 0]," + ftc + "]";
+				case "locobrakepipe":
+					Maximum /= 0.001;
+					return "if[BrakePipe["+ Train.DriverCar + "] < " + Maximum + ", if[BrakePipe["+ Train.DriverCar + "] >  " + Minimum + ", (BrakePipe["+ Train.DriverCar + "] * .001) " + " * " + range + ", 0]," + ftc + "]";
 				case "er":
 					Maximum /= 0.001;
 					return "if[EqualizingReservoir < " + Maximum + ", if[EqualizingReservoir >  " + Minimum + ", (EqualizingReservoir * .001) " + " * " + range + ", 0]," + ftc + "]";
@@ -1084,6 +1090,8 @@ namespace OpenBve {
 					return "if[rightdoorbuttom < " + Maximum + ", if[rightdoorbutton >  " + Minimum + ", rightdoorbutton " + " * " + range + ", 0]," + ftc + "]";
 				case "power":
 					return "if[PowerNotch < " + Maximum + ", if[PowerNotch >  " + Minimum + ", PowerNotch " + " * " + range + ", 0]," + ftc + "]";
+				case "locobrake":
+					return "if[LocoBrakeNotch < " + Maximum + ", if[LocoBrakeNotch >  " + Minimum + ", LocoBrakeNotch " + " * " + range + ", 0]," + ftc + "]";
 				case "brake":
 					return "if[BrakeNotch < " + Maximum + ", if[BrakeNotch >  " + Minimum + ", BrakeNotch " + " * " + range + ", 0]," + ftc + "]";
 				case "rev":
@@ -1198,6 +1206,9 @@ namespace OpenBve {
 				case "ms":
 					Code = "speedometer abs";
 					break;
+				case "locobrakecylinder":
+					Code = Train.DriverCar + " brakecylinderindex 0.001 *";
+					break;
 				case "bc":
 					Code = "brakecylinder 0.001 *";
 					break;
@@ -1206,6 +1217,9 @@ namespace OpenBve {
 					break;
 				case "sap":
 					Code = "straightairpipe 0.001 *";
+					break;
+				case "locobrakepipe":
+					Code = Train.DriverCar + "brakepipeindex 0.001 *";
 					break;
 				case "bp":
 					Code = "brakepipe 0.001 *";
@@ -1221,6 +1235,9 @@ namespace OpenBve {
 					break;
 				case "power":
 					Code = "brakeNotchLinear 0 powerNotch ?";
+					break;
+				case "locobrake":
+					Code = "locoBrakeNotch";
 					break;
 				case "brake":
 					Code = "brakeNotchLinear";
