@@ -33,6 +33,8 @@ namespace OpenBve
 
 		//		internal static AppDomain RouteInfoFormDomain;
 
+		private static double kioskModeTimer;
+
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Sounds.Initialize();

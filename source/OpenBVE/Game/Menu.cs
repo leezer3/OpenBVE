@@ -168,9 +168,17 @@ namespace OpenBve
 						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 						if (jump > 0)
 							Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
-						Items[1 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
-						Items[2 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-						Items[3 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+						if (!Interface.CurrentOptions.KioskMode)
+						{
+							//Don't allow quitting or customisation of the controls in kiosk mode
+							Items[1 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
+							Items[2 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
+							Items[3 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+						}
+						else
+						{
+							Array.Resize(ref Items, Items.Length -3);
+						}
 						break;
 
 					case MenuType.JumpToStation:    // list of stations to jump to

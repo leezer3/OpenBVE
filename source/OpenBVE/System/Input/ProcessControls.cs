@@ -11,12 +11,106 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed in ms since the last call to this function</param>
 		internal static void ProcessControls(double TimeElapsed)
 		{
+			if (Interface.CurrentOptions.KioskMode)
+			{
+				kioskModeTimer += TimeElapsed;
+				if (kioskModeTimer > Interface.CurrentOptions.KioskModeTimer && TrainManager.PlayerTrain.AI == null)
+				{
+					/*
+					 * We are in kiosk mode, and the timer has expired (NOTE: The AI null check saves us time)
+					 *
+					 * Therefore:
+					 * ==> Switch back to the interior view of the driver's car
+					 * ==> Enable AI
+					 */
+					World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+					MainLoop.SaveCameraSettings();
+					bool lookahead = false;
+					if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+					{
+						Game.AddMessage(Interface.GetInterfaceString("notification_interior_lookahead"),
+							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+							MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
+						lookahead = true;
+					}
+					else
+					{
+						Game.AddMessage(Interface.GetInterfaceString("notification_interior"),
+							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+							MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
+					}
+
+					World.CameraMode = World.CameraViewMode.Interior;
+					MainLoop.RestoreCameraSettings();
+					bool returnToCab = false;
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						if (j == World.CameraCar)
+						{
+							if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+							{
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+								World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+							}
+							else
+							{
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+								returnToCab = true;
+							}
+						}
+						else
+						{
+							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+						}
+					}
+
+					if (returnToCab)
+					{
+						//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
+						World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+						World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+					}
+
+					//Hide bogies
+					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+					{
+						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
+						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
+					}
+
+					World.CameraAlignmentDirection = new World.CameraAlignment();
+					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					World.UpdateAbsoluteCamera(TimeElapsed);
+					World.UpdateViewingDistances();
+					if (World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+					{
+						if (!World.PerformCameraRestrictionTest())
+						{
+							World.InitializeCameraRestriction();
+						}
+					}
+
+					if (lookahead)
+					{
+						World.CameraMode = World.CameraViewMode.InteriorLookAhead;
+					}
+					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
+					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
+					{
+						Game.AddMessage(Interface.GetInterfaceString("notification_aiunable"), MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+					}
+
+				}
+			}
 			//If we are currently blocking key repeat events from firing, return
 			if (BlockKeyRepeat) return;
 			switch (Game.CurrentInterface)
 			{
 				case Game.InterfaceType.Pause:
 					// pause
+					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
 						if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.Digital)
@@ -53,6 +147,7 @@ namespace OpenBve
 					break;
 */
 				case Game.InterfaceType.Menu:			// MENU
+					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
 						if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.Digital

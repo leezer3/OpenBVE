@@ -92,6 +92,10 @@
 			this.buttonOptionsPrevious = new System.Windows.Forms.Button();
 			this.buttonOptionsNext = new System.Windows.Forms.Button();
 			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
+			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
+			this.labelKioskTimeout = new System.Windows.Forms.Label();
+			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
 			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
 			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
@@ -445,6 +449,8 @@
 			this.panelRouteEncoding.SuspendLayout();
 			this.panelOptions.SuspendLayout();
 			this.panelOptionsPage2.SuspendLayout();
+			this.groupBoxKioskMode.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
 			this.groupBoxPackageOptions.SuspendLayout();
@@ -1390,12 +1396,52 @@
 			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptionsPage2.Controls.Add(this.groupBoxKioskMode);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
 			this.panelOptionsPage2.Location = new System.Drawing.Point(8, 72);
 			this.panelOptionsPage2.Name = "panelOptionsPage2";
 			this.panelOptionsPage2.Size = new System.Drawing.Size(643, 528);
 			this.panelOptionsPage2.TabIndex = 20;
+			// 
+			// groupBoxKioskMode
+			// 
+			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
+			this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
+			this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
+			this.groupBoxKioskMode.Location = new System.Drawing.Point(334, 164);
+			this.groupBoxKioskMode.Name = "groupBoxKioskMode";
+			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 88);
+			this.groupBoxKioskMode.TabIndex = 22;
+			this.groupBoxKioskMode.TabStop = false;
+			this.groupBoxKioskMode.Text = "Kiosk Mode";
+			// 
+			// labelKioskTimeout
+			// 
+			this.labelKioskTimeout.AutoSize = true;
+			this.labelKioskTimeout.Location = new System.Drawing.Point(8, 43);
+			this.labelKioskTimeout.Name = "labelKioskTimeout";
+			this.labelKioskTimeout.Size = new System.Drawing.Size(91, 13);
+			this.labelKioskTimeout.TabIndex = 2;
+			this.labelKioskTimeout.Text = "Control timeout (s)";
+			// 
+			// numericUpDownKioskTimeout
+			// 
+			this.numericUpDownKioskTimeout.DecimalPlaces = 2;
+			this.numericUpDownKioskTimeout.Location = new System.Drawing.Point(166, 41);
+			this.numericUpDownKioskTimeout.Name = "numericUpDownKioskTimeout";
+			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 20);
+			this.numericUpDownKioskTimeout.TabIndex = 1;
+			// 
+			// checkBoxEnableKiosk
+			// 
+			this.checkBoxEnableKiosk.AutoSize = true;
+			this.checkBoxEnableKiosk.Location = new System.Drawing.Point(9, 20);
+			this.checkBoxEnableKiosk.Name = "checkBoxEnableKiosk";
+			this.checkBoxEnableKiosk.Size = new System.Drawing.Size(118, 17);
+			this.checkBoxEnableKiosk.TabIndex = 0;
+			this.checkBoxEnableKiosk.Text = "Enable Kiosk Mode";
+			this.checkBoxEnableKiosk.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxAdvancedOptions
 			// 
@@ -5329,6 +5375,9 @@
 			this.panelOptions.ResumeLayout(false);
 			this.panelOptions.PerformLayout();
 			this.panelOptionsPage2.ResumeLayout(false);
+			this.groupBoxKioskMode.ResumeLayout(false);
+			this.groupBoxKioskMode.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
 			this.groupBoxAdvancedOptions.ResumeLayout(false);
 			this.groupBoxAdvancedOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
@@ -5825,5 +5874,9 @@
 		private System.Windows.Forms.Button buttonRailDriverCalibration;
 		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
 		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
+		private System.Windows.Forms.GroupBox groupBoxKioskMode;
+		private System.Windows.Forms.NumericUpDown numericUpDownKioskTimeout;
+		private System.Windows.Forms.CheckBox checkBoxEnableKiosk;
+		private System.Windows.Forms.Label labelKioskTimeout;
 	}
 }
