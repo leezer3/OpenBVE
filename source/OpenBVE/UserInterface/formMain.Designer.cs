@@ -1429,6 +1429,11 @@
 			// 
 			this.numericUpDownKioskTimeout.DecimalPlaces = 2;
 			this.numericUpDownKioskTimeout.Location = new System.Drawing.Point(166, 41);
+			this.numericUpDownKioskTimeout.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
 			this.numericUpDownKioskTimeout.Name = "numericUpDownKioskTimeout";
 			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 20);
 			this.numericUpDownKioskTimeout.TabIndex = 1;

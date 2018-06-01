@@ -341,9 +341,12 @@ namespace OpenBve
 											double d;
 											if (!double.TryParse(Value, NumberStyles.Number, Culture, out d))
 											{
-												d = 300000;
+												d = 300;
 											}
-
+											if (d > 1000 || d < 0)
+											{
+												d = 300;
+											}
 											Interface.CurrentOptions.KioskModeTimer = d;
 											break;
 									} break;
