@@ -401,7 +401,20 @@ namespace OpenBve {
 												ElectropneumaticType = TrainManager.EletropneumaticBrakeType.None;
 											}
 										} break;
-										case 2: BrakeControlSpeed = a * 0.277777777777778; break;
+										case 2:
+											if (a < 0)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												break;
+											}
+
+											if (a != 0 && BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake || ElectropneumaticType == TrainManager.EletropneumaticBrakeType.DelayFillingControl)
+											{
+												Interface.AddMessage(Interface.MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												break;
+											}
+											BrakeControlSpeed = a * 0.277777777777778; //Convert to m/s
+											break;
 								}
 							} i++; n++;
 						} i--; break;
