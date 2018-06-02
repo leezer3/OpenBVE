@@ -2330,22 +2330,22 @@ namespace OpenBve {
 															Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not contain a valid path in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															break;
 														}
-														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(FileName))
+														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
 														{
 															bool notFound = false;
 															while (true)
 															{
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+																f = Path.CombineFile(ObjectPath, f + ".x");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
+																f = Path.CombineFile(ObjectPath, f + ".csv");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
+																f = Path.CombineFile(ObjectPath, f + ".b3d");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
