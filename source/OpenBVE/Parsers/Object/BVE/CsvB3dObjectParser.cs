@@ -8,6 +8,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using System.Text.RegularExpressions;
 
 namespace OpenBve {
 	internal static class CsvB3dObjectParser {
@@ -994,9 +995,26 @@ namespace OpenBve {
 										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
 										tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
-										if (!System.IO.File.Exists(tday)) {
-											Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture " + tday + " could not be found in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											tday = null;
+										if (!System.IO.File.Exists(tday))
+										{
+											bool hackFound = false;
+											if (Interface.CurrentOptions.EnableBveTsHacks)
+											{
+												//Original BVE2 signal graphics
+												Match m = Regex.Match(tday, @"(signal\d{1,2}\.bmp)", RegexOptions.IgnoreCase);
+												if (m.Success)
+												{
+													string s = "Signals\\Static\\" + m.Groups[0].Value.Replace(".bmp", ".png");
+													tday = Path.CombineFile(CsvRwRouteParser.CompatibilityFolder, s);
+													hackFound = true;
+												}
+											}
+											if (!hackFound)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, true, "DaytimeTexture " + tday + " could not be found in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												tday = null;
+											}
+											
 										}
 									}
 								}

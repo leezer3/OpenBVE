@@ -11,6 +11,7 @@ namespace OpenBve {
 		internal static string ObjectPath;
 		internal static string SoundPath;
 		internal static string TrainPath;
+		internal static string CompatibilityFolder;
 
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly) {
@@ -27,7 +28,7 @@ namespace OpenBve {
 			Game.UnitOfSpeed = "km/h";
 			Game.SpeedConversionFactor = 0.0;
 			Game.RouteInformation.RouteBriefing = null;
-			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
+			CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
 				CompatibilityObjects.LoadCompatibilityObjects(OpenBveApi.Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
