@@ -55,8 +55,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="SharpCompress.Unsigned">
-      <HintPath>..\..\Dependencies\SharpCompress.Unsigned.dll</HintPath>
+    <Reference Include="SharpCompress">
+      <HintPath>..\..\Dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />

@@ -354,7 +354,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) \
-	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
+	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
@@ -381,7 +381,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_API_OUT) /target:library $(OPEN_BVE_API_SRC) $(ARGS) $(OPEN_BVE_API_DOC) \
-	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll \
+	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
 
@@ -623,7 +623,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############

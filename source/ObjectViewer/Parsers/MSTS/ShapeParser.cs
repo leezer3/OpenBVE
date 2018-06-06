@@ -5,8 +5,10 @@ using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
-using SharpCompress.Compressor.Deflate;
 using OpenBve.Formats.MsTs;
+using SharpCompress.Compressors;
+using SharpCompress.Compressors.Deflate;
+
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
 // hopefully this will be used un a later build
@@ -350,7 +352,7 @@ namespace OpenBve
 			// SIMISA@@  means uncompressed
 			if (headerString.StartsWith("SIMISA@F"))
 			{
-				fb = new ZlibStream(fb, SharpCompress.Compressor.CompressionMode.Decompress);
+				fb = new ZlibStream(fb, CompressionMode.Decompress);
 			}
 			else if (headerString.StartsWith("\r\nSIMISA"))
 			{
