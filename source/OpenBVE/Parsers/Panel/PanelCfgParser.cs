@@ -395,6 +395,11 @@ namespace OpenBve {
 											double cy = 0.25 * (y0 + y1 + y2 + y3);
 											double cz = 0.25 * (z0 + z1 + z2 + z3);
 											VertexTemplate[] vertices = new VertexTemplate[11];
+											for (int v = 0; v < 11; v++)
+											{
+												//The verticies are transformed by the LED function, so must be created here at zero
+												vertices[v] = new Vertex();
+											}
 											int[][] faces = new int[][] {
 												new int[] { 0, 1, 2 },
 												new int[] { 0, 3, 4 },
@@ -658,6 +663,11 @@ namespace OpenBve {
 										double cy = 0.25 * (y0 + y1 + y2 + y3);
 										double cz = 0.25 * (z0 + z1 + z2 + z3);
 										VertexTemplate[] vertices = new VertexTemplate[11];
+										for (int v = 0; v < 11; v++)
+										{
+											//The verticies are transformed by the LED function, so must be created here at zero
+											vertices[v] = new Vertex();
+										}
 										int[][] faces = new int[][] {
 											new int[] { 0, 1, 2 },
 											new int[] { 0, 3, 4 },
