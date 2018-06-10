@@ -73,6 +73,15 @@ namespace OpenBve
 			// initialize
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
+			if (Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius < 300)
+			{
+				/*
+				 * The track end event is placed 600m after the end of the final block
+				 * If our curve radius in the final block is < 300, then our train will
+				 * re-appear erroneously if the player is watching the final block
+				 */
+				Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius = 0.0;
+			}
 			int BlocksUsed = Data.Blocks.Length;
 			Data.CreateMissingBlocks(ref BlocksUsed, LastBlock, PreviewOnly);
 			Array.Resize<Block>(ref Data.Blocks, BlocksUsed);
