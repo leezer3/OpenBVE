@@ -37,7 +37,7 @@ namespace OpenBve
 			rf = Folder;
 			try
 			{
-				if (!OpenTK.Configuration.RunningOnMacOS && !String.IsNullOrEmpty(Folder))
+				if (!OpenTK.Configuration.RunningOnMacOS && !String.IsNullOrEmpty(Folder) && Folder.Length > 2)
 				{
 					//BUG: Mono's filesystem watcher can exceed the OS-X handles limit on some systems
 					//Triggered by NWM which has 600+ files in the route folder
