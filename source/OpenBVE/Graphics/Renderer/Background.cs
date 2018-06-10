@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -300,9 +301,16 @@ namespace OpenBve
 				for (int j = 0; j < Object.ObjectBackground.Mesh.Faces[i].Vertices.Length; j++)
 				{
 					GL.Color4(inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.R * 1.0f, inv255 * Object.ObjectBackground.Mesh.Materials[m].Color.G * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.B * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.A);
-					World.Vertex v = Object.ObjectBackground.Mesh.Vertices[Object.ObjectBackground.Mesh.Faces[i].Vertices[j].Index];
+					VertexTemplate v = Object.ObjectBackground.Mesh.Vertices[Object.ObjectBackground.Mesh.Faces[i].Vertices[j].Index];
+					if (v is ColoredVertex)
+					{
+						ColoredVertex vv = v as ColoredVertex;
+						GL.Color3(vv.Color.R, vv.Color.G, vv.Color.B);
+						
+					}
 					GL.TexCoord2(v.TextureCoordinates.X, v.TextureCoordinates.Y);
 					GL.Vertex3(v.Coordinates.X, v.Coordinates.Y, v.Coordinates.Z);
+					
 				}
 				GL.End();
 			}

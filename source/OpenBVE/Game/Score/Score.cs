@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -190,7 +191,7 @@ namespace OpenBve
 					{
 						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
 						{
-							if (j == 0 || Stations[j - 1].StationType != StationType.ChangeEnds)
+							if (j == 0 || Stations[j - 1].Type != StationType.ChangeEnds)
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;
@@ -278,7 +279,7 @@ namespace OpenBve
 								// evaluation
 								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 								{
-									if (Stations[j].StationType == StationType.Terminal)
+									if (Stations[j].Type == StationType.Terminal)
 									{
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;

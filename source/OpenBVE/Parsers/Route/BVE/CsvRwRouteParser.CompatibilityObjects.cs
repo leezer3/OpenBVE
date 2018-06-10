@@ -27,6 +27,53 @@ namespace OpenBve
 				//The object exists, and does not require a compatibility object
 				return true;
 			}
+
+			if (Interface.CurrentOptions.EnableBveTsHacks)
+			{
+				string fn;
+				//The Midland Suburban Line has a malformed object zip, so let's try again....
+				if (fileName.StartsWith("Midland Suburban Line", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = "Midland Suburban Line Objects" + fileName.Substring(21);
+					try
+					{
+						//Catch completely malformed path references
+						n = OpenBveApi.Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
+				//The Midland Suburban Line expects BRSema4Sigs to be placed in it's object folder, but we've probably got them elsewhere
+				if (fileName.StartsWith(@"Midland Suburban Line\BrSema4Sigs", StringComparison.InvariantCultureIgnoreCase))
+				{
+					fn = "BrSema4Sigs" + fileName.Substring(33);
+					try
+					{
+						//Catch completely malformed path references
+						n = OpenBveApi.Path.CombineFile(objectPath, fn);
+					}
+					catch
+					{
+						return false;
+					}
+					if (System.IO.File.Exists(n))
+					{
+						fileName = n;
+						//The object exists, and does not require a compatibility object
+						return true;
+					}
+				}
+
+				
+			}
 			//We haven't found the object on-disk, so check the compatibility objects to see if a replacement is available
 			for (int i = 0; i < CompatibilityObjects.AvailableReplacements.Length; i++)
 			{

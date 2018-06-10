@@ -56,6 +56,7 @@ namespace TrainEditor {
 			comboBoxHandleBehaviour.Items.Add("Return Power to neutral");
 			comboBoxHandleBehaviour.Items.Add("Return Reverser to neutral");
 			comboBoxHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxLocoBrakeType.SelectedIndex = 0;
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
 				comboboxSoundIndex.Items.Add(i.ToString(culture));
@@ -101,11 +102,7 @@ namespace TrainEditor {
 			textboxCoefficientOfStaticFriction.Text = Train.Performance.CoefficientOfStaticFriction.ToString(Culture);
 			textboxCoefficientOfRollingResistance.Text = Train.Performance.CoefficientOfRollingResistance.ToString(Culture);
 			textboxAerodynamicDragCoefficient.Text = Train.Performance.AerodynamicDragCoefficient.ToString(Culture);
-			// delay
-			textboxDelayPowerUp.Text = Train.Delay.DelayPowerUp.ToString(Culture);
-			textboxDelayPowerDown.Text = Train.Delay.DelayPowerDown.ToString(Culture);
-			textboxDelayBrakeUp.Text = Train.Delay.DelayBrakeUp.ToString(Culture);
-			textboxDelayBrakeDown.Text = Train.Delay.DelayBrakeDown.ToString(Culture);
+
 			// move
 			textboxJerkPowerUp.Text = Train.Move.JerkPowerUp.ToString(Culture);
 			textboxJerkPowerDown.Text = Train.Move.JerkPowerDown.ToString(Culture);
@@ -125,8 +122,8 @@ namespace TrainEditor {
 			textboxBrakePipeNormalPressure.Text = Train.Pressure.BrakePipeNormalPressure.ToString(Culture);
 			// handle
 			comboboxHandleType.SelectedIndex = (int)Train.Handle.HandleType;
-			textboxPowerNotches.Text = Train.Handle.PowerNotches.ToString(Culture);
-			textboxBrakeNotches.Text = Train.Handle.BrakeNotches.ToString(Culture);
+			numericUpDownPowerNotches.Value = Train.Handle.PowerNotches;
+			numericUpDownBrakeNotches.Value = Train.Handle.BrakeNotches;
 			textboxPowerNotchReduceSteps.Text = Train.Handle.PowerNotchReduceSteps.ToString(Culture);
 			// cab
 			textboxX.Text = Train.Cab.X.ToString(Culture);
@@ -166,12 +163,7 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxCoefficientOfStaticFriction, "CoefficientOfStaticFriction", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Performance.CoefficientOfStaticFriction)) return false;
 			if (!SaveControlContent(textboxCoefficientOfRollingResistance, "CoefficientOfRollingResistance", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Performance.CoefficientOfRollingResistance)) return false;
 			if (!SaveControlContent(textboxAerodynamicDragCoefficient, "AerodynamicDragCoefficient", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Performance.AerodynamicDragCoefficient)) return false;
-			// delay
-			if (!SaveControlContent(textboxDelayPowerUp, "DelayPowerUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Delay.DelayPowerUp)) return false;
-			if (!SaveControlContent(textboxDelayPowerDown, "DelayPowerDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Delay.DelayPowerDown)) return false;
-			if (!SaveControlContent(textboxDelayBrakeUp, "DelayBrakeUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Delay.DelayBrakeUp)) return false;
-			if (!SaveControlContent(textboxDelayBrakeDown, "DelayBrakeDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Delay.DelayBrakeDown)) return false;
-			// delay
+			// Jerk
 			if (!SaveControlContent(textboxJerkPowerUp, "JerkPowerUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.JerkPowerUp)) return false;
 			if (!SaveControlContent(textboxJerkPowerDown, "JerkPowerDown", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.JerkPowerDown)) return false;
 			if (!SaveControlContent(textboxJerkBrakeUp, "JerkBrakeUp", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Move.JerkBrakeUp)) return false;
@@ -190,13 +182,12 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxBrakePipeNormalPressure, "BrakePipeNormalPressure", tabpagePropertiesOne, NumberRange.Positive, out Train.Pressure.BrakePipeNormalPressure)) return false;
 			// handle
 			Train.Handle.HandleType = (TrainDat.Handle.HandleTypes)comboboxHandleType.SelectedIndex;
-			if (!SaveControlContent(textboxPowerNotches, "PowerNotches", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotches)) return false;
-			if (!SaveControlContent(textboxBrakeNotches, "BrakeNotches", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.BrakeNotches)) return false;
+			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
+			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
 				MessageBox.Show("BrakeNotches must be at least 1 if HoldBrake is set.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
-				textboxBrakeNotches.SelectAll();
-				textboxBrakeNotches.Focus();
+				numericUpDownBrakeNotches.Focus();
 				return false;
 			}
 			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxHandleBehaviour.SelectedIndex;
@@ -1384,5 +1375,145 @@ namespace TrainEditor {
 			return 3.6 * a;
 		}
 
+		private void buttonSetDelayPowerUp_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayPowerUp, "DelayPowerUp");
+		}
+
+		private void buttonSetDelayPowerDown_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayPowerDown, "DelayPowerDown");
+		}
+
+		private void buttonSetDelayBrakeUp_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayBrakeUp, "DelayBrakeUp");
+		}
+
+		private void buttonSetDelayBrakeDown_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayBrakeDown, "DelayBrakeDown");
+		}
+
+		private void buttonLocoBrakeDelayUp_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, "DelayLocoBrakeUp");
+		}
+
+		private void buttonLocoBrakeDelayDown_Click(object sender, EventArgs e)
+		{
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, "DelayLocoBrakeDown");
+		}
+
+		private void setDelay(ref double[] delayValues, string delayType)
+    {
+      using (Form formDelay = new Form())
+      {
+        formDelay.ShowIcon = false;
+        formDelay.FormBorderStyle = FormBorderStyle.FixedSingle;
+        formDelay.MinimizeBox = false;
+        formDelay.MaximizeBox = false;
+        formDelay.StartPosition = FormStartPosition.CenterParent;
+        formDelay.Text = delayType;
+        int currentPosition = 10;
+	    for (int index = 0; index < delayValues.Length; ++index)
+	    {
+			TextBox t = new TextBox
+		    {
+		     Location = new Point(20, currentPosition),
+		     Text = delayValues[index].ToString()
+		    };
+		    formDelay.Controls.Add(t);
+		    Label l = new Label
+		    {
+		     Location = new Point(140, currentPosition + 3),
+		     Text = "Notch " + (object) index
+		    };
+		    formDelay.Controls.Add(l);
+		    currentPosition += 25;
+	    }
+		Button buttonOK = new Button
+	    {
+		    Text = "Save",
+		    DialogResult = DialogResult.OK,
+		    Location = new Point(30, currentPosition)
+	    };
+        formDelay.Controls.Add(buttonOK);
+	    Button buttonCancel = new Button
+	    {
+		    Text = "Cancel",
+		    DialogResult = DialogResult.Cancel,
+		    Location = new Point(110, currentPosition)
+	    };
+		formDelay.Controls.Add(buttonCancel);
+        int height = currentPosition + 75;
+        formDelay.Size = new Size(210, height);
+        if (formDelay.ShowDialog() != DialogResult.OK)
+          return;
+        int arrayIndex = 0;
+        for (int i = 0; i < formDelay.Controls.Count; i++)
+        {
+          if (formDelay.Controls[i] is TextBox)
+          {
+            if (this.SaveControlContent((TextBox)formDelay.Controls[i], delayType + (object) i, this.tabpagePropertiesOne, formEditor.NumberRange.NonNegative, out delayValues[arrayIndex]))
+            {
+	            arrayIndex++;
+            }
+            else
+            {
+	            break;
+            }
+          }
+        }
+      }
+    }
+
+		private void numericUpDownPowerNotches_ValueChanged(object sender, EventArgs e)
+		{
+			int length = Train.Delay.DelayPowerUp.Length;
+			if (length == numericUpDownPowerNotches.Value)
+			{
+				return;
+			}
+			Array.Resize(ref Train.Delay.DelayPowerUp, (int)numericUpDownPowerNotches.Value);
+			Array.Resize(ref Train.Delay.DelayPowerDown, (int)numericUpDownPowerNotches.Value);
+			if (numericUpDownPowerNotches.Value > length)
+			{
+				for (int i = length; i < numericUpDownPowerNotches.Value; i++)
+				{
+					Train.Delay.DelayPowerUp[i] = 0.0;
+					Train.Delay.DelayPowerDown[i] = 0.0;
+				}
+			}
+		}
+
+		private void numericUpDownBrakeNotches_ValueChanged(object sender, EventArgs e)
+		{
+			int length = Train.Delay.DelayBrakeUp.Length;
+			if (length == numericUpDownBrakeNotches.Value)
+			{
+				return;
+			}
+			Array.Resize(ref Train.Delay.DelayBrakeUp, (int)numericUpDownBrakeNotches.Value);
+			Array.Resize(ref Train.Delay.DelayBrakeDown, (int)numericUpDownBrakeNotches.Value);
+			if (numericUpDownBrakeNotches.Value > length)
+			{
+				for (int i = length; i < numericUpDownBrakeNotches.Value; i++)
+				{
+					Train.Delay.DelayBrakeUp[i] = 0.0;
+					Train.Delay.DelayBrakeDown[i] = 0.0;
+				}
+			}
+		}
+
+		private void comboBoxEBHandleBehaviour_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour)comboBoxEBHandleBehaviour.SelectedIndex;
+		}
+
+		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+		}
 	}
 }

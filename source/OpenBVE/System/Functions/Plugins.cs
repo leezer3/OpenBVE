@@ -22,8 +22,6 @@ namespace OpenBve {
 			internal OpenBveApi.Textures.TextureInterface Texture;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
 			internal OpenBveApi.Sounds.SoundInterface Sound;
-			/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Objects.ObjectInterface Object;
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="file">The plugin file.</param>
@@ -32,7 +30,6 @@ namespace OpenBve {
 				this.Title = Path.GetFileName(file);
 				this.Texture = null;
 				this.Sound = null;
-				this.Object = null;
 			}
 			// --- functions ---
 			/// <summary>Loads all interfaces this plugin supports.</summary>
@@ -43,9 +40,6 @@ namespace OpenBve {
 				if (this.Sound != null) {
 					this.Sound.Load(Program.CurrentHost);
 				}
-				if (this.Object != null) {
-					this.Object.Load(Program.CurrentHost);
-				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>
 			internal void Unload() {
@@ -54,9 +48,6 @@ namespace OpenBve {
 				}
 				if (this.Sound != null) {
 					this.Sound.Unload();
-				}
-				if (this.Object != null) {
-					this.Object.Unload();
 				}
 			}
 		}
@@ -111,14 +102,11 @@ namespace OpenBve {
 							if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface))) {
 								plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
 							}
-							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
-								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
-							}
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
 						}
-						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
+						if (plugin.Texture != null | plugin.Sound != null) {
 							plugin.Load();
 							list.Add(plugin);
 						} else if (!iruntime) {

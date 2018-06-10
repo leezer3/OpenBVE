@@ -362,7 +362,7 @@ namespace OpenBve {
 								double sx = TrainManager.Trains[k].Cars[i].Width;
 								double sy = TrainManager.Trains[k].Cars[i].Height;
 								double sz = TrainManager.Trains[k].Cars[i].Length;
-								CsvB3dObjectParser.ApplyScale(so, sx, sy, sz);
+								so.ApplyScale(sx, sy, sz);
 								CarObjects[i] = so;
 							}
 						}

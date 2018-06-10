@@ -44,7 +44,7 @@ namespace OpenBve
 		{
 			Arcade = 0,
 			Normal = 1,
-			Expert = 2
+			Expert = 2,
 		}
 		internal enum InterpolationMode
 		{
@@ -179,6 +179,10 @@ namespace OpenBve
 			 */
 			/// <summary>Whether textures are to be resized to the power of two rule</summary>
 			internal bool NoTextureResize;
+			/// <summary>Whether we are currently in kiosk mode</summary>
+			internal bool KioskMode;
+			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
+			internal double KioskModeTimer; //5 minutes by default set in ctor
 			/*
 			 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
 			 */
@@ -248,6 +252,8 @@ namespace OpenBve
 				this.RailDriverMPH = true;
 				this.EnableBveTsHacks = true;
 				this.OldTransparencyMode = true;
+				this.KioskMode = false;
+				this.KioskModeTimer = 300;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -327,6 +333,21 @@ namespace OpenBve
 													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.PreferCustom;
 													break;
 											}
+											break;
+										case "kioskmode":
+											Interface.CurrentOptions.KioskMode = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											break;
+										case "kioskmodetimer":
+											double d;
+											if (!double.TryParse(Value, NumberStyles.Number, Culture, out d))
+											{
+												d = 300;
+											}
+											if (d > 1000 || d < 0)
+											{
+												d = 300;
+											}
+											Interface.CurrentOptions.KioskModeTimer = d;
 											break;
 									} break;
 								case "display":
@@ -772,6 +793,8 @@ namespace OpenBve
 				}
 				Builder.AppendLine("timetablemode = " + t);
 			}
+			Builder.AppendLine("kioskMode = " + (CurrentOptions.KioskMode ? "true" : "false"));
+			Builder.AppendLine("kioskModeTimer = " + CurrentOptions.KioskModeTimer);
 			Builder.AppendLine();
 			Builder.AppendLine("[display]");
 			Builder.AppendLine("preferNativeBackend = " + (CurrentOptions.PreferNativeBackend ? "true" : "false"));

@@ -97,9 +97,9 @@
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress.Unsigned, Version=0.11.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpCompress.Unsigned.dll</HintPath>
+      <HintPath>..\..\Dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -183,27 +183,28 @@
     <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
-	<Compile Include="Graphics\Renderer\Overlays.ATS.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+    <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.Debug.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.Functions.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.GameMessages.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.HUD.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
-		<DependentUpon>Overlays.cs</DependentUpon>
+      <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
+    <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
@@ -257,16 +258,25 @@
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
-    <Compile Include="Simulation\TrainManager\Train\EbHandleBehaviour.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Handles.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.States.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Eb.Behaviour.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Abstract.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Brake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.cs" />
     <Compile Include="Simulation\TrainManager\Passengers.cs" />
     <Compile Include="Simulation\TrainManager\Station.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.EmergencyBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.HoldBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Power.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
     <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
@@ -438,6 +448,7 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -465,6 +476,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
+      <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
+      <Name>OpenBve.Formats.Msts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

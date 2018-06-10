@@ -35,11 +35,27 @@ namespace OpenBve
 				return;
 			}
 			var m = message as GameMessage;
+			if (m != null && m.Depencency == MessageDependency.PassedRedSignal)
+			{
+				for (int i = TextualMessages.Count -1; i >= 0; i--)
+				{
+					var c = TextualMessages[i] as GameMessage;
+					if (c != null && c.Depencency == MessageDependency.SectionLimit || c.Depencency == MessageDependency.RouteLimit)
+					{
+						TextualMessages.RemoveAt(i);
+					}
+				}
+			}
 			for (int i = 0; i < TextualMessages.Count; i++)
 			{
 				var c = TextualMessages[i] as GameMessage;
 				if (m != null && c != null)
 				{
+					if ((m.Depencency == MessageDependency.SectionLimit || m.Depencency == MessageDependency.RouteLimit) && c.Depencency == MessageDependency.PassedRedSignal)
+					{
+						//Don't add a new section limit message whilst the passed red signal message is active
+						return;
+					}
 					if (m.Depencency == c.Depencency)
 					{
 						switch (m.Depencency)
@@ -48,6 +64,8 @@ namespace OpenBve
 							case MessageDependency.Plugin:
 								//Continue down the logic tree, multiple messages allowed
 								break;
+							case MessageDependency.SectionLimit:
+							case MessageDependency.RouteLimit:
 							case MessageDependency.PointOfInterest:
 							case MessageDependency.StationArrival:
 							case MessageDependency.CameraView:

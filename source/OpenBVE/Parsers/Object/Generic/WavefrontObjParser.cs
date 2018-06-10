@@ -3,6 +3,7 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -38,12 +39,12 @@ namespace OpenBve
 		}
 		private class MeshBuilder
 		{
-			internal List<World.Vertex> Vertices;
+			internal List<VertexTemplate> Vertices;
 			internal List<World.MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
-				this.Vertices = new List<World.Vertex>();
+				this.Vertices = new List<VertexTemplate>();
 				this.Faces = new List<World.MeshFace>();
 				this.Materials = new Material[] { new Material() };
 			}
@@ -64,7 +65,7 @@ namespace OpenBve
 				{
 					Faces = new World.MeshFace[] { },
 					Materials = new World.MeshMaterial[] { },
-					Vertices = new World.Vertex[] { }
+					Vertices = new VertexTemplate[] { }
 				}
 			};
 
@@ -164,11 +165,11 @@ namespace OpenBve
 						//Creates a new face
 
 						//Create the temp list to hook out the vertices 
-						List<World.Vertex> vertices = new List<World.Vertex>();
+						List<VertexTemplate> vertices = new List<VertexTemplate>();
 						List<Vector3> normals = new List<Vector3>();
 						for (int f = 1; f < Arguments.Count; f++)
 						{
-							World.Vertex newVertex = new World.Vertex();
+							Vertex newVertex = new Vertex();
 							string[] faceArguments = Arguments[f].Split(new char[] {'/'} , StringSplitOptions.None);
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx) || idx > tempVertices.Count)
@@ -220,7 +221,7 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int v = Builder.Vertices.FindIndex(a => a == vertices[k]);
+							int v = Builder.Vertices.FindIndex(a => a.Equals(vertices[k]));
 							if (v != -1)
 							{
 								Vertices[k].Index = (ushort)v;
@@ -442,10 +443,10 @@ namespace OpenBve
 					 */
 					mm -= 1;
 				}
-				Array.Resize<World.Vertex>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
+				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
-					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
+					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
 				}
 				for (int i = 0; i < Builder.Faces.Count; i++)
 				{

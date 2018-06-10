@@ -23,6 +23,7 @@
 </font></td></tr></table>
 ↷ <a href="#overview">1. Overview</a><br />
 ↷ <a href="#identifier">2. The file identifier</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;↷ <a href="train_train_dat_version.html">2a. Version history</a><br />
 ↷ <a href="#syntax">3. Syntax</a><br />
 ↷ <a href="#acceleration">4. The Acceleration section</a><br />
 ↷ <a href="#performance">5. The Performance section</a><br />
@@ -298,8 +299,22 @@ A non-negative floating point number representing the time in <b>seconds</b> (s)
 <tr><td><font color="#808080">
 
 </font></td></tr></table>
-A non-negative floating point number representing the time in <b>seconds</b> (s) before decreasing the brake notch takes effect. Applies only to trains that have notched brakes. The default value is 0.<br /><br /><table>
+A non-negative floating point number representing the time in <b>seconds</b> (s) before decreasing the brake notch takes effect. Applies only to trains that have notched brakes. The default value is 0.<br />
+<br /><table><tr style="height: 4px;"><td /></tr></table>
+<table style="border:1px dashed;margin-left:0pt;margin-right:20pt;">
+<tr><td bgcolor="#FFE080" style="border:2px; border-style:ridge;"><font color="#404040">
+<b>ⓘ</b> Setting a delay for each notch
+</font></td></tr><tr><td bgcolor="#FFFFFF">
+From <b>V1.5.3.4</b> onwards, a comma separated list may be used for any of the above parameters, supplying the delay values from Notch 0 upwards. If this list is <em>shorter</em> than the total number of notches, the last value will be used for all subsequent notches.
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+
+<table>
+
+
+
 <tr>
+
 <td width="16" valign="top" /><td>
 <font size="-1"><em>Example of a Delay section:</em></font>
 </td></tr><tr>
@@ -623,7 +638,32 @@ If the value is set to <em>PowerNotches</em>, the driver needs to reset the powe
 </font></td></tr></table>
 This entry defines the behaviour of the Power and Reverser handles when the Emergency Brake is applied.<br>
 <b><em>Note:</b></em> Requires openBVE 1.5.3.3 or higher. [Will be silently ignored in older versions]<br /><br />
-<br /><table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><em>LocoBrakeNotches</em></font></td></tr>
+</table><br>
+</font></td></tr></table>
+A non-negative integer indicating how many locomotive brake notches are available.<br /><br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><em>LocoBrakeType</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+<table style="border:0px none;margin-left:40pt;margin-right:10pt;">
+<tr><td>▸ Options for <em>LocoBrakeType</em>:</td></tr></table>
+<table style="border:0px none;margin-left:50pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b>0</b>: Combined- The brakes on the locomotive operate at the higher of the train brake and locomotive brake settings.<br />
+<b>1</b>: Independant- The locomotive brakes are independant of the train brakes.<br />
+<b>2</b>: Blocking- The locomotive brakes block the release of the train brakes.<br />
+</font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<table>
 <tr>
 <td width="16" valign="top" /><td>
 <font size="-1"><em>Example of a Handle section:</em></font>

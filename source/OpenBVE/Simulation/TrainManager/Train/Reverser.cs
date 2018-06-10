@@ -8,13 +8,13 @@
 		/// <param name="Relative">Whether this is an absolute value or relative to the previous</param>
 		internal static void ApplyReverser(Train Train, int Value, bool Relative)
 		{
-			int a = Train.Handles.Reverser.Driver;
+			int a = (int)Train.Handles.Reverser.Driver;
 			int r = Relative ? a + Value : Value;
 			if (r < -1) r = -1;
 			if (r > 1) r = 1;
 			if (a != r)
 			{
-				Train.Handles.Reverser.Driver = r;
+				Train.Handles.Reverser.Driver = (ReverserPosition)r;
 				if (Train.Plugin != null)
 				{
 					Train.Plugin.UpdateReverser();

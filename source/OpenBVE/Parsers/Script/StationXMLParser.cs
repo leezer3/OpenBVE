@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -73,14 +74,14 @@ namespace OpenBve
 										{
 											case "c":
 											case "changeends":
-												station.StationType = Game.StationType.ChangeEnds;
+												station.Type = StationType.ChangeEnds;
 												break;
 											case "t":
 											case "terminal":
-												station.StationType = Game.StationType.Terminal;
+												station.Type = StationType.Terminal;
 												break;
 											default:
-												station.StationType = Game.StationType.Normal;
+												station.Type = StationType.Normal;
 												break;
 										}
 										break;
@@ -331,8 +332,8 @@ namespace OpenBve
 										}
 										break;
 									case "requeststop":
-										station.StationType = Game.StationType.RequestStop;
-										station.StopMode = Game.StationStopMode.AllRequestStop;
+										station.Type = StationType.RequestStop;
+										station.StopMode = StationStopMode.AllRequestStop;
 										foreach (XmlNode cc in c.ChildNodes)
 										{
 											switch (cc.Name.ToLowerInvariant())
@@ -353,7 +354,7 @@ namespace OpenBve
 													}
 													break;
 												case "playeronly":
-													station.StopMode = Game.StationStopMode.PlayerRequestStop;
+													station.StopMode = StationStopMode.PlayerRequestStop;
 													break;
 												case "distance":
 													if (!string.IsNullOrEmpty(cc.InnerText))

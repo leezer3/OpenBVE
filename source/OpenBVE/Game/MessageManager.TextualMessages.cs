@@ -55,6 +55,7 @@ namespace OpenBve
 						s = s.Replace("[unit]", Game.UnitOfSpeed);
 						MessageToDisplay = s;
 					} break;
+					case MessageDependency.PassedRedSignal:
 					case MessageDependency.SectionLimit:
 					{
 						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);

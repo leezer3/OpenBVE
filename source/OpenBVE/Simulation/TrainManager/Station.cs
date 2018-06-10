@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -171,7 +172,7 @@ namespace OpenBve
 									}
 									double d = Math.Abs(Train.StationDistanceToStopPoint);
 									string c = d.ToString("0.0", Culture);
-									if (Game.Stations[i].StationType == Game.StationType.Terminal)
+									if (Game.Stations[i].Type == StationType.Terminal)
 									{
 										s += Interface.GetInterfaceString("message_delimiter") + Interface.GetInterfaceString("message_station_terminal");
 									}
@@ -179,7 +180,7 @@ namespace OpenBve
 									s = s.Replace("[time]", b);
 									s = s.Replace("[difference]", c);
 									Game.AddMessage(s, MessageManager.MessageDependency.StationArrival, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
-									if (Game.Stations[i].StationType == Game.StationType.Normal)
+									if (Game.Stations[i].Type == StationType.Normal)
 									{
 										s = Interface.GetInterfaceString("message_station_deadline");
 										Game.AddMessage(s, MessageManager.MessageDependency.StationDeparture, Interface.GameMode.Normal, MessageColor.White, double.PositiveInfinity, null);
@@ -244,7 +245,7 @@ namespace OpenBve
 				{
 					//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
 					//e.g. Change ends
-					if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].StationType == Game.StationType.Normal)
+					if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].Type == StationType.Normal)
 					{
 						//Check the interlock state for the doors
 						switch (Train.Specs.DoorInterlockState)
@@ -318,10 +319,10 @@ namespace OpenBve
 					if (left | right)
 					{
 						// departure message
-						if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].StationType != Game.StationType.Terminal || Train != PlayerTrain))
+						if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].Type != StationType.Terminal || Train != PlayerTrain))
 						{
 							Train.StationState = TrainStopState.Completed;
-							if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
+							if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
 							{
 								if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
 								{
@@ -332,7 +333,7 @@ namespace OpenBve
 									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 								}
 							}
-							else if (Game.Stations[i].StationType == Game.StationType.ChangeEnds)
+							else if (Game.Stations[i].Type == StationType.ChangeEnds)
 							{
 								//Game.AddMessage("CHANGE ENDS", MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
 								JumpTrain(Train, i + 1);
@@ -359,7 +360,7 @@ namespace OpenBve
 					else
 					{
 						Train.StationState = TrainStopState.Completed;
-						if (Train == PlayerTrain & Game.Stations[i].StationType == Game.StationType.Normal)
+						if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
 						{
 							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 						}

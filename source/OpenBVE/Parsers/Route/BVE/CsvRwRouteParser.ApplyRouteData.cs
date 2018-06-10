@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -72,6 +73,15 @@ namespace OpenBve
 			// initialize
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
+			if (Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius < 300)
+			{
+				/*
+				 * The track end event is placed 600m after the end of the final block
+				 * If our curve radius in the final block is < 300, then our train will
+				 * re-appear erroneously if the player is watching the final block
+				 */
+				Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius = 0.0;
+			}
 			int BlocksUsed = Data.Blocks.Length;
 			Data.CreateMissingBlocks(ref BlocksUsed, LastBlock, PreviewOnly);
 			Array.Resize<Block>(ref Data.Blocks, BlocksUsed);
@@ -1600,31 +1610,31 @@ namespace OpenBve
 			Array.Resize<TrackManager.TrackElement>(ref TrackManager.CurrentTrack.Elements, CurrentTrackLength);
 			for (int i = 0; i < Game.Stations.Length; i++)
 			{
-				if (Game.Stations[i].Stops.Length == 0 & Game.Stations[i].StopMode != Game.StationStopMode.AllPass)
+				if (Game.Stations[i].Stops.Length == 0 & Game.Stations[i].StopMode != StationStopMode.AllPass)
 				{
 					Interface.AddMessage(Interface.MessageType.Warning, false, "Station " + Game.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Game.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
-					Game.Stations[i].StopMode = Game.StationStopMode.AllPass;
+					Game.Stations[i].StopMode = StationStopMode.AllPass;
 				}
-				if (Game.Stations[i].StationType == Game.StationType.ChangeEnds)
+				if (Game.Stations[i].Type == StationType.ChangeEnds)
 				{
 					if (i < Game.Stations.Length - 1)
 					{
-						if (Game.Stations[i + 1].StopMode != Game.StationStopMode.AllStop)
+						if (Game.Stations[i + 1].StopMode != StationStopMode.AllStop)
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, false, "Station " + Game.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
-							Game.Stations[i + 1].StopMode = Game.StationStopMode.AllStop;
+							Game.Stations[i + 1].StopMode = StationStopMode.AllStop;
 						}
 					}
 					else
 					{
 						Interface.AddMessage(Interface.MessageType.Warning, false, "Station " + Game.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
-						Game.Stations[i].StationType = Game.StationType.Terminal;
+						Game.Stations[i].Type = StationType.Terminal;
 					}
 				}
 			}
 			if (Game.Stations.Length != 0)
 			{
-				Game.Stations[Game.Stations.Length - 1].StationType = Game.StationType.Terminal;
+				Game.Stations[Game.Stations.Length - 1].Type = StationType.Terminal;
 			}
 			if (TrackManager.CurrentTrack.Elements.Length != 0)
 			{

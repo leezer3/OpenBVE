@@ -33,6 +33,8 @@ namespace OpenBve
 
 		//		internal static AppDomain RouteInfoFormDomain;
 
+		private static double kioskModeTimer;
+
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			Sounds.Initialize();
@@ -226,7 +228,7 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case Interface.ControlMethod.Joystick:
-						if (JoystickManager.AttachedJoysticks.Length == 0 || Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
+						if (JoystickManager.AttachedJoysticks.Length == 0 || !Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
 						{
 							//Not currently connected
 							continue;

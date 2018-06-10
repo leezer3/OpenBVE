@@ -8,6 +8,12 @@ namespace OpenBve
 		/// <summary>Called when a KeyDown event is generated</summary>
 		internal static void keyDownEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			if (Interface.CurrentOptions.KioskMode)
+			{
+				//If in kiosk mode, reset the timer and disable AI on keypress
+				MainLoop.kioskModeTimer = 0;
+				TrainManager.PlayerTrain.AI = null;
+			}
 			if (Loading.Complete == true && e.Key == OpenTK.Input.Key.F4 && e.Alt == true)
 			{
 				// Catch standard ALT + F4 quit and push confirmation prompt
@@ -62,6 +68,12 @@ namespace OpenBve
 		/// <summary>Called when a KeyUp event is generated</summary>
 		internal static void keyUpEvent(object sender, KeyboardKeyEventArgs e)
 		{
+			if (Interface.CurrentOptions.KioskMode)
+			{
+				//If in kiosk mode, reset the timer and disable AI on keypress
+				MainLoop.kioskModeTimer = 0;
+				TrainManager.PlayerTrain.AI = null;
+			}
 			if (Game.PreviousInterface == Game.InterfaceType.Menu & Game.CurrentInterface == Game.InterfaceType.Normal)
 			{
 				//Block the first keyup event after the menu has been closed, as this may produce unwanted effects

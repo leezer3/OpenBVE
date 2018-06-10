@@ -419,6 +419,8 @@ namespace OpenBve {
 			checkboxErrorMessages.Checked = Interface.CurrentOptions.ShowErrorMessages;
 			comboBoxCompressionFormat.SelectedIndex = (int)Interface.CurrentOptions.packageCompressionType;
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
+			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
+			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
 			// language
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
@@ -584,7 +586,9 @@ namespace OpenBve {
 			labelTrainInstallDirectory.Text = Interface.GetInterfaceString("options_package_train_directory");
 			labelOtherInstallDirectory.Text = Interface.GetInterfaceString("options_package_other_directory");
 			labelPackageCompression.Text = Interface.GetInterfaceString("options_package_compression");
-
+			groupBoxKioskMode.Text = Interface.GetInterfaceString("options_kiosk_mode");
+			checkBoxEnableKiosk.Text = Interface.GetInterfaceString("options_kiosk_mode_enable");
+			labelKioskTimeout.Text = Interface.GetInterfaceString("options_kiosk_mode_timer");
 			/*
 			 * Localisation for strings in the game start pane
 			 */

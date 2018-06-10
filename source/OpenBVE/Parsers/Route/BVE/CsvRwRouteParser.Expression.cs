@@ -96,6 +96,13 @@ namespace OpenBve
 							this.Text = this.Text.Substring(0, this.Text.Length - 1);
 						}
 					}
+
+					if (Text.StartsWith("route.comment", StringComparison.InvariantCultureIgnoreCase) && Text.IndexOf("(C)", StringComparison.InvariantCultureIgnoreCase) != -1)
+					{
+						//Some BVE4 routes use this instead of the copyright symbol
+						Text = Text.Replace("(C)", "©");
+						Text = Text.Replace("(c)", "©");
+					}
 				}
 				for (i = 0; i < Text.Length; i++)
 				{

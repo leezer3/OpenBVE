@@ -338,10 +338,12 @@ namespace OpenBve {
 	                break;
 	            case Key.F7:
 	            {
-	                OpenFileDialog Dialog = new OpenFileDialog();
-	                Dialog.CheckFileExists = true;
-	                Dialog.Multiselect = true;
-	                Dialog.Filter = "CSV/B3D/X/ANIMATED files|*.csv;*.b3d;*.x;*.animated;*.l3dobj;*.l3dgrp|All files|*";
+		            OpenFileDialog Dialog = new OpenFileDialog
+		            {
+			            CheckFileExists = true,
+			            Multiselect = true,
+			            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;*.l3dobj;*.l3dgrp;*.obj;*.s|openBVE Objects|*.csv;*.b3d;*.x;*.animated|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
+		            };
 		            if (Dialog.ShowDialog() == DialogResult.OK)
 		            {
 			            Application.DoEvents();

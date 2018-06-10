@@ -57,7 +57,7 @@ namespace OpenBve
 					if (Direction < 0)
 					{
 						Train.StationFrontCar = false;
-						if (Train.Handles.Reverser.Actual == 1 && Train.Handles.Power.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.Station)
+						if (Train.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards && Train.Handles.Power.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.Station)
 						{
 							//Our reverser and power are in F, but we are rolling backwards
 							//Leave the station index alone, and we won't trigger again when we actually move forwards

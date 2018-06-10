@@ -76,6 +76,9 @@ OPEN_BVE_FILE         :=OpenBve.exe
 OPEN_BVE_API_ROOT     :=source/OpenBveApi
 OPEN_BVE_API_FILE     :=OpenBveApi.dll
 
+FORMATS_MSTS_ROOT     :=source/Plugins/Formats.Msts
+FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
+
 OPEN_BVE_ATS_ROOT     :=source/Plugins/OpenBveAts
 OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
 
@@ -154,6 +157,7 @@ openbve-release: copy_release_depends
 all: all-debug
 
 all-debug: print_csc_type
+all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
@@ -166,6 +170,7 @@ all-debug: copy_depends
 all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
+all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
@@ -185,8 +190,8 @@ endif
 print_csc_type:
 	@echo $(COLOR_RED)Using $(CSC_NAME) as c\# compiler$(COLOR_END)
 
-$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/DevTools
-$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/DevTools
+$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/Data/Formats $(DEBUG_DIR)/DevTools
+$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Formats $(RELEASE_DIR)/DevTools
 
 $(DEBUG_DEPEND) $(RELEASE_DEPEND):
 	@echo $(COLOR_BLUE)Copying dependency $(COLOR_CYAN)$@$(COLOR_END)
@@ -207,6 +212,9 @@ $(DEBUG_DIR)/Data $(RELEASE_DIR)/Data:
 $(DEBUG_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Plugins:
 	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/Plugins$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
+$(DEBUG_DIR)/Data/Formats $(RELEASE_DIR)/Data/Formats:
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/Formats$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)/Data/Formats/
 
 copy_depends: $(DEBUG_DIR)/Data
 copy_release_depends: $(RELEASE_DIR)/Data
@@ -226,6 +234,7 @@ clean:
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
+	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
 	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
 	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
 	rm -f bin*/Data/Plugins/Sound.RiffWave.dll* bin*/Data/Plugins/Sound.RiffWave.pdb
@@ -306,7 +315,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_FOLDERS  := . Audio Game Game/AI Game/Events Game/Events/EventTypes Game/ObjectManager Game/ObjectManager/AnimatedObjects Game/Score Game/TrackManager Graphics Graphics/Renderer Interface OldCode Parsers Parsers/Object/BVE Parsers/Object/Generic Parsers/Object/Loksim3D Parsers/Panel Parsers/Routes Parsers/Route/BVE Parsers/Script Parsers/SoundConfiguration Parsers/Train Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Car Simulation/TrainManager/Motor Simulation/TrainManager/Train Simulation/World System System/Functions System/Input System/Logging System/Plugins System/Program System/Translations UserInterface
+OPEN_BVE_FOLDERS  := . Audio Game Game/AI Game/Events Game/Events/EventTypes Game/ObjectManager Game/ObjectManager/AnimatedObjects Game/Score Game/TrackManager Graphics Graphics/Renderer Interface OldCode Parsers Parsers/Object/BVE Parsers/Object/Generic Parsers/Object/Loksim3D Parsers/Object/MSTS Parsers/Panel Parsers/Routes Parsers/Route/BVE Parsers/Script Parsers/SoundConfiguration Parsers/Train Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Car Simulation/TrainManager/Motor Simulation/TrainManager/Train Simulation/TrainManager/Train/Handles Simulation/World System System/Functions System/Input System/Logging System/Plugins System/Program System/Translations UserInterface
 OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
 OPEN_BVE_SRC      := $(filter-out "$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs",$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
@@ -328,6 +337,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
@@ -337,13 +347,14 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) \
-	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) \
+	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
@@ -370,7 +381,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_API_OUT) /target:library $(OPEN_BVE_API_SRC) $(ARGS) $(OPEN_BVE_API_DOC) \
-	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.Unsigned.dll \
+	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
 
@@ -396,6 +407,29 @@ $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE): $(OPEN_BV
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_ATS_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_ATS_OUT) /target:library $(OPEN_BVE_ATS_SRC) $(ARGS) $(OPEN_BVE_ATS_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(OPEN_BVE_ATS_RESOURCE))
+	
+################
+# Formats.MSTS #
+################
+
+FORMATS_MSTS_FOLDERS  := . Properties
+FORMATS_MSTS_FOLDERS  := $(addprefix $(FORMATS_MSTS_ROOT)/, $(FORMATS_MSTS_FOLDERS))
+FORMATS_MSTS_SRC      := $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.cs))
+FORMATS_MSTS_DOC      := $(addprefix /doc:, $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.xml)))
+FORMATS_MSTS_RESX     := $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.resx))
+FORMATS_MSTS_RESOURCE := $(addprefix $(FORMATS_MSTS_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(FORMATS_MSTS_ROOT))%.resx, %.resources, $(FORMATS_MSTS_RESX)))))
+FORMATS_MSTS_OUT       =$(OUTPUT_DIR)/$(FORMATS_MSTS_FILE)
+
+$(call create_resource, $(FORMATS_MSTS_RESOURCE), $(FORMATS_MSTS_RESX))
+
+$(DEBUG_DIR)/$(FORMATS_MSTS_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(FORMATS_MSTS_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(FORMATS_MSTS_FILE) $(RELEASE_DIR)/$(FORMATS_MSTS_FILE): $(FORMATS_MSTS_SRC) $(FORMATS_MSTS_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(FORMATS_MSTS_OUT)$(COLOR_END)
+	@$(CSC) /out:$(FORMATS_MSTS_OUT) /target:library $(FORMATS_MSTS_SRC) $(ARGS) $(FORMATS_MSTS_DOC) \
+	/reference:System.Core.dll /reference:System.dll \
+	$(addprefix /resource:, $(FORMATS_MSTS_RESOURCE))
 
 ##############
 # Sound.Flac #
@@ -573,7 +607,7 @@ $(DEBUG_DIR)/$(CAR_XML_FILE) $(RELEASE_DIR)/$(CAR_XML_FILE): $(CAR_XML_SRC) $(CA
 # ObjectViewer #
 ################
 
-OBJECT_VIEWER_FOLDERS  := . Parsers Properties System
+OBJECT_VIEWER_FOLDERS  := . Parsers Parsers/MSTS Properties System
 OBJECT_VIEWER_FOLDERS  := $(addprefix $(OBJECT_VIEWER_ROOT)/, $(OBJECT_VIEWER_FOLDERS))
 OBJECT_VIEWER_SRC      := $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 OBJECT_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
@@ -589,7 +623,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############
@@ -609,6 +643,7 @@ $(call create_resource, $(TRAIN_EDITOR_RESOURCE), $(TRAIN_EDITOR_RESX))
 $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_EDITOR_SRC) $(TRAIN_EDITOR_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TRAIN_EDITOR_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
+	/reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
 
 #############

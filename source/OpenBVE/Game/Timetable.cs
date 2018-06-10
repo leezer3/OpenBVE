@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class Timetable {
@@ -77,7 +78,7 @@ namespace OpenBve {
 						Table.Stations[n].Name = Game.Stations[sse.StationIndex].Name;
 						Table.Stations[n].NameJapanese = Interface.IsJapanese(Game.Stations[sse.StationIndex].Name);
 						Table.Stations[n].Pass = !Game.PlayerStopsAtStation(sse.StationIndex);
-						Table.Stations[n].Terminal = Game.Stations[sse.StationIndex].StationType != Game.StationType.Normal;
+						Table.Stations[n].Terminal = Game.Stations[sse.StationIndex].Type != StationType.Normal;
 						double x;
 						if (Game.Stations[sse.StationIndex].ArrivalTime >= 0.0) {
 							x = Game.Stations[sse.StationIndex].ArrivalTime;
