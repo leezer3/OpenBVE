@@ -77,29 +77,10 @@ namespace OpenBve
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					int s = Cars[i].CurrentCarSection;
-					if (s >= 0)
-					{
-						for (int j = 0; j < Cars[i].CarSections[s].Elements.Length; j++)
-						{
-							Renderer.HideObject(Cars[i].CarSections[s].Elements[j].ObjectIndex);
-						}
-					}
-					s = Cars[i].FrontBogie.CurrentCarSection;
-					if (s >= 0)
-					{
-						for (int j = 0; j < Cars[i].FrontBogie.CarSections[s].Elements.Length; j++)
-						{
-							Renderer.HideObject(Cars[i].FrontBogie.CarSections[s].Elements[j].ObjectIndex);
-						}
-					}
-					s = Cars[i].RearBogie.CurrentCarSection;
-					if (s >= 0)
-					{
-						for (int j = 0; j < Cars[i].RearBogie.CarSections[s].Elements.Length; j++)
-						{
-							Renderer.HideObject(Cars[i].RearBogie.CarSections[s].Elements[j].ObjectIndex);
-						}
-					}
+					
+					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
+					Cars[i].FrontBogie.ChangeSection(-1);
+					Cars[i].RearBogie.ChangeSection(-1);
 				}
 				Sounds.StopAllSounds(this);
 
