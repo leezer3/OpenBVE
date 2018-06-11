@@ -9,10 +9,8 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-
-
-
 		internal static OutputMode CurrentOutputMode = OutputMode.Default;
+		internal static OutputMode PreviousOutputMode = OutputMode.Default;
 		//Set LoadTextureImmediatelyMode to NotYet for the first frame
 		internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 

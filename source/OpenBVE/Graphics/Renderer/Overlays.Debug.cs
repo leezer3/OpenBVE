@@ -195,6 +195,62 @@ namespace OpenBve
 			}
 		}
 
+		private static void RenderATSDebugOverlay()
+		{
+			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			// debug
+			GL.Color4(0.5, 0.5, 0.5, 0.5);
+			RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			string[] Lines;
+			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
+			{
+				Lines = new string[TrainManager.PlayerTrain.Plugin.Panel.Length + 2];
+				Lines[0] = "=ATS Plugin Variables";
+				Lines[1] = "";
+				for (int i = 2; i < TrainManager.PlayerTrain.Plugin.Panel.Length + 2; i++)
+				{
+					Lines[i] = (i -2).ToString("000") + " : " + TrainManager.PlayerTrain.Plugin.Panel[i - 2];
+				}
+			}
+			else
+			{
+				Lines = new string[3];
+				Lines[0] = "=ATS Plugin Variables";
+				Lines[1] = "";
+				Lines[2] = "No ATS plugin variables set."; 
+			}
+			double x = 4.0;
+			double y = 4.0;
+			for (int i = 0; i < Lines.Length; i++)
+			{
+				if (Lines[i].Length != 0)
+				{
+					if (Lines[i][0] == '=')
+					{
+						string text = Lines[i].Substring(1);
+						System.Drawing.Size size = MeasureString(Fonts.SmallFont, text);
+						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
+						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
+						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+					}
+					else
+					{
+						DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+					}
+					y += 14.0;
+					if (y > Screen.Height - 20.0)
+					{
+						y = 32.0;
+						x += 80.0;
+					}
+				}
+				else
+				{
+					y += 14.0;
+				}
+			}
+		}
+
 		/// <summary>Renders the brake system debug overlay</summary>
 		private static void RenderBrakeSystemDebug()
 		{

@@ -154,6 +154,8 @@ namespace OpenBve {
 			DebugNormals,
 			/// <summary>Shows or hides debug information on the brake-system performance</summary>
 			DebugBrakeSystems,
+			/// <summary>Shows or hides the ATS (plugin) debugn screen</summary>
+			DebugATS,
 			/// <summary>Shows or hides a visual representation of all events on the track</summary>
 			ShowEvents,
 			/*

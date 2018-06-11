@@ -1467,9 +1467,24 @@ namespace OpenBve
 											case Renderer.OutputMode.Debug:
 												Renderer.CurrentOutputMode = Renderer.OutputMode.None;
 												break;
+											case Renderer.OutputMode.DebugATS:
+												Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+												break;
 											default:
 												Renderer.CurrentOutputMode = Renderer.OutputMode.Default;
 												break;
+										}
+										Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
+										break;
+									case Interface.Command.DebugATS:
+										if (Renderer.CurrentOutputMode == Renderer.OutputMode.DebugATS)
+										{
+											Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+										}
+										else
+										{
+											Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
+											Renderer.CurrentOutputMode = Renderer.OutputMode.DebugATS;
 										}
 										break;
 									case Interface.Command.MiscBackfaceCulling:
