@@ -1196,10 +1196,7 @@ namespace OpenBve
 										break;
 									case Interface.Command.BrakeEmergency:
 										// brake emergency
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle || Interface.CurrentOptions.AllowAxisEB == false)
-										{
-											TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
-										}
+										TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
 										break;
 									case Interface.Command.DeviceConstSpeed:
 										// const speed
