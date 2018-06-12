@@ -3,6 +3,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -783,27 +784,76 @@ namespace OpenBve {
 										int wday, hday;
 										Program.CurrentHost.QueryTextureDimensions(DaytimeImage, out wday, out hday);
 										if (wday > 0 & hday > 0) {
-											int nday = hday / Interval;
-											Textures.Texture[] tday = new Textures.Texture[nday];
+											int numFrames = hday / Interval;
+											if (Interface.CurrentOptions.EnableBveTsHacks)
+											{
+												/*
+												 * With hacks enabled, the final frame does not necessarily need to be
+												 * completely within the confines of the texture
+												 * e.g. LT_C69_77
+												 * https://github.com/leezer3/OpenBVE/issues/247
+												 */
+												switch (Subject)
+												{
+													case "power":
+														if (Train.Handles.Power.MaximumNotch > numFrames)
+														{
+															numFrames = Train.Handles.Power.MaximumNotch;
+														}
+														break;
+													case "brake":
+														int b = Train.Handles.Brake.MaximumNotch + 2;
+														if (Train.Handles.HasHoldBrake)
+														{
+															b++;
+														}
+														if (b > numFrames )
+														{
+															numFrames = b;
+														}
+														break;
+												}
+											}
+											Textures.Texture[] tday = new Textures.Texture[numFrames];
 											Textures.Texture[] tnight;
-											for (int k = 0; k < nday; k++) {
-												Textures.RegisterTexture(DaytimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+											for (int k = 0; k < numFrames; k++)
+											{
+												if ((k + 1) * Interval <= hday)
+												{
+													Textures.RegisterTexture(DaytimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+												}
+												else if (k * Interval > hday)
+												{
+													numFrames = k;
+													Array.Resize(ref tday, k);
+												}
+												else
+												{
+													Textures.RegisterTexture(DaytimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+												}
 											}
 											if (NighttimeImage != null) {
 												int wnight, hnight;
 												Program.CurrentHost.QueryTextureDimensions(NighttimeImage, out wnight, out hnight);
-												int nnight = hnight / Interval;
-												if (nnight > nday) nnight = nday;
-												tnight = new Textures.Texture[nday];
-												for (int k = 0; k < nnight; k++) {
-													Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+												tnight = new Textures.Texture[numFrames];
+												for (int k = 0; k < numFrames; k++) {
+													if ((k + 1) * Interval <= hnight)
+													{
+														Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+													}
+													else if (k * Interval > hnight)
+													{
+														tnight[k] = null;
+													}
+													else
+													{
+														Textures.RegisterTexture(NighttimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+													}
 												}
-												for (int k = nnight; k < nday; k++) {
-													tnight[k] = null;
-												}
+												
 											} else {
-												tnight = new Textures.Texture[nday];
-												for (int k = 0; k < nday; k++) {
+												tnight = new Textures.Texture[numFrames];
+												for (int k = 0; k < numFrames; k++) {
 													tnight[k] = null;
 												}
 											}
