@@ -163,6 +163,7 @@ namespace OpenBve {
 			new CommandInfo(Command.DebugWireframe, CommandType.Digital, "DEBUG_WIREFRAME"),
 			new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS"),
 			new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE"),
+			new CommandInfo(Command.DebugATS, CommandType.Digital, "DEBUG_ATS"),
 			new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
 			new CommandInfo(Command.ShowEvents, CommandType.Digital, "SHOW_EVENTS"),
 		};

@@ -1196,10 +1196,7 @@ namespace OpenBve
 										break;
 									case Interface.Command.BrakeEmergency:
 										// brake emergency
-										if (!TrainManager.PlayerTrain.Handles.SingleHandle || Interface.CurrentOptions.AllowAxisEB == false)
-										{
-											TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
-										}
+										TrainManager.ApplyEmergencyBrake(TrainManager.PlayerTrain);
 										break;
 									case Interface.Command.DeviceConstSpeed:
 										// const speed
@@ -1467,9 +1464,24 @@ namespace OpenBve
 											case Renderer.OutputMode.Debug:
 												Renderer.CurrentOutputMode = Renderer.OutputMode.None;
 												break;
+											case Renderer.OutputMode.DebugATS:
+												Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+												break;
 											default:
 												Renderer.CurrentOutputMode = Renderer.OutputMode.Default;
 												break;
+										}
+										Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
+										break;
+									case Interface.Command.DebugATS:
+										if (Renderer.CurrentOutputMode == Renderer.OutputMode.DebugATS)
+										{
+											Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+										}
+										else
+										{
+											Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
+											Renderer.CurrentOutputMode = Renderer.OutputMode.DebugATS;
 										}
 										break;
 									case Interface.Command.MiscBackfaceCulling:

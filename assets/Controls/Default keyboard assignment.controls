@@ -100,3 +100,4 @@ INCREASE_CUTOFF, keyboard, U, 0
 DECREASE_CUTOFF, keyboard, U, 2
 ROUTE_INFORMATION, keyboard, F9, 0
 SHOW_EVENTS, keyboard, E, 3
+DEBUG_ATS, keyboard, F10, 2

@@ -493,19 +493,56 @@ namespace OpenBve {
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
-									for (int k = 0; k < StateFiles.Length; k++) {
+									for (int k = 0; k < StateFiles.Length; k++)
+									{
 										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
-										if (StateFiles[k] != null) {
+										if (StateFiles[k] != null)
+										{
 											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
-											if (Result.Objects[ObjectCount].States[k].Object != null) {
+											if (Result.Objects[ObjectCount].States[k].Object != null)
+											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
+												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
+												{
+													if (ForceTextureRepeatX && ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+													}
+													else if (ForceTextureRepeatX)
+													{
+														
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case Textures.OpenGlTextureWrapMode.ClampRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+																break;
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+																break;
+														}
+													}
+													else if (ForceTextureRepeatY)
+													{
+														
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case Textures.OpenGlTextureWrapMode.RepeatClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+																break;
+															case Textures.OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+																break;
+														}
+													}
+												}
 											}
-										} else {
+											
+										}
+										else
+										{
 											Result.Objects[ObjectCount].States[k].Object = null;
 										}
-										for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++) {
-											Result.Objects[ObjectCount].States[j].Position = Position;
-										}
+										
 									}
 								} else {
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
