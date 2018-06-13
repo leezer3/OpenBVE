@@ -787,11 +787,11 @@ namespace OpenBve
                 ObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
                 for (int k = 0; k < m; k++)
                 {
-	                if (Objects[i].Mesh.Vertices[k] is Vertex)
+	                if (Object.States[t].Object.Mesh.Vertices[k] is Vertex)
 	                {
 		                ObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)Object.States[t].Object.Mesh.Vertices[k]);
 	                }
-					else if (Objects[i].Mesh.Vertices[k] is ColoredVertex)
+					else if (Object.States[t].Object.Mesh.Vertices[k] is ColoredVertex)
 	                {
 		                ObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)Object.States[t].Object.Mesh.Vertices[k]);
 	                }
@@ -977,29 +977,29 @@ namespace OpenBve
             if ((shiftx | shifty) & UpdateFunctions)
             {
                 for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
-                {
-                    ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates = Object.States[s].Object.Mesh.Vertices[k].TextureCoordinates;
-                }
-                if (shiftx)
-                {
-                    double x = Object.TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
-                    x -= Math.Floor(x);
-                    for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
-                    {
-                        ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(x * Object.TextureShiftXDirection.X);
-                        ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(x * Object.TextureShiftXDirection.Y);
-                    }
-                }
-                if (shifty)
-                {
-                    double y = Object.TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
-                    y -= Math.Floor(y);
-                    for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
-                    {
-                        ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(y * Object.TextureShiftYDirection.X);
-                        ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(y * Object.TextureShiftYDirection.Y);
-                    }
-                }
+					{
+						ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates = Object.States[s].Object.Mesh.Vertices[k].TextureCoordinates;
+					}
+					if (shiftx)
+					{
+						double x = Object.TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
+						x -= Math.Floor(x);
+						for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
+						{
+							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(x * Object.TextureShiftXDirection.X);
+							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(x * Object.TextureShiftXDirection.Y);
+						}
+					}
+					if (shifty)
+					{
+						double y = Object.TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
+						y -= Math.Floor(y);
+						for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
+						{
+							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(y * Object.TextureShiftYDirection.X);
+							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(y * Object.TextureShiftYDirection.Y);
+						}
+					}
             }
             // led
             bool led = Object.LEDFunction != null;
@@ -1028,15 +1028,7 @@ namespace OpenBve
             // initialize vertices
             for (int k = 0; k < Object.States[s].Object.Mesh.Vertices.Length; k++)
             {
-	            if (Object.States[s].Object.Mesh.Vertices[k] is ColoredVertex)
-	            {
-		            ObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)Object.States[s].Object.Mesh.Vertices[k]);
-	            }
-	            else
-	            {
-		            ObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)Object.States[s].Object.Mesh.Vertices[k]);
-	            }
-                
+	            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates = Object.States[s].Object.Mesh.Vertices[k].Coordinates;
             }
             // led
             if (led)

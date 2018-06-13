@@ -822,7 +822,7 @@ namespace OpenBve {
 												{
 													Textures.RegisterTexture(DaytimeImage, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
 												}
-												else if (k * Interval > hday)
+												else if (k * Interval >= hday)
 												{
 													numFrames = k;
 													Array.Resize(ref tday, k);
