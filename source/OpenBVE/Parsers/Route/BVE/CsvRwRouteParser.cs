@@ -2333,22 +2333,26 @@ namespace OpenBve {
 														}
 														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
 														{
+															string ff;
 															bool notFound = false;
 															while (true)
 															{
-																f = Path.CombineFile(ObjectPath, f + ".x");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".x");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
-																f = Path.CombineFile(ObjectPath, f + ".csv");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".csv");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
-																f = Path.CombineFile(ObjectPath, f + ".b3d");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".b3d");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
 																Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -3765,12 +3769,14 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
-											} else if (!Interface.TryParseTime(Arguments[1], out arr)) {
+											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											{ /* Treat a single period as a blank space */ }
+											else if (!Interface.TryParseTime(Arguments[1], out arr)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												arr = -1.0;
 											}
 										}
-										if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
+										if (Arguments.Length >= 3 && (Arguments[2].Length > 0)) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
 												Game.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
@@ -3787,7 +3793,9 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
-											} else if (!Interface.TryParseTime(Arguments[2], out dep)) {
+											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											{ /* Treat a single period as a blank space */ }
+											else if (!Interface.TryParseTime(Arguments[2], out dep)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												dep = -1.0;
 											}

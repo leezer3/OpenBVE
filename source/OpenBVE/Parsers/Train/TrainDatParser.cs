@@ -461,7 +461,7 @@ namespace OpenBve {
 								switch (n) {
 									case 0: Train.Handles.SingleHandle = a == 1; break;
 									case 1:
-										if (a >= 0)
+										if (a > 0)
 										{
 											powerNotches = a;
 										}
@@ -472,7 +472,7 @@ namespace OpenBve {
 										}
 									break;
 									case 2:
-										if (a >= 0)
+										if (a > 0)
 										{
 											brakeNotches = a;
 										}
@@ -486,7 +486,7 @@ namespace OpenBve {
 										powerReduceSteps = a;
 										break;
 									case 4:
-										if (a > 0 || a < 3)
+										if (a < 0 || a > 3)
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "EbHandleBehaviour is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
