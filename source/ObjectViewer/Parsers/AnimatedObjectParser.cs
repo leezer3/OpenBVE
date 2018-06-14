@@ -501,6 +501,7 @@ namespace OpenBve {
 											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
+												Result.Objects[ObjectCount].States[k].Position = Position;
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
 												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
 												{
