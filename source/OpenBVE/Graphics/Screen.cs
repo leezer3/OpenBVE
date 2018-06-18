@@ -19,7 +19,9 @@ namespace OpenBve
 		
 		/// <summary>Whether the screen is set to fullscreen mode.</summary>
 		internal static bool Fullscreen = false;
-		
+
+		/// <summary>Whether the window is currently minimized</summary>
+		internal static bool Minimized = false;
 		
 		// --- functions ---
 		

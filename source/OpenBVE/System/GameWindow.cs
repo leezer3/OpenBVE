@@ -273,6 +273,19 @@ namespace OpenBve
 
 		protected override void OnResize(EventArgs e)
 		{
+			if(Width == 0 && Height == 0)
+			{
+				/*
+				 * HACK: Don't resize if minimized
+				 * 
+				 * Unsure if this is an openTK bug, Windows or what
+				 * but setting our width / height to zero breaks 
+				 * stuff.....
+				 */
+				Screen.Minimized = true;
+				return;
+			}
+			Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
 		}
 
