@@ -60,10 +60,28 @@ typedef ATS_API void (__stdcall *SETBEACONDATA) (ATS_BEACONDATA beaconData); SET
 
 // --- load the plugin ---
 int _stdcall LoadDLL(LPCWSTR fileUnicode, LPCSTR fileAnsi) {
-  dllhandle = LoadLibraryW(fileUnicode);
+	try
+	{
+		dllhandle = LoadLibraryW(fileUnicode);
+	}
+	catch (...)
+	{
+		//Blank try / catch in case our library will only load with ANSI & crashes with Unicode
+		//This seems to be the case with some specific versions of OS_ATS1.dll
+		//These were likely compiled on XP with Bloodshed Dev C++ (??)
+	}
+  
   if (dllhandle == NULL) {
-    dllhandle = LoadLibraryA(fileAnsi);
-    if (dllhandle == NULL) return 0;
+	  try
+	  {
+		  dllhandle = LoadLibraryA(fileAnsi);
+	  }
+	  catch (...)
+	  {
+		  //Presumably both Unicode and ANSI crashed
+		  return 0;
+	  }
+      if (dllhandle == NULL) return 0;
   }
   { // --- Load ---
     FARPROC functionhandle = GetProcAddress(dllhandle, "Load");
