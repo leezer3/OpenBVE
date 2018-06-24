@@ -18,14 +18,16 @@
 		{
 			private double TimeLastProcessed;
 			private double CurrentInterval;
+			private readonly TrainManager.Train Train;
 
-			internal BogusPretrainAI(TrainManager.Train Train)
+			internal BogusPretrainAI(TrainManager.Train train)
 			{
 				this.TimeLastProcessed = 0.0;
 				this.CurrentInterval = 1.0;
+				this.Train = train;
 			}
 
-			internal override void Trigger(TrainManager.Train Train, double TimeElapsed)
+			internal override void Trigger(double TimeElapsed)
 			{
 				if (SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{

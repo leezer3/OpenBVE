@@ -399,7 +399,7 @@ namespace OpenBve
 					}
 					if (AI != null)
 					{
-						AI.Trigger(this, TimeElapsed);
+						AI.Trigger(TimeElapsed);
 					}
 				}
 				else if (State == TrainState.Bogus)
@@ -407,7 +407,7 @@ namespace OpenBve
 					// bogus train
 					if (AI != null)
 					{
-						AI.Trigger(this, TimeElapsed);
+						AI.Trigger(TimeElapsed);
 					}
 				}
 			}

@@ -16,9 +16,12 @@ namespace OpenBve
 			private readonly double PersonalitySpeedFactor;
 			private int PowerNotchAtWhichWheelSlipIsObserved;
 			private int LastStation;
+
+			private readonly TrainManager.Train Train;
 			// functions
-			internal SimpleHumanDriverAI(TrainManager.Train Train)
+			internal SimpleHumanDriverAI(TrainManager.Train train)
 			{
+				this.Train = train;
 				this.TimeLastProcessed = 0.0;
 				this.CurrentInterval = 1.0;
 				this.BrakeMode = false;
@@ -34,24 +37,24 @@ namespace OpenBve
 					this.LastStation = -1;
 				}
 			}
-			private OpenBveApi.Runtime.AIResponse PerformPlugin(TrainManager.Train Train)
+			private AIResponse PerformPlugin()
 			{
-				OpenBveApi.Runtime.AIResponse response = Train.Plugin.UpdateAI();
-				if (response == OpenBveApi.Runtime.AIResponse.Short)
+				AIResponse response = Train.Plugin.UpdateAI();
+				if (response == AIResponse.Short)
 				{
 					CurrentInterval = 0.2 + 0.1 * Program.RandomNumberGenerator.NextDouble();
 				}
-				else if (response == OpenBveApi.Runtime.AIResponse.Medium)
+				else if (response == AIResponse.Medium)
 				{
 					CurrentInterval = 0.4 + 0.2 * Program.RandomNumberGenerator.NextDouble();
 				}
-				else if (response == OpenBveApi.Runtime.AIResponse.Long)
+				else if (response == AIResponse.Long)
 				{
 					CurrentInterval = 0.8 + 0.4 * Program.RandomNumberGenerator.NextDouble();
 				}
 				return response;
 			}
-			private void PerformDefault(TrainManager.Train Train)
+			private void PerformDefault()
 			{
 				// personality
 				double spd = Train.Specs.CurrentAverageSpeed;
@@ -846,7 +849,7 @@ namespace OpenBve
 					}
 				}
 			}
-			internal override void Trigger(TrainManager.Train Train, double TimeElapsed)
+			internal override void Trigger(double TimeElapsed)
 			{
 				if (TimeLastProcessed > SecondsSinceMidnight)
 				{
@@ -857,12 +860,12 @@ namespace OpenBve
 					TimeLastProcessed = SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{
-						if (PerformPlugin(Train) != OpenBveApi.Runtime.AIResponse.None)
+						if (PerformPlugin() != AIResponse.None)
 						{
 							return;
 						}
 					}
-					PerformDefault(Train);
+					PerformDefault();
 				}
 			}
 		}
