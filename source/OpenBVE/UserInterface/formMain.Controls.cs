@@ -83,9 +83,9 @@ namespace OpenBve {
 				buttonControlDown.Enabled = false;
 			}
 		}
-		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns) {
-			Interface.CommandInfo Info;
-			Interface.TryGetCommandInfo(Interface.CurrentControls[Index].Command, out Info);
+		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns)
+		{
+			Interface.CommandInfo Info = Interface.CommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
 			Item.SubItems[0].Text = Info.Name;
 			switch (Info.Type) {
 					case Interface.CommandType.Digital: Item.SubItems[1].Text = Interface.GetInterfaceString("controls_list_type_digital"); break;
@@ -295,8 +295,7 @@ namespace OpenBve {
 				int j = comboboxCommand.SelectedIndex;
 				if (j >= 0) {
 					Interface.CurrentControls[i].Command = Interface.CommandInfos[j].Command;
-					Interface.CommandInfo Info;
-					Interface.TryGetCommandInfo(Interface.CommandInfos[j].Command, out Info);
+					Interface.CommandInfo Info = Interface.CommandInfos.TryGetInfo(Interface.CommandInfos[j].Command);
 					Interface.CurrentControls[i].InheritedType = Info.Type;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 				}

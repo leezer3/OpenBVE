@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi;
 
 namespace OpenBve
 {
@@ -25,7 +26,7 @@ namespace OpenBve
 				return;
 			}
 			string Folder = textboxRouteFolder.Text;
-			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder))
+			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder))
 			{
 				Folder = Directory.GetParent(Folder).ToString();
 			}
@@ -408,7 +409,7 @@ namespace OpenBve
 				return;
 			}
 			string Folder = textboxTrainFolder.Text;
-			while (!Directory.Exists(Folder) && Path.IsPathRooted(Folder))
+			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder))
 			{
 				Folder = Directory.GetParent(Folder).ToString();
 			}
@@ -798,7 +799,7 @@ namespace OpenBve
 				}
 
 				// description
-				string Description = Interface.ConvertNewlinesToCrLf(Game.RouteComment);
+				string Description = Game.RouteComment.ConvertNewlinesToCrLf();
 				if (Description.Length != 0)
 				{
 					textboxRouteDescription.Text = Description;
@@ -807,7 +808,8 @@ namespace OpenBve
 				{
 					textboxRouteDescription.Text = System.IO.Path.GetFileNameWithoutExtension(Result.RouteFile);
 				}
-				textboxRouteEncodingPreview.Text = Interface.ConvertNewlinesToCrLf(Description);
+
+				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
 				if (Game.TrainName != null)
 				{
 					checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault") + @" (" + Game.TrainName + @")";
@@ -1054,7 +1056,7 @@ namespace OpenBve
 				if (System.IO.File.Exists(File)) {
 					try {
 						string trainText = System.IO.File.ReadAllText(File, Result.TrainEncoding);
-						trainText = Interface.ConvertNewlinesToCrLf(trainText);
+						trainText = trainText.ConvertNewlinesToCrLf();
 						textboxTrainDescription.Text = trainText;
 						textboxTrainEncodingPreview.Text = trainText;
 					} catch {
@@ -1158,7 +1160,7 @@ namespace OpenBve
 			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
-			textboxTrainDescription.Text = Interface.ConvertNewlinesToCrLf(Interface.GetInterfaceString("start_train_notfound") + Game.TrainName);
+			textboxTrainDescription.Text = (Interface.GetInterfaceString("start_train_notfound") + Game.TrainName).ConvertNewlinesToCrLf();
 			comboboxTrainEncoding.Tag = new object();
 			comboboxTrainEncoding.SelectedIndex = 0;
 			comboboxTrainEncoding.Tag = null;

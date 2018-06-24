@@ -78,6 +78,7 @@
     <Compile Include="Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime.Station.cs" />
+    <Compile Include="Text.cs" />
     <Compile Include="Textures.TextOverlay.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Textures.cs" />

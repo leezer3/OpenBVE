@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using OpenBveApi;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -76,7 +77,7 @@ namespace OpenBve {
 							Array.Resize<Station>(ref Table.Stations, Table.Stations.Length << 1);
 						}
 						Table.Stations[n].Name = Game.Stations[sse.StationIndex].Name;
-						Table.Stations[n].NameJapanese = Interface.IsJapanese(Game.Stations[sse.StationIndex].Name);
+						Table.Stations[n].NameJapanese = Game.Stations[sse.StationIndex].Name.IsJapanese();
 						Table.Stations[n].Pass = !Game.PlayerStopsAtStation(sse.StationIndex);
 						Table.Stations[n].Terminal = Game.Stations[sse.StationIndex].Type != StationType.Normal;
 						double x;

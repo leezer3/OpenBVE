@@ -287,25 +287,7 @@ namespace OpenBve {
 			AnalogFull
 		}
 
-		/// <summary>Information on an in-game command</summary>
-		internal struct CommandInfo
-		{
-			/// <summary>The actual command to be performed</summary>
-			internal Command Command;
-			/// <summary>Whether this is a digital or analog control</summary>
-			internal CommandType Type;
-			/// <summary>The command name</summary>
-			internal string Name;
-			/// <summary>The command's description</summary>
-			internal string Description;
-			internal CommandInfo(Command Command, CommandType Type, string Name)
-			{
-				this.Command = Command;
-				this.Type = Type;
-				this.Name = Name;
-				this.Description = "N/A";
-			}
-		}
+		
 
 		/// <summary>Converts the specified security command to a virtual key.</summary>
 		/// <returns>Virtual key for plugins.</returns>
