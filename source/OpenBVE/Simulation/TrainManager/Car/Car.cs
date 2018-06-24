@@ -966,7 +966,7 @@ namespace OpenBve
 					 * line is to the rails, the more flange noise there will be.
 					 * */
 					Vector3 d = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
-					World.Normalize(ref d.X, ref d.Y, ref d.Z);
+					d.Normalize();
 					double b0 = d.X * RearAxle.Follower.WorldSide.X + d.Y * RearAxle.Follower.WorldSide.Y + d.Z * RearAxle.Follower.WorldSide.Z;
 					double b1 = d.X * FrontAxle.Follower.WorldSide.X + d.Y * FrontAxle.Follower.WorldSide.Y + d.Z * FrontAxle.Follower.WorldSide.Z;
 					double spd = Math.Abs(Specs.CurrentSpeed);

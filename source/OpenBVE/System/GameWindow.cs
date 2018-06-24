@@ -106,7 +106,7 @@ namespace OpenBve
 			}
 			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
 			{
-				World.UpdateDriverBody(TimeElapsed);
+				World.CurrentDriverBody.Update(TimeElapsed);
 			}
 			//Check if we are running at an accelerated time factor-
 			//Camera motion speed should be the same whatever the game speed is
