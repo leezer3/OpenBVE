@@ -65,20 +65,9 @@ namespace OpenBve
 		};
 
 		// components of the semi-transparent screen overlay
-		private const float ovlR = 0.00f;
-		private const float ovlG = 0.00f;
-		private const float ovlB = 0.00f;
-		private const float ovlA = 0.20f;
-		// components of the menu background colour
-		private const float bkgMenuR = 0.00f;
-		private const float bkgMenuG = 0.00f;
-		private const float bkgMenuB = 0.00f;
-		private const float bkgMenuA = 1.00f;
-		// components of the highlighted item background
-		private const float bkgHgltR = 1.00f;
-		private const float bkgHgltG = 0.69f;
-		private const float bkgHgltB = 0.00f;
-		private const float bkgHgltA = 1.00f;
+		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
+		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
+		private readonly Color128 highlightColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
 		// text colours
 		private static readonly Color128 ColourCaption = new Color128(0.750f, 0.750f, 0.875f, 1.0f);
 		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
@@ -135,13 +124,14 @@ namespace OpenBve
 			/********************
 				MENU FIELDS
 			*********************/
-			public Renderer.TextAlignment Align;
-			public MenuEntry[] Items = { };
-			public int ItemWidth = 0;
-			public int Height = 0;
-			public int Selection = SelectionNone;
+			public readonly Renderer.TextAlignment Align;
+			public readonly MenuEntry[] Items = { };
+			public readonly int ItemWidth = 0;
+			public readonly int Width = 0;
+			public readonly int Height = 0;
+			public int Selection;
 			public int TopItem;         // the top displayed menu item
-			public int Width = 0;
+			
 
 			/********************
 				MENU C'TOR
@@ -366,7 +356,7 @@ namespace OpenBve
 			}
 		}
 
-		internal OpenTK.Input.Key MenuBackKey;
+		internal Key MenuBackKey;
 
 		/********************
 			MENU SYSTEM SINGLETON C'TOR
@@ -735,7 +725,7 @@ namespace OpenBve
 
 			SingleMenu menu = Menus[CurrMenu];
 			// overlay background
-			GL.Color4(ovlR, ovlG, ovlB, ovlA);
+			GL.Color4(overlayColor.R, overlayColor.G, overlayColor.B, overlayColor.A);
 			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -747,19 +737,19 @@ namespace OpenBve
 			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
 			// draw the menu background
-			GL.Color4(bkgMenuR, bkgMenuG, bkgMenuB, bkgMenuA);
+			GL.Color4(backgroundColor.R, backgroundColor.G, backgroundColor.B, backgroundColor.A);
 			Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
 				menuXmax + MenuBorderX, menuYmax + MenuBorderY);
 
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
 			{
-				GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
 				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, menuYmin + em + MenuItemBorderY * 2);
 			}
 			if (menu.TopItem > 0)
-				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, menuYmin),
+				Renderer.DrawString(MenuFont, "...", new Point(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			int itemY = topItemY;
@@ -774,18 +764,18 @@ namespace OpenBve
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
-					GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+					GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
 					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 					// draw the text
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new System.Drawing.Point(itemX, itemY),
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
@@ -793,13 +783,13 @@ namespace OpenBve
 
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
-				GL.Color4(bkgHgltR, bkgHgltG, bkgHgltB, bkgHgltA);
+				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
 				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Renderer.DrawString(MenuFont, "...", new System.Drawing.Point(itemX, itemY),
+				Renderer.DrawString(MenuFont, "...", new Point(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 		}
 
