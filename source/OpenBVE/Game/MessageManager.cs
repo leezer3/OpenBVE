@@ -40,7 +40,7 @@ namespace OpenBve
 				for (int i = TextualMessages.Count -1; i >= 0; i--)
 				{
 					var c = TextualMessages[i] as GameMessage;
-					if (c != null && c.Depencency == MessageDependency.SectionLimit || c.Depencency == MessageDependency.RouteLimit)
+					if (c != null && (c.Depencency == MessageDependency.SectionLimit || c.Depencency == MessageDependency.RouteLimit))
 					{
 						TextualMessages.RemoveAt(i);
 					}
