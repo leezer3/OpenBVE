@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using OpenBveApi.Colors;
 
 namespace OpenBve
@@ -177,6 +179,16 @@ namespace OpenBve
 						bytes[i + 2] = (byte)(255 + b - r - g);
 					}
 				}
+			}
+		}
+
+		private static string GetChecksum(string file)
+		{
+			using (FileStream stream = File.OpenRead(file))
+			{
+				SHA256Managed sha = new SHA256Managed();
+				byte[] checksum = sha.ComputeHash(stream);
+				return BitConverter.ToString(checksum).Replace("-", string.Empty);
 			}
 		}
 	}

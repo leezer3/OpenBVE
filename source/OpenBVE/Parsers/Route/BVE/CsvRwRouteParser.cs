@@ -12,6 +12,7 @@ namespace OpenBve {
 		internal static string SoundPath;
 		internal static string TrainPath;
 		internal static string CompatibilityFolder;
+		internal static bool CylinderHack = false;
 
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly) {
@@ -1016,6 +1017,8 @@ namespace OpenBve {
 			bool ValueBasedSections = false;
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
 			// process non-track namespaces
+			//Check for any special-cased fixes we might need
+			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = (double)j * progressFactor;
 				if ((j & 255) == 0) {
@@ -2578,8 +2581,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			//Check for any special-cased fixes we might need
-			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
+			
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = 0.3333 + (double)j * progressFactor;
@@ -3769,7 +3771,7 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
-											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											} else if(Arguments[1].Length == 1 && Arguments[1][0] == '.')
 											{ /* Treat a single period as a blank space */ }
 											else if (!Interface.TryParseTime(Arguments[1], out arr)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
