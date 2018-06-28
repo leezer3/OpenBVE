@@ -147,6 +147,16 @@ namespace OpenBve {
 														{
 															switch ((int)PanelCenterY)
 															{
+																case 180:
+																	switch (trainName.ToUpperInvariant())
+																	{
+																		case "LT_C69_77":
+																		case "LT_C69_77_V2":
+																			// Broken initial zoom
+																			PanelCenterY = 350;
+																			break;
+																	}
+																	break;
 																case 229:
 																	if (PanelBottom == 768 && PanelResolution == 1024)
 																	{
@@ -155,10 +165,22 @@ namespace OpenBve {
 																	}
 																	break;
 																case 255:
-																	if (PanelBottom == 1024 && PanelResolution == 1024 && trainName == "LT1938" )
+																	if (PanelBottom == 1024 && PanelResolution == 1024)
 																	{
-																		// LT1938 stock: Broken initial zoom
-																		PanelCenterY = 350;
+																		switch (trainName.ToUpperInvariant())
+																		{
+																			case "LT1938":
+																			case "LT1973 UNREFURB":
+																				// Broken initial zoom
+																				PanelCenterY = 350;
+																				break;
+																			case "LT_A60_62":
+																			case "LT1972 MKII":
+																				// Broken initial zoom and black patch at bottom of panel
+																				PanelCenterY = 350;
+																				PanelBottom = 792;
+																				break;
+																		}
 																	}
 																	break;
 															}
