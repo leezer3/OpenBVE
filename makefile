@@ -479,7 +479,7 @@ $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_RIFFWAVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_RIFFWAVE_OUT) /target:library $(SOUND_RIFFWAVE_SRC) $(ARGS) $(SOUND_RIFFWAVE_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
 	
 #############
 # Sound.MP3 #
@@ -501,7 +501,7 @@ $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_MP3_FILE) $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(SOUND_MP3_SRC) $(SOUND_MP3_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_MP3_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_MP3_OUT) /target:library $(SOUND_MP3_SRC) $(ARGS) $(SOUND_MP3_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SOUND_MP3_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_MP3_RESOURCE))
 
 ###############
 # Texture.Ace #
