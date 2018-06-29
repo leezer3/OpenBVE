@@ -409,7 +409,7 @@ namespace OpenBve
 				return;
 			}
 			string Folder = textboxTrainFolder.Text;
-			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder))
+			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder) && Folder.Length > 2)
 			{
 				Folder = Directory.GetParent(Folder).ToString();
 			}
