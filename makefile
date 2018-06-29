@@ -88,6 +88,9 @@ SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
 SOUND_RIFFWAVE_ROOT   :=source/Plugins/Sound.RiffWave
 SOUND_RIFFWAVE_FILE   :=Data/Plugins/Sound.RiffWave.dll
 
+SOUND_MP3_ROOT   :=source/Plugins/Sound.MP3
+SOUND_MP3_FILE   :=Data/Plugins/Sound.MP3.dll
+
 TEXTURE_ACE_ROOT      :=source/Plugins/Texture.Ace
 TEXTURE_ACE_FILE      :=Data/Plugins/Texture.Ace.dll
 
@@ -238,6 +241,7 @@ clean:
 	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
 	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
 	rm -f bin*/Data/Plugins/Sound.RiffWave.dll* bin*/Data/Plugins/Sound.RiffWave.pdb
+	rm -f bin*/Data/Plugins/Sound.MP3.dll* bin*/Data/Plugins/Sound.MP3.pdb
 	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
@@ -333,6 +337,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) 
@@ -343,6 +348,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE) 
@@ -473,7 +479,29 @@ $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_RIFFWAVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_RIFFWAVE_OUT) /target:library $(SOUND_RIFFWAVE_SRC) $(ARGS) $(SOUND_RIFFWAVE_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
+	
+#############
+# Sound.MP3 #
+#############
+
+SOUND_MP3_FOLDERS  := . Properties
+SOUND_MP3_FOLDERS  := $(addprefix $(SOUND_MP3_ROOT)/, $(SOUND_MP3_FOLDERS))
+SOUND_MP3_SRC      := $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.cs))
+SOUND_MP3_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.xml)))
+SOUND_MP3_RESX     := $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.resx))
+SOUND_MP3_RESOURCE := $(addprefix $(SOUND_MP3_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(SOUND_MP3_ROOT))%.resx, %.resources, $(SOUND_MP3_RESX)))))
+SOUND_MP3_OUT       =$(OUTPUT_DIR)/$(SOUND_MP3_FILE)
+
+$(call create_resource, $(SOUND_MP3_RESOURCE), $(SOUND_MP3_RESX))
+
+$(DEBUG_DIR)/$(SOUND_MP3_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUND_MP3_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(SOUND_MP3_FILE) $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(SOUND_MP3_SRC) $(SOUND_MP3_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_MP3_OUT)$(COLOR_END)
+	@$(CSC) /out:$(SOUND_MP3_OUT) /target:library $(SOUND_MP3_SRC) $(ARGS) $(SOUND_MP3_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_MP3_RESOURCE))
 
 ###############
 # Texture.Ace #
