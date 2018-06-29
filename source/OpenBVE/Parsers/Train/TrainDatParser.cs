@@ -56,6 +56,9 @@ namespace OpenBve {
 						case "bve2000000":
 							currentFormat = TrainDatFormats.BVE2000000;
 							break;
+						case "bve2060000":
+							currentFormat = TrainDatFormats.BVE2060000;
+							break;
 						case "openbve":
 							currentFormat = TrainDatFormats.openBVE;
 							break;
