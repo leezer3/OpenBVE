@@ -74,6 +74,15 @@
 					CylinderHack = true;
 					Interface.AddMessage(Interface.MessageType.Warning, false, "Bakerloo v3 routefile detected- Applying cylinder hack.");
 					break;
+				case "AA6528402BE457A20DF77A8B7CAFBC2580F3F8326BB56B9A691A4558174AE152":
+				case "2EB087770AEC2C6A0F2AADC0A8D531117502B1AB33E94CBBC11940DA4FFF4A30":
+					//V.2.1.1 Aldwych BVE4- no fog.csv
+					//V.2.1.1 Aldwych BVE4.csv
+					CylinderHack = true;
+					Interface.AddMessage(Interface.MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
+					break;
+
+
 			}
 		}
 	}
