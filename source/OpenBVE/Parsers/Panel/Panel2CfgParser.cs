@@ -169,6 +169,11 @@ namespace OpenBve {
 																	{
 																		switch (trainName.ToUpperInvariant())
 																		{
+																			case "PARIS_MF67":
+																			case "PARIS_MF88":
+																			case "PARIS_MP73":
+																			case "PARIS_MP89":
+																			case "PARIS_MP89AUTO":
 																			case "LT1938":
 																			case "LT1973 UNREFURB":
 																				// Broken initial zoom
