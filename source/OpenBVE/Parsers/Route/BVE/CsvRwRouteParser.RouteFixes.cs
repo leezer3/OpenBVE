@@ -81,8 +81,21 @@
 					CylinderHack = true;
 					Interface.AddMessage(Interface.MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
 					break;
-
-
+				case "9D87539BAC426DE5B1ECB638A935EF8AC37B31AD6B16D645B1D3F2A7E2D1B23F":
+				case "078324311EC9048F313513849B5EBDCF3C3CAF193520F947258324FEDDD6A2BD":
+				case "939E18B5AB5645FF25CF5C4CE72D0F0567C9A0C9ABDF6D21AB5DC3278D180032":
+				case "3E673AAD446439A42FA81AA37D6C51FE69DC32C93D2FDC1EE3B8DA73EDC61B81":
+				case "60F9CF7F40E21808072DAEF3F316ECB0BEA2AA224F5AD414BCA084F6AE0BD1E8":
+				case "179EB3C4F653DBC8FF98CF1F6F44693DE5AE6EB8A196CE89D2B5681BA6D972EB":
+					//Barons Ct to Arnos 38ts.csv
+					//Barons Ct to Arnos Peak.csv
+					//Barons Ct to Arnos Weedkill.csv
+					//Barons Ct to Arnos.csv
+					//Barons Ct to Wood Green.csv
+					//Hyde Pk Cnr to Wood Green.csv
+					CylinderHack = true;
+					Interface.AddMessage(Interface.MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
+					break;
 			}
 		}
 	}
