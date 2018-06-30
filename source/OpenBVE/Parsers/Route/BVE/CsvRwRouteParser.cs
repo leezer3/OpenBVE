@@ -2384,13 +2384,46 @@ namespace OpenBve {
 																} else
 																{
 																	f = Arguments[1];
-																	LocateObject(ref f, ObjectPath);
-																	Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-																	if (Signal.GlowObject != null) {
-																		Signal.GlowTextures = LoadAllTextures(f, true);
-																		for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++) {
-																			Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																	bool notFound = false;
+																	if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
+																	{
+																		string ff;
+																		while (true)
+																		{
+																			ff = Path.CombineFile(ObjectPath, f + ".x");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			ff = Path.CombineFile(ObjectPath, f + ".csv");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			ff = Path.CombineFile(ObjectPath, f + ".b3d");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																			notFound = true;
+																			break;
+																		}
+																	}
+																	if (!notFound)
+																	{
+																		Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		if (Signal.GlowObject != null)
+																		{
+																			Signal.GlowTextures = LoadAllTextures(f, true);
+																			for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++)
+																			{
+																				Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
+																				Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																			}
 																		}
 																	}
 																}
