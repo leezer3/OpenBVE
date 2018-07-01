@@ -39,12 +39,12 @@ namespace OpenBve
 		}
 		private class MeshBuilder
 		{
-			internal List<VertexTemplate> Vertices;
+			internal List<Vertex> Vertices;
 			internal List<World.MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
-				this.Vertices = new List<VertexTemplate>();
+				this.Vertices = new List<Vertex>();
 				this.Faces = new List<World.MeshFace>();
 				this.Materials = new Material[] { };
 			}
@@ -165,7 +165,7 @@ namespace OpenBve
 						//Creates a new face
 
 						//Create the temp list to hook out the vertices 
-						List<VertexTemplate> vertices = new List<VertexTemplate>();
+						List<Vertex> vertices = new List<Vertex>();
 						List<Vector3> normals = new List<Vector3>();
 						for (int f = 1; f < Arguments.Count; f++)
 						{
@@ -268,17 +268,8 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int v = Builder.Vertices.FindIndex(a => a.Equals(vertices[k]));
-							if (v != -1)
-							{
-								Vertices[k].Index = (ushort)v;
-							}
-							else
-							{
-								Builder.Vertices.Add(vertices[k]);
-								Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
-							}
-							
+							Builder.Vertices.Add(vertices[k]);
+							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
 						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));

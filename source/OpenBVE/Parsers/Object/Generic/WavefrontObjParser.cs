@@ -268,17 +268,8 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int v = Builder.Vertices.FindIndex(a => a.Equals(vertices[k]));
-							if (v != -1)
-							{
-								Vertices[k].Index = (ushort)v;
-							}
-							else
-							{
-								Builder.Vertices.Add(vertices[k]);
-								Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
-							}
-							
+							Builder.Vertices.Add(vertices[k]);
+							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
 						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));
