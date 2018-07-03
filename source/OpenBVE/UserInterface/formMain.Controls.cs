@@ -28,13 +28,20 @@ namespace OpenBve {
 						}
 					}
 					// data
-					if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Keyboard) {
-						radiobuttonKeyboard.Checked = true;
-					} else if (Interface.CurrentControls[i].Method == Interface.ControlMethod.Joystick || Interface.CurrentControls[i].Method == Interface.ControlMethod.RailDriver) {
-						radiobuttonJoystick.Checked = true;
-					} else {
-						radiobuttonKeyboard.Checked = false;
-						radiobuttonJoystick.Checked = false;
+					switch (Interface.CurrentControls[i].Method)
+					{
+						case Interface.ControlMethod.Keyboard:
+							radiobuttonKeyboard.Checked = true;
+							break;
+						case Interface.ControlMethod.Joystick:
+						case Interface.ControlMethod.RailDriver:
+							radiobuttonJoystick.Checked = true;
+							break;
+						default:
+							radiobuttonKeyboard.Checked = false;
+							radiobuttonJoystick.Checked = false;
+							textboxJoystickGrab.Enabled = false;
+							break;
 					}
 					panelKeyboard.Enabled = radiobuttonKeyboard.Checked;
 					if (radiobuttonKeyboard.Checked)
@@ -83,9 +90,9 @@ namespace OpenBve {
 				buttonControlDown.Enabled = false;
 			}
 		}
-		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns) {
-			Interface.CommandInfo Info;
-			Interface.TryGetCommandInfo(Interface.CurrentControls[Index].Command, out Info);
+		private void UpdateControlListElement(ListViewItem Item, int Index, bool ResizeColumns)
+		{
+			Interface.CommandInfo Info = Interface.CommandInfos.TryGetInfo(Interface.CurrentControls[Index].Command);
 			Item.SubItems[0].Text = Info.Name;
 			switch (Info.Type) {
 					case Interface.CommandType.Digital: Item.SubItems[1].Text = Interface.GetInterfaceString("controls_list_type_digital"); break;
@@ -295,8 +302,7 @@ namespace OpenBve {
 				int j = comboboxCommand.SelectedIndex;
 				if (j >= 0) {
 					Interface.CurrentControls[i].Command = Interface.CommandInfos[j].Command;
-					Interface.CommandInfo Info;
-					Interface.TryGetCommandInfo(Interface.CommandInfos[j].Command, out Info);
+					Interface.CommandInfo Info = Interface.CommandInfos.TryGetInfo(Interface.CommandInfos[j].Command);
 					Interface.CurrentControls[i].InheritedType = Info.Type;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 				}
@@ -309,6 +315,14 @@ namespace OpenBve {
 
 		// keyboard
 		private void radiobuttonKeyboard_CheckedChanged(object sender, EventArgs e) {
+			if (radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked)
+			{
+				textboxJoystickGrab.Enabled = true;
+			}
+			else
+			{
+				textboxJoystickGrab.Enabled = false;
+			}
 			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
 				int i = listviewControls.SelectedIndices[0];
 				Interface.CurrentControls[i].Method = Interface.ControlMethod.Keyboard;
@@ -372,6 +386,14 @@ namespace OpenBve {
 				UpdateControlListElement(listviewControls.Items[i], i, true);
 			}
 			panelJoystick.Enabled = radiobuttonJoystick.Checked;
+			if (radiobuttonJoystick.Checked || radiobuttonKeyboard.Checked)
+			{
+				textboxJoystickGrab.Enabled = true;
+			}
+			else
+			{
+				textboxJoystickGrab.Enabled = false;
+			}
 			if (radiobuttonJoystick.Checked)
 			{
 				textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment_grab");

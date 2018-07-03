@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using OpenBveApi;
 
 namespace OpenBve {
 	internal static class Illustrations {
@@ -448,7 +449,7 @@ namespace OpenBve {
 							if (Game.Stations[e.StationIndex].Name != string.Empty)
 							{
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);
-								if (Interface.IsJapanese(Game.Stations[e.StationIndex].Name))
+								if (Game.Stations[e.StationIndex].Name.IsJapanese())
 								{
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;

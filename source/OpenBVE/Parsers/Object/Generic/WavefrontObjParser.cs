@@ -172,19 +172,36 @@ namespace OpenBve
 							Vertex newVertex = new Vertex();
 							string[] faceArguments = Arguments[f].Split(new char[] {'/'} , StringSplitOptions.None);
 							int idx;
-							if (!int.TryParse(faceArguments[0], out idx) || idx > tempVertices.Count)
+							if (!int.TryParse(faceArguments[0], out idx))
 							{
 								Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
 								continue;
 							}
-							newVertex.Coordinates = tempVertices[idx - 1];
+
+							int currentVertex = tempVertices.Count;
+							if (idx != Math.Abs(idx))
+							{
+								//Offset, so we seem to need to add one....
+								currentVertex++; 
+								currentVertex += idx;
+							}
+							else
+							{
+								currentVertex = idx;
+							}
+							if (currentVertex > tempVertices.Count)
+							{
+								Interface.AddMessage(Interface.MessageType.Warning, false, "Vertex index " + idx + " was greater than the available number of vertices in Face " + f + " at Line " + i);
+								continue;
+							}
+							newVertex.Coordinates = tempVertices[currentVertex - 1];
 							if (faceArguments.Length <= 1)
 							{
 								normals.Add(new Vector3());
 							}
 							else
 							{
-								if (!int.TryParse(faceArguments[1], out idx) || idx > tempCoords.Count)
+								if (!int.TryParse(faceArguments[1], out idx))
 								{
 									if (!string.IsNullOrEmpty(faceArguments[1]))
 									{
@@ -194,7 +211,22 @@ namespace OpenBve
 								}
 								else
 								{
-									newVertex.TextureCoordinates = tempCoords[idx - 1];
+									int currentCoord = tempCoords.Count;
+									if (idx != Math.Abs(idx))
+									{
+										//Offset, so we seem to need to add one....
+										currentCoord++;
+										currentCoord += idx;
+									}
+									if (currentCoord > tempCoords.Count)
+									{
+										Interface.AddMessage(Interface.MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
+									}
+									else
+									{
+										newVertex.TextureCoordinates = tempCoords[currentCoord - 1];
+									}
+									
 								}
 							}
 							if (faceArguments.Length <= 2)
@@ -203,7 +235,7 @@ namespace OpenBve
 							}
 							else
 							{
-								if (!int.TryParse(faceArguments[2], out idx) || idx > tempNormals.Count)
+								if (!int.TryParse(faceArguments[2], out idx))
 								{
 									if (!string.IsNullOrEmpty(faceArguments[2]))
 									{
@@ -213,7 +245,22 @@ namespace OpenBve
 								}
 								else
 								{
-									normals.Add(tempNormals[idx - 1]);
+									int currentNormal = tempNormals.Count;
+									if (idx != Math.Abs(idx))
+									{
+										//Offset, so we seem to need to add one....
+										currentNormal++;
+										currentNormal += idx;
+									}
+									if (currentNormal > tempNormals.Count)
+									{
+										Interface.AddMessage(Interface.MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
+										normals.Add(new Vector3());
+									}
+									else
+									{
+										normals.Add(tempNormals[currentNormal - 1]);
+									}
 								}
 							}
 							vertices.Add(newVertex);
@@ -221,17 +268,8 @@ namespace OpenBve
 						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
-							int v = Builder.Vertices.FindIndex(a => a.Equals(vertices[k]));
-							if (v != -1)
-							{
-								Vertices[k].Index = (ushort)v;
-							}
-							else
-							{
-								Builder.Vertices.Add(vertices[k]);
-								Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
-							}
-							
+							Builder.Vertices.Add(vertices[k]);
+							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
 						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));

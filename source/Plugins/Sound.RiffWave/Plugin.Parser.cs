@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0660, 0661
 
 using System.IO;
+using NAudio.Wave;
 using OpenBveApi.Sounds;
 
 namespace Plugin {
@@ -197,6 +198,9 @@ namespace Plugin {
 								format.Channels = (int)wChannels;
 								adpcmData.BlockSize = wBlockAlign;
 								data = adpcmData;
+							} else if (wFormatTag == 85) {
+								//This is actually a WAV encapsulated mp3 file....
+								return NlayerLoadFromFile(fileName);
 							} else {
 								// unsupported format
 								throw new InvalidDataException("Unsupported wFormatTag");
@@ -333,7 +337,36 @@ namespace Plugin {
 				}
 			}
 		}
-		
+
+		/// <summary>Reads sound data from a MP3 file.</summary>
+		/// <param name="fileName">The file name of the MP3 file.</param>
+		/// <returns>The raw sound data.</returns>
+		private static Sound NlayerLoadFromFile(string fileName)
+		{
+			using (var reader = new Mp3FileReader(fileName))
+			{
+				var pcmLength = (int)reader.Length;
+				var leftBuffer = new byte[pcmLength / 2];
+				var rightBuffer = new byte[pcmLength / 2];
+				var buffer = new byte[pcmLength];
+				var bytesRead = reader.Read(buffer, 0, pcmLength);
+
+				int index = 0;
+				//For simplicity just use let NLayer internally convert into raw 16-bit 2 channel PCM
+				for (int i = 0; i < bytesRead; i += 4)
+				{
+					leftBuffer[index] = buffer[i];
+					rightBuffer[index] = buffer[i + 2];
+					index++;
+					leftBuffer[index] = buffer[i + 1];
+					rightBuffer[index] = buffer[i + 3];
+					index++;
+				}
+				return new Sound(44100, 16, new byte[][] { leftBuffer, rightBuffer });
+				
+			}
+		}
+
 		/// <summary>Reads a System.UInt32 from a binary reader with the specified endianness.</summary>
 		/// <param name="reader">The binary reader.</param>
 		/// <param name="endianness">The endianness.</param>

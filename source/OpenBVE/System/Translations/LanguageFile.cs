@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using OpenBveApi;
 
 namespace OpenBve {
 	internal static partial class Interface {
@@ -45,7 +46,7 @@ namespace OpenBve {
                             if (j >= 0)
                             {
                                 string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                string b = Interface.Unescape(Lines[i].Substring(j + 1).TrimStart());
+                                string b = Lines[i].Substring(j + 1).TrimStart().Unescape();
                                 switch (Section)
                                 {
                                     case "handles":
@@ -156,7 +157,7 @@ namespace OpenBve {
                             if (j >= 0)
                             {
                                 string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                string b = Interface.Unescape(Lines[i].Substring(j + 1).TrimStart());
+                                string b = Lines[i].Substring(j + 1).TrimStart().Unescape();
                                 switch (Section)
                                 {
                                     case "handles":

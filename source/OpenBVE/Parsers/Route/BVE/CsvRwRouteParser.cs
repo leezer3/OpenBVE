@@ -12,6 +12,7 @@ namespace OpenBve {
 		internal static string SoundPath;
 		internal static string TrainPath;
 		internal static string CompatibilityFolder;
+		internal static bool CylinderHack = false;
 
 		// parse route
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly) {
@@ -1016,6 +1017,8 @@ namespace OpenBve {
 			bool ValueBasedSections = false;
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
 			// process non-track namespaces
+			//Check for any special-cased fixes we might need
+			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = (double)j * progressFactor;
 				if ((j & 255) == 0) {
@@ -2333,22 +2336,26 @@ namespace OpenBve {
 														}
 														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
 														{
+															string ff;
 															bool notFound = false;
 															while (true)
 															{
-																f = Path.CombineFile(ObjectPath, f + ".x");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".x");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
-																f = Path.CombineFile(ObjectPath, f + ".csv");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".csv");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
-																f = Path.CombineFile(ObjectPath, f + ".b3d");
-																if (System.IO.File.Exists(f))
+																ff = Path.CombineFile(ObjectPath, f + ".b3d");
+																if (System.IO.File.Exists(ff))
 																{
+																	f = ff;
 																	break;
 																}
 																Interface.AddMessage(Interface.MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2377,13 +2384,46 @@ namespace OpenBve {
 																} else
 																{
 																	f = Arguments[1];
-																	LocateObject(ref f, ObjectPath);
-																	Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-																	if (Signal.GlowObject != null) {
-																		Signal.GlowTextures = LoadAllTextures(f, true);
-																		for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++) {
-																			Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																	bool notFound = false;
+																	if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
+																	{
+																		string ff;
+																		while (true)
+																		{
+																			ff = Path.CombineFile(ObjectPath, f + ".x");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			ff = Path.CombineFile(ObjectPath, f + ".csv");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			ff = Path.CombineFile(ObjectPath, f + ".b3d");
+																			if (System.IO.File.Exists(ff))
+																			{
+																				f = ff;
+																				break;
+																			}
+																			Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																			notFound = true;
+																			break;
+																		}
+																	}
+																	if (!notFound)
+																	{
+																		Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+																		if (Signal.GlowObject != null)
+																		{
+																			Signal.GlowTextures = LoadAllTextures(f, true);
+																			for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++)
+																			{
+																				Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
+																				Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																			}
 																		}
 																	}
 																}
@@ -2574,8 +2614,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			//Check for any special-cased fixes we might need
-			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
+			
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = 0.3333 + (double)j * progressFactor;
@@ -3765,12 +3804,14 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
-											} else if (!Interface.TryParseTime(Arguments[1], out arr)) {
+											} else if(Arguments[1].Length == 1 && Arguments[1][0] == '.')
+											{ /* Treat a single period as a blank space */ }
+											else if (!Interface.TryParseTime(Arguments[1], out arr)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												arr = -1.0;
 											}
 										}
-										if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
+										if (Arguments.Length >= 3 && (Arguments[2].Length > 0)) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
 												Game.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
@@ -3787,7 +3828,9 @@ namespace OpenBve {
 													Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
-											} else if (!Interface.TryParseTime(Arguments[2], out dep)) {
+											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											{ /* Treat a single period as a blank space */ }
+											else if (!Interface.TryParseTime(Arguments[2], out dep)) {
 												Interface.AddMessage(Interface.MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												dep = -1.0;
 											}

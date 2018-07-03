@@ -34,6 +34,14 @@ namespace OpenBve
 	    /// <summary>This function renderers full-screen motion blur if selected</summary>
 		private static void RenderFullscreenMotionBlur()
         {
+			if(Screen.Minimized)
+			{
+				/*
+				 * HACK:
+				 * This breaks if minimized, even if we don't reset the W / H values
+				 */
+				return;
+			}
             int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
             int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
             // render

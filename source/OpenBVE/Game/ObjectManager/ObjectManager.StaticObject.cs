@@ -326,10 +326,10 @@ namespace OpenBve
 							nx -= dx * n;
 							ny -= dy * n;
 							nz -= dz * n;
-							World.Normalize(ref nx, ref ny, ref nz);
 							Mesh.Faces[j].Vertices[k].Normal.X = (float) nx;
 							Mesh.Faces[j].Vertices[k].Normal.Y = (float) ny;
 							Mesh.Faces[j].Vertices[k].Normal.Z = (float) nz;
+							Mesh.Faces[j].Vertices[k].Normal.Normalize();
 						}
 					}
 				}

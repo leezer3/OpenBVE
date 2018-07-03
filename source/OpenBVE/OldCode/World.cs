@@ -9,9 +9,6 @@ using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal static partial class World {
-		// vertices
-		/// <summary>Represents a vertex consisting of 3D coordinates and 2D texture coordinates.</summary>
-
 		// mesh material
 		/// <summary>Represents material properties.</summary>
 		internal struct MeshMaterial {
@@ -289,47 +286,46 @@ namespace OpenBve {
 			internal double FastY;
 			internal double Pitch;
 			internal ObjectManager.Damping PitchDamping;
-		}
-		internal static DriverBody CurrentDriverBody;
-		internal static void UpdateDriverBody(double TimeElapsed) {
+
+			internal void Update(double TimeElapsed) {
 			if (CameraRestriction == CameraRestrictionMode.NotAvailable) {
 				{
 					// pitch
 					double targetY = TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
 					const double accelerationSlow = 0.25;
 					const double accelerationFast = 2.0;
-					if (CurrentDriverBody.SlowY < targetY) {
-						CurrentDriverBody.SlowY += accelerationSlow * TimeElapsed;
-						if (CurrentDriverBody.SlowY > targetY) {
-							CurrentDriverBody.SlowY = targetY;
+					if (SlowY < targetY) {
+						SlowY += accelerationSlow * TimeElapsed;
+						if (SlowY > targetY) {
+							SlowY = targetY;
 						}
-					} else if (CurrentDriverBody.SlowY > targetY) {
-						CurrentDriverBody.SlowY -= accelerationSlow * TimeElapsed;
-						if (CurrentDriverBody.SlowY < targetY) {
-							CurrentDriverBody.SlowY = targetY;
-						}
-					}
-					if (CurrentDriverBody.FastY < targetY) {
-						CurrentDriverBody.FastY += accelerationFast * TimeElapsed;
-						if (CurrentDriverBody.FastY > targetY) {
-							CurrentDriverBody.FastY = targetY;
-						}
-					} else if (CurrentDriverBody.FastY > targetY) {
-						CurrentDriverBody.FastY -= accelerationFast * TimeElapsed;
-						if (CurrentDriverBody.FastY < targetY) {
-							CurrentDriverBody.FastY = targetY;
+					} else if (SlowY > targetY) {
+						SlowY -= accelerationSlow * TimeElapsed;
+						if (SlowY < targetY) {
+							SlowY = targetY;
 						}
 					}
-					double diffY = CurrentDriverBody.FastY - CurrentDriverBody.SlowY;
+					if (FastY < targetY) {
+						FastY += accelerationFast * TimeElapsed;
+						if (FastY > targetY) {
+							FastY = targetY;
+						}
+					} else if (FastY > targetY) {
+						FastY -= accelerationFast * TimeElapsed;
+						if (FastY < targetY) {
+							FastY = targetY;
+						}
+					}
+					double diffY = FastY - SlowY;
 					diffY = (double)Math.Sign(diffY) * diffY * diffY;
-					CurrentDriverBody.Pitch = 0.5 * Math.Atan(0.1 * diffY);
-					if (CurrentDriverBody.Pitch > 0.1) {
-						CurrentDriverBody.Pitch = 0.1;
+					Pitch = 0.5 * Math.Atan(0.1 * diffY);
+					if (Pitch > 0.1) {
+						Pitch = 0.1;
 					}
-					if (CurrentDriverBody.PitchDamping == null) {
-						CurrentDriverBody.PitchDamping = new ObjectManager.Damping(6.0, 0.3);
+					if (PitchDamping == null) {
+						PitchDamping = new ObjectManager.Damping(6.0, 0.3);
 					}
-					CurrentDriverBody.PitchDamping.Update(TimeElapsed, ref CurrentDriverBody.Pitch, true);
+					PitchDamping.Update(TimeElapsed, ref Pitch, true);
 				}
 				{
 					// roll
@@ -359,38 +355,41 @@ namespace OpenBve {
 					}
 					const double accelerationSlow = 1.0;
 					const double accelerationFast = 10.0;
-					if (CurrentDriverBody.SlowX < targetX) {
-						CurrentDriverBody.SlowX += accelerationSlow * TimeElapsed;
-						if (CurrentDriverBody.SlowX > targetX) {
-							CurrentDriverBody.SlowX = targetX;
+					if (SlowX < targetX) {
+						SlowX += accelerationSlow * TimeElapsed;
+						if (SlowX > targetX) {
+							SlowX = targetX;
 						}
-					} else if (CurrentDriverBody.SlowX > targetX) {
-						CurrentDriverBody.SlowX -= accelerationSlow * TimeElapsed;
-						if (CurrentDriverBody.SlowX < targetX) {
-							CurrentDriverBody.SlowX = targetX;
-						}
-					}
-					if (CurrentDriverBody.FastX < targetX) {
-						CurrentDriverBody.FastX += accelerationFast * TimeElapsed;
-						if (CurrentDriverBody.FastX > targetX) {
-							CurrentDriverBody.FastX = targetX;
-						}
-					} else if (CurrentDriverBody.FastX > targetX) {
-						CurrentDriverBody.FastX -= accelerationFast * TimeElapsed;
-						if (CurrentDriverBody.FastX < targetX) {
-							CurrentDriverBody.FastX = targetX;
+					} else if (SlowX > targetX) {
+						SlowX -= accelerationSlow * TimeElapsed;
+						if (SlowX < targetX) {
+							SlowX = targetX;
 						}
 					}
-					double diffX = CurrentDriverBody.SlowX - CurrentDriverBody.FastX;
+					if (FastX < targetX) {
+						FastX += accelerationFast * TimeElapsed;
+						if (FastX > targetX) {
+							FastX = targetX;
+						}
+					} else if (FastX > targetX) {
+						FastX -= accelerationFast * TimeElapsed;
+						if (FastX < targetX) {
+							FastX = targetX;
+						}
+					}
+					double diffX = SlowX - FastX;
 					diffX = (double)Math.Sign(diffX) * diffX * diffX;
-					CurrentDriverBody.Roll = 0.5 * Math.Atan(0.3 * diffX);
-					if (CurrentDriverBody.RollDamping == null) {
-						CurrentDriverBody.RollDamping = new ObjectManager.Damping(6.0, 0.3);
+					Roll = 0.5 * Math.Atan(0.3 * diffX);
+					if (RollDamping == null) {
+						RollDamping = new ObjectManager.Damping(6.0, 0.3);
 					}
-					CurrentDriverBody.RollDamping.Update(TimeElapsed, ref CurrentDriverBody.Roll, true);
+					RollDamping.Update(TimeElapsed, ref Roll, true);
 				}
 			}
 		}
+		}
+		internal static DriverBody CurrentDriverBody;
+		
 		
 		// mouse grab
 		internal static bool MouseGrabEnabled = false;
@@ -711,7 +710,7 @@ namespace OpenBve {
 					dz *= ti;
 					AbsoluteCameraDirection = new Vector3(dx, dy, dz);
 					AbsoluteCameraSide = new Vector3(dz, 0.0, -dx);
-					Normalize(ref AbsoluteCameraSide.X, ref AbsoluteCameraSide.Y, ref AbsoluteCameraSide.Z);
+					AbsoluteCameraSide.Normalize();
 					World.Cross(dx, dy, dz, AbsoluteCameraSide.X, AbsoluteCameraSide.Y, AbsoluteCameraSide.Z, out AbsoluteCameraUp.X, out AbsoluteCameraUp.Y, out AbsoluteCameraUp.Z);
 					UpdateViewingDistances();
 					if (CameraMode == CameraViewMode.FlyByZooming) {

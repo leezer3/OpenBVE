@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static partial class Game {

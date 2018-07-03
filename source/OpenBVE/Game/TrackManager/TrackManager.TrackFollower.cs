@@ -78,7 +78,7 @@ namespace OpenBve
 							double c = (double)Math.Sign(db) * Math.Sqrt(f >= 0.0 ? f : 0.0);
 							double a = 0.5 * (double)Math.Sign(r) * b;
 							Vector3 D = new Vector3(CurrentTrack.Elements[i].WorldDirection.X, 0.0, CurrentTrack.Elements[i].WorldDirection.Z);
-							World.Normalize(ref D.X, ref D.Y, ref D.Z);
+							D.Normalize();
 							double cosa = Math.Cos(a);
 							double sina = Math.Sin(a);
 							World.Rotate(ref D, 0.0, 1.0, 0.0, cosa, sina);
@@ -89,7 +89,7 @@ namespace OpenBve
 							WorldDirection.X = D.X;
 							WorldDirection.Y = p;
 							WorldDirection.Z = D.Z;
-							World.Normalize(ref WorldDirection.X, ref WorldDirection.Y, ref WorldDirection.Z);
+							WorldDirection.Normalize();
 							double cos2a = Math.Cos(2.0 * a);
 							double sin2a = Math.Sin(2.0 * a);
 							WorldSide = CurrentTrack.Elements[i].WorldSide;

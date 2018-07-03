@@ -67,6 +67,7 @@ namespace OpenBve {
 			internal VertexTemplate[] Vertices;
 			internal World.MeshFace[] Faces;
 			internal Material[] Materials;
+			internal bool isCylinder = false;
 			internal MeshBuilder() {
 				this.Vertices = new VertexTemplate[] { };
 				this.Faces = new World.MeshFace[] { };
@@ -477,6 +478,13 @@ namespace OpenBve {
 											Builder.Faces[f].Vertices[j].Index = (ushort)a[j];
 											Builder.Faces[f].Vertices[j].Normal = Normals[a[j]];
 										}
+										if (Builder.isCylinder && Interface.CurrentOptions.EnableBveTsHacks && CsvRwRouteParser.CylinderHack)
+										{
+											int l = Builder.Faces[f].Vertices.Length;
+											World.MeshFaceVertex v = Builder.Faces[f].Vertices[l - 1];
+											Builder.Faces[f].Vertices[l - 1] = Builder.Faces[f].Vertices[l - 2];
+											Builder.Faces[f].Vertices[l - 2] = v;
+										}
 										if (cmd == "addface2" | cmd == "face2") {
 											Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
 										}
@@ -532,6 +540,7 @@ namespace OpenBve {
 									h = 1.0;
 								}
 								CreateCylinder(ref Builder, n, r1, r2, h);
+								Builder.isCylinder = true;
 							} break;
 						case "translate":
 						case "translateall":
