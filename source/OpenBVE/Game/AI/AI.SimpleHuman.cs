@@ -321,7 +321,7 @@ namespace OpenBve
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
 						{
-							if (Train.Cars[Train.DriverCar].Specs.MotorDeceleration < BrakeDeceleration)
+							if (Train.Cars[Train.DriverCar].Specs.MotorDeceleration != 0 && Train.Cars[Train.DriverCar].Specs.MotorDeceleration < BrakeDeceleration)
 							{
 								BrakeDeceleration = Train.Cars[Train.DriverCar].Specs.MotorDeceleration;
 							}
