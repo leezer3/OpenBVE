@@ -1117,10 +1117,7 @@ namespace OpenBve {
 				Train.Couplers[i].MaximumDistanceBetweenCars = 1.1 * DistanceBetweenTheCars;
 			}
 			// finish
-			Train.Station = -1;
-			Train.RouteLimits = new double[] { double.PositiveInfinity };
-			Train.CurrentRouteLimit = double.PositiveInfinity;
-			Train.CurrentSectionLimit = double.PositiveInfinity;
+			
 		}
 
 	}

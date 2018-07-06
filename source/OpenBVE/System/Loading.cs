@@ -203,6 +203,7 @@ namespace OpenBve {
 					}
 				}
 			}
+
 			if (Game.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
@@ -214,7 +215,7 @@ namespace OpenBve {
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
-				TrainManager.Trains[k] = new TrainManager.Train {TrainIndex = k, Destination = Game.InitialDestination};
+				TrainManager.Trains[k] = new TrainManager.Train(k);
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0) {
 					TrainManager.Trains[k].State = TrainManager.TrainState.Bogus;
 				} else {

@@ -60,6 +60,15 @@ namespace OpenBve
 			/// <summary>The absolute on-disk path to the train's folder</summary>
 			internal string TrainFolder;
 
+			internal Train(int trainIndex)
+			{
+				TrainIndex = trainIndex;
+				Destination = Game.InitialDestination;
+				Station = -1;
+				CurrentRouteLimit = double.PositiveInfinity;
+				CurrentSectionLimit = double.PositiveInfinity;
+			}
+
 			internal void Initialize()
 			{
 				for (int i = 0; i < Cars.Length; i++)
