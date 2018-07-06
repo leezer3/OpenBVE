@@ -375,6 +375,11 @@ namespace OpenBve
 										}
 										else
 										{
+											if (World.CameraAtWorldEnd)
+											{
+												//Don't let the camera run off the end of the worldspace
+												break;
+											}
 											World.CameraAlignmentDirection.TrackPosition = World.CameraExteriorTopSpeed*
 																						   Interface.CurrentControls[i]
 																							   .AnalogState;

@@ -427,6 +427,7 @@ namespace OpenBve {
 			}
 		}
 		internal static TrackManager.TrackFollower CameraTrackFollower;
+		internal static bool CameraAtWorldEnd;
 		internal static CameraAlignment CameraCurrentAlignment;
 		internal static CameraAlignment CameraAlignmentDirection;
 		internal static CameraAlignment CameraAlignmentSpeed;
