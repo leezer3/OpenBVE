@@ -91,8 +91,6 @@ namespace OpenBve {
 				}
 			}
 			// initialize
-			Train.Cars = new TrainManager.Car[] { };
-			Train.Couplers = null;
 			double BrakeCylinderServiceMaximumPressure = 440000.0;
 			double BrakeCylinderEmergencyMaximumPressure = 440000.0;
 			double MainReservoirMinimumPressure = 690000.0;
@@ -124,9 +122,7 @@ namespace OpenBve {
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
 			int ReAdhesionDevice = 0;
-			Train.Specs.PassAlarm = TrainManager.PassAlarmType.None;
-			Train.Specs.DoorOpenMode = TrainManager.DoorMode.AutomaticManualOverride;
-			Train.Specs.DoorCloseMode = TrainManager.DoorMode.AutomaticManualOverride;
+			
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.AirBrake.Handle = new TrainManager.AirBrakeHandle();
 			Train.Handles.HasLocoBrake = false;
