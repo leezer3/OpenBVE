@@ -489,9 +489,25 @@ namespace OpenBve {
 			}
 			string file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
 			string title = System.IO.Path.GetFileName(file);
-			if (!System.IO.File.Exists(file)) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
-				return false;
+			if (!System.IO.File.Exists(file))
+			{
+				if(lines[0].EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
+				{
+					// Our filename ends with .dll so probably is not mangled Unicode
+					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					return false;
+				}
+				// Try again with ASCII encoding
+				lines = System.IO.File.ReadAllLines(config, System.Text.Encoding.GetEncoding(1252));
+				file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
+				title = System.IO.Path.GetFileName(file);
+				if (!System.IO.File.Exists(file))
+				{
+					// Nope, still not found
+					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					return false;
+				}
+
 			}
 			Program.AppendToLogFile("Loading train plugin: " + file);
 			bool success = LoadPlugin(train, file, trainFolder);

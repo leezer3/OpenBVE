@@ -101,65 +101,68 @@ namespace OpenBve
 			{
 				Program.AppendToLogFile("Loading train panel: " + File);
 				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
-				try
+				if (a != null)
 				{
-					for (int i = 0; i < a.Objects.Length; i++)
+					//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
+					try
 					{
-						a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+						for (int i = 0; i < a.Objects.Length; i++)
+						{
+							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+						}
+						Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
+						World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+						World.UpdateViewingDistances();
+						return;
 					}
-					Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
-					World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-					World.UpdateViewingDistances();
-				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("error_critical_file");
-					currentError = currentError.Replace("[file]", "panel.animated");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
+					catch
+					{
+						var currentError = Interface.GetInterfaceString("errors_critical_file");
+						currentError = currentError.Replace("[file]", "panel.animated");
+						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						Program.RestartArguments = " ";
+						Loading.Cancel = true;
+						return;
+					}
 				}
 			}
-			else
+
+			var Panel2 = false;
+			try
 			{
-				var Panel2 = false;
-				try
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+				if (System.IO.File.Exists(File))
 				{
-					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+					Program.AppendToLogFile("Loading train panel: " + File);
+					Panel2 = true;
+					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
+					World.CameraRestriction = World.CameraRestrictionMode.On;
+				}
+				else
+				{
+					File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 					if (System.IO.File.Exists(File))
 					{
 						Program.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
 						World.CameraRestriction = World.CameraRestrictionMode.On;
 					}
 					else
 					{
-						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							Program.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-							World.CameraRestriction = World.CameraRestrictionMode.On;
-						}
-						else
-						{
-							World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-						}
+						World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
 					}
 				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
-				}
-
+			}
+			catch
+			{
+				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				Loading.Cancel = true;
 			}
 		}
 		

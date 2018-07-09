@@ -1371,6 +1371,16 @@ namespace OpenBve
 							}
 							break;
 						default:
+							if (Lines.Length == 1 && Encoding.Equals(System.Text.Encoding.Unicode))
+							{
+								/*
+								 * If only one line, there's a good possibility that our file is NOT Unicode at all
+								 * and that the misdetection has turned it into garbage
+								 *
+								 * Try again with ASCII instead
+								 */
+								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252), LoadMode);
+							}
 							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							return null;
 					}
