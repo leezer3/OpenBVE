@@ -137,8 +137,6 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
 						}
-						//Wavefront obj texture co-ords Y axis appear inverted v.s. BVE standard
-						coords.Y = -coords.Y;
 						tempCoords.Add(coords);
 						break;
 					case "vn":
@@ -218,6 +216,10 @@ namespace OpenBve
 										currentCoord++;
 										currentCoord += idx;
 									}
+									else
+									{
+										currentCoord = idx;
+									}
 									if (currentCoord > tempCoords.Count)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
@@ -251,6 +253,10 @@ namespace OpenBve
 										//Offset, so we seem to need to add one....
 										currentNormal++;
 										currentNormal += idx;
+									}
+									else
+									{
+										currentNormal = idx;
 									}
 									if (currentNormal > tempNormals.Count)
 									{
