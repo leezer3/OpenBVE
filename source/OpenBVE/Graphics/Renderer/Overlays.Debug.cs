@@ -152,6 +152,7 @@ namespace OpenBve
 				"position: " + World.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m",
 				"curve radius: " + World.CameraTrackFollower.CurveRadius.ToString("0.00", Culture) + " m",
 				"curve cant: " + (1000.0 * Math.Abs(World.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (World.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : World.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
+				"pitch: " + World.CameraTrackFollower.Pitch.ToString("0.00", Culture),
 				"",
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " / " + soundBuffersRegistered.ToString(Culture),
