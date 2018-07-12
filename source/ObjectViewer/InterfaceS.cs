@@ -83,6 +83,7 @@ namespace OpenBve {
 			internal Vector3 WorldSide;
             internal double CurveRadius;
             internal double CurveCant;
+			internal double Pitch;
             internal double CantDueToInaccuracy;
 		}
 		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) { }

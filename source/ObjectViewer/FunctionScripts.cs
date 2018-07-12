@@ -18,7 +18,7 @@ namespace OpenBve {
 			TrainCars, TrainDestination,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Odometer, OdometerOfCar,
+			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Pitch, Odometer, OdometerOfCar,
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
@@ -513,6 +513,25 @@ namespace OpenBve {
                             }
                         }
                         break;
+					case Instructions.Pitch:
+						if (Train == null)
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						else
+						{
+							int j = (int)Math.Round(Function.Stack[s - 1]);
+							if (j < 0) j += Train.Cars.Length;
+							if (j >= 0 & j < Train.Cars.Length)
+							{
+								Function.Stack[s - 1] = Train.Cars[j].FrontAxle.Follower.Pitch;
+							}
+							else
+							{
+								Function.Stack[s - 1] = 0.0;
+							}
+						}
+						break;
 					case Instructions.Odometer:
 						Function.Stack[s] = 0.0;
 						s++;
@@ -1607,6 +1626,7 @@ namespace OpenBve {
 				case "frontaxlecurveradius":
 				case "rearaxlecurveradius":
 				case "curvecant":
+				case "pitch":
 				case "odometer":
 				case "speed":
 				case "speedometer":
@@ -2469,6 +2489,11 @@ namespace OpenBve {
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CurveCant;
+							n++; break;
+						case "pitchindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Pitch;
 							n++; break;
 						case "odometer":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);

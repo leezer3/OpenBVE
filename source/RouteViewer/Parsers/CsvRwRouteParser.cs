@@ -5468,6 +5468,14 @@ namespace OpenBve {
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				}
+				if (Data.Blocks[i].Pitch != 0.0)
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = Data.Blocks[i].Pitch;
+				}
+				else
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = 0.0;
+				}
 				// curves
 				double a = 0.0;
 				double c = Data.BlockInterval;
