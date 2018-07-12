@@ -241,7 +241,7 @@ namespace OpenBve {
 							this.Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
 						} else {
 							TrainManager.UnapplyEmergencyBrake(this.Train);
-							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Release);
+							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Service);
 						}
 					} else if (handles.BrakeNotch == 3) {
 						if (virtualHandles) {
