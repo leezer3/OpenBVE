@@ -630,7 +630,7 @@ namespace OpenBve
 
 					break;
 				case KujuTokenID.texture:
-					int imageIDX = (int) block.ReadUInt32();
+					int imageIDX = block.ReadInt32();
 					int filterMode = (int) block.ReadUInt32();
 					float mipmapLODBias = block.ReadSingle();
 					uint borderColor = 0xff000000U;
