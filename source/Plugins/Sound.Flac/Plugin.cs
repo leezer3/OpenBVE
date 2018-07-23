@@ -4,13 +4,6 @@ using OpenBveApi.Sounds;
 
 namespace Plugin {
 	public class Plugin : SoundInterface {
-
-		// --- members ---
-		
-		/// <summary>The host that loaded the plugin.</summary>
-		// private HostInterface CurrentHost = null;
-		
-		
 		// --- functions ---
 		
 		/// <summary>Called when the plugin is loaded.</summary>

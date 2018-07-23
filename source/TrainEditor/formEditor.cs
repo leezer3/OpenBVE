@@ -1421,7 +1421,7 @@ namespace TrainEditor {
 			TextBox t = new TextBox
 		    {
 		     Location = new Point(20, currentPosition),
-		     Text = delayValues[index].ToString()
+		     Text = delayValues[index].ToString(CultureInfo.InvariantCulture)
 		    };
 		    formDelay.Controls.Add(t);
 		    Label l = new Label

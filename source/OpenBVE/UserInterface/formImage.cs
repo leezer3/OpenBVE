@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace OpenBve {
     internal partial class formImage : Form {
-        internal formImage() {
+	    private formImage() {
             InitializeComponent();
         }
 
@@ -16,7 +16,7 @@ namespace OpenBve {
         }
 
         // members
-        internal Image CurrentImage = null;
+	    private Image CurrentImage = null;
 
         // resize
         private void formImage_Resize(object sender, EventArgs e) {

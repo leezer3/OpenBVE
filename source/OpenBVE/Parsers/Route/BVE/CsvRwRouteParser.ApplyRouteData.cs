@@ -28,7 +28,6 @@ namespace OpenBve
 			if (!PreviewOnly)
 			{
 				//TODO: These need to be shifted into the main compatibility manager
-				string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 				// load compatibility objects
 				SignalPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
 				SignalPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalPath, "signal_post.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);

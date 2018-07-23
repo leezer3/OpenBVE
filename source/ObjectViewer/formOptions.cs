@@ -7,7 +7,7 @@ namespace OpenBve
 {
     public partial class formOptions : Form
     {
-        public formOptions()
+	    private formOptions()
         {
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
