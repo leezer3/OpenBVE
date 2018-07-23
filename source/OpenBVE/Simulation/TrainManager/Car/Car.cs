@@ -54,7 +54,7 @@ namespace OpenBve
 			/// <summary>The index of the car within the train</summary>
 			internal int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
-			internal World.CameraRestrictionMode CameraRestrictionMode = World.CameraRestrictionMode.NotSpecified;
+			internal Camera.RestrictionMode CameraRestrictionMode = Camera.RestrictionMode.NotSpecified;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
 			internal World.CameraAlignment InteriorCamera;
 
@@ -594,7 +594,7 @@ namespace OpenBve
 			internal void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}

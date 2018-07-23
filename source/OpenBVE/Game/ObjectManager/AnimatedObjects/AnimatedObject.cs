@@ -754,7 +754,7 @@ namespace OpenBve
 						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 					{
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;

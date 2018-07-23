@@ -111,8 +111,8 @@ namespace OpenBve
 							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 						}
 						Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
-						World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 						World.UpdateViewingDistances();
 						return;
 					}
@@ -137,8 +137,8 @@ namespace OpenBve
 					Program.AppendToLogFile("Loading train panel: " + File);
 					Panel2 = true;
 					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
-					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-					World.CameraRestriction = World.CameraRestrictionMode.On;
+					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+					World.CameraRestriction = Camera.RestrictionMode.On;
 				}
 				else
 				{
@@ -147,12 +147,12 @@ namespace OpenBve
 					{
 						Program.AppendToLogFile("Loading train panel: " + File);
 						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-						World.CameraRestriction = World.CameraRestrictionMode.On;
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+						World.CameraRestriction = Camera.RestrictionMode.On;
 					}
 					else
 					{
-						World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
+						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 					}
 				}
 			}

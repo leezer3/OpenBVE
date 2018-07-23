@@ -26,7 +26,7 @@ namespace OpenBve
 					World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 					MainLoop.SaveCameraSettings();
 					bool lookahead = false;
-					if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+					if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 					{
 						Game.AddMessage(Interface.GetInterfaceString("notification_interior_lookahead"),
 							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -84,7 +84,7 @@ namespace OpenBve
 					UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(TimeElapsed);
 					World.UpdateViewingDistances();
-					if (World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+					if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 					{
 						if (!World.PerformCameraRestrictionTest())
 						{
@@ -499,7 +499,7 @@ namespace OpenBve
 										// camera rotate ccw
 										if ((World.CameraMode != World.CameraViewMode.Interior &
 											 World.CameraMode != World.CameraViewMode.InteriorLookAhead) |
-											World.CameraRestriction != World.CameraRestrictionMode.On)
+											World.CameraRestriction != Camera.RestrictionMode.On)
 										{
 											double s = World.CameraMode == World.CameraViewMode.Interior |
 													   World.CameraMode == World.CameraViewMode.InteriorLookAhead
@@ -514,7 +514,7 @@ namespace OpenBve
 										// camera rotate cw
 										if ((World.CameraMode != World.CameraViewMode.Interior &
 											 World.CameraMode != World.CameraViewMode.InteriorLookAhead) |
-											World.CameraRestriction != World.CameraRestrictionMode.On)
+											World.CameraRestriction != Camera.RestrictionMode.On)
 										{
 											double s = World.CameraMode == World.CameraViewMode.Interior |
 													   World.CameraMode == World.CameraViewMode.InteriorLookAhead
@@ -641,7 +641,7 @@ namespace OpenBve
 										// camera: interior
 										MainLoop.SaveCameraSettings();
 										bool lookahead = false;
-										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+										if (World.CameraMode != World.CameraViewMode.InteriorLookAhead & World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 										{
 											Game.AddMessage(Interface.GetInterfaceString("notification_interior_lookahead"),
 												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -695,7 +695,7 @@ namespace OpenBve
 										UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
-										if (World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+										if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 										{
 											if (!World.PerformCameraRestrictionTest())
 											{
@@ -926,7 +926,7 @@ namespace OpenBve
 										World.UpdateViewingDistances();
 										if ((World.CameraMode == World.CameraViewMode.Interior |
 											 World.CameraMode == World.CameraViewMode.InteriorLookAhead) &
-											World.CameraRestriction == World.CameraRestrictionMode.On)
+											World.CameraRestriction == Camera.RestrictionMode.On)
 										{
 											if (!World.PerformCameraRestrictionTest())
 											{
@@ -936,18 +936,18 @@ namespace OpenBve
 										break;
 									case Interface.Command.CameraRestriction:
 										// camera: restriction
-										if (World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+										if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 										{
-											if (World.CameraRestriction == World.CameraRestrictionMode.Off)
+											if (World.CameraRestriction == Camera.RestrictionMode.Off)
 											{
-												World.CameraRestriction = World.CameraRestrictionMode.On;
+												World.CameraRestriction = Camera.RestrictionMode.On;
 											}
 											else
 											{
-												World.CameraRestriction = World.CameraRestrictionMode.Off;
+												World.CameraRestriction = Camera.RestrictionMode.Off;
 											}
 											World.InitializeCameraRestriction();
-											if (World.CameraRestriction == World.CameraRestrictionMode.Off)
+											if (World.CameraRestriction == Camera.RestrictionMode.Off)
 											{
 												Game.AddMessage(
 													Interface.GetInterfaceString("notification_camerarestriction_off"),

@@ -210,7 +210,7 @@ namespace OpenBve.Parsers.Train
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
-					Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.On;
+					Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
@@ -222,7 +222,7 @@ namespace OpenBve.Parsers.Train
 							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 						}
 						Train.Cars[Car].CarSections[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 					}
 					catch
 					{

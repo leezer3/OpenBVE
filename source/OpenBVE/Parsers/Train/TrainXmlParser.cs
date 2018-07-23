@@ -66,7 +66,7 @@ namespace OpenBve.Parsers.Train
 						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 				}
-				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != World.CameraRestrictionMode.NotSpecified)
+				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)
 				{
 					World.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();

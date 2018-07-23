@@ -1378,6 +1378,10 @@ namespace OpenBve {
 				if (Expression.EndsWith("]")) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 				} else {
+					// ReSharper disable once NotAccessedVariable
+					/*
+					 * If this is a simple number, we can short-circuit the rest of this function
+					 */
 					double value;
 					if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
 						return Expression;

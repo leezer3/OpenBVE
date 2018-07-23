@@ -526,13 +526,12 @@ namespace OpenBve {
 		/// <param name="train">The train to attach the plugin to.</param>
 		/// <param name="trainFolder">The train folder.</param>
 		/// <returns>Whether the plugin was loaded successfully.</returns>
-		internal static bool LoadDefaultPlugin(TrainManager.Train train, string trainFolder) {
+		internal static void LoadDefaultPlugin(TrainManager.Train train, string trainFolder) {
 			string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Plugins"), "OpenBveAts.dll");
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success) {
 				train.Plugin.IsDefault = true;
 			}
-			return success;
 		}
 		
 		/// <summary>Loads the specified plugin for the specified train.</summary>
