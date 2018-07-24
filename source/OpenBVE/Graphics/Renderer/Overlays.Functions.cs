@@ -32,7 +32,7 @@
 		/// <param name="LeftWidth">The left width of the viewing plane</param>
 		/// <param name="RightWidth">The right width of the viewing plane</param>
 		/// <param name="LCrH">The center point of the viewing plane</param>
-		private static void CalculateViewingPlaneSize(Interface.HudElement Element, out double LeftWidth, out double RightWidth, out double LCrH)
+		private static void CalculateViewingPlaneSize(HUD.Element Element, out double LeftWidth, out double RightWidth, out double LCrH)
 		{
 			LCrH = 0.0;
 			// left width/height

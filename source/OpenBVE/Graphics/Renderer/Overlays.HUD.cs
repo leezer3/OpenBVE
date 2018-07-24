@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <summary>Renders all default HUD elements</summary>
 		/// <param name="Element">The HUD element these are to be rendererd onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
-		private static void RenderHUDElement(Interface.HudElement Element, double TimeElapsed)
+		private static void RenderHUDElement(HUD.Element Element, double TimeElapsed)
 		{
 			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
 			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
@@ -591,17 +591,17 @@ namespace OpenBve
 			}
 			// transitions
 			float alpha = 1.0f;
-			if ((Element.Transition & Interface.HudTransition.Move) != 0)
+			if ((Element.Transition & HUD.Transition.Move) != 0)
 			{
 				double s = Element.TransitionState;
 				x += Element.TransitionVector.X * s * s;
 				y += Element.TransitionVector.Y * s * s;
 			}
-			if ((Element.Transition & Interface.HudTransition.Fade) != 0)
+			if ((Element.Transition & HUD.Transition.Fade) != 0)
 			{
 				alpha = (float)(1.0 - Element.TransitionState);
 			}
-			else if (Element.Transition == Interface.HudTransition.None)
+			else if (Element.Transition == HUD.Transition.None)
 			{
 				alpha = (float)(1.0 - Element.TransitionState);
 			}

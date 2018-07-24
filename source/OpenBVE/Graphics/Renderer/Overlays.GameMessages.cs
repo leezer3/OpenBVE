@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <summary>Renders the list of game (textual) messages</summary>
 		/// <param name="Element">The HUD element these are to be rendered onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
-		private static void RenderGameMessages(Interface.HudElement Element, double TimeElapsed)
+		private static void RenderGameMessages(HUD.Element Element, double TimeElapsed)
 		{
 			//Calculate the size of the viewing plane
 			int n = MessageManager.TextualMessages.Count;
@@ -52,7 +52,7 @@ namespace OpenBve
 				CreateBackColor(Element.OverlayColor, mm.Color, out or, out og, out ob, out oa);
 				double tx, ty;
 				bool preserve = false;
-				if ((Element.Transition & Interface.HudTransition.Move) != 0)
+				if ((Element.Transition & HUD.Transition.Move) != 0)
 				{
 					if (Game.SecondsSinceMidnight < mm.Timeout)
 					{
@@ -66,7 +66,7 @@ namespace OpenBve
 						ty = y + m * Element.Value2;
 						preserve = true;
 					}
-					else if (Element.Transition == Interface.HudTransition.MoveAndFade)
+					else if (Element.Transition == HUD.Transition.MoveAndFade)
 					{
 						tx = x;
 						ty = y + m * Element.Value2;
@@ -113,7 +113,7 @@ namespace OpenBve
 						mm.RendererPosition.Y += Math.Sign(ty - mm.RendererPosition.Y) * dy;
 					}
 				}
-				if ((Element.Transition & Interface.HudTransition.Fade) != 0)
+				if ((Element.Transition & HUD.Transition.Fade) != 0)
 				{
 					if (Game.SecondsSinceMidnight >= mm.Timeout)
 					{
@@ -139,17 +139,17 @@ namespace OpenBve
 				double py = mm.RendererPosition.Y;
 				float alpha = (float)(mm.RendererAlpha * mm.RendererAlpha);
 				// graphics
-				Interface.HudImage Left = j == 0
+				HUD.Image Left = j == 0
 					? Element.TopLeft
 					: j < n - 1
 						? Element.CenterLeft
 						: Element.BottomLeft;
-				Interface.HudImage Middle = j == 0
+				HUD.Image Middle = j == 0
 					? Element.TopMiddle
 					: j < n - 1
 						? Element.CenterMiddle
 						: Element.BottomMiddle;
-				Interface.HudImage Right = j == 0
+				HUD.Image Right = j == 0
 					? Element.TopRight
 					: j < n - 1
 						? Element.CenterRight

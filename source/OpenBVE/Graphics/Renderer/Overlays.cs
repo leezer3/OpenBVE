@@ -33,29 +33,29 @@ namespace OpenBve
 						//Route info overlay (if selected)
 						Game.routeInfoOverlay.Show();
 						//HUD
-						for (int i = 0; i < Interface.CurrentHudElements.Length; i++)
+						for (int i = 0; i < HUD.CurrentHudElements.Length; i++)
 						{
-							string Command = Interface.CurrentHudElements[i].Subject.ToLowerInvariant();
+							string Command = HUD.CurrentHudElements[i].Subject.ToLowerInvariant();
 							switch (Command)
 							{
 								case "messages":
 									{
-										RenderGameMessages(Interface.CurrentHudElements[i], TimeElapsed);
+										RenderGameMessages(HUD.CurrentHudElements[i], TimeElapsed);
 									}
 									break;
 								case "scoremessages":
 									{
-										RenderScoreMessages(Interface.CurrentHudElements[i], TimeElapsed);
+										RenderScoreMessages(HUD.CurrentHudElements[i], TimeElapsed);
 									}
 									break;
 								case "ats":
 									{
-										RenderATSLamps(Interface.CurrentHudElements[i], TimeElapsed);
+										RenderATSLamps(HUD.CurrentHudElements[i], TimeElapsed);
 									}
 									break;
 								default:
 									{
-										RenderHUDElement(Interface.CurrentHudElements[i], TimeElapsed);
+										RenderHUDElement(HUD.CurrentHudElements[i], TimeElapsed);
 									}
 									break;
 							}

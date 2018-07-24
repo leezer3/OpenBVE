@@ -174,9 +174,19 @@
     <Compile Include="Game\TrackManager\TrackManager.cs" />
     <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
-	<Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\Camera.CameraRestriction.cs">
       <DependentUpon>Camera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\HUD\HUD.cs" />
+    <Compile Include="Graphics\HUD\HUD.Element.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\HUD\HUD.Image.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
+    </Compile>
+	<Compile Include="Graphics\HUD\HUD.Transitions.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
@@ -454,6 +464,7 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
+    
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
