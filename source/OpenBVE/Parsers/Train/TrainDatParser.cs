@@ -297,13 +297,21 @@ namespace OpenBve {
 									case 4:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											Train.Handles.LocoBrake.DelayUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											locoBrakeDelayUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											locoBrakeDelayUp = new[] {a};
 										}
 										break;
 									case 5:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											Train.Handles.LocoBrake.DelayDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+											locoBrakeDelayDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										}
+										else
+										{
+											locoBrakeDelayDown = new[] {a};
 										}
 										break;
 								}
