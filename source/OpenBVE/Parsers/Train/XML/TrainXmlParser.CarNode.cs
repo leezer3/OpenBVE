@@ -1,12 +1,11 @@
 ﻿using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System;
+using System.Text;
 
 namespace OpenBve.Parsers.Train
 {
-	using System;
-	using System.Text;
-
 	partial class TrainXmlParser
 	{
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
@@ -18,6 +17,32 @@ namespace OpenBve.Parsers.Train
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
+					case "brake":
+						Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Auxillary;
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							ParseBrakeNode(c, fileName, Car, ref Train);
+						}
+						else if (!String.IsNullOrEmpty(c.InnerText))
+						{
+							try
+							{
+								string childFile = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+								XmlDocument childXML = new XmlDocument();
+								childXML.Load(childFile);
+								XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Brake");
+								//We need to save and restore the current path to make relative paths within the child file work correctly
+								string savedPath = currentPath;
+								currentPath = System.IO.Path.GetDirectoryName(childFile);
+								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
+								currentPath = savedPath;
+							}
+							catch
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
+							}
+						}
+						break;
 					case "length":
 						double l;
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out l) | l <= 0.0)
@@ -49,10 +74,12 @@ namespace OpenBve.Parsers.Train
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
+							Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Main;
 						}
 						else
 						{
 							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Auxillary;
 						}
 						break;
 					case "mass":
