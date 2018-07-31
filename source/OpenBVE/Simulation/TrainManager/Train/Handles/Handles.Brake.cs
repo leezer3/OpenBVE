@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -13,6 +11,7 @@ namespace OpenBve
 				this.EmergencyBrake = eb;
 				this.DelayUp = delayUp;
 				this.DelayDown = delayDown;
+				this.DelayedChanges = new HandleChange[] { };
 			}
 
 			/// <summary>Provides a reference to the associated EB handle</summary>

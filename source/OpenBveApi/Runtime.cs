@@ -236,6 +236,8 @@ namespace OpenBveApi.Runtime {
 		private readonly BrakeTypes MyBrakeType;
 		/// <summary>Whether the train has a hold brake.</summary>
 		private readonly bool MyHasHoldBrake;
+		/// <summary>Whether the train has a hold brake.</summary>
+		private readonly bool MyHasLocoBrake;
 		/// <summary>The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
 		private readonly int MyBrakeNotches;
 		/// <summary>The number of cars the train has.</summary>
@@ -263,6 +265,13 @@ namespace OpenBveApi.Runtime {
 		public bool HasHoldBrake {
 			get {
 				return this.MyHasHoldBrake;
+			}
+		}
+
+		/// <summary>Gets whether the train has a hold brake.</summary>
+		public bool HasLocoBrake {
+			get {
+				return this.MyHasLocoBrake;
 			}
 		}
 		/// <summary>Gets the index of the brake notch that corresponds to B1 or LAP.</summary>
@@ -300,6 +309,23 @@ namespace OpenBveApi.Runtime {
 			this.MyBrakeType = brakeType;
 			this.MyBrakeNotches = brakeNotches;
 			this.MyHasHoldBrake = hasHoldBrake;
+			this.MyHasLocoBrake = false;
+			this.MyCars = cars;
+		}
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="powerNotches">The number of power notches the train has.</param>
+		/// <param name="brakeType">The type of brake the train uses.</param>
+		/// <param name="brakeNotches">The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</param>
+		/// <param name="hasHoldBrake">Whether the train has a hold brake.</param>
+		/// <param name="hasLocoBrake">Whether the train has a loco brake.</param>
+		/// <param name="cars">The number of cars the train has.</param>
+		public VehicleSpecs(int powerNotches, BrakeTypes brakeType, int brakeNotches, bool hasHoldBrake, bool hasLocoBrake, int cars) {
+			this.MyPowerNotches = powerNotches;
+			this.MyBrakeType = brakeType;
+			this.MyBrakeNotches = brakeNotches;
+			this.MyHasHoldBrake = hasHoldBrake;
+			this.MyHasLocoBrake = hasLocoBrake;
 			this.MyCars = cars;
 		}
 	}
@@ -565,6 +591,8 @@ namespace OpenBveApi.Runtime {
 		private int MyPowerNotch;
 		/// <summary>The brake notch.</summary>
 		private int MyBrakeNotch;
+		/// <summary>The loco brake notch.</summary>
+		private int MyLocoBrakeNotch;
 		/// <summary>Whether the const speed system is enabled.</summary>
 		private bool MyConstSpeed;
 		// --- properties ---
@@ -595,6 +623,15 @@ namespace OpenBveApi.Runtime {
 				this.MyBrakeNotch = value;
 			}
 		}
+		/// <summary>Gets or sets the brake notch.</summary>
+		public int LocoBrakeNotch {
+			get {
+				return this.MyLocoBrakeNotch;
+			}
+			set {
+				this.MyLocoBrakeNotch = value;
+			}
+		}
 		/// <summary>Gets or sets whether the const speed system is enabled.</summary>
 		public bool ConstSpeed {
 			get {
@@ -614,6 +651,19 @@ namespace OpenBveApi.Runtime {
 			this.MyReverser = reverser;
 			this.MyPowerNotch = powerNotch;
 			this.MyBrakeNotch = brakeNotch;
+			this.MyConstSpeed = constSpeed;
+		}
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="reverser">The current reverser position.</param>
+		/// <param name="powerNotch">The current power notch.</param>
+		/// <param name="brakeNotch">The current brake notch.</param>
+		/// /// <param name="locoBrakeNotch">The current loco brake notch.</param>
+		/// <param name="constSpeed">Whether the const speed system is enabled.</param>
+		public Handles(int reverser, int powerNotch, int brakeNotch, int locoBrakeNotch, bool constSpeed) {
+			this.MyReverser = reverser;
+			this.MyPowerNotch = powerNotch;
+			this.MyBrakeNotch = brakeNotch;
+			this.MyLocoBrakeNotch = locoBrakeNotch;
 			this.MyConstSpeed = constSpeed;
 		}
 	}

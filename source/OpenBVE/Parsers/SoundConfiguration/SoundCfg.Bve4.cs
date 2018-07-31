@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.BrakeSystems;
 using OpenBveApi;
 using OpenBveApi.Math;
 
@@ -304,7 +305,7 @@ namespace OpenBve
 								{
 									for (int c = 0; c < train.Cars.Length; c++)
 									{
-										if (train.Cars[c].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
+										if (train.Cars[c].CarBrake.brakeType == BrakeType.Main)
 										{
 											switch (a.ToLowerInvariant())
 											{

@@ -9,21 +9,26 @@ namespace OpenBve
 	 */
 	public static partial class TrainManager
 	{
-		/// <summary>Represents an abstract handle with a set number of notches</summary>
-		internal abstract class NotchedHandle
+		internal abstract class AbstractHandle
 		{
-			/// <summary>The maximum notch this handle can be increased to</summary>
-			internal int MaximumNotch;
-			/// <summary>The notch set by the driver</summary>
 			internal int Driver;
-			/// <summary>The notch set by the safety system (Train plugin)</summary>
+
 			internal int Safety;
-			/// <summary>The actual notch</summary>
+
 			internal int Actual;
+
+			internal int MaximumNotch;
+
+			internal HandleChange[] DelayedChanges;
+
+			internal abstract void Update();
+		}
+		/// <summary>Represents an abstract handle with a set number of notches</summary>
+		internal abstract class NotchedHandle : AbstractHandle
+		{
+
 			/// <summary>The number of steps this handle must be reduced by for a change to take effect</summary>
 			internal int ReduceSteps;
-			/// <summary>The delayed handle state changes</summary>
-			internal HandleChange[] DelayedChanges;
 			/// <summary>The list of delay values for each notch increase</summary>
 			internal double[] DelayUp;
 			/// <summary>The list of delay values for each notch decrease</summary>
@@ -50,7 +55,6 @@ namespace OpenBve
 				Array.Resize<HandleChange>(ref DelayedChanges, n - Count);
 			}
 
-			internal abstract void Update();
 
 			/// <summary>Gets the delay value for this handle</summary>
 			/// <param name="Increase">Whether this is an increase or a decrease</param>
@@ -82,6 +86,7 @@ namespace OpenBve
 
 				return DelayUp[DelayUp.Length - 1];
 			}
+
 		}
 	}
 }

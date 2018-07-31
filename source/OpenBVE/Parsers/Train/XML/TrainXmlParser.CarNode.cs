@@ -3,6 +3,7 @@ using OpenBveApi.Math;
 using System.Linq;
 using System;
 using System.Text;
+using OpenBve.BrakeSystems;
 
 namespace OpenBve.Parsers.Train
 {
@@ -18,7 +19,7 @@ namespace OpenBve.Parsers.Train
 				switch (c.Name.ToLowerInvariant())
 				{
 					case "brake":
-						Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Auxillary;
+						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{
 							ParseBrakeNode(c, fileName, Car, ref Train);
@@ -74,12 +75,10 @@ namespace OpenBve.Parsers.Train
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
-							Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Main;
 						}
 						else
 						{
 							Train.Cars[Car].Specs.IsMotorCar = false;
-							Train.Cars[Car].Specs.AirBrake.Type = TrainManager.AirBrakeType.Auxillary;
 						}
 						break;
 					case "mass":

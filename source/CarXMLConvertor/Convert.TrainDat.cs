@@ -16,6 +16,8 @@ namespace CarXmlConvertor
 		internal static double TrailerCarMass = 1.0;
 		internal static double BrakeCylinderServiceMaximumPressure = 440000.0;
 		internal static double BrakeCylinderEmergencyMaximumPressure = 440000.0;
+		internal static double BrakeCylinderEmergencyRate = 300000.0;
+		internal static double BrakeCylinderReleaseRate = 200000.0;
 		internal static double MainReservoirMinimumPressure = 690000.0;
 		internal static double MainReservoirMaximumPressure = 780000.0;
 		internal static double BrakePipePressure = 0.0;
@@ -123,6 +125,20 @@ namespace CarXmlConvertor
 								switch (n)
 								{
 									case 0: BrakeType = a; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
+					case "#move":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 4: BrakeCylinderEmergencyRate = a; break;
+									case 5: BrakeCylinderReleaseRate = a; break;
 								}
 							}
 							i++; n++;
