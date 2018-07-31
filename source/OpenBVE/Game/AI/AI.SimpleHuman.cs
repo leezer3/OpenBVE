@@ -17,6 +17,7 @@ namespace OpenBve
 			private readonly double PersonalitySpeedFactor;
 			private int PowerNotchAtWhichWheelSlipIsObserved;
 			private int LastStation;
+			private readonly int MotorCar = 0; //The first motor car in the train [for accessing motor related properties]
 
 			private readonly TrainManager.Train Train;
 			// functions
@@ -36,6 +37,15 @@ namespace OpenBve
 				else
 				{
 					this.LastStation = -1;
+				}
+
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						MotorCar = i;
+						break;
+					}
 				}
 			}
 			private AIResponse PerformPlugin()
@@ -784,7 +794,27 @@ namespace OpenBve
 							{
 								if (Train.Handles.Power.Driver < this.PowerNotchAtWhichWheelSlipIsObserved - 1)
 								{
-									Train.ApplyNotch(1, true, 0, true);
+									//Determine best power notch
+									double bestAcc = 0;
+									int bestNotch = 1;
+									for (int i = 0; i < Train.Cars[MotorCar].Specs.AccelerationCurves.Length; i++)
+									{
+										double accel = Train.Cars[MotorCar].Specs.AccelerationCurves[i].GetAccelerationOutput(Train.Specs.CurrentAverageSpeed, 1.0);
+										if (accel >= bestAcc)
+										{
+											bestAcc = accel;
+											bestNotch = i + 1;
+										}
+									}
+
+									if (Train.Handles.Power.Driver < bestNotch)
+									{
+										Train.ApplyNotch(1, true, 0, true);
+									}
+									else if (Train.Handles.Power.Driver > bestNotch)
+									{
+										Train.ApplyNotch(-1, true, 0, true);
+									}
 								}
 							}
 							else
