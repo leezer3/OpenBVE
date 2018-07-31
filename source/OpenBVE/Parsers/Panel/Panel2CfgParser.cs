@@ -157,6 +157,15 @@ namespace OpenBve {
 																			break;
 																	}
 																	break;
+																case 200:
+																	switch (trainName.ToUpperInvariant())
+																	{
+																		case "HM05":
+																			// Broken initial zoom
+																			PanelCenter.Y = 350;
+																			break;
+																	}
+																	break;
 																case 229:
 																	if (PanelBottom == 768 && PanelResolution == 1024)
 																	{
