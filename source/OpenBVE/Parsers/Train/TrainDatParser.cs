@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -96,8 +97,9 @@ namespace OpenBve {
 			double MainReservoirMinimumPressure = 690000.0;
 			double MainReservoirMaximumPressure = 780000.0;
 			double BrakePipePressure = 0.0;
-			TrainManager.CarBrakeType BrakeType = TrainManager.CarBrakeType.ElectromagneticStraightAirBrake;
-			TrainManager.EletropneumaticBrakeType ElectropneumaticType = TrainManager.EletropneumaticBrakeType.None;
+			BrakeSystemType trainBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+			BrakeSystemType locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+			EletropneumaticBrakeType ElectropneumaticType = EletropneumaticBrakeType.None;
 			double BrakeControlSpeed = 0.0;
 			double BrakeDeceleration = 0.277777777777778;
 			double JerkPowerUp = 10.0;
@@ -124,7 +126,6 @@ namespace OpenBve {
 			int ReAdhesionDevice = 0;
 			
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
-			Train.Handles.AirBrake.Handle = new TrainManager.AirBrakeHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0;
@@ -386,42 +387,58 @@ namespace OpenBve {
 						} i--; break;
 					case "#brake":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
-								switch (n) {
+							double a; int b; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
+								switch (n)
+								{
 									case 0:
+										b = (int) Math.Round(a);
+										if (b >= 0 & b <= 2)
 										{
-											int b = (int)Math.Round(a);
-											if (b >= 0 & b <= 2) {
-												BrakeType = (TrainManager.CarBrakeType)b;
-											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												BrakeType = TrainManager.CarBrakeType.ElectromagneticStraightAirBrake;
-											}
-										} break;
+											trainBrakeType = (BrakeSystemType) b;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											trainBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+										}
+										break;
 									case 1:
+										b = (int) Math.Round(a);
+										if (b >= 0 & b <= 2)
 										{
-											int b = (int)Math.Round(a);
-											if (b >= 0 & b <= 2) {
-												ElectropneumaticType = (TrainManager.EletropneumaticBrakeType)b;
-											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												ElectropneumaticType = TrainManager.EletropneumaticBrakeType.None;
-											}
-										} break;
-										case 2:
-											if (a < 0)
-											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												break;
-											}
-
-											if (a != 0 && BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake || ElectropneumaticType == TrainManager.EletropneumaticBrakeType.DelayFillingControl)
-											{
-												Interface.AddMessage(Interface.MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
-												break;
-											}
-											BrakeControlSpeed = a * 0.277777777777778; //Convert to m/s
+											ElectropneumaticType = (EletropneumaticBrakeType) b;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											ElectropneumaticType = EletropneumaticBrakeType.None;
+										}
+										break;
+									case 2:
+										if (a < 0)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
+										}
+										if (a != 0 && trainBrakeType == BrakeSystemType.AutomaticAirBrake || ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
+										{
+											Interface.AddMessage(Interface.MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											break;
+										}
+										BrakeControlSpeed = a * 0.277777777777778; //Convert to m/s
+										break;
+									case 3:
+										b = (int) Math.Round(a);
+										if (b >= 0 & b <= 2)
+										{
+											locomotiveBrakeType = (BrakeSystemType) b;
+										}
+										else
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+										}
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -724,9 +741,29 @@ namespace OpenBve {
 			{
 				Train.Handles.Power.ReduceSteps = powerReduceSteps;
 			}
-			Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
-			Train.Handles.LocoBrake = new TrainManager.LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
-			Train.Handles.LocoBrake.BrakeType = (TrainManager.LocoBrakeType) locoBrakeType;
+
+			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
+			{
+				Train.Handles.Brake = new TrainManager.AirBrakeHandle();
+			}
+			else
+			{
+				Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
+				
+			}
+
+			if (locomotiveBrakeType == BrakeSystemType.AutomaticAirBrake)
+			{
+				Train.Handles.LocoBrake = new TrainManager.LocoAirBrakeHandle();
+			}
+			else
+			{
+				Train.Handles.LocoBrake = new TrainManager.LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
+			}
+			Train.Handles.LocoBrakeType = (TrainManager.LocoBrakeType)locoBrakeType;
+
+			
+			
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
 			if (TrailerCars < 0) TrailerCars = 0;
@@ -751,7 +788,7 @@ namespace OpenBve {
 			// brake system
 			double OperatingPressure;
 			if (BrakePipePressure <= 0.0) {
-				if (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+				if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
 					OperatingPressure = BrakeCylinderEmergencyMaximumPressure + 0.75 * (MainReservoirMinimumPressure - BrakeCylinderEmergencyMaximumPressure);
 					if (OperatingPressure > MainReservoirMinimumPressure) {
 						OperatingPressure = MainReservoirMinimumPressure;
@@ -812,179 +849,6 @@ namespace OpenBve {
 					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
 				}
 			}
-			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
-			// apply brake-specific attributes for all cars
-			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].Specs.BrakeType = BrakeType;
-				Train.Cars[i].Specs.ElectropneumaticType = ElectropneumaticType;
-				Train.Cars[i].Specs.BrakeControlSpeed = BrakeControlSpeed;
-				Train.Cars[i].Specs.DecelerationCurves = new TrainManager.AccelerationCurve[]
-				{
-					new TrainManager.BveDecelerationCurve(BrakeDeceleration), 
-				};
-				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
-				Train.Cars[i].Specs.AirBrake.AirCompressorEnabled = false;
-				Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure = MainReservoirMinimumPressure;
-				Train.Cars[i].Specs.AirBrake.AirCompressorMaximumPressure = MainReservoirMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.AirCompressorRate = 5000.0;
-				Train.Cars[i].Specs.AirBrake.MainReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure + (Train.Cars[i].Specs.AirBrake.AirCompressorMaximumPressure - Train.Cars[i].Specs.AirBrake.AirCompressorMinimumPressure) * Program.RandomNumberGenerator.NextDouble();
-				Train.Cars[i].Specs.AirBrake.MainReservoirEqualizingReservoirCoefficient = 0.01;
-				Train.Cars[i].Specs.AirBrake.MainReservoirBrakePipeCoefficient = (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake ? 0.25 : 0.075) / Cars;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure = 1.005 * OperatingPressure;
-				/*
-				 * These values are all constants, and are expressed in pascals per second
-				 * Presumably, Michelle intended for them to be editable in v2.0
-				 */
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirServiceRate = 50000.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirEmergencyRate = 250000.0;
-				Train.Cars[i].Specs.AirBrake.EqualizingReservoirChargeRate = 200000.0;
-				Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure = OperatingPressure;
-				Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake ? 0.0 : Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
-				Train.Cars[i].Specs.AirBrake.BrakePipeChargeRate = 10000000.0;
-				Train.Cars[i].Specs.AirBrake.BrakePipeServiceRate = 1500000.0;
-				Train.Cars[i].Specs.AirBrake.BrakePipeEmergencyRate = 5000000.0;
-				Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure = 0.975 * OperatingPressure;
-				Train.Cars[i].Specs.AirBrake.AuxillaryReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.AuxillaryReservoirChargeRate = 200000.0;
-				Train.Cars[i].Specs.AirBrake.AuxillaryReservoirBrakePipeCoefficient = 0.5;
-				{
-					double r = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure / BrakeCylinderEmergencyMaximumPressure - 1.0;
-					if (r < 0.1) r = 0.1;
-					if (r > 1.0) r = 1.0;
-					Train.Cars[i].Specs.AirBrake.AuxillaryReservoirBrakeCylinderCoefficient = r;
-				}
-				Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = BrakeCylinderEmergencyMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceMaximumPressure = BrakeCylinderServiceMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure = BrakeCylinderEmergencyMaximumPressure;
-				if (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceChargeRate = BrakeCylinderUp;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = BrakeCylinderUp;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderReleaseRate = BrakeCylinderDown;
-				} else {
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceChargeRate = 0.3 * BrakeCylinderUp;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyChargeRate = BrakeCylinderUp;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderReleaseRate = BrakeCylinderDown;
-				}
-				Train.Cars[i].Specs.AirBrake.BrakeCylinderSoundPlayedForPressure = BrakeCylinderEmergencyMaximumPressure;
-				Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = 0.0;
-				Train.Cars[i].Specs.AirBrake.StraightAirPipeReleaseRate = 200000.0;
-				Train.Cars[i].Specs.AirBrake.StraightAirPipeServiceRate = 300000.0;
-				Train.Cars[i].Specs.AirBrake.StraightAirPipeEmergencyRate = 400000.0;
-			}
-			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
-				Train.Handles.Brake.MaximumNotch--;
-			}
-			// apply train attributes
-			Train.Handles.Reverser.Driver = 0;
-			Train.Handles.Reverser.Actual = 0;
-			Train.Handles.Power.Driver = 0;
-			Train.Handles.Power.Safety = 0;
-			Train.Handles.Power.Actual = 0;
-			Train.Handles.Power.DelayedChanges = new TrainManager.HandleChange[] { };
-			Train.Handles.Brake.Driver = 0;
-			Train.Handles.Brake.Safety = 0;
-			Train.Handles.Brake.Actual = 0;
-			Train.Handles.Brake.DelayedChanges = new TrainManager.HandleChange[] { };
-			Train.Handles.EmergencyBrake.ApplicationTime = double.MaxValue;
-			if (BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-				Train.Handles.SingleHandle = false;
-				Train.Handles.HasHoldBrake = false;
-			}
-			// starting mode
-			if (Game.TrainStart == Game.TrainStartMode.ServiceBrakesAts) {
-				for (int i = 0; i < Cars; i++) {
-					Train.Cars[i].Specs.AirBrake.AuxillaryReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakePipeNormalPressure;
-					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderServiceMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.EqualizingReservoirNormalPressure;
-				}
-				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				int notch = (int)Math.Round(0.7 * Train.Handles.Brake.MaximumNotch);
-				Train.Handles.Brake.Driver = notch;
-				Train.Handles.Brake.Safety = notch;
-				Train.Handles.Brake.Actual = notch;
-				Train.Handles.EmergencyBrake.Driver = false;
-				Train.Handles.EmergencyBrake.Safety = false;
-				Train.Handles.EmergencyBrake.Actual = false;
-				Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
-				Train.Handles.Reverser.Actual = TrainManager.ReverserPosition.Forwards;
-			} else if (Game.TrainStart == Game.TrainStartMode.EmergencyBrakesAts) {
-				for (int i = 0; i < Cars; i++) {
-					Train.Cars[i].Specs.AirBrake.AuxillaryReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
-				}
-				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.EmergencyBrake.Driver = true;
-				Train.Handles.EmergencyBrake.Safety = true;
-				Train.Handles.EmergencyBrake.Actual = true;
-			} else {
-				for (int i = 0; i < Cars; i++) {
-					Train.Cars[i].Specs.AirBrake.AuxillaryReservoirCurrentPressure = Train.Cars[i].Specs.AirBrake.AuxillaryReservoirMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakeCylinderCurrentPressure = Train.Cars[i].Specs.AirBrake.BrakeCylinderEmergencyMaximumPressure;
-					Train.Cars[i].Specs.AirBrake.BrakePipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.StraightAirPipeCurrentPressure = 0.0;
-					Train.Cars[i].Specs.AirBrake.EqualizingReservoirCurrentPressure = 0.0;
-				}
-				Train.Handles.AirBrake.Handle.Driver = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.AirBrake.Handle.Actual = TrainManager.AirBrakeHandleState.Service;
-				Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
-				Train.Handles.EmergencyBrake.Driver = true;
-				Train.Handles.EmergencyBrake.Safety = true;
-				Train.Handles.EmergencyBrake.Actual = true;
-			}
-			// apply other attributes for all cars
-			double AxleDistance = 0.4 * CarLength;
-			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
-				Train.Cars[i].FrontBogie.ChangeSection(-1);
-				Train.Cars[i].RearBogie.ChangeSection(-1);
-				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
-				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? TrackManager.EventTriggerType.RearCarRearAxle : TrackManager.EventTriggerType.OtherCarRearAxle;
-				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? TrackManager.EventTriggerType.TrainFront : TrackManager.EventTriggerType.None;
-				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
-				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
-				Train.Cars[i].RearAxle.Follower.CarIndex = i;
-				Train.Cars[i].FrontAxle.Position = AxleDistance;
-				Train.Cars[i].RearAxle.Position = -AxleDistance;
-				Train.Cars[i].Specs.IsMotorCar = false;
-				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
-				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
-				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
-				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
-				Train.Cars[i].Specs.CoefficientOfStaticFriction = CoefficientOfStaticFriction;
-				Train.Cars[i].Specs.CoefficientOfRollingResistance = CoefficientOfRollingResistance;
-				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;
-				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
-				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
-				Train.Cars[i].Doors = new TrainManager.Door[2];
-				Train.Cars[i].Doors[0].Direction = -1;
-				Train.Cars[i].Doors[0].State = 0.0;
-				Train.Cars[i].Doors[1].Direction = 1;
-				Train.Cars[i].Doors[1].State = 0.0;
-				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
-				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
-				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
-				Train.Cars[i].Width = CarWidth;
-				Train.Cars[i].Height = CarHeight;
-				Train.Cars[i].Length = CarLength;
-				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
-			}
 			// assign motor cars
 			if (MotorCars == 1) {
 				if (FrontCarIsMotorCar | TrailerCars == 0) {
@@ -1034,6 +898,205 @@ namespace OpenBve {
 					}
 				}
 			}
+			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
+			// apply brake-specific attributes for all cars
+			for (int i = 0; i < Cars; i++) {
+				TrainManager.AccelerationCurve[] DecelerationCurves = new TrainManager.AccelerationCurve[]
+				{
+					new TrainManager.BveDecelerationCurve(BrakeDeceleration), 
+				};
+				Train.Cars[i].Specs.MotorDeceleration = MotorDeceleration;
+				if (i == Train.DriverCar && Train.Handles.HasLocoBrake)
+				{
+					switch (locomotiveBrakeType)
+					{
+						case BrakeSystemType.AutomaticAirBrake:
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+						case BrakeSystemType.ElectricCommandBrake:
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+						case BrakeSystemType.ElectromagneticStraightAirBrake:
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+					}
+				}
+				else
+				{
+					switch (trainBrakeType)
+					{
+						case BrakeSystemType.AutomaticAirBrake:
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+						case BrakeSystemType.ElectricCommandBrake:
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+						case BrakeSystemType.ElectromagneticStraightAirBrake:
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							break;
+					}
+				}
+
+				if (Train.Cars[i].Specs.IsMotorCar || Train == TrainManager.PlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				{
+					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
+				}
+				else
+				{
+					Train.Cars[i].CarBrake.brakeType = BrakeType.Auxiliary;
+				}
+				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0);
+				Train.Cars[i].CarBrake.mainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
+				Train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
+				Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure = 1.005 * OperatingPressure;
+				
+				Train.Cars[i].CarBrake.brakePipe = new BrakePipe(OperatingPressure, 10000000.0, 1500000.0, 5000000.0, trainBrakeType == BrakeSystemType.ElectricCommandBrake);
+				{
+					double r = 200000.0 / BrakeCylinderEmergencyMaximumPressure - 1.0;
+					if (r < 0.1) r = 0.1;
+					if (r > 1.0) r = 1.0;
+					Train.Cars[i].CarBrake.auxiliaryReservoir = new AuxiliaryReservoir(0.975 * OperatingPressure, 200000.0, 0.5, r);
+				}
+				Train.Cars[i].CarBrake.brakeCylinder = new BrakeCylinder(BrakeCylinderServiceMaximumPressure, BrakeCylinderEmergencyMaximumPressure, trainBrakeType == BrakeSystemType.AutomaticAirBrake ? BrakeCylinderUp : 0.3 * BrakeCylinderUp, BrakeCylinderUp, BrakeCylinderDown);
+				Train.Cars[i].CarBrake.straightAirPipe = new StraightAirPipe(300000.0, 400000.0, 200000.0);
+			}
+			if (Train.Handles.HasHoldBrake & Train.Handles.Brake.MaximumNotch > 1) {
+				Train.Handles.Brake.MaximumNotch--;
+			}
+			// apply train attributes
+			Train.Handles.Reverser.Driver = 0;
+			Train.Handles.Reverser.Actual = 0;
+			Train.Handles.Power.Driver = 0;
+			Train.Handles.Power.Safety = 0;
+			Train.Handles.Power.Actual = 0;
+			Train.Handles.Power.DelayedChanges = new TrainManager.HandleChange[] { };
+			Train.Handles.Brake.Driver = 0;
+			Train.Handles.Brake.Safety = 0;
+			Train.Handles.Brake.Actual = 0;
+			Train.Handles.EmergencyBrake.ApplicationTime = double.MaxValue;
+			if (trainBrakeType == BrakeSystemType.AutomaticAirBrake) {
+				Train.Handles.SingleHandle = false;
+				Train.Handles.HasHoldBrake = false;
+			}
+
+			switch (Game.TrainStart)
+			{
+				// starting mode
+				case Game.TrainStartMode.ServiceBrakesAts:
+					for (int i = 0; i < Cars; i++) {
+						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.ServiceMaximumPressure;
+						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = Train.Cars[i].CarBrake.brakePipe.NormalPressure;
+						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.ServiceMaximumPressure;
+						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
+					}
+
+					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
+					{
+						Train.Handles.Brake.Driver = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Actual = (int)TrainManager.AirBrakeHandleState.Service;
+					}
+					else
+					{
+						int notch = (int)Math.Round(0.7 * Train.Handles.Brake.MaximumNotch);
+						Train.Handles.Brake.Driver = notch;
+						Train.Handles.Brake.Safety = notch;
+						Train.Handles.Brake.Actual = notch;
+					}
+					Train.Handles.EmergencyBrake.Driver = false;
+					Train.Handles.EmergencyBrake.Safety = false;
+					Train.Handles.EmergencyBrake.Actual = false;
+					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
+					Train.Handles.Reverser.Actual = TrainManager.ReverserPosition.Forwards;
+					break;
+				case Game.TrainStartMode.EmergencyBrakesAts:
+					for (int i = 0; i < Cars; i++) {
+						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
+						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
+						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = 0.0;
+						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = 0.0;
+					}
+
+					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
+					{
+						Train.Handles.Brake.Driver = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Actual = (int)TrainManager.AirBrakeHandleState.Service;
+					}
+					else
+					{
+						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
+						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
+						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
+					}
+				
+					Train.Handles.EmergencyBrake.Driver = true;
+					Train.Handles.EmergencyBrake.Safety = true;
+					Train.Handles.EmergencyBrake.Actual = true;
+					break;
+				default:
+					for (int i = 0; i < Cars; i++) {
+						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
+						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
+						Train.Cars[i].CarBrake.straightAirPipe.CurrentPressure = 0.0;
+						Train.Cars[i].CarBrake.equalizingReservoir.CurrentPressure = 0.0;
+					}
+
+					if (trainBrakeType == BrakeSystemType.AutomaticAirBrake)
+					{
+						Train.Handles.Brake.Driver = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
+						Train.Handles.Brake.Actual = (int)TrainManager.AirBrakeHandleState.Service;
+					}
+					else
+					{
+						Train.Handles.Brake.Driver = Train.Handles.Brake.MaximumNotch;
+						Train.Handles.Brake.Safety = Train.Handles.Brake.MaximumNotch;
+						Train.Handles.Brake.Actual = Train.Handles.Brake.MaximumNotch;
+					}
+					Train.Handles.EmergencyBrake.Driver = true;
+					Train.Handles.EmergencyBrake.Safety = true;
+					Train.Handles.EmergencyBrake.Actual = true;
+					break;
+			}
+			// apply other attributes for all cars
+			double AxleDistance = 0.4 * CarLength;
+			for (int i = 0; i < Cars; i++) {
+				Train.Cars[i].CurrentCarSection = -1;
+				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+				Train.Cars[i].FrontBogie.ChangeSection(-1);
+				Train.Cars[i].RearBogie.ChangeSection(-1);
+				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
+				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? TrackManager.EventTriggerType.RearCarRearAxle : TrackManager.EventTriggerType.OtherCarRearAxle;
+				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? TrackManager.EventTriggerType.TrainFront : TrackManager.EventTriggerType.None;
+				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
+				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
+				Train.Cars[i].RearAxle.Follower.CarIndex = i;
+				Train.Cars[i].FrontAxle.Position = AxleDistance;
+				Train.Cars[i].RearAxle.Position = -AxleDistance;
+				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
+				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
+				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
+				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
+				Train.Cars[i].Specs.CoefficientOfStaticFriction = CoefficientOfStaticFriction;
+				Train.Cars[i].Specs.CoefficientOfRollingResistance = CoefficientOfRollingResistance;
+				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;
+				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
+				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
+				Train.Cars[i].Doors = new TrainManager.Door[2];
+				Train.Cars[i].Doors[0].Direction = -1;
+				Train.Cars[i].Doors[0].State = 0.0;
+				Train.Cars[i].Doors[1].Direction = 1;
+				Train.Cars[i].Doors[1].State = 0.0;
+				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
+				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
+				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
+				Train.Cars[i].Width = CarWidth;
+				Train.Cars[i].Height = CarHeight;
+				Train.Cars[i].Length = CarLength;
+				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
+			}
+			
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
 				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
@@ -1041,7 +1104,6 @@ namespace OpenBve {
 				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
-					Train.Cars[i].Specs.AirBrake.Type = TrainManager.AirBrakeType.Main;
 					Train.Cars[i].Specs.MassEmpty = MotorCarMass;
 					Train.Cars[i].Specs.MassCurrent = MotorCarMass;
 					Array.Resize(ref Train.Cars[i].Specs.AccelerationCurves, AccelerationCurves.Length);
@@ -1093,7 +1155,6 @@ namespace OpenBve {
 					}
 				} else {
 					// trailer car
-					Train.Cars[i].Specs.AirBrake.Type = Train == TrainManager.PlayerTrain & i == Train.DriverCar | BrakeType == TrainManager.CarBrakeType.ElectricCommandBrake ? TrainManager.AirBrakeType.Main : TrainManager.AirBrakeType.Auxillary;
 					Train.Cars[i].Specs.MassEmpty = TrailerCarMass;
 					Train.Cars[i].Specs.MassCurrent = TrailerCarMass;
 					Train.Cars[i].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };

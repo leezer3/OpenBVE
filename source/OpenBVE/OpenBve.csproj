@@ -255,6 +255,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AirSound.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakeCylinder.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\Reservoirs.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\StraightAirPipe.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectricCommandBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\BrakeSystemType.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\ElectropnuematicBrakeType.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
@@ -270,7 +283,6 @@
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
-    <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.States.cs" />
@@ -292,6 +304,7 @@
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />

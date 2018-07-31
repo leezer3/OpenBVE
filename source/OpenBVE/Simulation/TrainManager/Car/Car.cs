@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -6,7 +7,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal class Car
+		internal partial class Car
 		{
 			/// <summary>Width in meters</summary>
 			internal double Width;
@@ -26,7 +27,8 @@ namespace OpenBve
 			internal Horn[] Horns;
 			/// <summary>The doors for this car</summary>
 			internal Door[] Doors;
-
+			/// <summary>The car brake for this car</summary>
+			internal CarBrake CarBrake;
 			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
@@ -331,7 +333,7 @@ namespace OpenBve
 								else if (ndir == -1)
 								{
 									// brake
-									double max = Specs.BrakeDecelerationAtServiceMaximumPressure(this.baseTrain.Handles.Brake.Actual);
+									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, Specs.CurrentSpeed);
 									if (max != 0.0)
 									{
 										double cur = -Specs.CurrentAccelerationOutput;

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using OpenBve.BrakeSystems;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -43,7 +44,7 @@ namespace OpenBve
 				train.Cars[i].Sounds.Air = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), center, SoundCfgParser.smallRadius);
 				train.Cars[i].Sounds.AirHigh = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), center, SoundCfgParser.smallRadius);
 				train.Cars[i].Sounds.AirZero = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), center, SoundCfgParser.smallRadius);
-				if (train.Cars[i].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main)
+				if (train.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
 					train.Cars[i].Sounds.CpEnd = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), center, SoundCfgParser.mediumRadius);
 					train.Cars[i].Sounds.CpLoop = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), center, SoundCfgParser.mediumRadius);

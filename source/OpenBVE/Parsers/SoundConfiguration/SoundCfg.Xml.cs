@@ -2,6 +2,7 @@
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBve.BrakeSystems;
 
 namespace OpenBve
 {
@@ -183,7 +184,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (car.Specs.AirBrake.Type != TrainManager.AirBrakeType.Main)
+									if (car.CarBrake.brakeType != BrakeType.Main)
 									{
 										break;
 									}

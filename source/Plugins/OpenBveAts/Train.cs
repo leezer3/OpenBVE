@@ -20,6 +20,8 @@ namespace Plugin {
 			private int MyPowerNotch;
 			/// <summary>The brake notch.</summary>
 			private int MyBrakeNotch;
+			/// <summary>The loco brake notch.</summary>
+			private int MyLocoBrakeNotch;
 			/// <summary>Whether the const speed system is enabled.</summary>
 			private bool MyConstSpeed;
 			// --- properties ---
@@ -41,6 +43,12 @@ namespace Plugin {
 					return this.MyBrakeNotch;
 				}
 			}
+			/// <summary>Gets or sets the brake notch.</summary>
+			internal int LocoBrakeNotch {
+				get {
+					return this.MyLocoBrakeNotch;
+				}
+			}
 			/// <summary>Gets or sets whether the const speed system is enabled.</summary>
 			internal bool ConstSpeed {
 				get {
@@ -55,6 +63,7 @@ namespace Plugin {
 				this.MyPowerNotch = handles.PowerNotch;
 				this.MyBrakeNotch = handles.BrakeNotch;
 				this.MyConstSpeed = handles.ConstSpeed;
+				this.MyLocoBrakeNotch = handles.LocoBrakeNotch;
 			}
 		}
 		
@@ -120,9 +129,9 @@ namespace Plugin {
 		/// <param name="playSound">The delegate to play sounds.</param>
 		internal Train(int[] panel, PlaySoundDelegate playSound) {
 			this.PluginInitializing = false;
-			this.Specs = new VehicleSpecs(0, BrakeTypes.ElectromagneticStraightAirBrake, 0, false, 0);
+			this.Specs = new VehicleSpecs(0, BrakeTypes.ElectromagneticStraightAirBrake, 0, false, false, 0);
 			this.State = new VehicleState(0.0, new Speed(0.0), 0.0, 0.0, 0.0, 0.0, 0.0,0.0,0.0,0.0);
-			this.Handles = new ReadOnlyHandles(new Handles(0, 0, 0, false));
+			this.Handles = new ReadOnlyHandles(new Handles(0, 0, 0, 0, false));
 			this.Doors = DoorStates.None;
 			this.Panel = panel;
 			this.Sounds = new Sounds(playSound);

@@ -495,8 +495,8 @@ namespace CarXmlConvertor
 			newLines.Add("</AuxiliaryReservoir>");
 			newLines.Add("<EqualizingReservoir>");
 			newLines.Add("<ServiceRate>50000.0</ServiceRate>");
-			newLines.Add("<EmergencyRate>50000.0</EmergencyRate>");
-			newLines.Add("<ChargeRate>50000.0</ChargeRate>");
+			newLines.Add("<EmergencyRate>250000.0</EmergencyRate>");
+			newLines.Add("<ChargeRate>200000.0</ChargeRate>");
 			newLines.Add("</EqualizingReservoir>");
 			newLines.Add("<BrakePipe>");
 			newLines.Add("<NormalPressure>" + ConvertTrainDat.BrakePipePressure + "</NormalPressure>");
@@ -512,6 +512,8 @@ namespace CarXmlConvertor
 			newLines.Add("<BrakeCylinder>");
 			newLines.Add("<ServiceMaximumPressure>" + ConvertTrainDat.BrakeCylinderServiceMaximumPressure + "</ServiceMaximumPressure>");
 			newLines.Add("<EmergencyMaximumPressure>" + ConvertTrainDat.BrakeCylinderEmergencyMaximumPressure + "</EmergencyMaximumPressure>");
+			newLines.Add("<EmergencyRate>" + ConvertTrainDat.BrakeCylinderEmergencyRate + "</EmergencyRate>");
+			newLines.Add("<ReleaseRate>" + ConvertTrainDat.BrakeCylinderReleaseRate + "</ReleaseRate>");
 			newLines.Add("</BrakeCylinder>");
 			newLines.Add("</Brake>");
 			newLines.Add("</Car>");
