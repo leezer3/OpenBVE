@@ -61,8 +61,9 @@ namespace OpenBve
 			/// <summary>The absolute on-disk path to the train's folder</summary>
 			internal string TrainFolder;
 
-			internal Train(int trainIndex)
+			internal Train(int trainIndex, TrainState state)
 			{
+				State = state;
 				TrainIndex = trainIndex;
 				Destination = Game.InitialDestination;
 				Station = -1;
@@ -997,6 +998,32 @@ namespace OpenBve
 					Cars[i].Sounds.SpringL = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.SpringR = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.Plugin = new TrainManager.CarSound[] { };
+				}
+			}
+
+			/// <summary>Places the cars</summary>
+			/// <param name="TrackPosition">The track position of the front car</param>
+			internal void PlaceCars(double TrackPosition)
+			{
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					//Front axle track position
+					Cars[i].FrontAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].FrontAxle.Position;
+					//Bogie for front axle
+					Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.FrontAxle.Position;
+					Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * Cars[i].FrontBogie.Length + Cars[i].FrontBogie.RearAxle.Position;
+					//Rear axle track position
+					Cars[i].RearAxle.Follower.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].RearAxle.Position;
+					//Bogie for rear axle
+					Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.FrontAxle.Position;
+					Cars[i].RearBogie.RearAxle.Follower.TrackPosition = Cars[i].RearAxle.Follower.TrackPosition - 0.5 * Cars[i].RearBogie.Length + Cars[i].RearBogie.RearAxle.Position;
+					//Beacon reciever (AWS, ATC etc.)
+					Cars[i].BeaconReceiver.TrackPosition = TrackPosition - 0.5 * Cars[i].Length + Cars[i].BeaconReceiverPosition;
+					TrackPosition -= Cars[i].Length;
+					if (i < Cars.Length - 1)
+					{
+						TrackPosition -= 0.5 * (Couplers[i].MinimumDistanceBetweenCars + Couplers[i].MaximumDistanceBetweenCars);
+					}
 				}
 			}
 		}

@@ -27,8 +27,14 @@ namespace OpenBve
 		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
 		/// <param name="Encoding">The automatically detected or manually set encoding of the panel configuration file.</param>
 		/// <param name="Train">The base train on which to apply the panel configuration.</param>
-		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
+		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, Train Train)
 		{
+			Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
+			Train.Cars[Train.DriverCar].CarSections[0] = new CarSection
+			{
+				Elements = new ObjectManager.AnimatedObject[] { },
+				Overlay = true
+			};
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
 			if (System.IO.File.Exists(File))
 			{
