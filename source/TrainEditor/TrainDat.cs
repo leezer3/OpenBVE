@@ -580,7 +580,7 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a <= 0 && a > 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;

@@ -52,10 +52,10 @@ namespace TrainEditor {
 			comboboxDoorCloseMode.Items.Add("Automatic");
 			comboboxDoorCloseMode.Items.Add("Manual");
 			comboboxSoundIndex.Items.Add("None");
-			comboBoxHandleBehaviour.Items.Add("No Action");
-			comboBoxHandleBehaviour.Items.Add("Return Power to neutral");
-			comboBoxHandleBehaviour.Items.Add("Return Reverser to neutral");
-			comboBoxHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("No Action");
+			comboBoxEBHandleBehaviour.Items.Add("Return Power to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("Return Reverser to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
 			comboBoxLocoBrakeType.SelectedIndex = 0;
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
@@ -152,6 +152,7 @@ namespace TrainEditor {
 			comboboxPassAlarm.SelectedIndex = (int)Train.Device.PassAlarm;
 			comboboxDoorOpenMode.SelectedIndex = (int)Train.Device.DoorOpenMode;
 			comboboxDoorCloseMode.SelectedIndex = (int)Train.Device.DoorCloseMode;
+			comboBoxEBHandleBehaviour.SelectedIndex = (int)Train.Handle.HandleBehaviour;
 		}
 		
 		// save control content
@@ -190,7 +191,7 @@ namespace TrainEditor {
 				numericUpDownBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
