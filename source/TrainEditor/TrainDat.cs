@@ -92,16 +92,23 @@ namespace TrainEditor {
 				ElectricCommandBrake = 1,
 				AutomaticAirBrake = 2
 			}
+			internal enum LocoBrakeTypes {
+				NotFitted = 0,
+				NotchedAirBrake = 1,
+				AutomaticAirBrake = 2
+			}
 			internal enum BrakeControlSystems {
 				None = 0,
 				ClosingElectromagneticValve = 1,
 				DelayIncludingSystem = 2
 			}
 			internal BrakeTypes BrakeType;
+			internal LocoBrakeTypes LocoBrakeType;
 			internal BrakeControlSystems BrakeControlSystem;
 			internal double BrakeControlSpeed;
 			internal Brake() {
 				this.BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+				this.LocoBrakeType = LocoBrakeTypes.NotFitted;
 				this.BrakeControlSystem = BrakeControlSystems.None;
 				this.BrakeControlSpeed = 0.0;
 			}
@@ -537,6 +544,9 @@ namespace TrainEditor {
 									case 2:
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
 										break;
+									case 3:
+										if (a <= 0 && a > 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -836,6 +846,7 @@ namespace TrainEditor {
 			b.AppendLine(((int)t.Brake.BrakeType).ToString(Culture).PadRight(n, ' ') + "; BrakeType");
 			b.AppendLine(((int)t.Brake.BrakeControlSystem).ToString(Culture).PadRight(n, ' ') + "; BrakeControlSystem");
 			b.AppendLine(t.Brake.BrakeControlSpeed.ToString(Culture).PadRight(n, ' ') + "; BrakeControlSpeed");
+			b.AppendLine(((int)t.Brake.LocoBrakeType).ToString(Culture).PadRight(n, ' ') + "; LocoBrakeType (1.5.3.4+)");
 			b.AppendLine("#PRESSURE");
 			b.AppendLine(t.Pressure.BrakeCylinderServiceMaximumPressure.ToString(Culture).PadRight(n, ' ') + "; BrakeCylinderServiceMaximumPressure");
 			b.AppendLine(t.Pressure.BrakeCylinderEmergencyMaximumPressure.ToString(Culture).PadRight(n, ' ') + "; BrakeCylinderEmergencyMaximumPressure");

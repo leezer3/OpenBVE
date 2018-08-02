@@ -56,6 +56,9 @@ namespace TrainEditor {
 			comboBoxEBHandleBehaviour.Items.Add("Return Power to neutral");
 			comboBoxEBHandleBehaviour.Items.Add("Return Reverser to neutral");
 			comboBoxEBHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxLocoBrakeSystemType.Items.Add("Not fitted");
+			comboBoxLocoBrakeSystemType.Items.Add("Notched air brake");
+			comboBoxLocoBrakeSystemType.Items.Add("Air brake with partial release");
 			comboBoxLocoBrakeType.SelectedIndex = 0;
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
@@ -153,6 +156,7 @@ namespace TrainEditor {
 			comboboxDoorOpenMode.SelectedIndex = (int)Train.Device.DoorOpenMode;
 			comboboxDoorCloseMode.SelectedIndex = (int)Train.Device.DoorCloseMode;
 			comboBoxEBHandleBehaviour.SelectedIndex = (int)Train.Handle.HandleBehaviour;
+			comboBoxLocoBrakeSystemType.SelectedIndex = (int) Train.Brake.LocoBrakeType;
 		}
 		
 		// save control content
@@ -1515,6 +1519,32 @@ namespace TrainEditor {
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+		}
+
+		private void comboBoxLocoBrakeSystemType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Brake.LocoBrakeType = (TrainDat.Brake.LocoBrakeTypes)comboBoxLocoBrakeSystemType.SelectedIndex;
+			if (Train.Brake.LocoBrakeType == TrainDat.Brake.LocoBrakeTypes.NotFitted)
+			{
+				numericUpDownLocoBrakeNotches.Enabled = false;
+				buttonLocoBrakeDelayUp.Enabled = false;
+				buttonLocoBrakeDelayDown.Enabled = false;
+				comboBoxLocoBrakeType.Enabled = false;
+			}
+			else
+			{
+				if (Train.Brake.LocoBrakeType != TrainDat.Brake.LocoBrakeTypes.AutomaticAirBrake)
+				{
+					numericUpDownLocoBrakeNotches.Enabled = true;
+				}
+				else
+				{
+					numericUpDownLocoBrakeNotches.Enabled = false;
+				}
+				buttonLocoBrakeDelayUp.Enabled = true;
+				buttonLocoBrakeDelayDown.Enabled = true;
+				comboBoxLocoBrakeType.Enabled = true;
+			}
 		}
 	}
 }

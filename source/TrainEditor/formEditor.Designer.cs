@@ -221,6 +221,8 @@
 			this.comboBoxEBHandleBehaviour = new System.Windows.Forms.ComboBox();
 			this.labelEBHandleBehaviour = new System.Windows.Forms.Label();
 			this.groupBoxLocoBrake = new System.Windows.Forms.GroupBox();
+			this.comboBoxLocoBrakeSystemType = new System.Windows.Forms.ComboBox();
+			this.labelLocoBrakeSystemType = new System.Windows.Forms.Label();
 			this.comboBoxLocoBrakeType = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.buttonLocoBrakeDelayDown = new System.Windows.Forms.Button();
@@ -2488,6 +2490,8 @@
 			// 
 			// groupBoxLocoBrake
 			// 
+			this.groupBoxLocoBrake.Controls.Add(this.comboBoxLocoBrakeSystemType);
+			this.groupBoxLocoBrake.Controls.Add(this.labelLocoBrakeSystemType);
 			this.groupBoxLocoBrake.Controls.Add(this.comboBoxLocoBrakeType);
 			this.groupBoxLocoBrake.Controls.Add(this.label2);
 			this.groupBoxLocoBrake.Controls.Add(this.buttonLocoBrakeDelayDown);
@@ -2498,10 +2502,33 @@
 			this.groupBoxLocoBrake.Controls.Add(this.labelLocoBrakeNotches);
 			this.groupBoxLocoBrake.Location = new System.Drawing.Point(8, 55);
 			this.groupBoxLocoBrake.Name = "groupBoxLocoBrake";
-			this.groupBoxLocoBrake.Size = new System.Drawing.Size(280, 134);
+			this.groupBoxLocoBrake.Size = new System.Drawing.Size(280, 190);
 			this.groupBoxLocoBrake.TabIndex = 2;
 			this.groupBoxLocoBrake.TabStop = false;
 			this.groupBoxLocoBrake.Text = "Locomotive Brake";
+			// 
+			// comboBoxLocoBrakeSystemType
+			// 
+			this.comboBoxLocoBrakeSystemType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxLocoBrakeSystemType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLocoBrakeSystemType.FormattingEnabled = true;
+			this.comboBoxLocoBrakeSystemType.Location = new System.Drawing.Point(6, 32);
+			this.comboBoxLocoBrakeSystemType.Name = "comboBoxLocoBrakeSystemType";
+			this.comboBoxLocoBrakeSystemType.Size = new System.Drawing.Size(268, 21);
+			this.comboBoxLocoBrakeSystemType.TabIndex = 9;
+			this.comboBoxLocoBrakeSystemType.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocoBrakeSystemType_SelectedIndexChanged);
+			// 
+			// labelLocoBrakeSystemType
+			// 
+			this.labelLocoBrakeSystemType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelLocoBrakeSystemType.Location = new System.Drawing.Point(6, 16);
+			this.labelLocoBrakeSystemType.Name = "labelLocoBrakeSystemType";
+			this.labelLocoBrakeSystemType.Size = new System.Drawing.Size(268, 16);
+			this.labelLocoBrakeSystemType.TabIndex = 8;
+			this.labelLocoBrakeSystemType.Text = "BrakeType:";
+			this.labelLocoBrakeSystemType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// comboBoxLocoBrakeType
 			// 
@@ -2511,7 +2538,7 @@
             "Combined",
             "Independant",
             "Blocking"});
-			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(156, 96);
+			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(156, 148);
 			this.comboBoxLocoBrakeType.Name = "comboBoxLocoBrakeType";
 			this.comboBoxLocoBrakeType.Size = new System.Drawing.Size(118, 21);
 			this.comboBoxLocoBrakeType.TabIndex = 7;
@@ -2520,7 +2547,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 99);
+			this.label2.Location = new System.Drawing.Point(6, 151);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(34, 13);
 			this.label2.TabIndex = 6;
@@ -2528,9 +2555,9 @@
 			// 
 			// buttonLocoBrakeDelayDown
 			// 
-			this.buttonLocoBrakeDelayDown.Location = new System.Drawing.Point(156, 67);
+			this.buttonLocoBrakeDelayDown.Location = new System.Drawing.Point(156, 117);
 			this.buttonLocoBrakeDelayDown.Name = "buttonLocoBrakeDelayDown";
-			this.buttonLocoBrakeDelayDown.Size = new System.Drawing.Size(118, 23);
+			this.buttonLocoBrakeDelayDown.Size = new System.Drawing.Size(118, 25);
 			this.buttonLocoBrakeDelayDown.TabIndex = 5;
 			this.buttonLocoBrakeDelayDown.Text = "Set";
 			this.buttonLocoBrakeDelayDown.UseVisualStyleBackColor = true;
@@ -2539,7 +2566,7 @@
 			// labelLocoBrakeDelayDown
 			// 
 			this.labelLocoBrakeDelayDown.AutoSize = true;
-			this.labelLocoBrakeDelayDown.Location = new System.Drawing.Point(6, 73);
+			this.labelLocoBrakeDelayDown.Location = new System.Drawing.Point(6, 125);
 			this.labelLocoBrakeDelayDown.Name = "labelLocoBrakeDelayDown";
 			this.labelLocoBrakeDelayDown.Size = new System.Drawing.Size(65, 13);
 			this.labelLocoBrakeDelayDown.TabIndex = 4;
@@ -2547,9 +2574,9 @@
 			// 
 			// buttonLocoBrakeDelayUp
 			// 
-			this.buttonLocoBrakeDelayUp.Location = new System.Drawing.Point(156, 41);
+			this.buttonLocoBrakeDelayUp.Location = new System.Drawing.Point(156, 91);
 			this.buttonLocoBrakeDelayUp.Name = "buttonLocoBrakeDelayUp";
-			this.buttonLocoBrakeDelayUp.Size = new System.Drawing.Size(118, 23);
+			this.buttonLocoBrakeDelayUp.Size = new System.Drawing.Size(118, 25);
 			this.buttonLocoBrakeDelayUp.TabIndex = 3;
 			this.buttonLocoBrakeDelayUp.Text = "Set";
 			this.buttonLocoBrakeDelayUp.UseVisualStyleBackColor = true;
@@ -2558,7 +2585,7 @@
 			// labelLocoBrakeDelayUp
 			// 
 			this.labelLocoBrakeDelayUp.AutoSize = true;
-			this.labelLocoBrakeDelayUp.Location = new System.Drawing.Point(6, 46);
+			this.labelLocoBrakeDelayUp.Location = new System.Drawing.Point(6, 98);
 			this.labelLocoBrakeDelayUp.Name = "labelLocoBrakeDelayUp";
 			this.labelLocoBrakeDelayUp.Size = new System.Drawing.Size(51, 13);
 			this.labelLocoBrakeDelayUp.TabIndex = 2;
@@ -2566,7 +2593,7 @@
 			// 
 			// numericUpDownLocoBrakeNotches
 			// 
-			this.numericUpDownLocoBrakeNotches.Location = new System.Drawing.Point(156, 13);
+			this.numericUpDownLocoBrakeNotches.Location = new System.Drawing.Point(156, 65);
 			this.numericUpDownLocoBrakeNotches.Maximum = new decimal(new int[] {
             20,
             0,
@@ -2579,7 +2606,7 @@
 			// labelLocoBrakeNotches
 			// 
 			this.labelLocoBrakeNotches.AutoSize = true;
-			this.labelLocoBrakeNotches.Location = new System.Drawing.Point(6, 15);
+			this.labelLocoBrakeNotches.Location = new System.Drawing.Point(6, 67);
 			this.labelLocoBrakeNotches.Name = "labelLocoBrakeNotches";
 			this.labelLocoBrakeNotches.Size = new System.Drawing.Size(50, 13);
 			this.labelLocoBrakeNotches.TabIndex = 0;
@@ -3007,6 +3034,8 @@
 		private System.Windows.Forms.GroupBox groupBoxMisc;
 		private System.Windows.Forms.ComboBox comboBoxEBHandleBehaviour;
 		private System.Windows.Forms.Label labelEBHandleBehaviour;
+		private System.Windows.Forms.ComboBox comboBoxLocoBrakeSystemType;
+		private System.Windows.Forms.Label labelLocoBrakeSystemType;
 	}
 }
 

@@ -429,14 +429,21 @@ namespace OpenBve {
 										break;
 									case 3:
 										b = (int) Math.Round(a);
-										if (b >= 0 & b <= 2)
+										switch (b)
 										{
-											locomotiveBrakeType = (BrakeSystemType) b;
-										}
-										else
-										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
-											locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+											case 0:
+												//Not fitted
+												break;
+											case 1:
+												//Notched air brake
+												Train.Handles.HasLocoBrake = true;
+												locomotiveBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
+												break;
+											case 2:
+												//Automatic air brake
+												Train.Handles.HasLocoBrake = true;
+												locomotiveBrakeType = BrakeSystemType.AutomaticAirBrake;
+												break;
 										}
 										break;
 								}
@@ -518,7 +525,6 @@ namespace OpenBve {
 										Train.Handles.EmergencyBrake.OtherHandlesBehaviour = (TrainManager.EbHandleBehaviour) a;
 										break;
 									case 5:
-										Train.Handles.HasLocoBrake = true;
 										if (a >= 0)
 										{
 											
