@@ -111,7 +111,7 @@ namespace OpenBve
 					}
 				}
 
-				if (CarIndex == DriverCar && Handles.HasLocoBrake || Handles.LocoBrakeType == LocoBrakeType.Blocking)
+				if (CarIndex == DriverCar && Handles.HasLocoBrake)
 				{
 					switch (Handles.LocoBrakeType)
 					{

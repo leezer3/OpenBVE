@@ -364,7 +364,7 @@ namespace TrainEditor {
 							{
 								string tt = s.Substring(7, s.Length - 7);
 								int v;
-								if (int.TryParse(tt, out v))
+								if (int.TryParse(tt, System.Globalization.NumberStyles.Float, Culture, out v))
 								{
 									if (v > currentVersion)
 									{
