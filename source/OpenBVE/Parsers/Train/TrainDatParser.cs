@@ -742,6 +742,7 @@ namespace OpenBve {
 				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
 				brakeNotches = 8;
 			}
+			Train.Handles.Reverser = new TrainManager.ReverserHandle();
 			Train.Handles.Power = new TrainManager.PowerHandle(powerNotches, powerDelayUp, powerDelayDown);
 			if (powerReduceSteps != -1)
 			{
