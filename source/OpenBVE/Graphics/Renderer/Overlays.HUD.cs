@@ -546,6 +546,20 @@ namespace OpenBve
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
+					else if (OptionGradient == GradientDisplayMode.Permil)
+					{
+						if (World.CameraTrackFollower.Pitch != 0)
+						{
+							double pm = World.CameraTrackFollower.Pitch;
+							t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
+						}
+						else
+						{
+							t = "Level";
+						}
+						Element.TransitionState -= speed * TimeElapsed;
+						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+					}
 					else
 					{
 						if (World.CameraTrackFollower.Pitch != 0)
