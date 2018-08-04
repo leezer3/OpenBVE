@@ -727,6 +727,7 @@ namespace OpenBve {
 						} break;
 				}
 			}
+			
 			if (TrailerCars > 0 & TrailerCarMass <= 0.0) {
 				Interface.AddMessage(Interface.MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
 				TrailerCarMass = 1.0;
@@ -768,8 +769,6 @@ namespace OpenBve {
 				Train.Handles.LocoBrake = new TrainManager.LocoBrakeHandle(locoBrakeNotches, Train.Handles.EmergencyBrake, locoBrakeDelayUp, locoBrakeDelayDown);
 			}
 			Train.Handles.LocoBrakeType = (TrainManager.LocoBrakeType)locoBrakeType;
-
-			
 			
 			// apply data
 			if (MotorCars < 1) MotorCars = 1;
@@ -783,15 +782,13 @@ namespace OpenBve {
 				Train.Cars[i].RearBogie = new TrainManager.Bogie(Train, Train.Cars[i]);
 			}
 			double DistanceBetweenTheCars = 0.3;
+			
 			if (DriverCar < 0 | DriverCar >= Cars) {
 				Interface.AddMessage(Interface.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
 				DriverCar = 0;
-				Train.Cars[0].Specs.IsDriverCar = true;
+
 			}
-			else
-			{
-				Train.Cars[DriverCar].Specs.IsDriverCar = true;
-			}
+			Train.DriverCar = DriverCar;
 			// brake system
 			double OperatingPressure;
 			if (BrakePipePressure <= 0.0) {
@@ -1174,7 +1171,7 @@ namespace OpenBve {
 				}
 			}
 			// driver
-			Train.DriverCar = DriverCar;
+			
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;

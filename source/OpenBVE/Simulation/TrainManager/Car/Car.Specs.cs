@@ -5,7 +5,6 @@
 	{
 		internal struct CarSpecs
 		{
-			internal bool IsDriverCar;
 			/// motor
 			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;

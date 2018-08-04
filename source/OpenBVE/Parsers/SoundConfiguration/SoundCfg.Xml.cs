@@ -14,7 +14,7 @@ namespace OpenBve
 			{
 				try
 				{
-					Parse(fileName, ref train.Cars[i]);
+					Parse(fileName, ref train.Cars[i], i == train.DriverCar);
 				}
 				catch
 				{
@@ -24,8 +24,8 @@ namespace OpenBve
 			return true;
 		}
 
-		internal static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Car car)
+		private static string currentPath;
+		internal static void Parse(string fileName, ref TrainManager.Car car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = new Vector3(0.0, 0.0, 0.0);
@@ -69,7 +69,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -117,7 +117,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -151,7 +151,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -172,7 +172,7 @@ namespace OpenBve
 									}
 									break;
 								case "buzzer":
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -259,7 +259,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -296,7 +296,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -339,7 +339,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
@@ -384,7 +384,7 @@ namespace OpenBve
 										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
 										break;
 									}
-									if (!car.Specs.IsDriverCar)
+									if (!isDriverCar)
 									{
 										break;
 									}
