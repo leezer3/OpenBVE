@@ -52,24 +52,16 @@ namespace OpenBve
 			internal double BeaconReceiverPosition;
 			internal TrackManager.TrackFollower BeaconReceiver;
 			/// <summary>A reference to the base train</summary>
-			internal Train baseTrain;
+			private readonly Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
-			internal int Index;
+			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal Camera.RestrictionMode CameraRestrictionMode = Camera.RestrictionMode.NotSpecified;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
 			internal World.CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
-
-			internal struct CarBrightness
-			{
-				internal float PreviousBrightness;
-				internal double PreviousTrackPosition;
-				internal float NextBrightness;
-				internal double NextTrackPosition;
-			}
-
+			
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
