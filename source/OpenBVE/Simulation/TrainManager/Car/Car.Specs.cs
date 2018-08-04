@@ -16,7 +16,6 @@
 			internal double JerkBrakeUp;
 			internal double JerkBrakeDown;
 			/// brake
-			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
 			/// physical properties
 			internal double MassEmpty;

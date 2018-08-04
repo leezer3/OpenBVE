@@ -254,7 +254,7 @@ namespace OpenBve
 				}
 
 				// deceleration provided by motor
-				if (!(Cars[CarIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[CarIndex].Specs.CurrentSpeed) >= Cars[CarIndex].Specs.BrakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)
+				if (!(Cars[CarIndex].CarBrake is AutomaticAirBrake) && Math.Abs(Cars[CarIndex].Specs.CurrentSpeed) >= Cars[CarIndex].CarBrake.brakeControlSpeed & Handles.Reverser.Actual != 0 & !Handles.EmergencyBrake.Actual)
 				{
 					double f;
 					if (Handles.LocoBrake.Actual != 0 && CarIndex == DriverCar)
