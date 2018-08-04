@@ -56,7 +56,7 @@ namespace OpenBve
 
 		internal enum GradientDisplayMode
 		{
-			Percentage, UnitOfChange, None
+			Percentage, UnitOfChange, Permil, None
 		}
 		/// <summary>Whether the gradient overlay is currently displayed</summary>
 		internal static GradientDisplayMode OptionGradient = GradientDisplayMode.None;

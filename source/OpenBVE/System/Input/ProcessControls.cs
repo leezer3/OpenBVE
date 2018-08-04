@@ -1605,7 +1605,7 @@ namespace OpenBve
 										else
 										{
 											Renderer.OptionGradient++;
-											if ((int)Renderer.OptionGradient >= 3) Renderer.OptionGradient = 0;
+											if ((int)Renderer.OptionGradient >= 4) Renderer.OptionGradient = 0;
 										}
 										break;
 									case Interface.Command.MiscFps:
