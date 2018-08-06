@@ -79,7 +79,15 @@ namespace OpenBve
 			}
 			OuterRadiusFactor = Math.Sqrt(OuterRadiusFactorMinimum * OuterRadiusFactorMaximum);
 			OuterRadiusFactorSpeed = 0.0;
-			OpenAlDevice = Alc.OpenDevice(null);
+			try
+			{
+				OpenAlDevice = Alc.OpenDevice(null);
+			}
+			catch
+			{
+				return;
+			}
+			
 			if (OpenAlDevice != IntPtr.Zero)
 			{
 				OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
@@ -103,7 +111,6 @@ namespace OpenBve
 				return;
 			}
 			OpenAlContext = ContextHandle.Zero;
-			MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		}
 
 		/// <summary>Deinitializes audio.</summary>

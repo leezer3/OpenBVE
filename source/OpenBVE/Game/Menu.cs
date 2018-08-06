@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
+using System.IO;
 
 namespace OpenBve
 {
@@ -61,13 +62,16 @@ namespace OpenBve
 			/// <summary>Customises the specified control</summary>
 			Control,
 			/// <summary>Quits the game</summary>
-			Quit
+			Quit,
+			/// <summary>Displays as a message box</summary>
+			MessageBox,
 		};
 
 		// components of the semi-transparent screen overlay
 		private readonly Color128 overlayColor = new Color128(0.0f, 0.0f, 0.0f, 0.2f);
 		private readonly Color128 backgroundColor = new Color128(0.0f, 0.0f, 0.0f, 1.0f);
 		private readonly Color128 highlightColor = new Color128(1.0f, 0.69f, 0.0f, 1.0f);
+		private readonly Color128 boxTitleColor = Color128.Blue;
 		// text colours
 		private static readonly Color128 ColourCaption = new Color128(0.750f, 0.750f, 0.875f, 1.0f);
 		private static readonly Color128 ColourDimmed = new Color128(1.000f, 1.000f, 1.000f, 0.5f);
@@ -94,6 +98,14 @@ namespace OpenBve
 		/********************
 			DERIVED MENU ITEM CLASSES
 		*********************/
+
+		private class MessageBoxTitle : MenuEntry
+		{
+			internal MessageBoxTitle(string Text)
+			{
+				this.Text = Text;
+			}
+		}
 		private class MenuCaption : MenuEntry
 		{
 			internal MenuCaption(string Text)
@@ -322,6 +334,36 @@ namespace OpenBve
 				TopItem = 0;
 			}
 
+			public SingleMenu(MenuType menuType, string Title, string[] MessageData)
+			{
+				int i;
+				Align = Renderer.TextAlignment.TopMiddle;
+				Height = Width = 0;
+				Selection = 0;                      // defaults to first menu item
+				Items = new MenuEntry[2 + MessageData.Length];
+				Items[0] = new MessageBoxTitle(Title);
+				for (i = 1; i < MessageData.Length + 1; i++)
+				{
+					Items[i] = new MenuCaption(MessageData[i -1]);
+				}
+				Items[Items.Length -1] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+				// compute menu extent
+				for (i = 0; i < Items.Length; i++)
+				{
+					if (Items[i] == null)
+					{
+						continue;
+					}
+					var size = Renderer.MeasureString(Game.Menu.MenuFont, Items[i].Text);
+					if (size.Width > Width)
+						Width = size.Width;
+					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
+						ItemWidth = size.Width;
+				}
+				Height = Items.Length * Game.Menu.LineHeight;
+				TopItem = 0;
+			}
+
 		}                   // end of private class SingleMenu
 
 		/********************
@@ -435,6 +477,21 @@ namespace OpenBve
 			if (Menus.Length <= CurrMenu)
 				Array.Resize(ref Menus, CurrMenu + 1);
 			Menus[CurrMenu] = new Menu.SingleMenu(type, data);
+			PositionMenu();
+			Game.PreviousInterface = Game.CurrentInterface;
+			Game.CurrentInterface = Game.InterfaceType.Menu;
+		}
+
+		/// <summary>Pushes a menu into the menu stack</summary>
+		
+		public void ShowMessageBox(string Title, string[] MessageData)
+		{
+			if (!isInitialized)
+				Init();
+			CurrMenu++;
+			if (Menus.Length <= CurrMenu)
+				Array.Resize(ref Menus, CurrMenu + 1);
+			Menus[CurrMenu] = new Menu.SingleMenu(MenuType.MessageBox, Title, MessageData);
 			PositionMenu();
 			Game.PreviousInterface = Game.CurrentInterface;
 			Game.CurrentInterface = Game.InterfaceType.Menu;
@@ -569,12 +626,20 @@ namespace OpenBve
 
 			int item = (y - topItemY) / lineHeight + menu.TopItem;
 			// if the mouse is above a command item, select it
-			if (item >= 0 && item < menu.Items.Length && menu.Items[item] is MenuCommand)
+			if (item >= 0 && item < menu.Items.Length)
 			{
-				if (item < visibleItems + menu.TopItem + 1)
+				if (menu.Items[item] is MenuCommand)
 				{
-					//Item is a standard menu entry or the scroll down elipsis
-					menu.Selection = item;
+					if (item < visibleItems + menu.TopItem + 1)
+					{
+						//Item is a standard menu entry or the scroll down elipsis
+						menu.Selection = item;
+						return true;
+					}
+				}
+				else if (menu.Items[item] is MessageBoxTitle || menu.Items[item] is MenuCaption)
+				{
+					menu.Selection = -1;
 					return true;
 				}
 			}
@@ -633,7 +698,7 @@ namespace OpenBve
 			{
 				case Interface.Command.MenuUp:      // UP
 					if (menu.Selection > 0 &&
-						!(menu.Items[menu.Selection - 1] is MenuCaption))
+						!(menu.Items[menu.Selection - 1] is MenuCaption) && !(menu.Items[menu.Selection - 1] is MessageBoxTitle))
 					{
 						menu.Selection--;
 						PositionMenu();
@@ -674,6 +739,8 @@ namespace OpenBve
 								Reset();
 								Game.PreviousInterface = Game.InterfaceType.Menu;
 								Game.CurrentInterface = Game.InterfaceType.Normal;
+								Loading.Pause = false;
+								Loading.Cancel = true;
 								break;
 
 							// simulation commands
@@ -759,7 +826,17 @@ namespace OpenBve
 				{
 					continue;
 				}
-				if (i == menu.Selection)
+				if (menu.Items[i] is MessageBoxTitle)
+				{
+					GL.Color4(boxTitleColor.R, boxTitleColor.G, boxTitleColor.B, boxTitleColor.A);
+					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
+					// draw the text
+					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+						menu.Align, ColourHighlight, false);
+				}
+
+				if (i == menu.Selection && !(menu.Items[i] is MessageBoxTitle))
 				{
 					// draw a solid highlight rectangle under the text
 					// HACK! the highlight rectangle has to be shifted a little down to match
@@ -772,12 +849,18 @@ namespace OpenBve
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
+				{
 					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourCaption, false);
+				}
 				else
+				{
 					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
+				}
+
 				itemY += lineHeight;
+
 			}
 
 

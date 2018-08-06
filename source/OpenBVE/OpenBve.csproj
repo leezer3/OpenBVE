@@ -185,7 +185,7 @@
     <Compile Include="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-	<Compile Include="Graphics\HUD\HUD.Transitions.cs">
+    <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Background.cs" />
@@ -317,6 +317,7 @@
     <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
+    <Compile Include="System\Loading\Loading.Train.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -437,7 +438,7 @@
     <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="System\Loading.cs" />
+    <Compile Include="System\Loading\Loading.cs" />
     <Compile Include="System\MainLoop.cs" />
     <Compile Include="System\Plugins\NetPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
@@ -479,7 +480,6 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
-    
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

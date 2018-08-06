@@ -171,7 +171,13 @@ namespace OpenBve {
 			// progress percent
 			DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop),
 				TextAlignment.TopMiddle, Color128.Black);
+			if (Game.CurrentInterface == Game.InterfaceType.Menu)
+			{
+				Game.Menu.Draw();
+				Loading.Pause = true;
+			}
 			GL.PopMatrix();
+			
 		}
 
 	}

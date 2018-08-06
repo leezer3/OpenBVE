@@ -76,7 +76,7 @@ namespace OpenBve {
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
 			Interface.ClearMessages();
-			CurrentInterface = InterfaceType.Normal;
+			//CurrentInterface = InterfaceType.Normal;
 			RouteComment = "";
 			RouteImage = "";
 			RouteAccelerationDueToGravity = 9.80665;

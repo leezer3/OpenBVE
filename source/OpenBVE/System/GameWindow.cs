@@ -299,14 +299,12 @@ namespace OpenBve
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
-			LoadingScreenLoop();
-			//Add event handler hooks for keyboard and mouse buttons
-			//Do this after the renderer has init and the loop has started to prevent timing issues
 			KeyDown	+= MainLoop.keyDownEvent;
 			KeyUp	+= MainLoop.keyUpEvent;
 			MouseDown	+= MainLoop.mouseDownEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
+			LoadingScreenLoop();
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -336,7 +334,7 @@ namespace OpenBve
 			{
 				if (Interface.Messages[i].Type == Interface.MessageType.Critical)
 				{
-					MessageBox.Show("A critical error has occured:\n\n" + Interface.Messages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					//MessageBox.Show("A critical error has occured:\n\n" + Interface.Messages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
 			}
@@ -817,7 +815,7 @@ namespace OpenBve
 			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
 			GL.Viewport(0, 0, Screen.Width, Screen.Height);
 
-			while (!Loading.Complete && !Loading.Cancel)
+			while ((!Loading.Complete || Loading.Pause) && !Loading.Cancel)
 			{
 				CPreciseTimer.GetElapsedTime();
 				this.ProcessEvents();
