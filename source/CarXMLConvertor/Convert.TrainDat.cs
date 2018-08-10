@@ -137,8 +137,8 @@ namespace CarXmlConvertor
 							{
 								switch (n)
 								{
-									case 4: BrakeCylinderEmergencyRate = a; break;
-									case 5: BrakeCylinderReleaseRate = a; break;
+									case 4: BrakeCylinderEmergencyRate = a * 1000.0; break;
+									case 5: BrakeCylinderReleaseRate = a * 1000.0; break;
 								}
 							}
 							i++; n++;
