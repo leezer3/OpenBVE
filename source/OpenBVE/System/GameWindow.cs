@@ -355,6 +355,7 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
+			World.CurrentDriverBody = new World.DriverBody();
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);

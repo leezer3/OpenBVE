@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
 using OpenBveApi;
-using OpenBveApi.Colors;
-using OpenTK.Input;
 
 namespace OpenBve {
 	internal static partial class Interface {

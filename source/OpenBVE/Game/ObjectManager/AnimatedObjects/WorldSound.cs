@@ -39,7 +39,8 @@ namespace OpenBve
 				{
 					Buffer = this.Buffer,
 					//Must clone the vector, not pass the reference
-					Position = new Vector3(position.X, position.Y, position.Z)
+					Position = new Vector3(position.X, position.Y, position.Z),
+					Follower =  new TrackManager.TrackFollower()
 				};
 				snd.currentTrackPosition = trackPosition;
 				snd.Follower.Update(trackPosition, true, true);

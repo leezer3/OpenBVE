@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Reflection;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -91,8 +90,6 @@ namespace OpenBve
 				State = TrainState.Disposed;
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					int s = Cars[i].CurrentCarSection;
-					
 					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 					Cars[i].FrontBogie.ChangeSection(-1);
 					Cars[i].RearBogie.ChangeSection(-1);

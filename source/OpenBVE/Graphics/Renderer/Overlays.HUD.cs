@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 

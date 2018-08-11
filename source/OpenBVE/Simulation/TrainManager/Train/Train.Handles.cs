@@ -1,10 +1,7 @@
-﻿using OpenBve.BrakeSystems;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 
 namespace OpenBve
 {
-	using System;
-
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{

@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 
 namespace OpenBve {
@@ -168,7 +167,6 @@ namespace OpenBve {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
-				int d = TrainManager.PlayerTrain.DriverCar;
 				BlackBoxEntries[BlackBoxEntryCount].Time = SecondsSinceMidnight;
 				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
 				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;

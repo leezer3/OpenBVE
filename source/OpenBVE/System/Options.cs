@@ -138,7 +138,7 @@ namespace OpenBve
 			/// <summary>The list of recently used trains</summary>
 			internal string[] RecentlyUsedTrains;
 			/// <summary>The maximum number of recently used routes/ trains to display</summary>
-			internal int RecentlyUsedLimit;
+			internal readonly int RecentlyUsedLimit;
 			/// <summary>The list of recently used route character encodings</summary>
 			internal TextEncoding.EncodingValue[] RouteEncodings;
 			/// <summary>The list of recently used train character encodings</summary>
@@ -697,6 +697,7 @@ namespace OpenBve
 										{
 #pragma warning disable CS0219
 //Used to check that the parsed integer is a valid codepage
+											// ReSharper disable once UnusedVariable
 											Encoding e = Encoding.GetEncoding(a);
 #pragma warning restore CS0219
 										}
@@ -720,6 +721,7 @@ namespace OpenBve
 										{
 #pragma warning disable CS0219
 //Used to check that the parsed integer is a valid codepage
+											// ReSharper disable once UnusedVariable
 											Encoding e = Encoding.GetEncoding(a);
 #pragma warning restore CS0219
 										}

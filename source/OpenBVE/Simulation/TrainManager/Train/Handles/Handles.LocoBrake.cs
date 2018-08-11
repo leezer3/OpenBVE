@@ -15,8 +15,6 @@
 
 			/// <summary>Provides a reference to the associated EB handle</summary>
 			private readonly EmergencyHandle EmergencyBrake;
-			/// <summary>The type of locomotive brake fitted</summary>
-			internal readonly LocoBrakeType BrakeType;
 
 			internal override void Update()
 			{

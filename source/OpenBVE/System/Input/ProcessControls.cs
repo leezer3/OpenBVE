@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenTK.Graphics.OpenGL;
@@ -193,7 +192,6 @@ namespace OpenBve
 										// brake half/full-axis
 										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
-											int d = TrainManager.PlayerTrain.DriverCar;
 											if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
 											{
 												double a = Interface.CurrentControls[i].AnalogState;
@@ -1082,7 +1080,6 @@ namespace OpenBve
 										// brake increase
 										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
-											int d = TrainManager.PlayerTrain.DriverCar;
 											if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
 											{
 												if (TrainManager.PlayerTrain.Handles.HasHoldBrake &

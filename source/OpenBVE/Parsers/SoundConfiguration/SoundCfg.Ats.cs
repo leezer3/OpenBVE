@@ -7,7 +7,7 @@ namespace OpenBve
 		/// <summary>Loads the default ATS plugin sound set</summary>
 		/// <param name="train">The train</param>
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
-		internal static void LoadDefaultATSSounds(TrainManager.Train train, string trainFolder)
+		private static void LoadDefaultATSSounds(TrainManager.Train train, string trainFolder)
 		{
 			Vector3 position = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 			const double radius = 2.0;

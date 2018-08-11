@@ -1,6 +1,6 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBve
 {

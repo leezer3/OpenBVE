@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.BrakeSystems;
 using OpenBveApi.Runtime;
 
 namespace OpenBve
