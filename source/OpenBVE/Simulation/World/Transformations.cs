@@ -157,54 +157,6 @@ namespace OpenBve
 			px = x; py = y; pz = z;
 		}
 
-		/// <summary>Rotates one vector based upon a second vector, both input as induvidual co-ordinates</summary>
-		/// <param name="px">The X co-ordinate of the first vector</param>
-		/// <param name="py">The Y co-ordinate of the first vector</param>
-		/// <param name="pz">The Z co-ordinate of the first vector</param>
-		/// <param name="dx">The X co-ordinate of the second vector</param>
-		/// <param name="dy">The Y co-ordinate of the second vector</param>
-		/// <param name="dz">The Z co-ordinate of the second vector</param>
-		/// <param name="cosa">The Cosine of the angle to rotate by</param>
-		/// <param name="sina">The Sine of the angle to rotate by</param>
-		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double cosa, double sina)
-		{
-			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-			dx *= t; dy *= t; dz *= t;
-			double oc = 1.0 - cosa;
-
-
-
-			//With any luck, this removes six multiplications from the Rotation calculation....
-			double Opt1 = oc * dx * dy;
-			double Opt2 = sina * dz;
-			double Opt3 = oc * dy * dz;
-			double Opt4 = sina * dx;
-			double Opt5 = sina * dy;
-			double Opt6 = oc * dx * dz;
-			double x = (cosa + oc * dx * dx) * (double)px + (Opt1 - Opt2) * (double)py + (Opt6 + Opt5) * (double)pz;
-			double y = (cosa + oc * dy * dy) * (double)py + (Opt1 + Opt2) * (double)px + (Opt3 - Opt4) * (double)pz;
-			double z = (cosa + oc * dz * dz) * (double)pz + (Opt6 - Opt5) * (double)px + (Opt3 + Opt4) * (double)py;
-			px = (float)x; py = (float)y; pz = (float)z;
-		}
-
-		/// <summary>Rotates a 2D vector</summary>
-		/// <param name="Vector">The vector to rotate</param>
-		/// <param name="cosa">The Cosine of the angle to rotate by</param>
-		/// <param name="sina">The Sine of the angle to rotate by</param>
-		internal static void Rotate(ref Vector2 Vector, double cosa, double sina)
-		{
-			double u = Vector.X * cosa - Vector.Y * sina;
-			double v = Vector.X * sina + Vector.Y * cosa;
-			Vector.X = u;
-			Vector.Y = v;
-		}
-		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz)
-		{
-			var x = sx * (double)px + ux * (double)py + dx * (double)pz;
-			var y = sy * (double)px + uy * (double)py + dy * (double)pz;
-			var z = sz * (double)px + uz * (double)py + dz * (double)pz;
-			px = (float)x; py = (float)y; pz = (float)z;
-		}
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz)
 		{
 			var x = sx * px + ux * py + dx * pz;
@@ -212,13 +164,7 @@ namespace OpenBve
 			var z = sz * px + uz * py + dz * pz;
 			px = x; py = y; pz = z;
 		}
-		internal static void Rotate(ref float px, ref float py, ref float pz, Transformation t)
-		{
-			var x = t.X.X * (double)px + t.Y.X * (double)py + t.Z.X * (double)pz;
-			var y = t.X.Y * (double)px + t.Y.Y * (double)py + t.Z.Y * (double)pz;
-			var z = t.X.Z * (double)px + t.Y.Z * (double)py + t.Z.Z * (double)pz;
-			px = (float)x; py = (float)y; pz = (float)z;
-		}
+
 		internal static void Rotate(ref double px, ref double py, ref double pz, Transformation t)
 		{
 			var x = t.X.X * px + t.Y.X * py + t.Z.X * pz;
@@ -232,34 +178,6 @@ namespace OpenBve
 			double v = Vector.X * sina + Vector.Z * cosa;
 			Vector.X = u;
 			Vector.Z = v;
-		}
-		internal static void RotateUpDown(ref Vector3 Vector, Vector2 Direction, double cosa, double sina)
-		{
-			double dx = Direction.X, dy = Direction.Y;
-			double x = Vector.X, y = Vector.Y, z = Vector.Z;
-			double u = dy * x - dx * z;
-			double v = dx * x + dy * z;
-			Vector.X = dy * u + dx * v * cosa - dx * y * sina;
-			Vector.Y = y * cosa + v * sina;
-			Vector.Z = -dx * u + dy * v * cosa - dy * y * sina;
-		}
-		internal static void RotateUpDown(ref Vector3 Vector, double dx, double dy, double cosa, double sina)
-		{
-			double x = Vector.X, y = Vector.Y, z = Vector.Z;
-			double u = dy * x - dx * z;
-			double v = dx * x + dy * z;
-			Vector.X = dy * u + dx * v * cosa - dx * y * sina;
-			Vector.Y = y * cosa + v * sina;
-			Vector.Z = -dx * u + dy * v * cosa - dy * y * sina;
-		}
-		internal static void RotateUpDown(ref double px, ref double py, ref double pz, double dx, double dz, double cosa, double sina)
-		{
-			double x = px, y = py, z = pz;
-			double u = dz * x - dx * z;
-			double v = dx * x + dz * z;
-			px = dz * u + dx * v * cosa - dx * y * sina;
-			py = y * cosa + v * sina;
-			pz = -dx * u + dz * v * cosa - dz * y * sina;
 		}
 	}
 }

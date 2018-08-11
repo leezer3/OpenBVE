@@ -484,7 +484,7 @@ namespace OpenBve
 					double ag = -Math.Atan(Data.Blocks[i].Turn);
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
-					World.Rotate(ref Direction, cosag, sinag);
+					Direction.Rotate(cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
@@ -512,7 +512,7 @@ namespace OpenBve
 					double b = s / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 					a = 0.5 * (double)Math.Sign(r) * b;
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 				else if (WorldTrackElement.CurveRadius != 0.0)
 				{
@@ -521,7 +521,7 @@ namespace OpenBve
 					double b = d / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 					a = 0.5 * (double)Math.Sign(r) * b;
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 				else if (Data.Blocks[i].Pitch != 0.0)
 				{
@@ -596,14 +596,14 @@ namespace OpenBve
 								Position2.Z += Direction.Y * c;
 								if (a != 0.0)
 								{
-									World.Rotate(ref Direction2, Math.Cos(-a), Math.Sin(-a));
+									Direction2.Rotate(Math.Cos(-a), Math.Sin(-a));
 								}
 								if (Data.Blocks[i + 1].Turn != 0.0)
 								{
 									double ag = -Math.Atan(Data.Blocks[i + 1].Turn);
 									double cosag = Math.Cos(ag);
 									double sinag = Math.Sin(ag);
-									World.Rotate(ref Direction2, cosag, sinag);
+									Direction2.Rotate(cosag, sinag);
 								}
 								double a2 = 0.0;
 								// double c2 = Data.BlockInterval;
@@ -618,7 +618,7 @@ namespace OpenBve
 									double b2 = s2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
-									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
+									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								}
 								else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0)
 								{
@@ -627,7 +627,7 @@ namespace OpenBve
 									double b2 = d2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
-									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
+									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								}
 								// else if (Data.Blocks[i + 1].Pitch != 0.0) {
 								// double p2 = Data.Blocks[i + 1].Pitch;
@@ -1508,7 +1508,7 @@ namespace OpenBve
 				Position.Z += Direction.Y * c;
 				if (a != 0.0)
 				{
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 			}
 			// orphaned transponders

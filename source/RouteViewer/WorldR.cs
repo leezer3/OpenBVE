@@ -518,12 +518,6 @@ namespace OpenBve {
 			double z = (cosa + oc * dz * dz) * (double)pz + (oc * dx * dz - sina * dy) * (double)px + (oc * dy * dz + sina * dx) * (double)py;
 			px = (float)x; py = (float)y; pz = (float)z;
 		}
-		internal static void Rotate(ref Vector2 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Y * sina;
-			double v = Vector.X * sina + Vector.Y * cosa;
-			Vector.X = u;
-			Vector.Y = v;
-		}
 		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
 			double x, y, z;
 			x = sx * (double)px + ux * (double)py + dx * (double)pz;
@@ -557,33 +551,6 @@ namespace OpenBve {
 			double v = Vector.X * sina + Vector.Z * cosa;
 			Vector.X = u;
 			Vector.Z = v;
-		}
-
-		internal static void RotateUpDown(ref Vector3 Vector, Vector2 Direction, double cosa, double sina) {
-			double dx = Direction.X, dy = Direction.Y;
-			double x = Vector.X, y = Vector.Y, z = Vector.Z;
-			double u = dy * x - dx * z;
-			double v = dx * x + dy * z;
-			Vector.X = dy * u + dx * v * cosa - dx * y * sina;
-			Vector.Y = y * cosa + v * sina;
-			Vector.Z = -dx * u + dy * v * cosa - dy * y * sina;
-		}
-		internal static void RotateUpDown(ref Vector3 Vector, double dx, double dy, double cosa, double sina) {
-			double x = Vector.X, y = Vector.Y, z = Vector.Z;
-			double u = dy * x - dx * z;
-			double v = dx * x + dy * z;
-			Vector.X = dy * u + dx * v * cosa - dx * y * sina;
-			Vector.Y = y * cosa + v * sina;
-			Vector.Z = -dx * u + dy * v * cosa - dy * y * sina;
-		}
-
-		internal static void RotateUpDown(ref double px, ref double py, ref double pz, double dx, double dz, double cosa, double sina) {
-			double x = px, y = py, z = pz;
-			double u = dz * x - dx * z;
-			double v = dx * x + dz * z;
-			px = dz * u + dx * v * cosa - dx * y * sina;
-			py = y * cosa + v * sina;
-			pz = -dx * u + dz * v * cosa - dz * y * sina;
 		}
 
 		// normalize
