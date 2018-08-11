@@ -199,7 +199,7 @@ namespace OpenBve
 				TrackManager.CurrentTrack.Elements[n].WorldPosition = Position;
 				TrackManager.CurrentTrack.Elements[n].WorldDirection = Vector3.GetVector3(Direction, Data.Blocks[i].Pitch);
 				TrackManager.CurrentTrack.Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
-				World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide, out TrackManager.CurrentTrack.Elements[n].WorldUp);
+				TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				TrackManager.CurrentTrack.Elements[n].StartingTrackPosition = StartingDistance;
 				TrackManager.CurrentTrack.Elements[n].Events = new TrackManager.GeneralEvent[] { };
 				TrackManager.CurrentTrack.Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
@@ -487,7 +487,7 @@ namespace OpenBve
 					World.Rotate(ref Direction, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
-					World.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide, out TrackManager.CurrentTrack.Elements[n].WorldUp);
+					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				}
 				//Pitch
 				if (Data.Blocks[i].Pitch != 0.0)
@@ -2083,8 +2083,8 @@ namespace OpenBve
 							{
 								double cosa = Math.Cos(b);
 								double sina = Math.Sin(b);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
+								TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
+								TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
 							}
 						}
 					}

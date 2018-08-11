@@ -206,19 +206,20 @@ namespace OpenBve
 				}
 			}
 
-			internal void ApplyRotation(double x, double y, double z, double a)
+			internal void ApplyRotation(Vector3 Rotation, double Angle)
 			{
-				double cosa = Math.Cos(a);
-				double sina = Math.Sin(a);
+				double cosa = Math.Cos(Angle);
+				double sina = Math.Sin(Angle);
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					World.Rotate(ref Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
+					Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
+
 				}
 				for (int j = 0; j < Mesh.Faces.Length; j++)
 				{
 					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
 					{
-						World.Rotate(ref Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
+						Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
 					}
 				}
 			}

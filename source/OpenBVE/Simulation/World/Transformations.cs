@@ -13,14 +13,6 @@ namespace OpenBve
 			cz = ax * by - ay * bx;
 		}
 
-		/// <summary>Creates the cross product of two vectors</summary>
-		internal static void Cross(Vector3 a, Vector3 b, out Vector3 c)
-		{
-			c.X = a.Y * b.Z - a.Z * b.Y;
-			c.Y = a.Z * b.X - a.X * b.Z;
-			c.Z = a.X * b.Y - a.Y * b.X;
-		}
-
 		// transformation
 		internal struct Transformation
 		{
@@ -113,28 +105,6 @@ namespace OpenBve
 				this.Y = y;
 				this.Z = z;
 			}
-		}
-
-		/// <summary>Rotates a vector</summary>
-		/// <param name="p">The vector to rotate</param>
-		/// <param name="d">The vector to rotate by</param>
-		/// <param name="cosa">The Cosine of the angle to rotate by</param>
-		/// <param name="sina">The Sine of the angle to rotate by</param>
-		internal static void Rotate(ref Vector3 p, Vector3 d, double cosa, double sina)
-		{
-			double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
-			d.X *= t; d.Y *= t; d.Z *= t;
-			double oc = 1.0 - cosa;
-			double Opt1 = oc * d.X * d.Y;
-			double Opt2 = sina * d.Z;
-			double Opt3 = oc * d.Y * d.Z;
-			double Opt4 = sina * d.X;
-			double Opt5 = sina * d.Y;
-			double Opt6 = oc * d.X * d.Z;
-			double x = (cosa + oc * d.X * d.X) * p.X + (Opt1 - Opt2) * p.Y + (Opt6 + Opt5) * p.Z;
-			double y = (cosa + oc * d.Y * d.Y) * p.Y + (Opt1 + Opt2) * p.X + (Opt3 - Opt4) * p.Z;
-			double z = (cosa + oc * d.Z * d.Z) * p.Z + (Opt6 - Opt5) * p.X + (Opt3 + Opt4) * p.Y;
-			p.X = x; p.Y = y; p.Z = z;
 		}
 
 		/// <summary>Rotates one vector based upon a second vector, input as induvidual co-ordinates</summary>

@@ -635,9 +635,9 @@ namespace OpenBve {
 									y *= t;
 									z *= t;
 									a *= 0.0174532925199433;
-									ApplyRotation(Builder, x, y, z, a);
+									ApplyRotation(Builder, new Vector3(x,y,z), a);
 									if (cmd == "rotateall") {
-										Object.ApplyRotation(x, y, z, a);
+										Object.ApplyRotation(new Vector3(x,y,z), a);
 									}
 								}
 							} break;
@@ -1422,15 +1422,15 @@ namespace OpenBve {
 		
 
 		// apply rotation
-		private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a) {
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
+		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double Angle) {
+			double cosa = Math.Cos(Angle);
+			double sina = Math.Sin(Angle);
 			for (int i = 0; i < Builder.Vertices.Length; i++) {
-				World.Rotate(ref Builder.Vertices[i].Coordinates, x, y, z, cosa, sina);
+				Builder.Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++) {
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++) {
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal, x, y, z, cosa, sina);
+					Builder.Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
 				}
 			}
 		}

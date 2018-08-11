@@ -496,9 +496,9 @@ namespace OpenBve {
 									y *= t;
 									z *= t;
 									a *= 0.0174532925199433;
-									ApplyRotation(Builder, x, y, z, a);
+									ApplyRotation(Builder, new Vector3(x,y,z), a);
 									if (cmd == "rotateall") {
-										ApplyRotation(Object, x, y, z, a);
+										ApplyRotation(Object, new Vector3(x,y,z), a);
 									}
 								}
 							} break;
@@ -1212,27 +1212,27 @@ namespace OpenBve {
 		}
 
 		// apply rotation
-		private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a) {
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
+		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double Angle) {
+			double cosa = Math.Cos(Angle);
+			double sina = Math.Sin(Angle);
 			for (int i = 0; i < Builder.Vertices.Length; i++) {
-				World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+				Builder.Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++) {
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++) {
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+					Builder.Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
 				}
 			}
 		}
-		private static void ApplyRotation(ObjectManager.StaticObject Object, double x, double y, double z, double a) {
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
+		private static void ApplyRotation(ObjectManager.StaticObject Object, Vector3 Rotation, double Angle) {
+			double cosa = Math.Cos(Angle);
+			double sina = Math.Sin(Angle);
 			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, x, y, z, cosa, sina);
+				Object.Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
 			}
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal.X, ref Object.Mesh.Faces[j].Vertices[k].Normal.Y, ref Object.Mesh.Faces[j].Vertices[k].Normal.Z, x, y, z, cosa, sina);
+					Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
 				}
 			}
 		}

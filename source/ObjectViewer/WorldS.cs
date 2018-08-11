@@ -555,29 +555,7 @@ namespace OpenBve {
 			}
 		}
 
-		/// <summary>Rotates one vector based upon a second vector, input as induvidual co-ordinates</summary>
-		/// <param name="p">The vector to rotate</param>
-		/// <param name="dx">The X co-ordinate of the second vector</param>
-		/// <param name="dy">The Y co-ordinate of the second vector</param>
-		/// <param name="dz">The Z co-ordinate of the second vector</param>
-		/// <param name="cosa">The Cosine of the angle to rotate by</param>
-		/// <param name="sina">The Sine of the angle to rotate by</param>
-		internal static void Rotate(ref Vector3 p, double dx, double dy, double dz, double cosa, double sina)
-		{
-			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-			dx *= t; dy *= t; dz *= t;
-			double oc = 1.0 - cosa;
-			double Opt1 = oc * dx * dy;
-			double Opt2 = sina * dz;
-			double Opt3 = oc * dy * dz;
-			double Opt4 = sina * dx;
-			double Opt5 = sina * dy;
-			double Opt6 = oc * dx * dz;
-			double x = (cosa + oc * dx * dx) * p.X + (Opt1 - Opt2) * p.Y + (Opt6 + Opt5) * p.Z;
-			double y = (cosa + oc * dy * dy) * p.Y + (Opt1 + Opt2) * p.X + (Opt3 - Opt4) * p.Z;
-			double z = (cosa + oc * dz * dz) * p.Z + (Opt6 - Opt5) * p.X + (Opt3 + Opt4) * p.Y;
-			p.X = x; p.Y = y; p.Z = z;
-		}
+		
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
 			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
 			dx *= t; dy *= t; dz *= t;

@@ -1395,7 +1395,7 @@ namespace OpenBve
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				World.Rotate(ref Mesh.Vertices[i].Coordinates, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
 			}
 			//Update normals
 			for (int i = 0; i < Mesh.Faces.Length; i++)
@@ -1403,7 +1403,7 @@ namespace OpenBve
 				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
 					{
-						World.Rotate(ref Mesh.Faces[i].Vertices[j].Normal, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
 					}
 			}
 		}

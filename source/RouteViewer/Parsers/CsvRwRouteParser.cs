@@ -325,6 +325,7 @@ namespace OpenBve {
 				Data.Blocks[0].Section = new Section[] { };
 				Data.Blocks[0].Sound = new Sound[] { };
 				Data.Blocks[0].Transponder = new Transponder[] { };
+	            Data.Blocks[0].DestinationChanges = new DestinationEvent[] { };
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] { };
 				Data.Markers = new Marker[] { };
 				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
@@ -5029,6 +5030,7 @@ namespace OpenBve {
 						Data.Blocks[i].Section = new Section[] { };
 						Data.Blocks[i].Sound = new Sound[] { };
 						Data.Blocks[i].Transponder = new Transponder[] { };
+						Data.Blocks[i].DestinationChanges = new DestinationEvent[] { };
 						Data.Blocks[i].RailFreeObj = new FreeObj[][] { };
 						Data.Blocks[i].GroundFreeObj = new FreeObj[] { };
 						Data.Blocks[i].PointsOfInterest = new PointOfInterest[] { };

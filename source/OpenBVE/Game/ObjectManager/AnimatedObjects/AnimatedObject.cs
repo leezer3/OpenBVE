@@ -743,15 +743,15 @@ namespace OpenBve
 					// rotate
 					if (rotateX)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateXDirection, cosX, sinX);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateXDirection, cosX, sinX);
 					}
 					if (rotateY)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateYDirection, cosY, sinY);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateYDirection, cosY, sinY);
 					}
 					if (rotateZ)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateZDirection, cosZ, sinZ);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
 					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
@@ -791,15 +791,15 @@ namespace OpenBve
 						{
 							if (rotateX)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateXDirection, cosX, sinX);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateXDirection, cosX, sinX);
 							}
 							if (rotateY)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateYDirection, cosY, sinY);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateYDirection, cosY, sinY);
 							}
 							if (rotateZ)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateZDirection, cosZ, sinZ);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateZDirection, cosZ, sinZ);
 							}
 							World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.X, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Y, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
 						}

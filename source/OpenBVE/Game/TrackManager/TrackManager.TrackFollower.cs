@@ -94,7 +94,7 @@ namespace OpenBve
 							double sin2a = Math.Sin(2.0 * a);
 							WorldSide = CurrentTrack.Elements[i].WorldSide;
 							World.Rotate(ref WorldSide, 0.0, 1.0, 0.0, cos2a, sin2a);
-							World.Cross(WorldDirection, WorldSide, out WorldUp);
+							WorldUp = Vector3.Cross(WorldDirection, WorldSide);
 
 						}
 						else
