@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using OpenBveApi.Math;
+using OpenBveApi.World;
 using OpenTK.Graphics;
 
 namespace OpenBve
@@ -95,7 +96,7 @@ namespace OpenBve
 #endif
                         ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8,ObjectManager.ObjectLoadMode.Normal, false, false, false);
                         ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-                            new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0,
+                            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
                             0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {

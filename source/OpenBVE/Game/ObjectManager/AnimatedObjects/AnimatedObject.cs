@@ -2,6 +2,7 @@
 using CSScriptLibrary;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -823,14 +824,14 @@ namespace OpenBve
 				}
 			}
 
-			internal void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+			internal void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 			{
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
 					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
-				World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
+				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 				
 				//Place track followers if required
 				if (TrackFollowerFunction != null)

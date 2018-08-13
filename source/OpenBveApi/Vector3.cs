@@ -285,7 +285,18 @@ namespace OpenBveApi.Math {
 			double z = (cosineOfAngle + cosineComplement * direction.Z * direction.Z) * this.Z + (cosineComplement * direction.X * direction.Z - sineOfAngle * direction.Y) * this.X + (cosineComplement * direction.Y * direction.Z + sineOfAngle * direction.X) * this.Y;
 			this = new Vector3(x, y, z);
 		}
-		
+
+		/// <summary>Rotates the vector based upon three other vectors</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <param name="thirdVector">The third vector</param>
+		public void Rotate(Vector3 firstVector, Vector3 secondVector, Vector3 thirdVector) {
+			var x = thirdVector.X * this.X + secondVector.X * this.Y + firstVector.X * this.Z;
+			var y = thirdVector.Y * this.X + secondVector.Y * this.Y + firstVector.Y * this.Z;
+			var z = thirdVector.Z * this.X + secondVector.Z * this.Y + firstVector.Z * this.Z;
+			this = new Vector3(x, y, z);
+		}
+
 		/// <summary>Rotates the vector from the default orientation into a specified orientation.</summary>
 		/// <param name="orientation">The orientation.</param>
 		/// <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>

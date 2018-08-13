@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -336,7 +337,7 @@ namespace OpenBve
 				}
 			}
 
-			internal void ApplyData(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+			internal void ApplyData(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
 				StartingDistance = float.MaxValue;
 				EndingDistance = float.MinValue;
@@ -434,7 +435,7 @@ namespace OpenBve
 				}
 			}
 
-			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
+			internal override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{

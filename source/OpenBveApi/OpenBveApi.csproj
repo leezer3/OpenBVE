@@ -84,6 +84,7 @@
     <Compile Include="Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
+    <Compile Include="Transformations.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vertex.cs" />
