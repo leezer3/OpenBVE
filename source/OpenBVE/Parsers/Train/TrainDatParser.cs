@@ -123,7 +123,7 @@ namespace OpenBve {
 			double CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
-			int ReAdhesionDevice = 0;
+			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
 			
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
@@ -645,7 +645,17 @@ namespace OpenBve {
 									case 4:
 										Train.Handles.HasHoldBrake = a == 1.0; break;
 									case 5:
-										ReAdhesionDevice = (int)Math.Round(a); break;
+										int dt = (int) Math.Round(a);
+										if (dt < 3 && dt > -1)
+										{
+											ReAdhesionDevice = (TrainManager.ReadhesionDeviceType)dt;
+										}
+										else
+										{
+											ReAdhesionDevice = TrainManager.ReadhesionDeviceType.NotFitted;
+											Interface.AddMessage(Interface.MessageType.Error, false, "ReAdhesionDeviceType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										break;
 									case 7:
 										{
 											int b = (int)Math.Round(a);
@@ -1100,12 +1110,13 @@ namespace OpenBve {
 				Train.Cars[i].Length = CarLength;
 				Train.Cars[i].Specs.CriticalTopplingAngle = 0.5 * Math.PI - Math.Atan(2 * Train.Cars[i].Specs.CenterOfGravityHeight / Train.Cars[i].Width);
 			}
-			
+
+			Train.Specs.ReadhesionDeviceType = ReAdhesionDevice;
 			// assign motor/trailer-specific settings
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
 				Train.Cars[i].Specs.ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
+				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
 				if (Train.Cars[i].Specs.IsMotorCar) {
 					// motor car
 					Train.Cars[i].Specs.MassEmpty = MotorCarMass;
@@ -1117,31 +1128,31 @@ namespace OpenBve {
 					}
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					switch (ReAdhesionDevice) {
-						case 0: // type a:
+						case TrainManager.ReadhesionDeviceType.TypeA:
 							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 8.0;
 							break;
-						case 1: // type b:
+						case TrainManager.ReadhesionDeviceType.TypeB:
 							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
 							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.9935;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 4.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 1.125;
 							break;
-						case 2: // type c:
+						case TrainManager.ReadhesionDeviceType.TypeC:
 							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
 							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.965;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 2.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 1.5;
 							break;
-						case 3: // type d:
+						case TrainManager.ReadhesionDeviceType.TypeD:
 							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 0.05;
 							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 0.935;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 0.3;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseFactor = 2.0;
 							break;
-						default: // no readhesion device
+						default:
 							Train.Cars[i].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ApplicationFactor = 1.0;
 							Train.Cars[i].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;

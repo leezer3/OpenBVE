@@ -75,10 +75,45 @@ namespace OpenBve.Parsers.Train
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
+							switch (Train.Specs.ReadhesionDeviceType)
+							{
+								case TrainManager.ReadhesionDeviceType.TypeA:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 8.0;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeB:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.9935;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 4.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 1.125;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeC:
+
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.965;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 2.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 1.5;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeD:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.05;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.935;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 0.3;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 2.0;
+									break;
+								default: // no readhesion device
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 99.0;
+									break;
+							}
 						}
 						else
 						{
 							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car]);
 						}
 						break;
 					case "mass":
