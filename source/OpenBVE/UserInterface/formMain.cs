@@ -920,6 +920,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
 			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
+			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
+			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:
