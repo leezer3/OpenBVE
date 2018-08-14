@@ -608,6 +608,11 @@ namespace OpenBve {
 			groupBoxKioskMode.Text = Interface.GetInterfaceString("options_kiosk_mode");
 			checkBoxEnableKiosk.Text = Interface.GetInterfaceString("options_kiosk_mode_enable");
 			labelKioskTimeout.Text = Interface.GetInterfaceString("options_kiosk_mode_timer");
+			labelRailDriverSpeedUnits.Text = Interface.GetInterfaceString("raildriver_speedunits");
+			comboBoxRailDriverUnits.Items[0] = Interface.GetInterfaceString("raildriver_milesperhour");
+			comboBoxRailDriverUnits.Items[1] = Interface.GetInterfaceString("raildriver_kilometersperhour");
+			labelRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_setcalibration");
+			buttonRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_launch");
 			/*
 			 * Localisation for strings in the game start pane
 			 */
