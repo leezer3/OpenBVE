@@ -1986,28 +1986,6 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} 
-											// Code was always unreachable because this is routeviewer //
-											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-											// 	if (Path.ContainsInvalidChars(Arguments[0])) {
-											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											// 	} else {
-											// 		while (CommandIndex1 >= Data.TimetableDaytime.Length) {
-											// 			int n = Data.TimetableDaytime.Length;
-											// 			Array.Resize<int>(ref Data.TimetableDaytime, n << 1);
-											// 			for (int i = n; i < Data.TimetableDaytime.Length; i++) {
-											// 				Data.TimetableDaytime[i] = -1;
-											// 			}
-											// 		}
-											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-											// 		if (!System.IO.File.Exists(f)) {
-											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-											// 		}
-											// 		if (System.IO.File.Exists(f)) {
-											// 			Data.TimetableDaytime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, true);
-											// 			TextureManager.UseTexture(Data.TimetableDaytime[CommandIndex1], TextureManager.UseMode.Normal);
-											// 		}
-											// 	}
-											// }
 										}
 									} break;
 								case "train.timetable.night":
@@ -2018,31 +1996,17 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} 
-											// Code was always unreachable because this is routeviewer //
-											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-											// 	if (Path.ContainsInvalidChars(Arguments[0])) {
-											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											// 	} else {
-											// 		while (CommandIndex1 >= Data.TimetableNighttime.Length) {
-											// 			int n = Data.TimetableNighttime.Length;
-											// 			Array.Resize<int>(ref Data.TimetableNighttime, n << 1);
-											// 			for (int i = n; i < Data.TimetableNighttime.Length; i++) {
-											// 				Data.TimetableNighttime[i] = -1;
-											// 			}
-											// 		}
-											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-											// 		if (!System.IO.File.Exists(f)) {
-											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-											// 		}
-											// 		if (System.IO.File.Exists(f)) {
-											// 			Data.TimetableNighttime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-											// 			TextureManager.UseTexture(Data.TimetableNighttime[CommandIndex1], TextureManager.UseMode.Normal);
-											// 		}
-											// 	}
-											// }
 										}
 									} break;
-									// structure
+								case "train.destination":
+									if (!PreviewOnly)
+									{
+										if (Arguments.Length < 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+									}
+									break;
 								case "structure.rail":
 									{
 										if (!PreviewOnly) {

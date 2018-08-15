@@ -1719,7 +1719,7 @@ namespace OpenBve {
 									} break;
 								case "train.destination":
 									{
-										if (PreviewOnly)
+										if (!PreviewOnly)
 										{
 											if (Arguments.Length < 1)
 											{
