@@ -613,6 +613,8 @@ namespace OpenBve {
 			comboBoxRailDriverUnits.Items[1] = Interface.GetInterfaceString("raildriver_kilometersperhour");
 			labelRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_setcalibration");
 			buttonRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_launch");
+			checkBoxTransparencyFix.Text = Interface.GetInterfaceString("options_transparencyfix");
+			checkBoxHacks.Text = Interface.GetInterfaceString("options_hacks_enable");
 			/*
 			 * Localisation for strings in the game start pane
 			 */
@@ -882,8 +884,17 @@ namespace OpenBve {
 			//Uninstall result panel
 			// *** All labels set at runtime ***
 
-			//HACK
-			panelOptionsPage2.Hide();
+			//HACK- WHY IS THIS NEEDED???
+			if (panelOptionsPage2.Visible)
+			{
+				panelOptionsPage2.Hide();
+				panelOptionsPage2.Show();
+			}
+			else
+			{
+				panelOptionsPage2.Hide();
+			}
+			
 
 		}
 
