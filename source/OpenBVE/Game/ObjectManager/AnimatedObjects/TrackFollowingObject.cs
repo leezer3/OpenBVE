@@ -160,14 +160,14 @@ namespace OpenBve
 				Side.Z = sz;
 			}
 
-			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)
+			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 WorldPosition, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)
 			{
 				double x = 0.0;
 				if (Object.TrackFollowerFunction != null)
 				{
 					if (UpdateFunctions)
 					{
-						x = Object.TrackFollowerFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
+						x = Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 					}
 					else
 					{
