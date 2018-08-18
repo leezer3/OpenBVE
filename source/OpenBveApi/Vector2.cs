@@ -22,6 +22,14 @@ namespace OpenBveApi.Math {
 			this.X = x;
 			this.Y = y;
 		}
+
+		/// <summary>Creates a clone of a vector</summary>
+		/// <param name="v">The vector to clone</param>
+		public Vector2(Vector2 v)
+		{
+			this.X = v.X;
+			this.Y = v.Y;
+		}
 		
 		
 		// --- arithmetic operators ---

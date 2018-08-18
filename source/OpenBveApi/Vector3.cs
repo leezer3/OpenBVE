@@ -28,6 +28,14 @@ namespace OpenBveApi.Math {
 			this.Z = z;
 		}
 
+		/// <summary>Creates a clone of a vector</summary>
+		/// <param name="v">The vector to clone</param>
+		public Vector3(Vector3 v) {
+			this.X = v.X;
+			this.Y = v.Y;
+			this.Z = v.Z;
+		}
+
 		/// <summary>Interpolates between two Vector3 values using a simple Cosine algorithm</summary>
 		/// <param name="Vector1">The first vector</param>
 		/// <param name="Vector2">The second vector</param>
