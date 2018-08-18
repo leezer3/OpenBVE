@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 
@@ -153,18 +153,15 @@ namespace OpenBve
 				{
 					t = 1.0 / Math.Sqrt(t);
 					DirectionX *= t; DirectionY *= t; DirectionZ *= t;
-					double ux = Up.X;
-					double uy = Up.Y;
-					double uz = Up.Z;
-					double sx = DirectionZ * uy - DirectionY * uz;
-					double sy = DirectionX * uz - DirectionZ * ux;
-					double sz = DirectionY * ux - DirectionX * uy;
+					double sx = DirectionZ * Up.Y - DirectionY * Up.Z;
+					double sy = DirectionX * Up.Z - DirectionZ * Up.X;
+					double sz = DirectionY * Up.X - DirectionX * Up.Y;
 					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-					PositionX = rx + sx * CarX + ux * CarY + DirectionX * CarZ;
-					PositionY = ry + sy * CarX + uy * CarY + DirectionY * CarZ;
-					PositionZ = rz + sz * CarX + uz * CarY + DirectionZ * CarZ;
+					PositionX = rx + sx * CarX + Up.X * CarY + DirectionX * CarZ;
+					PositionY = ry + sy * CarX + Up.Y * CarY + DirectionY * CarZ;
+					PositionZ = rz + sz * CarX + Up.Z * CarY + DirectionZ * CarZ;
 				}
 				else
 				{
