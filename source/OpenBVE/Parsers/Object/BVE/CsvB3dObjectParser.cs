@@ -1131,10 +1131,10 @@ namespace OpenBve {
 								int.TryParse(Arguments[0], out r);
 								int.TryParse(Arguments[1], out g);
 								int.TryParse(Arguments[2], out b);
-								Color textColor = Color.FromArgb(r, g, b);
+								Color backgroundColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
-									Builder.Materials[j].BackgroundColor = textColor;
+									Builder.Materials[j].BackgroundColor = backgroundColor;
 								}
 							}
 							break;
