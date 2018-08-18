@@ -4959,24 +4959,6 @@ namespace OpenBve {
 					}
 				}
 			}
-			if (!PreviewOnly) {
-				// timetable
-				Timetable.CustomTextures = new Textures.Texture[Data.TimetableDaytime.Length + Data.TimetableNighttime.Length];
-				int n = 0;
-				for (int i = 0; i < Data.TimetableDaytime.Length; i++) {
-					if (Data.TimetableDaytime[i] != null) {
-						Timetable.CustomTextures[n] = Data.TimetableDaytime[i];
-						n++;
-					}
-				}
-				for (int i = 0; i < Data.TimetableNighttime.Length; i++) {
-					if (Data.TimetableNighttime[i] != null) {
-						Timetable.CustomTextures[n] = Data.TimetableNighttime[i];
-						n++;
-					}
-				}
-				Array.Resize<Textures.Texture>(ref Timetable.CustomTextures, n);
-			}
 			// blocks
 			Array.Resize<Block>(ref Data.Blocks, BlocksUsed);
 		}

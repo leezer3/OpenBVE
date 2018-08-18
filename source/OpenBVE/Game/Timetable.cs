@@ -14,7 +14,6 @@ namespace OpenBve {
 		// members (custom timetable)
 		internal static ObjectManager.AnimatedObject[] CustomObjects = new ObjectManager.AnimatedObject[16];
 		internal static int CustomObjectsUsed;
-		internal static Textures.Texture[] CustomTextures = new Textures.Texture[] { };
 		internal static bool CustomTimetableAvailable;
 		internal static Textures.Texture CurrentCustomTimetableDaytimeTexture;
 		internal static Textures.Texture CurrentCustomTimetableNighttimeTexture;
