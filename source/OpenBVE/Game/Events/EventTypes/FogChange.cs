@@ -6,9 +6,9 @@
 		internal class FogChangeEvent : GeneralEvent
 		{
 			/// <summary>The fog which applies previously to this point</summary>
-			internal Game.Fog PreviousFog;
+			private readonly Game.Fog PreviousFog;
 			/// <summary>The fog which applies after this point</summary>
-			internal Game.Fog CurrentFog;
+			private readonly Game.Fog CurrentFog;
 			/// <summary>The next upcoming fog (Used for distance based interpolation)</summary>
 			internal Game.Fog NextFog;
 

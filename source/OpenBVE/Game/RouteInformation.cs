@@ -6,7 +6,7 @@ namespace OpenBve
     {
         internal static class RouteInformation
         {
-			internal const int		DefaultRouteInfoSize	= 500;
+	        private const int		DefaultRouteInfoSize	= 500;
             /// <summary>A bitmap storing the current route-map image</summary>
             internal static Bitmap RouteMap;
             /// <summary>A bitmap storing the current route gradient profile </summary>
