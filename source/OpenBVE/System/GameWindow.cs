@@ -322,6 +322,13 @@ namespace OpenBve
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
+			for (int i = 0; i < TrainManager.Trains.Length; i++)
+			{
+				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus)
+				{
+					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
+				}
+			}
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
