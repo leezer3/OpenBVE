@@ -75,6 +75,11 @@ namespace OpenBve.Parsers.Train
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
+							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[AccelerationCurves.Length];
+							for (int i = 0; i < AccelerationCurves.Length; i++)
+							{
+								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
+							}
 							switch (Train.Specs.ReadhesionDeviceType)
 							{
 								case TrainManager.ReadhesionDeviceType.TypeA:
@@ -112,6 +117,7 @@ namespace OpenBve.Parsers.Train
 						}
 						else
 						{
+							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 							Train.Cars[Car].Specs.IsMotorCar = false;
 							Train.Cars[Car].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car]);
 						}
