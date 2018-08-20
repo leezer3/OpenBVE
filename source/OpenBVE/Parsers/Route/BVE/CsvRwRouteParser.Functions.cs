@@ -31,23 +31,23 @@ namespace OpenBve
 			double bmin = 1.0, bmax = 1.0;
 			for (int i = 0; i < Data.Blocks.Length; i++)
 			{
-				for (int j = 0; j < Data.Blocks[i].Brightness.Length; j++)
+				for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Length; j++)
 				{
-					if (Data.Blocks[i].Brightness[j].TrackPosition <= TrackPosition)
+					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition <= TrackPosition)
 					{
-						tmin = Data.Blocks[i].Brightness[j].TrackPosition;
-						bmin = (double)Data.Blocks[i].Brightness[j].Value;
+						tmin = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						bmin = (double)Data.Blocks[i].BrightnessChanges[j].Value;
 					}
 				}
 			}
 			for (int i = Data.Blocks.Length - 1; i >= 0; i--)
 			{
-				for (int j = Data.Blocks[i].Brightness.Length - 1; j >= 0; j--)
+				for (int j = Data.Blocks[i].BrightnessChanges.Length - 1; j >= 0; j--)
 				{
-					if (Data.Blocks[i].Brightness[j].TrackPosition >= TrackPosition)
+					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition >= TrackPosition)
 					{
-						tmax = Data.Blocks[i].Brightness[j].TrackPosition;
-						bmax = (double)Data.Blocks[i].Brightness[j].Value;
+						tmax = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						bmax = (double)Data.Blocks[i].BrightnessChanges[j].Value;
 					}
 				}
 			}

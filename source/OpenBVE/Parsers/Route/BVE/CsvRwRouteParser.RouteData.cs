@@ -50,11 +50,11 @@ namespace OpenBve
 						if (!PreviewOnly)
 						{
 							Blocks[i].Background = -1;
-							Blocks[i].Brightness = new Brightness[] { };
+							Blocks[i].BrightnessChanges = new Brightness[] { };
 							Blocks[i].Fog = Blocks[i - 1].Fog;
 							Blocks[i].FogDefined = false;
 							Blocks[i].Cycle = Blocks[i - 1].Cycle;
-							Blocks[i].RailCycle = Blocks[i - 1].RailCycle;
+							Blocks[i].RailCycles = Blocks[i - 1].RailCycles;
 							Blocks[i].Height = double.NaN;
 						}
 						Blocks[i].RailType = new int[Blocks[i - 1].RailType.Length];
@@ -63,23 +63,23 @@ namespace OpenBve
 							for (int j = 0; j < Blocks[i].RailType.Length; j++)
 							{
 								int rc = -1;
-								if (Blocks[i].RailCycle.Length > j)
+								if (Blocks[i].RailCycles.Length > j)
 								{
-									rc = Blocks[i].RailCycle[j].RailCycleIndex;
+									rc = Blocks[i].RailCycles[j].RailCycleIndex;
 								}
-								if (rc != -1 && Structure.RailCycle.Length > rc && Structure.RailCycle[rc].Length > 1)
+								if (rc != -1 && Structure.RailCycles.Length > rc && Structure.RailCycles[rc].Length > 1)
 								{
-									int cc = Blocks[i].RailCycle[j].CurrentCycle;
-									if (cc == Structure.RailCycle[rc].Length - 1)
+									int cc = Blocks[i].RailCycles[j].CurrentCycle;
+									if (cc == Structure.RailCycles[rc].Length - 1)
 									{
-										Blocks[i].RailType[j] = Structure.RailCycle[rc][0];
-										Blocks[i].RailCycle[j].CurrentCycle = 0;
+										Blocks[i].RailType[j] = Structure.RailCycles[rc][0];
+										Blocks[i].RailCycles[j].CurrentCycle = 0;
 									}
 									else
 									{
 										cc++;
-										Blocks[i].RailType[j] = Structure.RailCycle[rc][cc];
-										Blocks[i].RailCycle[j].CurrentCycle++;
+										Blocks[i].RailType[j] = Structure.RailCycles[rc][cc];
+										Blocks[i].RailCycles[j].CurrentCycle++;
 									}
 								}
 								else
@@ -88,16 +88,16 @@ namespace OpenBve
 								}
 							}
 						}
-						Blocks[i].Rail = new Rail[Blocks[i - 1].Rail.Length];
-						for (int j = 0; j < Blocks[i].Rail.Length; j++)
+						Blocks[i].Rails = new Rail[Blocks[i - 1].Rails.Length];
+						for (int j = 0; j < Blocks[i].Rails.Length; j++)
 						{
-							Blocks[i].Rail[j].RailStart = Blocks[i - 1].Rail[j].RailStart;
-							Blocks[i].Rail[j].RailStartX = Blocks[i - 1].Rail[j].RailStartX;
-							Blocks[i].Rail[j].RailStartY = Blocks[i - 1].Rail[j].RailStartY;
-							Blocks[i].Rail[j].RailStartRefreshed = false;
-							Blocks[i].Rail[j].RailEnd = false;
-							Blocks[i].Rail[j].RailEndX = Blocks[i - 1].Rail[j].RailStartX;
-							Blocks[i].Rail[j].RailEndY = Blocks[i - 1].Rail[j].RailStartY;
+							Blocks[i].Rails[j].RailStart = Blocks[i - 1].Rails[j].RailStart;
+							Blocks[i].Rails[j].RailStartX = Blocks[i - 1].Rails[j].RailStartX;
+							Blocks[i].Rails[j].RailStartY = Blocks[i - 1].Rails[j].RailStartY;
+							Blocks[i].Rails[j].RailStartRefreshed = false;
+							Blocks[i].Rails[j].RailEnd = false;
+							Blocks[i].Rails[j].RailEndX = Blocks[i - 1].Rails[j].RailStartX;
+							Blocks[i].Rails[j].RailEndY = Blocks[i - 1].Rails[j].RailStartY;
 						}
 						if (!PreviewOnly)
 						{
@@ -116,20 +116,20 @@ namespace OpenBve
 							{
 								Blocks[i].RailPole[j] = Blocks[i - 1].RailPole[j];
 							}
-							Blocks[i].Form = new Form[] { };
-							Blocks[i].Crack = new Crack[] { };
-							Blocks[i].Signal = new Signal[] { };
-							Blocks[i].Section = new Section[] { };
-							Blocks[i].Sound = new Sound[] { };
-							Blocks[i].Transponder = new Transponder[] { };
+							Blocks[i].Forms = new Form[] { };
+							Blocks[i].Cracks = new Crack[] { };
+							Blocks[i].Signals = new Signal[] { };
+							Blocks[i].Sections = new Section[] { };
+							Blocks[i].SoundEvents = new Sound[] { };
+							Blocks[i].Transponders = new Transponder[] { };
 							Blocks[i].DestinationChanges = new DestinationEvent[] { };
 							Blocks[i].RailFreeObj = new FreeObj[][] { };
 							Blocks[i].GroundFreeObj = new FreeObj[] { };
 							Blocks[i].PointsOfInterest = new PointOfInterest[] { };
 						}
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;
-						Blocks[i].Limit = new Limit[] { };
-						Blocks[i].Stop = new Stop[] { };
+						Blocks[i].Limits = new Limit[] { };
+						Blocks[i].StopPositions = new Stop[] { };
 						Blocks[i].Station = -1;
 						Blocks[i].StationPassAlarm = false;
 						Blocks[i].CurrentTrackState = Blocks[i - 1].CurrentTrackState;

@@ -68,7 +68,7 @@
 		private struct Signal
 		{
 			internal double TrackPosition;
-			internal int Section;
+			internal int SectionIndex;
 			internal int SignalCompatibilityObjectIndex;
 			internal int SignalObjectIndex;
 			internal double X;
@@ -139,7 +139,9 @@
 			//This is always set to a constant 15.0 on loading a sound, and never touched again
 			//I presume Michelle intended to have sounds with different radii available
 			//This would require a custom or extended command which allowed the radius value to be set
+#pragma warning disable 414
 			internal double Radius;
+#pragma warning restore 414
 			internal double Speed;
 		}
 		private struct Transponder
@@ -149,7 +151,7 @@
 			internal bool ShowDefaultObject;
 			internal int BeaconStructureIndex;
 			internal int Data;
-			internal int Section;
+			internal int SectionIndex;
 			internal bool ClipToFirstRedSection;
 			internal double X;
 			internal double Y;
@@ -189,27 +191,27 @@
 		private class Block
 		{
 			internal int Background;
-			internal Brightness[] Brightness;
+			internal Brightness[] BrightnessChanges;
 			internal Game.Fog Fog;
 			internal bool FogDefined;
 			internal int[] Cycle;
-			internal RailCycle[] RailCycle;
+			internal RailCycle[] RailCycles;
 			internal double Height;
-			internal Rail[] Rail;
+			internal Rail[] Rails;
 			internal int[] RailType;
 			internal WallDike[] RailWall;
 			internal WallDike[] RailDike;
 			internal Pole[] RailPole;
 			internal FreeObj[][] RailFreeObj;
 			internal FreeObj[] GroundFreeObj;
-			internal Form[] Form;
-			internal Crack[] Crack;
-			internal Signal[] Signal;
-			internal Section[] Section;
-			internal Limit[] Limit;
-			internal Stop[] Stop;
-			internal Sound[] Sound;
-			internal Transponder[] Transponder;
+			internal Form[] Forms;
+			internal Crack[] Cracks;
+			internal Signal[] Signals;
+			internal Section[] Sections;
+			internal Limit[] Limits;
+			internal Stop[] StopPositions;
+			internal Sound[] SoundEvents;
+			internal Transponder[] Transponders;
 			internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
 			internal TrackManager.TrackElement CurrentTrackState;
@@ -220,30 +222,55 @@
 			internal double Accuracy;
 			internal double AdhesionMultiplier;
 		}
+
+		/// <summary>Holds the base structures for a route: These are cloned and transformed for final world placement</summary>
 		private struct StructureData
 		{
+			/// <summary>All currently defined Structure.Rail objects</summary>
 			internal ObjectDictionary RailObjects;
+			/// <summary>All currently defined Structure.Pole objects</summary>
 			internal ObjectManager.UnifiedObject[][] Poles;
+			/// <summary>All currently defined Structure.Ground objects</summary>
 			internal ObjectDictionary Ground;
+			/// <summary>All currently defined Structure.WallL objects</summary>
 			internal ObjectDictionary WallL;
+			/// <summary>All currently defined Structure.WallR objects</summary>
 			internal ObjectDictionary WallR;
+			/// <summary>All currently defined Structure.DikeL objects</summary>
 			internal ObjectDictionary DikeL;
+			/// <summary>All currently defined Structure.DikeR objects</summary>
 			internal ObjectDictionary DikeR;
+			/// <summary>All currently defined Structure.FormL objects</summary>
 			internal ObjectDictionary FormL;
+			/// <summary>All currently defined Structure.FormR objects</summary>
 			internal ObjectDictionary FormR;
+			/// <summary>All currently defined Structure.FormCL objects</summary>
 			internal ObjectDictionary FormCL;
+			/// <summary>All currently defined Structure.FormCR objects</summary>
 			internal ObjectDictionary FormCR;
+			/// <summary>All currently defined Structure.RoofL objects</summary>
 			internal ObjectDictionary RoofL;
+			/// <summary>All currently defined Structure.RoofR objects</summary>
 			internal ObjectDictionary RoofR;
+			/// <summary>All currently defined Structure.RoofCL objects</summary>
 			internal ObjectDictionary RoofCL;
+			/// <summary>All currently defined Structure.RoofCR objects</summary>
 			internal ObjectDictionary RoofCR;
+			/// <summary>All currently defined Structure.CrackL objects</summary>
 			internal ObjectDictionary CrackL;
+			/// <summary>All currently defined Structure.CrackR objects</summary>
 			internal ObjectDictionary CrackR;
+			/// <summary>All currently defined Structure.FreeObj objects</summary>
 			internal ObjectDictionary FreeObjects;
+			/// <summary>All currently defined Structure.Beacon objects</summary>
 			internal ObjectDictionary Beacon;
-			internal int[][] Cycle;
-			internal int[][] RailCycle;
+			/// <summary>All currently defined cycles</summary>
+			internal int[][] Cycles;
+			/// <summary>All currently defined RailCycles</summary>
+			internal int[][] RailCycles;
+			/// <summary>The Run sound index to be played for each railtype idx</summary>
 			internal int[] Run;
+			/// <summary>The flange sound index to be played for each railtype idx</summary>
 			internal int[] Flange;
 		}
 	}
