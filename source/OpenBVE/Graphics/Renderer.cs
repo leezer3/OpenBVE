@@ -65,6 +65,11 @@ namespace OpenBve
 			None, Kmph, Mph
 		}
 		internal static SpeedDisplayMode OptionSpeed = SpeedDisplayMode.None;
+		internal enum DistanceToNextStationDisplayMode
+		{
+			None, Km, Mile
+		}
+		internal static DistanceToNextStationDisplayMode OptionDistanceToNextStation = DistanceToNextStationDisplayMode.None;
 		internal static bool OptionFrameRates = false;
 		internal static bool OptionBrakeSystems = false;
 

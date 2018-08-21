@@ -118,6 +118,8 @@ namespace OpenBve {
 			MiscSpeed,
 			/// <summary>Shows or hides the in-game gradient display</summary>
 			MiscGradient,
+			/// <summary>Show / hide the in-game remain distance of the next station</summary>
+			MiscDistanceToNextStation,
 			/// <summary>Shows or hides the in-game FPS display</summary>
 			MiscFps,
 			/// <summary>Toggles AI control of the player train</summary>
