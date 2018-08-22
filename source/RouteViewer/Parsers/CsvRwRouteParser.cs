@@ -2576,17 +2576,17 @@ namespace OpenBve {
 															bool notFound = false;
 															while (true)
 															{
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".x");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".csv");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".b3d");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
@@ -2599,7 +2599,6 @@ namespace OpenBve {
 															{
 																break;
 															}
-															break;
 														}
 														Bve4SignalData Signal = new Bve4SignalData();
 														Signal.BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
