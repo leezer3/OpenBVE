@@ -86,48 +86,60 @@ namespace OpenBve
 				return;
 			}
 			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "logs.bin");
-			using (System.IO.FileStream Stream = new System.IO.FileStream(BlackBoxFile, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+			try
 			{
-				//TODO: This code recreates the file every frame.....
-				//It should be possible to spin up a stream in a separate thread which then continously appends
-				using (System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Stream, System.Text.Encoding.UTF8))
+				using (System.IO.FileStream Stream = new System.IO.FileStream(BlackBoxFile, System.IO.FileMode.Create, System.IO.FileAccess.Write))
 				{
-					byte[] Identifier = new byte[] { 111, 112, 101, 110, 66, 86, 69, 95, 76, 79, 71, 83 };
-					const short Version = 1;
-					Writer.Write(Identifier);
-					Writer.Write(Version);
-					Writer.Write(Game.LogRouteName);
-					Writer.Write(Game.LogTrainName);
-					Writer.Write(Game.LogDateTime.ToBinary());
-					Writer.Write((short)Interface.CurrentOptions.GameMode);
-					Writer.Write(Game.BlackBoxEntryCount);
-					for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+					//TODO: This code recreates the file every frame.....
+					//It should be possible to spin up a stream in a separate thread which then continously appends
+					using (System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Stream, System.Text.Encoding.UTF8))
 					{
-						Writer.Write(Game.BlackBoxEntries[i].Time);
-						Writer.Write(Game.BlackBoxEntries[i].Position);
-						Writer.Write(Game.BlackBoxEntries[i].Speed);
-						Writer.Write(Game.BlackBoxEntries[i].Acceleration);
-						Writer.Write(Game.BlackBoxEntries[i].ReverserDriver);
-						Writer.Write(Game.BlackBoxEntries[i].ReverserSafety);
-						Writer.Write((short)Game.BlackBoxEntries[i].PowerDriver);
-						Writer.Write((short)Game.BlackBoxEntries[i].PowerSafety);
-						Writer.Write((short)Game.BlackBoxEntries[i].BrakeDriver);
-						Writer.Write((short)Game.BlackBoxEntries[i].BrakeSafety);
-						Writer.Write((short)Game.BlackBoxEntries[i].EventToken);
+						byte[] Identifier = new byte[] {111, 112, 101, 110, 66, 86, 69, 95, 76, 79, 71, 83};
+						const short Version = 1;
+						Writer.Write(Identifier);
+						Writer.Write(Version);
+						Writer.Write(Game.LogRouteName);
+						Writer.Write(Game.LogTrainName);
+						Writer.Write(Game.LogDateTime.ToBinary());
+						Writer.Write((short) Interface.CurrentOptions.GameMode);
+						Writer.Write(Game.BlackBoxEntryCount);
+						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+						{
+							Writer.Write(Game.BlackBoxEntries[i].Time);
+							Writer.Write(Game.BlackBoxEntries[i].Position);
+							Writer.Write(Game.BlackBoxEntries[i].Speed);
+							Writer.Write(Game.BlackBoxEntries[i].Acceleration);
+							Writer.Write(Game.BlackBoxEntries[i].ReverserDriver);
+							Writer.Write(Game.BlackBoxEntries[i].ReverserSafety);
+							Writer.Write((short) Game.BlackBoxEntries[i].PowerDriver);
+							Writer.Write((short) Game.BlackBoxEntries[i].PowerSafety);
+							Writer.Write((short) Game.BlackBoxEntries[i].BrakeDriver);
+							Writer.Write((short) Game.BlackBoxEntries[i].BrakeSafety);
+							Writer.Write((short) Game.BlackBoxEntries[i].EventToken);
+						}
+
+						Writer.Write(Game.ScoreLogCount);
+						for (int i = 0; i < Game.ScoreLogCount; i++)
+						{
+							Writer.Write(Game.ScoreLogs[i].Time);
+							Writer.Write(Game.ScoreLogs[i].Position);
+							Writer.Write(Game.ScoreLogs[i].Value);
+							Writer.Write((short) Game.ScoreLogs[i].TextToken);
+						}
+
+						Writer.Write(Game.CurrentScore.Maximum);
+						Identifier = new byte[] {95, 102, 105, 108, 101, 69, 78, 68};
+						Writer.Write(Identifier);
+						Writer.Close();
 					}
-					Writer.Write(Game.ScoreLogCount);
-					for (int i = 0; i < Game.ScoreLogCount; i++)
-					{
-						Writer.Write(Game.ScoreLogs[i].Time);
-						Writer.Write(Game.ScoreLogs[i].Position);
-						Writer.Write(Game.ScoreLogs[i].Value);
-						Writer.Write((short)Game.ScoreLogs[i].TextToken);
-					}
-					Writer.Write(Game.CurrentScore.Maximum);
-					Identifier = new byte[] { 95, 102, 105, 108, 101, 69, 78, 68 };
-					Writer.Write(Identifier);
-					Writer.Close();
-				} Stream.Close();
+
+					Stream.Close();
+				}
+			}
+			catch
+			{
+				Interface.CurrentOptions.BlackBox = false;
+				Interface.AddMessage(MessageType.Error, false, "An unexpected error occurred whilst attempting to write to the black box log- Black box has been disabled.");
 			}
 		}
 

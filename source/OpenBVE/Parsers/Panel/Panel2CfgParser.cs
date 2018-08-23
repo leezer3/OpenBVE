@@ -3,7 +3,6 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -25,7 +24,7 @@ namespace OpenBve {
 			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, PanelFile);
+			string FileName = Path.CombineFile(TrainPath, PanelFile);
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
 				Lines[i] = Lines[i].Trim();
@@ -38,8 +37,8 @@ namespace OpenBve {
 			double PanelResolution = 1024.0;
 			double PanelLeft = 0.0, PanelRight = 1024.0;
 			double PanelTop = 0.0, PanelBottom = 1024.0;
-			double PanelCenterX = 0.0, PanelCenterY = 512.0;
-			double PanelOriginX = 0.0, PanelOriginY = 512.0;
+			Vector2 PanelCenter = new Vector2(0, 512);
+			Vector2 PanelOrigin = new Vector2(0, 512);
 			double PanelBitmapWidth = 1024.0, PanelBitmapHeight = 1024.0;
 			string PanelDaytimeImage = null;
 			string PanelNighttimeImage = null;
@@ -108,7 +107,7 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Value)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
-													PanelDaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													PanelDaytimeImage = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelDaytimeImage)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														PanelDaytimeImage = null;
@@ -120,7 +119,7 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Value)) {
 													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
-													PanelNighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													PanelNighttimeImage = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelNighttimeImage)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														PanelNighttimeImage = null;
@@ -137,15 +136,15 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenterX)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenterY)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelCenter.Y)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 														if (Interface.CurrentOptions.EnableBveTsHacks)
 														{
-															switch ((int)PanelCenterY)
+															switch ((int)PanelCenter.Y)
 															{
 																case 180:
 																	switch (trainName.ToUpperInvariant())
@@ -153,7 +152,16 @@ namespace OpenBve {
 																		case "LT_C69_77":
 																		case "LT_C69_77_V2":
 																			// Broken initial zoom
-																			PanelCenterY = 350;
+																			PanelCenter.Y = 350;
+																			break;
+																	}
+																	break;
+																case 200:
+																	switch (trainName.ToUpperInvariant())
+																	{
+																		case "HM05":
+																			// Broken initial zoom
+																			PanelCenter.Y = 350;
 																			break;
 																	}
 																	break;
@@ -161,7 +169,7 @@ namespace OpenBve {
 																	if (PanelBottom == 768 && PanelResolution == 1024)
 																	{
 																		// Martin Finken's BVE4 trams: Broken initial zoom
-																		PanelCenterY = 350;
+																		PanelCenter.Y = 350;
 																	}
 																	break;
 																case 255:
@@ -177,12 +185,12 @@ namespace OpenBve {
 																			case "LT1938":
 																			case "LT1973 UNREFURB":
 																				// Broken initial zoom
-																				PanelCenterY = 350;
+																				PanelCenter.Y = 350;
 																				break;
 																			case "LT_A60_62":
 																			case "LT1972 MKII":
 																				// Broken initial zoom and black patch at bottom of panel
-																				PanelCenterY = 350;
+																				PanelCenter.Y = 350;
 																				PanelBottom = 792;
 																				break;
 																		}
@@ -201,10 +209,10 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOriginX)) {
+														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOriginY)) {
+														if (b.Length != 0 && !NumberFormats.TryParseDoubleVb6(b, out PanelOrigin.Y)) {
 															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 														if (Interface.CurrentOptions.EnableBveTsHacks)
@@ -212,10 +220,10 @@ namespace OpenBve {
 															switch (trainName)
 															{
 																case "8171BETA":
-																	if (PanelResolution == 768 && PanelOriginY == 256)
+																	if (PanelResolution == 768 && PanelOrigin.Y == 256)
 																	{
 																		// 81-71: Bust panel origin means a flying cab....
-																		PanelOriginY = 0;
+																		PanelOrigin.Y = 0;
 																	}
 																	break;
 															}
@@ -240,14 +248,14 @@ namespace OpenBve {
 					WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
 					WorldWidth = WorldHeight * World.AspectRatio;
 				}
-				double x0 = (PanelLeft - PanelCenterX) / PanelResolution;
-				double x1 = (PanelRight - PanelCenterX) / PanelResolution;
-				double y0 = (PanelCenterY - PanelBottom) / PanelResolution * World.AspectRatio;
-				double y1 = (PanelCenterY - PanelTop) / PanelResolution * World.AspectRatio;
+				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
+				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * World.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * World.AspectRatio;
 				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
 				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
-				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenterX - PanelOriginX) * WorldWidth / PanelResolution);
-				Train.Cars[Car].DriverPitch = Math.Atan((PanelOriginY - PanelCenterY) * WorldWidth / PanelResolution);
+				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
+				Train.Cars[Car].DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 			}
 			// create panel
 			if (PanelDaytimeImage != null) {
@@ -271,7 +279,7 @@ namespace OpenBve {
 					});
 					PanelBitmapWidth = (double)tday.Width;
 					PanelBitmapHeight = (double)tday.Height;
-					CreateElement(Train.Cars[Car].CarSections[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, 0.5, 0.5, 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
+					CreateElement(Train.Cars[Car].CarSections[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
 				}
 			}
 			// parse lines for rest
@@ -322,7 +330,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
@@ -334,7 +342,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
@@ -369,7 +377,7 @@ namespace OpenBve {
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, w, h, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f + " 1 == --");
 									}
@@ -426,7 +434,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
@@ -438,7 +446,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
@@ -552,7 +560,7 @@ namespace OpenBve {
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * w;
 										double ny = n * h;
-										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX - ox * nx, LocationY - oy * ny, nx, ny, ox, oy, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, tday, tnight, Color, false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color, false);
 										Train.Cars[Car].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
 										Train.Cars[Car].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 										Train.Cars[Car].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Elements[j].RotateXDirection);
@@ -667,7 +675,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
@@ -679,7 +687,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
@@ -714,7 +722,7 @@ namespace OpenBve {
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, w, h, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, new Color32(255, 255, 255, 255), false);
 										if (Maximum < Minimum)
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -764,7 +772,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
@@ -776,7 +784,7 @@ namespace OpenBve {
 													if (Path.ContainsInvalidChars(Value)) {
 														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
 															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
@@ -886,7 +894,7 @@ namespace OpenBve {
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, (double)wday, (double)Interval, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, tday[k], tnight[k], new Color32(255, 255, 255, 255), k != 0);
+												int l = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday[k], tnight[k], new Color32(255, 255, 255, 255), k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -982,7 +990,7 @@ namespace OpenBve {
 									}
 									if (Radius != 0.0) {
 										// create element
-										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, null, null, Color, false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color, false);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
 										double x0 = Train.Cars[Car].CarSections[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
@@ -1099,7 +1107,7 @@ namespace OpenBve {
 										Interface.AddMessage(Interface.MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, Width, Height, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, Train.Cars[Car].Driver, null, null, new Color32(255, 255, 255, 255), false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, new Color32(255, 255, 255, 255), false);
 										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("timetable");
 										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Elements[j]);
 									}
@@ -1401,7 +1409,7 @@ namespace OpenBve {
 
 		
 
-		private static int CreateElement(TrainManager.CarSection Section, double Left, double Top, double Width, double Height, double RelativeRotationCenterX, double RelativeRotationCenterY, double Distance, double PanelResolution, double PanelLeft, double PanelRight, double PanelTop, double PanelBottom, double PanelBitmapWidth, double PanelBitmapHeight, double PanelCenterX, double PanelCenterY, double PanelOriginX, double PanelOriginY, Vector3 Driver, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement) {
+		private static int CreateElement(TrainManager.CarSection Section, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelLeft, double PanelRight, double PanelTop, double PanelBottom, double PanelBitmapWidth, double PanelBitmapHeight, Vector2 PanelCenter, Vector2 PanelOrigin, Vector3 Driver, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement) {
 			double WorldWidth, WorldHeight;
 			if (Screen.Width >= Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
@@ -1414,17 +1422,17 @@ namespace OpenBve {
 			double x1 = (Left + Width) / PanelResolution;
 			double y0 = (PanelBottom - Top) / PanelResolution * World.AspectRatio;
 			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * World.AspectRatio;
-			double xd = 0.5 - PanelCenterX / PanelResolution;
+			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd; x1 += xd;
 			double yt = PanelBottom - PanelResolution / World.AspectRatio;
-			double yd = (PanelCenterY - yt) / (PanelBottom - yt) - 0.5;
+			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd; y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;
 			x1 = (x1 - 0.5) * WorldWidth;
 			y0 = (y0 - 0.5) * WorldHeight;
 			y1 = (y1 - 0.5) * WorldHeight;
-			double xm = x0 * (1.0 - RelativeRotationCenterX) + x1 * RelativeRotationCenterX;
-			double ym = y0 * (1.0 - RelativeRotationCenterY) + y1 * RelativeRotationCenterY;
+			double xm = x0 * (1.0 - RelativeRotationCenter.X) + x1 * RelativeRotationCenter.X;
+			double ym = y0 * (1.0 - RelativeRotationCenter.Y) + y1 * RelativeRotationCenter.Y;
 			Vector3[] v = new Vector3[4];
 			v[0] = new Vector3(x0 - xm, y1 - ym, 0);
 			v[1] = new Vector3(x0 - xm, y0 - ym, 0);
@@ -1435,7 +1443,7 @@ namespace OpenBve {
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Vertices = new Vertex[] { t0, t1, t2, t3 };
+			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new World.MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? World.MeshMaterial.TransparentColorMask : 0);

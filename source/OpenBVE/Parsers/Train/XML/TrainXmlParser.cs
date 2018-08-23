@@ -10,6 +10,7 @@ namespace OpenBve.Parsers.Train
 		private static string currentPath;
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
+		private static TrainManager.BveAccelerationCurve[] AccelerationCurves;
 		internal static void Parse(string fileName, TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
 		{
 			//The current XML file to load
@@ -17,6 +18,21 @@ namespace OpenBve.Parsers.Train
 			//Load the marker's XML file 
 			currentXML.Load(fileName);
 			currentPath = System.IO.Path.GetDirectoryName(fileName);
+			if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(currentPath, "train.dat")))
+			{
+				for (int i = 0; i < Train.Cars.Length; i++)
+				{
+					if (Train.Cars[i].Specs.IsMotorCar)
+					{
+						AccelerationCurves = new TrainManager.BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
+						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
+						{
+							TrainManager.BveAccelerationCurve c = (TrainManager.BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
+							AccelerationCurves[j] = c.Clone(c.Multiplier);
+						}
+					}
+				}
+			}
 			CarObjectsReversed = new bool[Train.Cars.Length];
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			if (currentXML.DocumentElement != null)
@@ -66,7 +82,7 @@ namespace OpenBve.Parsers.Train
 						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 				}
-				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != World.CameraRestrictionMode.NotSpecified)
+				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)
 				{
 					World.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();

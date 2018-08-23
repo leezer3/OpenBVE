@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <summary>Renders all default HUD elements</summary>
 		/// <param name="Element">The HUD element these are to be rendererd onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
-		private static void RenderHUDElement(Interface.HudElement Element, double TimeElapsed)
+		private static void RenderHUDElement(HUD.Element Element, double TimeElapsed)
 		{
 			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
 			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
@@ -119,7 +119,7 @@ namespace OpenBve
 					{
 						return;
 					}
-					if (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+					if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
 					{
 						if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
 						{
@@ -133,7 +133,7 @@ namespace OpenBve
 								t = Interface.QuickReferences.HandleEmergency;
 							}
 						}
-						else if (TrainManager.PlayerTrain.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Release)
+						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Release)
 						{
 							sc = MessageColor.Gray;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
@@ -145,7 +145,7 @@ namespace OpenBve
 								t = Interface.QuickReferences.HandleRelease;
 							}
 						}
-						else if (TrainManager.PlayerTrain.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap)
+						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
 						{
 							sc = MessageColor.Blue;
 							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
@@ -230,30 +230,74 @@ namespace OpenBve
 					{
 						return;
 					}
-					if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == 0)
+
+					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
 					{
-						sc = MessageColor.Gray;
-						if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length > 1)
+						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)TrainManager.AirBrakeHandleState.Release)
 						{
-							t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[1];
+							sc = MessageColor.Gray;
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 1)
+							{
+								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[1];
+							}
+							else
+							{
+								t = Interface.QuickReferences.HandleRelease;
+							}
+						}
+						else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
+						{
+							sc = MessageColor.Blue;
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 2)
+							{
+								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[2];
+							}
+							else
+							{
+								t = Interface.QuickReferences.HandleLap;
+							}
 						}
 						else
 						{
-							t = Interface.QuickReferences.HandleBrakeNull;
+							sc = MessageColor.Orange;
+							if (TrainManager.PlayerTrain.BrakeNotchDescriptions != null && TrainManager.PlayerTrain.BrakeNotchDescriptions.Length > 3)
+							{
+								t = TrainManager.PlayerTrain.BrakeNotchDescriptions[3];
+							}
+							else
+							{
+								t = Interface.QuickReferences.HandleService;
+							}
+							
 						}
 					}
 					else
 					{
-						sc = MessageColor.Orange;
-						if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.Driver < TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length)
+						if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == 0)
 						{
-							t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.LocoBrake.Driver];
+							sc = MessageColor.Gray;
+							if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length > 1)
+							{
+								t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[1];
+							}
+							else
+							{
+								t = Interface.QuickReferences.HandleBrakeNull;
+							}
 						}
 						else
 						{
-							t = Interface.QuickReferences.HandleLocoBrake + TrainManager.PlayerTrain.Handles.LocoBrake.Driver.ToString(Culture);
-						}
+							sc = MessageColor.Orange;
+							if (TrainManager.PlayerTrain.LocoBrakeNotchDescriptions != null && TrainManager.PlayerTrain.Handles.LocoBrake.Driver < TrainManager.PlayerTrain.LocoBrakeNotchDescriptions.Length)
+							{
+								t = TrainManager.PlayerTrain.LocoBrakeNotchDescriptions[TrainManager.PlayerTrain.Handles.LocoBrake.Driver];
+							}
+							else
+							{
+								t = Interface.QuickReferences.HandleLocoBrake + TrainManager.PlayerTrain.Handles.LocoBrake.Driver.ToString(Culture);
+							}
 							
+						}
 					}
 					Element.TransitionState = 0.0;
 					break;
@@ -501,6 +545,20 @@ namespace OpenBve
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
+					else if (OptionGradient == GradientDisplayMode.Permil)
+					{
+						if (World.CameraTrackFollower.Pitch != 0)
+						{
+							double pm = World.CameraTrackFollower.Pitch;
+							t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
+						}
+						else
+						{
+							t = "Level";
+						}
+						Element.TransitionState -= speed * TimeElapsed;
+						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+					}
 					else
 					{
 						if (World.CameraTrackFollower.Pitch != 0)
@@ -591,17 +649,17 @@ namespace OpenBve
 			}
 			// transitions
 			float alpha = 1.0f;
-			if ((Element.Transition & Interface.HudTransition.Move) != 0)
+			if ((Element.Transition & HUD.Transition.Move) != 0)
 			{
 				double s = Element.TransitionState;
 				x += Element.TransitionVector.X * s * s;
 				y += Element.TransitionVector.Y * s * s;
 			}
-			if ((Element.Transition & Interface.HudTransition.Fade) != 0)
+			if ((Element.Transition & HUD.Transition.Fade) != 0)
 			{
 				alpha = (float)(1.0 - Element.TransitionState);
 			}
-			else if (Element.Transition == Interface.HudTransition.None)
+			else if (Element.Transition == HUD.Transition.None)
 			{
 				alpha = (float)(1.0 - Element.TransitionState);
 			}

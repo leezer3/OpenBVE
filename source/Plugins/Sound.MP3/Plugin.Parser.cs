@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Sounds;
+﻿using OpenBveApi.Sounds;
 using NAudio.Wave;
 
 namespace Plugin {

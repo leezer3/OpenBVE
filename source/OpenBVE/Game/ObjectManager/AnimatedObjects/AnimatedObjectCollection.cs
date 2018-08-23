@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -12,7 +13,7 @@ namespace OpenBve
 			internal AnimatedObject[] Objects;
 			internal WorldObject[] Sounds;
 
-			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
+			internal override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
@@ -54,7 +55,7 @@ namespace OpenBve
 							if (free[i])
 							{
 								Vector3 p = Position;
-								World.Transformation t = new OpenBve.World.Transformation(BaseTransformation, AuxTransformation);
+								Transformation t = new Transformation(BaseTransformation, AuxTransformation);
 								Vector3 s = t.X;
 								Vector3 u = t.Y;
 								Vector3 d = t.Z;

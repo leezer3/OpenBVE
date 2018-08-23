@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using OpenBveApi;
 
 namespace OpenBve {
@@ -400,6 +401,17 @@ namespace OpenBve {
 								else
 								{
 									// default
+									if (Lines.Length == 1 && Encoding.Equals(Encoding.Unicode))
+									{
+										/*
+										 * If only one line, there's a good possibility that our file is NOT Unicode at all
+										 * and that the misdetection has turned it into garbage
+										 *
+										 * Try again with ASCII instead
+										 */
+										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, Train, LoadObjects);
+										return;
+									}
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								break;

@@ -6,11 +6,11 @@
 		internal struct CommandInfo
 		{
 			/// <summary>The actual command to be performed</summary>
-			internal Command Command;
+			internal readonly Command Command;
 			/// <summary>Whether this is a digital or analog control</summary>
-			internal CommandType Type;
+			internal readonly CommandType Type;
 			/// <summary>The command name</summary>
-			internal string Name;
+			internal readonly string Name;
 			/// <summary>The command's description</summary>
 			internal string Description;
 			internal CommandInfo(Command Command, CommandType Type, string Name)

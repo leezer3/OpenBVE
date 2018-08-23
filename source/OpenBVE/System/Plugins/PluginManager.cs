@@ -95,11 +95,11 @@ namespace OpenBve {
 				}
 				//End of additions
 				double speed = this.Train.Cars[this.Train.DriverCar].Specs.CurrentPerceivedSpeed;
-				double bcPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakeCylinderCurrentPressure;
-				double mrPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.MainReservoirCurrentPressure;
-				double erPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.EqualizingReservoirCurrentPressure;
-				double bpPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.BrakePipeCurrentPressure;
-				double sapPressure = this.Train.Cars[this.Train.DriverCar].Specs.AirBrake.StraightAirPipeCurrentPressure;
+				double bcPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure;
+				double mrPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.mainReservoir.CurrentPressure;
+				double erPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.equalizingReservoir.CurrentPressure;
+				double bpPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.brakePipe.CurrentPressure;
+				double sapPressure = this.Train.Cars[this.Train.DriverCar].CarBrake.straightAirPipe.CurrentPressure;
 				VehicleState vehicle = new VehicleState(location, new Speed(speed), bcPressure, mrPressure, erPressure, bpPressure, sapPressure, CurrentRadius, CurrentCant, CurrentPitch);
 				/*
 				 * Prepare the preceding vehicle state.
@@ -162,8 +162,8 @@ namespace OpenBve {
 				int reverser = (int)this.Train.Handles.Reverser.Driver;
 				int powerNotch = this.Train.Handles.Power.Driver;
 				int brakeNotch;
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
-					brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
+					brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
 				} else {
 					if (this.Train.Handles.HasHoldBrake) {
 						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 2 : this.Train.Handles.Brake.Driver > 0 ? this.Train.Handles.Brake.Driver + 1 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
@@ -171,8 +171,9 @@ namespace OpenBve {
 						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? this.Train.Handles.Brake.MaximumNotch + 1 : this.Train.Handles.Brake.Driver;
 					}
 				}
+				int locoBrakeNotch = this.Train.Handles.LocoBrake.Driver;
 				bool constSpeed = this.Train.Specs.CurrentConstSpeed;
-				return new Handles(reverser, powerNotch, brakeNotch, constSpeed);
+				return new Handles(reverser, powerNotch, brakeNotch, locoBrakeNotch, constSpeed);
 			}
 			/// <summary>Sets the driver handles or the virtual handles.</summary>
 			/// <param name="handles">The handles.</param>
@@ -191,7 +192,7 @@ namespace OpenBve {
 					if (virtualHandles) {
 						this.Train.Handles.Reverser.Actual = (TrainManager.ReverserPosition)handles.Reverser;
 					} else {
-						TrainManager.ApplyReverser(this.Train, handles.Reverser, false);
+						this.Train.ApplyReverser(handles.Reverser, false);
 					}
 				} else {
 					if (virtualHandles) {
@@ -221,35 +222,35 @@ namespace OpenBve {
 					this.Train.Handles.EmergencyBrake.Safety = false;
 					this.Train.Handles.HoldBrake.Actual = false;
 				}
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
 					if (handles.BrakeNotch == 0) {
 						if (virtualHandles) {
-							this.Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Release;
+							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Release;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
-							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Release);
+							this.Train.UnapplyEmergencyBrake();
+							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 1) {
 						if (virtualHandles) {
-							this.Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Lap;
+							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Lap;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
-							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Lap);
+							this.Train.UnapplyEmergencyBrake();
+							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
 						}
 					} else if (handles.BrakeNotch == 2) {
 						if (virtualHandles) {
-							this.Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
+							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
 						} else {
-							TrainManager.UnapplyEmergencyBrake(this.Train);
-							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Release);
+							this.Train.UnapplyEmergencyBrake();
+							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
 						}
 					} else if (handles.BrakeNotch == 3) {
 						if (virtualHandles) {
-							this.Train.Handles.AirBrake.Handle.Safety = TrainManager.AirBrakeHandleState.Service;
+							this.Train.Handles.Brake.Safety = (int)TrainManager.AirBrakeHandleState.Service;
 							this.Train.Handles.EmergencyBrake.Safety = true;
 						} else {
-							TrainManager.ApplyAirBrakeHandle(this.Train, TrainManager.AirBrakeHandleState.Service);
-							TrainManager.ApplyEmergencyBrake(this.Train);
+							this.Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+							this.Train.ApplyEmergencyBrake();
 						}
 					} else {
 						this.PluginValid = false;
@@ -261,16 +262,16 @@ namespace OpenBve {
 								this.Train.Handles.EmergencyBrake.Safety = true;
 								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
 							} else {
-								TrainManager.ApplyHoldBrake(this.Train, false);
+								this.Train.ApplyHoldBrake(false);
 								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false);
-								TrainManager.ApplyEmergencyBrake(this.Train);
+								this.Train.ApplyEmergencyBrake();
 							}
 						} else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch + 1) {
 							if (virtualHandles) {
 								this.Train.Handles.Brake.Safety = handles.BrakeNotch - 1;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
-								TrainManager.ApplyHoldBrake(this.Train, false);
+								this.Train.UnapplyEmergencyBrake();
+								this.Train.ApplyHoldBrake(false);
 								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false);
 							}
 						} else if (handles.BrakeNotch == 1) {
@@ -278,17 +279,17 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = 0;
 								this.Train.Handles.HoldBrake.Actual = true;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
+								this.Train.UnapplyEmergencyBrake();
 								Train.ApplyNotch(0, true, 0, false);
-								TrainManager.ApplyHoldBrake(this.Train, true);
+								this.Train.ApplyHoldBrake(true);
 							}
 						} else if (handles.BrakeNotch == 0) {
 							if (virtualHandles) {
 								this.Train.Handles.Brake.Safety = 0;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
+								this.Train.UnapplyEmergencyBrake();
 								Train.ApplyNotch(0, true, 0, false);
-								TrainManager.ApplyHoldBrake(this.Train, false);
+								this.Train.ApplyHoldBrake(false);
 							}
 						} else {
 							if (virtualHandles) {
@@ -302,14 +303,14 @@ namespace OpenBve {
 								this.Train.Handles.EmergencyBrake.Safety = true;
 								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
 							} else {
-								TrainManager.ApplyHoldBrake(this.Train, false);
-								TrainManager.ApplyEmergencyBrake(this.Train);
+								this.Train.ApplyHoldBrake(false);
+								this.Train.ApplyEmergencyBrake();
 							}
 						} else if (handles.BrakeNotch >= 0 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch | this.Train.Handles.Brake.DelayedChanges.Length == 0) {
 							if (virtualHandles) {
 								this.Train.Handles.Brake.Safety = handles.BrakeNotch;
 							} else {
-								TrainManager.UnapplyEmergencyBrake(this.Train);
+								this.Train.UnapplyEmergencyBrake();
 								Train.ApplyNotch(0, true, handles.BrakeNotch, false);
 							}
 						} else {
@@ -356,11 +357,11 @@ namespace OpenBve {
 			/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occured.</summary>
 			internal void UpdateBrake() {
 				int brakeNotch;
-				if (this.Train.Cars[this.Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake) {
+				if (this.Train.Handles.Brake is TrainManager.AirBrakeHandle) {
 					if (this.Train.Handles.HasHoldBrake) {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 4 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
+						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 4 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 2 : this.Train.Handles.HoldBrake.Driver ? 1 : 0;
 					} else {
-						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.AirBrake.Handle.Driver == TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
+						brakeNotch = this.Train.Handles.EmergencyBrake.Driver ? 3 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Service ? 2 : this.Train.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap ? 1 : 0;
 					}
 				} else {
 					if (this.Train.Handles.HasHoldBrake) {
@@ -489,9 +490,25 @@ namespace OpenBve {
 			}
 			string file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
 			string title = System.IO.Path.GetFileName(file);
-			if (!System.IO.File.Exists(file)) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
-				return false;
+			if (!System.IO.File.Exists(file))
+			{
+				if(lines[0].EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
+				{
+					// Our filename ends with .dll so probably is not mangled Unicode
+					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					return false;
+				}
+				// Try again with ASCII encoding
+				lines = System.IO.File.ReadAllLines(config, System.Text.Encoding.GetEncoding(1252));
+				file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
+				title = System.IO.Path.GetFileName(file);
+				if (!System.IO.File.Exists(file))
+				{
+					// Nope, still not found
+					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					return false;
+				}
+
 			}
 			Program.AppendToLogFile("Loading train plugin: " + file);
 			bool success = LoadPlugin(train, file, trainFolder);
@@ -510,13 +527,12 @@ namespace OpenBve {
 		/// <param name="train">The train to attach the plugin to.</param>
 		/// <param name="trainFolder">The train folder.</param>
 		/// <returns>Whether the plugin was loaded successfully.</returns>
-		internal static bool LoadDefaultPlugin(TrainManager.Train train, string trainFolder) {
+		internal static void LoadDefaultPlugin(TrainManager.Train train, string trainFolder) {
 			string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Plugins"), "OpenBveAts.dll");
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success) {
 				train.Plugin.IsDefault = true;
 			}
-			return success;
 		}
 		
 		/// <summary>Loads the specified plugin for the specified train.</summary>
@@ -539,7 +555,7 @@ namespace OpenBve {
 			/*
 			 * Prepare initialization data for the plugin.
 			 * */
-			BrakeTypes brakeType = (BrakeTypes)train.Cars[train.DriverCar].Specs.BrakeType;
+			BrakeTypes brakeType = (BrakeTypes)train.Cars[train.DriverCar].CarBrake.brakeType;
 			int brakeNotches;
 			int powerNotches;
 			bool hasHoldBrake;
@@ -552,8 +568,10 @@ namespace OpenBve {
 				powerNotches = train.Handles.Power.MaximumNotch;
 				hasHoldBrake = train.Handles.HasHoldBrake;
 			}
+
+			bool hasLocoBrake = train.Handles.HasLocoBrake;
 			int cars = train.Cars.Length;
-			VehicleSpecs specs = new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, cars);
+			VehicleSpecs specs = new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
 			InitializationModes mode = (InitializationModes)Game.TrainStart;
 			/*
 			 * Check if the plugin is a .NET plugin.

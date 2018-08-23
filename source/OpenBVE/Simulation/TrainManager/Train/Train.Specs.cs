@@ -12,8 +12,8 @@
 			internal double CurrentAirDensity;
 			internal double CurrentAirTemperature;
 			internal double CurrentElevation;
-			
-			
+
+			internal ReadhesionDeviceType ReadhesionDeviceType;
 			internal DefaultSafetySystems DefaultSafetySystems;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;

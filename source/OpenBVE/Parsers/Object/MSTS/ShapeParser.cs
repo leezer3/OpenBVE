@@ -16,7 +16,7 @@ using SharpCompress.Compressors.Deflate;
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
-#pragma warning disable 2019
+#pragma warning disable 0219
 namespace OpenBve
 {
 	class MsTsShapeParser
@@ -630,7 +630,7 @@ namespace OpenBve
 
 					break;
 				case KujuTokenID.texture:
-					int imageIDX = (int) block.ReadUInt32();
+					int imageIDX = block.ReadInt32();
 					int filterMode = (int) block.ReadUInt32();
 					float mipmapLODBias = block.ReadSingle();
 					uint borderColor = 0xff000000U;
@@ -1077,4 +1077,4 @@ namespace OpenBve
 		}
 	}
 }
-#pragma warning restore 2019
+#pragma warning restore 0219

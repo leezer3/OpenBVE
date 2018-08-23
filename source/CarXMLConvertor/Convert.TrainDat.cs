@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 
@@ -13,15 +14,24 @@ namespace CarXmlConvertor
 		internal static double CarHeight = 3.6;
 		internal static double MotorCarMass = 1.0;
 		internal static double TrailerCarMass = 1.0;
+		internal static double BrakeCylinderServiceMaximumPressure = 440000.0;
+		internal static double BrakeCylinderEmergencyMaximumPressure = 440000.0;
+		internal static double BrakeCylinderEmergencyRate = 300000.0;
+		internal static double BrakeCylinderReleaseRate = 200000.0;
+		internal static double MainReservoirMinimumPressure = 690000.0;
+		internal static double MainReservoirMaximumPressure = 780000.0;
+		internal static double BrakePipePressure = 0.0;
 		private static int NumberOfMotorCars;
 		private static int NumberOfTrailerCars;
 		private static bool FrontCarIsMotorCar;
 		internal static bool[] MotorCars;
 		internal static int DriverCar = 0;
-		private static System.Windows.Forms.Form mainForm;
-		internal static void Process(Form form)
+		internal static int BrakeType = 0;
+		private static MainForm mainForm;
+		internal static void Process(MainForm form)
 		{
 			mainForm = form;
+
 			if (!System.IO.File.Exists(FileName))
 			{
 				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -107,7 +117,71 @@ namespace CarXmlConvertor
 							i++; n++;
 						}
 						i--; break;
-
+					case "#brake":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							int a; if (NumberFormats.TryParseIntVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 0: BrakeType = a; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
+					case "#move":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 4: BrakeCylinderEmergencyRate = a * 1000.0; break;
+									case 5: BrakeCylinderReleaseRate = a * 1000.0; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; break;
+					case "#pressure":
+						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a)) {
+								switch (n) {
+									case 0:
+										if (a <= 0.0)
+										{
+											mainForm.updateLogBoxText += "BrakeCylinderServiceMaximumPressure is expected to be positive at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in " + FileName;
+										} else {
+											BrakeCylinderServiceMaximumPressure = a * 1000.0;
+										} break;
+									case 1:
+										if (a <= 0.0) {
+											mainForm.updateLogBoxText += "BrakeCylinderEmergencyMaximumPressure is expected to be positive at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in " + FileName;
+										} else {
+											BrakeCylinderEmergencyMaximumPressure = a * 1000.0;
+										} break;
+									case 2:
+										if (a <= 0.0) {
+											mainForm.updateLogBoxText += "MainReservoirMinimumPressure is expected to be positive at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in " + FileName;
+										} else {
+											MainReservoirMinimumPressure = a * 1000.0;
+										} break;
+									case 3:
+										if (a <= 0.0) {
+											mainForm.updateLogBoxText += "MainReservoirMaximumPressure is expected to be positive at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in " + FileName;
+										} else {
+											MainReservoirMaximumPressure = a * 1000.0;
+										} break;
+									case 4:
+										if (a <= 0.0) {
+											mainForm.updateLogBoxText += "BrakePipePressue is expected to be positive at line " + (i + 1).ToString(CultureInfo.InvariantCulture) + " in " + FileName;
+										} else {
+											BrakePipePressure = a * 1000.0;
+										} break;
+								}
+							} i++; n++;
+						} i--; break;
 					default:
 					{
 						i++;
@@ -120,6 +194,31 @@ namespace CarXmlConvertor
 						break;
 				}
 			}
+
+			if (BrakePipePressure <= 0.0)
+			{
+
+				if (BrakeType == 2) //Automatic air brake
+				{
+					BrakePipePressure = BrakeCylinderEmergencyMaximumPressure + 0.75 * (MainReservoirMinimumPressure - BrakeCylinderEmergencyMaximumPressure);
+					if (BrakePipePressure > MainReservoirMinimumPressure)
+					{
+						BrakePipePressure = MainReservoirMinimumPressure;
+					}
+				}
+				else
+				{
+					if (BrakeCylinderEmergencyMaximumPressure < 480000.0 & MainReservoirMinimumPressure > 500000.0)
+					{
+						BrakePipePressure = 490000.0;
+					}
+					else
+					{
+						BrakePipePressure = BrakeCylinderEmergencyMaximumPressure + 0.75 * (MainReservoirMinimumPressure - BrakeCylinderEmergencyMaximumPressure);
+					}
+				}
+			}
+
 			NumberOfCars = NumberOfMotorCars + NumberOfTrailerCars;
 			MotorCars = new bool[NumberOfCars];
 			if (NumberOfMotorCars == 1)

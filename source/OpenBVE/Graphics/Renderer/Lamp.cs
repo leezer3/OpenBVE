@@ -78,11 +78,11 @@ namespace OpenBve
                         break;
                 }
                 Fonts.OpenGlFont font = Fonts.NormalFont;
-                for (int i = 0; i < Interface.CurrentHudElements.Length; i++)
+                for (int i = 0; i < HUD.CurrentHudElements.Length; i++)
                 {
-                    if (Interface.CurrentHudElements[i].Subject.Equals("ats", StringComparison.OrdinalIgnoreCase))
+                    if (HUD.CurrentHudElements[i].Subject.Equals("ats", StringComparison.OrdinalIgnoreCase))
                     {
-                        font = Interface.CurrentHudElements[i].Font;
+                        font = HUD.CurrentHudElements[i].Font;
                         break;
                     }
                 }

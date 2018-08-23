@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -206,19 +207,20 @@ namespace OpenBve
 				}
 			}
 
-			internal void ApplyRotation(double x, double y, double z, double a)
+			internal void ApplyRotation(Vector3 Rotation, double Angle)
 			{
-				double cosa = Math.Cos(a);
-				double sina = Math.Sin(a);
+				double cosa = Math.Cos(Angle);
+				double sina = Math.Sin(Angle);
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					World.Rotate(ref Mesh.Vertices[j].Coordinates, x, y, z, cosa, sina);
+					Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
+
 				}
 				for (int j = 0; j < Mesh.Faces.Length; j++)
 				{
 					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
 					{
-						World.Rotate(ref Mesh.Faces[j].Vertices[k].Normal, x, y, z, cosa, sina);
+						Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
 					}
 				}
 			}
@@ -335,7 +337,7 @@ namespace OpenBve
 				}
 			}
 
-			internal void ApplyData(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+			internal void ApplyData(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
 				StartingDistance = float.MaxValue;
 				EndingDistance = float.MinValue;
@@ -433,7 +435,7 @@ namespace OpenBve
 				}
 			}
 
-			internal override void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation,
+			internal override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{

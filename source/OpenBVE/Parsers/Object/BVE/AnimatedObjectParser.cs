@@ -1371,6 +1371,16 @@ namespace OpenBve
 							}
 							break;
 						default:
+							if (Lines.Length == 1 && Encoding.Equals(System.Text.Encoding.Unicode))
+							{
+								/*
+								 * If only one line, there's a good possibility that our file is NOT Unicode at all
+								 * and that the misdetection has turned it into garbage
+								 *
+								 * Try again with ASCII instead
+								 */
+								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252), LoadMode);
+							}
 							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							return null;
 					}
@@ -1385,7 +1395,7 @@ namespace OpenBve
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)
 			{
-				World.Rotate(ref Mesh.Vertices[i].Coordinates, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
 			}
 			//Update normals
 			for (int i = 0; i < Mesh.Faces.Length; i++)
@@ -1393,7 +1403,7 @@ namespace OpenBve
 				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
 					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
 					{
-						World.Rotate(ref Mesh.Faces[i].Vertices[j].Normal, RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
 					}
 			}
 		}

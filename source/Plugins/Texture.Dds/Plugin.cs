@@ -1,18 +1,10 @@
 ﻿using System.IO;
-using Microsoft.Win32.SafeHandles;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
 namespace Plugin {
 	/// <summary>Implements the texture interface.</summary>
-	public partial class Plugin : TextureInterface {
-		
-		// --- members ---
-		
-		/// <summary>The host that loaded the plugin.</summary>
-		// private HostInterface CurrentHost = null;
-		
-		
+	public class Plugin : TextureInterface {
 		// --- functions ---
 		
 		/// <summary>Called when the plugin is loaded.</summary>

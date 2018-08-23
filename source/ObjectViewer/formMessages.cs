@@ -6,7 +6,7 @@ namespace OpenBve
 {
 	public partial class formMessages : Form
 	{
-		public formMessages()
+		private formMessages()
 		{
 			InitializeComponent();
 		}

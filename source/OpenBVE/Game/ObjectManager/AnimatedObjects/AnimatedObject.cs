@@ -2,6 +2,7 @@
 using CSScriptLibrary;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -743,18 +744,18 @@ namespace OpenBve
 					// rotate
 					if (rotateX)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateXDirection, cosX, sinX);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateXDirection, cosX, sinX);
 					}
 					if (rotateY)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateYDirection, cosY, sinY);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateYDirection, cosY, sinY);
 					}
 					if (rotateZ)
 					{
-						World.Rotate(ref ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates, RotateZDirection, cosZ, sinZ);
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 					{
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
@@ -791,15 +792,15 @@ namespace OpenBve
 						{
 							if (rotateX)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateXDirection, cosX, sinX);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateXDirection, cosX, sinX);
 							}
 							if (rotateY)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateYDirection, cosY, sinY);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateYDirection, cosY, sinY);
 							}
 							if (rotateZ)
 							{
-								World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal, RotateZDirection, cosZ, sinZ);
+								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateZDirection, cosZ, sinZ);
 							}
 							World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.X, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Y, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
 						}
@@ -823,14 +824,14 @@ namespace OpenBve
 				}
 			}
 
-			internal void CreateObject(Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+			internal void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 			{
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
 					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
-				World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
+				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 				
 				//Place track followers if required
 				if (TrackFollowerFunction != null)

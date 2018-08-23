@@ -1,4 +1,5 @@
-﻿namespace OpenBve.Formats.MsTs
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBve.Formats.MsTs
 {
 	/// <summary>The tokens from the Kuju compressed binary format</summary>
     public enum KujuTokenID : uint

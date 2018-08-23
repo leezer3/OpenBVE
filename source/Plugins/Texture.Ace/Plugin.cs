@@ -5,13 +5,6 @@ using OpenBveApi.Textures;
 namespace Plugin {
 	/// <summary>Implements the texture interface.</summary>
 	public partial class Plugin : TextureInterface {
-		
-		// --- members ---
-		
-		/// <summary>The host that loaded the plugin.</summary>
-		// private HostInterface CurrentHost = null;
-		
-		
 		// --- functions ---
 		
 		/// <summary>Called when the plugin is loaded.</summary>

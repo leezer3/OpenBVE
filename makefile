@@ -319,8 +319,7 @@ create_resource_tmp = $(eval $(call resource_rule_impl, $(firstword $(subst ^, ,
 # OpenBve #
 ###########
 
-OPEN_BVE_FOLDERS  := . Audio Game Game/AI Game/Events Game/Events/EventTypes Game/ObjectManager Game/ObjectManager/AnimatedObjects Game/Score Game/TrackManager Graphics Graphics/Renderer Interface OldCode Parsers Parsers/Object/BVE Parsers/Object/Generic Parsers/Object/Loksim3D Parsers/Object/MSTS Parsers/Panel Parsers/Routes Parsers/Route/BVE Parsers/Script Parsers/SoundConfiguration Parsers/Train Properties OldParsers OldParsers/BveRouteParser Simulation/TrainManager Simulation/TrainManager/Car Simulation/TrainManager/Motor Simulation/TrainManager/Train Simulation/TrainManager/Train/Handles Simulation/World System System/Functions System/Input System/Logging System/Plugins System/Program System/Translations UserInterface
-OPEN_BVE_FOLDERS  := $(addprefix $(OPEN_BVE_ROOT)/, $(OPEN_BVE_FOLDERS))
+OPEN_BVE_FOLDERS  := $(shell find $(OPEN_BVE_ROOT) -type d)
 OPEN_BVE_SRC      := $(filter-out "$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs",$(patsubst %, "%", $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.cs))))
 OPEN_BVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_RESX     := $(foreach sdir, $(OPEN_BVE_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -371,8 +370,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 # OpenBveApi #
 ##############
 
-OPEN_BVE_API_FOLDERS  := . Properties
-OPEN_BVE_API_FOLDERS  := $(addprefix $(OPEN_BVE_API_ROOT)/, $(OPEN_BVE_API_FOLDERS))
+OPEN_BVE_API_FOLDERS  := $(shell find $(OPEN_BVE_API_ROOT) -type d)
 OPEN_BVE_API_SRC      := $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.cs))
 OPEN_BVE_API_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_API_RESX     := $(foreach sdir, $(OPEN_BVE_API_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -396,8 +394,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BV
 # OpenBveAts #
 ##############
 
-OPEN_BVE_ATS_FOLDERS  := . Properties
-OPEN_BVE_ATS_FOLDERS  := $(addprefix $(OPEN_BVE_ATS_ROOT)/, $(OPEN_BVE_ATS_FOLDERS))
+OPEN_BVE_ATS_FOLDERS  := $(shell find $(OPEN_BVE_ATS_ROOT) -type d)
 OPEN_BVE_ATS_SRC      := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.cs))
 OPEN_BVE_ATS_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OPEN_BVE_ATS_RESX     := $(foreach sdir, $(OPEN_BVE_ATS_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -418,8 +415,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE): $(OPEN_BV
 # Formats.MSTS #
 ################
 
-FORMATS_MSTS_FOLDERS  := . Properties
-FORMATS_MSTS_FOLDERS  := $(addprefix $(FORMATS_MSTS_ROOT)/, $(FORMATS_MSTS_FOLDERS))
+FORMATS_MSTS_FOLDERS  := $(shell find $(FORMATS_MSTS_ROOT) -type d)
 FORMATS_MSTS_SRC      := $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.cs))
 FORMATS_MSTS_DOC      := $(addprefix /doc:, $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.xml)))
 FORMATS_MSTS_RESX     := $(foreach sdir, $(FORMATS_MSTS_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -441,8 +437,7 @@ $(DEBUG_DIR)/$(FORMATS_MSTS_FILE) $(RELEASE_DIR)/$(FORMATS_MSTS_FILE): $(FORMATS
 # Sound.Flac #
 ##############
 
-SOUND_FLAC_FOLDERS  := . Properties
-SOUND_FLAC_FOLDERS  := $(addprefix $(SOUND_FLAC_ROOT)/, $(SOUND_FLAC_FOLDERS))
+SOUND_FLAC_FOLDERS  := $(shell find $(SOUND_FLAC_ROOT) -type d)
 SOUND_FLAC_SRC      := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.cs))
 SOUND_FLAC_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_FLAC_RESX     := $(foreach sdir, $(SOUND_FLAC_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -463,8 +458,7 @@ $(DEBUG_DIR)/$(SOUND_FLAC_FILE) $(RELEASE_DIR)/$(SOUND_FLAC_FILE): $(SOUND_FLAC_
 # Sound.RiffWave #
 ##################
 
-SOUND_RIFFWAVE_FOLDERS  := . Properties
-SOUND_RIFFWAVE_FOLDERS  := $(addprefix $(SOUND_RIFFWAVE_ROOT)/, $(SOUND_RIFFWAVE_FOLDERS))
+SOUND_RIFFWAVE_FOLDERS  := $(shell find $(SOUND_RIFFWAVE_ROOT) -type d)
 SOUND_RIFFWAVE_SRC      := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.cs))
 SOUND_RIFFWAVE_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_RIFFWAVE_RESX     := $(foreach sdir, $(SOUND_RIFFWAVE_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -485,8 +479,7 @@ $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOU
 # Sound.MP3 #
 #############
 
-SOUND_MP3_FOLDERS  := . Properties
-SOUND_MP3_FOLDERS  := $(addprefix $(SOUND_MP3_ROOT)/, $(SOUND_MP3_FOLDERS))
+SOUND_MP3_FOLDERS  := $(shell find $(SOUND_MP3_ROOT) -type d)
 SOUND_MP3_SRC      := $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.cs))
 SOUND_MP3_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.xml)))
 SOUND_MP3_RESX     := $(foreach sdir, $(SOUND_MP3_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -507,8 +500,7 @@ $(DEBUG_DIR)/$(SOUND_MP3_FILE) $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(SOUND_MP3_SRC
 # Texture.Ace #
 ###############
 
-TEXTURE_ACE_FOLDERS  := . Properties
-TEXTURE_ACE_FOLDERS  := $(addprefix $(TEXTURE_ACE_ROOT)/, $(TEXTURE_ACE_FOLDERS))
+TEXTURE_ACE_FOLDERS  := $(shell find $(TEXTURE_ACE_ROOT) -type d)
 TEXTURE_ACE_SRC      := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.cs))
 TEXTURE_ACE_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_ACE_RESX     := $(foreach sdir, $(TEXTURE_ACE_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -529,8 +521,7 @@ $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) $(RELEASE_DIR)/$(TEXTURE_ACE_FILE): $(TEXTURE_A
 # Texture.BmpGifJpegPngTiff #
 #############################
 
-TEXTURE_BGJPT_FOLDERS  := . Properties
-TEXTURE_BGJPT_FOLDERS  := $(addprefix $(TEXTURE_BGJPT_ROOT)/, $(TEXTURE_BGJPT_FOLDERS))
+TEXTURE_BGJPT_FOLDERS  := $(shell find $(TEXTURE_BGJPT_ROOT) -type d)
 TEXTURE_BGJPT_SRC      := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.cs))
 TEXTURE_BGJPT_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_BGJPT_RESX     := $(foreach sdir, $(TEXTURE_BGJPT_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -551,8 +542,7 @@ $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE) $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE): $(TEXTU
 # Texture.Dds #
 ###############
 
-TEXTURE_DDS_FOLDERS  := . Properties
-TEXTURE_DDS_FOLDERS  := $(addprefix $(TEXTURE_DDS_ROOT)/, $(TEXTURE_DDS_FOLDERS))
+TEXTURE_DDS_FOLDERS  := $(shell find $(TEXTURE_DDS_ROOT) -type d)
 TEXTURE_DDS_SRC      := $(foreach sdir, $(TEXTURE_DDS_FOLDERS), $(wildcard $(sdir)/*.cs))
 TEXTURE_DDS_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_DDS_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TEXTURE_DDS_RESX     := $(foreach sdir, $(TEXTURE_DDS_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -573,8 +563,7 @@ $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) $(RELEASE_DIR)/$(TEXTURE_DDS_FILE): $(TEXTURE_D
 # RouteViewer #
 ###############
 
-ROUTE_VIEWER_FOLDERS  := . Audio Parsers Properties System System/Functions
-ROUTE_VIEWER_FOLDERS  := $(addprefix $(ROUTE_VIEWER_ROOT)/, $(ROUTE_VIEWER_FOLDERS))
+ROUTE_VIEWER_FOLDERS  := $(shell find $(ROUTE_VIEWER_ROOT) -type d)
 ROUTE_VIEWER_SRC      := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 ROUTE_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 ROUTE_VIEWER_RESX     := $(foreach sdir, $(ROUTE_VIEWER_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -597,8 +586,7 @@ $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_V
 # ObjectBender #
 ################
 
-OBJECT_BENDER_FOLDERS  := . Properties
-OBJECT_BENDER_FOLDERS  := $(addprefix $(OBJECT_BENDER_ROOT)/, $(OBJECT_BENDER_FOLDERS))
+OBJECT_BENDER_FOLDERS  := $(shell find $(OBJECT_BENDER_ROOT) -type d)
 OBJECT_BENDER_SRC      := $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.cs))
 OBJECT_BENDER_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OBJECT_BENDER_RESX     := $(foreach sdir, $(OBJECT_BENDER_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -616,8 +604,7 @@ $(DEBUG_DIR)/$(OBJECT_BENDER_FILE) $(RELEASE_DIR)/$(OBJECT_BENDER_FILE): $(OBJEC
 # CarXMLConvertor #
 ###################
 
-CAR_XML_FOLDERS  := . Properties
-CAR_XML_FOLDERS  := $(addprefix $(CAR_XML_ROOT)/, $(CAR_XML_FOLDERS))
+CAR_XML_FOLDERS  := $(shell find $(CAR_XML_ROOT) -type d)
 CAR_XML_SRC      := $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.cs))
 CAR_XML_DOC      := $(addprefix /doc:, $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.xml)))
 CAR_XML_RESX     := $(foreach sdir, $(CAR_XML_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -635,8 +622,7 @@ $(DEBUG_DIR)/$(CAR_XML_FILE) $(RELEASE_DIR)/$(CAR_XML_FILE): $(CAR_XML_SRC) $(CA
 # ObjectViewer #
 ################
 
-OBJECT_VIEWER_FOLDERS  := . Parsers Parsers/MSTS Properties System
-OBJECT_VIEWER_FOLDERS  := $(addprefix $(OBJECT_VIEWER_ROOT)/, $(OBJECT_VIEWER_FOLDERS))
+OBJECT_VIEWER_FOLDERS  := $(shell find $(OBJECT_VIEWER_ROOT) -type d)
 OBJECT_VIEWER_SRC      := $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.cs))
 OBJECT_VIEWER_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.xml)))
 OBJECT_VIEWER_RESX     := $(foreach sdir, $(OBJECT_VIEWER_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -658,8 +644,7 @@ $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJEC
 # TrainEditor #
 ###############
 
-TRAIN_EDITOR_FOLDERS  := . CsvB3dDecoder Properties TrainsimApi/Codecs TrainsimApi/Geometry TrainsimApi/Platform TrainsimApi/Vectors
-TRAIN_EDITOR_FOLDERS  := $(addprefix $(TRAIN_EDITOR_ROOT)/, $(TRAIN_EDITOR_FOLDERS))
+TRAIN_EDITOR_FOLDERS  := $(shell find $(TRAIN_EDITOR_ROOT) -type d)
 TRAIN_EDITOR_SRC      := $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.cs))
 TRAIN_EDITOR_DOC      := $(addprefix /doc:, $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.xml)))
 TRAIN_EDITOR_RESX     := $(foreach sdir, $(TRAIN_EDITOR_FOLDERS), $(wildcard $(sdir)/*.resx))
@@ -678,8 +663,7 @@ $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_E
 # LBAHeader #
 #############
 
-LBAHEADER_FOLDERS  := .
-LBAHEADER_FOLDERS  := $(addprefix $(LBAHEADER_ROOT)/, $(LBAHEADER_FOLDERS))
+LBAHEADER_FOLDERS  := $(shell find $(LBAHEADER_ROOT) -type d)
 LBAHEADER_SRC      := $(foreach sdir, $(LBAHEADER_FOLDERS), $(wildcard $(sdir)/*.cs))
 LBAHEADER_OUT       =$(OUTPUT_DIR)/$(LBAHEADER_FILE)
 

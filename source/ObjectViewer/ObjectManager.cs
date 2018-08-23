@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace OpenBve
 {
@@ -1440,7 +1441,7 @@ namespace OpenBve
         }
         internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
         internal static int AnimatedWorldObjectsUsed = 0;
-        internal static void CreateAnimatedWorldObjects(AnimatedObject[] Prototypes, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+        internal static void CreateAnimatedWorldObjects(AnimatedObject[] Prototypes, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
         {
             bool[] free = new bool[Prototypes.Length];
             bool anyfree = false;
@@ -1467,7 +1468,7 @@ namespace OpenBve
                         if (free[i])
                         {
                             Vector3 p = Position;
-                            World.Transformation t = new OpenBve.World.Transformation(BaseTransformation, AuxTransformation);
+                            Transformation t = new Transformation(BaseTransformation, AuxTransformation);
                             Vector3 s = t.X;
                             Vector3 u = t.Y;
                             Vector3 d = t.Z;
@@ -1495,14 +1496,14 @@ namespace OpenBve
                 }
             }
         }
-        internal static int CreateAnimatedWorldObject(AnimatedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+        internal static int CreateAnimatedWorldObject(AnimatedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
         {
             int a = AnimatedWorldObjectsUsed;
             if (a >= AnimatedWorldObjects.Length)
             {
                 Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
             }
-            World.Transformation FinalTransformation = new World.Transformation(BaseTransformation, AuxTransformation);
+            Transformation FinalTransformation = new Transformation(BaseTransformation, AuxTransformation);
             AnimatedWorldObjects[a] = new AnimatedWorldObject();
             AnimatedWorldObjects[a].Position = Position;
             AnimatedWorldObjects[a].Direction = FinalTransformation.Z;
@@ -1807,7 +1808,7 @@ namespace OpenBve
         }
 
         // create object
-        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
+        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
         {
 		if (Prototype != null)
 		{
@@ -1823,7 +1824,7 @@ namespace OpenBve
 			ObjectsUsed++;
 		}
         }
-        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
         {
             if (Prototype is StaticObject)
             {
@@ -1838,11 +1839,11 @@ namespace OpenBve
         }
 
         // create static object
-        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
+        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
         {
             return CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
         }
-        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
         {
             int a = ObjectsUsed;
             if (a >= Objects.Length)
@@ -1874,7 +1875,7 @@ namespace OpenBve
             ObjectsUsed++;
             return a;
         }
-        internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+        internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
         {
             Object = new StaticObject();
             Object.StartingDistance = float.MaxValue;

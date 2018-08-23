@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <summary>Renders the list of score messages</summary>
 		/// <param name="Element">The HUD element these are to be rendererd onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
-		private static void RenderScoreMessages(Interface.HudElement Element, double TimeElapsed)
+		private static void RenderScoreMessages(HUD.Element Element, double TimeElapsed)
 		{
 			// score messages
 			int n = Game.ScoreMessages.Length;
@@ -46,7 +46,7 @@ namespace OpenBve
 				CreateBackColor(Element.OverlayColor, Game.ScoreMessages[j].Color, out or, out og, out ob, out oa);
 				double tx, ty;
 				bool preserve = false;
-				if ((Element.Transition & Interface.HudTransition.Move) != 0)
+				if ((Element.Transition & HUD.Transition.Move) != 0)
 				{
 					if (Game.SecondsSinceMidnight < Game.ScoreMessages[j].Timeout)
 					{
@@ -60,7 +60,7 @@ namespace OpenBve
 						ty = y + m * Element.Value2;
 						preserve = true;
 					}
-					else if (Element.Transition == Interface.HudTransition.MoveAndFade)
+					else if (Element.Transition == HUD.Transition.MoveAndFade)
 					{
 						tx = x;
 						ty = y + m * Element.Value2;
@@ -107,7 +107,7 @@ namespace OpenBve
 						Game.ScoreMessages[j].RendererPosition.Y += Math.Sign(ty - Game.ScoreMessages[j].RendererPosition.Y) * dy;
 					}
 				}
-				if ((Element.Transition & Interface.HudTransition.Fade) != 0)
+				if ((Element.Transition & HUD.Transition.Fade) != 0)
 				{
 					if (Game.SecondsSinceMidnight >= Game.ScoreMessages[j].Timeout)
 					{
@@ -133,9 +133,9 @@ namespace OpenBve
 				double py = Game.ScoreMessages[j].RendererPosition.Y;
 				float alpha = (float)(Game.ScoreMessages[j].RendererAlpha * Game.ScoreMessages[j].RendererAlpha);
 				// graphics
-				Interface.HudImage Left = j == 0 ? Element.TopLeft : j < n - 1 ? Element.CenterLeft : Element.BottomLeft;
-				Interface.HudImage Middle = j == 0 ? Element.TopMiddle : j < n - 1 ? Element.CenterMiddle : Element.BottomMiddle;
-				Interface.HudImage Right = j == 0 ? Element.TopRight : j < n - 1 ? Element.CenterRight : Element.BottomRight;
+				HUD.Image Left = j == 0 ? Element.TopLeft : j < n - 1 ? Element.CenterLeft : Element.BottomLeft;
+				HUD.Image Middle = j == 0 ? Element.TopMiddle : j < n - 1 ? Element.CenterMiddle : Element.BottomMiddle;
+				HUD.Image Right = j == 0 ? Element.TopRight : j < n - 1 ? Element.CenterRight : Element.BottomRight;
 				// left background
 				if (Left.BackgroundTexture != null)
 				{

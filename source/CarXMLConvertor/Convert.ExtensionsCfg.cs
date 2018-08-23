@@ -477,6 +477,45 @@ namespace CarXmlConvertor
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
 			}
+			newLines.Add("<Brake>");
+			if (ConvertTrainDat.MotorCars[i] == true)
+			{
+
+				newLines.Add("<Compressor>");
+				newLines.Add("<Rate>5000.0</Rate>");
+				newLines.Add("</Compressor>");
+			}
+
+			newLines.Add("<MainReservoir>");
+			newLines.Add("<MinimumPressure>" + ConvertTrainDat.MainReservoirMinimumPressure + "</MinimumPressure>");
+			newLines.Add("<MaximumPressure>" + ConvertTrainDat.MainReservoirMaximumPressure + "</MaximumPressure>");
+			newLines.Add("</MainReservoir>");
+			newLines.Add("<AuxiliaryReservoir>");
+			newLines.Add("<ChargeRate>200000.0</ChargeRate>");
+			newLines.Add("</AuxiliaryReservoir>");
+			newLines.Add("<EqualizingReservoir>");
+			newLines.Add("<ServiceRate>50000.0</ServiceRate>");
+			newLines.Add("<EmergencyRate>250000.0</EmergencyRate>");
+			newLines.Add("<ChargeRate>200000.0</ChargeRate>");
+			newLines.Add("</EqualizingReservoir>");
+			newLines.Add("<BrakePipe>");
+			newLines.Add("<NormalPressure>" + ConvertTrainDat.BrakePipePressure + "</NormalPressure>");
+			newLines.Add("<ServiceRate>1500000.0</ServiceRate>");
+			newLines.Add("<EmergencyRate>5000000.0</EmergencyRate>");
+			newLines.Add("<ChargeRate>10000000.0</ChargeRate>");
+			newLines.Add("</BrakePipe>");
+			newLines.Add("<StraightAirPipe>");
+			newLines.Add("<ServiceRate>300000.0</ServiceRate>");
+			newLines.Add("<EmergencyRate>400000.0</EmergencyRate>");
+			newLines.Add("<ReleaseRate>200000.0</ReleaseRate>");
+			newLines.Add("</StraightAirPipe>");
+			newLines.Add("<BrakeCylinder>");
+			newLines.Add("<ServiceMaximumPressure>" + ConvertTrainDat.BrakeCylinderServiceMaximumPressure + "</ServiceMaximumPressure>");
+			newLines.Add("<EmergencyMaximumPressure>" + ConvertTrainDat.BrakeCylinderEmergencyMaximumPressure + "</EmergencyMaximumPressure>");
+			newLines.Add("<EmergencyRate>" + ConvertTrainDat.BrakeCylinderEmergencyRate + "</EmergencyRate>");
+			newLines.Add("<ReleaseRate>" + ConvertTrainDat.BrakeCylinderReleaseRate + "</ReleaseRate>");
+			newLines.Add("</BrakeCylinder>");
+			newLines.Add("</Brake>");
 			newLines.Add("</Car>");
 		}
 

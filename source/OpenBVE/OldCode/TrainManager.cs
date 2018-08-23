@@ -6,73 +6,6 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-		internal enum CarBrakeType
-		{
-			ElectromagneticStraightAirBrake = 0,
-			ElectricCommandBrake = 1,
-			AutomaticAirBrake = 2
-		}
-		internal enum EletropneumaticBrakeType
-		{
-			None = 0,
-			ClosingElectromagneticValve = 1,
-			DelayFillingControl = 2
-		}
-
-		internal enum AirBrakeType { Main, Auxillary }
-		internal struct CarAirBrake
-		{
-			internal AirBrakeType Type;
-			internal bool AirCompressorEnabled;
-			internal double AirCompressorMinimumPressure;
-			internal double AirCompressorMaximumPressure;
-			internal double AirCompressorRate;
-			internal double MainReservoirCurrentPressure;
-			internal double MainReservoirEqualizingReservoirCoefficient;
-			internal double MainReservoirBrakePipeCoefficient;
-			internal double EqualizingReservoirCurrentPressure;
-			internal double EqualizingReservoirNormalPressure;
-			internal double EqualizingReservoirServiceRate;
-
-			internal double EqualizingReservoirEmergencyRate;
-			internal double EqualizingReservoirChargeRate;
-			internal double BrakePipeCurrentPressure;
-			internal double BrakePipeNormalPressure;
-			internal double BrakePipeChargeRate;
-			internal double BrakePipeServiceRate;
-			internal double BrakePipeEmergencyRate;
-			internal double AuxillaryReservoirCurrentPressure;
-			internal double AuxillaryReservoirMaximumPressure;
-			internal double AuxillaryReservoirChargeRate;
-			internal double AuxillaryReservoirBrakePipeCoefficient;
-			internal double AuxillaryReservoirBrakeCylinderCoefficient;
-			internal double BrakeCylinderCurrentPressure;
-			internal double BrakeCylinderEmergencyMaximumPressure;
-			internal double BrakeCylinderServiceMaximumPressure;
-			internal double BrakeCylinderEmergencyChargeRate;
-			internal double BrakeCylinderServiceChargeRate;
-			internal double BrakeCylinderReleaseRate;
-			internal double BrakeCylinderSoundPlayedForPressure;
-			internal double StraightAirPipeCurrentPressure;
-			internal double StraightAirPipeReleaseRate;
-			internal double StraightAirPipeServiceRate;
-			internal double StraightAirPipeEmergencyRate;
-		}
-
-		
-		
-
-		
-
-
-		// train
-		
-		// train specs
-		
-		internal struct TrainAirBrake
-		{
-			internal AirBrakeHandle Handle;
-		}
 		internal enum DoorMode
 		{
 			AutomaticManualOverride = 0,
@@ -94,72 +27,81 @@ namespace OpenBve
 		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
 		/// <param name="Encoding">The automatically detected or manually set encoding of the panel configuration file.</param>
 		/// <param name="Train">The base train on which to apply the panel configuration.</param>
-		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
+		internal static void ParsePanelConfig(string TrainPath, System.Text.Encoding Encoding, Train Train)
 		{
+			Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
+			Train.Cars[Train.DriverCar].CarSections[0] = new CarSection
+			{
+				Elements = new ObjectManager.AnimatedObject[] { },
+				Overlay = true
+			};
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
 			if (System.IO.File.Exists(File))
 			{
 				Program.AppendToLogFile("Loading train panel: " + File);
 				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
-				try
+				if (a != null)
 				{
-					for (int i = 0; i < a.Objects.Length; i++)
+					//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
+					try
 					{
-						a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+						for (int i = 0; i < a.Objects.Length; i++)
+						{
+							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+						}
+						Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+						World.UpdateViewingDistances();
+						return;
 					}
-					Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-					Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
-					World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-					World.UpdateViewingDistances();
-				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("error_critical_file");
-					currentError = currentError.Replace("[file]", "panel.animated");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
+					catch
+					{
+						var currentError = Interface.GetInterfaceString("errors_critical_file");
+						currentError = currentError.Replace("[file]", "panel.animated");
+						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						Program.RestartArguments = " ";
+						Loading.Cancel = true;
+						return;
+					}
 				}
 			}
-			else
+
+			var Panel2 = false;
+			try
 			{
-				var Panel2 = false;
-				try
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+				if (System.IO.File.Exists(File))
 				{
-					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+					Program.AppendToLogFile("Loading train panel: " + File);
+					Panel2 = true;
+					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+					World.CameraRestriction = Camera.RestrictionMode.On;
+				}
+				else
+				{
+					File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 					if (System.IO.File.Exists(File))
 					{
 						Program.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-						World.CameraRestriction = World.CameraRestrictionMode.On;
+						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
+						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+						World.CameraRestriction = Camera.RestrictionMode.On;
 					}
 					else
 					{
-						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							Program.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = World.CameraRestrictionMode.On;
-							World.CameraRestriction = World.CameraRestrictionMode.On;
-						}
-						else
-						{
-							World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
-						}
+						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 					}
 				}
-				catch
-				{
-					var currentError = Interface.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
-					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					Program.RestartArguments = " ";
-					Loading.Cancel = true;
-				}
-
+			}
+			catch
+			{
+				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				Program.RestartArguments = " ";
+				Loading.Cancel = true;
 			}
 		}
 		

@@ -9,7 +9,7 @@ namespace OpenBve
 		/// <summary>Renders the ATS lamp overlay</summary>
 		/// <param name="Element">The HUD element these are to be rendererd onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
-		private static void RenderATSLamps(Interface.HudElement Element, double TimeElapsed)
+		private static void RenderATSLamps(HUD.Element Element, double TimeElapsed)
 		{
 			// ats lamps
 			if (CurrentLampCollection.Lamps == null)
@@ -53,9 +53,9 @@ namespace OpenBve
 					{
 						o = 0;
 					}
-					Interface.HudImage Left = o < 0 ? Element.TopLeft : o == 0 ? Element.CenterLeft : Element.BottomLeft;
-					Interface.HudImage Middle = o < 0 ? Element.TopMiddle : o == 0 ? Element.CenterMiddle : Element.BottomMiddle;
-					Interface.HudImage Right = o < 0 ? Element.TopRight : o == 0 ? Element.CenterRight : Element.BottomRight;
+					HUD.Image Left = o < 0 ? Element.TopLeft : o == 0 ? Element.CenterLeft : Element.BottomLeft;
+					HUD.Image Middle = o < 0 ? Element.TopMiddle : o == 0 ? Element.CenterMiddle : Element.BottomMiddle;
+					HUD.Image Right = o < 0 ? Element.TopRight : o == 0 ? Element.CenterRight : Element.BottomRight;
 					MessageColor sc = MessageColor.Gray;
 					if (TrainManager.PlayerTrain.Plugin.Panel.Length >= 272)
 					{

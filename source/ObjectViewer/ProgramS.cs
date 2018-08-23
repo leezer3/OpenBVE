@@ -8,6 +8,7 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.World;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -27,7 +28,6 @@ namespace OpenBve {
 		internal const ProgramType CurrentProgramType = ProgramType.ObjectViewer;
 
 		// members
-		private const bool Quit = false;
 	    internal static string[] Files = new string[] { };
 	    internal static bool[] SkipArgs;
 
@@ -220,7 +220,7 @@ namespace OpenBve {
 				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 					ObjectManager.ObjectLoadMode.Normal, false, false, false);
 				ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-					new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
 #if !DEBUG
 				            }
@@ -324,7 +324,7 @@ namespace OpenBve {
 	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 	                        ObjectManager.ObjectLoadMode.Normal, false, false, false);
 	                    ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-	                        new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0,
+	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
@@ -369,7 +369,7 @@ namespace OpenBve {
 					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 						            ObjectManager.ObjectLoadMode.Normal, false, false, false);
 					            ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-						            new World.Transformation(0.0, 0.0, 0.0), new World.Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);
 #if !DEBUG
 				            }

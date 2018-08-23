@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -6,7 +7,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal class Car
+		internal partial class Car
 		{
 			/// <summary>Width in meters</summary>
 			internal double Width;
@@ -26,7 +27,8 @@ namespace OpenBve
 			internal Horn[] Horns;
 			/// <summary>The doors for this car</summary>
 			internal Door[] Doors;
-
+			/// <summary>The car brake for this car</summary>
+			internal CarBrake CarBrake;
 			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
@@ -50,24 +52,16 @@ namespace OpenBve
 			internal double BeaconReceiverPosition;
 			internal TrackManager.TrackFollower BeaconReceiver;
 			/// <summary>A reference to the base train</summary>
-			internal Train baseTrain;
+			private readonly Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
-			internal int Index;
+			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
-			internal World.CameraRestrictionMode CameraRestrictionMode = World.CameraRestrictionMode.NotSpecified;
+			internal Camera.RestrictionMode CameraRestrictionMode = Camera.RestrictionMode.NotSpecified;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
 			internal World.CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
-
-			internal struct CarBrightness
-			{
-				internal float PreviousBrightness;
-				internal double PreviousTrackPosition;
-				internal float NextBrightness;
-				internal double NextTrackPosition;
-			}
-
+			
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
@@ -159,18 +153,15 @@ namespace OpenBve
 				{
 					t = 1.0 / Math.Sqrt(t);
 					DirectionX *= t; DirectionY *= t; DirectionZ *= t;
-					double ux = Up.X;
-					double uy = Up.Y;
-					double uz = Up.Z;
-					double sx = DirectionZ * uy - DirectionY * uz;
-					double sy = DirectionX * uz - DirectionZ * ux;
-					double sz = DirectionY * ux - DirectionX * uy;
+					double sx = DirectionZ * Up.Y - DirectionY * Up.Z;
+					double sy = DirectionX * Up.Z - DirectionZ * Up.X;
+					double sz = DirectionY * Up.X - DirectionX * Up.Y;
 					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-					PositionX = rx + sx * CarX + ux * CarY + DirectionX * CarZ;
-					PositionY = ry + sy * CarX + uy * CarY + DirectionY * CarZ;
-					PositionZ = rz + sz * CarX + uz * CarY + DirectionZ * CarZ;
+					PositionX = rx + sx * CarX + Up.X * CarY + DirectionX * CarZ;
+					PositionY = ry + sy * CarX + Up.Y * CarY + DirectionY * CarZ;
+					PositionZ = rz + sz * CarX + Up.Z * CarY + DirectionZ * CarZ;
 				}
 				else
 				{
@@ -331,7 +322,7 @@ namespace OpenBve
 								else if (ndir == -1)
 								{
 									// brake
-									double max = Specs.BrakeDecelerationAtServiceMaximumPressure(this.baseTrain.Handles.Brake.Actual);
+									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, Specs.CurrentSpeed);
 									if (max != 0.0)
 									{
 										double cur = -Specs.CurrentAccelerationOutput;
@@ -594,7 +585,7 @@ namespace OpenBve
 			internal void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}

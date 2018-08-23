@@ -104,7 +104,7 @@ namespace OpenBve
 				//Update the camera position based upon the relative car position
 				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
-			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 			{
 				World.CurrentDriverBody.Update(TimeElapsed);
 			}
@@ -322,6 +322,13 @@ namespace OpenBve
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
+			for (int i = 0; i < TrainManager.Trains.Length; i++)
+			{
+				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus)
+				{
+					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
+				}
+			}
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
@@ -355,6 +362,7 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
+			World.CurrentDriverBody = new World.DriverBody();
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);
@@ -585,7 +593,7 @@ namespace OpenBve
 			}
 
 			// initialize camera
-			if (World.CameraRestriction == World.CameraRestrictionMode.NotAvailable)
+			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 			{
 				World.CameraMode = World.CameraViewMode.InteriorLookAhead;
 			}

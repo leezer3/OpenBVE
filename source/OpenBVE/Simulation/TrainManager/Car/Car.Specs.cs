@@ -5,24 +5,9 @@
 	{
 		internal struct CarSpecs
 		{
-			internal bool IsDriverCar;
 			/// motor
 			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;
-			internal AccelerationCurve[] DecelerationCurves;
-
-			internal double BrakeDecelerationAtServiceMaximumPressure(int Notch)
-			{
-				if (Notch == 0)
-				{
-					return this.DecelerationCurves[0].GetAccelerationOutput(this.CurrentSpeed, 1.0);
-				}
-				if (this.DecelerationCurves.Length >= Notch)
-				{
-					return this.DecelerationCurves[Notch - 1].GetAccelerationOutput(this.CurrentSpeed, 1.0);
-				}
-				return this.DecelerationCurves[this.DecelerationCurves.Length - 1].GetAccelerationOutput(this.CurrentSpeed, 1.0);
-			}
 
 			internal double AccelerationCurveMaximum;
 			internal double JerkPowerUp;
@@ -30,7 +15,6 @@
 			internal double JerkBrakeUp;
 			internal double JerkBrakeDown;
 			/// brake
-			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
 			/// physical properties
 			internal double MassEmpty;
@@ -63,9 +47,7 @@
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
 			internal CarReAdhesionDevice ReAdhesionDevice;
-			internal CarBrakeType BrakeType;
-			internal EletropneumaticBrakeType ElectropneumaticType;
-			internal CarAirBrake AirBrake;
+
 			/// doors
 			
 			internal double DoorOpenFrequency;

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using OpenTK;
 
@@ -55,17 +54,15 @@ namespace OpenBve {
 		/// <param name="args">The command-line arguments.</param>
 		[STAThread]
 		private static void Main(string[] args) {
-
-#if !DEBUG            
 			// Add handler for UI thread exceptions
-			Application.ThreadException += new ThreadExceptionEventHandler(CrashHandler.UIThreadException);
+			Application.ThreadException += (CrashHandler.UIThreadException);
 
 			// Force all WinForms errors to go through handler
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
 			// This handler is for catching non-UI thread exceptions
-			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler.CurrentDomain_UnhandledException);
-#endif
+			AppDomain.CurrentDomain.UnhandledException += (CrashHandler.CurrentDomain_UnhandledException);
+
 
 			//Determine the current CPU architecture-
 			//ARM will generally only support OpenGL-ES

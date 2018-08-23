@@ -19,6 +19,14 @@ namespace OpenBve
 			}
 			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
+				if (Train == null)
+				{
+					return;
+				}
+				if (Train.RouteLimits == null)
+				{
+					Train.RouteLimits = new double[] {};
+				}
 				if (Direction < 0)
 				{
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle)

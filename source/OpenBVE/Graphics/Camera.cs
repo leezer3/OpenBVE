@@ -1,10 +1,9 @@
 ﻿using System;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
-	internal class Camera {
+	internal partial class Camera {
 		
 		// --- members ---
 		

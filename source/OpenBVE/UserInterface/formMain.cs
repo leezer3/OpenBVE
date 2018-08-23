@@ -343,6 +343,21 @@ namespace OpenBve {
 			comboboxVSync.Items.Add("");
 			comboboxVSync.Items.Add("");
 			comboboxVSync.SelectedIndex = Interface.CurrentOptions.VerticalSynchronization ? 1 : 0;
+			switch (Interface.CurrentOptions.UserInterfaceFolder)
+			{
+				case "Slim":
+					trackBarHUDSize.Value = 0;
+					break;
+				case "Default":
+					trackBarHUDSize.Value = 1;
+					break;
+				case "Large":
+					trackBarHUDSize.Value = 2;
+					break;
+				default:
+					trackBarHUDSize.Value = 1;
+					break;
+			}
 			updownWindowWidth.Value = (decimal)Interface.CurrentOptions.WindowWidth;
 			updownWindowHeight.Value = (decimal)Interface.CurrentOptions.WindowHeight;
 			updownFullscreenWidth.Value = (decimal)Interface.CurrentOptions.FullscreenWidth;
@@ -502,6 +517,10 @@ namespace OpenBve {
 			labelVSync.Text = Interface.GetInterfaceString("options_display_vsync");
 			comboboxVSync.Items[0] = Interface.GetInterfaceString("options_display_vsync_off");
 			comboboxVSync.Items[1] = Interface.GetInterfaceString("options_display_vsync_on");
+			labelHUDScale.Text = Interface.GetInterfaceString("options_hud_size");
+			labelHUDSmall.Text = Interface.GetInterfaceString("options_hud_size_small");
+			labelHUDNormal.Text = Interface.GetInterfaceString("options_hud_size_normal");
+			labelHUDLarge.Text = Interface.GetInterfaceString("options_hud_size_large");
 			//Windowed Mode
 			groupboxWindow.Text = Interface.GetInterfaceString("options_display_window");
 			labelWindowWidth.Text = Interface.GetInterfaceString("options_display_window_width");
@@ -589,6 +608,13 @@ namespace OpenBve {
 			groupBoxKioskMode.Text = Interface.GetInterfaceString("options_kiosk_mode");
 			checkBoxEnableKiosk.Text = Interface.GetInterfaceString("options_kiosk_mode_enable");
 			labelKioskTimeout.Text = Interface.GetInterfaceString("options_kiosk_mode_timer");
+			labelRailDriverSpeedUnits.Text = Interface.GetInterfaceString("raildriver_speedunits");
+			comboBoxRailDriverUnits.Items[0] = Interface.GetInterfaceString("raildriver_milesperhour");
+			comboBoxRailDriverUnits.Items[1] = Interface.GetInterfaceString("raildriver_kilometersperhour");
+			labelRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_setcalibration");
+			buttonRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_launch");
+			checkBoxTransparencyFix.Text = Interface.GetInterfaceString("options_transparencyfix");
+			checkBoxHacks.Text = Interface.GetInterfaceString("options_hacks_enable");
 			/*
 			 * Localisation for strings in the game start pane
 			 */
@@ -858,8 +884,17 @@ namespace OpenBve {
 			//Uninstall result panel
 			// *** All labels set at runtime ***
 
-			//HACK
-			panelOptionsPage2.Hide();
+			//HACK- WHY IS THIS NEEDED???
+			if (panelOptionsPage2.Visible)
+			{
+				panelOptionsPage2.Hide();
+				panelOptionsPage2.Show();
+			}
+			else
+			{
+				panelOptionsPage2.Hide();
+			}
+			
 
 		}
 
@@ -901,6 +936,20 @@ namespace OpenBve {
 			Interface.CurrentOptions.TrainFolder = textboxTrainFolder.Text;
 			Interface.CurrentOptions.MainMenuWidth = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Width;
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
+			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
+			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
+			switch (trackBarHUDSize.Value)
+			{
+				case 0:
+					Interface.CurrentOptions.UserInterfaceFolder = "Slim";
+					break;
+				case 1:
+					Interface.CurrentOptions.UserInterfaceFolder = "Default";
+					break;
+				case 2:
+					Interface.CurrentOptions.UserInterfaceFolder = "Large";
+					break;
+			}
 			if (Result.Start)
 			{
 				// recently used routes

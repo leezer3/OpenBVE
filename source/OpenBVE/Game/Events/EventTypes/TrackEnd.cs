@@ -20,6 +20,11 @@
 				{
 					Train.Derail(CarIndex, 0.0);
 				}
+
+				if (TriggerType == EventTriggerType.Camera)
+				{
+					World.CameraAtWorldEnd = !World.CameraAtWorldEnd;
+				}
 			}
 		}
 	}

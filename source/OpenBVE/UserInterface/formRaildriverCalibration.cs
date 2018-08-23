@@ -14,6 +14,7 @@ namespace OpenBve.UserInterface
 			main = (Bitmap)Image.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\raildriver.png"));
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
+			labelCalibrationText.Text = Interface.GetInterfaceString("raildriver_calibration_start");
 			if (JoystickManager.devices.Length == 0)
 			{
 				MessageBox.Show(Interface.GetInterfaceString("raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -39,7 +39,7 @@ namespace OpenBve {
 				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName), Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
-				return LoadBinaryX(FileName, Data, 16, Encoding, FloatingPointSize, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+				return LoadBinaryX(FileName, Data, 16, FloatingPointSize, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
 				#if !DEBUG
@@ -60,7 +60,7 @@ namespace OpenBve {
 				try {
 					#endif
 					byte[] Uncompressed = Decompress(Data);
-					return LoadBinaryX(FileName, Uncompressed, 0, Encoding, FloatingPointSize, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					return LoadBinaryX(FileName, Uncompressed, 0, FloatingPointSize, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					#if !DEBUG
 				} catch (Exception ex) {
 					Interface.AddMessage(Interface.MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
@@ -844,7 +844,7 @@ namespace OpenBve {
 		// ================================
 
 		// load binary x
-		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, System.Text.Encoding Encoding, int FloatingPointSize, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			// parse file
 			AlternateStructure = false;
 			LoadedMaterials = new Structure[] {};

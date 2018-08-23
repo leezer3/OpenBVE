@@ -52,7 +52,7 @@ namespace OpenBve
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
+		/// <param name="Encoding">The encoding the file is saved in.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
@@ -82,7 +82,7 @@ namespace OpenBve
 			int currentMaterial = -1;
 
 			//Read the contents of the file
-			string[] Lines = File.ReadAllLines(FileName);
+			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
@@ -137,8 +137,6 @@ namespace OpenBve
 						{
 							Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
 						}
-						//Wavefront obj texture co-ords Y axis appear inverted v.s. BVE standard
-						coords.Y = -coords.Y;
 						tempCoords.Add(coords);
 						break;
 					case "vn":
@@ -218,6 +216,10 @@ namespace OpenBve
 										currentCoord++;
 										currentCoord += idx;
 									}
+									else
+									{
+										currentCoord = idx;
+									}
 									if (currentCoord > tempCoords.Count)
 									{
 										Interface.AddMessage(Interface.MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
@@ -251,6 +253,10 @@ namespace OpenBve
 										//Offset, so we seem to need to add one....
 										currentNormal++;
 										currentNormal += idx;
+									}
+									else
+									{
+										currentNormal = idx;
 									}
 									if (currentNormal > tempNormals.Count)
 									{

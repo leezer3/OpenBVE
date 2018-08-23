@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
+using OpenBveApi.World;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -160,6 +161,20 @@ namespace OpenBve {
 			internal double Pitch;
 			internal double Roll;
 		}
+		private struct DestinationEvent
+		{
+			internal double TrackPosition;
+			internal int Type;
+			internal bool TriggerOnce;
+			internal int BeaconStructureIndex;
+			internal int NextDestination;
+			internal int PreviousDestination;
+			internal double X;
+			internal double Y;
+			internal double Yaw;
+			internal double Pitch;
+			internal double Roll;
+		}
 		private struct PointOfInterest {
 			internal double TrackPosition;
 			internal int RailIndex;
@@ -197,6 +212,7 @@ namespace OpenBve {
 			internal Stop[] Stop;
 			internal Sound[] Sound;
 			internal Transponder[] Transponder;
+	        internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
 			internal TrackManager.TrackElement CurrentTrackState;
 			internal double Pitch;
@@ -310,6 +326,7 @@ namespace OpenBve {
 				Data.Blocks[0].Section = new Section[] { };
 				Data.Blocks[0].Sound = new Sound[] { };
 				Data.Blocks[0].Transponder = new Transponder[] { };
+	            Data.Blocks[0].DestinationChanges = new DestinationEvent[] { };
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] { };
 				Data.Markers = new Marker[] { };
 				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
@@ -1969,28 +1986,6 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} 
-											// Code was always unreachable because this is routeviewer //
-											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-											// 	if (Path.ContainsInvalidChars(Arguments[0])) {
-											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											// 	} else {
-											// 		while (CommandIndex1 >= Data.TimetableDaytime.Length) {
-											// 			int n = Data.TimetableDaytime.Length;
-											// 			Array.Resize<int>(ref Data.TimetableDaytime, n << 1);
-											// 			for (int i = n; i < Data.TimetableDaytime.Length; i++) {
-											// 				Data.TimetableDaytime[i] = -1;
-											// 			}
-											// 		}
-											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-											// 		if (!System.IO.File.Exists(f)) {
-											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-											// 		}
-											// 		if (System.IO.File.Exists(f)) {
-											// 			Data.TimetableDaytime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, true);
-											// 			TextureManager.UseTexture(Data.TimetableDaytime[CommandIndex1], TextureManager.UseMode.Normal);
-											// 		}
-											// 	}
-											// }
 										}
 									} break;
 								case "train.timetable.night":
@@ -2001,31 +1996,17 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} 
-											// Code was always unreachable because this is routeviewer //
-											// else if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-											// 	if (Path.ContainsInvalidChars(Arguments[0])) {
-											// 		Interface.AddMessage(Interface.MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											// 	} else {
-											// 		while (CommandIndex1 >= Data.TimetableNighttime.Length) {
-											// 			int n = Data.TimetableNighttime.Length;
-											// 			Array.Resize<int>(ref Data.TimetableNighttime, n << 1);
-											// 			for (int i = n; i < Data.TimetableNighttime.Length; i++) {
-											// 				Data.TimetableNighttime[i] = -1;
-											// 			}
-											// 		}
-											// 		string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
-											// 		if (!System.IO.File.Exists(f)) {
-											// 			f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-											// 		}
-											// 		if (System.IO.File.Exists(f)) {
-											// 			Data.TimetableNighttime[CommandIndex1] = TextureManager.RegisterTexture(f, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
-											// 			TextureManager.UseTexture(Data.TimetableNighttime[CommandIndex1], TextureManager.UseMode.Normal);
-											// 		}
-											// 	}
-											// }
 										}
 									} break;
-									// structure
+								case "train.destination":
+									if (!PreviewOnly)
+									{
+										if (Arguments.Length < 1)
+										{
+											Interface.AddMessage(Interface.MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+										}
+									}
+									break;
 								case "structure.rail":
 									{
 										if (!PreviewOnly) {
@@ -2595,17 +2576,17 @@ namespace OpenBve {
 															bool notFound = false;
 															while (true)
 															{
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".x");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".csv");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
 																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
+																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".b3d");
 																if (System.IO.File.Exists(f))
 																{
 																	break;
@@ -2618,7 +2599,6 @@ namespace OpenBve {
 															{
 																break;
 															}
-															break;
 														}
 														Bve4SignalData Signal = new Bve4SignalData();
 														Signal.BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectManager.ObjectLoadMode.Normal, false, false, false);
@@ -3555,6 +3535,102 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
 										}
 									} break;
+								case "track.destination":
+									{
+										if (!PreviewOnly)
+										{
+											int type = 0;
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out type))
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Type is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												type = 0;
+											}
+											if (type < -1 || type > 1)
+											{
+												Interface.AddMessage(Interface.MessageType.Error, false, "Type is expected to be in the range of -1 to 1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											}
+											else
+											{
+												int structure = 0, nextDestination = 0, previousDestination = 0, triggerOnce = 0;
+												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out structure))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = 0;
+												}
+												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[2], out nextDestination))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "NextDestination is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													nextDestination = 0;
+												}
+												if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[3], out previousDestination))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "PreviousDestination is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													previousDestination = 0;
+												}
+												if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[4], out triggerOnce))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "TriggerOnce is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													previousDestination = 0;
+												}
+												if (structure < -1)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative or -1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = -1;
+												}
+												else if (structure >= 0 && !Data.Structure.Beacon.ContainsKey(structure))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "BeaconStructureIndex " + structure + " references an object not loaded in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													structure = -1;
+												}
+												if (triggerOnce < 0 || triggerOnce > 1)
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "TriggerOnce is expected to be in the range of 0 to 1 in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													triggerOnce = 0;
+												}
+												double x = 0.0, y = 0.0;
+												double yaw = 0.0, pitch = 0.0, roll = 0.0;
+												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out x))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													x = 0.0;
+												}
+												if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], UnitOfLength, out y))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													y = 0.0;
+												}
+												if (Arguments.Length >= 8 && Arguments[7].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[7], out yaw))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Yaw is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													yaw = 0.0;
+												}
+												if (Arguments.Length >= 9 && Arguments[8].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[8], out pitch))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Pitch is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													pitch = 0.0;
+												}
+												if (Arguments.Length >= 10 && Arguments[9].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[9], out roll))
+												{
+													Interface.AddMessage(Interface.MessageType.Error, false, "Roll is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													roll = 0.0;
+												}
+												int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
+												Array.Resize<DestinationEvent>(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
+												Data.Blocks[BlockIndex].DestinationChanges[n].TrackPosition = Data.TrackPosition;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Type = type;
+												Data.Blocks[BlockIndex].DestinationChanges[n].TriggerOnce = triggerOnce != 0;
+												Data.Blocks[BlockIndex].DestinationChanges[n].PreviousDestination = previousDestination;
+												Data.Blocks[BlockIndex].DestinationChanges[n].BeaconStructureIndex = structure;
+												Data.Blocks[BlockIndex].DestinationChanges[n].NextDestination = nextDestination;
+												Data.Blocks[BlockIndex].DestinationChanges[n].X = x;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Y = y;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Yaw = yaw * 0.0174532925199433;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Pitch = pitch * 0.0174532925199433;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Roll = roll * 0.0174532925199433;
+											}
+										}
+									}
+									break;
 								case "track.beacon":
 									{
 										if (!PreviewOnly) {
@@ -4918,6 +4994,7 @@ namespace OpenBve {
 						Data.Blocks[i].Section = new Section[] { };
 						Data.Blocks[i].Sound = new Sound[] { };
 						Data.Blocks[i].Transponder = new Transponder[] { };
+						Data.Blocks[i].DestinationChanges = new DestinationEvent[] { };
 						Data.Blocks[i].RailFreeObj = new FreeObj[][] { };
 						Data.Blocks[i].GroundFreeObj = new FreeObj[] { };
 						Data.Blocks[i].PointsOfInterest = new PointOfInterest[] { };
@@ -5463,10 +5540,18 @@ namespace OpenBve {
 					double ag = -Math.Atan(Data.Blocks[i].Turn);
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
-					World.Rotate(ref Direction, cosag, sinag);
+					Direction.Rotate(cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
 					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
+				}
+				if (Data.Blocks[i].Pitch != 0.0)
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = Data.Blocks[i].Pitch;
+				}
+				else
+				{
+					TrackManager.CurrentTrack.Elements[n].Pitch = 0.0;
 				}
 				// curves
 				double a = 0.0;
@@ -5481,14 +5566,14 @@ namespace OpenBve {
 					double b = s / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 					a = 0.5 * (double)Math.Sign(r) * b;
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				} else if (WorldTrackElement.CurveRadius != 0.0) {
 					double d = Data.BlockInterval;
 					double r = WorldTrackElement.CurveRadius;
 					double b = d / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
 					a = 0.5 * (double)Math.Sign(r) * b;
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				} else if (Data.Blocks[i].Pitch != 0.0) {
 					double p = Data.Blocks[i].Pitch;
 					double d = Data.BlockInterval;
@@ -5497,9 +5582,9 @@ namespace OpenBve {
 				}
 				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
 				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
-				World.Transformation GroundTransformation = new World.Transformation(TrackYaw, 0.0, 0.0);
-				World.Transformation TrackTransformation = new World.Transformation(TrackYaw, TrackPitch, 0.0);
-				World.Transformation NullTransformation = new World.Transformation(0.0, 0.0, 0.0);
+				Transformation GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
+				Transformation TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
 				// ground
 				if (!PreviewOnly) {
 					int cb = (int)Math.Floor((double)i + 0.001);
@@ -5518,7 +5603,7 @@ namespace OpenBve {
 						double dy = Data.Blocks[i].GroundFreeObj[j].Y;
 						Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
 						double tpos = Data.Blocks[i].GroundFreeObj[j].TrackPosition;
-						ObjectManager.CreateObject(Data.Structure.FreeObjects[sttype], wpos, GroundTransformation, new World.Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+						ObjectManager.CreateObject(Data.Structure.FreeObjects[sttype], wpos, GroundTransformation, new Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
 					}
 				}
 				// rail-aligned objects
@@ -5527,14 +5612,14 @@ namespace OpenBve {
 						if (j > 0 && !Data.Blocks[i].Rail[j].RailStart) continue;
 						// rail
 						Vector3 pos;
-						World.Transformation RailTransformation;
+						Transformation RailTransformation;
 						double planar, updown;
 						if (j == 0) {
 							// rail 0
 							pos = Position;
 							planar = 0.0;
 							updown = 0.0;
-							RailTransformation = new World.Transformation(TrackTransformation, planar, updown, 0.0);
+							RailTransformation = new Transformation(TrackTransformation, planar, updown, 0.0);
 							pos = Position;
 						} else {
 							// rails 1-infinity
@@ -5551,13 +5636,13 @@ namespace OpenBve {
 								Position2.Y += h;
 								Position2.Z += Direction.Y * c;
 								if (a != 0.0) {
-									World.Rotate(ref Direction2, Math.Cos(-a), Math.Sin(-a));
+									Direction2.Rotate(Math.Cos(-a), Math.Sin(-a));
 								}
 								if (Data.Blocks[i + 1].Turn != 0.0) {
 									double ag = -Math.Atan(Data.Blocks[i + 1].Turn);
 									double cosag = Math.Cos(ag);
 									double sinag = Math.Sin(ag);
-									World.Rotate(ref Direction2, cosag, sinag);
+									Direction2.Rotate(cosag, sinag);
 								}
 								double a2 = 0.0;
 								// double c2 = Data.BlockInterval;
@@ -5571,14 +5656,14 @@ namespace OpenBve {
 									double b2 = s2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
-									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
+									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0) {
 									double d2 = Data.BlockInterval;
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double b2 = d2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
 									a2 = 0.5 * (double)Math.Sign(r2) * b2;
-									World.Rotate(ref Direction2, Math.Cos(-a2), Math.Sin(-a2));
+									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								} else if (Data.Blocks[i + 1].Pitch != 0.0) {
 									// double p2 = Data.Blocks[i + 1].Pitch;
 									// double d2 = Data.BlockInterval;
@@ -5587,8 +5672,8 @@ namespace OpenBve {
 								}
 								// double TrackYaw2 = Math.Atan2(Direction2.X, Direction2.Y);
 								// double TrackPitch2 = Math.Atan(Data.Blocks[i + 1].Pitch);
-								// World.Transformation GroundTransformation2 = new World.Transformation(TrackYaw2, 0.0, 0.0);
-								// World.Transformation TrackTransformation2 = new World.Transformation(TrackYaw2, TrackPitch2, 0.0);
+								// Transformation GroundTransformation2 = new Transformation(TrackYaw2, 0.0, 0.0);
+								// Transformation TrackTransformation2 = new Transformation(TrackYaw2, TrackPitch2, 0.0);
 								double x2 = Data.Blocks[i + 1].Rail[j].RailEndX;
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
@@ -5610,7 +5695,7 @@ namespace OpenBve {
 								planar = 0.0;
 								dh = 0.0;
 								updown = 0.0;
-								RailTransformation = new World.Transformation(TrackTransformation, 0.0, 0.0, 0.0);
+								RailTransformation = new Transformation(TrackTransformation, 0.0, 0.0, 0.0);
 							}
 						}
 						if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j])) { 
@@ -5922,7 +6007,7 @@ namespace OpenBve {
 								wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
 								wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
 								double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
-								ObjectManager.CreateObject(Data.Structure.FreeObjects[sttype], wpos, RailTransformation, new World.Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch, Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
+								ObjectManager.CreateObject(Data.Structure.FreeObjects[sttype], wpos, RailTransformation, new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch, Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 							}
 						}
 						// transponder objects
@@ -5954,10 +6039,31 @@ namespace OpenBve {
 									double tpos = Data.Blocks[i].Transponder[k].TrackPosition;
 									if (Data.Blocks[i].Transponder[k].ShowDefaultObject) {
 										double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-										ObjectManager.CreateObject(obj, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Transponder[k].Yaw, Data.Blocks[i].Transponder[k].Pitch, Data.Blocks[i].Transponder[k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
+										ObjectManager.CreateObject(obj, wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponder[k].Yaw, Data.Blocks[i].Transponder[k].Pitch, Data.Blocks[i].Transponder[k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 									} else {
-										ObjectManager.CreateObject(obj, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Transponder[k].Yaw, Data.Blocks[i].Transponder[k].Pitch, Data.Blocks[i].Transponder[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+										ObjectManager.CreateObject(obj, wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponder[k].Yaw, Data.Blocks[i].Transponder[k].Pitch, Data.Blocks[i].Transponder[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
 									}
+								}
+							}
+							for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
+							{
+								ObjectManager.UnifiedObject obj = null;
+								int b = Data.Blocks[i].DestinationChanges[k].BeaconStructureIndex;
+								if (b >= 0 & Data.Structure.Beacon.ContainsKey(b))
+								{
+									obj = Data.Structure.Beacon[b];
+								}
+								if (obj != null)
+								{
+									double dx = Data.Blocks[i].DestinationChanges[k].X;
+									double dy = Data.Blocks[i].DestinationChanges[k].Y;
+									double dz = Data.Blocks[i].DestinationChanges[k].TrackPosition - StartingDistance;
+									Vector3 wpos = pos;
+									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
+									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
+									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+									double tpos = Data.Blocks[i].DestinationChanges[k].TrackPosition;
+									ObjectManager.CreateObject(obj, wpos, RailTransformation, new Transformation(Data.Blocks[i].DestinationChanges[k].Yaw, Data.Blocks[i].DestinationChanges[k].Pitch, Data.Blocks[i].DestinationChanges[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
 								}
 							}
 						}
@@ -5995,7 +6101,7 @@ namespace OpenBve {
 									double tpos = Data.Blocks[i].Signal[k].TrackPosition;
 									if (sd is AnimatedObjectSignalData) {
 										AnimatedObjectSignalData aosd = (AnimatedObjectSignalData)sd;
-										ObjectManager.CreateObject(aosd.Objects, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
+										ObjectManager.CreateObject(aosd.Objects, wpos, RailTransformation, new Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 									} else if (sd is CompatibilitySignalData) {
 										CompatibilitySignalData csd = (CompatibilitySignalData)sd;
 										if (csd.Numbers.Length != 0) {
@@ -6017,7 +6123,7 @@ namespace OpenBve {
 											}
 											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Game.Generator.NextDouble();
-											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
+											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
 										}
 									} else if (sd is Bve4SignalData) {
 										Bve4SignalData b4sd = (Bve4SignalData)sd;
@@ -6064,7 +6170,7 @@ namespace OpenBve {
 											}
 											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Game.Generator.NextDouble();
-											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new World.Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
+											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 										}
 									}
 								}
@@ -6211,7 +6317,7 @@ namespace OpenBve {
 				Position.Y += h;
 				Position.Z += Direction.Y * c;
 				if (a != 0.0) {
-					World.Rotate(ref Direction, Math.Cos(-a), Math.Sin(-a));
+					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 			}
 			// orphaned transponders
@@ -6228,6 +6334,16 @@ namespace OpenBve {
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.TransponderEvent(d, Data.Blocks[i].Transponder[j].Type, Data.Blocks[i].Transponder[j].SwitchSubsystem, Data.Blocks[i].Transponder[j].OptionalInteger, Data.Blocks[i].Transponder[j].OptionalFloat, s);
 							Data.Blocks[i].Transponder[j].Type = TrackManager.TransponderType.None;
 						}
+					}
+					// Destination Change Events
+					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
+					{
+						int n = i - Data.FirstUsedBlock;
+						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
+						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - TrackManager.CurrentTrack.Elements[n].StartingTrackPosition;
+						//Destination events not supported in Route Viewer.....
+						//TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
 					}
 				}
 			}

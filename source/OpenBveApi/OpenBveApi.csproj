@@ -63,7 +63,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Archives.cs" />
     <Compile Include="Colors.cs">
     </Compile>
     <Compile Include="Hosts.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
+    <Compile Include="Transformations.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vertex.cs" />

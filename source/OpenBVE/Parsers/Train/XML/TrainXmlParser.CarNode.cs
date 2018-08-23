@@ -1,12 +1,12 @@
 ﻿using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System;
+using System.Text;
+using OpenBve.BrakeSystems;
 
 namespace OpenBve.Parsers.Train
 {
-	using System;
-	using System.Text;
-
 	partial class TrainXmlParser
 	{
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
@@ -18,6 +18,32 @@ namespace OpenBve.Parsers.Train
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
+					case "brake":
+						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
+						if (c.ChildNodes.OfType<XmlElement>().Any())
+						{
+							ParseBrakeNode(c, fileName, Car, ref Train);
+						}
+						else if (!String.IsNullOrEmpty(c.InnerText))
+						{
+							try
+							{
+								string childFile = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
+								XmlDocument childXML = new XmlDocument();
+								childXML.Load(childFile);
+								XmlNodeList childNodes = childXML.DocumentElement.SelectNodes("/openBVE/Brake");
+								//We need to save and restore the current path to make relative paths within the child file work correctly
+								string savedPath = currentPath;
+								currentPath = System.IO.Path.GetDirectoryName(childFile);
+								ParseBrakeNode(childNodes[0], fileName, Car, ref Train);
+								currentPath = savedPath;
+							}
+							catch
+							{
+								Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Brake XML file specified in " +c.InnerText);
+							}
+						}
+						break;
 					case "length":
 						double l;
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out l) | l <= 0.0)
@@ -49,10 +75,51 @@ namespace OpenBve.Parsers.Train
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
 							Train.Cars[Car].Specs.IsMotorCar = true;
+							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[AccelerationCurves.Length];
+							for (int i = 0; i < AccelerationCurves.Length; i++)
+							{
+								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
+							}
+							switch (Train.Specs.ReadhesionDeviceType)
+							{
+								case TrainManager.ReadhesionDeviceType.TypeA:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 8.0;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeB:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.9935;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 4.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 1.125;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeC:
+
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.1;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.965;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 2.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 1.5;
+									break;
+								case TrainManager.ReadhesionDeviceType.TypeD:
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 0.05;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 0.935;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 0.3;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 2.0;
+									break;
+								default: // no readhesion device
+									Train.Cars[Car].Specs.ReAdhesionDevice.UpdateInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ApplicationFactor = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseInterval = 1.0;
+									Train.Cars[Car].Specs.ReAdhesionDevice.ReleaseFactor = 99.0;
+									break;
+							}
 						}
 						else
 						{
+							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 							Train.Cars[Car].Specs.IsMotorCar = false;
+							Train.Cars[Car].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car]);
 						}
 						break;
 					case "mass":
@@ -210,7 +277,7 @@ namespace OpenBve.Parsers.Train
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
-					Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.On;
+					Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
@@ -222,7 +289,7 @@ namespace OpenBve.Parsers.Train
 							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 						}
 						Train.Cars[Car].CarSections[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = World.CameraRestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 					}
 					catch
 					{

@@ -15,8 +15,6 @@
 
 			/// <summary>Provides a reference to the associated EB handle</summary>
 			private readonly EmergencyHandle EmergencyBrake;
-			/// <summary>The type of locomotive brake fitted</summary>
-			internal LocoBrakeType BrakeType = LocoBrakeType.Combined;
 
 			internal override void Update()
 			{
@@ -50,6 +48,41 @@
 					{
 						Actual = DelayedChanges[0].Value;
 						RemoveChanges(1);
+					}
+				}
+			}
+		}
+
+		internal class LocoAirBrakeHandle : AbstractHandle
+		{
+			private AirBrakeHandleState DelayedValue;
+			private double DelayedTime;
+
+			internal override void Update()
+			{
+				if (DelayedValue != AirBrakeHandleState.Invalid)
+				{
+					if (DelayedTime <= Game.SecondsSinceMidnight)
+					{
+						Actual = (int)DelayedValue;
+						DelayedValue = AirBrakeHandleState.Invalid;
+					}
+				}
+				else
+				{
+					if (Safety == (int)AirBrakeHandleState.Release & Actual != (int)AirBrakeHandleState.Release)
+					{
+						DelayedValue = AirBrakeHandleState.Release;
+						DelayedTime = Game.SecondsSinceMidnight;
+					}
+					else if (Safety == (int)AirBrakeHandleState.Service & Actual != (int)AirBrakeHandleState.Service)
+					{
+						DelayedValue = AirBrakeHandleState.Service;
+						DelayedTime = Game.SecondsSinceMidnight;
+					}
+					else if (Safety == (int)AirBrakeHandleState.Lap)
+					{
+						Actual = (int)AirBrakeHandleState.Lap;
 					}
 				}
 			}

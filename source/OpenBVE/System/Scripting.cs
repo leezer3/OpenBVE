@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBve
 {
@@ -247,7 +248,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.MainReservoirCurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
@@ -261,7 +262,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.BrakePipeCurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.brakePipe.CurrentPressure;
             }
 
             /// <summary>Returns the brake cylinder pressure of the selected car of the selected train</summary>
@@ -275,7 +276,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.BrakeCylinderCurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.brakeCylinder.CurrentPressure;
             }
 
             /// <summary>Returns the brake pipe pressure of the selected car of the selected train</summary>
@@ -289,7 +290,7 @@ namespace OpenBve
                 {
                     return 0.0;
                 }
-                return Train.Cars[CarIndex].Specs.AirBrake.StraightAirPipeCurrentPressure;
+                return Train.Cars[CarIndex].CarBrake.straightAirPipe.CurrentPressure;
             }
 
             /// <summary>Returns the doors state of the selected train</summary>
@@ -547,13 +548,13 @@ namespace OpenBve
             public static int brakeNotchLinear(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
                 {
                     if (Train.Handles.EmergencyBrake.Driver)
                     {
                         return 3;
                     }
-                    return (int) Train.Handles.AirBrake.Handle.Driver;
+                    return (int) Train.Handles.Brake.Driver;
                 }
                 if (Train.Handles.HasHoldBrake)
                 {
@@ -580,7 +581,7 @@ namespace OpenBve
             public static int brakeNotchesLinear(TrainManager.Train Train)
             {
                 if (Train == null) return 0;
-                if (Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake)
+                if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
                 {
                     return 3;
                 }
@@ -606,7 +607,7 @@ namespace OpenBve
             public static bool hasAirBrake(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                return Train.Cars[Train.DriverCar].Specs.BrakeType == TrainManager.CarBrakeType.AutomaticAirBrake;
+                return Train.Handles.Brake is TrainManager.AirBrakeHandle;
             }
 
             /// <summary>Whether the hold brake is currently active for the selected train</summary>

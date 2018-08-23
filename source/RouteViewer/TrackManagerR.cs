@@ -285,6 +285,7 @@ namespace OpenBve {
         // track element
 		internal struct TrackElement {
 			internal double StartingTrackPosition;
+			internal double Pitch;
 			internal double CurveRadius;
 			internal double CurveCant;
 			internal double CurveCantTangent;
@@ -297,6 +298,7 @@ namespace OpenBve {
 			internal GeneralEvent[] Events;
 			internal TrackElement(double StartingTrackPosition) {
 				this.StartingTrackPosition = StartingTrackPosition;
+				this.Pitch = 0.0;
 				this.CurveRadius = 0.0;
 				this.CurveCant = 0.0;
 				this.CurveCantTangent = 0.0;
@@ -326,6 +328,7 @@ namespace OpenBve {
 			internal Vector3 WorldSide;
 			internal double CurveRadius;
 			internal double CurveCant;
+			internal double Pitch;
 			internal double CantDueToInaccuracy;
 			internal double AdhesionMultiplier;
 			internal EventTriggerType TriggerType;
@@ -452,6 +455,7 @@ namespace OpenBve {
 				}
 			}
 			Follower.AdhesionMultiplier = CurrentTrack.Elements[i].AdhesionMultiplier;
+			Follower.Pitch = CurrentTrack.Elements[i].Pitch * 1000;
 			// inaccuracy
 			if (AddTrackInaccurary) {
 				double x, y, c;

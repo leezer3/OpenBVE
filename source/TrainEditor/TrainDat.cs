@@ -92,16 +92,23 @@ namespace TrainEditor {
 				ElectricCommandBrake = 1,
 				AutomaticAirBrake = 2
 			}
+			internal enum LocoBrakeTypes {
+				NotFitted = 0,
+				NotchedAirBrake = 1,
+				AutomaticAirBrake = 2
+			}
 			internal enum BrakeControlSystems {
 				None = 0,
 				ClosingElectromagneticValve = 1,
 				DelayIncludingSystem = 2
 			}
 			internal BrakeTypes BrakeType;
+			internal LocoBrakeTypes LocoBrakeType;
 			internal BrakeControlSystems BrakeControlSystem;
 			internal double BrakeControlSpeed;
 			internal Brake() {
 				this.BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
+				this.LocoBrakeType = LocoBrakeTypes.NotFitted;
 				this.BrakeControlSystem = BrakeControlSystems.None;
 				this.BrakeControlSpeed = 0.0;
 			}
@@ -357,7 +364,7 @@ namespace TrainEditor {
 							{
 								string tt = s.Substring(7, s.Length - 7);
 								int v;
-								if (int.TryParse(tt, out v))
+								if (int.TryParse(tt, System.Globalization.NumberStyles.Float, Culture, out v))
 								{
 									if (v > currentVersion)
 									{
@@ -477,22 +484,22 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(Convert.ToDouble).ToArray();
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 								}
 							}
@@ -537,6 +544,9 @@ namespace TrainEditor {
 									case 2:
 										if (a >= 0.0) t.Brake.BrakeControlSpeed = a;
 										break;
+									case 3:
+										if (a <= 0 && a > 3) t.Brake.LocoBrakeType = (Brake.LocoBrakeTypes) b;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -580,7 +590,7 @@ namespace TrainEditor {
 										if (b >= 0) t.Handle.PowerNotchReduceSteps = b;
 										break;
 									case 4:
-										if (a <= 0 && a > 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
+										if (a >= 0 && a < 4) t.Handle.HandleBehaviour = (Handle.EbHandleBehaviour) b;
 										break;
 									case 5:
 										if (b > 0) t.Handle.LocoBrakeNotches = b;
@@ -836,6 +846,7 @@ namespace TrainEditor {
 			b.AppendLine(((int)t.Brake.BrakeType).ToString(Culture).PadRight(n, ' ') + "; BrakeType");
 			b.AppendLine(((int)t.Brake.BrakeControlSystem).ToString(Culture).PadRight(n, ' ') + "; BrakeControlSystem");
 			b.AppendLine(t.Brake.BrakeControlSpeed.ToString(Culture).PadRight(n, ' ') + "; BrakeControlSpeed");
+			b.AppendLine(((int)t.Brake.LocoBrakeType).ToString(Culture).PadRight(n, ' ') + "; LocoBrakeType (1.5.3.4+)");
 			b.AppendLine("#PRESSURE");
 			b.AppendLine(t.Pressure.BrakeCylinderServiceMaximumPressure.ToString(Culture).PadRight(n, ' ') + "; BrakeCylinderServiceMaximumPressure");
 			b.AppendLine(t.Pressure.BrakeCylinderEmergencyMaximumPressure.ToString(Culture).PadRight(n, ' ') + "; BrakeCylinderEmergencyMaximumPressure");

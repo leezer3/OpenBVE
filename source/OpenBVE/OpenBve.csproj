@@ -174,6 +174,20 @@
     <Compile Include="Game\TrackManager\TrackManager.cs" />
     <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Camera.CameraRestriction.cs">
+      <DependentUpon>Camera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\HUD\HUD.cs" />
+    <Compile Include="Graphics\HUD\HUD.Element.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\HUD\HUD.Image.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
+    </Compile>
+	<Compile Include="Graphics\HUD\HUD.Transitions.cs">
+      <DependentUpon>HUD.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Events.cs" />
@@ -228,8 +242,9 @@
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve4.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Xml.cs" />
     <Compile Include="Parsers\Train\TrainDatParser.Formats.cs" />
-    <Compile Include="Parsers\Train\TrainXmlParser.CarNode.cs" />
-    <Compile Include="Parsers\Train\TrainXmlParser.cs" />
+    <Compile Include="Parsers\Train\XML\TrainXmlParser.BrakeNode.cs" />
+    <Compile Include="Parsers\Train\XML\TrainXmlParser.CarNode.cs" />
+    <Compile Include="Parsers\Train\XML\TrainXmlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -240,9 +255,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AirSound.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakeCylinder.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\BrakePipe.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\Reservoirs.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\StraightAirPipe.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectricCommandBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\AirBrake\ElectromagneticStraightAirBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\BrakeSystemType.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Brake\ElectropnuematicBrakeType.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.Brightness.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
+    <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
     <Compile Include="Simulation\TrainManager\Car\Axle.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
@@ -255,7 +285,6 @@
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
-    <Compile Include="Simulation\TrainManager\Train\BrakeSystem.AirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\BrakeSystem.cs" />
     <Compile Include="Simulation\TrainManager\Train\DefaultSafetySystems.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.States.cs" />
@@ -277,6 +306,7 @@
     <Compile Include="Simulation\TrainManager\Train\Reverser.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
@@ -331,7 +361,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
-    <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
@@ -451,6 +480,7 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
+    
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

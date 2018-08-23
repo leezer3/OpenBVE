@@ -68,6 +68,7 @@ namespace CarXmlConvertor
 	        else
 	        {
 				updateLogBoxText += "INFO: Using a train.xml file with child car files." + Environment.NewLine;
+		        ConvertExtensionsCfg.SingleFile = false;
 			}
 			ConvertExtensionsCfg.Process(this);
 	        updateLogBoxText += "Processing complete.";

@@ -203,6 +203,7 @@ namespace OpenBve {
 					}
 				}
 			}
+
 			if (Game.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
@@ -213,13 +214,17 @@ namespace OpenBve {
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
-			for (int k = 0; k < TrainManager.Trains.Length; k++) {
-				TrainManager.Trains[k] = new TrainManager.Train {TrainIndex = k, Destination = Game.InitialDestination};
-				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0) {
-					TrainManager.Trains[k].State = TrainManager.TrainState.Bogus;
-				} else {
-					TrainManager.Trains[k].State = TrainManager.TrainState.Pending;
+			for (int k = 0; k < TrainManager.Trains.Length; k++)
+			{
+				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
+				{
+					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Bogus);
 				}
+				else
+				{
+					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Pending);
+				}
+				
 			}
 			TrainManager.PlayerTrain = TrainManager.Trains[Game.PrecedingTrainTimeDeltas.Length];
 
@@ -229,7 +234,7 @@ namespace OpenBve {
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
-				//Sleep for 10ms to allow route loading locks to release
+				//Sleep for 20ms to allow route loading locks to release
 				Thread.Sleep(20);
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
@@ -316,10 +321,6 @@ namespace OpenBve {
 				}
 				// add panel section
 				if (k == TrainManager.PlayerTrain.TrainIndex) {	
-					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections = new TrainManager.CarSection[1];
-					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0] = new TrainManager.CarSection();
-					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
-					TrainManager.Trains[k].Cars[TrainManager.Trains[k].DriverCar].CarSections[0].Overlay = true;
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
 					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
@@ -385,27 +386,8 @@ namespace OpenBve {
 					}
 				}
 				// place cars
-				{
-					double z = 0.0;
-					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
-						//Front axle track position
-						TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].FrontAxle.Position;
-						//Bogie for front axle
-						TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.FrontAxle.Position;
-						TrainManager.Trains[k].Cars[i].FrontBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].FrontAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].FrontBogie.Length + TrainManager.Trains[k].Cars[i].FrontBogie.RearAxle.Position;
-						//Rear axle track position
-						TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].RearAxle.Position;
-						//Bogie for rear axle
-						TrainManager.Trains[k].Cars[i].RearBogie.FrontAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.FrontAxle.Position;
-						TrainManager.Trains[k].Cars[i].RearBogie.RearAxle.Follower.TrackPosition = TrainManager.Trains[k].Cars[i].RearAxle.Follower.TrackPosition - 0.5 * TrainManager.Trains[k].Cars[i].RearBogie.Length + TrainManager.Trains[k].Cars[i].RearBogie.RearAxle.Position;
-						//Beacon reciever (AWS, ATC etc.)
-						TrainManager.Trains[k].Cars[i].BeaconReceiver.TrackPosition = z - 0.5 * TrainManager.Trains[k].Cars[i].Length + TrainManager.Trains[k].Cars[i].BeaconReceiverPosition;
-						z -= TrainManager.Trains[k].Cars[i].Length;
-						if (i < TrainManager.Trains[k].Cars.Length - 1) {
-							z -= 0.5 * (TrainManager.Trains[k].Couplers[i].MinimumDistanceBetweenCars + TrainManager.Trains[k].Couplers[i].MaximumDistanceBetweenCars);
-						}
-					}
-				}
+				TrainManager.Trains[k].PlaceCars(0.0);
+				
 				// configure ai / timetable
 				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {
 					TrainManager.Trains[k].TimetableDelta = 0.0;

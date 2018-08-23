@@ -129,7 +129,7 @@ namespace OpenBve
             GL.Enable(EnableCap.CullFace); CullEnabled = true;
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
             GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            Interface.LoadHUD();
+            HUD.LoadHUD();
             InitLoading();
             Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MatrixMode(MatrixMode.Modelview);

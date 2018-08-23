@@ -52,10 +52,13 @@ namespace TrainEditor {
 			comboboxDoorCloseMode.Items.Add("Automatic");
 			comboboxDoorCloseMode.Items.Add("Manual");
 			comboboxSoundIndex.Items.Add("None");
-			comboBoxHandleBehaviour.Items.Add("No Action");
-			comboBoxHandleBehaviour.Items.Add("Return Power to neutral");
-			comboBoxHandleBehaviour.Items.Add("Return Reverser to neutral");
-			comboBoxHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("No Action");
+			comboBoxEBHandleBehaviour.Items.Add("Return Power to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("Return Reverser to neutral");
+			comboBoxEBHandleBehaviour.Items.Add("Return Power & Reverser to neutral");
+			comboBoxLocoBrakeSystemType.Items.Add("Not fitted");
+			comboBoxLocoBrakeSystemType.Items.Add("Notched air brake");
+			comboBoxLocoBrakeSystemType.Items.Add("Air brake with partial release");
 			comboBoxLocoBrakeType.SelectedIndex = 0;
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			for (int i = 0; i < 16; i++) {
@@ -152,6 +155,8 @@ namespace TrainEditor {
 			comboboxPassAlarm.SelectedIndex = (int)Train.Device.PassAlarm;
 			comboboxDoorOpenMode.SelectedIndex = (int)Train.Device.DoorOpenMode;
 			comboboxDoorCloseMode.SelectedIndex = (int)Train.Device.DoorCloseMode;
+			comboBoxEBHandleBehaviour.SelectedIndex = (int)Train.Handle.HandleBehaviour;
+			comboBoxLocoBrakeSystemType.SelectedIndex = (int) Train.Brake.LocoBrakeType;
 		}
 		
 		// save control content
@@ -190,7 +195,7 @@ namespace TrainEditor {
 				numericUpDownBrakeNotches.Focus();
 				return false;
 			}
-			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxHandleBehaviour.SelectedIndex;
+			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
 			if (!SaveControlContent(textboxPowerNotchReduceSteps, "PowerNotchReduceSteps", tabpagePropertiesOne, NumberRange.NonNegative, out Train.Handle.PowerNotchReduceSteps)) return false;
 			// cab
 			if (!SaveControlContent(textboxX, "X", tabpagePropertiesTwo, NumberRange.Any, out Train.Cab.X)) return false;
@@ -1421,7 +1426,7 @@ namespace TrainEditor {
 			TextBox t = new TextBox
 		    {
 		     Location = new Point(20, currentPosition),
-		     Text = delayValues[index].ToString()
+		     Text = delayValues[index].ToString(CultureInfo.InvariantCulture)
 		    };
 		    formDelay.Controls.Add(t);
 		    Label l = new Label
@@ -1514,6 +1519,32 @@ namespace TrainEditor {
 		private void comboBoxLocoBrakeType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Train.Handle.LocoBrake = (TrainDat.Handle.LocoBrakeType)comboBoxLocoBrakeType.SelectedIndex;
+		}
+
+		private void comboBoxLocoBrakeSystemType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Train.Brake.LocoBrakeType = (TrainDat.Brake.LocoBrakeTypes)comboBoxLocoBrakeSystemType.SelectedIndex;
+			if (Train.Brake.LocoBrakeType == TrainDat.Brake.LocoBrakeTypes.NotFitted)
+			{
+				numericUpDownLocoBrakeNotches.Enabled = false;
+				buttonLocoBrakeDelayUp.Enabled = false;
+				buttonLocoBrakeDelayDown.Enabled = false;
+				comboBoxLocoBrakeType.Enabled = false;
+			}
+			else
+			{
+				if (Train.Brake.LocoBrakeType != TrainDat.Brake.LocoBrakeTypes.AutomaticAirBrake)
+				{
+					numericUpDownLocoBrakeNotches.Enabled = true;
+				}
+				else
+				{
+					numericUpDownLocoBrakeNotches.Enabled = false;
+				}
+				buttonLocoBrakeDelayUp.Enabled = true;
+				buttonLocoBrakeDelayDown.Enabled = true;
+				comboBoxLocoBrakeType.Enabled = true;
+			}
 		}
 	}
 }
