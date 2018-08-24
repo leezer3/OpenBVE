@@ -329,6 +329,7 @@ namespace OpenBve
 					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
 				}
 			}
+			Textures.UnloadAllTextures();
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()

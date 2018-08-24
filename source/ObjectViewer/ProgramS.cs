@@ -6,7 +6,6 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using System.Text;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenTK;
@@ -19,13 +18,9 @@ using Vector3 = OpenBveApi.Math.Vector3;
 namespace OpenBve {
 	internal static class Program {
 
-		// system
-		internal enum Platform { Windows, Linux, Mac }
-		internal static Platform CurrentPlatform = Platform.Windows;
+
 		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
-		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
-		internal const ProgramType CurrentProgramType = ProgramType.ObjectViewer;
 
 		// members
 	    internal static string[] Files = new string[] { };
@@ -58,24 +53,7 @@ namespace OpenBve {
 	    [STAThread]
 	    internal static void Main(string[] args)
 	    {
-	        // platform and mono
-	        int p = (int) Environment.OSVersion.Platform;
-	        if (p == 4 | p == 128)
-	        {
-	            // general Unix
-	            CurrentPlatform = Platform.Linux;
-	        }
-	        else if (p == 6)
-	        {
-	            // Mac
-	            CurrentPlatform = Platform.Mac;
-	        }
-	        else
-	        {
-	            // non-Unix
-	            CurrentPlatform = Platform.Windows;
-	        }
-	        CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
+			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			CurrentHost = new Host();
 		    
 	        // file system

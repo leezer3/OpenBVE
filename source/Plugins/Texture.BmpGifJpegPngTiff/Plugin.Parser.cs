@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
@@ -11,7 +11,7 @@ namespace Plugin {
 		/// <param name="file">The file that holds the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		internal bool Parse(string file, out Texture texture) {
+		private bool Parse(string file, out Texture texture) {
 			/*
 			 * Read the bitmap. This will be a bitmap of just
 			 * any format, not necessarily the one that allows

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -18,21 +18,6 @@ namespace OpenBve
 
 		/// <summary>The number of currently registered textures.</summary>
 		private static int RegisteredTexturesCount = 0;
-
-
-		// --- initialize / deinitialize ---
-
-		/// <summary>Initializes the texture component. A call to Deinitialize must be made when terminating the program.</summary>
-		internal static void Initialize()
-		{
-		}
-
-		/// <summary>Deinitializes the texture component.</summary>
-		internal static void Deinitialize()
-		{
-			UnloadAllTextures();
-		}
-
 
 		// --- register texture ---
 

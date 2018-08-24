@@ -21,8 +21,6 @@ namespace OpenBve {
 	internal static class Program {
 
 		// system
-		internal enum Platform { Windows, Linux, Mac }
-		internal static Platform CurrentPlatform = Platform.Windows;
 		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
 		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
@@ -68,17 +66,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// platform and mono
-			int p = (int)Environment.OSVersion.Platform;
-			if (p == 4 | p == 128) {
-				// general Unix
-				CurrentPlatform = Platform.Linux;
-			} else if (p == 6) {
-				// Mac
-				CurrentPlatform = Platform.Mac;
-			} else {
-				// non-Unix
-				CurrentPlatform = Platform.Windows;
-			}
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
