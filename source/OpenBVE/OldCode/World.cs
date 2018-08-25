@@ -281,11 +281,11 @@ namespace OpenBve {
 			internal double SlowX;
 			internal double FastX;
 			internal double Roll;
-			internal ObjectManager.Damping RollDamping;
+			internal Damping RollDamping;
 			internal double SlowY;
 			internal double FastY;
 			internal double Pitch;
-			internal ObjectManager.Damping PitchDamping;
+			internal Damping PitchDamping;
 
 			internal void Update(double TimeElapsed) {
 			if (CameraRestriction == Camera.RestrictionMode.NotAvailable) {
@@ -323,7 +323,7 @@ namespace OpenBve {
 						Pitch = 0.1;
 					}
 					if (PitchDamping == null) {
-						PitchDamping = new ObjectManager.Damping(6.0, 0.3);
+						PitchDamping = new Damping(6.0, 0.3);
 					}
 					PitchDamping.Update(TimeElapsed, ref Pitch, true);
 				}
@@ -381,7 +381,7 @@ namespace OpenBve {
 					diffX = (double)Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
 					if (RollDamping == null) {
-						RollDamping = new ObjectManager.Damping(6.0, 0.3);
+						RollDamping = new Damping(6.0, 0.3);
 					}
 					RollDamping.Update(TimeElapsed, ref Roll, true);
 				}

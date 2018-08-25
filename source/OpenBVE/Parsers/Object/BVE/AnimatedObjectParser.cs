@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -634,13 +635,13 @@ namespace OpenBve
 																switch (a.ToLowerInvariant())
 																{
 																	case "rotatexdamping":
-																		Result.Objects[ObjectCount].RotateXDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateXDamping = new Damping(nf, dr);
 																		break;
 																	case "rotateydamping":
-																		Result.Objects[ObjectCount].RotateYDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateYDamping = new Damping(nf, dr);
 																		break;
 																	case "rotatezdamping":
-																		Result.Objects[ObjectCount].RotateZDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateZDamping = new Damping(nf, dr);
 																		break;
 																}
 															}

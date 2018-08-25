@@ -152,7 +152,6 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.Damping.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
@@ -185,7 +184,7 @@
     <Compile Include="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-	<Compile Include="Graphics\HUD\HUD.Transitions.cs">
+    <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Background.cs" />
@@ -480,7 +479,6 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
-    
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

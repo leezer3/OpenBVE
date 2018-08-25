@@ -23,8 +23,6 @@ namespace OpenBve {
 		// system
 		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
-		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
-		internal const ProgramType CurrentProgramType = ProgramType.RouteViewer;
 
 		internal static bool CpuReducedMode = false;
 		internal static bool CpuAutomaticMode = true;

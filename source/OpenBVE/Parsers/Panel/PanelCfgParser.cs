@@ -997,7 +997,7 @@ namespace OpenBve {
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time 0.000277777777777778 * floor 0.523598775598298 *");
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new ObjectManager.Damping(20.0, 0.4);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
 									}
 									{ // minute
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
@@ -1014,7 +1014,7 @@ namespace OpenBve {
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time 0.0166666666666667 * floor 0.10471975511966 *");
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new ObjectManager.Damping(20.0, 0.4);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
 									}
 									{ // second
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
@@ -1031,7 +1031,7 @@ namespace OpenBve {
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time floor 0.10471975511966 *");
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new ObjectManager.Damping(20.0, 0.4);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
 									}
 								} break;
 								// brakeindicator

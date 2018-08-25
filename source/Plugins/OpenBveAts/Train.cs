@@ -13,57 +13,26 @@ namespace Plugin {
 		
 		/// <summary>Represents handles that can only be read from.</summary>
 		internal class ReadOnlyHandles {
-			// --- members ---
-			/// <summary>The reverser position.</summary>
-			private int MyReverser;
-			/// <summary>The power notch.</summary>
-			private int MyPowerNotch;
-			/// <summary>The brake notch.</summary>
-			private int MyBrakeNotch;
-			/// <summary>The loco brake notch.</summary>
-			private int MyLocoBrakeNotch;
-			/// <summary>Whether the const speed system is enabled.</summary>
-			private bool MyConstSpeed;
 			// --- properties ---
 			/// <summary>Gets or sets the reverser position.</summary>
-			internal int Reverser {
-				get {
-					return this.MyReverser;
-				}
-			}
+			internal int Reverser { get; }
 			/// <summary>Gets or sets the power notch.</summary>
-			internal int PowerNotch {
-				get {
-					return this.MyPowerNotch;
-				}
-			}
+			internal int PowerNotch { get; }
 			/// <summary>Gets or sets the brake notch.</summary>
-			internal int BrakeNotch {
-				get {
-					return this.MyBrakeNotch;
-				}
-			}
+			internal int BrakeNotch { get; }
 			/// <summary>Gets or sets the brake notch.</summary>
-			internal int LocoBrakeNotch {
-				get {
-					return this.MyLocoBrakeNotch;
-				}
-			}
+			internal int LocoBrakeNotch { get; }
 			/// <summary>Gets or sets whether the const speed system is enabled.</summary>
-			internal bool ConstSpeed {
-				get {
-					return this.MyConstSpeed;
-				}
-			}
+			internal bool ConstSpeed { get; }
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="handles">The handles</param>
 			internal ReadOnlyHandles(Handles handles) {
-				this.MyReverser = handles.Reverser;
-				this.MyPowerNotch = handles.PowerNotch;
-				this.MyBrakeNotch = handles.BrakeNotch;
-				this.MyConstSpeed = handles.ConstSpeed;
-				this.MyLocoBrakeNotch = handles.LocoBrakeNotch;
+				this.Reverser = handles.Reverser;
+				this.PowerNotch = handles.PowerNotch;
+				this.BrakeNotch = handles.BrakeNotch;
+				this.ConstSpeed = handles.ConstSpeed;
+				this.LocoBrakeNotch = handles.LocoBrakeNotch;
 			}
 		}
 		

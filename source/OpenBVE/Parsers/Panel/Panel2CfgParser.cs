@@ -586,7 +586,7 @@ namespace OpenBve {
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
 										if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0) {
-											Train.Cars[Car].CarSections[0].Elements[j].RotateZDamping = new ObjectManager.Damping(NaturalFrequency, DampingRatio);
+											Train.Cars[Car].CarSections[0].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 										}
 										Train.Cars[Car].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
 										if (Backstop)

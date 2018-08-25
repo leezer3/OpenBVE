@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Hosts.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Objects\Damping.cs" />
     <Compile Include="Orientation3.cs" />
     <Compile Include="Packages.cs" />
     <Compile Include="Packages.Database.cs" />

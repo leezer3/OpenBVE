@@ -32,45 +32,7 @@ namespace OpenBve {
 		internal static double LastUpdatedTrackPosition = 0.0;
 
 		// animated objects
-		internal class Damping {
-			internal double NaturalFrequency;
-			internal double NaturalTime;
-			internal double DampingRatio;
-			internal double NaturalDampingFrequency;
-			internal double OriginalAngle;
-			internal double OriginalDerivative;
-			internal double TargetAngle;
-			internal double CurrentAngle;
-			internal double CurrentValue;
-			internal double CurrentTimeDelta;
-			internal Damping(double NaturalFrequency, double DampingRatio) {
-				if (NaturalFrequency < 0.0) {
-					throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
-				} else if (DampingRatio < 0.0) {
-					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
-				} else {
-					this.NaturalFrequency = NaturalFrequency;
-					this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-					this.DampingRatio = DampingRatio;
-					if (DampingRatio < 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-					} else if (DampingRatio == 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency;
-					} else {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-					}
-					this.OriginalAngle = 0.0;
-					this.OriginalDerivative = 0.0;
-					this.TargetAngle = 0.0;
-					this.CurrentAngle = 0.0;
-					this.CurrentValue = 1.0;
-					this.CurrentTimeDelta = 0.0;
-				}
-			}
-			internal Damping Clone() {
-				return (Damping)this.MemberwiseClone();
-			}
-		}
+		
 		internal struct AnimatedObjectState {
 			internal Vector3 Position;
 			internal ObjectManager.StaticObject Object;
@@ -280,7 +242,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateXFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateXDamping, TimeElapsed, ref a);
+				Object.RotateXDamping.Update(TimeElapsed, ref a, true);
 				cosX = Math.Cos(a);
 				sinX = Math.Sin(a);
 			} else {
@@ -294,7 +256,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateYFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateYDamping, TimeElapsed, ref a);
+				Object.RotateYDamping.Update(TimeElapsed, ref a, true);
 				cosY = Math.Cos(a);
 				sinY = Math.Sin(a);
 			} else {
@@ -308,7 +270,7 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateZFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateZDamping, TimeElapsed, ref a);
+				Object.RotateZDamping.Update(TimeElapsed, ref a, true);
 				cosZ = Math.Cos(a);
 				sinZ = Math.Sin(a);
 			} else {
@@ -606,62 +568,6 @@ namespace OpenBve {
 					}
 				} else {
 					Renderer.HideObject(i);
-				}
-			}
-		}
-
-		// update damping
-		internal static void UpdateDamping(ref Damping Damping, double TimeElapsed, ref double Angle) {
-			if (TimeElapsed < 0.0) {
-				TimeElapsed = 0.0;
-			} else if (TimeElapsed > 1.0) {
-				TimeElapsed = 1.0;
-			}
-			if (Damping != null) {
-				if (Damping.CurrentTimeDelta > Damping.NaturalTime) {
-					// update
-					double newDerivative;
-					if (Damping.NaturalFrequency == 0.0) {
-						newDerivative = 0.0;
-					} else if (Damping.DampingRatio == 0.0) {
-						newDerivative = Damping.OriginalDerivative * Math.Cos(Damping.NaturalFrequency * Damping.CurrentTimeDelta) - Damping.NaturalFrequency * Math.Sin(Damping.NaturalFrequency * Damping.CurrentTimeDelta);
-					} else if (Damping.DampingRatio < 1.0) {
-						newDerivative = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.NaturalDampingFrequency * Damping.OriginalDerivative * Math.Cos(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) - (Damping.NaturalDampingFrequency * Damping.NaturalDampingFrequency + Damping.DampingRatio * Damping.NaturalFrequency * (Damping.DampingRatio * Damping.NaturalFrequency + Damping.OriginalDerivative)) * Math.Sin(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta)) / Damping.NaturalDampingFrequency;
-					} else if (Damping.DampingRatio == 1.0) {
-						newDerivative = Math.Exp(-Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.OriginalDerivative - Damping.NaturalFrequency * (Damping.NaturalFrequency + Damping.OriginalDerivative) * Damping.CurrentTimeDelta);
-					} else {
-						newDerivative = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.NaturalDampingFrequency * Damping.OriginalDerivative * Math.Cosh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + (Damping.NaturalDampingFrequency * Damping.NaturalDampingFrequency - Damping.DampingRatio * Damping.NaturalFrequency * (Damping.DampingRatio * Damping.NaturalFrequency + Damping.OriginalDerivative)) * Math.Sinh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta)) / Damping.NaturalDampingFrequency;
-					}
-					double a = Damping.TargetAngle - Damping.OriginalAngle;
-					Damping.OriginalAngle = Damping.CurrentAngle;
-					Damping.TargetAngle = Angle;
-					double b = Damping.TargetAngle - Damping.OriginalAngle;
-					double r = b == 0.0 ? 1.0 : a / b;
-					Damping.OriginalDerivative = newDerivative * r;
-					if (Damping.NaturalTime > 0.0) {
-						Damping.CurrentTimeDelta = Damping.CurrentTimeDelta % Damping.NaturalTime;
-					}
-				}
-				{
-					// perform
-					double newValue;
-					if (Damping.NaturalFrequency == 0.0) {
-						newValue = 1.0;
-					} else if (Damping.DampingRatio == 0.0) {
-						newValue = Math.Cos(Damping.NaturalFrequency * Damping.CurrentTimeDelta) + Damping.OriginalDerivative * Math.Sin(Damping.NaturalFrequency * Damping.CurrentTimeDelta) / Damping.NaturalFrequency;
-					} else if (Damping.DampingRatio < 1.0) {
-						double n = (Damping.OriginalDerivative + Damping.NaturalFrequency * Damping.DampingRatio) / Damping.NaturalDampingFrequency;
-						newValue = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Math.Cos(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + n * Math.Sin(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta));
-					} else if (Damping.DampingRatio == 1.0) {
-						newValue = Math.Exp(-Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (1.0 + (Damping.OriginalDerivative + Damping.NaturalFrequency) * Damping.CurrentTimeDelta);
-					} else {
-						double n = (Damping.OriginalDerivative + Damping.NaturalFrequency * Damping.DampingRatio) / Damping.NaturalDampingFrequency;
-						newValue = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Math.Cosh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + n * Math.Sinh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta));
-					}
-					Damping.CurrentValue = newValue;
-					Damping.CurrentAngle = Damping.TargetAngle * (1.0 - newValue) + Damping.OriginalAngle * newValue;
-					Damping.CurrentTimeDelta += TimeElapsed;
-					Angle = Damping.CurrentAngle;
 				}
 			}
 		}
