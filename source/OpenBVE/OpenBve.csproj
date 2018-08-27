@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -173,10 +173,7 @@
     <Compile Include="Game\TrackManager\TrackManager.cs" />
     <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
-    <Compile Include="Graphics\Camera.cs" />
-    <Compile Include="Graphics\Camera.CameraRestriction.cs">
-      <DependentUpon>Camera.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Graphics\Camera.CameraRestriction.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>

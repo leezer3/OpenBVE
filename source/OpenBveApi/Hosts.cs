@@ -1,5 +1,4 @@
-﻿using OpenBveApi.Objects;
-using OpenBveApi.Sounds;
+﻿using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 
 namespace OpenBveApi.Hosts {

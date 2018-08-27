@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Game.cs for the Route Viewer                                ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -13,15 +13,7 @@ namespace OpenBve {
 	internal static class Game {
 
 		// random numbers
-		internal static Random Generator = new Random();
-
-		// game mode
-		internal enum GameMode {
-			Arcade = 0,
-			Normal = 1,
-			Expert = 2
-		}
-		internal static GameMode CurrentMode = GameMode.Normal;
+		internal static readonly Random Generator = new Random();
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
