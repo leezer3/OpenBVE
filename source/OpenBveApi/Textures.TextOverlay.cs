@@ -24,7 +24,7 @@ namespace OpenBveApi.Textures
 				bitmap = new Bitmap(1024, 1024);
 				overlay = false;
 			}
-			using (Graphics graphics = Graphics.FromImage(bitmap))
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap))
 			{
 				Font font = new Font(fontname, fontsize);
 				size = graphics.MeasureString(txt, font);

@@ -13,6 +13,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
+using OpenBveApi.Graphics;
 
 namespace OpenBve
 {

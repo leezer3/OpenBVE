@@ -8,6 +8,7 @@
 using System;
 using System.Drawing;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;

@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve

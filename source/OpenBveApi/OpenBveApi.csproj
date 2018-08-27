@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Colors.cs">
     </Compile>
+    <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Objects\Damping.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Vector3.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"

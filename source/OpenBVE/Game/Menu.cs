@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;             // for Key
 using System;
@@ -124,7 +125,7 @@ namespace OpenBve
 			/********************
 				MENU FIELDS
 			*********************/
-			public readonly Renderer.TextAlignment Align;
+			public readonly TextAlignment Align;
 			public readonly MenuEntry[] Items = { };
 			public readonly int ItemWidth = 0;
 			public readonly int Width = 0;
@@ -142,7 +143,7 @@ namespace OpenBve
 				int jump = 0;
 				Size size;
 
-				Align = Renderer.TextAlignment.TopMiddle;
+				Align = TextAlignment.TopMiddle;
 				Height = Width = 0;
 				Selection = 0;                      // defaults to first menu item
 				switch (menuType)
@@ -195,7 +196,7 @@ namespace OpenBve
 								}
 								menuItem++;
 							}
-						Align = Renderer.TextAlignment.TopLeft;
+						Align = TextAlignment.TopLeft;
 						break;
 
 					case MenuType.ExitToMainMenu:
@@ -221,7 +222,7 @@ namespace OpenBve
 						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 							Items[i + 1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
-						Align = Renderer.TextAlignment.TopLeft;
+						Align = TextAlignment.TopLeft;
 						break;
 
 					case MenuType.Control:
@@ -732,7 +733,7 @@ namespace OpenBve
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
 			int itemLeft = (Screen.Width - menu.ItemWidth) / 2; // item left edge
 																// if menu alignment is left, left-align items, otherwise centre them in the screen
-			int itemX = (menu.Align & Renderer.TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
+			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
 
 			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
