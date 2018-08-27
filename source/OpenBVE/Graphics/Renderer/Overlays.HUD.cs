@@ -605,6 +605,10 @@ namespace OpenBve
 					{
 						i = TrainManager.PlayerTrain.LastStation + 1;
 					}
+					if (i > Game.Stations.Length - 1)
+					{
+						i = TrainManager.PlayerTrain.LastStation;
+					}
 					int n = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
 					double p0 = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[0].FrontAxle.Position + 0.5 * TrainManager.PlayerTrain.Cars[0].Length;
 					double p1 = Game.Stations[i].Stops[n].TrackPosition;
