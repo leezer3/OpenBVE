@@ -1605,6 +1605,20 @@ namespace OpenBve
 											if ((int)Renderer.OptionGradient >= 4) Renderer.OptionGradient = 0;
 										}
 										break;
+									case Interface.Command.MiscDistanceToNextStation:
+										if (Interface.CurrentOptions.GameMode == Interface.GameMode.Expert)
+										{
+											Game.AddMessage(
+												Interface.GetInterfaceString("notification_notavailableexpert"),
+												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
+										}
+										else
+										{
+											Renderer.OptionDistanceToNextStation++;
+											if ((int)Renderer.OptionDistanceToNextStation >= 3) Renderer.OptionDistanceToNextStation = 0;
+										}
+										break;
 									case Interface.Command.MiscFps:
 										// fps
 										Renderer.OptionFrameRates = !Renderer.OptionFrameRates;

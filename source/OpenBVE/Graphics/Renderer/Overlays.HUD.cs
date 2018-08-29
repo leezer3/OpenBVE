@@ -595,6 +595,77 @@ namespace OpenBve
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
+				case "dist_next_station":
+					int i;
+					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+					{
+					i = TrainManager.PlayerTrain.LastStation;
+					}
+					else
+					{
+						i = TrainManager.PlayerTrain.LastStation + 1;
+					}
+					if (i > Game.Stations.Length - 1)
+					{
+						i = TrainManager.PlayerTrain.LastStation;
+					}
+					int n = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
+					double p0 = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[0].FrontAxle.Position + 0.5 * TrainManager.PlayerTrain.Cars[0].Length;
+					double p1 = Game.Stations[i].Stops[n].TrackPosition;
+					double m = p1 - p0;
+					if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
+					{
+						if (Game.PlayerStopsAtStation(i))
+						{
+							t = "Stop: ";
+							if (Math.Abs(m) <= 10.0)
+							{
+								t += m.ToString("0.00", Culture) + " m";
+							}
+							else
+							{
+								m /= 1000.0;
+								t += m.ToString("0.000", Culture) + " km";
+							}
+						}
+						else
+						{
+							m /= 1000.0;
+							t = "Pass: " + m.ToString("0.000", Culture) + " km";
+						}
+						Element.TransitionState -= speed * TimeElapsed;
+						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+					}
+					else if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
+					{
+						m /= 1609.34;
+						if (Game.PlayerStopsAtStation(i))
+						{
+							t = "Stop: ";
+						}
+						else
+						{
+							t = "Pass: ";
+						}
+						t += m.ToString("0.0000", Culture) + " miles";
+						Element.TransitionState -= speed * TimeElapsed;
+						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+					}
+					else
+					{
+						m /= 1609.34;
+						if (Game.PlayerStopsAtStation(i))
+						{
+							t = "Stop: ";
+						}
+						else
+						{
+							t = "Pass: ";
+						}
+						t += m.ToString("0.0000", Culture) + " miles";
+						Element.TransitionState += speed * TimeElapsed;
+						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+					} break;
 				case "fps":
 					int fps = (int)Math.Round(Game.InfoFrameRate);
 					t = fps.ToString(Culture) + " fps";
