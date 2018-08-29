@@ -133,7 +133,6 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			//const double invdeg = 57.295779513082320877;
 			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -242,8 +241,6 @@ namespace OpenBve {
 		internal static MouseState currentMouseState;
 		internal static MouseState previousMouseState;
 
-		internal static bool buttonDown = false;
-
 		internal static void MouseMovement()
 		{
 			if (MouseButton == 0)
@@ -339,7 +336,7 @@ namespace OpenBve {
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = "CSV/RW files|*.csv;*.rw|All files|*";
+					Dialog.Filter = @"CSV/RW files|*.csv;*.rw|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();

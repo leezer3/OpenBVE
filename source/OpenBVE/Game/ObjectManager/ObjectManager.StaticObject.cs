@@ -355,7 +355,7 @@ namespace OpenBve
 					}
 					if (AccurateObjectDisposal)
 					{
-						World.Rotate(ref Mesh.Vertices[j].Coordinates.X, ref Mesh.Vertices[j].Coordinates.Y, ref Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
+						Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
 						if (Mesh.Vertices[j].Coordinates.Z < StartingDistance)
 						{
 							StartingDistance = (float)Mesh.Vertices[j].Coordinates.Z;
@@ -366,8 +366,8 @@ namespace OpenBve
 						}
 						Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
 					}
-					World.Rotate(ref Mesh.Vertices[j].Coordinates.X, ref Mesh.Vertices[j].Coordinates.Y, ref Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
-					World.Rotate(ref Mesh.Vertices[j].Coordinates.X, ref Mesh.Vertices[j].Coordinates.Y, ref Mesh.Vertices[j].Coordinates.Z, BaseTransformation);
+					Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
+					Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
 					Mesh.Vertices[j].Coordinates.X += Position.X;
 					Mesh.Vertices[j].Coordinates.Y += Position.Y;
 					Mesh.Vertices[j].Coordinates.Z += Position.Z;
@@ -392,8 +392,8 @@ namespace OpenBve
 						double nz = Mesh.Faces[j].Vertices[k].Normal.Z;
 						if (nx * nx + ny * ny + nz * nz != 0.0)
 						{
-							World.Rotate(ref Mesh.Faces[j].Vertices[k].Normal.X, ref Mesh.Faces[j].Vertices[k].Normal.Y, ref Mesh.Faces[j].Vertices[k].Normal.Z, AuxTransformation);
-							World.Rotate(ref Mesh.Faces[j].Vertices[k].Normal.X, ref Mesh.Faces[j].Vertices[k].Normal.Y, ref Mesh.Faces[j].Vertices[k].Normal.Z, BaseTransformation);
+							Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
+							Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
 						}
 					}
 				}
