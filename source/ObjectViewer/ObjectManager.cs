@@ -871,7 +871,10 @@ namespace OpenBve
                 {
                     a = Object.RotateXFunction.LastResult;
                 }
-                Object.RotateXDamping.Update(TimeElapsed, ref a, true);
+				if (Object.RotateXDamping != null)
+	            {
+		            Object.RotateXDamping.Update(TimeElapsed, ref a, true);
+	            }
                 cosX = Math.Cos(a);
                 sinX = Math.Sin(a);
             }
@@ -891,7 +894,10 @@ namespace OpenBve
                 {
                     a = Object.RotateYFunction.LastResult;
                 }
-                Object.RotateYDamping.Update(TimeElapsed, ref a, true);
+				if (Object.RotateYDamping != null)
+	            {
+		            Object.RotateYDamping.Update(TimeElapsed, ref a, true);
+	            }
                 cosY = Math.Cos(a);
                 sinY = Math.Sin(a);
             }
@@ -911,7 +917,10 @@ namespace OpenBve
                 {
                     a = Object.RotateZFunction.LastResult;
                 }
-                Object.RotateZDamping.Update(TimeElapsed, ref a, true);
+				if (Object.RotateZDamping != null)
+	            {
+		            Object.RotateZDamping.Update(TimeElapsed, ref a, true);
+	            }
                 cosZ = Math.Cos(a);
                 sinZ = Math.Sin(a);
             }

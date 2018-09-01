@@ -2961,6 +2961,7 @@ namespace OpenBve {
 								case "train.velocity":
 								case "train.acceleration":
 								case "train.station":
+								case "train.destination":
 								case "structure.rail":
 								case "structure.beacon":
 								case "structure.pole":
