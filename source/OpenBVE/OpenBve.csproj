@@ -84,22 +84,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSScriptLibrary">
-      <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
+      <HintPath>..\..\dependencies\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\NUniversalCharDet.dll</HintPath>
+      <HintPath>..\..\dependencies\NUniversalCharDet.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpCompress.dll</HintPath>
+      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
