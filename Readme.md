@@ -48,13 +48,13 @@ Project Source Code on GitHub: https://github.com/leezer3/OpenBVE
 
 **Discussion Boards**:
 
-- [BVE Worldwide](http://bveworldwide.unlimitedboard.com)
+- [BVE Worldwide](http://bveworldwide.forumotion.com)
 - [BVE-Terminus](http://www.bve-terminus.org/forum)
 - [UKTrainsim](http://forums.uktrainsim.com/viewforum.php?f=66)
 
 **Official Project Forum:**
 
-http://bveworldwide.unlimitedboard.com/f14-the-sim-in-time-general-discussion
+http://bveworldwide.forumotion.com/f14-the-sim-in-time-general-discussion
 
 ### License
 
