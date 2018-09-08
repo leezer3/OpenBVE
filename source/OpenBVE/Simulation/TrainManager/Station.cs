@@ -243,31 +243,55 @@ namespace OpenBve
 				}
 				else if (Train.StationState == TrainStopState.Boarding)
 				{
-					//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
-					//e.g. Change ends
-					if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].Type == StationType.Normal)
+					for (int j = 0; j < Train.Cars.Length; j++)
 					{
-						//Check the interlock state for the doors
-						switch (Train.Specs.DoorInterlockState)
+						if (GetDoorsState(Train, j, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) == (TrainDoorState.Opened | TrainDoorState.AllOpened))
 						{
-							case DoorInterlockStates.Unlocked:
-								AttemptToCloseDoors(Train);
-								break;
-							case DoorInterlockStates.Left:
-								if (Game.Stations[i].OpenLeftDoors)
+							//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
+							//e.g. Change ends
+							if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].Type == StationType.Normal)
+							{
+								//Check the interlock state for the doors
+								switch (Train.Specs.DoorInterlockState)
 								{
-									AttemptToCloseDoors(Train);
+									case DoorInterlockStates.Unlocked:
+										AttemptToCloseDoors(Train);
+										break;
+									case DoorInterlockStates.Left:
+										if (Game.Stations[i].OpenLeftDoors)
+										{
+											AttemptToCloseDoors(Train);
+										}
+										break;
+									case DoorInterlockStates.Right:
+										if (Game.Stations[i].OpenRightDoors)
+										{
+											AttemptToCloseDoors(Train);
+										}
+										break;
+									case DoorInterlockStates.Locked:
+										//All doors are currently locked, do nothing
+										break;
 								}
-								break;
-							case DoorInterlockStates.Right:
-								if (Game.Stations[i].OpenRightDoors)
+
+								if (Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & Train.Specs.DoorClosureAttempted)
 								{
-									AttemptToCloseDoors(Train);
+									if (Game.Stations[i].OpenLeftDoors && !Train.Cars[j].Doors[0].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < Game.Stations[i].ReopenDoor)
+									{
+										Train.Cars[j].Doors[0].AnticipatedReopen = true;
+										Train.Cars[j].Doors[0].ReopenLimit = Program.RandomNumberGenerator.Next(1, Game.Stations[i].ReopenStationLimit);
+										Train.Cars[j].Doors[0].ReopenCounter = 0;
+										Train.Cars[j].Doors[0].InterferencingObjectRate = Program.RandomNumberGenerator.Next(1, Game.Stations[i].MaxInterferencingObjectRate) * 0.01;
+									}
+									if (Game.Stations[i].OpenRightDoors && !Train.Cars[j].Doors[1].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < Game.Stations[i].ReopenDoor)
+									{
+										Train.Cars[j].Doors[1].AnticipatedReopen = true;
+										Train.Cars[j].Doors[1].ReopenLimit = Program.RandomNumberGenerator.Next(1, Game.Stations[i].ReopenStationLimit);
+										Train.Cars[j].Doors[1].ReopenCounter = 0;
+										Train.Cars[j].Doors[1].InterferencingObjectRate = Program.RandomNumberGenerator.Next(1, Game.Stations[i].MaxInterferencingObjectRate) * 0.01;
+									}
 								}
-								break;
-							case DoorInterlockStates.Locked:
-								//All doors are currently locked, do nothing
-								break;
+							}
 						}
 					}
 					// detect departure
@@ -316,55 +340,6 @@ namespace OpenBve
 							right = false;
 						}
 					}
-					if (left | right)
-					{
-						// departure message
-						if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].Type != StationType.Terminal || Train != PlayerTrain))
-						{
-							Train.StationState = TrainStopState.Completed;
-							if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
-							{
-								if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
-								}
-								else
-								{
-									Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
-								}
-							}
-							else if (Game.Stations[i].Type == StationType.ChangeEnds)
-							{
-								//Game.AddMessage("CHANGE ENDS", MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
-								JumpTrain(Train, i + 1);
-							}
-						}
-						if (Interface.CurrentOptions.LoadingSway)
-						{
-							// passengers boarding
-							for (int j = 0; j < Train.Cars.Length; j++)
-							{
-								double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-								if (r >= Program.RandomNumberGenerator.NextDouble())
-								{
-									int d =
-										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Doors.Length);
-									if (Train.Cars[j].Doors[d].State == 1.0)
-									{
-										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Doors[d].Direction;
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						Train.StationState = TrainStopState.Completed;
-						if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
-						{
-							Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
-						}
-					}
 					// departure sound
 					if (!Train.StationDepartureSoundPlayed)
 					{
@@ -376,6 +351,97 @@ namespace OpenBve
 							{
 								Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
 								Train.StationDepartureSoundPlayed = true;
+							}
+						}
+					}
+					for (int j = 0; j < Train.Cars.Length; j++)
+					{
+						if (Train.Cars[j].Doors[0].AnticipatedReopen && Train.Cars[j].Doors[0].State == Train.Cars[j].Doors[0].InterferencingObjectRate)
+						{
+							if (Train.Cars[j].Doors[0].InterferenceInDoorTime == 0.0)
+							{
+								Train.Cars[j].Doors[0].InterferenceInDoorTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
+							}
+							else if (Train.Cars[j].Doors[0].ReopenCounter < Train.Cars[j].Doors[0].ReopenLimit)
+							{
+								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[0].InterferenceInDoorTime)
+								{
+									OpenTrainDoors(Train, j, true, false);
+								}
+							}
+							else
+							{
+								Train.Cars[j].Doors[0].AnticipatedReopen = false;
+							}
+						}
+						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[0].InterferencingObjectRate)
+						{
+							if (Train.Cars[j].Doors[1].InterferenceInDoorTime == 0.0)
+							{
+								Train.Cars[j].Doors[1].InterferenceInDoorTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
+							}
+							else if (Train.Cars[j].Doors[1].ReopenCounter < Train.Cars[j].Doors[1].ReopenLimit)
+							{
+								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[1].InterferenceInDoorTime)
+								{
+									OpenTrainDoors(Train, j, false, true);
+								}
+							}
+							else
+							{
+								Train.Cars[j].Doors[1].AnticipatedReopen = false;
+							}
+						}
+					}
+					if (GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) == (TrainDoorState.Closed | TrainDoorState.AllClosed))
+					{
+						if (left | right)
+						{
+							// departure message
+							if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].Type != StationType.Terminal || Train != PlayerTrain))
+							{
+								Train.StationState = TrainStopState.Completed;
+								if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
+								{
+									if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
+									{
+										Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
+									}
+									else
+									{
+										Game.AddMessage(Interface.GetInterfaceString("message_station_depart_closedoors"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
+									}
+								}
+								else if (Game.Stations[i].Type == StationType.ChangeEnds)
+								{
+									//Game.AddMessage("CHANGE ENDS", MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
+									JumpTrain(Train, i + 1);
+								}
+							}
+							if (Interface.CurrentOptions.LoadingSway)
+							{
+								// passengers boarding
+								for (int j = 0; j < Train.Cars.Length; j++)
+								{
+									double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
+									if (r >= Program.RandomNumberGenerator.NextDouble())
+									{
+										int d =
+											(int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Doors.Length);
+										if (Train.Cars[j].Doors[d].State == 1.0)
+										{
+											Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Doors[d].Direction;
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							Train.StationState = TrainStopState.Completed;
+							if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
+							{
+								Game.AddMessage(Interface.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 							}
 						}
 					}

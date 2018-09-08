@@ -25,6 +25,14 @@
 		public StationStopMode StopMode;
 		/// <summary>The type of this station</summary>
 		public StationType Type;
+		/// <summary>The incidence of reopening of the door</summary>
+		public double ReopenDoor;
+		/// <summary>The upper limit of the number of times reopen the door</summary>
+		public int ReopenStationLimit;
+		/// <summary>The duration of interference in the door</summary>
+		public double InterferenceInDoor;
+		/// <summary>The maximum width of the obstacle to the overall width of the door</summary>
+		public int MaxInterferencingObjectRate;
 
 		/// <summary>Creates a new station with default (empty) values</summary>
 		public Station()

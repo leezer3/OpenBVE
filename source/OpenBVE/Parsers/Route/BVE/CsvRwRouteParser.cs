@@ -3968,6 +3968,50 @@ namespace OpenBve {
 												}
 											}
 										}
+										double reopenDoor = 0.0;
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 13 && Arguments[12].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[12], out reopenDoor)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenDoor = 0.0;
+											} else if (reopenDoor < 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenDoor = 0.0;
+											}
+										}
+										int reopenStationLimit = 5;
+										if(!PreviewOnly)
+										{
+											if (Arguments.Length >= 14 && Arguments[13].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[13], out reopenStationLimit)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenStationLimit = 5;
+											} else if (reopenStationLimit < 0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenStationLimit = 0;
+											}
+										}
+										double interferenceInDoor = Program.RandomNumberGenerator.NextDouble() * 30.0;
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 15 && Arguments[14].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[14], out interferenceInDoor)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												interferenceInDoor = Program.RandomNumberGenerator.NextDouble() * 30.0;
+											} else if (interferenceInDoor < 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												interferenceInDoor = 0.0;
+											}
+										}
+										int maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferencingObjectRate)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											} else if (maxInterferencingObjectRate <= 0 || maxInterferencingObjectRate >= 100) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											}
+										}
 										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
@@ -3985,6 +4029,10 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
 										Game.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Game.Stations[CurrentStation].ReopenDoor = 0.01 * reopenDoor;
+										Game.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
+										Game.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
+										Game.Stations[CurrentStation].MaxInterferencingObjectRate = maxInterferencingObjectRate;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 										CurrentStop = -1;
@@ -4097,6 +4145,10 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = null;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = null;
 										Game.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Game.Stations[CurrentStation].ReopenDoor = 0.0;
+										Game.Stations[CurrentStation].ReopenStationLimit = 0;
+										Game.Stations[CurrentStation].InterferenceInDoor = 0.0;
+										Game.Stations[CurrentStation].MaxInterferencingObjectRate = 10;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = false;
 										CurrentStop = -1;
