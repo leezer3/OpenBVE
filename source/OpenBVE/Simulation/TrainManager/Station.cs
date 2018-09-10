@@ -249,7 +249,7 @@ namespace OpenBve
 						{
 							//Check whether all doors are controlled by the driver, and whether this is a non-standard station type
 							//e.g. Change ends
-							if (Train.Specs.DoorOpenMode != DoorMode.Manual & Game.Stations[i].Type == StationType.Normal)
+							if (Train.Specs.DoorCloseMode != DoorMode.Manual & Game.Stations[i].Type == StationType.Normal)
 							{
 								//Check the interlock state for the doors
 								switch (Train.Specs.DoorInterlockState)
@@ -393,7 +393,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) == (TrainDoorState.Closed | TrainDoorState.AllClosed))
+					if (Train.Specs.DoorCloseMode == DoorMode.Manual || GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) == (TrainDoorState.Closed | TrainDoorState.AllClosed))
 					{
 						if (left | right)
 						{
