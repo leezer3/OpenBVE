@@ -30,7 +30,7 @@ namespace OpenBve
 			/// <summary>The upper limit of the number of times reopen the door</summary>
 			internal int ReopenLimit;
 			/// <summary>The duration of interference in the door</summary>
-			internal double InterferenceInDoorTime;
+			internal double NextReopenTime;
 			/// <summary>Ratio that width of the obstacle to the overall width of the door</summary>
 			internal double InterferencingObjectRate;
 		}
@@ -325,7 +325,7 @@ namespace OpenBve
 			{
 				if (Train.Cars[CarIndex].Doors[i].AnticipatedOpen)
 				{
-					Train.Cars[CarIndex].Doors[i].InterferenceInDoorTime = 0.0;
+					Train.Cars[CarIndex].Doors[i].NextReopenTime = 0.0;
 					Train.Cars[CarIndex].Doors[i].ReopenCounter++;
 				}
 			}

@@ -364,13 +364,13 @@ namespace OpenBve
 					{
 						if (Train.Cars[j].Doors[0].AnticipatedReopen && Train.Cars[j].Doors[0].State == Train.Cars[j].Doors[0].InterferencingObjectRate)
 						{
-							if (Train.Cars[j].Doors[0].InterferenceInDoorTime == 0.0)
+							if (Train.Cars[j].Doors[0].NextReopenTime == 0.0)
 							{
-								Train.Cars[j].Doors[0].InterferenceInDoorTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
+								Train.Cars[j].Doors[0].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].NextReopen;
 							}
 							else if (Train.Cars[j].Doors[0].ReopenCounter < Train.Cars[j].Doors[0].ReopenLimit)
 							{
-								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[0].InterferenceInDoorTime)
+								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[0].NextReopenTime)
 								{
 									OpenTrainDoors(Train, j, true, false);
 								}
@@ -382,13 +382,13 @@ namespace OpenBve
 						}
 						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[0].InterferencingObjectRate)
 						{
-							if (Train.Cars[j].Doors[1].InterferenceInDoorTime == 0.0)
+							if (Train.Cars[j].Doors[1].NextReopenTime == 0.0)
 							{
-								Train.Cars[j].Doors[1].InterferenceInDoorTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
+								Train.Cars[j].Doors[1].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].NextReopen;
 							}
 							else if (Train.Cars[j].Doors[1].ReopenCounter < Train.Cars[j].Doors[1].ReopenLimit)
 							{
-								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[1].InterferenceInDoorTime)
+								if (Game.SecondsSinceMidnight >= Train.Cars[j].Doors[1].NextReopenTime)
 								{
 									OpenTrainDoors(Train, j, false, true);
 								}
