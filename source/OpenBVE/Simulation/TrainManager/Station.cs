@@ -366,7 +366,7 @@ namespace OpenBve
 						{
 							if (Train.Cars[j].Doors[0].NextReopenTime == 0.0)
 							{
-								Train.Cars[j].Doors[0].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].NextReopenTime;
+								Train.Cars[j].Doors[0].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
 							}
 							else if (Train.Cars[j].Doors[0].ReopenCounter < Train.Cars[j].Doors[0].ReopenLimit)
 							{
@@ -384,7 +384,7 @@ namespace OpenBve
 						{
 							if (Train.Cars[j].Doors[1].NextReopenTime == 0.0)
 							{
-								Train.Cars[j].Doors[1].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].NextReopenTime;
+								Train.Cars[j].Doors[1].NextReopenTime = Game.SecondsSinceMidnight + Game.Stations[i].InterferenceInDoor;
 							}
 							else if (Train.Cars[j].Doors[1].ReopenCounter < Train.Cars[j].Doors[1].ReopenLimit)
 							{
