@@ -278,17 +278,23 @@ namespace OpenBve
 								{
 									if (Game.Stations[i].OpenLeftDoors && !Train.Cars[j].Doors[0].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < Game.Stations[i].ReopenDoor)
 									{
-										Train.Cars[j].Doors[0].AnticipatedReopen = true;
 										Train.Cars[j].Doors[0].ReopenLimit = Program.RandomNumberGenerator.Next(1, Game.Stations[i].ReopenStationLimit);
 										Train.Cars[j].Doors[0].ReopenCounter = 0;
 										Train.Cars[j].Doors[0].InterferencingObjectRate = Program.RandomNumberGenerator.Next(1, Game.Stations[i].MaxInterferencingObjectRate) * 0.01;
+										if (Train.Cars[j].Doors[0].InterferencingObjectRate * Train.Specs.DoorWidth >= Train.Specs.DoorMaxTolerance)
+										{
+											Train.Cars[j].Doors[0].AnticipatedReopen = true;
+										}
 									}
 									if (Game.Stations[i].OpenRightDoors && !Train.Cars[j].Doors[1].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < Game.Stations[i].ReopenDoor)
 									{
-										Train.Cars[j].Doors[1].AnticipatedReopen = true;
 										Train.Cars[j].Doors[1].ReopenLimit = Program.RandomNumberGenerator.Next(1, Game.Stations[i].ReopenStationLimit);
 										Train.Cars[j].Doors[1].ReopenCounter = 0;
 										Train.Cars[j].Doors[1].InterferencingObjectRate = Program.RandomNumberGenerator.Next(1, Game.Stations[i].MaxInterferencingObjectRate) * 0.01;
+										if (Train.Cars[j].Doors[1].InterferencingObjectRate * Train.Specs.DoorWidth >= Train.Specs.DoorMaxTolerance)
+										{
+											Train.Cars[j].Doors[1].AnticipatedReopen = true;
+										}
 									}
 								}
 							}

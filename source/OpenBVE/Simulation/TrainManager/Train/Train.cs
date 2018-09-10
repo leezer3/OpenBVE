@@ -72,6 +72,8 @@ namespace OpenBve
 				Specs.PassAlarm = PassAlarmType.None;
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
+				Specs.DoorWidth = 1000.0;
+				Specs.DoorMaxTolerance = 0.0;
 			}
 
 			internal void Initialize()
