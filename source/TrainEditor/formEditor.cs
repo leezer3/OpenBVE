@@ -1686,21 +1686,21 @@ namespace TrainEditor {
 		    Label l = new Label
 		    {
 		     Location = new Point(140, currentPosition + 3),
-		     Text = "Notch " + (object) index
+		     Text = Interface.GetInterfaceString("editor_delay_notch") + " " + (object) index
 		    };
 		    formDelay.Controls.Add(l);
 		    currentPosition += 25;
 	    }
 		Button buttonOK = new Button
 	    {
-		    Text = "Save",
+		    Text = Interface.GetInterfaceString("editor_delay_save"),
 		    DialogResult = DialogResult.OK,
 		    Location = new Point(30, currentPosition)
 	    };
         formDelay.Controls.Add(buttonOK);
 	    Button buttonCancel = new Button
 	    {
-		    Text = "Cancel",
+		    Text = Interface.GetInterfaceString("editor_delay_cancel"),
 		    DialogResult = DialogResult.Cancel,
 		    Location = new Point(110, currentPosition)
 	    };
