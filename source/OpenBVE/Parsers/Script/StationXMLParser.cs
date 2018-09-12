@@ -336,6 +336,7 @@ namespace OpenBve
 										if (!double.TryParse(c.InnerText, out reopenDoor))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor is invalid in XML file " + fileName);
+											reopenDoor = 0.0;
 										}
 										else
 										{
@@ -344,14 +345,15 @@ namespace OpenBve
 												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor must be non-negative in XML file " + fileName);
 												reopenDoor = 0.0;
 											}
-											station.ReopenDoor = 0.01 * reopenDoor;
 										}
+										station.ReopenDoor = 0.01 * reopenDoor;
 										break;
 									case "reopenstationlimit":
 										int reopenStationLimit;
 										if (!int.TryParse(c.InnerText, out reopenStationLimit))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit is invalid in XML file " + fileName);
+											reopenStationLimit = 5;
 										}
 										else
 										{
@@ -360,14 +362,15 @@ namespace OpenBve
 												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit must be non-negative in XML file " + fileName);
 												reopenStationLimit = 0;
 											}
-											station.ReopenStationLimit = reopenStationLimit;
 										}
+										station.ReopenStationLimit = reopenStationLimit;
 										break;
 									case "interferenceindoor":
 										double interferenceInDoor;
 										if (!double.TryParse(c.InnerText, out interferenceInDoor))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor is invalid in XML file " + fileName);
+											interferenceInDoor = 0.0;
 										}
 										else
 										{
@@ -376,14 +379,15 @@ namespace OpenBve
 												Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor must be non-negative in XML file " + fileName);
 												interferenceInDoor = 0.0;
 											}
-											station.InterferenceInDoor = interferenceInDoor;
 										}
+										station.InterferenceInDoor = interferenceInDoor;
 										break;
 									case "maxinterferencingobjectrate":
 										int maxInterferencingObjectRate;
 										if (!int.TryParse(c.InnerText, out maxInterferencingObjectRate))
 										{
 											Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is invalid in XML file " + fileName);
+											maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 										}
 										else
 										{
@@ -392,8 +396,8 @@ namespace OpenBve
 												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate must be positive, less than 100 in XML file " + fileName);
 												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 											}
-											station.MaxInterferencingObjectRate = maxInterferencingObjectRate;
 										}
+										station.MaxInterferencingObjectRate = maxInterferencingObjectRate;
 										break;
 									case "requeststop":
 										station.Type = StationType.RequestStop;
