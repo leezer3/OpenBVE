@@ -217,6 +217,8 @@
 			this.pictureboxMotorB1 = new System.Windows.Forms.PictureBox();
 			this.pictureboxMotorB2 = new System.Windows.Forms.PictureBox();
 			this.tabPageExtended = new System.Windows.Forms.TabPage();
+			this.groupBoxLanguage = new System.Windows.Forms.GroupBox();
+			this.comboboxLanguages = new System.Windows.Forms.ComboBox();
 			this.groupBoxMisc = new System.Windows.Forms.GroupBox();
 			this.comboBoxEBHandleBehaviour = new System.Windows.Forms.ComboBox();
 			this.labelEBHandleBehaviour = new System.Windows.Forms.Label();
@@ -280,6 +282,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).BeginInit();
 			this.tabPageExtended.SuspendLayout();
+			this.groupBoxLanguage.SuspendLayout();
 			this.groupBoxMisc.SuspendLayout();
 			this.groupBoxLocoBrake.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).BeginInit();
@@ -2446,6 +2449,7 @@
 			// 
 			// tabPageExtended
 			// 
+			this.tabPageExtended.Controls.Add(this.groupBoxLanguage);
 			this.tabPageExtended.Controls.Add(this.groupBoxMisc);
 			this.tabPageExtended.Controls.Add(this.groupBoxLocoBrake);
 			this.tabPageExtended.Controls.Add(this.labelMinVersion);
@@ -2457,12 +2461,32 @@
 			this.tabPageExtended.TabIndex = 4;
 			this.tabPageExtended.Text = "Extended Features";
 			this.tabPageExtended.UseVisualStyleBackColor = true;
-			// 
+			//
+			// groupBoxLanguage
+			//
+			this.groupBoxLanguage.Controls.Add(this.comboboxLanguages);
+			this.groupBoxLanguage.Location = new System.Drawing.Point(295, 195);
+			this.groupBoxLanguage.Name = "groupBoxLanguage";
+			this.groupBoxLanguage.Size = new System.Drawing.Size(339, 50);
+			this.groupBoxLanguage.TabIndex = 4;
+			this.groupBoxLanguage.TabStop = false;
+			this.groupBoxLanguage.Text = "Language";
+			//
+			// comboboxLanguages
+			//
+			this.comboboxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboboxLanguages.FormattingEnabled = true;
+			this.comboboxLanguages.Location = new System.Drawing.Point(139, 18);
+			this.comboboxLanguages.Name = "comboboxLanguages";
+			this.comboboxLanguages.Size = new System.Drawing.Size(194, 20);
+			this.comboboxLanguages.TabIndex = 0;
+			this.comboboxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboboxLanguages_SelectedIndexChanged);
+			//
 			// groupBoxMisc
 			// 
 			this.groupBoxMisc.Controls.Add(this.comboBoxEBHandleBehaviour);
 			this.groupBoxMisc.Controls.Add(this.labelEBHandleBehaviour);
-			this.groupBoxMisc.Location = new System.Drawing.Point(295, 58);
+			this.groupBoxMisc.Location = new System.Drawing.Point(295, 55);
 			this.groupBoxMisc.Name = "groupBoxMisc";
 			this.groupBoxMisc.Size = new System.Drawing.Size(339, 131);
 			this.groupBoxMisc.TabIndex = 3;
@@ -2805,6 +2829,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxMotorB2)).EndInit();
 			this.tabPageExtended.ResumeLayout(false);
 			this.tabPageExtended.PerformLayout();
+			this.groupBoxLanguage.ResumeLayout(false);
 			this.groupBoxMisc.ResumeLayout(false);
 			this.groupBoxMisc.PerformLayout();
 			this.groupBoxLocoBrake.ResumeLayout(false);
@@ -3036,6 +3061,8 @@
 		private System.Windows.Forms.Label labelEBHandleBehaviour;
 		private System.Windows.Forms.ComboBox comboBoxLocoBrakeSystemType;
 		private System.Windows.Forms.Label labelLocoBrakeSystemType;
+		private System.Windows.Forms.GroupBox groupBoxLanguage;
+		private System.Windows.Forms.ComboBox comboboxLanguages;
 	}
 }
 

@@ -15,7 +15,10 @@ namespace TrainEditor {
 		private TrainEditor.TrainDat.Train Train = new TrainDat.Train();
 		private string FileName = null;
 
-		
+		private string[] LanguageFiles = new string[0];
+		private string CurrentLanguageCode = "en-US";
+
+
 		// ----------------------------------------
 		// form loading / closing                 |
 		// ----------------------------------------
@@ -66,11 +69,41 @@ namespace TrainEditor {
 			}
 			comboboxSoundIndex.SelectedIndex = 0;
 			LoadControlContent();
+			ListLanguages();
+			// language
+			{
+				string Exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
+				Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
+				Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
+				#if !DEBUG
+				try
+				{
+					#endif
+					string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
+					Interface.LoadLanguage(File);
+					ApplyLanguage();
+					for (int j = 0; j < LanguageFiles.Length; j++)
+					{
+						if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0)
+						{
+							comboboxLanguages.SelectedIndex = j;
+							break;
+						}
+					}
+					#if !DEBUG
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				#endif
+			}
 		}
 
 		// form closing
 		private void FormEditorFormClosing(object sender, FormClosingEventArgs e) {
-			switch (MessageBox.Show("Do you want to save data before closing?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Interface.GetInterfaceString("editor_close_message"), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (SaveControlContent()) {
 						if (buttonSave.Enabled) {
@@ -190,7 +223,7 @@ namespace TrainEditor {
 			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
 			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
-				MessageBox.Show("BrakeNotches must be at least 1 if HoldBrake is set.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Interface.GetInterfaceString("editor_handle_brake_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
 				numericUpDownBrakeNotches.Focus();
 				return false;
@@ -208,14 +241,14 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxTrailerCarMass, "TrailerCarMass", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.TrailerCarMass)) return false;
 			if (!SaveControlContent(textboxNumberOfTrailerCars, "NumberOfTrailerCars", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Car.NumberOfTrailerCars)) return false;
 			if (Train.Car.NumberOfTrailerCars == 0 & !checkboxFrontCarIsMotorCar.Checked) {
-				MessageBox.Show("NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Interface.GetInterfaceString("editor_car_number_of_trailer_cars_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesTwo;
 				textboxNumberOfTrailerCars.SelectAll();
 				textboxNumberOfTrailerCars.Focus();
 				return false;
 			}
 			if (Train.Cab.DriverCar >= Train.Car.NumberOfMotorCars + Train.Car.NumberOfTrailerCars) {
-				MessageBox.Show("DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Interface.GetInterfaceString("editor_cab_driver_car_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesTwo;
 				textboxDriverCar.SelectAll();
 				textboxDriverCar.Focus();
@@ -347,7 +380,7 @@ namespace TrainEditor {
 		
 		// new
 		private void ButtonNewClick(object sender, EventArgs e) {
-			switch (MessageBox.Show("Do you want to save data before creating a new train?", "New", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Interface.GetInterfaceString("editor_new_message"), "New", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (buttonSave.Enabled) {
 						ButtonSaveClick(null, null);
@@ -371,7 +404,7 @@ namespace TrainEditor {
 		
 		// open
 		private void ButtonOpenClick(object sender, EventArgs e) {
-			switch (MessageBox.Show("Do you want to save data before opening another train?", "Open", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Interface.GetInterfaceString("editor_open_message"), "Open", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (buttonSave.Enabled) {
 						ButtonSaveClick(null, null);
@@ -1200,8 +1233,8 @@ namespace TrainEditor {
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			labelMotorInfo.Text =
 				"X = #" + ((int)Math.Floor(5.0 * (double)MotorHoverX)).ToString(culture) + " (" + MotorHoverX.ToString("0.00", culture) + " km/h)\n\n" +
-				"Ypitch = " + MotorHoverYPitch.ToString("0.00", culture) + "\n" +
-				"yvolume = " + MotorHoverYVolume.ToString("0.00", culture) + " (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + "%)";
+				Interface.GetInterfaceString("editor_motor_y_pitch") + " = " + MotorHoverYPitch.ToString("0.00", culture) + "\n" +
+				Interface.GetInterfaceString("editor_motor_y_volume") + " = " + MotorHoverYVolume.ToString("0.00", culture) + " (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + "%)";
 		}
 		private void MotorMouseUp(MouseEventArgs e, TrainDat.Motor Motor, PictureBox Box) {
 			if (MotorSelectionBox != null) {
@@ -1380,24 +1413,245 @@ namespace TrainEditor {
 			return 3.6 * a;
 		}
 
+		// language
+		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
+			if (this.Tag != null) return;
+			int i = comboboxLanguages.SelectedIndex;
+			if (i >= 0 & i < LanguageFiles.Length) {
+				string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
+				#if !DEBUG
+				try {
+					#endif
+					Interface.CurrentLanguageCode = Interface.AvailableLangauges[i].LanguageCode;
+					#if !DEBUG
+				} catch (Exception ex) {
+					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+				#endif
+				#if !DEBUG
+				try {
+					#endif
+					CurrentLanguageCode = Code;
+					#if !DEBUG
+				} catch { }
+				#endif
+				ApplyLanguage();
+			}
+		}
+
+		// list languages
+		private void ListLanguages() {
+			string Exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
+			string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
+			Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
+			Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
+			if (System.IO.Directory.Exists(Folder)) {
+				string[] Files = System.IO.Directory.GetFiles(Folder);
+				string[] LanguageFilesPath = System.IO.Directory.GetFiles(Folder, "*.cfg");
+				foreach (var File in LanguageFilesPath) {
+					Interface.AddLanguage(File);
+				}
+				string[] LanguageNames = new string[Files.Length];
+				LanguageFiles = new string[Files.Length];
+				int n = 0;
+				for (int i = 0; i < Files.Length; i++) {
+					string Title = System.IO.Path.GetFileName(Files[i]);
+					if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) {
+						string Code = Title.Substring(0, Title.Length - 4);
+						string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
+						string Section = "";
+						string languageName = Code;
+						for (int j = 0; j < Lines.Length; j++) {
+							Lines[j] = Lines[j].Trim();
+							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
+								Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
+							} else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
+								int k = Lines[j].IndexOf('=');
+								if (k >= 0) {
+									string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
+									string Value = Lines[j].Substring(k + 1).TrimStart();
+									if (Section == "language" & Key == "name") {
+										languageName = Value;
+										break;
+									}
+								}
+							}
+						}
+						LanguageFiles[n] = Files[i];
+						LanguageNames[n] = languageName;
+						n++;
+					}
+				}
+				Array.Resize<string>(ref LanguageFiles, n);
+				Array.Resize<string>(ref LanguageNames, n);
+				Array.Sort<string, string>(LanguageNames, LanguageFiles);
+				comboboxLanguages.Items.Clear();
+				//Load all available languages
+				for (int i = 0; i < Interface.AvailableLangauges.Count; i++) {
+					comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
+				}
+			} else {
+				LanguageFiles = new string[] { };
+				comboboxLanguages.Items.Clear();
+			}
+		}
+
+		/// <summary>This function is called to change the display language of the program</summary>
+		private void ApplyLanguage() {
+			Interface.SetInGameLanguage(Interface.CurrentLanguageCode);
+			buttonNew.Text = Interface.GetInterfaceString("editor_new");
+			buttonOpen.Text = Interface.GetInterfaceString("editor_open");
+			buttonSave.Text = Interface.GetInterfaceString("editor_save");
+			buttonSaveAs.Text = Interface.GetInterfaceString("editor_save_as");
+			buttonClose.Text = Interface.GetInterfaceString("editor_close");
+
+			tabpagePropertiesOne.Text = Interface.GetInterfaceString("editor_properties_one");
+			tabpagePropertiesTwo.Text = Interface.GetInterfaceString("editor_properties_two");
+			tabpageAcceleration.Text = Interface.GetInterfaceString("editor_acceleration");
+			tabpageMotor.Text = Interface.GetInterfaceString("editor_motor_sound");
+			tabPageExtended.Text = Interface.GetInterfaceString("editor_extended_features");
+
+			groupboxPerformance.Text = Interface.GetInterfaceString("editor_performance");
+			labelDeceleration.Text = Interface.GetInterfaceString("editor_performance_deceleration");
+			labelCoefficientOfStaticFriction.Text = Interface.GetInterfaceString("editor_performance_static_friction");
+			labelCoefficientOfRollingResistance.Text = Interface.GetInterfaceString("editor_performance_rolling_resistance");
+			labelAerodynamicDragCoefficient.Text = Interface.GetInterfaceString("editor_performance_aerodynamic_drag");
+
+			groupboxDelay.Text = Interface.GetInterfaceString("editor_delay");
+			labelDelayPowerUp.Text = Interface.GetInterfaceString("editor_delay_power_up") + ":";
+			labelDelayPowerDown.Text = Interface.GetInterfaceString("editor_delay_power_down") + ":";
+			labelDelayBrakeUp.Text = Interface.GetInterfaceString("editor_delay_brake_up") + ":";
+			labelDelayBrakeDown.Text = Interface.GetInterfaceString("editor_delay_brake_down") + ":";
+			buttonSetDelayPowerUp.Text = Interface.GetInterfaceString("editor_delay_set");
+			buttonSetDelayPowerDown.Text = Interface.GetInterfaceString("editor_delay_set");
+			buttonSetDelayBrakeUp.Text = Interface.GetInterfaceString("editor_delay_set");
+			buttonSetDelayBrakeDown.Text = Interface.GetInterfaceString("editor_delay_set");
+
+			groupboxMove.Text = Interface.GetInterfaceString("editor_move");
+			labelJerkPowerUp.Text = Interface.GetInterfaceString("editor_move_jerk_power_up");
+			labelJerkPowerDown.Text = Interface.GetInterfaceString("editor_move_jerk_power_down");
+			labelJerkBrakeUp.Text = Interface.GetInterfaceString("editor_move_jerk_brake_up");
+			labelJerkBrakeDown.Text = Interface.GetInterfaceString("editor_move_jerk_brake_down");
+			labelBrakeCylinderUp.Text = Interface.GetInterfaceString("editor_move_brake_cylinder_up");
+			labelBrakeCylinderDown.Text = Interface.GetInterfaceString("editor_move_brake_cylinder_down");
+
+			groupboxBrake.Text = Interface.GetInterfaceString("editor_brake");
+			labelBrakeType.Text = Interface.GetInterfaceString("editor_brake_type");
+			labelBrakeControlSystem.Text = Interface.GetInterfaceString("editor_brake_control_system");
+			labelBrakeControlSpeed.Text = Interface.GetInterfaceString("editor_brake_control_speed");
+			comboboxBrakeType.Items[0] = Interface.GetInterfaceString("editor_brake_smee");
+			comboboxBrakeType.Items[1] = Interface.GetInterfaceString("editor_brake_ecb");
+			comboboxBrakeType.Items[2] = Interface.GetInterfaceString("editor_brake_cl");
+			comboboxBrakeControlSystem.Items[0] = Interface.GetInterfaceString("editor_brake_control_system_none");
+			comboboxBrakeControlSystem.Items[1] = Interface.GetInterfaceString("editor_brake_lock_out_valve");
+			comboboxBrakeControlSystem.Items[2] = Interface.GetInterfaceString("editor_brake_delay_including_control");
+
+			groupboxPressure.Text = Interface.GetInterfaceString("editor_pressure");
+			labelBrakeCylinderServiceMaximumPressure.Text = Interface.GetInterfaceString("editor_pressure_brake_cylinder_service_max");
+			labelBrakeCylinderEmergencyMaximumPressure.Text = Interface.GetInterfaceString("editor_pressure_brake_cylinder_emergency_max");
+			labelMainReservoirMinimumPressure.Text = Interface.GetInterfaceString("editor_pressure_main_reservoir_min");
+			labelMainReservoirMaximumPressure.Text = Interface.GetInterfaceString("editor_pressure_main_reservoir_max");
+			labelBrakePipeNormalPressure.Text = Interface.GetInterfaceString("editor_pressure_brake_pipe_normal");
+
+			groupboxHandle.Text = Interface.GetInterfaceString("editor_handle");
+			labelHandleType.Text = Interface.GetInterfaceString("editor_handle_type");
+			labelPowerNotches.Text = Interface.GetInterfaceString("editor_handle_power_notches");
+			labelBrakeNotches.Text = Interface.GetInterfaceString("editor_handle_brake_notches");
+			labelPowerNotchReduceSteps.Text = Interface.GetInterfaceString("editor_handle_power_notch_reduce_steps");
+			comboboxHandleType.Items[0] = Interface.GetInterfaceString("editor_handle_separated");
+			comboboxHandleType.Items[1] = Interface.GetInterfaceString("editor_handle_combined");
+
+			groupboxCab.Text = Interface.GetInterfaceString("editor_cab");
+			labelDriverCar.Text = Interface.GetInterfaceString("editor_cab_driver_car");
+
+			groupboxCar.Text = Interface.GetInterfaceString("editor_car");
+			labelMotorCarMass.Text = Interface.GetInterfaceString("editor_car_motor_car_mass");
+			labelNumberOfMotorCars.Text = Interface.GetInterfaceString("editor_car_number_of_motor_cars");
+			labelTrailerCarMass.Text = Interface.GetInterfaceString("editor_car_trailer_car_mass");
+			labelNumberOfTrailerCars.Text = Interface.GetInterfaceString("editor_car_number_of_trailer_cars");
+			labelLengthOfACar.Text = Interface.GetInterfaceString("editor_car_length_of_a_car");
+			labelFrontCarIsMotorCar.Text = Interface.GetInterfaceString("editor_car_front_car_is_motor_car");
+			labelWidthOfACar.Text = Interface.GetInterfaceString("editor_car_width_of_a_car");
+			labelHeightOfACar.Text = Interface.GetInterfaceString("editor_car_height_of_a_car");
+			labelCenterOfGravityHeight.Text = Interface.GetInterfaceString("editor_car_center_of_gravity_height");
+			labelExposedFrontalArea.Text = Interface.GetInterfaceString("editor_car_exposed_frontal_area");
+			labelUnexposedFrontalArea.Text = Interface.GetInterfaceString("editor_car_unexposed_frontal_area");
+
+			groupboxDevice.Text = Interface.GetInterfaceString("editor_device");
+			labelConstSpeed.Text = Interface.GetInterfaceString("editor_device_const_speed");
+			labelHoldBrake.Text = Interface.GetInterfaceString("editor_device_hold_brake");
+			labelReAdhesionDevice.Text = Interface.GetInterfaceString("editor_device_readhesion_device");
+			labelPassAlarm.Text = Interface.GetInterfaceString("editor_device_pass_alarm");
+			labelDoorOpenMode.Text = Interface.GetInterfaceString("editor_device_door_open_mode");
+			labelDoorCloseMode.Text = Interface.GetInterfaceString("editor_device_door_close_mode");
+			comboboxAts.Items[0] = Interface.GetInterfaceString("editor_device_none");
+			comboboxAtc.Items[0] = Interface.GetInterfaceString("editor_device_none");
+			comboboxAtc.Items[1] = Interface.GetInterfaceString("editor_device_manual_switching");
+			comboboxAtc.Items[2] = Interface.GetInterfaceString("editor_device_automatic_switching");
+			comboboxReAdhesionDevice.Items[0] = Interface.GetInterfaceString("editor_device_none");
+			comboboxReAdhesionDevice.Items[1] = Interface.GetInterfaceString("editor_device_type_a");
+			comboboxReAdhesionDevice.Items[2] = Interface.GetInterfaceString("editor_device_type_b");
+			comboboxReAdhesionDevice.Items[3] = Interface.GetInterfaceString("editor_device_type_c");
+			comboboxReAdhesionDevice.Items[4] = Interface.GetInterfaceString("editor_device_type_d");
+			comboboxPassAlarm.Items[0] = Interface.GetInterfaceString("editor_device_none");
+			comboboxPassAlarm.Items[1] = Interface.GetInterfaceString("editor_device_single");
+			comboboxPassAlarm.Items[2] = Interface.GetInterfaceString("editor_device_looping");
+			comboboxDoorOpenMode.Items[0] = Interface.GetInterfaceString("editor_device_semi_automatic");
+			comboboxDoorOpenMode.Items[1] = Interface.GetInterfaceString("editor_device_automatic");
+			comboboxDoorOpenMode.Items[2] = Interface.GetInterfaceString("editor_device_manual");
+			comboboxDoorCloseMode.Items[0] = Interface.GetInterfaceString("editor_device_semi_automatic");
+			comboboxDoorCloseMode.Items[1] = Interface.GetInterfaceString("editor_device_automatic");
+			comboboxDoorCloseMode.Items[2] = Interface.GetInterfaceString("editor_device_manual");
+
+			labelAccelerationNotch.Text = Interface.GetInterfaceString("editor_acceleration_notch");
+			groupboxAccelerationData.Text = Interface.GetInterfaceString("editor_acceleration_data");
+			groupboxAccelerationPreview.Text = Interface.GetInterfaceString("editor_acceleration_preview");
+			checkboxAccelerationSubtractDeceleration.Text = Interface.GetInterfaceString("editor_acceleration_subtract_deceleration");
+			labelAccelerationMaxX.Text = Interface.GetInterfaceString("editor_acceleration_max_x");
+			labelAccelerationMaxY.Text = Interface.GetInterfaceString("editor_acceleration_max_y");
+
+			groupboxMotorEdit.Text = Interface.GetInterfaceString("editor_motor_edit");
+			radiobuttonSoundIndex.Text = Interface.GetInterfaceString("editor_motor_sound_index");
+			radiobuttonPitch.Text = Interface.GetInterfaceString("editor_motor_pitch");
+			radiobuttonVolume.Text = Interface.GetInterfaceString("editor_motor_volume");
+			comboboxSoundIndex.Items[0] = Interface.GetInterfaceString("editor_motor_sound_none");
+
+			groupboxMotorPreview.Text = Interface.GetInterfaceString("editor_motor_preview");
+			labelMotorInfo.Text =
+				"X: 0.00 km/h\n\n" +
+				Interface.GetInterfaceString("editor_motor_y_pitch") + ": 100.00 (100%)\n" +
+				Interface.GetInterfaceString("editor_motor_y_volume") + ": 128.00 (100%)";
+			labelMotorMinX.Text = Interface.GetInterfaceString("editor_motor_min_x");
+			labelMotorMaxX.Text = Interface.GetInterfaceString("editor_motor_max_x");
+			buttonMotorLeft.Text = Interface.GetInterfaceString("editor_motor_left");
+			buttonMotorRight.Text = Interface.GetInterfaceString("editor_motor_right");
+			buttonMotorIn.Text = Interface.GetInterfaceString("editor_motor_in");
+			buttonMotorOut.Text = Interface.GetInterfaceString("editor_motor_out");
+			labelMotorMaxYPitch.Text = Interface.GetInterfaceString("editor_motor_max_y_pitch");
+			labelMotorMaxYVolume.Text = Interface.GetInterfaceString("editor_motor_max_y_volume");
+
+			labelExtendedNote.Text = Interface.GetInterfaceString("editor_extended_note");
+			groupBoxLanguage.Text = Interface.GetInterfaceString("editor_extended_language");
+		}
+
 		private void buttonSetDelayPowerUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayPowerUp, "DelayPowerUp");
+			this.setDelay(ref this.Train.Delay.DelayPowerUp, Interface.GetInterfaceString("editor_delay_power_up"));
 		}
 
 		private void buttonSetDelayPowerDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayPowerDown, "DelayPowerDown");
+			this.setDelay(ref this.Train.Delay.DelayPowerDown, Interface.GetInterfaceString("editor_delay_power_down"));
 		}
 
 		private void buttonSetDelayBrakeUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayBrakeUp, "DelayBrakeUp");
+			this.setDelay(ref this.Train.Delay.DelayBrakeUp, Interface.GetInterfaceString("editor_delay_brake_up"));
 		}
 
 		private void buttonSetDelayBrakeDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayBrakeDown, "DelayBrakeDown");
+			this.setDelay(ref this.Train.Delay.DelayBrakeDown, Interface.GetInterfaceString("editor_delay_brake_down"));
 		}
 
 		private void buttonLocoBrakeDelayUp_Click(object sender, EventArgs e)
