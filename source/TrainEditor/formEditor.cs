@@ -1631,6 +1631,29 @@ namespace TrainEditor {
 			labelMotorMaxYVolume.Text = Interface.GetInterfaceString("editor_motor_max_y_volume");
 
 			labelExtendedNote.Text = Interface.GetInterfaceString("editor_extended_note");
+
+			groupBoxLocoBrake.Text = Interface.GetInterfaceString("editor_extended_loco_brake");
+			labelLocoBrakeSystemType.Text = Interface.GetInterfaceString("editor_extended_loco_brake_system_type");
+			labelLocoBrakeNotches.Text = Interface.GetInterfaceString("editor_extended_loco_brake_notches");
+			labelLocoBrakeDelayUp.Text = Interface.GetInterfaceString("editor_extended_loco_brake_delay_up");
+			labelLocoBrakeDelayDown.Text = Interface.GetInterfaceString("editor_extended_loco_brake_delay_down");
+			label2.Text = Interface.GetInterfaceString("editor_extended_loco_brake_type");
+			buttonLocoBrakeDelayUp.Text = Interface.GetInterfaceString("editor_extended_loco_brake_set");
+			buttonLocoBrakeDelayDown.Text = Interface.GetInterfaceString("editor_extended_loco_brake_set");
+			comboBoxLocoBrakeSystemType.Items[0] = Interface.GetInterfaceString("editor_extended_loco_brake_none");
+			comboBoxLocoBrakeSystemType.Items[1] = Interface.GetInterfaceString("editor_extended_loco_brake_notched_air_brake");
+			comboBoxLocoBrakeSystemType.Items[2] = Interface.GetInterfaceString("editor_extended_loco_brake_cl");
+			comboBoxLocoBrakeType.Items[0] = Interface.GetInterfaceString("editor_extended_loco_brake_combined");
+			comboBoxLocoBrakeType.Items[1] = Interface.GetInterfaceString("editor_extended_loco_brake_independant");
+			comboBoxLocoBrakeType.Items[2] = Interface.GetInterfaceString("editor_extended_loco_brake_blocking");
+
+			groupBoxMisc.Text = Interface.GetInterfaceString("editor_extended_misc");
+			labelEBHandleBehaviour.Text = Interface.GetInterfaceString("editor_extended_misc_eb");
+			comboBoxEBHandleBehaviour.Items[0] = Interface.GetInterfaceString("editor_extended_misc_eb_no");
+			comboBoxEBHandleBehaviour.Items[1] = Interface.GetInterfaceString("editor_extended_misc_eb_power");
+			comboBoxEBHandleBehaviour.Items[2] = Interface.GetInterfaceString("editor_extended_misc_eb_reverser");
+			comboBoxEBHandleBehaviour.Items[3] = Interface.GetInterfaceString("editor_extended_misc_eb_power_reverser");
+
 			groupBoxLanguage.Text = Interface.GetInterfaceString("editor_extended_language");
 		}
 
@@ -1656,12 +1679,12 @@ namespace TrainEditor {
 
 		private void buttonLocoBrakeDelayUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, "DelayLocoBrakeUp");
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, Interface.GetInterfaceString("editor_extended_delay_loco_brake_up"));
 		}
 
 		private void buttonLocoBrakeDelayDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, "DelayLocoBrakeDown");
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, Interface.GetInterfaceString("editor_extended_delay_loco_brake_down"));
 		}
 
 		private void setDelay(ref double[] delayValues, string delayType)
