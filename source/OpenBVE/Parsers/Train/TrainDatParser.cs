@@ -683,6 +683,22 @@ namespace OpenBve {
 												Interface.AddMessage(Interface.MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
+									case 10:
+										{
+											if (a >= 0.0) {
+												Train.Specs.DoorWidth = a;
+											} else {
+												Interface.AddMessage(Interface.MessageType.Error, false, "DoorWidth is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											} break;
+										}
+									case 11:
+										{
+											if (a >= 0.0) {
+												Train.Specs.DoorMaxTolerance = a;
+											} else {
+												Interface.AddMessage(Interface.MessageType.Error, false, "DoorMaxTolerance is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											} break;
+										}
 								}
 							} i++; n++;
 						} i--; break;

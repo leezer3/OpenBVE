@@ -23,6 +23,8 @@
 			internal DoorMode DoorCloseMode;
 			internal DoorInterlockStates DoorInterlockState;
 			internal bool DoorClosureAttempted;
+			internal double DoorWidth;
+			internal double DoorMaxTolerance;
 		}
 	}
 }
