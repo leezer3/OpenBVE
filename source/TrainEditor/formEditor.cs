@@ -188,6 +188,8 @@ namespace TrainEditor {
 			comboboxPassAlarm.SelectedIndex = (int)Train.Device.PassAlarm;
 			comboboxDoorOpenMode.SelectedIndex = (int)Train.Device.DoorOpenMode;
 			comboboxDoorCloseMode.SelectedIndex = (int)Train.Device.DoorCloseMode;
+			textboxDoorWidth.Text = Train.Device.DoorWidth.ToString(Culture);
+			textboxDoorMaxTolerance.Text = Train.Device.DoorMaxTolerance.ToString(Culture);
 			comboBoxEBHandleBehaviour.SelectedIndex = (int)Train.Handle.HandleBehaviour;
 			comboBoxLocoBrakeSystemType.SelectedIndex = (int) Train.Brake.LocoBrakeType;
 		}
@@ -271,6 +273,8 @@ namespace TrainEditor {
 			Train.Device.PassAlarm = (TrainDat.Device.PassAlarmModes)comboboxPassAlarm.SelectedIndex;
 			Train.Device.DoorOpenMode = (TrainDat.Device.DoorModes)comboboxDoorOpenMode.SelectedIndex;
 			Train.Device.DoorCloseMode = (TrainDat.Device.DoorModes)comboboxDoorCloseMode.SelectedIndex;
+			if (!SaveControlContent(textboxDoorWidth, "DoorWidth", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorWidth)) return false;
+			if (!SaveControlContent(textboxDoorMaxTolerance, "DoorMaxTolerance", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Device.DoorMaxTolerance)) return false;
 			// finish
 			return true;
 		}
@@ -1584,6 +1588,8 @@ namespace TrainEditor {
 			labelPassAlarm.Text = Interface.GetInterfaceString("editor_device_pass_alarm");
 			labelDoorOpenMode.Text = Interface.GetInterfaceString("editor_device_door_open_mode");
 			labelDoorCloseMode.Text = Interface.GetInterfaceString("editor_device_door_close_mode");
+			labelDoorWidth.Text = Interface.GetInterfaceString("editor_device_door_width");
+			labelDoorMaxTolerance.Text = Interface.GetInterfaceString("editor_device_door_max_tolerance");
 			comboboxAts.Items[0] = Interface.GetInterfaceString("editor_device_none");
 			comboboxAtc.Items[0] = Interface.GetInterfaceString("editor_device_none");
 			comboboxAtc.Items[1] = Interface.GetInterfaceString("editor_device_manual_switching");

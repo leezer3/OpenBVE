@@ -244,6 +244,12 @@
 			this.buttonNew = new System.Windows.Forms.Button();
 			this.pictureboxLogo = new System.Windows.Forms.PictureBox();
 			this.labelLineVertical = new System.Windows.Forms.Label();
+			this.textboxDoorMaxTolerance = new System.Windows.Forms.TextBox();
+			this.labelDoorMaxToleranceUnit = new System.Windows.Forms.Label();
+			this.labelDoorMaxTolerance = new System.Windows.Forms.Label();
+			this.textboxDoorWidth = new System.Windows.Forms.TextBox();
+			this.labelDoorWidthUnit = new System.Windows.Forms.Label();
+			this.labelDoorWidth = new System.Windows.Forms.Label();
 			this.tabcontrolTabs.SuspendLayout();
 			this.tabpagePropertiesOne.SuspendLayout();
 			this.groupboxPressure.SuspendLayout();
@@ -1561,6 +1567,12 @@
 			// 
 			// groupboxDevice
 			// 
+			this.groupboxDevice.Controls.Add(this.labelDoorMaxTolerance);
+			this.groupboxDevice.Controls.Add(this.labelDoorMaxToleranceUnit);
+			this.groupboxDevice.Controls.Add(this.textboxDoorMaxTolerance);
+			this.groupboxDevice.Controls.Add(this.labelDoorWidth);
+			this.groupboxDevice.Controls.Add(this.labelDoorWidthUnit);
+			this.groupboxDevice.Controls.Add(this.textboxDoorWidth);
 			this.groupboxDevice.Controls.Add(this.comboboxDoorCloseMode);
 			this.groupboxDevice.Controls.Add(this.labelDoorCloseMode);
 			this.groupboxDevice.Controls.Add(this.comboboxDoorOpenMode);
@@ -1581,7 +1593,7 @@
 			this.groupboxDevice.Controls.Add(this.labelAtc);
 			this.groupboxDevice.Location = new System.Drawing.Point(296, 8);
 			this.groupboxDevice.Name = "groupboxDevice";
-			this.groupboxDevice.Size = new System.Drawing.Size(336, 240);
+			this.groupboxDevice.Size = new System.Drawing.Size(336, 288);
 			this.groupboxDevice.TabIndex = 2;
 			this.groupboxDevice.TabStop = false;
 			this.groupboxDevice.Text = "Device";
@@ -2763,6 +2775,56 @@
 			this.labelLineVertical.Size = new System.Drawing.Size(2, 480);
 			this.labelLineVertical.TabIndex = 13;
 			// 
+			// textboxDoorWidth
+			//
+			this.textboxDoorWidth.Location = new System.Drawing.Point(168, 232);
+			this.textboxDoorWidth.Name = "textboxDoorWidth";
+			this.textboxDoorWidth.Size = new System.Drawing.Size(112, 20);
+			this.textboxDoorWidth.TabIndex = 18;
+			//
+			// labelDoorWidthUnit
+			//
+			this.labelDoorWidthUnit.Location = new System.Drawing.Point(280, 232);
+			this.labelDoorWidthUnit.Name = "labelDoorWidthUnit";
+			this.labelDoorWidthUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelDoorWidthUnit.TabIndex = 19;
+			this.labelDoorWidthUnit.Text = "mm";
+			this.labelDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// labelDoorWidth
+			//
+			this.labelDoorWidth.Location = new System.Drawing.Point(10, 232);
+			this.labelDoorWidth.Name = "labelDoorWidth";
+			this.labelDoorWidth.Size = new System.Drawing.Size(158, 16);
+			this.labelDoorWidth.TabIndex = 20;
+			this.labelDoorWidth.Text = "DoorWidth:";
+			this.labelDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			//
+			// textboxDoorMaxTolerance
+			//
+			this.textboxDoorMaxTolerance.Location = new System.Drawing.Point(168, 256);
+			this.textboxDoorMaxTolerance.Name = "textboxDoorMaxTolerance";
+			this.textboxDoorMaxTolerance.Size = new System.Drawing.Size(112, 20);
+			this.textboxDoorMaxTolerance.TabIndex = 21;
+			//
+			// labelDoorMaxToleranceUnit
+			//
+			this.labelDoorMaxToleranceUnit.Location = new System.Drawing.Point(280, 256);
+			this.labelDoorMaxToleranceUnit.Name = "labelDoorMaxToleranceUnit";
+			this.labelDoorMaxToleranceUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelDoorMaxToleranceUnit.TabIndex = 22;
+			this.labelDoorMaxToleranceUnit.Text = "mm";
+			this.labelDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// labelDoorMaxTolerance
+			//
+			this.labelDoorMaxTolerance.Location = new System.Drawing.Point(10, 256);
+			this.labelDoorMaxTolerance.Name = "labelDoorMaxTolerance";
+			this.labelDoorMaxTolerance.Size = new System.Drawing.Size(158, 16);
+			this.labelDoorMaxTolerance.TabIndex = 23;
+			this.labelDoorMaxTolerance.Text = "DoorMaxTolerance:";
+			this.labelDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			//
 			// formEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3063,6 +3125,12 @@
 		private System.Windows.Forms.Label labelLocoBrakeSystemType;
 		private System.Windows.Forms.GroupBox groupBoxLanguage;
 		private System.Windows.Forms.ComboBox comboboxLanguages;
+		private System.Windows.Forms.Label labelDoorWidth;
+		private System.Windows.Forms.Label labelDoorWidthUnit;
+		private System.Windows.Forms.TextBox textboxDoorWidth;
+		private System.Windows.Forms.Label labelDoorMaxTolerance;
+		private System.Windows.Forms.Label labelDoorMaxToleranceUnit;
+		private System.Windows.Forms.TextBox textboxDoorMaxTolerance;
 	}
 }
 
