@@ -18,7 +18,7 @@ namespace OpenBve {
 			TrainCars, TrainDestination,
 			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
 			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, FrontAxleCurveRadius, RearAxleCurveRadius, CurveCant, Pitch, Odometer, OdometerOfCar,
+			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar,
 			Doors, DoorsIndex,
 			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
 			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
@@ -437,7 +437,11 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
-                    case Instructions.CurveRadius:
+					case Instructions.CurveRadius:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+                    case Instructions.CurveRadiusOfCar:
                         if (Train == null)
                         {
                             Function.Stack[s - 1] = 0.0;
@@ -456,7 +460,11 @@ namespace OpenBve {
                             }
                         }
                         break;
-                    case Instructions.FrontAxleCurveRadius:
+					case Instructions.FrontAxleCurveRadius:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+                    case Instructions.FrontAxleCurveRadiusOfCar:
                         if (Train == null)
                         {
                             Function.Stack[s - 1] = 0.0;
@@ -475,7 +483,11 @@ namespace OpenBve {
                             }
                         }
                         break;
-                    case Instructions.RearAxleCurveRadius:
+					case Instructions.RearAxleCurveRadius:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+                    case Instructions.RearAxleCurveRadiusOfCar:
                         if (Train == null)
                         {
                             Function.Stack[s - 1] = 0.0;
@@ -494,7 +506,11 @@ namespace OpenBve {
                             }
                         }
                         break;
-                    case Instructions.CurveCant:
+					case Instructions.CurveCant:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+                    case Instructions.CurveCantOfCar:
                         if (Train == null)
                         {
                             Function.Stack[s - 1] = 0.0;
@@ -514,6 +530,10 @@ namespace OpenBve {
                         }
                         break;
 					case Instructions.Pitch:
+						Function.Stack[s] = 0.0;
+						s++;
+						break;
+					case Instructions.PitchOfCar:
 						if (Train == null)
 						{
 							Function.Stack[s - 1] = 0.0;
@@ -2484,20 +2504,50 @@ namespace OpenBve {
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainTrackDistanceToCar;
 							n++; break;
+						case "curveradius":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurveRadius;
+							n++; s++; if (s >= m) m = s; break;
                         case "curveradiusindex":
                             if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
                             if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-                            Result.Instructions[n] = Instructions.CurveRadius;
+                            Result.Instructions[n] = Instructions.CurveRadiusOfCar;
                             n++; break;
+						case "frontaxlecurveradius":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.FrontAxleCurveRadius;
+							n++; s++; if (s >= m) m = s; break;
+						case "frontaxlecurveradiusindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.FrontAxleCurveRadiusOfCar;
+							n++; break;
+						case "rearaxlecurveradius":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.RearAxleCurveRadius;
+							n++; s++; if (s >= m) m = s; break;
+						case "rearaxlecurveradiusindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.RearAxleCurveRadiusOfCar;
+							n++; break;
+						case "curvecant":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.CurveCant;
+							n++; s++; if (s >= m) m = s; break;
 						case "curvecantindex":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-							Result.Instructions[n] = Instructions.CurveCant;
+							Result.Instructions[n] = Instructions.CurveCantOfCar;
 							n++; break;
+						case "pitch":
+							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
+							Result.Instructions[n] = Instructions.Pitch;
+							n++; s++; if (s >= m) m = s; break;
 						case "pitchindex":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
-							Result.Instructions[n] = Instructions.Pitch;
+							Result.Instructions[n] = Instructions.PitchOfCar;
 							n++; break;
 						case "odometer":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
