@@ -32,7 +32,7 @@ namespace OpenBve
 			/// <summary>The duration of interference in the door</summary>
 			internal double NextReopenTime;
 			/// <summary>Ratio that width of the obstacle to the overall width of the door</summary>
-			internal double InterferencingObjectRate;
+			internal double InterferingObjectRate;
 		}
 
 		/// <summary>The states of the door lock.</summary>
@@ -129,9 +129,9 @@ namespace OpenBve
 							{
 								Train.Cars[i].Doors[j].State -= cs * TimeElapsed;
 							}
-							if (Train.Cars[i].Doors[j].AnticipatedReopen && Train.Cars[i].Doors[j].State < Train.Cars[i].Doors[j].InterferencingObjectRate)
+							if (Train.Cars[i].Doors[j].AnticipatedReopen && Train.Cars[i].Doors[j].State < Train.Cars[i].Doors[j].InterferingObjectRate)
 							{
-								Train.Cars[i].Doors[j].State = Train.Cars[i].Doors[j].InterferencingObjectRate;
+								Train.Cars[i].Doors[j].State = Train.Cars[i].Doors[j].InterferingObjectRate;
 							}
 							if (Train.Cars[i].Doors[j].State < 0.0)
 							{

@@ -32,7 +32,7 @@
 		/// <summary>The duration of interference in the door</summary>
 		public double InterferenceInDoor;
 		/// <summary>The maximum width of the obstacle to the overall width of the door</summary>
-		public int MaxInterferencingObjectRate;
+		public int MaxInterferingObjectRate;
 
 		/// <summary>Creates a new station with default (empty) values</summary>
 		public Station()

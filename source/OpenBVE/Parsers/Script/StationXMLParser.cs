@@ -382,22 +382,22 @@ namespace OpenBve
 										}
 										station.InterferenceInDoor = interferenceInDoor;
 										break;
-									case "maxinterferencingobjectrate":
-										int maxInterferencingObjectRate;
-										if (!int.TryParse(c.InnerText, out maxInterferencingObjectRate))
+									case "maxinterferingobjectrate":
+										int maxInterferingObjectRate;
+										if (!int.TryParse(c.InnerText, out maxInterferingObjectRate))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is invalid in XML file " + fileName);
-											maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate is invalid in XML file " + fileName);
+											maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 										}
 										else
 										{
-											if (maxInterferencingObjectRate <= 0 || maxInterferencingObjectRate >= 100)
+											if (maxInterferingObjectRate <= 0 || maxInterferingObjectRate >= 100)
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate must be positive, less than 100 in XML file " + fileName);
-												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate must be positive, less than 100 in XML file " + fileName);
+												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 											}
 										}
-										station.MaxInterferencingObjectRate = maxInterferencingObjectRate;
+										station.MaxInterferingObjectRate = maxInterferingObjectRate;
 										break;
 									case "requeststop":
 										station.Type = StationType.RequestStop;

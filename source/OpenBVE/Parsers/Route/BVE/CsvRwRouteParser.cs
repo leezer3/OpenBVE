@@ -4001,15 +4001,15 @@ namespace OpenBve {
 												interferenceInDoor = 0.0;
 											}
 										}
-										int maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+										int maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 										if (!PreviewOnly)
 										{
-											if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferencingObjectRate)) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
-											} else if (maxInterferencingObjectRate <= 0 || maxInterferencingObjectRate >= 100) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferencingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												maxInterferencingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferingObjectRate)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											} else if (maxInterferingObjectRate <= 0 || maxInterferingObjectRate >= 100) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 											}
 										}
 										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
@@ -4032,7 +4032,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].ReopenDoor = 0.01 * reopenDoor;
 										Game.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
 										Game.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
-										Game.Stations[CurrentStation].MaxInterferencingObjectRate = maxInterferencingObjectRate;
+										Game.Stations[CurrentStation].MaxInterferingObjectRate = maxInterferingObjectRate;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 										CurrentStop = -1;
@@ -4148,7 +4148,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].ReopenDoor = 0.0;
 										Game.Stations[CurrentStation].ReopenStationLimit = 0;
 										Game.Stations[CurrentStation].InterferenceInDoor = 0.0;
-										Game.Stations[CurrentStation].MaxInterferencingObjectRate = 10;
+										Game.Stations[CurrentStation].MaxInterferingObjectRate = 10;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = false;
 										CurrentStop = -1;
