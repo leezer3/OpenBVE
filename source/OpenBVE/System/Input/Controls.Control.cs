@@ -44,8 +44,8 @@ namespace OpenBve
         internal struct Control
         {
             /// <summary>The internal command which this control performs</summary>
-            internal Command Command;
-            internal CommandType InheritedType;
+            internal OpenBveTranslate.Interface.Command Command;
+            internal OpenBveTranslate.Interface.CommandType InheritedType;
             internal ControlMethod Method;
             internal KeyboardModifier Modifier;
             internal int Device;

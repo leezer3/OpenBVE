@@ -57,7 +57,7 @@ namespace OpenBve
 					}
 					catch
 					{
-						var currentError = Interface.GetInterfaceString("errors_critical_file");
+						var currentError = OpenBveTranslate.Interface.GetInterfaceString("errors_critical_file");
 						currentError = currentError.Replace("[file]", "panel.animated");
 						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						Program.RestartArguments = " ";
@@ -97,7 +97,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				var currentError = OpenBveTranslate.Interface.GetInterfaceString("errors_critical_file");
 				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
 				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Program.RestartArguments = " ";

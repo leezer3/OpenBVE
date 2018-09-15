@@ -284,11 +284,11 @@ namespace OpenBve
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
 										if (y > 1.0) y = 1.0;
-										int k = (int)Math.Floor(y * (double)Interface.RatingsCount);
-										if (k >= Interface.RatingsCount) k = Interface.RatingsCount - 1;
+										int k = (int)Math.Floor(y * (double)OpenBveTranslate.Interface.RatingsCount);
+										if (k >= OpenBveTranslate.Interface.RatingsCount) k = OpenBveTranslate.Interface.RatingsCount - 1;
 										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-										AddScore(Interface.GetInterfaceString("score_rating"), 20.0);
-										AddScore(Interface.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
+										AddScore(OpenBveTranslate.Interface.GetInterfaceString("score_rating"), 20.0);
+										AddScore(OpenBveTranslate.Interface.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
 									}
 								}
 							}

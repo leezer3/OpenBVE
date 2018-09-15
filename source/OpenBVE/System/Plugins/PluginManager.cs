@@ -143,7 +143,7 @@ namespace OpenBve {
 				 * 
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, OpenBveTranslate.Interface.CurrentLanguageCode, this.Train.Destination);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
@@ -514,7 +514,7 @@ namespace OpenBve {
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success == false)
 			{
-				Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+				Loading.PluginError = OpenBveTranslate.Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
 			}
 			else
 			{

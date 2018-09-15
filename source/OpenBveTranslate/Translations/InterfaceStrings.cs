@@ -127,27 +127,27 @@ namespace OpenBveTranslate
 			return Name;
 		}
 		/// <summary>The quick-reference strings displayed in-game</summary>
-		internal struct InterfaceQuickReference
+		public struct InterfaceQuickReference
 		{
-			internal string HandleForward;
-			internal string HandleNeutral;
-			internal string HandleBackward;
-			internal string HandlePower;
-			internal string HandlePowerNull;
-			internal string HandleBrake;
-			internal string HandleLocoBrake;
-			internal string HandleBrakeNull;
-			internal string HandleRelease;
-			internal string HandleLap;
-			internal string HandleService;
-			internal string HandleEmergency;
-			internal string HandleHoldBrake;
-			internal string DoorsLeft;
-			internal string DoorsRight;
-			internal string Score;
+			public string HandleForward;
+			public string HandleNeutral;
+			public string HandleBackward;
+			public string HandlePower;
+			public string HandlePowerNull;
+			public string HandleBrake;
+			public string HandleLocoBrake;
+			public string HandleBrakeNull;
+			public string HandleRelease;
+			public string HandleLap;
+			public string HandleService;
+			public string HandleEmergency;
+			public string HandleHoldBrake;
+			public string DoorsLeft;
+			public string DoorsRight;
+			public string Score;
 		}
-		internal static InterfaceQuickReference QuickReferences;
-		internal static int RatingsCount = 10;
+		public static InterfaceQuickReference QuickReferences;
+		public static int RatingsCount = 10;
 
 	}
 }

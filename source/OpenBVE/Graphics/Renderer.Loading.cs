@@ -154,7 +154,7 @@ namespace OpenBve {
 			double	routeProgress	= Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
 			double	trainProgress	= Math.Max(0.0, Math.Min(1.0, Loading.TrainProgress));
 			// draw progress message right above the second division
-			string	text			= Interface.GetInterfaceString(
+			string	text			= OpenBveTranslate.Interface.GetInterfaceString(
 				routeProgress < 1.0 ? "loading_loading_route" :
 				(trainProgress < 1.0 ? "loading_loading_train" : "message_loading") );
 			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6),

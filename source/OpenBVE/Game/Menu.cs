@@ -156,15 +156,15 @@ namespace OpenBve
 								break;
 							}
 						Items = new MenuEntry[4 + jump];
-						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
+						Items[0] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_resume"), MenuTag.BackToSim, 0);
 						if (jump > 0)
-							Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
+							Items[1] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_jump"), MenuTag.MenuJumpToStation, 0);
 						if (!Interface.CurrentOptions.KioskMode)
 						{
 							//Don't allow quitting or customisation of the controls in kiosk mode
-							Items[1 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
-							Items[2 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
-							Items[3 + jump] = new MenuCommand(Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
+							Items[1 + jump] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_exit"), MenuTag.MenuExitToMainMenu, 0);
+							Items[2 + jump] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_customize_controls"), MenuTag.MenuControls, 0);
+							Items[3 + jump] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_quit"), MenuTag.MenuQuit, 0);
 						}
 						else
 						{
@@ -181,7 +181,7 @@ namespace OpenBve
 						// list available stations, selecting the next station as predefined choice
 						jump = 0;                           // no jump found yet
 						Items = new MenuEntry[menuItem + 1];
-						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
+						Items[0] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						menuItem = 1;
 						for (i = 0; i < Game.Stations.Length; i++)
 							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
@@ -201,17 +201,17 @@ namespace OpenBve
 
 					case MenuType.ExitToMainMenu:
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption(Interface.GetInterfaceString("menu_exit_question"));
-						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.MenuBack, 0);
-						Items[2] = new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0);
+						Items[0] = new MenuCaption(OpenBveTranslate.Interface.GetInterfaceString("menu_exit_question"));
+						Items[1] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_exit_no"), MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0);
 						Selection = 1;
 						break;
 
 					case MenuType.Quit:         // ask for quit confirmation
 						Items = new MenuEntry[3];
-						Items[0] = new MenuCaption(Interface.GetInterfaceString("menu_quit_question"));
-						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.MenuBack, 0);
-						Items[2] = new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
+						Items[0] = new MenuCaption(OpenBveTranslate.Interface.GetInterfaceString("menu_quit_question"));
+						Items[1] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_quit_no"), MenuTag.MenuBack, 0);
+						Items[2] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
 						Selection = 1;
 						break;
 
@@ -219,7 +219,7 @@ namespace OpenBve
 						//Refresh the joystick list
 						Program.Joysticks.RefreshJoysticks();
 						Items = new MenuEntry[Interface.CurrentControls.Length + 1];
-						Items[0] = new MenuCommand(Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
+						Items[0] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						for (i = 0; i < Interface.CurrentControls.Length; i++)
 							Items[i + 1] = new MenuCommand(Interface.CurrentControls[i].Command.ToString(), MenuTag.Control, i);
 						Align = TextAlignment.TopLeft;
@@ -232,12 +232,12 @@ namespace OpenBve
 						Items = new MenuEntry[4];
 						// get code name and description
 						Interface.Control loadedControl = Interface.CurrentControls[data];
-						for (int h = 0; h < Interface.CommandInfos.Length; h++)
+						for (int h = 0; h < OpenBveTranslate.Interface.CommandInfos.Length; h++)
 						{
-							if (Interface.CommandInfos[h].Command == loadedControl.Command)
+							if (OpenBveTranslate.Interface.CommandInfos[h].Command == loadedControl.Command)
 							{
 								Items[0] = new MenuCommand(loadedControl.Command.ToString() + " - " +
-										Interface.CommandInfos[h].Description, MenuTag.None, 0);
+										OpenBveTranslate.Interface.CommandInfos[h].Description, MenuTag.None, 0);
 								break;
 							}
 						}
@@ -247,30 +247,30 @@ namespace OpenBve
 						{
 							case Interface.ControlMethod.Keyboard:
 								string keyName = loadedControl.Key.ToString();
-								for (int k = 0; k < Interface.TranslatedKeys.Length; k++)
+								for (int k = 0; k < OpenBveTranslate.Interface.TranslatedKeys.Length; k++)
 								{
-									if (Interface.TranslatedKeys[k].Key == loadedControl.Key)
+									if (OpenBveTranslate.Interface.TranslatedKeys[k].Key == loadedControl.Key)
 									{
-										keyName = Interface.TranslatedKeys[k].Description;
+										keyName = OpenBveTranslate.Interface.TranslatedKeys[k].Description;
 										break;
 									}
 								}
 								if (loadedControl.Modifier != Interface.KeyboardModifier.None)
 								{
-									str = Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
+									str = OpenBveTranslate.Interface.GetInterfaceString("menu_keyboard") + " [" + loadedControl.Modifier + "-" + keyName + "]";
 								}
 								else
 								{
-									str = Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
+									str = OpenBveTranslate.Interface.GetInterfaceString("menu_keyboard") + " [" + keyName + "]";
 								}
 								break;
 							case Interface.ControlMethod.Joystick:
-								str = Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
+								str = OpenBveTranslate.Interface.GetInterfaceString("menu_joystick") + " " + loadedControl.Device + " [" + loadedControl.Component + " " + loadedControl.Element + "]";
 								switch (loadedControl.Component)
 								{
 									case Interface.JoystickComponent.FullAxis:
 									case Interface.JoystickComponent.Axis:
-										str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
+										str += " " + (loadedControl.Direction == 1 ? OpenBveTranslate.Interface.GetInterfaceString("menu_joystickdirection_positive") : OpenBveTranslate.Interface.GetInterfaceString("menu_joystickdirection_negative"));
 										break;
 									//						case Interface.JoystickComponent.Button:	// NOTHING TO DO FOR THIS CASE!
 									//							str = str;
@@ -279,7 +279,7 @@ namespace OpenBve
 										str += " " + (OpenTK.Input.HatPosition)loadedControl.Direction;
 										break;
 									case Interface.JoystickComponent.Invalid:
-										str = Interface.GetInterfaceString("menu_joystick_notavailable");
+										str = OpenBveTranslate.Interface.GetInterfaceString("menu_joystick_notavailable");
 										break;
 								}
 								break;
@@ -289,20 +289,20 @@ namespace OpenBve
 								{
 									case Interface.JoystickComponent.FullAxis:
 									case Interface.JoystickComponent.Axis:
-										str += " " + (loadedControl.Direction == 1 ? Interface.GetInterfaceString("menu_joystickdirection_positive") : Interface.GetInterfaceString("menu_joystickdirection_negative"));
+										str += " " + (loadedControl.Direction == 1 ? OpenBveTranslate.Interface.GetInterfaceString("menu_joystickdirection_positive") : OpenBveTranslate.Interface.GetInterfaceString("menu_joystickdirection_negative"));
 										break;
 									case Interface.JoystickComponent.Invalid:
-										str = Interface.GetInterfaceString("menu_joystick_notavailable");
+										str = OpenBveTranslate.Interface.GetInterfaceString("menu_joystick_notavailable");
 										break;
 								}
 								break;
 							case Interface.ControlMethod.Invalid:
-								str = Interface.GetInterfaceString("menu_joystick_notavailable");
+								str = OpenBveTranslate.Interface.GetInterfaceString("menu_joystick_notavailable");
 								break;
 						}
-						Items[1] = new MenuCommand(Interface.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
+						Items[1] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_assignment_current") + " " + str, MenuTag.None, 0);
 						Items[2] = new MenuCommand(" ", MenuTag.None, 0);
-						Items[3] = new MenuCommand(Interface.GetInterfaceString("menu_assign"), MenuTag.None, 0);
+						Items[3] = new MenuCommand(OpenBveTranslate.Interface.GetInterfaceString("menu_assign"), MenuTag.None, 0);
 						break;
 				}
 
@@ -402,7 +402,7 @@ namespace OpenBve
 			for (int i = 0; i < Interface.CurrentControls.Length; i++)
 			{
 				//Find the current menu back key- It's unlikely that we want to set a new key to this
-				if (Interface.CurrentControls[i].Command == Interface.Command.MenuBack)
+				if (Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.MenuBack)
 				{
 					MenuBackKey = Interface.CurrentControls[i].Key;
 					break;
@@ -595,15 +595,15 @@ namespace OpenBve
 			{
 				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem + visibleItems)
 				{
-					ProcessCommand(Interface.Command.MenuDown, 0);
+					ProcessCommand(OpenBveTranslate.Interface.Command.MenuDown, 0);
 					return;
 				}
 				if (Menus[CurrMenu].Selection == Menus[CurrMenu].TopItem - 1)
 				{
-					ProcessCommand(Interface.Command.MenuUp, 0);
+					ProcessCommand(OpenBveTranslate.Interface.Command.MenuUp, 0);
 					return;
 				}
-				ProcessCommand(Interface.Command.MenuEnter, 0);
+				ProcessCommand(OpenBveTranslate.Interface.Command.MenuEnter, 0);
 			}
 		}
 
@@ -613,7 +613,7 @@ namespace OpenBve
 		/// <summary>Processes a user command for the current menu</summary>
 		/// <param name="cmd">The command to apply to the current menu</param>
 		/// <param name="timeElapsed">The time elapsed since previous frame</param>
-		internal void ProcessCommand(Interface.Command cmd, double timeElapsed)
+		internal void ProcessCommand(OpenBveTranslate.Interface.Command cmd, double timeElapsed)
 		{
 
 			if (CurrMenu < 0)
@@ -621,7 +621,7 @@ namespace OpenBve
 				return;
 			}
 			// MenuBack is managed independently from single menu data
-			if (cmd == Interface.Command.MenuBack)
+			if (cmd == OpenBveTranslate.Interface.Command.MenuBack)
 			{
 				PopMenu();
 				return;
@@ -632,7 +632,7 @@ namespace OpenBve
 				return;
 			switch (cmd)
 			{
-				case Interface.Command.MenuUp:      // UP
+				case OpenBveTranslate.Interface.Command.MenuUp:      // UP
 					if (menu.Selection > 0 &&
 						!(menu.Items[menu.Selection - 1] is MenuCaption))
 					{
@@ -640,16 +640,16 @@ namespace OpenBve
 						PositionMenu();
 					}
 					break;
-				case Interface.Command.MenuDown:    // DOWN
+				case OpenBveTranslate.Interface.Command.MenuDown:    // DOWN
 					if (menu.Selection < menu.Items.Length - 1)
 					{
 						menu.Selection++;
 						PositionMenu();
 					}
 					break;
-				//			case Interface.Command.MenuBack:	// ESC:	managed above
+				//			case OpenBveTranslate.Interface.Command.MenuBack:	// ESC:	managed above
 				//				break;
-				case Interface.Command.MenuEnter:   // ENTER
+				case OpenBveTranslate.Interface.Command.MenuEnter:   // ENTER
 					if (menu.Items[menu.Selection] is MenuCommand)
 					{
 						MenuCommand menuItem = (MenuCommand)menu.Items[menu.Selection];
@@ -700,11 +700,11 @@ namespace OpenBve
 						}
 					}
 					break;
-				case Interface.Command.MiscFullscreen:
+				case OpenBveTranslate.Interface.Command.MiscFullscreen:
 					// fullscreen
 					Screen.ToggleFullscreen();
 					break;
-				case Interface.Command.MiscMute:
+				case OpenBveTranslate.Interface.Command.MiscMute:
 					// mute
 					Sounds.GlobalMute = !Sounds.GlobalMute;
 					Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);

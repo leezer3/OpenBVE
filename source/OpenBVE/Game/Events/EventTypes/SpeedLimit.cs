@@ -69,7 +69,7 @@ namespace OpenBve
 						}
 						if (Train.Specs.CurrentAverageSpeed > this.NextSpeedLimit)
 						{
-							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+							Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
 					else if (TriggerType == EventTriggerType.RearCarRearAxle)

@@ -310,17 +310,12 @@
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Functions\TextEncoding.cs" />
-    <Compile Include="System\Input\Commands.CommandInfo.cs" />
-    <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
-    <Compile Include="System\Translations\InterfaceStrings.cs" />
-    <Compile Include="System\Translations\KeyInfo.cs" />
-    <Compile Include="System\Translations\LanguageFile.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -503,6 +498,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenBveTranslate\OpenBveTranslate.csproj">
+      <Project>{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}</Project>
+      <Name>OpenBveTranslate</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>

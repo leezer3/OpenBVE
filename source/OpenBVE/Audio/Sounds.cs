@@ -92,18 +92,18 @@ namespace OpenBve
 					}
 					catch
 					{
-						MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_version"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(OpenBveTranslate.Interface.GetInterfaceString("errors_sound_openal_version"), OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return;
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
-				MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_context"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(OpenBveTranslate.Interface.GetInterfaceString("errors_sound_openal_context"), OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			OpenAlContext = ContextHandle.Zero;
-			MessageBox.Show(Interface.GetInterfaceString("errors_sound_openal_device"), Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			MessageBox.Show(OpenBveTranslate.Interface.GetInterfaceString("errors_sound_openal_device"), OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		}
 
 		/// <summary>Deinitializes audio.</summary>
