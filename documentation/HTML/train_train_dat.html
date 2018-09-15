@@ -1053,6 +1053,24 @@ This entry defines whether the pass alarm device is available or not. If availab
 <b>1</b>: The doors are closed automatically. Manual override is not possible.<br />
 <b>2</b>: The doors can only be closed manually.
 </font></td></tr></table>
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><em>DoorWidth</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+A positive floating-point number measured in <b>millimeters</b> (mm) indicating the width of a Door. The number is applied for all the cars in the train. This number is mainly used for calculating the size of the obstacle in the door. The default value is 1000.0<br /><br />
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><em>DoorMaxTolerance</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+
+</font></td></tr></table>
+A positive floating-point number measured in <b>millimeters</b> (mm) indicating the max tolerance of a Door. The number is applied for all the cars in the train. This number is mainly used for judgment of the re-opening. The default value is 0.0<br /><br />
 <br /><table>
 <tr>
 <td width="16" valign="top" /><td>
