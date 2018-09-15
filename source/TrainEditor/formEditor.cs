@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using OpenBveTranslate;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
@@ -69,35 +70,17 @@ namespace TrainEditor {
 			}
 			comboboxSoundIndex.SelectedIndex = 0;
 			LoadControlContent();
-			ListLanguages();
 			// language
 			{
 				string Exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
 				string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
 				Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
 				Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
-				#if !DEBUG
-				try
-				{
-					#endif
-					string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
-					Interface.LoadLanguage(File);
-					ApplyLanguage();
-					for (int j = 0; j < LanguageFiles.Length; j++)
-					{
-						if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0)
-						{
-							comboboxLanguages.SelectedIndex = j;
-							break;
-						}
-					}
-					#if !DEBUG
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				}
-				#endif
+                Interface.LoadLanguageFiles(Folder);
+                Interface.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
+                if (Interface.InitLanguage(Folder, LanguageFiles, "en-US", comboboxLanguages)) {
+                    ApplyLanguage();
+                }
 			}
 		}
 
@@ -1420,84 +1403,9 @@ namespace TrainEditor {
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
-			int i = comboboxLanguages.SelectedIndex;
-			if (i >= 0 & i < LanguageFiles.Length) {
-				string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
-				#if !DEBUG
-				try {
-					#endif
-					Interface.CurrentLanguageCode = Interface.AvailableLangauges[i].LanguageCode;
-					#if !DEBUG
-				} catch (Exception ex) {
-					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-				}
-				#endif
-				#if !DEBUG
-				try {
-					#endif
-					CurrentLanguageCode = Code;
-					#if !DEBUG
-				} catch { }
-				#endif
-				ApplyLanguage();
-			}
-		}
-
-		// list languages
-		private void ListLanguages() {
-			string Exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
-			string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
-			Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
-			Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
-			if (System.IO.Directory.Exists(Folder)) {
-				string[] Files = System.IO.Directory.GetFiles(Folder);
-				string[] LanguageFilesPath = System.IO.Directory.GetFiles(Folder, "*.cfg");
-				foreach (var File in LanguageFilesPath) {
-					Interface.AddLanguage(File);
-				}
-				string[] LanguageNames = new string[Files.Length];
-				LanguageFiles = new string[Files.Length];
-				int n = 0;
-				for (int i = 0; i < Files.Length; i++) {
-					string Title = System.IO.Path.GetFileName(Files[i]);
-					if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) {
-						string Code = Title.Substring(0, Title.Length - 4);
-						string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
-						string Section = "";
-						string languageName = Code;
-						for (int j = 0; j < Lines.Length; j++) {
-							Lines[j] = Lines[j].Trim();
-							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
-								Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
-							} else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
-								int k = Lines[j].IndexOf('=');
-								if (k >= 0) {
-									string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
-									string Value = Lines[j].Substring(k + 1).TrimStart();
-									if (Section == "language" & Key == "name") {
-										languageName = Value;
-										break;
-									}
-								}
-							}
-						}
-						LanguageFiles[n] = Files[i];
-						LanguageNames[n] = languageName;
-						n++;
-					}
-				}
-				Array.Resize<string>(ref LanguageFiles, n);
-				Array.Resize<string>(ref LanguageNames, n);
-				Array.Sort<string, string>(LanguageNames, LanguageFiles);
-				comboboxLanguages.Items.Clear();
-				//Load all available languages
-				for (int i = 0; i < Interface.AvailableLangauges.Count; i++) {
-					comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
-				}
-			} else {
-				LanguageFiles = new string[] { };
-				comboboxLanguages.Items.Clear();
-			}
+            if (Interface.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
+                ApplyLanguage();
+            }
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>

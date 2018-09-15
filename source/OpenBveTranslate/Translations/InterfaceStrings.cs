@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TrainEditor
+namespace OpenBveTranslate
 {
-	internal static partial class Interface
+	public static partial class Interface
 	{
 		/// <summary>Stores the current language-code</summary>
-		internal static string CurrentLanguageCode = "en-GB";
+		public static string CurrentLanguageCode = "en-GB";
 
 		internal struct InterfaceString
 		{
@@ -33,7 +33,7 @@ namespace TrainEditor
 			InterfaceStringCount++;
 		}
 
-		internal static void SetInGameLanguage(string Language)
+		public static void SetInGameLanguage(string Language)
 		{
 			//Set command infos to the translated strings
 			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
@@ -41,7 +41,9 @@ namespace TrainEditor
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
 				if (Interface.AvailableLangauges[i].LanguageCode == Language)
 				{
+					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
 					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
+					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
 					break;
 				}
 			}
@@ -50,7 +52,7 @@ namespace TrainEditor
 		/// <summary>Fetches a translated user interface string</summary>
 		/// <param name="Name">The name of the string to fetch</param>
 		/// <returns>The translated string</returns>
-		internal static string GetInterfaceString(string Name)
+		public static string GetInterfaceString(string Name)
 		{
 			List<string> FallbackLanguages = new List<string>();
 			//First, we need to find the default langauge file

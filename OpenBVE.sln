@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.Msts", "source\Plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.MP3", "source\Plugins\Sound.MP3\Sound.MP3.csproj", "{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBveTranslate", "source\OpenBveTranslate\OpenBveTranslate.csproj", "{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -248,6 +250,16 @@ Global
 		{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}.Release|Mixed Platforms.Build.0 = Release|x86
 		{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}.Release|x86.ActiveCfg = Release|x86
 		{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}.Release|x86.Build.0 = Release|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Debug|x86.ActiveCfg = Debug|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Debug|x86.Build.0 = Debug|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Release|Any CPU.ActiveCfg = Release|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Release|Mixed Platforms.Build.0 = Release|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Release|x86.ActiveCfg = Release|x86
+		{9E3A5B17-53CB-40D0-89B0-5C4AC44514E9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

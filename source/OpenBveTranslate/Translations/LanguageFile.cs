@@ -1,10 +1,156 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi;
 
-namespace TrainEditor {
-	internal static partial class Interface {
+namespace OpenBveTranslate {
+	public static partial class Interface {
+
+        public static void LoadLanguageFiles(string LanguageFolder) {
+            try {
+                string[] LanguageFiles = System.IO.Directory.GetFiles(LanguageFolder, "*.cfg");
+                foreach (var File in LanguageFiles) {
+                    AddLanguage(File);
+                }
+            } catch {
+                MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
+                //Environment.Exit(0);
+            }
+        }
+
+        public static void ListLanguages(string LanguageFolder, ref string[] LanguageFiles, ComboBox comboboxLanguages) {
+            if (System.IO.Directory.Exists(LanguageFolder)) {
+                string[] Files = System.IO.Directory.GetFiles(LanguageFolder);
+                string[] LanguageNames = new string[Files.Length];
+                LanguageFiles = new string[Files.Length];
+                int n = 0;
+                for (int i = 0; i < Files.Length; i++) {
+                    string Title = System.IO.Path.GetFileName(Files[i]);
+                    if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) {
+                        string Code = Title.Substring(0, Title.Length - 4);
+                        string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
+                        string Section = "";
+                        string languageName = Code;
+                        for (int j = 0; j < Lines.Length; j++) {
+                            Lines[j] = Lines[j].Trim();
+                            if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
+                                Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
+                            } else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
+                                int k = Lines[j].IndexOf('=');
+                                if (k >= 0) {
+                                    string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
+                                    string Value = Lines[j].Substring(k + 1).TrimStart();
+                                    if (Section == "language" & Key == "name") {
+                                        languageName = Value;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        LanguageFiles[n] = Files[i];
+                        LanguageNames[n] = languageName;
+                        n++;
+                    }
+                }
+                Array.Resize<string>(ref LanguageFiles, n);
+                Array.Resize<string>(ref LanguageNames, n);
+                Array.Sort<string, string>(LanguageNames, LanguageFiles);
+                comboboxLanguages.Items.Clear();
+                //Load all available languages
+                for (int i = 0; i < AvailableLangauges.Count; i++) {
+                    comboboxLanguages.Items.Add(AvailableLangauges[i].Name);
+                }
+            } else {
+                LanguageFiles = new string[] { };
+                comboboxLanguages.Items.Clear();
+            }
+        }
+
+        public static bool InitLanguage(string LanguageFolder, string[] LanguageFiles, string LanguageCodeOption, ComboBox comboboxLanguages) {
+            int j;
+            for (j = 0; j < LanguageFiles.Length; j++) {
+                string File = OpenBveApi.Path.CombineFile(LanguageFolder, LanguageCodeOption + ".cfg");
+                if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0) {
+                    comboboxLanguages.SelectedIndex = j;
+                    break;
+                }
+            }
+            if (j == LanguageFiles.Length) {
+#if !DEBUG
+                try {
+#endif
+                    string File = OpenBveApi.Path.CombineFile(LanguageFolder, "en-US.cfg");
+                    LoadLanguage(File);
+                    return true;
+#if !DEBUG
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                }
+#endif
+            }
+            return false;
+        }
+
+        public static bool SelectedLanguage(string FlagFolder, string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage) {
+            int i = comboboxLanguages.SelectedIndex;
+            if (i >= 0 & i < LanguageFiles.Length) {
+                string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
+#if !DEBUG
+                try {
+#endif
+                    CurrentLanguageCode = AvailableLangauges[i].LanguageCode;
+#if !DEBUG
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                }
+#endif
+#if !DEBUG
+                try {
+#endif
+                    string File = OpenBveApi.Path.CombineFile(FlagFolder, AvailableLangauges[i].Flag);
+                    if (!System.IO.File.Exists(File)) {
+                        File = OpenBveApi.Path.CombineFile(FlagFolder, "unknown.png");
+                    }
+                    if (System.IO.File.Exists(File)) {
+                        using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+                            pictureboxLanguage.Image = System.Drawing.Image.FromStream(fs);
+                        }
+                    } else {
+                        pictureboxLanguage.Image = null;
+                    }
+                    CurrentLanguageCodeArgument = Code;
+#if !DEBUG
+                } catch { }
+#endif
+                return true;
+            }
+            return false;
+        }
+
+        public static bool SelectedLanguage(string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
+            int i = comboboxLanguages.SelectedIndex;
+            if (i >= 0 & i < LanguageFiles.Length) {
+                string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
+#if !DEBUG
+                try {
+#endif
+                    CurrentLanguageCode = AvailableLangauges[i].LanguageCode;
+#if !DEBUG
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                }
+#endif
+#if !DEBUG
+                try {
+#endif
+                    CurrentLanguageCodeArgument = Code;
+#if !DEBUG
+                } catch { }
+#endif
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>Loads a translation from a language file</summary>
         /// <param name="File">The absolute on-disk path to the language file we wish to load</param>
@@ -77,6 +223,29 @@ namespace TrainEditor {
                                         {
                                             case "score": Interface.QuickReferences.Score = b; break;
                                         } break;
+                                    case "commands":
+                                        {
+                                            for (int k = 0; k < CommandInfos.Length; k++)
+                                            {
+                                                if (string.Compare(CommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                {
+                                                    CommandInfos[k].Description = b;
+                                                    break;
+                                                }
+                                            }
+                                        } break;
+                                    case "keys":
+                                        {
+                                            for (int k = 0; k < TranslatedKeys.Length; k++)
+                                            {
+                                                if (string.Compare(TranslatedKeys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                {
+                                                    TranslatedKeys[k].Description = b;
+                                                    break;
+                                                }
+                                            }
+
+                                        } break;
                                     default:
                                         AddInterfaceString(Section + "_" + a, b);
                                         break;
@@ -113,7 +282,11 @@ namespace TrainEditor {
                 string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
                 string Section = "";
                 InterfaceString[] LoadedStrings = new InterfaceString[16];
+                CommandInfo[] LoadedCommands = new CommandInfo[Interface.CommandInfos.Length];
+				KeyInfo[] LoadedKeys = new KeyInfo[Interface.TranslatedKeys.Length];
 				InterfaceQuickReference QuickReference = new InterfaceQuickReference();
+                Array.Copy(Interface.CommandInfos, LoadedCommands, Interface.CommandInfos.Length);
+				Array.Copy(Interface.TranslatedKeys, LoadedKeys, Interface.TranslatedKeys.Length);
                 var LoadedStringCount = 0;
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -161,6 +334,28 @@ namespace TrainEditor {
                                         {
                                             case "score": QuickReference.Score = b; break;
                                         } break;
+                                    case "commands":
+                                        {
+                                            for (int k = 0; k < LoadedCommands.Length; k++)
+                                            {
+                                                if (string.Compare(LoadedCommands[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                {
+                                                    LoadedCommands[k].Description = b;
+                                                    break;
+                                                }
+                                            }
+                                        } break;
+                                    case "keys":
+                                        {
+                                            for (int k = 0; k < LoadedKeys.Length; k++)
+                                            {
+                                                if (string.Compare(LoadedKeys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+                                                {
+                                                    LoadedKeys[k].Description = b;
+                                                    break;
+                                                }
+                                            }
+                                        } break;
                                     case "fallback":
                                         switch (a)
                                         {
@@ -189,6 +384,8 @@ namespace TrainEditor {
                     }
                 }
                 newLanguage.InterfaceStrings = LoadedStrings;
+                newLanguage.CommandInfos = LoadedCommands;
+	            newLanguage.KeyInfos = LoadedKeys;
                 newLanguage.InterfaceStringCount = LoadedStringCount;
                 newLanguage.QuickReferences = QuickReference;
                 //We should always fall-back to en-US as the last-resort before failing to load a string
@@ -207,6 +404,10 @@ namespace TrainEditor {
 	    {
             /// <summary>The interface strings for this language</summary>
 	        internal InterfaceString[] InterfaceStrings;
+            /// <summary>The command information strings for this language</summary>
+	        internal CommandInfo[] CommandInfos;
+			/// <summary>The key information strings for this language</summary>
+			internal KeyInfo[] KeyInfos;
             /// <summary>The quick-reference strings for this language</summary>
 	        internal InterfaceQuickReference QuickReferences;
 
