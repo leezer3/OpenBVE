@@ -23,6 +23,16 @@ namespace OpenBve
 			internal CarSound OpenSound;
 			/// <summary>Played once when this set of doors closes</summary>
 			internal CarSound CloseSound;
+			/// <summary>Whether reopen the door or not</summary>
+			internal bool AnticipatedReopen;
+			/// <summary>The number of times that reopened the door</summary>
+			internal int ReopenCounter;
+			/// <summary>The upper limit of the number of times reopen the door</summary>
+			internal int ReopenLimit;
+			/// <summary>The duration of interference in the door</summary>
+			internal double NextReopenTime;
+			/// <summary>Ratio that width of the obstacle to the overall width of the door</summary>
+			internal double InterferingObjectRate;
 		}
 
 		/// <summary>The states of the door lock.</summary>
@@ -118,6 +128,10 @@ namespace OpenBve
 							else
 							{
 								Train.Cars[i].Doors[j].State -= cs * TimeElapsed;
+							}
+							if (Train.Cars[i].Doors[j].AnticipatedReopen && Train.Cars[i].Doors[j].State < Train.Cars[i].Doors[j].InterferingObjectRate)
+							{
+								Train.Cars[i].Doors[j].State = Train.Cars[i].Doors[j].InterferingObjectRate;
 							}
 							if (Train.Cars[i].Doors[j].State < 0.0)
 							{
@@ -257,6 +271,66 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>Opens the left-hand or right-hand doors within a specific car in a specified train</summary>
+		/// <param name="Train">The train</param>
+		/// <param name="CarIndex">Car Index number - 1</param>
+		/// <param name="Left">Whether to open the left-hand doors</param>
+		/// <param name="Right">Whether to open the right-hand doors</param>
+		internal static void OpenTrainDoors(Train Train, int CarIndex, bool Left, bool Right)
+		{
+			bool sl = false, sr = false;
+			if (Left & !Train.Cars[CarIndex].Doors[0].AnticipatedOpen)
+			{
+				Train.Cars[CarIndex].Doors[0].AnticipatedOpen = true;
+				sl = true;
+			}
+			if (Right & !Train.Cars[CarIndex].Doors[1].AnticipatedOpen)
+			{
+				Train.Cars[CarIndex].Doors[1].AnticipatedOpen = true;
+				sr = true;
+			}
+			if (sl)
+			{
+				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Doors[0].OpenSound.Buffer;
+				if (buffer != null)
+				{
+					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Doors[0].OpenSound.Position;
+					Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train, CarIndex, false);
+				}
+				for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
+				{
+					if (Train.Cars[CarIndex].Doors[i].Direction == -1)
+					{
+						Train.Cars[CarIndex].Doors[i].DoorLockDuration = 0.0;
+					}
+				}
+			}
+			if (sr)
+			{
+				Sounds.SoundBuffer buffer = Train.Cars[CarIndex].Doors[1].OpenSound.Buffer;
+				if (buffer != null)
+				{
+					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Doors[1].OpenSound.Position;
+					Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train, CarIndex, false);
+				}
+				for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
+				{
+					if (Train.Cars[CarIndex].Doors[i].Direction == 1)
+					{
+						Train.Cars[CarIndex].Doors[i].DoorLockDuration = 0.0;
+					}
+				}
+			}
+			for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
+			{
+				if (Train.Cars[CarIndex].Doors[i].AnticipatedOpen)
+				{
+					Train.Cars[CarIndex].Doors[i].NextReopenTime = 0.0;
+					Train.Cars[CarIndex].Doors[i].ReopenCounter++;
+				}
+			}
+		}
+
 		/// <summary>Closes the left-hand or right-hand doors for the specified train</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="Left">Whether to close the left-hand doors</param>
@@ -330,6 +404,43 @@ namespace OpenBve
 						{
 							mixed = true;
 						}
+					}
+				}
+			}
+			TrainDoorState Result = TrainDoorState.None;
+			if (opened) Result |= TrainDoorState.Opened;
+			if (closed) Result |= TrainDoorState.Closed;
+			if (mixed) Result |= TrainDoorState.Mixed;
+			if (opened & !closed & !mixed) Result |= TrainDoorState.AllOpened;
+			if (!opened & closed & !mixed) Result |= TrainDoorState.AllClosed;
+			if (!opened & !closed & mixed) Result |= TrainDoorState.AllMixed;
+			return Result;
+		}
+
+		/// <summary>Returns the combination of door states what encountered at the specified car in a train.</summary>
+		/// <param name="Train">The train to consider.</param>
+		/// <param name="CarIndex">Car Index number - 1</param>
+		/// <param name="Left">Whether to include left doors.</param>
+		/// <param name="Right">Whether to include right doors.</param>
+		/// <returns>A bit mask combining encountered door states.</returns>
+		internal static TrainDoorState GetDoorsState(Train Train, int CarIndex, bool Left, bool Right)
+		{
+			bool opened = false, closed = false, mixed = false;
+			for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
+			{
+				if (Left & Train.Cars[CarIndex].Doors[i].Direction == -1 | Right & Train.Cars[CarIndex].Doors[i].Direction == 1)
+				{
+					if (Train.Cars[CarIndex].Doors[i].State == 0.0)
+					{
+						closed = true;
+					}
+					else if (Train.Cars[CarIndex].Doors[i].State == 1.0)
+					{
+						opened = true;
+					}
+					else
+					{
+						mixed = true;
 					}
 				}
 			}
