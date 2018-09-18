@@ -80,6 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime.Station.cs" />
     <Compile Include="Text.cs" />
+    <Compile Include="Textures\Textures.OpenGLTexture.cs" />
     <Compile Include="Textures\Textures.TextOverlay.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Textures\Textures.cs" />

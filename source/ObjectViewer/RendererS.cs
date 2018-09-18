@@ -446,7 +446,7 @@ namespace OpenBve
         }
 
         // render face
-        private static Textures.OpenGlTexture LastBoundTexture = null;
+        private static OpenGlTexture LastBoundTexture = null;
 
 	    /// <summary>
 	    /// Restores the OpenGL alpha function to it's previous state

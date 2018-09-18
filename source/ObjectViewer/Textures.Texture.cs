@@ -2,16 +2,11 @@
 
 using System;
 using System.Drawing;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static partial class Textures {
-		/// <summary>Represents an OpenGL texture.</summary>
-		internal class OpenGlTexture {
-			/// <summary>Whether the texture has been loaded and the OpenGL texture name is valid.</summary>
-			internal bool Valid;
-			/// <summary>The OpenGL texture name.</summary>
-			internal int Name;
-		}
+		
 		
 		/// <summary>Represents a texture.</summary>
 		internal class Texture : OpenBveApi.Textures.TextureHandle {

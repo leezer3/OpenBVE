@@ -486,7 +486,7 @@ namespace OpenBve
 		// set alpha func
 
 		/// <summary> Stores the last bound OpenGL texture</summary>
-		internal static Textures.OpenGlTexture LastBoundTexture = null;
+		internal static OpenGlTexture LastBoundTexture = null;
 
 		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ)
 		{
