@@ -3,6 +3,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -120,7 +121,7 @@ namespace OpenBve {
 					Textures.RegisterTexture(PanelBackground, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 					OpenBVEGame.RunInRenderThread(() =>
 					{
-						Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp); 
+						Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
 					});
 					double w = (double)t.Width;
 					double h = (double)t.Height;
@@ -326,7 +327,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -338,7 +339,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(Cover, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -354,7 +355,7 @@ namespace OpenBve {
 												Textures.RegisterTexture(File, out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												double w = (double)t.Width;
 												double h = (double)t.Height;
@@ -562,7 +563,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -574,7 +575,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(Cover, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -613,7 +614,7 @@ namespace OpenBve {
 												Textures.RegisterTexture(Atc, new OpenBveApi.Textures.TextureParameters(new OpenBveApi.Textures.TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												if (j == 0) {
 													k = CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, new Color32(255, 255, 255, 255), false);
@@ -632,7 +633,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -886,8 +887,8 @@ namespace OpenBve {
 										Textures.RegisterTexture(TurnOff, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t1);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t0, Textures.OpenGlTextureWrapMode.ClampClamp);
-											Textures.LoadTexture(t1, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t0.Width;
 										double h = (double)t0.Height;
@@ -975,7 +976,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(Background, new OpenBveApi.Textures.TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -988,7 +989,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1005,7 +1006,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1022,7 +1023,7 @@ namespace OpenBve {
 										Textures.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;

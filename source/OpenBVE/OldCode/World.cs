@@ -6,6 +6,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static partial class World {
@@ -26,7 +27,7 @@ namespace OpenBve {
 			internal ushort GlowAttenuationData;
 			internal const int EmissiveColorMask = 1;
 			internal const int TransparentColorMask = 2;
-			internal Textures.OpenGlTextureWrapMode? WrapMode;
+			internal OpenGlTextureWrapMode? WrapMode;
 			// operators
 			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
 				if (A.Flags != B.Flags) return false;

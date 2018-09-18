@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -508,7 +509,7 @@ namespace OpenBve
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
 			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
 		}
-		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, Textures.OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)

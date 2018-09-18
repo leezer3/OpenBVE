@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Textures;
+
+namespace OpenBve
 {
 	internal static partial class Renderer
 	{
@@ -39,7 +41,7 @@
 			LeftWidth = 0.0;
 			if (Element.TopLeft.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.TopLeft.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.TopLeft.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.TopLeft.BackgroundTexture.Width;
 					double v = (double)Element.TopLeft.BackgroundTexture.Height;
@@ -49,7 +51,7 @@
 			}
 			if (Element.CenterLeft.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterLeft.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.CenterLeft.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.CenterLeft.BackgroundTexture.Width;
 					double v = (double)Element.CenterLeft.BackgroundTexture.Height;
@@ -59,7 +61,7 @@
 			}
 			if (Element.BottomLeft.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.BottomLeft.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.BottomLeft.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.BottomLeft.BackgroundTexture.Width;
 					double v = (double)Element.BottomLeft.BackgroundTexture.Height;
@@ -70,7 +72,7 @@
 			// center height
 			if (Element.TopMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.TopMiddle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.TopMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double v = (double)Element.TopMiddle.BackgroundTexture.Height;
 					if (v > LCrH) LCrH = v;
@@ -78,7 +80,7 @@
 			}
 			if (Element.CenterMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double v = (double)Element.CenterMiddle.BackgroundTexture.Height;
 					if (v > LCrH) LCrH = v;
@@ -86,7 +88,7 @@
 			}
 			if (Element.BottomMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.BottomMiddle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.BottomMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double v = (double)Element.BottomMiddle.BackgroundTexture.Height;
 					if (v > LCrH) LCrH = v;
@@ -96,7 +98,7 @@
 			RightWidth = 0.0;
 			if (Element.TopRight.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.TopRight.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.TopRight.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.TopRight.BackgroundTexture.Width;
 					double v = (double)Element.TopRight.BackgroundTexture.Height;
@@ -106,7 +108,7 @@
 			}
 			if (Element.CenterRight.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterRight.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.CenterRight.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.CenterRight.BackgroundTexture.Width;
 					double v = (double)Element.CenterRight.BackgroundTexture.Height;
@@ -116,7 +118,7 @@
 			}
 			if (Element.BottomRight.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.BottomRight.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.BottomRight.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					double u = (double)Element.BottomRight.BackgroundTexture.Width;
 					double v = (double)Element.BottomRight.BackgroundTexture.Height;

@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -544,7 +545,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+					Object.Mesh.Materials[mm + i].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 				}
 			}
 		}

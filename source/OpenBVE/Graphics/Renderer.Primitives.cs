@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using OpenBveApi.Colors;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
@@ -12,7 +13,7 @@ namespace OpenBve {
 		/// <param name="color">The color, or a null reference.</param>
 		internal static void DrawRectangle(Textures.Texture texture, Point point, Size size, Color128? color) {
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
-			if (texture == null || !Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
+			if (texture == null || !Textures.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
 				GL.Disable(EnableCap.Texture2D);
 				if (color.HasValue) {
 					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
@@ -25,7 +26,7 @@ namespace OpenBve {
 				GL.End();
 			} else {
                 GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 				if (color.HasValue) {
 					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
 				}

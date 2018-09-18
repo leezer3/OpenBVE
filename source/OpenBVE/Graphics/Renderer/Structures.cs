@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -99,7 +100,7 @@ namespace OpenBve
 			internal int ObjectIndex;
 			internal int FaceIndex;
 			internal double Distance;
-			internal Textures.OpenGlTextureWrapMode Wrap;
+			internal OpenGlTextureWrapMode Wrap;
 		}
 		private class ObjectList
 		{

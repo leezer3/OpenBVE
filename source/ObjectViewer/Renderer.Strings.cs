@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
@@ -86,8 +87,8 @@ namespace OpenBve {
 				Textures.Texture texture;
 				Fonts.OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
-				if (Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
-                    GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+				if (Textures.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
+                    GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
                     
 					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
 					int y = top - (data.PhysicalSize.Height - data.TypographicSize.Height) / 2;

@@ -488,10 +488,10 @@ namespace OpenBve
         private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
         {
 	        // texture
-	        Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+	        OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.RepeatRepeat;
 	        if (Material.WrapMode != null)
 	        {
-		        wrap = (Textures.OpenGlTextureWrapMode)Material.WrapMode;
+		        wrap = (OpenGlTextureWrapMode)Material.WrapMode;
 	        }
 			if (Material.DaytimeTexture != null)
 			{
@@ -1028,25 +1028,25 @@ namespace OpenBve
                             {
 	                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode == null)
 	                            {
-		                            Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+		                            OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
 		                            // If the object does not have a stored wrapping mode, determine it now
 		                            for (int v = 0; v < ObjectManager.Objects[ObjectIndex].Mesh.Vertices.Length; v++)
 		                            {
 			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
 			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 			                            {
-				                            wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+				                            wrap |= OpenGlTextureWrapMode.RepeatClamp;
 			                            }
 			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
 			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 			                            {
-				                            wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+				                            wrap |= OpenGlTextureWrapMode.ClampRepeat;
 			                            }
 		                            }
 
 		                            ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode = wrap;
 	                            }
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (Textures.OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
@@ -1058,7 +1058,7 @@ namespace OpenBve
                             }
                             if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
                             {
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, Textures.OpenGlTextureWrapMode.ClampClamp);
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, OpenGlTextureWrapMode.ClampClamp);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -575,7 +576,7 @@ namespace OpenBve
 												if (Timetable.DefaultTimetableTexture != null)
 												{
 													Textures.LoadTexture(Timetable.DefaultTimetableTexture,
-														Textures.OpenGlTextureWrapMode.ClampClamp);
+														OpenGlTextureWrapMode.ClampClamp);
 													max =
 														Math.Min(
 															Screen.Height - Timetable.DefaultTimetableTexture.Height,
@@ -603,7 +604,7 @@ namespace OpenBve
 												if (texture != null)
 												{
 													Textures.LoadTexture(texture,
-														Textures.OpenGlTextureWrapMode.ClampClamp);
+														OpenGlTextureWrapMode.ClampClamp);
 													max = Math.Min(Screen.Height - texture.Height, 0.0);
 												}
 												else

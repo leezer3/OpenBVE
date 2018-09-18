@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -46,7 +47,7 @@ namespace OpenBve
 				{
 					bool alpha = false;
 					int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
-					Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
 					if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture != null | ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
 					{
 						if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode == null)
@@ -57,19 +58,19 @@ namespace OpenBve
 								if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
 								    ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 								{
-									wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
 								}
 								if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
 								    ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 								{
-									wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
 								}
 							}							
 						}
 						else
 						{
 							//Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
-							wrap = (Textures.OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
+							wrap = (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
 						}
 						if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture != null)
 						{

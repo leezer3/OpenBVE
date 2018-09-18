@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenBveApi.Textures;
+using OpenTK.Graphics.OpenGL;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -229,7 +230,7 @@ namespace OpenBve
 			Faces[3] = new int[] { 6, 5, 4, 7 };
 			Faces[4] = new int[] { 6, 7, 3, 2 };
 			Faces[5] = new int[] { 6, 2, 1, 5 };
-			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, Textures.OpenGlTextureWrapMode.ClampClamp))
+			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
 			{
 				if (TexturingEnabled)
 				{
@@ -253,7 +254,7 @@ namespace OpenBve
 				TexturingEnabled = true;
 				GL.Enable(EnableCap.Texture2D);
 			}
-			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 			Vector2[][] t = new Vector2[6][];
 				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
 				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };

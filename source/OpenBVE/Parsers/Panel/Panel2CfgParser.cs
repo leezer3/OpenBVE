@@ -3,6 +3,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -274,8 +275,8 @@ namespace OpenBve {
 					}
 					OpenBVEGame.RunInRenderThread(() =>
 					{
-						Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
-						//Textures.LoadTexture(tnight, Textures.OpenGlTextureWrapMode.ClampClamp);
+						Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+						//Textures.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 					});
 					PanelBitmapWidth = (double)tday.Width;
 					PanelBitmapHeight = (double)tday.Height;
@@ -373,7 +374,7 @@ namespace OpenBve {
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										int w = tday.Width;
 										int h = tday.Height;
@@ -547,7 +548,7 @@ namespace OpenBve {
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)tday.Width;
 										double h = (double)tday.Height;
@@ -718,7 +719,7 @@ namespace OpenBve {
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, Textures.OpenGlTextureWrapMode.ClampClamp);
+											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										int w = tday.Width;
 										int h = tday.Height;

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -20,7 +21,7 @@ namespace OpenBve
 			double w, h;
 			if (Element.CenterMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					w = (double)Element.CenterMiddle.BackgroundTexture.Width;
 					h = (double)Element.CenterMiddle.BackgroundTexture.Height;
@@ -774,7 +775,7 @@ namespace OpenBve
 				}
 				if (Element.CenterMiddle.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						float r, g, b, a;
 						CreateBackColor(Element.BackgroundColor, sc, out r, out g, out b, out a);
@@ -797,7 +798,7 @@ namespace OpenBve
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						float r, g, b, a;
 						CreateBackColor(Element.OverlayColor, sc, out r, out g, out b, out a);
