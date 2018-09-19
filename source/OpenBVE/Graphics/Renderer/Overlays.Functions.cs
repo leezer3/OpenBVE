@@ -14,7 +14,7 @@ namespace OpenBve
 		/// <param name="top">The top co-ordinate</param>
 		/// <param name="right">The right co-ordinate</param>
 		/// <param name="bottom">The bottom co-ordinate</param>
-		internal static void RenderOverlayTexture(Textures.Texture texture, double left, double top, double right, double bottom)
+		internal static void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
 		{
 			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
 		}

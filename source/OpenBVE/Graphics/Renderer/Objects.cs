@@ -76,13 +76,13 @@ namespace OpenBve
 						{
 							if (Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, wrap))
 							{
-								OpenBveApi.Textures.TextureTransparencyType type =
+								TextureTransparencyType type =
 									ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency;
-								if (type == OpenBveApi.Textures.TextureTransparencyType.Alpha)
+								if (type == TextureTransparencyType.Alpha)
 								{
 									alpha = true;
 								}
-								else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial &&
+								else if (type == TextureTransparencyType.Partial &&
 								         Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality)
 								{
 									alpha = true;
@@ -93,13 +93,13 @@ namespace OpenBve
 						{
 							if (Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, wrap))
 							{
-								OpenBveApi.Textures.TextureTransparencyType type =
+								TextureTransparencyType type =
 									ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency;
-								if (type == OpenBveApi.Textures.TextureTransparencyType.Alpha)
+								if (type == TextureTransparencyType.Alpha)
 								{
 									alpha = true;
 								}
-								else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial &
+								else if (type == TextureTransparencyType.Partial &
 								         Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality)
 								{
 									alpha = true;

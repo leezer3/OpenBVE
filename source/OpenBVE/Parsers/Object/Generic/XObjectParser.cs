@@ -5,6 +5,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class XObjectParser {
@@ -2198,7 +2199,7 @@ namespace OpenBve {
 								bool transparent;
 								if (Materials[j].TextureFilename != null)
 								{
-									Textures.RegisterTexture(Materials[j].TextureFilename, new OpenBveApi.Textures.TextureParameters(null, Color24.Black), out Object.Mesh.Materials[mm + j].DaytimeTexture);
+									Textures.RegisterTexture(Materials[j].TextureFilename, new TextureParameters(null, Color24.Black), out Object.Mesh.Materials[mm + j].DaytimeTexture);
 									//Textures.UnloadTexture(Object.Mesh.Materials[mm + j].DaytimeTexture);
 									transparent = true;
 								}

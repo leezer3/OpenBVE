@@ -594,7 +594,7 @@ namespace OpenBve
 												Timetable.CustomTimetablePosition -= scrollSpeed*
 																					 Interface.CurrentControls[i]
 																						 .AnalogState*TimeElapsed;
-												Textures.Texture texture =
+												Texture texture =
 													Timetable.CurrentCustomTimetableDaytimeTexture;
 												if (texture == null)
 												{

@@ -36,7 +36,7 @@ namespace OpenBve
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives a handle to the texture.</param>
 		/// <returns>Whether registering the texture was successful.</returns>
-		internal static bool RegisterTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out Texture handle)
+		internal static bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
 		{
 		   /* BUG:
 			* Attempt to delete null texture handles from the end of the array
@@ -102,7 +102,7 @@ namespace OpenBve
 			 * Register the texture and return the newly created handle.
 			 * */
 			int idx = GetNextFreeTexture();
-			RegisteredTextures[idx] = new Texture(path, parameters);
+			RegisteredTextures[idx] = new Texture(path, parameters, Program.CurrentHost);
 			RegisteredTexturesCount++;
 			handle = RegisteredTextures[idx];
 			return true;
@@ -111,7 +111,7 @@ namespace OpenBve
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="texture">The texture data.</param>
 		/// <returns>The handle to the texture.</returns>
-		internal static Texture RegisterTexture(OpenBveApi.Textures.Texture texture)
+		internal static Texture RegisterTexture(Texture texture)
 		{
 			/*
 			 * Register the texture and return the newly created handle.
@@ -127,7 +127,7 @@ namespace OpenBve
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <returns>The handle to the texture.</returns>
 		/// <remarks>Be sure not to dispose of the bitmap after calling this function.</remarks>
-		internal static Texture RegisterTexture(Bitmap bitmap, OpenBveApi.Textures.TextureParameters parameters)
+		internal static Texture RegisterTexture(Bitmap bitmap, TextureParameters parameters)
 		{
 			/*
 			 * Register the texture and return the newly created handle.
@@ -189,7 +189,7 @@ namespace OpenBve
 				return true;
 			if (handle.Ignore)
 				return false;
-			OpenBveApi.Textures.Texture texture;
+			Texture texture;
 			if (handle.Origin.GetTexture(out texture))
 			{
 				if (texture.BitsPerPixel == 32)
@@ -258,7 +258,7 @@ namespace OpenBve
 					{
 						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 					}
-					if (handle.Transparency == OpenBveApi.Textures.TextureTransparencyType.Opaque)
+					if (handle.Transparency == TextureTransparencyType.Opaque)
 					{
 						/*
 							 * If the texture is fully opaque, the alpha channel is not used.
@@ -327,7 +327,7 @@ namespace OpenBve
 		/// <param name="file">The file.</param>
 		/// <param name="texture">The texture.</param>
 		/// <remarks>The texture is always saved in PNG format.</remarks>
-		internal static void SaveTexture(string file, OpenBveApi.Textures.Texture texture)
+		internal static void SaveTexture(string file, Texture texture)
 		{
 			Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
@@ -352,7 +352,7 @@ namespace OpenBve
 		/// <param name="texture">The texture.</param>
 		/// <returns>The upsized texture, or the original if already a power of two size.</returns>
 		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
-		internal static OpenBveApi.Textures.Texture ResizeToPowerOfTwo(OpenBveApi.Textures.Texture texture)
+		internal static Texture ResizeToPowerOfTwo(Texture texture)
 		{
 			int width = RoundUpToPowerOfTwo(texture.Width);
 			int height = RoundUpToPowerOfTwo(texture.Height);
@@ -375,13 +375,13 @@ namespace OpenBve
 		/// <param name="height">The new height.</param>
 		/// <returns>The resize texture, or the original if already of the specified size.</returns>
 		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
-		internal static OpenBveApi.Textures.Texture Resize(OpenBveApi.Textures.Texture texture, int width, int height)
+		internal static Texture Resize(Texture texture, int width, int height)
 		{
 			if (width == texture.Width && height == texture.Height)
 				return texture;
 			if (texture.BitsPerPixel != 32)
 				throw new NotSupportedException("The number of bits per pixel is not supported.");
-			OpenBveApi.Textures.TextureTransparencyType type = texture.GetTransparencyType();
+			TextureTransparencyType type = texture.GetTransparencyType();
 			/*
 				 * Convert the texture into a bitmap.
 				 * */
@@ -411,21 +411,21 @@ namespace OpenBve
 				 * Ensure opaque and partially transparent
 				 * textures have valid alpha components.
 				 * */
-			if (type == OpenBveApi.Textures.TextureTransparencyType.Opaque)
+			if (type == TextureTransparencyType.Opaque)
 			{
 				for (int i = 3; i < bytes.Length; i += 4)
 				{
 					bytes[i] = 255;
 				}
 			}
-			else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial)
+			else if (type == TextureTransparencyType.Partial)
 			{
 				for (int i = 3; i < bytes.Length; i += 4)
 				{
 					bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
 				}
 			}
-			OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes, texture.Palette);
+			Texture result = new Texture(width, height, 32, bytes, texture.Palette);
 			return result;
 		}
 

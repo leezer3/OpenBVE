@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -35,9 +36,9 @@ namespace OpenBve
 		// FIELDS
 		//
 		private state				currentState	= state.none;
-		private Textures.Texture	gradientImage	= null;
+		private Texture	gradientImage	= null;
 		private Size				gradientSize;
-		private Textures.Texture	mapImage		= null;
+		private Texture	mapImage		= null;
 		private Size				mapSize;
 
 		/********************
@@ -132,14 +133,14 @@ namespace OpenBve
 			case state.map:
 				if (mapImage == null)
 				{
-					mapImage	= new Textures.Texture(Game.RouteInformation.RouteMap);
+					mapImage	= new Texture(Game.RouteInformation.RouteMap);
 					mapSize		= Game.RouteInformation.RouteMap.Size;
 				}
 				break;
 			case state.gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Textures.Texture(Game.RouteInformation.GradientProfile);
+					gradientImage	= new Texture(Game.RouteInformation.GradientProfile);
 					gradientSize	= Game.RouteInformation.GradientProfile.Size;
 				}
 				break;

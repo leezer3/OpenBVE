@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -33,7 +34,7 @@ namespace OpenBve
 							//The time to transition between backgrounds in seconds
 							double TransitionTime = 0.8;
 							//The texture to use (if static)
-							Textures.Texture t = null;
+							Texture t = null;
 							//The object to use (if object based)
 							ObjectManager.StaticObject o = null;
 							//The transition mode between backgrounds

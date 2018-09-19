@@ -27,9 +27,9 @@ namespace OpenBveApi.Textures {
 	public class Texture {
 		// --- members ---
 		/// <summary>The width of the texture in pixels.</summary>
-		private readonly int MyWidth;
+		private int MyWidth;
 		/// <summary>The height of the texture in pixels.</summary>
-		private readonly int MyHeight;
+		private int MyHeight;
 		/// <summary>The number of bits per pixel. Must be 32.</summary>
 		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
@@ -134,7 +134,7 @@ namespace OpenBveApi.Textures {
 			}
 			set
 			{
-
+				this.MyWidth = value;
 			}
 		}
 		/// <summary>Gets the height of the texture in pixels.</summary>
@@ -144,7 +144,7 @@ namespace OpenBveApi.Textures {
 			}
 			set
 			{
-
+				this.MyHeight = value;
 			}
 		}
 		/// <summary>Gets the number of bits per pixel.</summary>
@@ -195,6 +195,10 @@ namespace OpenBveApi.Textures {
 			if (object.ReferenceEquals(a, b)) return false;
 			if (object.ReferenceEquals(a, null)) return true;
 			if (object.ReferenceEquals(b, null)) return true;
+			if (a.MyWidth == 0 && b.MyWidth == 0)
+			{
+				return false;
+			}
 			if (a.MyWidth != b.MyWidth) return true;
 			if (a.MyHeight != b.MyHeight) return true;
 			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return true;
