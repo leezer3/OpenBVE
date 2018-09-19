@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -241,6 +241,13 @@ namespace OpenBve
 						GL.Color4(or, og, ob, oa * alpha);
 						RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
 					}
+				}
+
+				if (Element.Font.FontSize >= 20.0)
+				{
+					//Add a little more line-padding to the large font sizes
+					//Asian and some Cyrillic charsets otherwise overlap slightly
+					y += 10;
 				}
 			}
 		}
