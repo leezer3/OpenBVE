@@ -76,11 +76,11 @@ namespace TrainEditor {
 				string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
 				Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
 				Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
-                Interface.LoadLanguageFiles(Folder);
-                Interface.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
-                if (Interface.InitLanguage(Folder, LanguageFiles, "en-US", comboboxLanguages)) {
-                    ApplyLanguage();
-                }
+				Interface.LoadLanguageFiles(Folder);
+				Interface.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
+				if (Interface.InitLanguage(Folder, LanguageFiles, "en-US", comboboxLanguages)) {
+					ApplyLanguage();
+				}
 			}
 		}
 
@@ -1403,9 +1403,9 @@ namespace TrainEditor {
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
-            if (Interface.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
-                ApplyLanguage();
-            }
+			if (Interface.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
+				ApplyLanguage();
+			}
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
