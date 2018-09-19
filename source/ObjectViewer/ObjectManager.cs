@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -1873,7 +1874,7 @@ namespace OpenBve
             if (Prototype == null) return null;
             return CloneObject(Prototype, null, null);
         }
-        internal static StaticObject CloneObject(StaticObject Prototype, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture)
+        internal static StaticObject CloneObject(StaticObject Prototype, Texture DaytimeTexture, Texture NighttimeTexture)
         {
             if (Prototype == null) return null;
             StaticObject Result = new StaticObject();

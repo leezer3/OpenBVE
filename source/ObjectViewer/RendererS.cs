@@ -14,6 +14,7 @@ using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {

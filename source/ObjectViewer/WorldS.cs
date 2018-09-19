@@ -22,8 +22,8 @@ namespace OpenBve {
 			internal Color32 Color;
 			internal Color24 TransparentColor;
 			internal Color24 EmissiveColor;
-			internal Textures.Texture DaytimeTexture;
-			internal Textures.Texture NighttimeTexture;
+			internal Texture DaytimeTexture;
+			internal Texture NighttimeTexture;
 			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
 			internal byte DaytimeNighttimeBlend;
 			internal MeshMaterialBlendMode BlendMode;

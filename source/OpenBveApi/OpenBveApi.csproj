@@ -81,6 +81,8 @@
     <Compile Include="Runtime.Station.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Textures\Textures.OpenGLTexture.cs" />
+    <Compile Include="Textures\Textures.PathOrigin.cs" />
+    <Compile Include="Textures\Textures.RawOrigin.cs" />
     <Compile Include="Textures\Textures.TextOverlay.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Textures\Textures.cs" />
@@ -88,6 +90,8 @@
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
     <Compile Include="Textures\Textures.OpenGLWrapMode.cs" />
+    <Compile Include="Textures\Textures.BitmapOrigin.cs" />
+    <Compile Include="Textures\Textures.TextureOrigin.cs" />
     <Compile Include="Transformations.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />

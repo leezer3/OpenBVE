@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	/// <summary>Represents plugins loaded by the program.</summary>
@@ -19,7 +20,7 @@ namespace OpenBve {
 			/// <summary>The plugin title.</summary>
 			internal readonly string Title;
 			/// <summary>The interface to load textures as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Textures.TextureInterface Texture;
+			internal TextureInterface Texture;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
 			internal OpenBveApi.Sounds.SoundInterface Sound;
 			// --- constructors ---
@@ -96,8 +97,8 @@ namespace OpenBve {
 						Type[] types = assembly.GetTypes();
 						bool iruntime = false;
 						foreach (Type type in types) {
-							if (type.IsSubclassOf(typeof(OpenBveApi.Textures.TextureInterface))) {
-								plugin.Texture = (OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName);
+							if (type.IsSubclassOf(typeof(TextureInterface))) {
+								plugin.Texture = (TextureInterface)assembly.CreateInstance(type.FullName);
 							}
 							if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface))) {
 								plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);

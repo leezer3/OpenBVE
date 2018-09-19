@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 0659, 0661
 
 using System;
+using System.Drawing;
 using OpenBveApi.Colors;
 
 namespace OpenBveApi.Textures {
@@ -36,8 +37,20 @@ namespace OpenBveApi.Textures {
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
 		private readonly Color24[] MyPalette;
 
+		public bool Ignore;
+
+		public double LastAccess;
+
+		public OpenGlTexture[] OpenGlTextures;
+
+		public TextureOrigin Origin;
+
+		public TextureTransparencyType Transparency;
+
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted pallete)</summary>
 		public bool CompatibleTransparencyMode;
+
+		//public TextureOrigin 
 
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="X">The X-coordinate of the pixel</param>
@@ -84,17 +97,54 @@ namespace OpenBveApi.Textures {
 			this.MyPalette = palette;
 		}
 
+		/// <summary>Creates a new texture.</summary>
+		/// <param name="path">The path to the texture.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost) {
+			this.Origin = new PathOrigin(path, parameters, currentHost);
+			this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+		}
+		/// <summary>Creates a new texture.</summary>
+		/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
+		public Texture(Bitmap bitmap) {
+			this.Origin = new BitmapOrigin(bitmap);
+			this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+		}
+
+		/// <summary>Creates a new texture.</summary>
+		/// <param name="bitmap">The System.Drawing.Bitmap that contains the texture.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		public Texture(Bitmap bitmap, TextureParameters parameters)
+		{
+			this.Origin = new BitmapOrigin(bitmap, parameters);
+			this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+		}
+		/// <summary>Creates a new texture.</summary>
+		/// <param name="texture">The texture raw data.</param>
+		public Texture(OpenBveApi.Textures.Texture texture) {
+			this.Origin = new RawOrigin(texture);
+			this.OpenGlTextures = new OpenGlTexture[] { new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture() };
+		}
+
 	    // --- properties ---
 		/// <summary>Gets the width of the texture in pixels.</summary>
 		public int Width {
 			get {
 				return this.MyWidth;
 			}
+			set
+			{
+
+			}
 		}
 		/// <summary>Gets the height of the texture in pixels.</summary>
 		public int Height {
 			get {
 				return this.MyHeight;
+			}
+			set
+			{
+
 			}
 		}
 		/// <summary>Gets the number of bits per pixel.</summary>
