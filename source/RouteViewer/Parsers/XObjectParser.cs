@@ -5,6 +5,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class XObjectParser {
@@ -2192,24 +2193,24 @@ namespace OpenBve {
 								bool transparent;
 								if (Materials[j].TextureFilename != null)
 								{
-									TextureManager.TextureWrapMode WrapX, WrapY;
+									OpenGlTextureWrapMode WrapX, WrapY;
 									if (ForceTextureRepeatX)
 									{
-										WrapX = TextureManager.TextureWrapMode.Repeat;
+										WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 									}
 									else
 									{
-										WrapX = TextureManager.TextureWrapMode.ClampToEdge;
+										WrapX = OpenGlTextureWrapMode.ClampClamp;
 									}
 									if (ForceTextureRepeatY)
 									{
-										WrapY = TextureManager.TextureWrapMode.Repeat;
+										WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 									}
 									else
 									{
-										WrapY = TextureManager.TextureWrapMode.ClampToEdge;
+										WrapY = OpenGlTextureWrapMode.ClampClamp;
 									}
-									if (WrapX != TextureManager.TextureWrapMode.Repeat | WrapY != TextureManager.TextureWrapMode.Repeat)
+									if (WrapX != OpenGlTextureWrapMode.RepeatRepeat | WrapY != OpenGlTextureWrapMode.RepeatRepeat)
 									{
 										for (int k = 0; k < nFaces; k++)
 										{
@@ -2217,11 +2218,11 @@ namespace OpenBve {
 											{
 												if (Vertices[Faces[k][h]].TextureCoordinates.X < 0.0 | Vertices[Faces[k][h]].TextureCoordinates.X > 1.0)
 												{
-													WrapX = TextureManager.TextureWrapMode.Repeat;
+													WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 												}
 												if (Vertices[Faces[k][h]].TextureCoordinates.Y < 0.0 | Vertices[Faces[k][h]].TextureCoordinates.Y > 1.0)
 												{
-													WrapY = TextureManager.TextureWrapMode.Repeat;
+													WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 												}
 											}
 										}
