@@ -5,7 +5,7 @@
 	{
 		// --- members ---
 		/// <summary>The texture raw data.</summary>
-		public Texture Texture;
+		public readonly Texture Texture;
 
 		// --- constructors ---
 		/// <summary>Creates a new raw data origin.</summary>

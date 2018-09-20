@@ -7,10 +7,10 @@ namespace OpenBveApi.Textures
 	/// <summary>Represents a System.Drawing.Bitmap where the texture can be loaded from.</summary>
 	public class BitmapOrigin : TextureOrigin
 	{
-		// --- members ---
 		/// <summary>The bitmap.</summary>
-		public Bitmap Bitmap;
-		public TextureParameters Parameters;
+		public readonly Bitmap Bitmap;
+		/// <summary>The texture parameters to be applied when loading the texture to OpenGL</summary>
+		public readonly TextureParameters Parameters;
 
 		// --- constructors ---
 		/// <summary>Creates a new bitmap origin.</summary>

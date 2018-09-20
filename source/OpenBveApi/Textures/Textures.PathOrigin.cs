@@ -1,11 +1,16 @@
-﻿namespace OpenBveApi.Textures
+﻿#pragma warning disable 0659, 0661
+
+namespace OpenBveApi.Textures
 {
 	/// <summary>Represents a file or directory where the texture can be loaded from.</summary>
 	public class PathOrigin : TextureOrigin
 	{
 		// --- members ---
-		public string Path;
-		public OpenBveApi.Textures.TextureParameters Parameters;
+		/// <summary>The absolute on-disk path to where the texture may be loaded</summary>
+		public readonly string Path;
+		/// <summary>The texture parameters to be applied when loading this texture from disk</summary>
+		/// <remarks>Multiple textures with different parameters may be loaded from the same on-disk file</remarks>
+		public readonly TextureParameters Parameters;
 
 		private readonly Hosts.HostInterface currentHost;
 
@@ -13,7 +18,8 @@
 		/// <summary>Creates a new path origin.</summary>
 		/// <param name="path">The path to the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		public PathOrigin(string path, OpenBveApi.Textures.TextureParameters parameters, Hosts.HostInterface Host)
+		/// <param name="Host">The callback function to the host application</param>
+		public PathOrigin(string path, TextureParameters parameters, Hosts.HostInterface Host)
 		{
 			this.Path = path;
 			this.Parameters = parameters;

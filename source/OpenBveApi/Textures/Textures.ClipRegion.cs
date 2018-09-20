@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 0659, 0661
+using System;
+
 namespace OpenBveApi.Textures
 {
 	/// <summary>Represents a region in a texture to be extracted.</summary>

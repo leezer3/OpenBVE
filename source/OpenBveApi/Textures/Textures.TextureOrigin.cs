@@ -1,4 +1,4 @@
-﻿using System;
+﻿#pragma warning disable 0659, 0661
 
 namespace OpenBveApi.Textures
 {
@@ -8,7 +8,7 @@ namespace OpenBveApi.Textures
 		/// <summary>Gets the texture from this origin.</summary>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether the texture could be obtained successfully.</returns>
-		public abstract bool GetTexture(out OpenBveApi.Textures.Texture texture);
+		public abstract bool GetTexture(out Texture texture);
 		// --- operators ---
 		/// <summary>Checks whether two origins are equal.</summary>
 		/// <param name="a">The first origin.</param>
