@@ -16,7 +16,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are equal.</returns>
 		public static bool operator ==(TextureOrigin a, TextureOrigin b)
 		{
-			if (a is null && b is null)
+			if ((object)a == null && (object)b == null)
 			{
 				return true; //Two nulls are always equal
 			}
@@ -46,7 +46,7 @@ namespace OpenBveApi.Textures
 		/// <returns>Whether the two origins are unequal.</returns>
 		public static bool operator !=(TextureOrigin a, TextureOrigin b)
 		{
-			if (a is null && b is null)
+			if ((object)a == null && (object)b == null)
 			{
 				return false; //Two nulls are always equal
 			}
