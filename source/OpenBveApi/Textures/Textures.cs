@@ -178,6 +178,7 @@ namespace OpenBveApi.Textures {
 			if (object.ReferenceEquals(a, b)) return true;
 			if (object.ReferenceEquals(a, null)) return false;
 			if (object.ReferenceEquals(b, null)) return false;
+			if (a.Origin != b.Origin) return false;
 			if (a.MyWidth != b.MyWidth) return false;
 			if (a.MyHeight != b.MyHeight) return false;
 			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return false;
@@ -195,10 +196,7 @@ namespace OpenBveApi.Textures {
 			if (object.ReferenceEquals(a, b)) return false;
 			if (object.ReferenceEquals(a, null)) return true;
 			if (object.ReferenceEquals(b, null)) return true;
-			if (a.MyWidth == 0 && b.MyWidth == 0)
-			{
-				return false;
-			}
+			if (a.Origin != b.Origin) return true;
 			if (a.MyWidth != b.MyWidth) return true;
 			if (a.MyHeight != b.MyHeight) return true;
 			if (a.MyBitsPerPixel != b.MyBitsPerPixel) return true;
@@ -217,6 +215,7 @@ namespace OpenBveApi.Textures {
 			if (object.ReferenceEquals(obj, null)) return false;
 			if (!(obj is Texture)) return false;
 			Texture x = (Texture)obj;
+			if (this.Origin != x.Origin) return false;
 			if (this.MyWidth != x.MyWidth) return false;
 			if (this.MyHeight != x.MyHeight) return false;
 			if (this.MyBitsPerPixel != x.MyBitsPerPixel) return false;
