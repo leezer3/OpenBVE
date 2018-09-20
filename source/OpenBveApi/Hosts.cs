@@ -58,27 +58,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out TextureHandle handle) {
-			handle = null;
-			return false;
-		}
-		
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="path">The path to the file or folder that contains the texture.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
-			handle = null;
-			return false;
-		}
-
-		/// <summary>Registers a texture and returns a handle to the texture.</summary>
-		/// <param name="texture">The texture data.</param>
-		/// <param name="parameters">The parameters that specify how to process the texture.</param>
-		/// <param name="handle">Receives the handle to the texture.</param>
-		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Textures.Texture texture, TextureParameters parameters, out TextureHandle handle) {
+		public virtual bool RegisterTexture(string path, TextureParameters parameters, out Textures.Texture handle) {
 			handle = null;
 			return false;
 		}
@@ -88,7 +68,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public virtual bool RegisterTexture(Textures.Texture texture, TextureParameters parameters, out Texture handle) {
+		public virtual bool RegisterTexture(Textures.Texture texture, TextureParameters parameters, out Textures.Texture handle) {
 			handle = null;
 			return false;
 		}
