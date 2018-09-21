@@ -45,12 +45,12 @@ namespace OpenBve
 						Interface.CurrentControls[i].AnalogState = 1.0;
 						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
 						//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
-						if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.MenuUp || Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.MenuDown)
+						if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.MenuUp || Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.MenuDown)
 						{
-							if (Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.CameraInterior |
-								Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.CameraExterior |
-								Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.CameraFlyBy |
-								Interface.CurrentControls[i].Command == OpenBveTranslate.Interface.Command.CameraTrack)
+							if (Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.CameraInterior |
+								Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.CameraExterior |
+								Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.CameraFlyBy |
+								Interface.CurrentControls[i].Command == OpenBveApi.Interface.Interface.Command.CameraTrack)
 							{
 								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
 								continue;

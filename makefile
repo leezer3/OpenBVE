@@ -76,9 +76,6 @@ OPEN_BVE_FILE         :=OpenBve.exe
 OPEN_BVE_API_ROOT     :=source/OpenBveApi
 OPEN_BVE_API_FILE     :=OpenBveApi.dll
 
-OPEN_BVE_TRANS_ROOT   :=source/OpenBveTranslate
-OPEN_BVE_TRANS_FILE   :=OpenBveTranslate.dll
-
 FORMATS_MSTS_ROOT     :=source/Plugins/Formats.Msts
 FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 
@@ -240,7 +237,6 @@ clean:
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
-	rm -f bin*/OpenBveTranslate.dll* bin*/OpenBveTranslate.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
 	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
 	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
@@ -337,7 +333,6 @@ $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/Assembl
 $(call create_resource, $(OPEN_BVE_RESOURCE), $(OPEN_BVE_RESX))
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) 
-$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_TRANS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
@@ -349,7 +344,6 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
-$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_TRANS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
@@ -364,7 +358,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(OPEN_BVE_TRANS_OUT) /reference:$(FORMATS_MSTS_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
@@ -391,33 +385,9 @@ $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BVE_API_SRC) $(OPEN_BVE_API_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_API_OUT) /target:library $(OPEN_BVE_API_SRC) $(ARGS) $(OPEN_BVE_API_DOC) \
-	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
-
-
-####################
-# OpenBveTranslate #
-####################
-
-OPEN_BVE_TRANS_FOLDERS  := $(shell find $(OPEN_BVE_TRANS_ROOT) -type d)
-OPEN_BVE_TRANS_SRC      := $(foreach sdir, $(OPEN_BVE_TRANS_FOLDERS), $(wildcard $(sdir)/*.cs))
-OPEN_BVE_TRANS_DOC      := $(addprefix /doc:, $(foreach sdir, $(OPEN_BVE_TRANS_FOLDERS), $(wildcard $(sdir)/*.xml)))
-OPEN_BVE_TRANS_RESX     := $(foreach sdir, $(OPEN_BVE_TRANS_FOLDERS), $(wildcard $(sdir)/*.resx))
-OPEN_BVE_TRANS_RESOURCE := $(addprefix $(OPEN_BVE_TRANS_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OPEN_BVE_TRANS_ROOT))%.resx, %.resources, $(OPEN_BVE_TRANS_RESX)))))
-OPEN_BVE_TRANS_OUT       =$(OUTPUT_DIR)/$(OPEN_BVE_TRANS_FILE)
-
-$(call create_resource, $(OPEN_BVE_TRANS_RESOURCE), $(OPEN_BVE_TRANS_RESX))
-
-$(DEBUG_DIR)/$(OPEN_BVE_TRANS_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
-$(RELEASE_DIR)/$(OPEN_BVE_TRANS_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
-
-$(DEBUG_DIR)/$(OPEN_BVE_TRABS_FILE) $(RELEASE_DIR)/$(OPEN_BVE_TRANS_FILE): $(OPEN_BVE_TRANS_SRC) $(OPEN_BVE_TRANS_RESOURCE)
-	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_TRANS_OUT)$(COLOR_END)
-	@$(CSC) /out:$(OPEN_BVE_TRANS_OUT) /target:library $(OPEN_BVE_TRANS_SRC) $(ARGS) $(OPEN_BVE_TRANS_DOC) \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) \
-	/reference:System.Core.dll /reference:System.dll \
-	$(addprefix /resource:, $(OPEN_BVE_TRANS_RESOURCE))
 
 
 ##############
@@ -683,13 +653,13 @@ TRAIN_EDITOR_OUT       =$(OUTPUT_DIR)/$(TRAIN_EDITOR_FILE)
 
 $(call create_resource, $(TRAIN_EDITOR_RESOURCE), $(TRAIN_EDITOR_RESX))
 
-$(DEBUG_DIR)/$(TRAIN_EDITOR_FILE): $(DEBUG_DIR)/$(OPEN_BVE_TRANS_FILE)
-$(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_TRANS_FILE)
+$(DEBUG_DIR)/$(TRAIN_EDITOR_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 
 $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_EDITOR_SRC) $(TRAIN_EDITOR_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TRAIN_EDITOR_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
-	/reference:$(OPEN_BVE_TRANS_OUT) /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
 
 #############

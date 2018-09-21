@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenBveTranslate
+namespace OpenBveApi.Interface
 {
 	public static partial class Interface
 	{

@@ -38,7 +38,7 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = OpenBveTranslate.Interface.GetInterfaceString("program_title");
+            this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("program_title");
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.formImage_Paint);
             this.Resize += new System.EventHandler(this.formImage_Resize);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.formImage_KeyDown);

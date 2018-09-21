@@ -83,7 +83,7 @@ namespace OpenBve {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
-				MessageBox.Show(OpenBveTranslate.Interface.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 
@@ -95,7 +95,7 @@ namespace OpenBve {
 				{
 					MessageBox.Show(
 						"You are currently running as the root user." + System.Environment.NewLine +
-						"This is a bad idea, please dont!", OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						"This is a bad idea, please dont!", OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
 			}
 			else
@@ -105,7 +105,7 @@ namespace OpenBve {
 					
 					MessageBox.Show(
 						"OpenAL was not found on your system, and will now be installed." + System.Environment.NewLine + System.Environment.NewLine +
-						"Please follow the install prompts.", OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						"Please follow the install prompts.", OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 
 					ProcessStartInfo info = new ProcessStartInfo(Path.Combine(FileSystem.DataFolder, "Dependencies\\Win32\\oalinst.exe"));
 					info.UseShellExecute = true;
@@ -130,7 +130,7 @@ namespace OpenBve {
 					catch (Win32Exception)
 					{
 						MessageBox.Show(
-						"An error occured during OpenAL installation....", OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						"An error occured during OpenAL installation....", OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					
 				}
@@ -149,7 +149,7 @@ namespace OpenBve {
 			// --- load language ---
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
-				OpenBveTranslate.Interface.LoadLanguageFiles(folder);
+				OpenBveApi.Interface.Interface.LoadLanguageFiles(folder);
 			}
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			{
@@ -219,7 +219,7 @@ namespace OpenBve {
 			} else {
 				result.Start = true;
 				//Apply translations
-				OpenBveTranslate.Interface.SetInGameLanguage(OpenBveTranslate.Interface.CurrentLanguageCode);
+				OpenBveApi.Interface.Interface.SetInGameLanguage(OpenBveApi.Interface.Interface.CurrentLanguageCode);
 			}
 			// --- start the actual program ---
 			if (result.Start) {
@@ -250,10 +250,10 @@ namespace OpenBve {
 								switch (ex.Message)
 								{
 									case "libopenal.so.1":
-										MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										break;
 									default:
-										MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", OpenBveTranslate.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+										MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										break;
 								}
 							}

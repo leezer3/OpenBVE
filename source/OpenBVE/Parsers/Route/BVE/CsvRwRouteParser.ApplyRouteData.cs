@@ -19,7 +19,7 @@ namespace OpenBve
 			{
 				if (freeObjCount == 0 && railtypeCount == 0)
 				{
-					throw new Exception(OpenBveTranslate.Interface.GetInterfaceString("errors_route_corrupt_noobjects"));
+					throw new Exception(OpenBveApi.Interface.Interface.GetInterfaceString("errors_route_corrupt_noobjects"));
 				}
 			}
 			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;

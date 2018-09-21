@@ -1,4 +1,4 @@
-﻿namespace OpenBveTranslate
+﻿namespace OpenBveApi.Interface
 {
 	public static partial class Interface
 	{

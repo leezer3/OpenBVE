@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi;
 
-namespace OpenBveTranslate {
+namespace OpenBveApi.Interface {
 	public static partial class Interface {
 
         public static void LoadLanguageFiles(string LanguageFolder) {

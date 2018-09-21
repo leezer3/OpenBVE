@@ -1,6 +1,6 @@
 ﻿using OpenTK.Input;
 
-namespace OpenBveTranslate
+namespace OpenBveApi.Interface
 {
 	public partial class Interface
 	{

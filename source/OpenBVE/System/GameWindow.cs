@@ -25,7 +25,7 @@ namespace OpenBve
 		private double RenderTimeElapsed;
 		private double RenderRealTimeElapsed;
 		//We need to explicitly specify the default constructor
-		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, OpenBveTranslate.Interface.GetInterfaceString("program_title"), @default)
+		public OpenBVEGame(int width, int height, GraphicsMode currentGraphicsMode, GameWindowFlags @default): base(width, height, currentGraphicsMode, OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), @default)
 		{
 			try
 			{
@@ -662,7 +662,7 @@ namespace OpenBve
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
-					Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("notification_aiunable"),MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+					Game.AddMessage(OpenBveApi.Interface.Interface.GetInterfaceString("notification_aiunable"),MessageManager.MessageDependency.None, Interface.GameMode.Expert,
 						OpenBveApi.Colors.MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 				}
 			}
@@ -718,7 +718,7 @@ namespace OpenBve
 				if (Loading.PluginError != null)
 				{
 					Game.AddMessage(Loading.PluginError, MessageManager.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
-					Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("errors_plugin_failure2"), MessageManager.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+					Game.AddMessage(OpenBveApi.Interface.Interface.GetInterfaceString("errors_plugin_failure2"), MessageManager.MessageDependency.None, Interface.GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;

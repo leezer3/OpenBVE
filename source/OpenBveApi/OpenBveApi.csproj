@@ -55,18 +55,28 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress">
       <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Colors.cs">
     </Compile>
     <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Hosts.cs" />
+    <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
+    <Compile Include="Interface\Input\Commands.cs" />
+    <Compile Include="Interface\Translations\InterfaceStrings.cs" />
+    <Compile Include="Interface\Translations\KeyInfo.cs" />
+    <Compile Include="Interface\Translations\LanguageFile.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Orientation3.cs" />

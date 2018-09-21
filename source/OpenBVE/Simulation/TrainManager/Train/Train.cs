@@ -203,15 +203,15 @@ namespace OpenBve
 					{
 						if (Specs.CurrentAverageSpeed > CurrentRouteLimit)
 						{
-							Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
+							Game.AddMessage(OpenBveApi.Interface.Interface.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 						if (CurrentSectionLimit == 0.0)
 						{
-							Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("message_signal_stop"), MessageManager.MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							Game.AddMessage(OpenBveApi.Interface.Interface.GetInterfaceString("message_signal_stop"), MessageManager.MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (Specs.CurrentAverageSpeed > CurrentSectionLimit)
 						{
-							Game.AddMessage(OpenBveTranslate.Interface.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+							Game.AddMessage(OpenBveApi.Interface.Interface.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 					}
 					if (AI != null)
@@ -318,7 +318,7 @@ namespace OpenBve
 						CurrentSectionLimit = 6.94444444444444;
 						if (this == PlayerTrain)
 						{
-							string s = OpenBveTranslate.Interface.GetInterfaceString("message_signal_proceed");
+							string s = OpenBveApi.Interface.Interface.GetInterfaceString("message_signal_proceed");
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);

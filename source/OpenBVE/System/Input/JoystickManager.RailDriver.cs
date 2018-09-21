@@ -117,7 +117,7 @@ namespace OpenBve
 					{
 						Calibration[i] = new AxisCalibration();
 					}
-					MessageBox.Show(OpenBveTranslate.Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					//Clear the calibration file
 					File.Delete(calibrationFile);
 				}

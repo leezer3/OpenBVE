@@ -48,10 +48,10 @@ namespace OpenBve
 		//
 		/// <summary>Processes commands.</summary>
 		/// <returns><c>true</c>, if command was processed, <c>false</c> otherwise.</returns>
-		/// <param name="command">The OpenBveTranslate.Interface.Command command to process.</param>
-		internal bool ProcessCommand(OpenBveTranslate.Interface.Command command)
+		/// <param name="command">The OpenBveApi.Interface.Interface.Command command to process.</param>
+		internal bool ProcessCommand(OpenBveApi.Interface.Interface.Command command)
 		{
-			if (command != OpenBveTranslate.Interface.Command.RouteInformation)	// only accept RouteInformation command
+			if (command != OpenBveApi.Interface.Interface.Command.RouteInformation)	// only accept RouteInformation command
 				return false;
 			// cycle through available state
 			setState( (state)((int)(currentState + 1) % (int)state.numOf) );

@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 
-namespace OpenBveTranslate {
+namespace OpenBveApi.Interface {
 	public static partial class Interface
 	{
 		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>

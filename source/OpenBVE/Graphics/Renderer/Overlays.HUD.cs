@@ -54,7 +54,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleBackward;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleBackward;
 						}
 					}
 					else if (TrainManager.PlayerTrain.Handles.Reverser.Driver > 0)
@@ -66,7 +66,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleForward;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleForward;
 						}
 					}
 					else
@@ -78,7 +78,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleNeutral;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleNeutral;
 						}
 					}
 					Element.TransitionState = 0.0;
@@ -97,7 +97,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandlePowerNull;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandlePowerNull;
 						}
 					}
 					else
@@ -109,7 +109,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture);
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture);
 						}
 						
 					}
@@ -131,7 +131,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleEmergency;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleEmergency;
 							}
 						}
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Release)
@@ -143,7 +143,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleRelease;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleRelease;
 							}
 						}
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
@@ -155,7 +155,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleLap;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleLap;
 							}
 						}
 						else
@@ -167,7 +167,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleService;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleService;
 							}
 							
 						}
@@ -183,7 +183,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleEmergency;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleEmergency;
 							}
 						}
 						else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
@@ -195,7 +195,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleHoldBrake;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleHoldBrake;
 							}
 						}
 						else if (TrainManager.PlayerTrain.Handles.Brake.Driver == 0)
@@ -207,7 +207,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleBrakeNull;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleBrakeNull;
 							}
 						}
 						else
@@ -219,7 +219,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture);
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture);
 							}
 							
 						}
@@ -243,7 +243,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleRelease;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleRelease;
 							}
 						}
 						else if (TrainManager.PlayerTrain.Handles.LocoBrake.Driver == (int)TrainManager.AirBrakeHandleState.Lap)
@@ -255,7 +255,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleLap;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleLap;
 							}
 						}
 						else
@@ -267,7 +267,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleService;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleService;
 							}
 							
 						}
@@ -283,7 +283,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleBrakeNull;
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleBrakeNull;
 							}
 						}
 						else
@@ -295,7 +295,7 @@ namespace OpenBve
 							}
 							else
 							{
-								t = OpenBveTranslate.Interface.QuickReferences.HandleLocoBrake + TrainManager.PlayerTrain.Handles.LocoBrake.Driver.ToString(Culture);
+								t = OpenBveApi.Interface.Interface.QuickReferences.HandleLocoBrake + TrainManager.PlayerTrain.Handles.LocoBrake.Driver.ToString(Culture);
 							}
 							
 						}
@@ -316,7 +316,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleEmergency;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleEmergency;
 						}
 					}
 					else if (TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
@@ -328,7 +328,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleHoldBrake;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleHoldBrake;
 						}
 					}
 					else if (TrainManager.PlayerTrain.Handles.Brake.Driver > 0)
@@ -340,7 +340,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture);
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandleBrake + TrainManager.PlayerTrain.Handles.Brake.Driver.ToString(Culture);
 						}
 					}
 					else if (TrainManager.PlayerTrain.Handles.Power.Driver > 0)
@@ -352,7 +352,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture);
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandlePower + TrainManager.PlayerTrain.Handles.Power.Driver.ToString(Culture);
 						}
 					}
 					else
@@ -364,7 +364,7 @@ namespace OpenBve
 						}
 						else
 						{
-							t = OpenBveTranslate.Interface.QuickReferences.HandlePowerNull;
+							t = OpenBveApi.Interface.Interface.QuickReferences.HandlePowerNull;
 						}
 					}
 					Element.TransitionState = 0.0;
@@ -399,7 +399,7 @@ namespace OpenBve
 					{
 						sc = MessageColor.Blue;
 					}
-					t = Command == "doorsleft" ? OpenBveTranslate.Interface.QuickReferences.DoorsLeft : OpenBveTranslate.Interface.QuickReferences.DoorsRight;
+					t = Command == "doorsleft" ? OpenBveApi.Interface.Interface.QuickReferences.DoorsLeft : OpenBveApi.Interface.Interface.QuickReferences.DoorsRight;
 				} break;
 				case "stopleft":
 				case "stopright":

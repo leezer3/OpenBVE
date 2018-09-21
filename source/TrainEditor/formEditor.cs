@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
-using OpenBveTranslate;
+using OpenBveApi.Interface;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
