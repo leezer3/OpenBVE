@@ -19,7 +19,7 @@ namespace TrainEditor {
 		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
-
+		
 		// ----------------------------------------
 		// form loading / closing                 |
 		// ----------------------------------------

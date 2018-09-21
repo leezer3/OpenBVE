@@ -2493,7 +2493,7 @@
 			this.comboboxLanguages.Size = new System.Drawing.Size(194, 20);
 			this.comboboxLanguages.TabIndex = 0;
 			this.comboboxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboboxLanguages_SelectedIndexChanged);
-			//
+			// 
 			// groupBoxMisc
 			// 
 			this.groupBoxMisc.Controls.Add(this.comboBoxEBHandleBehaviour);
@@ -2774,7 +2774,7 @@
 			this.labelLineVertical.Name = "labelLineVertical";
 			this.labelLineVertical.Size = new System.Drawing.Size(2, 480);
 			this.labelLineVertical.TabIndex = 13;
-			// 
+			//
 			// textboxDoorWidth
 			//
 			this.textboxDoorWidth.Location = new System.Drawing.Point(168, 232);
@@ -2824,7 +2824,7 @@
 			this.labelDoorMaxTolerance.TabIndex = 23;
 			this.labelDoorMaxTolerance.Text = "DoorMaxTolerance:";
 			this.labelDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			//
+			// 
 			// formEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

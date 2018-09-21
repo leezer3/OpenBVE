@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi;
@@ -391,7 +391,7 @@ namespace OpenBveTranslate {
                 //We should always fall-back to en-US as the last-resort before failing to load a string
                 newLanguage.FallbackCodes.Add("en-US");
                 AvailableLangauges.Add(newLanguage);
-				AvailableLangauges.Sort((a, b) => string.Compare(a.Name, b.Name));
+                AvailableLangauges.Sort((a, b) => string.Compare(a.Name, b.Name));
             }
             catch (Exception)
             {
