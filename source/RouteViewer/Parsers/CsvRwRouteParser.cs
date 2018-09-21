@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.World;
 using OpenBveApi.Textures;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -2620,7 +2621,7 @@ namespace OpenBve {
 																	if (Signal.GlowObject != null) {
 																		for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++) {
 																			Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, GlowAttenuationMode.DivisionExponent4);
 																		}
 																	}
 																}

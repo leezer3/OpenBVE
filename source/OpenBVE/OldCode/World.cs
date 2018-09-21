@@ -230,12 +230,6 @@ namespace OpenBve {
 			}
 		}
 
-		// glow
-		internal enum GlowAttenuationMode {
-			None = 0,
-			DivisionExponent2 = 1,
-			DivisionExponent4 = 2,
-		}
 		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
 		/// <param name="HalfDistance">The distance at which the glow is at 50% of its full intensity. The value is clamped to the integer range from 1 to 4096. Values less than or equal to 0 disable glow attenuation.</param>
 		/// <param name="Mode">The glow attenuation mode.</param>

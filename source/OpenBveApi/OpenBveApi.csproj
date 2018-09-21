@@ -69,6 +69,7 @@
     <Compile Include="Hosts.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Objects\Damping.cs" />
+    <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
     <Compile Include="Orientation3.cs" />
     <Compile Include="Packages.cs" />

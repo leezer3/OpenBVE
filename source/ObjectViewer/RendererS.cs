@@ -1235,7 +1235,7 @@ namespace OpenBve
         {
             if (Face.Vertices.Length != 0)
             {
-                World.GlowAttenuationMode mode; double halfdistance;
+				GlowAttenuationMode mode; double halfdistance;
                 World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
                 int i = (int)Face.Vertices[0].Index;
                 double dx = Vertices[i].Coordinates.X - CameraX;
@@ -1243,12 +1243,12 @@ namespace OpenBve
                 double dz = Vertices[i].Coordinates.Z - CameraZ;
                 switch (mode)
                 {
-                    case World.GlowAttenuationMode.DivisionExponent2:
+                    case GlowAttenuationMode.DivisionExponent2:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             return t / (t + halfdistance * halfdistance);
                         }
-                    case World.GlowAttenuationMode.DivisionExponent4:
+                    case GlowAttenuationMode.DivisionExponent4:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             t *= t; halfdistance *= halfdistance;

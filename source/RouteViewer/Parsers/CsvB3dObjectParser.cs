@@ -787,11 +787,11 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument GlowHalfDistance in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									glowhalfdistance = 0;
 								}
-								World.GlowAttenuationMode glowmode = World.GlowAttenuationMode.DivisionExponent4;
+								GlowAttenuationMode glowmode = GlowAttenuationMode.DivisionExponent4;
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 									switch (Arguments[2].ToLowerInvariant()) {
-											case "divideexponent2": glowmode = World.GlowAttenuationMode.DivisionExponent2; break;
-											case "divideexponent4": glowmode = World.GlowAttenuationMode.DivisionExponent4; break;
+											case "divideexponent2": glowmode = GlowAttenuationMode.DivisionExponent2; break;
+											case "divideexponent4": glowmode = GlowAttenuationMode.DivisionExponent4; break;
 										default:
 											Interface.AddMessage(Interface.MessageType.Error, false, "The given GlowAttenuationMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
