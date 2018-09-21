@@ -157,7 +157,6 @@ namespace OpenBve
         internal static void Initialize()
         {
             // opengl
-            //GL.ShadeModel(ShadingModel.Decal); // what is decal?
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -227,9 +226,6 @@ namespace OpenBve
 		    SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 	    }
 
-        // render scene
-        internal static byte[] PixelBuffer = null;
-        internal static int PixelBufferOpenGlTextureIndex = 0;
         internal static void RenderScene()
         {
 	        // initialize

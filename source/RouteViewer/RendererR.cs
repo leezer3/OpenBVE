@@ -199,9 +199,6 @@ namespace OpenBve {
 			GL.DepthFunc(DepthFunction.Lequal);
 		}
 
-		// render scene
-		internal static byte[] PixelBuffer = null;
-		internal static int PixelBufferOpenGlTextureIndex = 0;
 		internal static void RenderScene(double TimeElapsed) {
 			// initialize
 			GL.Enable(EnableCap.DepthTest);

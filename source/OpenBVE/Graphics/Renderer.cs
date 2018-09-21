@@ -85,8 +85,7 @@ namespace OpenBve
 		private const float inv255 = 1.0f / 255.0f;
 
 		// render scene
-		internal static byte[] PixelBuffer = null;
-		internal static int PixelBufferOpenGlTextureIndex = 0;
+		
 		internal static void RenderScene(double TimeElapsed)
 		{
 			// initialize
