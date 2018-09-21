@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
 namespace OpenBve

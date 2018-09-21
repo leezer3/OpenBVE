@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -87,7 +88,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}
