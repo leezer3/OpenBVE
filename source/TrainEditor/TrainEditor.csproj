@@ -78,6 +78,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Options.cs" />
     <Compile Include="TrainDat.cs" />
     <Compile Include="formEditor.cs">
       <SubType>Form</SubType>
