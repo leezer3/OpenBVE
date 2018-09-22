@@ -2,6 +2,7 @@
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
@@ -25,8 +26,8 @@ namespace OpenBve {
 		private const int		numOfLoadingBkgs	= 7;
 
 		private static bool				customLoadScreen	= false;
-		private static Textures.Texture	TextureLoadingBkg	= null;
-		private static Textures.Texture	TextureLogo			= null;
+		private static Texture	TextureLoadingBkg	= null;
+		private static Texture	TextureLogo			= null;
 		private static string[]			LogoFileName		= {"logo_256.png", "logo_512.png", "logo_1024.png"};
 
 		//

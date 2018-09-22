@@ -4,7 +4,8 @@ namespace OpenBveApi.Textures
 {
 	/// <summary>Represents how the texture wraps on each axis.</summary>
 	[Flags]
-	public enum OpenGlTextureWrapMode {
+	public enum OpenGlTextureWrapMode
+	{
 		/// <summary>The texture is clamped to edge on both axes.</summary>
 		/// <remarks>The numerical value is 0.</remarks>
 		ClampClamp = 0,

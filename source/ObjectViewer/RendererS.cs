@@ -30,15 +30,7 @@ namespace OpenBve
         internal enum TransparencyMode { Sharp, Smooth }
 
         // object list
-        internal enum ObjectType : byte
-        {
-            /// <summary>The object is part of the static scenery. The matching ObjectListType is StaticOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Static = 1,
-            /// <summary>The object is part of the animated scenery or of a train exterior. The matching ObjectListType is DynamicOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Dynamic = 2,
-            /// <summary>The object is part of the cab. The matching ObjectListType is OverlayOpaque for fully opaque faces, and OverlayAlpha for all other faces.</summary>
-            Overlay = 3
-        }
+        
         private struct Object
         {
             internal int ObjectIndex;
@@ -165,7 +157,6 @@ namespace OpenBve
         internal static void Initialize()
         {
             // opengl
-            //GL.ShadeModel(ShadingModel.Decal); // what is decal?
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -235,9 +226,6 @@ namespace OpenBve
 		    SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 	    }
 
-        // render scene
-        internal static byte[] PixelBuffer = null;
-        internal static int PixelBufferOpenGlTextureIndex = 0;
         internal static void RenderScene()
         {
 	        // initialize
@@ -1247,7 +1235,7 @@ namespace OpenBve
         {
             if (Face.Vertices.Length != 0)
             {
-                World.GlowAttenuationMode mode; double halfdistance;
+				GlowAttenuationMode mode; double halfdistance;
                 World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
                 int i = (int)Face.Vertices[0].Index;
                 double dx = Vertices[i].Coordinates.X - CameraX;
@@ -1255,12 +1243,12 @@ namespace OpenBve
                 double dz = Vertices[i].Coordinates.Z - CameraZ;
                 switch (mode)
                 {
-                    case World.GlowAttenuationMode.DivisionExponent2:
+                    case GlowAttenuationMode.DivisionExponent2:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             return t / (t + halfdistance * halfdistance);
                         }
-                    case World.GlowAttenuationMode.DivisionExponent4:
+                    case GlowAttenuationMode.DivisionExponent4:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             t *= t; halfdistance *= halfdistance;

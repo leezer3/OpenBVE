@@ -104,8 +104,6 @@
     <Compile Include="RendererS.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="TextureManager.cs" />
-    <Compile Include="Textures.Texture.cs" />
-    <Compile Include="Textures.TextureOrigin.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
     <Compile Include="WorldS.cs" />

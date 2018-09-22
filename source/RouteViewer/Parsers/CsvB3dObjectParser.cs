@@ -787,11 +787,11 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument GlowHalfDistance in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									glowhalfdistance = 0;
 								}
-								World.GlowAttenuationMode glowmode = World.GlowAttenuationMode.DivisionExponent4;
+								GlowAttenuationMode glowmode = GlowAttenuationMode.DivisionExponent4;
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 									switch (Arguments[2].ToLowerInvariant()) {
-											case "divideexponent2": glowmode = World.GlowAttenuationMode.DivisionExponent2; break;
-											case "divideexponent4": glowmode = World.GlowAttenuationMode.DivisionExponent4; break;
+											case "divideexponent2": glowmode = GlowAttenuationMode.DivisionExponent2; break;
+											case "divideexponent4": glowmode = GlowAttenuationMode.DivisionExponent4; break;
 										default:
 											Interface.AddMessage(Interface.MessageType.Error, false, "The given GlowAttenuationMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
@@ -1430,24 +1430,24 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					TextureManager.TextureWrapMode WrapX, WrapY;
+					OpenGlTextureWrapMode WrapX, WrapY;
 					if (ForceTextureRepeatX) {
-						WrapX = TextureManager.TextureWrapMode.Repeat;
+						WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 					} else {
-						WrapX = TextureManager.TextureWrapMode.ClampToEdge;
+						WrapX = OpenGlTextureWrapMode.ClampClamp;
 					}
 					if (ForceTextureRepeatY) {
-						WrapY = TextureManager.TextureWrapMode.Repeat;
+						WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 					} else {
-						WrapY = TextureManager.TextureWrapMode.ClampToEdge;
+						WrapY = OpenGlTextureWrapMode.ClampClamp;
 					}
-					if (WrapX != TextureManager.TextureWrapMode.Repeat | WrapY != TextureManager.TextureWrapMode.Repeat) {
+					if (WrapX != OpenGlTextureWrapMode.RepeatRepeat | WrapY != OpenGlTextureWrapMode.RepeatRepeat) {
 						for (int j = 0; j < Builder.Vertices.Length; j++) {
 							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0) {
-								WrapX = TextureManager.TextureWrapMode.Repeat;
+								WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 							}
 							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0) {
-								WrapY = TextureManager.TextureWrapMode.Repeat;
+								WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 							}
 						}
 					}

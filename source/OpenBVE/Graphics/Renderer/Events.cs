@@ -7,17 +7,17 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		private static Textures.Texture BrightnessChangeTexture;
-		private static Textures.Texture BackgroundChangeTexture;
-		private static Textures.Texture StationStartTexture;
-		private static Textures.Texture StationEndTexture;
-		private static Textures.Texture LimitTexture;
-		private static Textures.Texture SectionTexture;
-		private static Textures.Texture TransponderTexture;
-		private static Textures.Texture SoundTexture;
-		private static Textures.Texture BufferTexture;
-		private static Textures.Texture StopTexture;
-		private static Textures.Texture PointSoundTexture;
+		private static Texture BrightnessChangeTexture;
+		private static Texture BackgroundChangeTexture;
+		private static Texture StationStartTexture;
+		private static Texture StationEndTexture;
+		private static Texture LimitTexture;
+		private static Texture SectionTexture;
+		private static Texture TransponderTexture;
+		private static Texture SoundTexture;
+		private static Texture BufferTexture;
+		private static Texture StopTexture;
+		private static Texture PointSoundTexture;
 
 		private static bool Initialized = false;
 
@@ -79,7 +79,7 @@ namespace OpenBve
 					{
 						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
-						double s; Textures.Texture t;
+						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent)
 						{
 							s = 0.15;
@@ -204,7 +204,7 @@ namespace OpenBve
 				}
 			}
 		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Textures.Texture TextureIndex)
+		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Texture TextureIndex)
 		{
 			
 			Vector3[] v = new Vector3[8];

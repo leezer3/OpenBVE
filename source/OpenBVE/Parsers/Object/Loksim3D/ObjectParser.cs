@@ -544,7 +544,7 @@ namespace OpenBve
 					}
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
-						Textures.Texture tday;
+						Texture tday;
 						if (Builder.Materials[i].TransparencyTexture != null)
 						{
 							Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
@@ -573,7 +573,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
-						Textures.Texture tnight;
+						Texture tnight;
 						Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tnight);
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tnight;
 					}

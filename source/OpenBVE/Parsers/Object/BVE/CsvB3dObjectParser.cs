@@ -98,7 +98,7 @@ namespace OpenBve {
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
-						Textures.Texture tday;
+						Texture tday;
 						if (Materials[i].Text != null)
 						{
 							Bitmap bitmap = null;
@@ -107,14 +107,14 @@ namespace OpenBve {
 								bitmap = new Bitmap(Materials[i].DaytimeTexture);
 							}
 							Bitmap texture = TextOverlay.AddTextToBitmap(bitmap, Materials[i].Text, Materials[i].Font, 12, Materials[i].BackgroundColor, Materials[i].TextColor, Materials[i].TextPadding);
-							tday = Textures.RegisterTexture(texture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)));
+							tday = Textures.RegisterTexture(texture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)));
 						}
 						else
 						{
 							if (Materials[i].TransparentColorUsed)
 							{
 								Textures.RegisterTexture(Materials[i].DaytimeTexture,
-									new OpenBveApi.Textures.TextureParameters(null,
+									new TextureParameters(null,
 										new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G,
 											Materials[i].TransparentColor.B)), out tday);
 							}
@@ -131,9 +131,9 @@ namespace OpenBve {
 					}
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null) {
-						Textures.Texture tnight;
+						Texture tnight;
 						if (Materials[i].TransparentColorUsed) {
-							Textures.RegisterTexture(Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
+							Textures.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
 						} else {
 							Textures.RegisterTexture(Materials[i].NighttimeTexture, out tnight);
 						}
@@ -929,11 +929,11 @@ namespace OpenBve {
 									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid argument GlowHalfDistance in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									glowhalfdistance = 0;
 								}
-								World.GlowAttenuationMode glowmode = World.GlowAttenuationMode.DivisionExponent4;
+								GlowAttenuationMode glowmode = GlowAttenuationMode.DivisionExponent4;
 								if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 									switch (Arguments[2].ToLowerInvariant()) {
-											case "divideexponent2": glowmode = World.GlowAttenuationMode.DivisionExponent2; break;
-											case "divideexponent4": glowmode = World.GlowAttenuationMode.DivisionExponent4; break;
+											case "divideexponent2": glowmode = GlowAttenuationMode.DivisionExponent2; break;
+											case "divideexponent4": glowmode = GlowAttenuationMode.DivisionExponent4; break;
 										default:
 											Interface.AddMessage(Interface.MessageType.Error, false, "The given GlowAttenuationMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;

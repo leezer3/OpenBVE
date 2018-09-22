@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Textures;
+
+namespace OpenBve
 {
 	partial class MessageManager
 	{
@@ -6,11 +8,11 @@
 		internal class TextureMessage : Message
 		{
 			/// <summary>The message texture to be displayed if early</summary>
-			internal Textures.Texture MessageEarlyTexture;
+			internal Texture MessageEarlyTexture;
 			/// <summary>The message texture to be displayed if on-time </summary>
-			internal Textures.Texture MessageOnTimeTexture;
+			internal Texture MessageOnTimeTexture;
 			/// <summary>The message text to be displayed if late</summary>
-			internal Textures.Texture MessageLateTexture;
+			internal Texture MessageLateTexture;
 
 			internal double MessageEarlyTime;
 
@@ -81,9 +83,9 @@
 		internal class MarkerImage : Message
 		{
 			/// <summary>The texture to be displayed</summary>
-			private readonly Textures.Texture Texture;
+			private readonly Texture Texture;
 
-			internal MarkerImage(Textures.Texture texture)
+			internal MarkerImage(Texture texture)
 			{
 				this.Texture = texture;
 			}

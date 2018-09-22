@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -173,7 +174,7 @@ namespace OpenBve
 					for (int j = 0; j < CarSections[SectionIndex].Elements.Length; j++)
 					{
 						int o = CarSections[SectionIndex].Elements[j].ObjectIndex;
-						Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(o, ObjectType.Dynamic);
 					}
 				}
 				CurrentCarSection = SectionIndex;
