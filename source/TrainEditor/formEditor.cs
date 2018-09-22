@@ -72,13 +72,10 @@ namespace TrainEditor {
 			LoadControlContent();
 			// language
 			{
-				string Exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
-				string Folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Exe), "Data", "Languages");
-				Folder = Folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
-				Folder = Folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
-				Interface.LoadLanguageFiles(Folder);
-				Interface.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
-				if (Interface.InitLanguage(Folder, LanguageFiles, "en-US", comboboxLanguages)) {
+				string folder = Program.FileSystem.GetDataFolder("Languages");
+				Interface.LoadLanguageFiles(folder);
+				Interface.ListLanguages(folder, ref LanguageFiles, comboboxLanguages);
+				if (Interface.InitLanguage(folder, LanguageFiles, "en-US", comboboxLanguages)) {
 					ApplyLanguage();
 				}
 			}
