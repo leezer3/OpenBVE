@@ -10,14 +10,18 @@ namespace OpenBve
     {
         internal static void LoadOptions()
         {
+            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+            if (!System.IO.Directory.Exists(optionsFolder))
+            {
+                System.IO.Directory.CreateDirectory(optionsFolder);
+            }
             CultureInfo Culture = CultureInfo.InvariantCulture;
-            string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
+            string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
             if (!System.IO.File.Exists(configFile))
             {
                 //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
                 //Write out to a new routeviewer specific file though
-                configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options.cfg");
+                configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
             }
 
             if (System.IO.File.Exists(configFile))
@@ -128,8 +132,7 @@ namespace OpenBve
 
         internal static void SaveOptions()
         {
-            string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"),"Settings");
+            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_ov.cfg");
             try
             {
