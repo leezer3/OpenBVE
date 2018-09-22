@@ -510,7 +510,7 @@ namespace OpenBve {
 				}
 
 			}
-			Program.AppendToLogFile("Loading train plugin: " + file);
+			Program.FileSystem.AppendToLogFile("Loading train plugin: " + file);
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success == false)
 			{
@@ -518,7 +518,7 @@ namespace OpenBve {
 			}
 			else
 			{
-				Program.AppendToLogFile("Train plugin loaded successfully.");
+				Program.FileSystem.AppendToLogFile("Train plugin loaded successfully.");
 			}
 			return success;
 		}

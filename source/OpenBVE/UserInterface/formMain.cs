@@ -1056,7 +1056,7 @@ namespace OpenBve {
 			{
 #endif
 				Interface.SaveOptions();
-				FileSystem.SaveCurrentFileSystemConfiguration();
+				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
 			catch (Exception ex)

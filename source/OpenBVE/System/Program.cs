@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OpenTK;
+using OpenBveApi.FileSystem;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -306,7 +307,7 @@ namespace OpenBve {
 			World.BackwardViewingDistance = 0.0;
 			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
-			ClearLogFile();
+			FileSystem.ClearLogFile();
 			return true;
 		}
 		
@@ -318,23 +319,6 @@ namespace OpenBve {
 			{
 				currentGameWindow.Dispose();
 			}
-		}
-				
-		/// <summary>Clears the log file.</summary>
-		internal static void ClearLogFile() {
-			try {
-				string file = System.IO.Path.Combine(Program.FileSystem.SettingsFolder, "log.txt");
-				System.IO.File.WriteAllText(file, @"openBVE Log: " + DateTime.Now + Environment.NewLine + Environment.NewLine, new System.Text.UTF8Encoding(true));
-			} catch { }
-		}
-		
-		/// <summary>Appends the specified text to the log file.</summary>
-		/// <param name="text">The text.</param>
-		internal static void AppendToLogFile(string text) {
-			try {
-				string file = System.IO.Path.Combine(Program.FileSystem.SettingsFolder, "log.txt");
-				System.IO.File.AppendAllText(file, DateTime.Now.ToString("HH:mm:ss") + @"  " + text + Environment.NewLine, new System.Text.UTF8Encoding(false));
-			} catch { }
 		}
 
 	}

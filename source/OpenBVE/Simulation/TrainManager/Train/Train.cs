@@ -919,7 +919,7 @@ namespace OpenBve
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
@@ -931,7 +931,7 @@ namespace OpenBve
 				this.Cars[CarIndex].Topples = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 

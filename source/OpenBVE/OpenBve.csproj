@@ -447,7 +447,6 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
-    <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
     <Compile Include="System\Input\JoystickManager.RailDriver.cs">
