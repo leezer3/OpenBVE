@@ -8,12 +8,14 @@ namespace TrainEditor
 {
 	internal class Interface
 	{
-		internal class Options {
+		internal class Options
+		{
 			/// <summary>The ISO 639-1 code for the current user interface language</summary>
 			internal string LanguageCode;
 
 			/// <summary>Creates a new instance of the options class with default values set</summary>
-			internal Options() {
+			internal Options()
+			{
 				this.LanguageCode = "en-US";
 			}
 		}
