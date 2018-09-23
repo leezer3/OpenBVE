@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -21,8 +22,8 @@ namespace OpenBve
 			internal StructureData Structure;
 			internal SignalData[] Signals;
 			internal CompatibilitySignalData[] CompatibilitySignals;
-			internal Textures.Texture[] TimetableDaytime;
-			internal Textures.Texture[] TimetableNighttime;
+			internal Texture[] TimetableDaytime;
+			internal Texture[] TimetableNighttime;
 			internal BackgroundManager.BackgroundHandle[] Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;

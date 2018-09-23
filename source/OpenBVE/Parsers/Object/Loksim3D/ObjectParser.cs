@@ -511,40 +511,40 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					Textures.OpenGlTextureWrapMode WrapX, WrapY;
+					OpenGlTextureWrapMode WrapX, WrapY;
 					if (ForceTextureRepeatX)
 					{
-						WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+						WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 					}
 					else
 					{
-						WrapX = Textures.OpenGlTextureWrapMode.ClampClamp;
+						WrapX = OpenGlTextureWrapMode.ClampClamp;
 					}
 					if (ForceTextureRepeatY)
 					{
-						WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+						WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 					}
 					else
 					{
-						WrapY = Textures.OpenGlTextureWrapMode.ClampClamp;
+						WrapY = OpenGlTextureWrapMode.ClampClamp;
 					}
-					if (WrapX != Textures.OpenGlTextureWrapMode.RepeatRepeat | WrapY != Textures.OpenGlTextureWrapMode.RepeatRepeat)
+					if (WrapX != OpenGlTextureWrapMode.RepeatRepeat | WrapY != OpenGlTextureWrapMode.RepeatRepeat)
 					{
 						for (int j = 0; j < Builder.Vertices.Length; j++)
 						{
 							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0)
 							{
-								WrapX = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+								WrapX = OpenGlTextureWrapMode.RepeatRepeat;
 							}
 							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0)
 							{
-								WrapY = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+								WrapY = OpenGlTextureWrapMode.RepeatRepeat;
 							}
 						}
 					}
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
-						Textures.Texture tday;
+						Texture tday;
 						if (Builder.Materials[i].TransparencyTexture != null)
 						{
 							Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
@@ -573,7 +573,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
-						Textures.Texture tnight;
+						Texture tnight;
 						Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tnight);
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tnight;
 					}

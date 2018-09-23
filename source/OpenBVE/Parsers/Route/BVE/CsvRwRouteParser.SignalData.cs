@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Textures;
+
+namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
@@ -18,8 +20,8 @@
 		{
 			internal ObjectManager.StaticObject BaseObject;
 			internal ObjectManager.StaticObject GlowObject;
-			internal Textures.Texture[] SignalTextures;
-			internal Textures.Texture[] GlowTextures;
+			internal Texture[] SignalTextures;
+			internal Texture[] GlowTextures;
 		}
 		/// <summary>Defines a default Japanese signal (See the documentation)</summary>
 		private class CompatibilitySignalData : SignalData

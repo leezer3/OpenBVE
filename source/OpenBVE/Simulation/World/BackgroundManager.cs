@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -37,7 +38,7 @@ namespace OpenBve
 		internal class StaticBackground : BackgroundHandle
 		{
 			/// <summary>The background texture</summary>
-			internal Textures.Texture Texture;
+			internal Texture Texture;
 			/// <summary>The number of times the texture is repeated around the viewing frustrum</summary>
 			internal double Repetition;
 			/// <summary>Whether the texture's aspect ratio should be maintained</summary>
@@ -50,7 +51,7 @@ namespace OpenBve
 			/// <param name="Texture">The texture to apply</param>
 			/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
-			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio)
+			internal StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
@@ -66,7 +67,7 @@ namespace OpenBve
 			/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
 			/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 			/// <param name="Mode">The transition mode</param>
-			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode)
+			internal StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;
@@ -83,7 +84,7 @@ namespace OpenBve
 			/// <param name="transitionTime">The time taken in seconds for the fade-in transition to occur</param>
 			/// <param name="Mode">The transition mode</param>
 			/// <param name="Time">The time at which this background is to be displayed, expressed as the number of seconds since midnight</param>
-			internal StaticBackground(Textures.Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode, double Time)
+			internal StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double transitionTime, BackgroundTransitionMode Mode, double Time)
 			{
 				this.Texture = Texture;
 				this.Repetition = Repetition;

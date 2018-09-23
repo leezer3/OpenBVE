@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -41,7 +42,7 @@ namespace OpenBve
 				{
 					if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
 					{
-						Renderer.ShowObject(i, Renderer.ObjectType.Static);
+						Renderer.ShowObject(i, ObjectType.Static);
 					}
 				}
 			}
@@ -97,7 +98,7 @@ namespace OpenBve
 					{
 						if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Static);
+							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					}
@@ -133,7 +134,7 @@ namespace OpenBve
 					{
 						if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
 						{
-							Renderer.ShowObject(o, Renderer.ObjectType.Static);
+							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					}

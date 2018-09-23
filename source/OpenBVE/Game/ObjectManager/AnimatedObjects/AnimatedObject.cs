@@ -192,11 +192,11 @@ namespace OpenBve
 				{
 					if (Overlay)
 					{
-						Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+						Renderer.ShowObject(i, ObjectType.Overlay);
 					}
 					else
 					{
-						Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(i, ObjectType.Dynamic);
 					}
 				}
 			}
@@ -810,11 +810,11 @@ namespace OpenBve
 					{
 						if (Overlay)
 						{
-							Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+							Renderer.ShowObject(i, ObjectType.Overlay);
 						}
 						else
 						{
-							Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+							Renderer.ShowObject(i, ObjectType.Dynamic);
 						}
 					}
 					else

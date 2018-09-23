@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -776,11 +777,11 @@ namespace OpenBve
             {
                 if (Overlay)
                 {
-                    Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+                    Renderer.ShowObject(i, ObjectType.Overlay);
                 }
                 else
                 {
-                    Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+                    Renderer.ShowObject(i, ObjectType.Dynamic);
                 }
             }
         }
@@ -1287,11 +1288,11 @@ namespace OpenBve
                 {
                     if (Overlay)
                     {
-                        Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+                        Renderer.ShowObject(i, ObjectType.Overlay);
                     }
                     else
                     {
-                        Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+                        Renderer.ShowObject(i, ObjectType.Dynamic);
                     }
                 }
                 else
@@ -1476,7 +1477,7 @@ namespace OpenBve
                     }
                     if (!AnimatedWorldObjects[i].Visible)
                     {
-                        Renderer.ShowObject(AnimatedWorldObjects[i].Object.ObjectIndex, Renderer.ObjectType.Dynamic);
+                        Renderer.ShowObject(AnimatedWorldObjects[i].Object.ObjectIndex, ObjectType.Dynamic);
                         AnimatedWorldObjects[i].Visible = true;
                     }
                 }
@@ -1873,7 +1874,7 @@ namespace OpenBve
             if (Prototype == null) return null;
             return CloneObject(Prototype, null, null);
         }
-        internal static StaticObject CloneObject(StaticObject Prototype, Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture)
+        internal static StaticObject CloneObject(StaticObject Prototype, Texture DaytimeTexture, Texture NighttimeTexture)
         {
             if (Prototype == null) return null;
             StaticObject Result = new StaticObject();
@@ -1958,7 +1959,7 @@ namespace OpenBve
                 {
                     if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
                     {
-                        Renderer.ShowObject(i, Renderer.ObjectType.Static);
+                        Renderer.ShowObject(i, ObjectType.Static);
                     }
                 }
             }
@@ -2010,7 +2011,7 @@ namespace OpenBve
                     {
                         if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
                         {
-                            Renderer.ShowObject(o, Renderer.ObjectType.Static);
+                            Renderer.ShowObject(o, ObjectType.Static);
                         }
                         ObjectsSortedByEndPointer--;
                     }
@@ -2046,7 +2047,7 @@ namespace OpenBve
                     {
                         if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
                         {
-                            Renderer.ShowObject(o, Renderer.ObjectType.Static);
+                            Renderer.ShowObject(o, ObjectType.Static);
                         }
                         ObjectsSortedByStartPointer++;
                     }

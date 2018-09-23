@@ -2,21 +2,22 @@
 using System.Drawing;
 using OpenBveApi;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class Timetable {
 
 		// members (built-in timetable)
 		internal static string DefaultTimetableDescription = "";
-		internal static Textures.Texture DefaultTimetableTexture;
+		internal static Texture DefaultTimetableTexture;
 		internal static double DefaultTimetablePosition = 0.0;
 		
 		// members (custom timetable)
 		internal static ObjectManager.AnimatedObject[] CustomObjects = new ObjectManager.AnimatedObject[16];
 		internal static int CustomObjectsUsed;
 		internal static bool CustomTimetableAvailable;
-		internal static Textures.Texture CurrentCustomTimetableDaytimeTexture;
-		internal static Textures.Texture CurrentCustomTimetableNighttimeTexture;
+		internal static Texture CurrentCustomTimetableDaytimeTexture;
+		internal static Texture CurrentCustomTimetableNighttimeTexture;
 		internal static double CustomTimetablePosition = 0.0;
 		
 		// members (interface)
@@ -405,7 +406,7 @@ namespace OpenBve {
 		}
 
 		// update custom timetable
-		internal static void UpdateCustomTimetable(Textures.Texture daytime, Textures.Texture nighttime) {
+		internal static void UpdateCustomTimetable(Texture daytime, Texture nighttime) {
 			for (int i = 0; i < CustomObjectsUsed; i++) {
 				for (int j = 0; j < CustomObjects[i].States.Length; j++) {
 					for (int k = 0; k < CustomObjects[i].States[j].Object.Mesh.Materials.Length; k++) {

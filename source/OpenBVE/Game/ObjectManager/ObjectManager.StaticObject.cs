@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -32,7 +33,7 @@ namespace OpenBve
 			/// <param name="DaytimeTexture">The replacement daytime texture</param>
 			/// <param name="NighttimeTexture">The replacement nighttime texture</param>
 			/// <returns></returns>
-			internal StaticObject Clone(Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture)
+			internal StaticObject Clone(Texture DaytimeTexture, Texture NighttimeTexture)
 			{
 				StaticObject Result = new StaticObject
 				{

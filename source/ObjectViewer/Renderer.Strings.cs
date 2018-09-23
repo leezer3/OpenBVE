@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
@@ -15,7 +16,7 @@ namespace OpenBve {
 			int height = 0;
 			if (text != null && font != null) {
 				for (int i = 0; i < text.Length; i++) {
-					Textures.Texture texture;
+					Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					width += data.TypographicSize.Width;
@@ -46,7 +47,7 @@ namespace OpenBve {
 			if ((alignment & TextAlignment.Left) == 0) {
 				int width = 0;
 				for (int i = 0; i < text.Length; i++) {
-					Textures.Texture texture;
+					Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					width += data.TypographicSize.Width;
@@ -63,7 +64,7 @@ namespace OpenBve {
 			if ((alignment & TextAlignment.Top) == 0) {
 				int height = 0;
 				for (int i = 0; i < text.Length; i++) {
-					Textures.Texture texture;
+					Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					if (data.TypographicSize.Height > height) {
@@ -83,11 +84,11 @@ namespace OpenBve {
 			 * */
             GL.Enable(EnableCap.Texture2D);
 			for (int i = 0; i < text.Length; i++) {
-				Textures.Texture texture;
+				Texture texture;
 				Fonts.OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
-				if (Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
-                    GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+				if (Textures.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
+                    GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
                     
 					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
 					int y = top - (data.PhysicalSize.Height - data.TypographicSize.Height) / 2;

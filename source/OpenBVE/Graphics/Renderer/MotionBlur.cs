@@ -5,6 +5,11 @@ namespace OpenBve
 {
     internal static partial class Renderer
     {
+		/// <summary>The pixel buffer used for rendering the motion blur</summary>
+		/// <remarks>Must be static to avoid re-allocating the array memory every frame</remarks>
+	    private static byte[] PixelBuffer = null;
+		/// <summary>The OpenGL texture index from which the blurred image is rendered</summary>
+	    private static int PixelBufferOpenGlTextureIndex = 0;
 		/// <summary>Intializes motion blur</summary>
 	    internal static void InitializeMotionBlur()
 	    {
@@ -13,21 +18,21 @@ namespace OpenBve
 			    return;
 		    }
 
-		    if (Renderer.PixelBufferOpenGlTextureIndex != 0)
+		    if (PixelBufferOpenGlTextureIndex != 0)
 		    {
-			    GL.DeleteTextures(1, new int[] {Renderer.PixelBufferOpenGlTextureIndex});
-			    Renderer.PixelBufferOpenGlTextureIndex = 0;
+			    GL.DeleteTextures(1, new int[] {PixelBufferOpenGlTextureIndex});
+			    PixelBufferOpenGlTextureIndex = 0;
 		    }
 		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
 		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
-		    Renderer.PixelBuffer = new byte[4 * w * h];
+		    PixelBuffer = new byte[4 * w * h];
 		    int[] a = new int[1];
 		    GL.GenTextures(1, a);
 		    GL.BindTexture(TextureTarget.Texture2D, a[0]);
 		    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMagFilter.Linear);
 		    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb,
-			    PixelType.UnsignedByte, Renderer.PixelBuffer);
-		    Renderer.PixelBufferOpenGlTextureIndex = a[0];
+			    PixelType.UnsignedByte, PixelBuffer);
+		    PixelBufferOpenGlTextureIndex = a[0];
 		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, w, h, 0);
 	    }
 

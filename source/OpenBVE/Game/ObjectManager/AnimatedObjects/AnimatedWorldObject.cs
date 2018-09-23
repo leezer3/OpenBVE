@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Objects;
+
+namespace OpenBve
 {
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static partial class ObjectManager
@@ -61,7 +63,7 @@
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}

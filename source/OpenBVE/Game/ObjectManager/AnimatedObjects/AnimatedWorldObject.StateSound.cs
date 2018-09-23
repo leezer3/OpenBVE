@@ -132,7 +132,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}

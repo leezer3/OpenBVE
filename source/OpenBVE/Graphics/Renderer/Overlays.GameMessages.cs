@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -158,7 +159,7 @@ namespace OpenBve
 				// left background
 				if (Left.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Left.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Left.BackgroundTexture.Width;
 						double v = (double)Left.BackgroundTexture.Height;
@@ -169,7 +170,7 @@ namespace OpenBve
 				// right background
 				if (Right.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Right.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Right.BackgroundTexture.Width;
 						double v = (double)Right.BackgroundTexture.Height;
@@ -180,7 +181,7 @@ namespace OpenBve
 				// middle background
 				if (Middle.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Middle.BackgroundTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double v = (double)Middle.BackgroundTexture.Height;
 						GL.Color4(br, bg, bb, ba * alpha);
@@ -212,7 +213,7 @@ namespace OpenBve
 				// left overlay
 				if (Left.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Left.OverlayTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Left.OverlayTexture.Width;
 						double v = (double)Left.OverlayTexture.Height;
@@ -223,7 +224,7 @@ namespace OpenBve
 				// right overlay
 				if (Right.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Right.OverlayTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Right.OverlayTexture.Width;
 						double v = (double)Right.OverlayTexture.Height;
@@ -234,12 +235,19 @@ namespace OpenBve
 				// middle overlay
 				if (Middle.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Middle.OverlayTexture, Textures.OpenGlTextureWrapMode.ClampClamp))
+					if (Textures.LoadTexture(Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double v = (double)Middle.OverlayTexture.Height;
 						GL.Color4(or, og, ob, oa * alpha);
 						RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
 					}
+				}
+
+				if (Element.Font.FontSize >= 20.0)
+				{
+					//Add a little more line-padding to the large font sizes
+					//Asian and some Cyrillic charsets otherwise overlap slightly
+					y += 10;
 				}
 			}
 		}

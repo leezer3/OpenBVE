@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -77,15 +78,14 @@ namespace OpenBve
 		private static double FadeToBlackDueToChangeEnds = 0.0;
 
 		// textures
-		//		internal static Textures.Texture	TextureLoadingBkg	= null;
-		//        internal static Textures.Texture	TextureLogo			= null;
+		//		internal static Texture	TextureLoadingBkg	= null;
+		//        internal static Texture	TextureLogo			= null;
 
 		// constants
 		private const float inv255 = 1.0f / 255.0f;
 
 		// render scene
-		internal static byte[] PixelBuffer = null;
-		internal static int PixelBufferOpenGlTextureIndex = 0;
+		
 		internal static void RenderScene(double TimeElapsed)
 		{
 			// initialize
@@ -485,7 +485,7 @@ namespace OpenBve
 		// set alpha func
 
 		/// <summary> Stores the last bound OpenGL texture</summary>
-		internal static Textures.OpenGlTexture LastBoundTexture = null;
+		internal static OpenGlTexture LastBoundTexture = null;
 
 		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ)
 		{
@@ -508,7 +508,7 @@ namespace OpenBve
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
 			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
 		}
-		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, Textures.OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)

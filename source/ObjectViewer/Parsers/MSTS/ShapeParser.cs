@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.Textures;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 
@@ -92,7 +93,7 @@ namespace OpenBve
 			internal bool EmissiveColorUsed;
 			internal string DaytimeTexture;
 			internal World.MeshMaterialBlendMode BlendMode;
-			internal Textures.OpenGlTextureWrapMode? WrapMode;
+			internal OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
 
 			internal Material(string texture)
@@ -294,7 +295,7 @@ namespace OpenBve
 						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
-							Textures.Texture tday;
+							OpenBveApi.Textures.Texture tday;
 							Textures.RegisterTexture(materials[i].DaytimeTexture, out tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
