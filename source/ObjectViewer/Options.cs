@@ -147,14 +147,26 @@ namespace OpenBve
             Builder.AppendLine("; Object Viewer specific options file");
             Builder.AppendLine();
             Builder.AppendLine("[display]");
-            Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth);
-            Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight);
+            Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
+            Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
             Builder.AppendLine();
             Builder.AppendLine("[quality]");
-            Builder.AppendLine("interpolation = " + Interface.CurrentOptions.Interpolation);
-            Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
-            Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
-            Builder.AppendLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
+            {
+                string t; switch (Interface.CurrentOptions.Interpolation)
+                {
+                case Interface.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                case Interface.InterpolationMode.Bilinear: t = "bilinear"; break;
+                case Interface.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                case Interface.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                case Interface.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                case Interface.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                default: t = "bilinearMipmapped"; break;
+                }
+                Builder.AppendLine("interpolation = " + t);
+            }
+            Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
+            Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+            Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
             string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
             System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
         }
