@@ -139,42 +139,24 @@ namespace OpenBve
 
         internal static void SaveOptions()
         {
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_ov.cfg");
-            try
-            {
-                //Delete original options file
-                if (System.IO.File.Exists(configFile))
-                {
-                    System.IO.File.Delete(configFile);
-                }
-                if (!System.IO.Directory.Exists(optionsFolder))
-                {
-                    Directory.CreateDirectory(optionsFolder);
-                }
-                using(StreamWriter sw = new StreamWriter(configFile))
-                {
-                    sw.WriteLine("; Options");
-                    sw.WriteLine("; =======");
-                    sw.WriteLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-                    sw.WriteLine("; Route Viewer specific options file");
-                    sw.WriteLine();
-                    sw.WriteLine("[display]");
-                    sw.WriteLine("windowWidth = " + Renderer.ScreenWidth);
-                    sw.WriteLine("windowHeight = " + Renderer.ScreenHeight);
-                    sw.WriteLine();
-                    sw.WriteLine("[quality]");
-                    sw.WriteLine("interpolation = " + Interface.CurrentOptions.Interpolation);
-                    sw.WriteLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
-                    sw.WriteLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
-                    sw.WriteLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
-                }
-            }
-            catch
-            {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
-                                "Please check you have write permission.");
-            }
+            CultureInfo Culture = CultureInfo.InvariantCulture;
+            System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+            Builder.AppendLine("; Options");
+            Builder.AppendLine("; =======");
+            Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+            Builder.AppendLine("; Object Viewer specific options file");
+            Builder.AppendLine();
+            Builder.AppendLine("[display]");
+            Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth);
+            Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight);
+            Builder.AppendLine();
+            Builder.AppendLine("[quality]");
+            Builder.AppendLine("interpolation = " + Interface.CurrentOptions.Interpolation);
+            Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
+            Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
+            Builder.AppendLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
+            string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
+            System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
         }
     }
 }

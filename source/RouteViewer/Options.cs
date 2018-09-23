@@ -168,47 +168,30 @@ namespace OpenBve
 
         internal static void SaveOptions()
         {
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_rv.cfg");
-            try
-            {
-                //Delete original options file
-                if (System.IO.File.Exists(configFile))
-                {
-                    System.IO.File.Delete(configFile);
-                }
-                if (!System.IO.Directory.Exists(optionsFolder))
-                {
-                    Directory.CreateDirectory(optionsFolder);
-                }
-                using(StreamWriter sw = new StreamWriter(configFile))
-                {
-                    sw.WriteLine("; Options");
-                    sw.WriteLine("; =======");
-                    sw.WriteLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-                    sw.WriteLine("; Route Viewer specific options file");
-                    sw.WriteLine();
-                    sw.WriteLine("[display]");
-                    sw.WriteLine("vsync = " + Interface.CurrentOptions.VerticalSynchronization);
-                    sw.WriteLine("windowWidth = " + Renderer.ScreenWidth);
-                    sw.WriteLine("windowHeight = " + Renderer.ScreenHeight);
-                    sw.WriteLine();
-                    sw.WriteLine("[quality]");
-                    sw.WriteLine("interpolation = " + Interface.CurrentOptions.Interpolation);
-                    sw.WriteLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
-                    sw.WriteLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
-                    sw.WriteLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
-					sw.WriteLine("[loading]");
-					sw.WriteLine("showlogo = " + Interface.CurrentOptions.LoadingLogo.ToString());
-					sw.WriteLine("showprogressbar = " + Interface.CurrentOptions.LoadingProgressBar.ToString());
-					sw.WriteLine("showbackground = " + Interface.CurrentOptions.LoadingBackground.ToString());
-				}
-            }
-            catch
-            {
-                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
-                                "Please check you have write permission.");
-            }
+            CultureInfo Culture = CultureInfo.InvariantCulture;
+            System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+            Builder.AppendLine("; Options");
+            Builder.AppendLine("; =======");
+            Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+            Builder.AppendLine("; Route Viewer specific options file");
+            Builder.AppendLine();
+            Builder.AppendLine("[display]");
+            Builder.AppendLine("vsync = " + Interface.CurrentOptions.VerticalSynchronization);
+            Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth);
+            Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight);
+            Builder.AppendLine();
+            Builder.AppendLine("[quality]");
+            Builder.AppendLine("interpolation = " + Interface.CurrentOptions.Interpolation);
+            Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
+            Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
+            Builder.AppendLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
+            Builder.AppendLine();
+            Builder.AppendLine("[loading]");
+            Builder.AppendLine("showlogo = " + Interface.CurrentOptions.LoadingLogo.ToString());
+            Builder.AppendLine("showprogressbar = " + Interface.CurrentOptions.LoadingProgressBar.ToString());
+            Builder.AppendLine("showbackground = " + Interface.CurrentOptions.LoadingBackground.ToString());
+            string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
+            System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
         }
     }
 }

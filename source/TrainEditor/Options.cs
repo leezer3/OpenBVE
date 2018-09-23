@@ -122,7 +122,7 @@ namespace TrainEditor
 			Builder.AppendLine("; Options");
 			Builder.AppendLine("; =======");
 			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-			Builder.AppendLine("; TrainEditor specific options file");
+			Builder.AppendLine("; Train Editor specific options file");
 			Builder.AppendLine();
 			Builder.AppendLine("[language]");
 			Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
