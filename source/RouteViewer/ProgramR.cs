@@ -60,10 +60,6 @@ namespace OpenBve {
 			CurrentHost = new Host();
 			
 			commandLineArguments = args;
-			Options.LoadOptions();
-			Interface.CurrentOptions.UseSound = true;
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// platform and mono
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
@@ -99,6 +95,10 @@ namespace OpenBve {
 					if (Skips == args.Length) return;
 				}
 			}
+			Options.LoadOptions();
+			Interface.CurrentOptions.UseSound = true;
+			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
+			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
