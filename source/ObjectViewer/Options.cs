@@ -154,13 +154,13 @@ namespace OpenBve
             {
                 string t; switch (Interface.CurrentOptions.Interpolation)
                 {
-                case Interface.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-                case Interface.InterpolationMode.Bilinear: t = "bilinear"; break;
-                case Interface.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-                case Interface.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-                case Interface.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-                case Interface.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-                default: t = "bilinearMipmapped"; break;
+                    case Interface.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                    case Interface.InterpolationMode.Bilinear: t = "bilinear"; break;
+                    case Interface.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                    case Interface.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                    case Interface.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                    case Interface.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                    default: t = "bilinearMipmapped"; break;
                 }
                 Builder.AppendLine("interpolation = " + t);
             }

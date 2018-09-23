@@ -184,13 +184,13 @@ namespace OpenBve
             {
                 string t; switch (Interface.CurrentOptions.Interpolation)
                 {
-                case TextureManager.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-                case TextureManager.InterpolationMode.Bilinear: t = "bilinear"; break;
-                case TextureManager.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-                case TextureManager.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-                case TextureManager.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-                case TextureManager.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-                default: t = "bilinearMipmapped"; break;
+                    case TextureManager.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                    case TextureManager.InterpolationMode.Bilinear: t = "bilinear"; break;
+                    case TextureManager.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                    case TextureManager.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                    case TextureManager.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                    case TextureManager.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                    default: t = "bilinearMipmapped"; break;
                 }
                 Builder.AppendLine("interpolation = " + t);
             }
