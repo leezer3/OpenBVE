@@ -55,7 +55,7 @@ namespace OpenBveApi.FileSystem {
 		
 		/// <summary>Creates a new instance of this class with default locations.</summary>
 		internal FileSystem() {
-			string assemblyFile = Assembly.GetExecutingAssembly().Location;
+			string assemblyFile = Assembly.GetEntryAssembly().Location;
 			string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyFile);
 			//This copy of openBVE is a special string, and should not be localised
 			string userDataFolder = OpenBveApi.Path.CombineDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "openBVE");
@@ -84,7 +84,7 @@ namespace OpenBveApi.FileSystem {
 					return FromConfigurationFile(arg.Substring(12));
 				}
 			}
-			string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 			string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "filesystem.cfg");
 			if (File.Exists(configFile)) {
 				return FromConfigurationFile(configFile);
@@ -183,8 +183,8 @@ namespace OpenBveApi.FileSystem {
 		{
 			try
 			{
-				line = line.Replace(Assembly.GetExecutingAssembly().Location, "$[AssemblyFile]");
-				line = line.Replace(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "$[AssemblyFolder]");
+				line = line.Replace(Assembly.GetEntryAssembly().Location, "$[AssemblyFile]");
+				line = line.Replace(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "$[AssemblyFolder]");
 				line = line.Replace(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "$[ApplicationData]");
 				line = line.Replace(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
 					"$[CommonApplicationData]");
@@ -232,7 +232,7 @@ namespace OpenBveApi.FileSystem {
 		/// <param name="file">The configuration file describing the file system.</param>
 		/// <returns>The file system.</returns>
 		private static FileSystem FromConfigurationFile(string file) {
-			string assemblyFile = Assembly.GetExecutingAssembly().Location;
+			string assemblyFile = Assembly.GetEntryAssembly().Location;
 			string assemblyFolder = System.IO.Path.GetDirectoryName(assemblyFile);
 			FileSystem system = new FileSystem();
 			try
@@ -341,8 +341,8 @@ namespace OpenBveApi.FileSystem {
 				folder = folder.Replace('/', System.IO.Path.DirectorySeparatorChar);
 				folder = folder.Replace('\\', System.IO.Path.DirectorySeparatorChar);
 			}
-			folder = folder.Replace("$[AssemblyFile]", Assembly.GetExecutingAssembly().Location);
-			folder = folder.Replace("$[AssemblyFolder]", System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+			folder = folder.Replace("$[AssemblyFile]", Assembly.GetEntryAssembly().Location);
+			folder = folder.Replace("$[AssemblyFolder]", System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 			folder = folder.Replace("$[ApplicationData]", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 			folder = folder.Replace("$[CommonApplicationData]", Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
 			folder = folder.Replace("$[Personal]", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
