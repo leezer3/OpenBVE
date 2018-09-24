@@ -16,7 +16,7 @@ namespace OpenBve
                 System.IO.Directory.CreateDirectory(optionsFolder);
             }
             CultureInfo Culture = CultureInfo.InvariantCulture;
-            string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
+            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_rv.cfg");
             if (!System.IO.File.Exists(configFile))
             {
                 //Attempt to load and upgrade a prior configuration file
@@ -168,42 +168,50 @@ namespace OpenBve
 
         internal static void SaveOptions()
         {
-            CultureInfo Culture = CultureInfo.InvariantCulture;
-            System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-            Builder.AppendLine("; Options");
-            Builder.AppendLine("; =======");
-            Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-            Builder.AppendLine("; Route Viewer specific options file");
-            Builder.AppendLine();
-            Builder.AppendLine("[display]");
-            Builder.AppendLine("vsync = " + (Interface.CurrentOptions.VerticalSynchronization ? "true" : "false"));
-            Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
-            Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
-            Builder.AppendLine();
-            Builder.AppendLine("[quality]");
+            try
             {
-                string t; switch (Interface.CurrentOptions.Interpolation)
+                CultureInfo Culture = CultureInfo.InvariantCulture;
+                System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+                Builder.AppendLine("; Options");
+                Builder.AppendLine("; =======");
+                Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+                Builder.AppendLine("; Route Viewer specific options file");
+                Builder.AppendLine();
+                Builder.AppendLine("[display]");
+                Builder.AppendLine("vsync = " + (Interface.CurrentOptions.VerticalSynchronization ? "true" : "false"));
+                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine();
+                Builder.AppendLine("[quality]");
                 {
-                    case TextureManager.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-                    case TextureManager.InterpolationMode.Bilinear: t = "bilinear"; break;
-                    case TextureManager.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-                    case TextureManager.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-                    case TextureManager.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-                    case TextureManager.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
-                    default: t = "bilinearMipmapped"; break;
+                    string t; switch (Interface.CurrentOptions.Interpolation)
+                    {
+                        case TextureManager.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                        case TextureManager.InterpolationMode.Bilinear: t = "bilinear"; break;
+                        case TextureManager.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                        case TextureManager.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                        case TextureManager.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                        case TextureManager.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                        default: t = "bilinearMipmapped"; break;
+                    }
+                    Builder.AppendLine("interpolation = " + t);
                 }
-                Builder.AppendLine("interpolation = " + t);
+                Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
+                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+                Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
+                Builder.AppendLine();
+                Builder.AppendLine("[loading]");
+                Builder.AppendLine("showlogo = " + (Interface.CurrentOptions.LoadingLogo ? "true" : "false"));
+                Builder.AppendLine("showprogressbar = " + (Interface.CurrentOptions.LoadingProgressBar ? "true" : "false"));
+                Builder.AppendLine("showbackground = " + (Interface.CurrentOptions.LoadingBackground ? "true" : "false"));
+                string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
+                System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
-            Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
-            Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
-            Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
-            Builder.AppendLine();
-            Builder.AppendLine("[loading]");
-            Builder.AppendLine("showlogo = " + (Interface.CurrentOptions.LoadingLogo ? "true" : "false"));
-            Builder.AppendLine("showprogressbar = " + (Interface.CurrentOptions.LoadingProgressBar ? "true" : "false"));
-            Builder.AppendLine("showbackground = " + (Interface.CurrentOptions.LoadingBackground ? "true" : "false"));
-            string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_rv.cfg");
-            System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
+            catch
+            {
+                MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+                                "Please check you have write permission.");
+            }
         }
     }
 }

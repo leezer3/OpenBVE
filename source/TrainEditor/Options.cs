@@ -31,7 +31,7 @@ namespace TrainEditor
 			}
 			CurrentOptions = new Options();
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te.cfg");
+			string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_te.cfg");
 			if (!System.IO.File.Exists(configFile))
 			{
 				//If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
@@ -117,17 +117,25 @@ namespace TrainEditor
 
 		internal static void SaveOptions()
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
-			Builder.AppendLine("; Options");
-			Builder.AppendLine("; =======");
-			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-			Builder.AppendLine("; Train Editor specific options file");
-			Builder.AppendLine();
-			Builder.AppendLine("[language]");
-			Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
-			string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te.cfg");
-			System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			try
+			{
+				CultureInfo Culture = CultureInfo.InvariantCulture;
+				System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+				Builder.AppendLine("; Options");
+				Builder.AppendLine("; =======");
+				Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+				Builder.AppendLine("; Train Editor specific options file");
+				Builder.AppendLine();
+				Builder.AppendLine("[language]");
+				Builder.AppendLine("code = " + CurrentOptions.LanguageCode);
+				string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_te.cfg");
+				System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
+			}
+			catch
+			{
+				MessageBox.Show("An error occured whilst saving the options to disk." + System.Environment.NewLine +
+								"Please check you have write permission.");
+			}
 		}
 	}
 }

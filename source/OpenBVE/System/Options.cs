@@ -268,7 +268,7 @@ namespace OpenBve
 			}
 			CurrentOptions = new Options();
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+			string File = OpenBveApi.Path.CombineFile(OptionsDir, "options.cfg");
 			if (!System.IO.File.Exists(File))
 			{
 				//Attempt to load and upgrade a prior configuration file
