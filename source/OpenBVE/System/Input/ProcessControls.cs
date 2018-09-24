@@ -295,9 +295,9 @@ namespace OpenBve
 												int b =
 													(int)
 														Math.Round(-a*
-																   (double)
+																   ((double)
 																	   TrainManager.PlayerTrain.Handles.Brake.MaximumNotch +
-																   2);
+																   2));
 												if (p < 0) p = 0;
 												if (b < 0) b = 0;
 												bool q = b == 1;
