@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using OpenBveApi;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -750,7 +751,7 @@ namespace OpenBve
 				pictureboxRouteGradient.Image = null;
 				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
-				checkboxTrainDefault.Text = OpenBveApi.Interface.Interface.GetInterfaceString("start_train_usedefault");
+				checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 				routeWorkerThread.Dispose();
 				this.Cursor = Cursors.Default;
 				return;
@@ -812,11 +813,11 @@ namespace OpenBve
 				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
 				if (Game.TrainName != null)
 				{
-					checkboxTrainDefault.Text = OpenBveApi.Interface.Interface.GetInterfaceString("start_train_usedefault") + @" (" + Game.TrainName + @")";
+					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault") + @" (" + Game.TrainName + @")";
 				}
 				else
 				{
-					checkboxTrainDefault.Text = OpenBveApi.Interface.Interface.GetInterfaceString("start_train_usedefault");
+					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 				}
 				Result.ErrorFile = null;
 			}
@@ -829,7 +830,7 @@ namespace OpenBve
 				pictureboxRouteGradient.Image = null;
 				Result.ErrorFile = Result.RouteFile;
 				Result.RouteFile = null;
-				checkboxTrainDefault.Text = OpenBveApi.Interface.Interface.GetInterfaceString("start_train_usedefault");
+				checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
 			}
 			
 
@@ -859,7 +860,7 @@ namespace OpenBve
 				this.Cursor = Cursors.WaitCursor;
 				TryLoadImage(pictureboxRouteImage, "loading.png");
 				groupboxRouteDetails.Visible = true;
-				textboxRouteDescription.Text = OpenBveApi.Interface.Interface.GetInterfaceString("start_route_processing");
+				textboxRouteDescription.Text = Translations.GetInterfaceString("start_route_processing");
 
 				// determine encoding
 				if (!UserSelectedEncoding) {
@@ -1160,7 +1161,7 @@ namespace OpenBve
 			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
-			textboxTrainDescription.Text = (OpenBveApi.Interface.Interface.GetInterfaceString("start_train_notfound") + Game.TrainName).ConvertNewlinesToCrLf();
+			textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Game.TrainName).ConvertNewlinesToCrLf();
 			comboboxTrainEncoding.Tag = new object();
 			comboboxTrainEncoding.SelectedIndex = 0;
 			comboboxTrainEncoding.Tag = null;

@@ -1,6 +1,6 @@
 ﻿namespace OpenBveApi.Interface
 {
-	public static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Information on an in-game command</summary>
 		public struct CommandInfo

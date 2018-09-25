@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using OpenTK.Input;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -22,7 +23,7 @@ namespace OpenBve
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
-				OpenBveApi.Interface.Interface.CommandInfo Info = OpenBveApi.Interface.Interface.TryGetInfo(OpenBveApi.Interface.Interface.CommandInfos, controlsToSave[i].Command);
+				Translations.CommandInfo Info = Translations.TryGetInfo(Translations.CommandInfos, controlsToSave[i].Command);
 				Builder.Append(Info.Name + ", ");
 				switch (controlsToSave[i].Method) {
 					case ControlMethod.Keyboard:
@@ -92,7 +93,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 					if (!System.IO.File.Exists(File))
 					{
-						MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_warning") + Environment.NewLine + OpenBveApi.Interface.Interface.GetInterfaceString("errors_controls_missing"),
+						MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_missing"),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						Controls = new Control[0];
 						return;
@@ -118,12 +119,12 @@ namespace OpenBve
 								Array.Resize<Control>(ref Controls, Controls.Length << 1);
 							}
 							int j;
-							for (j = 0; j < OpenBveApi.Interface.Interface.CommandInfos.Length; j++) {
-								if (string.Compare(OpenBveApi.Interface.Interface.CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
+							for (j = 0; j < Translations.CommandInfos.Length; j++) {
+								if (string.Compare(Translations.CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
 							}
-							if (j == OpenBveApi.Interface.Interface.CommandInfos.Length) {
-								Controls[Length].Command = OpenBveApi.Interface.Interface.Command.None;
-								Controls[Length].InheritedType = OpenBveApi.Interface.Interface.CommandType.Digital;
+							if (j == Translations.CommandInfos.Length) {
+								Controls[Length].Command = Translations.Command.None;
+								Controls[Length].InheritedType = Translations.CommandType.Digital;
 								Controls[Length].Method = ControlMethod.Invalid;
 								Controls[Length].Device = -1;
 								Controls[Length].Component = JoystickComponent.Invalid;
@@ -131,8 +132,8 @@ namespace OpenBve
 								Controls[Length].Direction = 0;
 								Controls[Length].Modifier = KeyboardModifier.None;
 							} else {
-								Controls[Length].Command = OpenBveApi.Interface.Interface.CommandInfos[j].Command;
-								Controls[Length].InheritedType = OpenBveApi.Interface.Interface.CommandInfos[j].Type;
+								Controls[Length].Command = Translations.CommandInfos[j].Command;
+								Controls[Length].InheritedType = Translations.CommandInfos[j].Type;
 								string Method = Terms[1].ToLowerInvariant();
 								bool Valid = false;
 								if (Method == "keyboard" & Terms.Length == 4)
@@ -145,7 +146,7 @@ namespace OpenBve
 										//We've discovered a SDL keybinding is present, so reset the loading process with the default keyconfig & show an appropriate error message
 										if (ControlsReset == false)
 										{
-											MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + OpenBveApi.Interface.Interface.GetInterfaceString("errors_controls_reset"), Application.ProductName,
+											MessageBox.Show(Translations.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_reset"), Application.ProductName,
 												MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										}
 										var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"),"Default keyboard assignment.controls");
@@ -158,7 +159,7 @@ namespace OpenBve
 											}
 											else
 											{
-												MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_warning") + Environment.NewLine + OpenBveApi.Interface.Interface.GetInterfaceString("errors_controls_default_oldversion"),
+												MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_oldversion"),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 												Controls = new Control[0];
 											}
@@ -166,7 +167,7 @@ namespace OpenBve
 										}
 										else
 										{
-											MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_warning") + Environment.NewLine + OpenBveApi.Interface.Interface.GetInterfaceString("errors_controls_default_missing"),
+											MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_missing"),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 												Controls = new Control[0];
 										}

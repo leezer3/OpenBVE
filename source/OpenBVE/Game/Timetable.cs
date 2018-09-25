@@ -3,6 +3,7 @@ using System.Drawing;
 using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class Timetable {
@@ -210,7 +211,7 @@ namespace OpenBve {
 					y0 += descriptionheight + 2;
 				}
 				// highest speed
-				t = OpenBveApi.Interface.Interface.GetInterfaceString("timetable_highestspeed");
+				t = Translations.GetInterfaceString("timetable_highestspeed");
 				s = g.MeasureString(t, fs);
 				g.DrawString(t, fs, Brushes.Black, x0, y0);
 				float y0a = y0 + s.Height + 2;
@@ -225,7 +226,7 @@ namespace OpenBve {
 				}
 				g.DrawLine(Pens.LightGray, new PointF(x1 - 2, 4 + descriptionheight), new PointF(x1 - 2, y0a + 18 * Table.Tracks.Length - 1));
 				// driving time
-				t = OpenBveApi.Interface.Interface.GetInterfaceString("timetable_drivingtime");
+				t = Translations.GetInterfaceString("timetable_drivingtime");
 				s = g.MeasureString(t, fs);
 				g.DrawString(t, fs, Brushes.Black, x1, y0);
 				float x2 = x1 + s.Width + 4;
@@ -260,7 +261,7 @@ namespace OpenBve {
 				g.DrawLine(Pens.LightGray, new PointF(x2 - 2, 4 + descriptionheight), new PointF(x2 - 2, y0a + 18 * Table.Tracks.Length - 1));
 				// station name
 				float y2 = y0;
-				t = OpenBveApi.Interface.Interface.GetInterfaceString("timetable_stationname");
+				t = Translations.GetInterfaceString("timetable_stationname");
 				s = g.MeasureString(t, f);
 				g.DrawString(t, f, Brushes.Black, x2, y2);
 				float x3 = x2 + s.Width + 4;
@@ -295,7 +296,7 @@ namespace OpenBve {
 					stationnamewidth = x3 - x2 - 6;
 				}
 				// arrival time
-				t = OpenBveApi.Interface.Interface.GetInterfaceString("timetable_arrivaltime");
+				t = Translations.GetInterfaceString("timetable_arrivaltime");
 				s = g.MeasureString(t, f);
 				g.DrawString(t, f, Brushes.Black, x3, y2);
 				float x4 = x3 + s.Width + 4;
@@ -330,7 +331,7 @@ namespace OpenBve {
 				}
 				g.DrawLine(Pens.LightGray, new PointF(x4 - 2, 4 + descriptionheight), new PointF(x4 - 2, y0 + 18 * (Table.Stations.Length + 1)));
 				// departure time
-				t = OpenBveApi.Interface.Interface.GetInterfaceString("timetable_departuretime");
+				t = Translations.GetInterfaceString("timetable_departuretime");
 				s = g.MeasureString(t, f);
 				g.DrawString(t, f, Brushes.Black, x4, y2);
 				float x5 = x4 + s.Width + 4;

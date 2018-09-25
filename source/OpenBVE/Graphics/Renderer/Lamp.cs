@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -32,46 +33,46 @@ namespace OpenBve
                         this.Text = null;
                         break;
                     case LampType.Ats:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_ats");
+                        this.Text = Translations.GetInterfaceString("lamps_ats");
                         break;
                     case LampType.AtsOperation:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atsoperation");
+                        this.Text = Translations.GetInterfaceString("lamps_atsoperation");
                         break;
                     case LampType.AtsPPower:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atsppower");
+                        this.Text = Translations.GetInterfaceString("lamps_atsppower");
                         break;
                     case LampType.AtsPPattern:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atsppattern");
+                        this.Text = Translations.GetInterfaceString("lamps_atsppattern");
                         break;
                     case LampType.AtsPBrakeOverride:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atspbrakeoverride");
+                        this.Text = Translations.GetInterfaceString("lamps_atspbrakeoverride");
                         break;
                     case LampType.AtsPBrakeOperation:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atspbrakeoperation");
+                        this.Text = Translations.GetInterfaceString("lamps_atspbrakeoperation");
                         break;
                     case LampType.AtsP:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atsp");
+                        this.Text = Translations.GetInterfaceString("lamps_atsp");
                         break;
                     case LampType.AtsPFailure:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atspfailure");
+                        this.Text = Translations.GetInterfaceString("lamps_atspfailure");
                         break;
                     case LampType.Atc:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atc");
+                        this.Text = Translations.GetInterfaceString("lamps_atc");
                         break;
                     case LampType.AtcPower:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atcpower");
+                        this.Text = Translations.GetInterfaceString("lamps_atcpower");
                         break;
                     case LampType.AtcUse:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atcuse");
+                        this.Text = Translations.GetInterfaceString("lamps_atcuse");
                         break;
                     case LampType.AtcEmergency:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_atcemergency");
+                        this.Text = Translations.GetInterfaceString("lamps_atcemergency");
                         break;
                     case LampType.Eb:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_eb");
+                        this.Text = Translations.GetInterfaceString("lamps_eb");
                         break;
                     case LampType.ConstSpeed:
-                        this.Text = OpenBveApi.Interface.Interface.GetInterfaceString("lamps_constspeed");
+                        this.Text = Translations.GetInterfaceString("lamps_constspeed");
                         break;
                     default:
                         this.Text = "TEXT";

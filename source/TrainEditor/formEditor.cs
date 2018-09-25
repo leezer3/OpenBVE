@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace TrainEditor {
 	public partial class formEditor : Form {
@@ -74,9 +75,9 @@ namespace TrainEditor {
 			// language
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
-				OpenBveApi.Interface.Interface.LoadLanguageFiles(folder);
-				OpenBveApi.Interface.Interface.ListLanguages(folder, ref LanguageFiles, comboboxLanguages);
-				if (OpenBveApi.Interface.Interface.InitLanguage(folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages)) {
+				Translations.LoadLanguageFiles(folder);
+				Translations.ListLanguages(folder, ref LanguageFiles, comboboxLanguages);
+				if (Translations.InitLanguage(folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages)) {
 					ApplyLanguage();
 				}
 			}
@@ -84,7 +85,7 @@ namespace TrainEditor {
 
 		// form closing
 		private void FormEditorFormClosing(object sender, FormClosingEventArgs e) {
-			switch (MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_close_message"), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Translations.GetInterfaceString("editor_close_message"), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (SaveControlContent()) {
 						if (buttonSave.Enabled) {
@@ -219,7 +220,7 @@ namespace TrainEditor {
 			Train.Handle.PowerNotches = (int)numericUpDownPowerNotches.Value;
 			Train.Handle.BrakeNotches = (int)numericUpDownBrakeNotches.Value;
 			if (Train.Handle.BrakeNotches == 0  & checkboxHoldBrake.Checked) {
-				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_brake_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Translations.GetInterfaceString("editor_handle_brake_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
 				numericUpDownBrakeNotches.Focus();
 				return false;
@@ -237,14 +238,14 @@ namespace TrainEditor {
 			if (!SaveControlContent(textboxTrailerCarMass, "TrailerCarMass", tabpagePropertiesTwo, NumberRange.Positive, out Train.Car.TrailerCarMass)) return false;
 			if (!SaveControlContent(textboxNumberOfTrailerCars, "NumberOfTrailerCars", tabpagePropertiesTwo, NumberRange.NonNegative, out Train.Car.NumberOfTrailerCars)) return false;
 			if (Train.Car.NumberOfTrailerCars == 0 & !checkboxFrontCarIsMotorCar.Checked) {
-				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_number_of_trailer_cars_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Translations.GetInterfaceString("editor_car_number_of_trailer_cars_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesTwo;
 				textboxNumberOfTrailerCars.SelectAll();
 				textboxNumberOfTrailerCars.Focus();
 				return false;
 			}
 			if (Train.Cab.DriverCar >= Train.Car.NumberOfMotorCars + Train.Car.NumberOfTrailerCars) {
-				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_cab_driver_car_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show(Translations.GetInterfaceString("editor_cab_driver_car_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesTwo;
 				textboxDriverCar.SelectAll();
 				textboxDriverCar.Focus();
@@ -378,7 +379,7 @@ namespace TrainEditor {
 		
 		// new
 		private void ButtonNewClick(object sender, EventArgs e) {
-			switch (MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_new_message"), "New", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Translations.GetInterfaceString("editor_new_message"), "New", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (buttonSave.Enabled) {
 						ButtonSaveClick(null, null);
@@ -402,7 +403,7 @@ namespace TrainEditor {
 		
 		// open
 		private void ButtonOpenClick(object sender, EventArgs e) {
-			switch (MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("editor_open_message"), "Open", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+			switch (MessageBox.Show(Translations.GetInterfaceString("editor_open_message"), "Open", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 				case DialogResult.Yes:
 					if (buttonSave.Enabled) {
 						ButtonSaveClick(null, null);
@@ -1231,8 +1232,8 @@ namespace TrainEditor {
 			CultureInfo culture = CultureInfo.InvariantCulture;
 			labelMotorInfo.Text =
 				"X = #" + ((int)Math.Floor(5.0 * (double)MotorHoverX)).ToString(culture) + " (" + MotorHoverX.ToString("0.00", culture) + " km/h)\n\n" +
-				OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_y_pitch") + " = " + MotorHoverYPitch.ToString("0.00", culture) + "\n" +
-				OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_y_volume") + " = " + MotorHoverYVolume.ToString("0.00", culture) + " (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + "%)";
+				Translations.GetInterfaceString("editor_motor_y_pitch") + " = " + MotorHoverYPitch.ToString("0.00", culture) + "\n" +
+				Translations.GetInterfaceString("editor_motor_y_volume") + " = " + MotorHoverYVolume.ToString("0.00", culture) + " (" + (0.78125 * MotorHoverYVolume).ToString("0", culture) + "%)";
 		}
 		private void MotorMouseUp(MouseEventArgs e, TrainDat.Motor Motor, PictureBox Box) {
 			if (MotorSelectionBox != null) {
@@ -1414,202 +1415,202 @@ namespace TrainEditor {
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
-			if (OpenBveApi.Interface.Interface.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
+			if (Translations.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
 				ApplyLanguage();
 			}
 		}
 
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage() {
-			OpenBveApi.Interface.Interface.SetInGameLanguage(OpenBveApi.Interface.Interface.CurrentLanguageCode);
-			buttonNew.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_new");
-			buttonOpen.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_open");
-			buttonSave.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_save");
-			buttonSaveAs.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_save_as");
-			buttonClose.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_close");
+			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
+			buttonNew.Text = Translations.GetInterfaceString("editor_new");
+			buttonOpen.Text = Translations.GetInterfaceString("editor_open");
+			buttonSave.Text = Translations.GetInterfaceString("editor_save");
+			buttonSaveAs.Text = Translations.GetInterfaceString("editor_save_as");
+			buttonClose.Text = Translations.GetInterfaceString("editor_close");
 
-			tabpagePropertiesOne.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_properties_one");
-			tabpagePropertiesTwo.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_properties_two");
-			tabpageAcceleration.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration");
-			tabpageMotor.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_sound");
-			tabPageExtended.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_features");
+			tabpagePropertiesOne.Text = Translations.GetInterfaceString("editor_properties_one");
+			tabpagePropertiesTwo.Text = Translations.GetInterfaceString("editor_properties_two");
+			tabpageAcceleration.Text = Translations.GetInterfaceString("editor_acceleration");
+			tabpageMotor.Text = Translations.GetInterfaceString("editor_motor_sound");
+			tabPageExtended.Text = Translations.GetInterfaceString("editor_extended_features");
 
-			groupboxPerformance.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_performance");
-			labelDeceleration.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_performance_deceleration");
-			labelCoefficientOfStaticFriction.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_performance_static_friction");
-			labelCoefficientOfRollingResistance.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_performance_rolling_resistance");
-			labelAerodynamicDragCoefficient.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_performance_aerodynamic_drag");
+			groupboxPerformance.Text = Translations.GetInterfaceString("editor_performance");
+			labelDeceleration.Text = Translations.GetInterfaceString("editor_performance_deceleration");
+			labelCoefficientOfStaticFriction.Text = Translations.GetInterfaceString("editor_performance_static_friction");
+			labelCoefficientOfRollingResistance.Text = Translations.GetInterfaceString("editor_performance_rolling_resistance");
+			labelAerodynamicDragCoefficient.Text = Translations.GetInterfaceString("editor_performance_aerodynamic_drag");
 
-			groupboxDelay.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay");
-			labelDelayPowerUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_power_up") + ":";
-			labelDelayPowerDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_power_down") + ":";
-			labelDelayBrakeUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_brake_up") + ":";
-			labelDelayBrakeDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_brake_down") + ":";
-			buttonSetDelayPowerUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_set");
-			buttonSetDelayPowerDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_set");
-			buttonSetDelayBrakeUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_set");
-			buttonSetDelayBrakeDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_set");
+			groupboxDelay.Text = Translations.GetInterfaceString("editor_delay");
+			labelDelayPowerUp.Text = Translations.GetInterfaceString("editor_delay_power_up") + ":";
+			labelDelayPowerDown.Text = Translations.GetInterfaceString("editor_delay_power_down") + ":";
+			labelDelayBrakeUp.Text = Translations.GetInterfaceString("editor_delay_brake_up") + ":";
+			labelDelayBrakeDown.Text = Translations.GetInterfaceString("editor_delay_brake_down") + ":";
+			buttonSetDelayPowerUp.Text = Translations.GetInterfaceString("editor_delay_set");
+			buttonSetDelayPowerDown.Text = Translations.GetInterfaceString("editor_delay_set");
+			buttonSetDelayBrakeUp.Text = Translations.GetInterfaceString("editor_delay_set");
+			buttonSetDelayBrakeDown.Text = Translations.GetInterfaceString("editor_delay_set");
 
-			groupboxMove.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move");
-			labelJerkPowerUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_jerk_power_up");
-			labelJerkPowerDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_jerk_power_down");
-			labelJerkBrakeUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_jerk_brake_up");
-			labelJerkBrakeDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_jerk_brake_down");
-			labelBrakeCylinderUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_brake_cylinder_up");
-			labelBrakeCylinderDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_move_brake_cylinder_down");
+			groupboxMove.Text = Translations.GetInterfaceString("editor_move");
+			labelJerkPowerUp.Text = Translations.GetInterfaceString("editor_move_jerk_power_up");
+			labelJerkPowerDown.Text = Translations.GetInterfaceString("editor_move_jerk_power_down");
+			labelJerkBrakeUp.Text = Translations.GetInterfaceString("editor_move_jerk_brake_up");
+			labelJerkBrakeDown.Text = Translations.GetInterfaceString("editor_move_jerk_brake_down");
+			labelBrakeCylinderUp.Text = Translations.GetInterfaceString("editor_move_brake_cylinder_up");
+			labelBrakeCylinderDown.Text = Translations.GetInterfaceString("editor_move_brake_cylinder_down");
 
-			groupboxBrake.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake");
-			labelBrakeType.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_type");
-			labelBrakeControlSystem.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_control_system");
-			labelBrakeControlSpeed.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_control_speed");
-			comboboxBrakeType.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_smee");
-			comboboxBrakeType.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_ecb");
-			comboboxBrakeType.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_cl");
-			comboboxBrakeControlSystem.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_control_system_none");
-			comboboxBrakeControlSystem.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_lock_out_valve");
-			comboboxBrakeControlSystem.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_brake_delay_including_control");
+			groupboxBrake.Text = Translations.GetInterfaceString("editor_brake");
+			labelBrakeType.Text = Translations.GetInterfaceString("editor_brake_type");
+			labelBrakeControlSystem.Text = Translations.GetInterfaceString("editor_brake_control_system");
+			labelBrakeControlSpeed.Text = Translations.GetInterfaceString("editor_brake_control_speed");
+			comboboxBrakeType.Items[0] = Translations.GetInterfaceString("editor_brake_smee");
+			comboboxBrakeType.Items[1] = Translations.GetInterfaceString("editor_brake_ecb");
+			comboboxBrakeType.Items[2] = Translations.GetInterfaceString("editor_brake_cl");
+			comboboxBrakeControlSystem.Items[0] = Translations.GetInterfaceString("editor_brake_control_system_none");
+			comboboxBrakeControlSystem.Items[1] = Translations.GetInterfaceString("editor_brake_lock_out_valve");
+			comboboxBrakeControlSystem.Items[2] = Translations.GetInterfaceString("editor_brake_delay_including_control");
 
-			groupboxPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure");
-			labelBrakeCylinderServiceMaximumPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure_brake_cylinder_service_max");
-			labelBrakeCylinderEmergencyMaximumPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure_brake_cylinder_emergency_max");
-			labelMainReservoirMinimumPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure_main_reservoir_min");
-			labelMainReservoirMaximumPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure_main_reservoir_max");
-			labelBrakePipeNormalPressure.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_pressure_brake_pipe_normal");
+			groupboxPressure.Text = Translations.GetInterfaceString("editor_pressure");
+			labelBrakeCylinderServiceMaximumPressure.Text = Translations.GetInterfaceString("editor_pressure_brake_cylinder_service_max");
+			labelBrakeCylinderEmergencyMaximumPressure.Text = Translations.GetInterfaceString("editor_pressure_brake_cylinder_emergency_max");
+			labelMainReservoirMinimumPressure.Text = Translations.GetInterfaceString("editor_pressure_main_reservoir_min");
+			labelMainReservoirMaximumPressure.Text = Translations.GetInterfaceString("editor_pressure_main_reservoir_max");
+			labelBrakePipeNormalPressure.Text = Translations.GetInterfaceString("editor_pressure_brake_pipe_normal");
 
-			groupboxHandle.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle");
-			labelHandleType.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_type");
-			labelPowerNotches.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_power_notches");
-			labelBrakeNotches.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_brake_notches");
-			labelPowerNotchReduceSteps.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_power_notch_reduce_steps");
-			comboboxHandleType.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_separated");
-			comboboxHandleType.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_handle_combined");
+			groupboxHandle.Text = Translations.GetInterfaceString("editor_handle");
+			labelHandleType.Text = Translations.GetInterfaceString("editor_handle_type");
+			labelPowerNotches.Text = Translations.GetInterfaceString("editor_handle_power_notches");
+			labelBrakeNotches.Text = Translations.GetInterfaceString("editor_handle_brake_notches");
+			labelPowerNotchReduceSteps.Text = Translations.GetInterfaceString("editor_handle_power_notch_reduce_steps");
+			comboboxHandleType.Items[0] = Translations.GetInterfaceString("editor_handle_separated");
+			comboboxHandleType.Items[1] = Translations.GetInterfaceString("editor_handle_combined");
 
-			groupboxCab.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_cab");
-			labelDriverCar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_cab_driver_car");
+			groupboxCab.Text = Translations.GetInterfaceString("editor_cab");
+			labelDriverCar.Text = Translations.GetInterfaceString("editor_cab_driver_car");
 
-			groupboxCar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car");
-			labelMotorCarMass.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_motor_car_mass");
-			labelNumberOfMotorCars.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_number_of_motor_cars");
-			labelTrailerCarMass.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_trailer_car_mass");
-			labelNumberOfTrailerCars.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_number_of_trailer_cars");
-			labelLengthOfACar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_length_of_a_car");
-			labelFrontCarIsMotorCar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_front_car_is_motor_car");
-			labelWidthOfACar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_width_of_a_car");
-			labelHeightOfACar.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_height_of_a_car");
-			labelCenterOfGravityHeight.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_center_of_gravity_height");
-			labelExposedFrontalArea.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_exposed_frontal_area");
-			labelUnexposedFrontalArea.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_car_unexposed_frontal_area");
+			groupboxCar.Text = Translations.GetInterfaceString("editor_car");
+			labelMotorCarMass.Text = Translations.GetInterfaceString("editor_car_motor_car_mass");
+			labelNumberOfMotorCars.Text = Translations.GetInterfaceString("editor_car_number_of_motor_cars");
+			labelTrailerCarMass.Text = Translations.GetInterfaceString("editor_car_trailer_car_mass");
+			labelNumberOfTrailerCars.Text = Translations.GetInterfaceString("editor_car_number_of_trailer_cars");
+			labelLengthOfACar.Text = Translations.GetInterfaceString("editor_car_length_of_a_car");
+			labelFrontCarIsMotorCar.Text = Translations.GetInterfaceString("editor_car_front_car_is_motor_car");
+			labelWidthOfACar.Text = Translations.GetInterfaceString("editor_car_width_of_a_car");
+			labelHeightOfACar.Text = Translations.GetInterfaceString("editor_car_height_of_a_car");
+			labelCenterOfGravityHeight.Text = Translations.GetInterfaceString("editor_car_center_of_gravity_height");
+			labelExposedFrontalArea.Text = Translations.GetInterfaceString("editor_car_exposed_frontal_area");
+			labelUnexposedFrontalArea.Text = Translations.GetInterfaceString("editor_car_unexposed_frontal_area");
 
-			groupboxDevice.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device");
-			labelConstSpeed.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_const_speed");
-			labelHoldBrake.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_hold_brake");
-			labelReAdhesionDevice.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_readhesion_device");
-			labelPassAlarm.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_pass_alarm");
-			labelDoorOpenMode.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_door_open_mode");
-			labelDoorCloseMode.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_door_close_mode");
-			labelDoorWidth.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_door_width");
-			labelDoorMaxTolerance.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_door_max_tolerance");
-			comboboxAts.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_none");
-			comboboxAtc.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_none");
-			comboboxAtc.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_manual_switching");
-			comboboxAtc.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_automatic_switching");
-			comboboxReAdhesionDevice.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_none");
-			comboboxReAdhesionDevice.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_type_a");
-			comboboxReAdhesionDevice.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_type_b");
-			comboboxReAdhesionDevice.Items[3] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_type_c");
-			comboboxReAdhesionDevice.Items[4] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_type_d");
-			comboboxPassAlarm.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_none");
-			comboboxPassAlarm.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_single");
-			comboboxPassAlarm.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_looping");
-			comboboxDoorOpenMode.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_semi_automatic");
-			comboboxDoorOpenMode.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_automatic");
-			comboboxDoorOpenMode.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_manual");
-			comboboxDoorCloseMode.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_semi_automatic");
-			comboboxDoorCloseMode.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_automatic");
-			comboboxDoorCloseMode.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_device_manual");
+			groupboxDevice.Text = Translations.GetInterfaceString("editor_device");
+			labelConstSpeed.Text = Translations.GetInterfaceString("editor_device_const_speed");
+			labelHoldBrake.Text = Translations.GetInterfaceString("editor_device_hold_brake");
+			labelReAdhesionDevice.Text = Translations.GetInterfaceString("editor_device_readhesion_device");
+			labelPassAlarm.Text = Translations.GetInterfaceString("editor_device_pass_alarm");
+			labelDoorOpenMode.Text = Translations.GetInterfaceString("editor_device_door_open_mode");
+			labelDoorCloseMode.Text = Translations.GetInterfaceString("editor_device_door_close_mode");
+			labelDoorWidth.Text = Translations.GetInterfaceString("editor_device_door_width");
+			labelDoorMaxTolerance.Text = Translations.GetInterfaceString("editor_device_door_max_tolerance");
+			comboboxAts.Items[0] = Translations.GetInterfaceString("editor_device_none");
+			comboboxAtc.Items[0] = Translations.GetInterfaceString("editor_device_none");
+			comboboxAtc.Items[1] = Translations.GetInterfaceString("editor_device_manual_switching");
+			comboboxAtc.Items[2] = Translations.GetInterfaceString("editor_device_automatic_switching");
+			comboboxReAdhesionDevice.Items[0] = Translations.GetInterfaceString("editor_device_none");
+			comboboxReAdhesionDevice.Items[1] = Translations.GetInterfaceString("editor_device_type_a");
+			comboboxReAdhesionDevice.Items[2] = Translations.GetInterfaceString("editor_device_type_b");
+			comboboxReAdhesionDevice.Items[3] = Translations.GetInterfaceString("editor_device_type_c");
+			comboboxReAdhesionDevice.Items[4] = Translations.GetInterfaceString("editor_device_type_d");
+			comboboxPassAlarm.Items[0] = Translations.GetInterfaceString("editor_device_none");
+			comboboxPassAlarm.Items[1] = Translations.GetInterfaceString("editor_device_single");
+			comboboxPassAlarm.Items[2] = Translations.GetInterfaceString("editor_device_looping");
+			comboboxDoorOpenMode.Items[0] = Translations.GetInterfaceString("editor_device_semi_automatic");
+			comboboxDoorOpenMode.Items[1] = Translations.GetInterfaceString("editor_device_automatic");
+			comboboxDoorOpenMode.Items[2] = Translations.GetInterfaceString("editor_device_manual");
+			comboboxDoorCloseMode.Items[0] = Translations.GetInterfaceString("editor_device_semi_automatic");
+			comboboxDoorCloseMode.Items[1] = Translations.GetInterfaceString("editor_device_automatic");
+			comboboxDoorCloseMode.Items[2] = Translations.GetInterfaceString("editor_device_manual");
 
-			labelAccelerationNotch.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_notch");
-			groupboxAccelerationData.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_data");
-			groupboxAccelerationPreview.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_preview");
-			checkboxAccelerationSubtractDeceleration.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_subtract_deceleration");
-			labelAccelerationMaxX.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_max_x");
-			labelAccelerationMaxY.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_acceleration_max_y");
+			labelAccelerationNotch.Text = Translations.GetInterfaceString("editor_acceleration_notch");
+			groupboxAccelerationData.Text = Translations.GetInterfaceString("editor_acceleration_data");
+			groupboxAccelerationPreview.Text = Translations.GetInterfaceString("editor_acceleration_preview");
+			checkboxAccelerationSubtractDeceleration.Text = Translations.GetInterfaceString("editor_acceleration_subtract_deceleration");
+			labelAccelerationMaxX.Text = Translations.GetInterfaceString("editor_acceleration_max_x");
+			labelAccelerationMaxY.Text = Translations.GetInterfaceString("editor_acceleration_max_y");
 
-			groupboxMotorEdit.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_edit");
-			radiobuttonSoundIndex.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_sound_index");
-			radiobuttonPitch.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_pitch");
-			radiobuttonVolume.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_volume");
-			comboboxSoundIndex.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_sound_none");
+			groupboxMotorEdit.Text = Translations.GetInterfaceString("editor_motor_edit");
+			radiobuttonSoundIndex.Text = Translations.GetInterfaceString("editor_motor_sound_index");
+			radiobuttonPitch.Text = Translations.GetInterfaceString("editor_motor_pitch");
+			radiobuttonVolume.Text = Translations.GetInterfaceString("editor_motor_volume");
+			comboboxSoundIndex.Items[0] = Translations.GetInterfaceString("editor_motor_sound_none");
 
-			groupboxMotorPreview.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_preview");
+			groupboxMotorPreview.Text = Translations.GetInterfaceString("editor_motor_preview");
 			labelMotorInfo.Text =
 				"X: 0.00 km/h\n\n" +
-				OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_y_pitch") + ": 100.00 (100%)\n" +
-				OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_y_volume") + ": 128.00 (100%)";
-			labelMotorMinX.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_min_x");
-			labelMotorMaxX.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_max_x");
-			buttonMotorLeft.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_left");
-			buttonMotorRight.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_right");
-			buttonMotorIn.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_in");
-			buttonMotorOut.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_out");
-			labelMotorMaxYPitch.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_max_y_pitch");
-			labelMotorMaxYVolume.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_motor_max_y_volume");
+				Translations.GetInterfaceString("editor_motor_y_pitch") + ": 100.00 (100%)\n" +
+				Translations.GetInterfaceString("editor_motor_y_volume") + ": 128.00 (100%)";
+			labelMotorMinX.Text = Translations.GetInterfaceString("editor_motor_min_x");
+			labelMotorMaxX.Text = Translations.GetInterfaceString("editor_motor_max_x");
+			buttonMotorLeft.Text = Translations.GetInterfaceString("editor_motor_left");
+			buttonMotorRight.Text = Translations.GetInterfaceString("editor_motor_right");
+			buttonMotorIn.Text = Translations.GetInterfaceString("editor_motor_in");
+			buttonMotorOut.Text = Translations.GetInterfaceString("editor_motor_out");
+			labelMotorMaxYPitch.Text = Translations.GetInterfaceString("editor_motor_max_y_pitch");
+			labelMotorMaxYVolume.Text = Translations.GetInterfaceString("editor_motor_max_y_volume");
 
-			labelExtendedNote.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_note");
+			labelExtendedNote.Text = Translations.GetInterfaceString("editor_extended_note");
 
-			groupBoxLocoBrake.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake");
-			labelLocoBrakeSystemType.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_system_type");
-			labelLocoBrakeNotches.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_notches");
-			labelLocoBrakeDelayUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_delay_up");
-			labelLocoBrakeDelayDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_delay_down");
-			label2.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_type");
-			buttonLocoBrakeDelayUp.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_set");
-			buttonLocoBrakeDelayDown.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_set");
-			comboBoxLocoBrakeSystemType.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_none");
-			comboBoxLocoBrakeSystemType.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_notched_air_brake");
-			comboBoxLocoBrakeSystemType.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_cl");
-			comboBoxLocoBrakeType.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_combined");
-			comboBoxLocoBrakeType.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_independant");
-			comboBoxLocoBrakeType.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_loco_brake_blocking");
+			groupBoxLocoBrake.Text = Translations.GetInterfaceString("editor_extended_loco_brake");
+			labelLocoBrakeSystemType.Text = Translations.GetInterfaceString("editor_extended_loco_brake_system_type");
+			labelLocoBrakeNotches.Text = Translations.GetInterfaceString("editor_extended_loco_brake_notches");
+			labelLocoBrakeDelayUp.Text = Translations.GetInterfaceString("editor_extended_loco_brake_delay_up");
+			labelLocoBrakeDelayDown.Text = Translations.GetInterfaceString("editor_extended_loco_brake_delay_down");
+			label2.Text = Translations.GetInterfaceString("editor_extended_loco_brake_type");
+			buttonLocoBrakeDelayUp.Text = Translations.GetInterfaceString("editor_extended_loco_brake_set");
+			buttonLocoBrakeDelayDown.Text = Translations.GetInterfaceString("editor_extended_loco_brake_set");
+			comboBoxLocoBrakeSystemType.Items[0] = Translations.GetInterfaceString("editor_extended_loco_brake_none");
+			comboBoxLocoBrakeSystemType.Items[1] = Translations.GetInterfaceString("editor_extended_loco_brake_notched_air_brake");
+			comboBoxLocoBrakeSystemType.Items[2] = Translations.GetInterfaceString("editor_extended_loco_brake_cl");
+			comboBoxLocoBrakeType.Items[0] = Translations.GetInterfaceString("editor_extended_loco_brake_combined");
+			comboBoxLocoBrakeType.Items[1] = Translations.GetInterfaceString("editor_extended_loco_brake_independant");
+			comboBoxLocoBrakeType.Items[2] = Translations.GetInterfaceString("editor_extended_loco_brake_blocking");
 
-			groupBoxMisc.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc");
-			labelEBHandleBehaviour.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc_eb");
-			comboBoxEBHandleBehaviour.Items[0] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc_eb_no");
-			comboBoxEBHandleBehaviour.Items[1] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc_eb_power");
-			comboBoxEBHandleBehaviour.Items[2] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc_eb_reverser");
-			comboBoxEBHandleBehaviour.Items[3] = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_misc_eb_power_reverser");
+			groupBoxMisc.Text = Translations.GetInterfaceString("editor_extended_misc");
+			labelEBHandleBehaviour.Text = Translations.GetInterfaceString("editor_extended_misc_eb");
+			comboBoxEBHandleBehaviour.Items[0] = Translations.GetInterfaceString("editor_extended_misc_eb_no");
+			comboBoxEBHandleBehaviour.Items[1] = Translations.GetInterfaceString("editor_extended_misc_eb_power");
+			comboBoxEBHandleBehaviour.Items[2] = Translations.GetInterfaceString("editor_extended_misc_eb_reverser");
+			comboBoxEBHandleBehaviour.Items[3] = Translations.GetInterfaceString("editor_extended_misc_eb_power_reverser");
 
-			groupBoxLanguage.Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_language");
+			groupBoxLanguage.Text = Translations.GetInterfaceString("editor_extended_language");
 		}
 
 		private void buttonSetDelayPowerUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayPowerUp, OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_power_up"));
+			this.setDelay(ref this.Train.Delay.DelayPowerUp, Translations.GetInterfaceString("editor_delay_power_up"));
 		}
 
 		private void buttonSetDelayPowerDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayPowerDown, OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_power_down"));
+			this.setDelay(ref this.Train.Delay.DelayPowerDown, Translations.GetInterfaceString("editor_delay_power_down"));
 		}
 
 		private void buttonSetDelayBrakeUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayBrakeUp, OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_brake_up"));
+			this.setDelay(ref this.Train.Delay.DelayBrakeUp, Translations.GetInterfaceString("editor_delay_brake_up"));
 		}
 
 		private void buttonSetDelayBrakeDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayBrakeDown, OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_brake_down"));
+			this.setDelay(ref this.Train.Delay.DelayBrakeDown, Translations.GetInterfaceString("editor_delay_brake_down"));
 		}
 
 		private void buttonLocoBrakeDelayUp_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_delay_loco_brake_up"));
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeUp, Translations.GetInterfaceString("editor_extended_delay_loco_brake_up"));
 		}
 
 		private void buttonLocoBrakeDelayDown_Click(object sender, EventArgs e)
 		{
-			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, OpenBveApi.Interface.Interface.GetInterfaceString("editor_extended_delay_loco_brake_down"));
+			this.setDelay(ref this.Train.Delay.DelayLocoBrakeDown, Translations.GetInterfaceString("editor_extended_delay_loco_brake_down"));
 		}
 
 		private void setDelay(ref double[] delayValues, string delayType)
@@ -1634,21 +1635,21 @@ namespace TrainEditor {
 		    Label l = new Label
 		    {
 		     Location = new Point(140, currentPosition + 3),
-		     Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_notch") + " " + (object) index
+		     Text = Translations.GetInterfaceString("editor_delay_notch") + " " + (object) index
 		    };
 		    formDelay.Controls.Add(l);
 		    currentPosition += 25;
 	    }
 		Button buttonOK = new Button
 	    {
-		    Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_save"),
+		    Text = Translations.GetInterfaceString("editor_delay_save"),
 		    DialogResult = DialogResult.OK,
 		    Location = new Point(30, currentPosition)
 	    };
         formDelay.Controls.Add(buttonOK);
 	    Button buttonCancel = new Button
 	    {
-		    Text = OpenBveApi.Interface.Interface.GetInterfaceString("editor_delay_cancel"),
+		    Text = Translations.GetInterfaceString("editor_delay_cancel"),
 		    DialogResult = DialogResult.Cancel,
 		    Location = new Point(110, currentPosition)
 	    };

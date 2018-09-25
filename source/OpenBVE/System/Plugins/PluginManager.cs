@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OpenBveApi.Runtime;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -143,7 +144,7 @@ namespace OpenBve {
 				 * 
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, OpenBveApi.Interface.Interface.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
@@ -514,7 +515,7 @@ namespace OpenBve {
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success == false)
 			{
-				Loading.PluginError = OpenBveApi.Interface.Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+				Loading.PluginError = Translations.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
 			}
 			else
 			{

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -92,18 +93,18 @@ namespace OpenBve
 					}
 					catch
 					{
-						MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_sound_openal_version"), OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+						MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_version"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					}
 					AL.DistanceModel(ALDistanceModel.None);
 					return;
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
-				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_sound_openal_context"), OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			OpenAlContext = ContextHandle.Zero;
-			MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_sound_openal_device"), OpenBveApi.Interface.Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+			MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_device"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 		}
 
 		/// <summary>Deinitializes audio.</summary>

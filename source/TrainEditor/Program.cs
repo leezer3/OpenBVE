@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Interface;
 
 namespace TrainEditor {
 	internal static class Program {
@@ -22,7 +23,7 @@ namespace TrainEditor {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
 				FileSystem.CreateFileSystem();
 			} catch (Exception ex) {
-				MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, "TrainEditor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, "TrainEditor", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			Application.Run(new formEditor());

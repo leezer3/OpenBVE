@@ -2,7 +2,7 @@
 using OpenBveApi.Runtime;
 
 namespace OpenBveApi.Interface {
-	public static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>
 		public enum Command

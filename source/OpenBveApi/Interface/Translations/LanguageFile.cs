@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using OpenBveApi;
 
 namespace OpenBveApi.Interface {
-	public static partial class Interface {
+	public static partial class Translations {
 
         public static void LoadLanguageFiles(string LanguageFolder) {
             try {
@@ -198,30 +198,30 @@ namespace OpenBveApi.Interface {
                                     case "handles":
                                         switch (a)
                                         {
-                                            case "forward": Interface.QuickReferences.HandleForward = b; break;
-                                            case "neutral": Interface.QuickReferences.HandleNeutral = b; break;
-                                            case "backward": Interface.QuickReferences.HandleBackward = b; break;
-                                            case "power": Interface.QuickReferences.HandlePower = b; break;
-                                            case "powernull": Interface.QuickReferences.HandlePowerNull = b; break;
-                                            case "brake": Interface.QuickReferences.HandleBrake = b; break;
-	                                        case "locobrake": Interface.QuickReferences.HandleLocoBrake = b; break;
-                                            case "brakenull": Interface.QuickReferences.HandleBrakeNull = b; break;
-                                            case "release": Interface.QuickReferences.HandleRelease = b; break;
-                                            case "lap": Interface.QuickReferences.HandleLap = b; break;
-                                            case "service": Interface.QuickReferences.HandleService = b; break;
-                                            case "emergency": Interface.QuickReferences.HandleEmergency = b; break;
-                                            case "holdbrake": Interface.QuickReferences.HandleHoldBrake = b; break;
+                                            case "forward": QuickReferences.HandleForward = b; break;
+                                            case "neutral": QuickReferences.HandleNeutral = b; break;
+                                            case "backward": QuickReferences.HandleBackward = b; break;
+                                            case "power": QuickReferences.HandlePower = b; break;
+                                            case "powernull": QuickReferences.HandlePowerNull = b; break;
+                                            case "brake": QuickReferences.HandleBrake = b; break;
+	                                        case "locobrake": QuickReferences.HandleLocoBrake = b; break;
+                                            case "brakenull": QuickReferences.HandleBrakeNull = b; break;
+                                            case "release": QuickReferences.HandleRelease = b; break;
+                                            case "lap": QuickReferences.HandleLap = b; break;
+                                            case "service": QuickReferences.HandleService = b; break;
+                                            case "emergency": QuickReferences.HandleEmergency = b; break;
+                                            case "holdbrake": QuickReferences.HandleHoldBrake = b; break;
                                         } break;
                                     case "doors":
                                         switch (a)
                                         {
-                                            case "left": Interface.QuickReferences.DoorsLeft = b; break;
-                                            case "right": Interface.QuickReferences.DoorsRight = b; break;
+                                            case "left": QuickReferences.DoorsLeft = b; break;
+                                            case "right": QuickReferences.DoorsRight = b; break;
                                         } break;
                                     case "misc":
                                         switch (a)
                                         {
-                                            case "score": Interface.QuickReferences.Score = b; break;
+                                            case "score": QuickReferences.Score = b; break;
                                         } break;
                                     case "commands":
                                         {
@@ -282,11 +282,11 @@ namespace OpenBveApi.Interface {
                 string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
                 string Section = "";
                 InterfaceString[] LoadedStrings = new InterfaceString[16];
-                CommandInfo[] LoadedCommands = new CommandInfo[Interface.CommandInfos.Length];
-				KeyInfo[] LoadedKeys = new KeyInfo[Interface.TranslatedKeys.Length];
+                CommandInfo[] LoadedCommands = new CommandInfo[CommandInfos.Length];
+				KeyInfo[] LoadedKeys = new KeyInfo[TranslatedKeys.Length];
 				InterfaceQuickReference QuickReference = new InterfaceQuickReference();
-                Array.Copy(Interface.CommandInfos, LoadedCommands, Interface.CommandInfos.Length);
-				Array.Copy(Interface.TranslatedKeys, LoadedKeys, Interface.TranslatedKeys.Length);
+                Array.Copy(CommandInfos, LoadedCommands, CommandInfos.Length);
+				Array.Copy(TranslatedKeys, LoadedKeys, TranslatedKeys.Length);
                 var LoadedStringCount = 0;
                 for (int i = 0; i < Lines.Length; i++)
                 {

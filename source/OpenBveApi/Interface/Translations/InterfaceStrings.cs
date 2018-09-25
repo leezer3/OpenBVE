@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OpenBveApi.Interface
 {
-	public static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Stores the current language-code</summary>
 		public static string CurrentLanguageCode = "en-GB";
@@ -36,14 +36,14 @@ namespace OpenBveApi.Interface
 		public static void SetInGameLanguage(string Language)
 		{
 			//Set command infos to the translated strings
-			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+			for (int i = 0; i < AvailableLangauges.Count; i++)
 			{
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (Interface.AvailableLangauges[i].LanguageCode == Language)
+				if (AvailableLangauges[i].LanguageCode == Language)
 				{
-					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
-					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
-					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
+					CommandInfos = AvailableLangauges[i].CommandInfos;
+					QuickReferences = AvailableLangauges[i].QuickReferences;
+					TranslatedKeys = AvailableLangauges[i].KeyInfos;
 					break;
 				}
 			}

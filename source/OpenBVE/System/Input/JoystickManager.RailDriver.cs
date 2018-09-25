@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 using PIEHid32Net;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -117,7 +118,7 @@ namespace OpenBve
 					{
 						Calibration[i] = new AxisCalibration();
 					}
-					MessageBox.Show(OpenBveApi.Interface.Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(Translations.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					//Clear the calibration file
 					File.Delete(calibrationFile);
 				}

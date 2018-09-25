@@ -2,7 +2,7 @@
 
 namespace OpenBveApi.Interface
 {
-	public partial class Interface
+	public partial class Translations
 	{
 		/// <summary>Defines an available keyboard key</summary>
 		public struct KeyInfo

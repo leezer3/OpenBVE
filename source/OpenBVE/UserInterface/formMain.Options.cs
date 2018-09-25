@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal partial class formMain : Form {
@@ -15,7 +16,7 @@ namespace OpenBve {
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
 			string Folder = Program.FileSystem.GetDataFolder("Flags");
-			if (OpenBveApi.Interface.Interface.SelectedLanguage(Folder, LanguageFiles, ref CurrentLanguageCode, comboboxLanguages, pictureboxLanguage)) {
+			if (Translations.SelectedLanguage(Folder, LanguageFiles, ref CurrentLanguageCode, comboboxLanguages, pictureboxLanguage)) {
 				ApplyLanguage();
 			}
 		}
