@@ -10,14 +10,25 @@ namespace OpenBve
     {
         internal static void LoadOptions()
         {
+            string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+            if (!System.IO.Directory.Exists(optionsFolder))
+            {
+                System.IO.Directory.CreateDirectory(optionsFolder);
+            }
             CultureInfo Culture = CultureInfo.InvariantCulture;
-            string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
+            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_ov.cfg");
             if (!System.IO.File.Exists(configFile))
             {
-                //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
-                //Write out to a new routeviewer specific file though
-                configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options.cfg");
+                //Attempt to load and upgrade a prior configuration file
+                string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                configFile = OpenBveApi.Path.CombineFile(OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"), "Settings"), "options_ov.cfg");
+
+                if (!System.IO.File.Exists(configFile))
+                {
+                    //If no route viewer specific configuration file exists, then try the main OpenBVE configuration file
+                    //Write out to a new routeviewer specific file though
+                    configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+                }
             }
 
             if (System.IO.File.Exists(configFile))
@@ -128,37 +139,38 @@ namespace OpenBve
 
         internal static void SaveOptions()
         {
-            string assemblyFolder = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string optionsFolder = OpenBveApi.Path.CombineDirectory(OpenBveApi.Path.CombineDirectory(assemblyFolder, "UserData"),"Settings");
-            string configFile = OpenBveApi.Path.CombineFile(optionsFolder, "options_ov.cfg");
             try
             {
-                //Delete original options file
-                if (System.IO.File.Exists(configFile))
+                CultureInfo Culture = CultureInfo.InvariantCulture;
+                System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+                Builder.AppendLine("; Options");
+                Builder.AppendLine("; =======");
+                Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
+                Builder.AppendLine("; Object Viewer specific options file");
+                Builder.AppendLine();
+                Builder.AppendLine("[display]");
+                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine();
+                Builder.AppendLine("[quality]");
                 {
-                    System.IO.File.Delete(configFile);
+                    string t; switch (Interface.CurrentOptions.Interpolation)
+                    {
+                        case Interface.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                        case Interface.InterpolationMode.Bilinear: t = "bilinear"; break;
+                        case Interface.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                        case Interface.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                        case Interface.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                        case Interface.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                        default: t = "bilinearMipmapped"; break;
+                    }
+                    Builder.AppendLine("interpolation = " + t);
                 }
-                if (!System.IO.Directory.Exists(optionsFolder))
-                {
-                    Directory.CreateDirectory(optionsFolder);
-                }
-                using(StreamWriter sw = new StreamWriter(configFile))
-                {
-                    sw.WriteLine("; Options");
-                    sw.WriteLine("; =======");
-                    sw.WriteLine("; This file was automatically generated. Please modify only if you know what you're doing.");
-                    sw.WriteLine("; Route Viewer specific options file");
-                    sw.WriteLine();
-                    sw.WriteLine("[display]");
-                    sw.WriteLine("windowWidth = " + Renderer.ScreenWidth);
-                    sw.WriteLine("windowHeight = " + Renderer.ScreenHeight);
-                    sw.WriteLine();
-                    sw.WriteLine("[quality]");
-                    sw.WriteLine("interpolation = " + Interface.CurrentOptions.Interpolation);
-                    sw.WriteLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel);
-                    sw.WriteLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel);
-                    sw.WriteLine("transparencymode = " + Interface.CurrentOptions.TransparencyMode);
-                }
+                Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
+                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+                Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
+                string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
+                System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }
             catch
             {

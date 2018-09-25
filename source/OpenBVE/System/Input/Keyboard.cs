@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Input;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -45,12 +46,12 @@ namespace OpenBve
 						Interface.CurrentControls[i].AnalogState = 1.0;
 						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
 						//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
-						if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == Interface.Command.MenuUp || Interface.CurrentControls[i].Command == Interface.Command.MenuDown)
+						if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
 						{
-							if (Interface.CurrentControls[i].Command == Interface.Command.CameraInterior |
-								Interface.CurrentControls[i].Command == Interface.Command.CameraExterior |
-								Interface.CurrentControls[i].Command == Interface.Command.CameraFlyBy |
-								Interface.CurrentControls[i].Command == Interface.Command.CameraTrack)
+							if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
+								Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
+								Interface.CurrentControls[i].Command == Translations.Command.CameraFlyBy |
+								Interface.CurrentControls[i].Command == Translations.Command.CameraTrack)
 							{
 								//HACK: We don't want to bounce between camera modes when holding down the mode switch key
 								continue;

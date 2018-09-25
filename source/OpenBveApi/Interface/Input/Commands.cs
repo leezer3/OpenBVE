@@ -1,11 +1,11 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 
-namespace OpenBve {
-	internal static partial class Interface
+namespace OpenBveApi.Interface {
+	public static partial class Translations
 	{
 		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>
-		internal enum Command
+		public enum Command
 		{
 			//Basic controls
 			/// <summary>No command specified</summary>
@@ -279,7 +279,7 @@ namespace OpenBve {
 		}
 
 		/// <summary>Defines the possible command types</summary>
-		internal enum CommandType
+		public enum CommandType
 		{
 			/// <summary>A digital input, comprising of ON and OFF states</summary>
 			Digital,
@@ -294,7 +294,7 @@ namespace OpenBve {
 		/// <summary>Converts the specified security command to a virtual key.</summary>
 		/// <returns>Virtual key for plugins.</returns>
 		/// <param name="cmd">The security command. If this isn't a recognized security command, ArgumentException will be thrown.</param>
-		internal static VirtualKeys SecurityToVirtualKey(Command cmd)
+		public static VirtualKeys SecurityToVirtualKey(Command cmd)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
 			if (cmdname == null) throw new ArgumentNullException("cmd");

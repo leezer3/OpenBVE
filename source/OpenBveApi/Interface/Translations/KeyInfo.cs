@@ -1,18 +1,18 @@
 ﻿using OpenTK.Input;
 
-namespace OpenBve
+namespace OpenBveApi.Interface
 {
-	internal partial class Interface
+	public partial class Translations
 	{
 		/// <summary>Defines an available keyboard key</summary>
-		internal struct KeyInfo
+		public struct KeyInfo
 		{
 			/// <summary>The key (OpenTK.Input.Key enum member)</summary>
-			internal readonly Key Key;
+			public readonly Key Key;
 			/// <summary>The internal key name</summary>
 			internal readonly string Name;
 			/// <summary>The translated key description</summary>
-			internal string Description;
+			public string Description;
 			/// <summary>Creates a new translated key</summary>
 			internal KeyInfo(Key Key, string Name)
 			{
@@ -30,7 +30,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Holds the translations for all keys available for assignation</summary>
-		internal static KeyInfo[] TranslatedKeys = {
+		public static KeyInfo[] TranslatedKeys = {
 			new KeyInfo(Key.Number0, "0"),
 			new KeyInfo(Key.Number1, "1"),
 			new KeyInfo(Key.Number2, "2"),

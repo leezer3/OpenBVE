@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using OpenBve.Parsers.Train;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -71,10 +72,10 @@ namespace OpenBve {
 						{
 							//HACK: Ignore completely empty directories
 							//Doesn't handle wrong directories, or those with stuff missing, TODO.....
-							Program.AppendToLogFile(Subfolder + " : Railway folder found.");
+							Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder found.");
 							return Subfolder;
 						}
-					Program.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
+					Program.FileSystem.AppendToLogFile(Subfolder + " : Railway folder candidate rejected- Directory empty.");
 						
 					}
 					if (Folder == null) continue;
@@ -96,7 +97,7 @@ namespace OpenBve {
 					string SoundFolder = OpenBveApi.Path.CombineDirectory(Folder, "Sound");
 					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder) && System.IO.Directory.Exists(SoundFolder))
 					{
-						Program.AppendToLogFile(Folder + " : Railway folder found.");
+						Program.FileSystem.AppendToLogFile(Folder + " : Railway folder found.");
 						return Folder;
 					}
 					if (System.IO.Directory.Exists(RouteFolder) && System.IO.Directory.Exists(ObjectFolder))
@@ -108,7 +109,7 @@ namespace OpenBve {
 					{
 						if (candidate != null)
 						{
-							Program.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
+							Program.FileSystem.AppendToLogFile(Folder + " : The best candidate for the Railway folder has been selected- Sound folder not detected.");
 							return candidate;
 						}
 						break;
@@ -117,7 +118,7 @@ namespace OpenBve {
 				}
 			}
 			catch { }
-			Program.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
+			Program.FileSystem.AppendToLogFile("No Railway folder found- Returning the openBVE startup path.");
 			return Application.StartupPath;
 		}
 
@@ -143,10 +144,10 @@ namespace OpenBve {
 					switch (ex.Message)
 					{
 						case "libopenal.so.1":
-							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("openAL was not found on this system. \n Please install libopenal1 via your distribtion's package management system.", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 						default:
-							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Interface.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							MessageBox.Show("The required system library " + ex.Message + " was not found on this system.", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 							break;
 					}
 				}
@@ -166,7 +167,7 @@ namespace OpenBve {
 			Complete = true;
 		}
 		private static void LoadEverythingThreaded() {
-			Program.AppendToLogFile("Loading route file: " + CurrentRouteFile);
+			Program.FileSystem.AppendToLogFile("Loading route file: " + CurrentRouteFile);
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
@@ -179,7 +180,7 @@ namespace OpenBve {
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
-			Program.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
+			Program.FileSystem.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
 			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
@@ -207,9 +208,9 @@ namespace OpenBve {
 			if (Game.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
-				Program.AppendToLogFile("The processed route file only contains a single station.");
+				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
 			}
-			Program.AppendToLogFile("Route file loaded successfully.");
+			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
 			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -250,11 +251,11 @@ namespace OpenBve {
 					// real train
 					if (TrainManager.Trains[k] == TrainManager.PlayerTrain)
 					{
-						Program.AppendToLogFile("Loading player train: " + TrainManager.Trains[k].TrainFolder);
+						Program.FileSystem.AppendToLogFile("Loading player train: " + TrainManager.Trains[k].TrainFolder);
 					}
 					else
 					{
-						Program.AppendToLogFile("Loading AI train: " + TrainManager.Trains[k].TrainFolder);
+						Program.FileSystem.AppendToLogFile("Loading AI train: " + TrainManager.Trains[k].TrainFolder);
 					}
 					TrainProgressCurrentWeight = 0.1 / TrainProgressMaximum;
 					string TrainData = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.dat");
@@ -325,7 +326,7 @@ namespace OpenBve {
 					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
-					Program.AppendToLogFile("Train panel loaded sucessfully.");
+					Program.FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 				}
 				// add exterior section
 				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus)

@@ -102,7 +102,6 @@
     <Compile Include="Audio\Sounds.SoundOrigin.cs" />
     <Compile Include="Audio\Sounds.SoundSource.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
-    <Compile Include="System\FileSystem.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Gamewindow.cs" />
     <Compile Include="System\Host.cs" />

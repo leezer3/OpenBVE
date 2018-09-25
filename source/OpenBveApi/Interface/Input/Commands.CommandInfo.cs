@@ -1,18 +1,18 @@
-﻿namespace OpenBve
+﻿namespace OpenBveApi.Interface
 {
-	internal static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Information on an in-game command</summary>
-		internal struct CommandInfo
+		public struct CommandInfo
 		{
 			/// <summary>The actual command to be performed</summary>
-			internal readonly Command Command;
+			public readonly Command Command;
 			/// <summary>Whether this is a digital or analog control</summary>
-			internal readonly CommandType Type;
+			public readonly CommandType Type;
 			/// <summary>The command name</summary>
-			internal readonly string Name;
+			public readonly string Name;
 			/// <summary>The command's description</summary>
-			internal string Description;
+			public string Description;
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;
@@ -26,7 +26,7 @@
 		/// <param name="commandInfos">The array of command infos</param>
 		/// <param name="Value">The command</param>
 		/// <returns>The command info for Value, or a new command info if this is not in the array</returns>
-		internal static CommandInfo TryGetInfo(this CommandInfo[] commandInfos, Command Value)
+		public static CommandInfo TryGetInfo(this CommandInfo[] commandInfos, Command Value)
 		{
 			for (int i = 0; i < commandInfos.Length; i++) {
 				if (commandInfos[i].Command == Value)
@@ -38,7 +38,7 @@
 		}
 
 		/// <summary>Contains the list of all known command infos</summary>
-		internal static CommandInfo[] CommandInfos = {
+		public static CommandInfo[] CommandInfos = {
 			new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE"),
 			new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE"),
 			new CommandInfo(Command.PowerHalfAxis, CommandType.AnalogHalf, "POWER_HALFAXIS"),

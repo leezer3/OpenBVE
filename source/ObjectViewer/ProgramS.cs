@@ -8,6 +8,7 @@
 using System;
 using System.Windows.Forms;
 using OpenBveApi.World;
+using OpenBveApi.FileSystem;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;

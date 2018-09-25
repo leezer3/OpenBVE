@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -38,7 +39,7 @@ namespace OpenBve
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
 			if (System.IO.File.Exists(File))
 			{
-				Program.AppendToLogFile("Loading train panel: " + File);
+				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectManager.ObjectLoadMode.DontAllowUnloadOfTextures);
 				if (a != null)
 				{
@@ -57,7 +58,7 @@ namespace OpenBve
 					}
 					catch
 					{
-						var currentError = Interface.GetInterfaceString("errors_critical_file");
+						var currentError = Translations.GetInterfaceString("errors_critical_file");
 						currentError = currentError.Replace("[file]", "panel.animated");
 						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						Program.RestartArguments = " ";
@@ -73,7 +74,7 @@ namespace OpenBve
 				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
 				if (System.IO.File.Exists(File))
 				{
-					Program.AppendToLogFile("Loading train panel: " + File);
+					Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 					Panel2 = true;
 					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
@@ -84,7 +85,7 @@ namespace OpenBve
 					File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 					if (System.IO.File.Exists(File))
 					{
-						Program.AppendToLogFile("Loading train panel: " + File);
+						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
 						World.CameraRestriction = Camera.RestrictionMode.On;
@@ -97,7 +98,7 @@ namespace OpenBve
 			}
 			catch
 			{
-				var currentError = Interface.GetInterfaceString("errors_critical_file");
+				var currentError = Translations.GetInterfaceString("errors_critical_file");
 				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
 				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Program.RestartArguments = " ";

@@ -255,6 +255,8 @@ namespace TrainEditor {
 			internal PassAlarmModes PassAlarm;
 			internal DoorModes DoorOpenMode;
 			internal DoorModes DoorCloseMode;
+			internal double DoorWidth;
+			internal double DoorMaxTolerance;
 			internal Device() {
 				this.Ats = AtsModes.AtsSn;
 				this.Atc = AtcModes.None;
@@ -266,6 +268,8 @@ namespace TrainEditor {
 				this.PassAlarm = PassAlarmModes.None;
 				this.DoorOpenMode = DoorModes.SemiAutomatic;
 				this.DoorCloseMode = DoorModes.SemiAutomatic;
+				this.DoorWidth = 1000.0;
+				this.DoorMaxTolerance = 0.0;
 			}
 		}
 		
@@ -697,6 +701,12 @@ namespace TrainEditor {
 									case 9:
 										if (b >= 0 & b <= 2) t.Device.DoorCloseMode = (Device.DoorModes)b;
 										break;
+									case 10:
+										if (a >= 0.0) t.Device.DoorWidth = a;
+										break;
+									case 11:
+										if (a >= 0.0) t.Device.DoorMaxTolerance = a;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -889,6 +899,8 @@ namespace TrainEditor {
 			b.AppendLine(((int)t.Device.PassAlarm).ToString(Culture).PadRight(n, ' ') + "; PassAlarm");
 			b.AppendLine(((int)t.Device.DoorOpenMode).ToString(Culture).PadRight(n, ' ') + "; DoorOpenMode");
 			b.AppendLine(((int)t.Device.DoorCloseMode).ToString(Culture).PadRight(n, ' ') + "; DoorCloseMode");
+			b.AppendLine(t.Device.DoorWidth.ToString(Culture).PadRight(n, ' ') + "; DoorWidth");
+			b.AppendLine(t.Device.DoorMaxTolerance.ToString(Culture).PadRight(n, ' ') + "; DoorMaxTolerance");
 			for (int i = 0; i < 4; i++) {
 				Motor m = null;
 				switch (i) {

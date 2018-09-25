@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Input;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -44,8 +45,8 @@ namespace OpenBve
         internal struct Control
         {
             /// <summary>The internal command which this control performs</summary>
-            internal Command Command;
-            internal CommandType InheritedType;
+            internal Translations.Command Command;
+            internal Translations.CommandType InheritedType;
             internal ControlMethod Method;
             internal KeyboardModifier Modifier;
             internal int Device;
