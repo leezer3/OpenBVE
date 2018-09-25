@@ -712,7 +712,7 @@ namespace OpenBve {
 			checkboxKeyboardCtrl.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
 			//Shift ALT to suit
 			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
-
+			
 			checkboxKeyboardAlt.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Translations.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment");
