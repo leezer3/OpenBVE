@@ -57,6 +57,7 @@ namespace OpenBve
             internal double AnalogState;
             internal Key Key;
             internal string LastState;
+            internal int Option;
         }
     }
 }

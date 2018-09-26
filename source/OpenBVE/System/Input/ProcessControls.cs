@@ -1226,6 +1226,50 @@ namespace OpenBve
 												!TrainManager.PlayerTrain.Specs.CurrentConstSpeed;
 										}
 										break;
+									case Translations.Command.PowerAnyNotch:
+										if (TrainManager.PlayerTrain.Handles.SingleHandle && TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
+										{
+											TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+										}
+										TrainManager.PlayerTrain.ApplyNotch(Interface.CurrentControls[i].Option, false, 0, !TrainManager.PlayerTrain.Handles.SingleHandle);
+										break;
+									case Translations.Command.BrakeAnyNotch:
+										if (TrainManager.PlayerTrain.Handles.Brake is TrainManager.AirBrakeHandle)
+										{
+											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
+											{
+												TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+											}
+											TrainManager.PlayerTrain.ApplyHoldBrake(false);
+											if (Interface.CurrentControls[i].Option <= (int)TrainManager.AirBrakeHandleState.Release)
+											{
+												TrainManager.PlayerTrain.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
+											}
+											else if (Interface.CurrentControls[i].Option == (int)TrainManager.AirBrakeHandleState.Lap)
+											{
+												TrainManager.PlayerTrain.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Lap);
+											}
+											else
+											{
+												TrainManager.PlayerTrain.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
+											}
+										}
+										else
+										{
+											if (TrainManager.PlayerTrain.Handles.EmergencyBrake.Driver)
+											{
+												TrainManager.PlayerTrain.UnapplyEmergencyBrake();
+											}
+											TrainManager.PlayerTrain.ApplyHoldBrake(false);
+											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, Interface.CurrentControls[i].Option, false);
+										}
+										break;
+									case Translations.Command.HoldBrake:
+										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
+										{
+											TrainManager.PlayerTrain.ApplyHoldBrake(true);
+										}
+										break;
 									case Translations.Command.ReverserForward:
 										// reverser forward
 										if (TrainManager.PlayerTrain.Handles.Reverser.Driver < TrainManager.ReverserPosition.Forwards)

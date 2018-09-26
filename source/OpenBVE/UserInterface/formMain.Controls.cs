@@ -22,10 +22,12 @@ namespace OpenBve {
 						int j; for (j = 0; j < Translations.CommandInfos.Length; j++) {
 							if (Translations.CommandInfos[j].Command == Interface.CurrentControls[i].Command) {
 								comboboxCommand.SelectedIndex = j;
+								updownCommandOption.Value = Interface.CurrentControls[i].Option;
 								break;
 							}
 						} if (j == Translations.CommandInfos.Length) {
 							comboboxCommand.SelectedIndex = -1;
+							updownCommandOption.Value = 0;
 						}
 					}
 					// data
@@ -114,6 +116,7 @@ namespace OpenBve {
 				Item.ImageKey = null;
 			}
 			Item.SubItems[3].Text = GetControlDetails(Index);
+			Item.SubItems[4].Text = Interface.CurrentControls[Index].Option.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			if (ResizeColumns) {
 				listviewControls.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 			}
@@ -248,7 +251,7 @@ namespace OpenBve {
 			int n = Interface.CurrentControls.Length;
 			Array.Resize<Interface.Control>(ref Interface.CurrentControls, n + 1);
 			Interface.CurrentControls[n].Command = Translations.Command.None;
-			ListViewItem Item = new ListViewItem(new string[] { "", "", "", "" });
+			ListViewItem Item = new ListViewItem(new string[] { "", "", "", "", "" });
 			UpdateControlListElement(Item, n, true);
 			listviewControls.Items.Add(Item);
 			Item.Selected = true;
@@ -305,6 +308,18 @@ namespace OpenBve {
 					Interface.CurrentControls[i].Command = Translations.CommandInfos[j].Command;
 					Translations.CommandInfo Info = Translations.TryGetInfo(Translations.CommandInfos, Translations.CommandInfos[j].Command);
 					Interface.CurrentControls[i].InheritedType = Info.Type;
+					UpdateControlListElement(listviewControls.Items[i], i, true);
+				}
+			}
+		}
+
+		// command option
+		private void updownCommandOption_ValueChanged(object sender, EventArgs e) {
+			if (this.Tag == null & listviewControls.SelectedIndices.Count == 1) {
+				int i = listviewControls.SelectedIndices[0];
+				int j = comboboxCommand.SelectedIndex;
+				if (j >= 0) {
+					Interface.CurrentControls[i].Option = (int)updownCommandOption.Value;
 					UpdateControlListElement(listviewControls.Items[i], i, true);
 				}
 			}
@@ -434,7 +449,7 @@ namespace OpenBve {
 					listviewControls.Items.Clear();
 					ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 					for (int i = 0; i < Interface.CurrentControls.Length; i++) {
-						Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+						Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
 						UpdateControlListElement(Items[i], i, false);
 					}
 					listviewControls.Items.AddRange(Items);
@@ -458,7 +473,7 @@ namespace OpenBve {
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
 				listviewControls.Items.AddRange(Items);

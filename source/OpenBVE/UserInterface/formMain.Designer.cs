@@ -255,6 +255,7 @@
 			this.columnheaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnheaderControlsDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnheaderControlsAssignment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderControlsOption = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.labelControlsTitleSeparator = new System.Windows.Forms.Label();
 			this.labelControlsTitle = new System.Windows.Forms.Label();
 			this.labelControlsTitleBackground = new System.Windows.Forms.Label();
@@ -267,6 +268,8 @@
 			this.checkboxKeyboardShift = new System.Windows.Forms.CheckBox();
 			this.labelKeyboardModifier = new System.Windows.Forms.Label();
 			this.comboboxCommand = new System.Windows.Forms.ComboBox();
+			this.updownCommandOption = new System.Windows.Forms.NumericUpDown();
+			this.labelCommandOption = new System.Windows.Forms.Label();
 			this.labelCommand = new System.Windows.Forms.Label();
 			this.textboxJoystickGrab = new System.Windows.Forms.TextBox();
 			this.panelJoystick = new System.Windows.Forms.Panel();
@@ -3341,7 +3344,8 @@
             this.columnheaderControlsCommands,
             this.columnheaderType,
             this.columnheaderControlsDescription,
-            this.columnheaderControlsAssignment});
+            this.columnheaderControlsAssignment,
+            this.columnheaderControlsOption});
 			this.listviewControls.FullRowSelect = true;
 			this.listviewControls.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listviewControls.HideSelection = false;
@@ -3374,6 +3378,10 @@
 			// 
 			this.columnheaderControlsAssignment.Text = "Assignment";
 			this.columnheaderControlsAssignment.Width = 172;
+			// 
+			// columnheaderControlsOption
+			// 
+			this.columnheaderControlsAssignment.Text = "Command Option";
 			// 
 			// labelControlsTitleSeparator
 			// 
@@ -3416,6 +3424,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupboxControl.Controls.Add(this.panelKeyboard);
 			this.groupboxControl.Controls.Add(this.comboboxCommand);
+			this.groupboxControl.Controls.Add(this.updownCommandOption);
+			this.groupboxControl.Controls.Add(this.labelCommandOption);
 			this.groupboxControl.Controls.Add(this.labelCommand);
 			this.groupboxControl.Controls.Add(this.textboxJoystickGrab);
 			this.groupboxControl.Controls.Add(this.panelJoystick);
@@ -3520,6 +3530,26 @@
 			this.comboboxCommand.Size = new System.Drawing.Size(547, 21);
 			this.comboboxCommand.TabIndex = 1;
 			this.comboboxCommand.SelectedIndexChanged += new System.EventHandler(this.comboboxCommand_SelectedIndexChanged);
+			//
+			// updownCommandOption
+			//
+			this.updownCommandOption.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left));
+			this.updownCommandOption.Location = new System.Drawing.Point(583, 48);
+			this.updownCommandOption.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+			this.updownCommandOption.Minimum = new decimal(new int[] { 0, 0, 0, 0 });
+			this.updownCommandOption.Name = "updownCommandOption";
+			this.updownCommandOption.Size = new System.Drawing.Size(52, 21);
+			this.updownCommandOption.Value = new decimal(new int[] { 0, 0, 0, 0 });
+			this.updownCommandOption.ValueChanged += new System.EventHandler(this.updownCommandOption_ValueChanged);
+			//
+			// labelCommandOption
+			//
+			this.labelCommandOption.AutoEllipsis = true;
+			this.labelCommandOption.Location = new System.Drawing.Point(463, 51);
+			this.labelCommandOption.Name = "labelCommandOption";
+			this.labelCommandOption.Size = new System.Drawing.Size(120, 16);
+			this.labelCommandOption.Text = "CommandOption:";
+			this.labelCommandOption.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// labelCommand
 			// 
@@ -5654,6 +5684,7 @@
         private System.Windows.Forms.ColumnHeader columnheaderControlsCommands;
         private System.Windows.Forms.ColumnHeader columnheaderControlsDescription;
         private System.Windows.Forms.ColumnHeader columnheaderControlsAssignment;
+        private System.Windows.Forms.ColumnHeader columnheaderControlsOption;
         private System.Windows.Forms.Label labelControlsTitleSeparator;
         private System.Windows.Forms.Label labelControlsTitle;
         private System.Windows.Forms.Label labelControlsTitleBackground;
@@ -5669,6 +5700,8 @@
         private System.Windows.Forms.Label labelKeyboardModifier;
         private System.Windows.Forms.Panel panelJoystick;
         private System.Windows.Forms.ComboBox comboboxCommand;
+        private System.Windows.Forms.NumericUpDown updownCommandOption;
+        private System.Windows.Forms.Label labelCommandOption;
         private System.Windows.Forms.Label labelCommand;
         private System.Windows.Forms.Label labelJoystickAssignmentValue;
         private System.Windows.Forms.GroupBox groupboxJoysticks;
