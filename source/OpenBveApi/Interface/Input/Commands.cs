@@ -38,6 +38,12 @@ namespace OpenBveApi.Interface {
 			SingleEmergency,
 			/// <summary>Controls a combined power and brake handle using a full joystick axis</summary>
 			SingleFullAxis,
+			/// <summary>Adjust to the power notch directly from command option value</summary>
+			PowerAnyNotch,
+			/// <summary>Adjust to the brake notch directly from command option value</summary>
+			BrakeAnyNotch,
+			/// <summary>Hold Brake</summary>
+			HoldBrake,
 			/// <summary>Moves the reverser in the forwards direction</summary>
 			ReverserForward,
 			/// <summary>Moves the reverser in the backwards direction</summary>

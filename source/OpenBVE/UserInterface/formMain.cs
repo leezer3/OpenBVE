@@ -692,6 +692,7 @@ namespace OpenBve {
 			listviewControls.Columns[1].Text = Translations.GetInterfaceString("controls_list_type");
 			listviewControls.Columns[2].Text = Translations.GetInterfaceString("controls_list_description");
 			listviewControls.Columns[3].Text = Translations.GetInterfaceString("controls_list_assignment");
+			listviewControls.Columns[4].Text = Translations.GetInterfaceString("controls_list_option");
 			buttonControlAdd.Text = Translations.GetInterfaceString("controls_add");
 			buttonControlRemove.Text = Translations.GetInterfaceString("controls_remove");
 			buttonControlsImport.Text = Translations.GetInterfaceString("controls_import");
@@ -701,6 +702,7 @@ namespace OpenBve {
 			buttonControlDown.Text = Translations.GetInterfaceString("controls_down");
 			groupboxControl.Text = Translations.GetInterfaceString("controls_selection");
 			labelCommand.Text = Translations.GetInterfaceString("controls_selection_command");
+			labelCommandOption.Text = Translations.GetInterfaceString("controls_selection_command_option");
 			radiobuttonKeyboard.Text = Translations.GetInterfaceString("controls_selection_keyboard");
 			labelKeyboardKey.Text = Translations.GetInterfaceString("controls_selection_keyboard_key");
 			labelKeyboardModifier.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers");
@@ -734,7 +736,7 @@ namespace OpenBve {
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
 				listviewControls.Items.AddRange(Items);

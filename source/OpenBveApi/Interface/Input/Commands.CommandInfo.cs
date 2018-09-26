@@ -13,12 +13,23 @@
 			public readonly string Name;
 			/// <summary>The command's description</summary>
 			public string Description;
+			/// <summary>Whether to enable command options</summary>
+			public bool EnableOption;
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;
 				this.Type = Type;
 				this.Name = Name;
 				this.Description = "N/A";
+				this.EnableOption = false;
+			}
+			internal CommandInfo(Command Command, CommandType Type, string Name, bool EnableOption)
+			{
+				this.Command = Command;
+				this.Type = Type;
+				this.Name = Name;
+				this.Description = "N/A";
+				this.EnableOption = EnableOption;
 			}
 		}
 
@@ -55,6 +66,9 @@
 			new CommandInfo(Command.SingleBrake, CommandType.Digital, "SINGLE_BRAKE"),
 			new CommandInfo(Command.SingleEmergency, CommandType.Digital, "SINGLE_EMERGENCY"),
 			new CommandInfo(Command.SingleFullAxis, CommandType.AnalogFull, "SINGLE_FULLAXIS"),
+			new CommandInfo(Command.PowerAnyNotch,CommandType.Digital, "POWER_ANY_NOTCH", true),
+			new CommandInfo(Command.BrakeAnyNotch,CommandType.Digital, "BRAKE_ANY_NOTCH", true),
+			new CommandInfo(Command.HoldBrake,CommandType.Digital, "HOLD_BRAKE"),
 			new CommandInfo(Command.ReverserForward, CommandType.Digital, "REVERSER_FORWARD"),
 			new CommandInfo(Command.ReverserBackward, CommandType.Digital, "REVERSER_BACKWARD"),
 			new CommandInfo(Command.ReverserFullAxis, CommandType.AnalogFull, "REVERSER_FULLAXIS"),

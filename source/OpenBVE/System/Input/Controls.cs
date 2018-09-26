@@ -27,7 +27,7 @@ namespace OpenBve
 				Builder.Append(Info.Name + ", ");
 				switch (controlsToSave[i].Method) {
 					case ControlMethod.Keyboard:
-						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture));
+						Builder.Append("keyboard, " + controlsToSave[i].Key + ", " + ((int)controlsToSave[i].Modifier).ToString(Culture) + ", " + controlsToSave[i].Option.ToString(Culture));
 						break;
 					case ControlMethod.Joystick:
 						Builder.Append("joystick, " + controlsToSave[i].Device.ToString(Culture) + ", ");
@@ -48,6 +48,7 @@ namespace OpenBve
 								Builder.Append("invalid");
 								break;
 						}
+						Builder.Append(", " + controlsToSave[i].Option.ToString(Culture));
 						break;
 					case ControlMethod.RailDriver:
 						Builder.Append("raildriver, 0, ");
@@ -62,6 +63,7 @@ namespace OpenBve
 								Builder.Append("invalid");
 								break;
 						}
+						Builder.Append(", " + controlsToSave[i].Option.ToString(Culture));
 						break;
 				}
 				Builder.Append("\n");
@@ -131,12 +133,13 @@ namespace OpenBve
 								Controls[Length].Element = -1;
 								Controls[Length].Direction = 0;
 								Controls[Length].Modifier = KeyboardModifier.None;
+								Controls[Length].Option = 0;
 							} else {
 								Controls[Length].Command = Translations.CommandInfos[j].Command;
 								Controls[Length].InheritedType = Translations.CommandInfos[j].Type;
 								string Method = Terms[1].ToLowerInvariant();
 								bool Valid = false;
-								if (Method == "keyboard" & Terms.Length == 4)
+								if (Method == "keyboard" & Terms.Length >= 4)
 								{
 									Key CurrentKey;
 									// ReSharper disable once NotAccessedVariable
@@ -184,6 +187,11 @@ namespace OpenBve
 											Controls[Length].Key = CurrentKey;
 											Controls[Length].Direction = 0;
 											Controls[Length].Modifier = (KeyboardModifier) Modifiers;
+											int Option;
+											if (Terms.Length >= 5 && int.TryParse(Terms[4], NumberStyles.Integer, Culture, out Option))
+											{
+												Controls[Length].Option = Option;
+											}
 											Valid = true;
 										}
 									}
@@ -194,7 +202,7 @@ namespace OpenBve
 									int Device;
 									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
 										string Component = Terms[3].ToLowerInvariant();
-										if (Component == "axis" & Terms.Length == 6)
+										if (Component == "axis" & Terms.Length >= 6)
 										{
 											int CurrentAxis;
 											if (Int32.TryParse(Terms[4], out CurrentAxis))
@@ -209,11 +217,15 @@ namespace OpenBve
 													Controls[Length].Element = CurrentAxis;
 													Controls[Length].Direction = Direction;
 													Controls[Length].Modifier = KeyboardModifier.None;
+													int Option;
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+														Controls[Length].Option = Option;
+													}
 													Valid = true;
 												}
 											}
 										}
-										else if (Component == "hat" & Terms.Length == 6)
+										else if (Component == "hat" & Terms.Length >= 6)
 										{
 											int CurrentHat;
 											if (Int32.TryParse(Terms[4], out CurrentHat))
@@ -227,12 +239,16 @@ namespace OpenBve
 													Controls[Length].Element = CurrentHat;
 													Controls[Length].Direction = HatDirection;
 													Controls[Length].Modifier = KeyboardModifier.None;
+													int Option;
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+														Controls[Length].Option = Option;
+													}
 													Valid = true;
 												}
 
 											}
 										}
-										else if (Component == "button" & Terms.Length == 5)
+										else if (Component == "button" & Terms.Length >= 5)
 										{
 											int CurrentButton;
 											if (Int32.TryParse(Terms[4], out CurrentButton))
@@ -243,6 +259,10 @@ namespace OpenBve
 												Controls[Length].Element = CurrentButton;
 												Controls[Length].Direction = 0;
 												Controls[Length].Modifier = KeyboardModifier.None;
+												int Option;
+												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option)) {
+													Controls[Length].Option = Option;
+												}
 												Valid = true;
 											}
 										}
@@ -253,7 +273,7 @@ namespace OpenBve
 									int Device;
 									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
 										string Component = Terms[3].ToLowerInvariant();
-										if (Component == "axis" & Terms.Length == 6)
+										if (Component == "axis" & Terms.Length >= 6)
 										{
 											int CurrentAxis;
 											if (Int32.TryParse(Terms[4], out CurrentAxis))
@@ -268,11 +288,15 @@ namespace OpenBve
 													Controls[Length].Element = CurrentAxis;
 													Controls[Length].Direction = Direction;
 													Controls[Length].Modifier = KeyboardModifier.None;
+													int Option;
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+														Controls[Length].Option = Option;
+													}
 													Valid = true;
 												}
 											}
 										}
-										else if (Component == "button" & Terms.Length == 5)
+										else if (Component == "button" & Terms.Length >= 5)
 										{
 											int CurrentButton;
 											if (Int32.TryParse(Terms[4], out CurrentButton))
@@ -283,6 +307,10 @@ namespace OpenBve
 												Controls[Length].Element = CurrentButton;
 												Controls[Length].Direction = 0;
 												Controls[Length].Modifier = KeyboardModifier.None;
+												int Option;
+												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option)) {
+													Controls[Length].Option = Option;
+												}
 												Valid = true;
 											}
 										}
@@ -297,6 +325,7 @@ namespace OpenBve
 									Controls[Length].Element = -1;
 									Controls[Length].Direction = 0;
 									Controls[Length].Modifier = KeyboardModifier.None;
+									Controls[Length].Option = 0;
 								}
 							}
 							Length++;
