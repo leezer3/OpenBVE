@@ -50,8 +50,7 @@ namespace OpenBve
                                         ForceTextureRepeatX, ForceTextureRepeatY);
                                     break;
                                 case ".x":
-                                    Object = XObjectParser.ReadObject(objectPath, encoding, LoadMode, ForceTextureRepeatX,
-                                        ForceTextureRepeatY);
+                                    Object = XObjectParser.ReadObject(objectPath, encoding, LoadMode);
                                     break;
                                 case ".animated":
                                     //Not currently working.
