@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OpenBveApi.Runtime;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -143,7 +144,7 @@ namespace OpenBve {
 				 * 
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Interface.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
@@ -510,15 +511,15 @@ namespace OpenBve {
 				}
 
 			}
-			Program.AppendToLogFile("Loading train plugin: " + file);
+			Program.FileSystem.AppendToLogFile("Loading train plugin: " + file);
 			bool success = LoadPlugin(train, file, trainFolder);
 			if (success == false)
 			{
-				Loading.PluginError = Interface.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
+				Loading.PluginError = Translations.GetInterfaceString("errors_plugin_failure1").Replace("[plugin]", file);
 			}
 			else
 			{
-				Program.AppendToLogFile("Train plugin loaded successfully.");
+				Program.FileSystem.AppendToLogFile("Train plugin loaded successfully.");
 			}
 			return success;
 		}

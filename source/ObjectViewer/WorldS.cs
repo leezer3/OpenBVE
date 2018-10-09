@@ -9,6 +9,7 @@ using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 
 namespace OpenBve {
@@ -21,8 +22,8 @@ namespace OpenBve {
 			internal Color32 Color;
 			internal Color24 TransparentColor;
 			internal Color24 EmissiveColor;
-			internal Textures.Texture DaytimeTexture;
-			internal Textures.Texture NighttimeTexture;
+			internal Texture DaytimeTexture;
+			internal Texture NighttimeTexture;
 			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
 			internal byte DaytimeNighttimeBlend;
 			internal MeshMaterialBlendMode BlendMode;
@@ -30,7 +31,7 @@ namespace OpenBve {
 			internal ushort GlowAttenuationData;
 			internal const int EmissiveColorMask = 1;
 			internal const int TransparentColorMask = 2;
-			internal Textures.OpenGlTextureWrapMode? WrapMode;
+			internal OpenGlTextureWrapMode? WrapMode;
 			// operators
 			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
 				if (A.Flags != B.Flags) return false;
@@ -244,12 +245,6 @@ namespace OpenBve {
 			}
 		}
 
-		// glow
-		internal enum GlowAttenuationMode {
-			None = 0,
-			DivisionExponent2 = 1,
-			DivisionExponent4 = 2,
-		}
 		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
 		/// <param name="HalfDistance">The distance at which the glow is at 50% of its full intensity. The value is clamped to the integer range from 1 to 4096. Values less than or equal to 0 disable glow attenuation.</param>
 		/// <param name="Mode">The glow attenuation mode.</param>
@@ -499,13 +494,6 @@ namespace OpenBve {
 			x = sx * px + ux * py + dx * pz;
 			y = sy * px + uy * py + dy * pz;
 			z = sz * px + uz * py + dz * pz;
-			px = x; py = y; pz = z;
-		}
-		internal static void Rotate(ref double px, ref double py, ref double pz, Transformation t) {
-			double x, y, z;
-			x = t.X.X * px + t.Y.X * py + t.Z.X * pz;
-			y = t.X.Y * px + t.Y.Y * py + t.Z.Y * pz;
-			z = t.X.Z * px + t.Y.Z * py + t.Z.Z * pz;
 			px = x; py = y; pz = z;
 		}
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {

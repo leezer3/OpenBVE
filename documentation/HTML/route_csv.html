@@ -1524,7 +1524,7 @@ This defines which ground objects to place from this point on. Ground objects ar
 <hr />
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
-<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.Sta</b> <em>Name</em>; <em>ArrivalTime</em>; <em>DepartureTime</em>; <em>PassAlarm</em>; <em>Doors</em>; <em>ForcedRedSignal</em>; <em>System</em>; <em>ArrivalSound</em>; <em>StopDuration</em>; <em>PassengerRatio</em>; <em>DepartureSound</em>; <em>TimetableIndex</em></font></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.Sta</b> <em>Name</em>; <em>ArrivalTime</em>; <em>DepartureTime</em>; <em>PassAlarm</em>; <em>Doors</em>; <em>ForcedRedSignal</em>; <em>System</em>; <em>ArrivalSound</em>; <em>StopDuration</em>; <em>PassengerRatio</em>; <em>DepartureSound</em>; <em>TimetableIndex</em>; <em>ReopenDoor</em>; <em>ReopenStationLimit</em>; <em>InterferenceInDoor</em>; <em>MaxInterferingObjectRate</em></font></td></tr>
 </table>
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font color="#808080">
@@ -1539,7 +1539,11 @@ This defines which ground objects to place from this point on. Ground objects ar
 <b><em>StopDuration</em></b>: A positive floating-point number indicating the minimum stop duration in seconds, including door opening/closing times. The default value is 15.<br />
 <b><em>PassengerRatio</em></b>: A non-negative floating-point number indicating the relative amount of passengers in the train from this station on. As a reference, 100 represents a train with normal amount of passengers, while 250 represents an over-crowded train. Values in-between 0 and 250 should be used. The default value is 100.<br />
 <b><em>DepartureSound</em></b>: The sound file to be played before departure (departure time minus sound duration minus door closing time), relative to the <b>Sound</b> folder.<br />
-<b><em>TimetableIndex</em></b>: A non-negative integer representing the timetable to be shown from this station on as defined via Train.Timetable(<em>TimetableIndex</em>).
+<b><em>TimetableIndex</em></b>: A non-negative integer representing the timetable to be shown from this station on as defined via Train.Timetable(<em>TimetableIndex</em>).<br />
+<b><em>ReopenDoor</em>[%]</b>: Door reopen / close occur probabilities. A non-negative floating-point number. The default value is 0.<br />
+<b><em>ReopenStationLimit</em></b>: Door reopen / close action maximum happening count. A non-negative integer number. The default value is 5.<br />
+<b><em>InterferenceInDoor</em>[s]</b>: A non-negative floating-point number indicating the duration of interference in the door. The default value is random value from 0 to 30.<br />
+<b><em>MaxInterferingObjectRate</em>[%]</b>: A positive integer less than 100 indicating the upper limit of ratio [%] of door catching. The default value is random value from 1 to 99.
 </font></td></tr></table>
 <table style="border:0px none;margin-left:40pt;margin-right:10pt;">
 <tr><td>▸ Available options for <em>ArrivalTime</em>:</td></tr></table>
@@ -1667,6 +1671,15 @@ The command should be placed at the beginning of the station platform. In order 
 <td bgcolor="#E0E0E0">&nbsp;</td>
 </tr></table>
 <hr />
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.StationXML</b> <em>FileName.xml</em></font></td></tr>
+</table><br>
+A <em>Track.StationXML</em> command, linking to a single XML file is also supported. <br>
+This command may be used as an alternative to the <i>Track.Sta</i> and <i>Track.Station</i> commands.<br>
+These are fully described on the <a href="route_stationxml.html">the The XML Station Format page...</a><br />
+<hr />
+
 <br /><table border="0">
 <tr style="height:16"><td></td></tr>
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.Stop</b> <em>Direction</em>; <font color="green"><em>BackwardTolerance</em></font>; <font color="green"><em>ForwardTolerance</em></font>; <em>Cars</em></font></td></tr>

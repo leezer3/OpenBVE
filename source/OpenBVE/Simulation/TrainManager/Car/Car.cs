@@ -1,6 +1,7 @@
 using System;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -428,11 +429,11 @@ namespace OpenBve
 								int o = CarSections[0].Elements[j].ObjectIndex;
 								if (CarSections[0].Overlay)
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+									Renderer.ShowObject(o, ObjectType.Overlay);
 								}
 								else
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+									Renderer.ShowObject(o, ObjectType.Dynamic);
 								}
 							}
 							break;
@@ -449,11 +450,11 @@ namespace OpenBve
 								int o = CarSections[1].Elements[j].ObjectIndex;
 								if (CarSections[1].Overlay)
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+									Renderer.ShowObject(o, ObjectType.Overlay);
 								}
 								else
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+									Renderer.ShowObject(o, ObjectType.Dynamic);
 								}
 							}
 							break;
@@ -467,11 +468,11 @@ namespace OpenBve
 								int o = CarSections[0].Elements[j].ObjectIndex;
 								if (CarSections[0].Overlay)
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Overlay);
+									Renderer.ShowObject(o, ObjectType.Overlay);
 								}
 								else
 								{
-									Renderer.ShowObject(o, Renderer.ObjectType.Dynamic);
+									Renderer.ShowObject(o, ObjectType.Dynamic);
 								}
 							}
 							break;

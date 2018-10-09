@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -508,10 +509,10 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
-						Textures.Texture tday;
+						Texture tday;
 						if (Builder.Materials[i].TransparentColorUsed)
 						{
-							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
+							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
 						}
 						else
 						{
@@ -526,10 +527,10 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
-						Textures.Texture tnight;
+						Texture tnight;
 						if (Builder.Materials[i].TransparentColorUsed)
 						{
-							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new OpenBveApi.Textures.TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
+							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
 						}
 						else
 						{
@@ -544,7 +545,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-					Object.Mesh.Materials[mm + i].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+					Object.Mesh.Materials[mm + i].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 				}
 			}
 		}

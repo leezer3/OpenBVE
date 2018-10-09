@@ -18,7 +18,6 @@
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,7 +59,7 @@
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\OpenTK.dll</HintPath>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,10 +102,7 @@
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RendererS.cs" />
-    <Compile Include="System\FileSystem.cs" />
     <Compile Include="TextureManager.cs" />
-    <Compile Include="Textures.Texture.cs" />
-    <Compile Include="Textures.TextureOrigin.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
     <Compile Include="WorldS.cs" />
@@ -129,6 +125,7 @@
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
       <Name>OpenBve.Formats.Msts</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

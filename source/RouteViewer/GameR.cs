@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Game.cs for the Route Viewer                                ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -13,15 +13,7 @@ namespace OpenBve {
 	internal static class Game {
 
 		// random numbers
-		internal static Random Generator = new Random();
-
-		// game mode
-		internal enum GameMode {
-			Arcade = 0,
-			Normal = 1,
-			Expert = 2
-		}
-		internal static GameMode CurrentMode = GameMode.Normal;
+		internal static readonly Random Generator = new Random();
 
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
@@ -58,7 +50,6 @@ namespace OpenBve {
 		internal static double RouteInitialElevation = 0.0;
 		internal static double RouteSeaLevelAirPressure = 101325.0;
 		internal static double RouteSeaLevelAirTemperature = 293.15;
-		internal const double CoefficientOfGroundFriction = 0.2;
 		internal const double CriticalCollisionSpeedDifference = 8.0;
 		internal const double BrakePipeLeakRate = 500000.0;
 		internal const double MolarMass = 0.0289644;

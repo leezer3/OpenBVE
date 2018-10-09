@@ -146,6 +146,10 @@ namespace OpenBve
 					}
 				}
 				train.StationState = TrainStopState.Pending;
+				if (train == PlayerTrain)
+				{
+					train.LastStation = stationIndex;
+				}
 			}
 		}
 	}

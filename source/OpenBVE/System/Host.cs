@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -63,7 +64,7 @@ namespace OpenBve {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="texture">Receives the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool LoadTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.Texture texture) {
+		public override bool LoadTexture(string path, TextureParameters parameters, out Texture texture) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++) {
 					if (Plugins.LoadedPlugins[i].Texture != null) {
@@ -98,9 +99,9 @@ namespace OpenBve {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.TextureHandle handle) {
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
-				Textures.Texture data;
+				Texture data;
 				if (Textures.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
@@ -117,7 +118,7 @@ namespace OpenBve {
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(OpenBveApi.Textures.Texture texture, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.TextureHandle handle) {
+		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
 			handle = Textures.RegisterTexture(texture);
 			return true;

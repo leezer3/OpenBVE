@@ -15,7 +15,7 @@
 
 </font></td></tr></table>
 <br />This page describes the principles and implementation of the XML based station format.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
-<font size="+1" color="#0080FF">■ Dynamic Backgrounds: Basic Principles</font><hr />
+<font size="+1" color="#0080FF">■ Basic Principles</font><hr />
 <table style="border:0px none;margin-left:10pt;margin-right:10pt;">
 <tr><td><font size="-1" color="#808080">
 
@@ -28,7 +28,6 @@ Each station which you wish to use must be setup using a Station XML file an exa
 <textarea rows="16" cols="110" style="border:2;">
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<openBVE>
 	<Station>
 		<Name>Dockyard</Name>
 		<ArrivalTime>12.3130</ArrivalTime>
@@ -36,6 +35,10 @@ Each station which you wish to use must be setup using a Station XML file an exa
 		<Doors>Left</Doors>
 		<ForcedRedSignal>False</ForcedRedSignal>
 		<PassengerRatio>10</PassengerRatio>
+		<ReopenDoor>95</ReopenDoor>
+		<ReopenStationLimit>3</ReopenStationLimit>
+		<InterferenceInDoor>5</InterferenceInDoor>
+		<MaxInterferingObjectRate>5</MaxInterferingObjectRate>
 	</Station>
 </openBVE>
 </textarea>
@@ -107,6 +110,26 @@ If <em>ForcedRedSignal</em> is set to <b>True</b> , then the signal associated w
 <tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;TimeTableIndex&gt;</b> <em>Index</em> <b>&lt;&#47;TimeTableIndex&gt;</b></font></td></tr>
 </table>
 <b>Inddex</b> sets the timetable to be shown from this station on as defined via <em>Train.Timetable(TimetableIndex)</em><p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;ReopenDoor&gt;</b> <em>Ratio</em> <b>&lt;&#47;ReopenDoor&gt;</b></font></td></tr>
+</table>
+<b>Ratio</b> sets a non-negative floating-point number. Door reopen / close occur probabilities. The default value is 0.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;ReopenStationLimit&gt;</b> <em>Times</em> <b>&lt;&#47;ReopenStationLimit&gt;</b></font></td></tr>
+</table>
+<b>Times</b> sets a non-negative integer number. Door reopen / close action maximum happening count. The default value is 5.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;InterferenceInDoor&gt;</b> <em>Time</em> <b>&lt;&#47;InterferenceInDoor&gt;</b></font></td></tr>
+</table>
+<b>Time</b> sets a non-negative floating-point number indicating the duration of interference in the door. The default value is random value from 0 to 30.<p>
+<table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>&lt;MaxInterferingObjectRate&gt;</b> <em>Ratio</em> <b>&lt;&#47;MaxInterferingObjectRate&gt;</b></font></td></tr>
+</table>
+<b>Ratio</b> sets a positive integer less than 100 indicating the upper limit of ratio [%] of door catching. The default value is random value from 1 to 99.<p>
 
 <table><tr style="height: 4px;"><td /></tr></table>
 <font size="+1" color="#0080FF">■ Creating a Request Stop</font><hr />

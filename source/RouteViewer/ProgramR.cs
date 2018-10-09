@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
+using OpenBveApi.FileSystem;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -21,12 +22,8 @@ namespace OpenBve {
 	internal static class Program {
 
 		// system
-		internal enum Platform { Windows, Linux, Mac }
-		internal static Platform CurrentPlatform = Platform.Windows;
 		internal static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
-		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
-		internal const ProgramType CurrentProgramType = ProgramType.RouteViewer;
 
 		internal static bool CpuReducedMode = false;
 		internal static bool CpuAutomaticMode = true;
@@ -63,22 +60,7 @@ namespace OpenBve {
 			CurrentHost = new Host();
 			
 			commandLineArguments = args;
-			Options.LoadOptions();
-			Interface.CurrentOptions.UseSound = true;
-			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
-			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// platform and mono
-			int p = (int)Environment.OSVersion.Platform;
-			if (p == 4 | p == 128) {
-				// general Unix
-				CurrentPlatform = Platform.Linux;
-			} else if (p == 6) {
-				// Mac
-				CurrentPlatform = Platform.Mac;
-			} else {
-				// non-Unix
-				CurrentPlatform = Platform.Windows;
-			}
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
@@ -113,6 +95,10 @@ namespace OpenBve {
 					if (Skips == args.Length) return;
 				}
 			}
+			Options.LoadOptions();
+			Interface.CurrentOptions.UseSound = true;
+			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
+			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
@@ -148,7 +134,6 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			//const double invdeg = 57.295779513082320877;
 			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -257,8 +242,6 @@ namespace OpenBve {
 		internal static MouseState currentMouseState;
 		internal static MouseState previousMouseState;
 
-		internal static bool buttonDown = false;
-
 		internal static void MouseMovement()
 		{
 			if (MouseButton == 0)
@@ -354,7 +337,7 @@ namespace OpenBve {
 					}
 					OpenFileDialog Dialog = new OpenFileDialog();
 					Dialog.CheckFileExists = true;
-					Dialog.Filter = "CSV/RW files|*.csv;*.rw|All files|*";
+					Dialog.Filter = @"CSV/RW files|*.csv;*.rw|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();

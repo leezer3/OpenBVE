@@ -84,22 +84,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSScriptLibrary">
-      <HintPath>..\..\Dependencies\CSScriptLibrary.dll</HintPath>
+      <HintPath>..\..\dependencies\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\NUniversalCharDet.dll</HintPath>
+      <HintPath>..\..\dependencies\NUniversalCharDet.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\OpenTK.dll</HintPath>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\SharpCompress.dll</HintPath>
+      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -152,7 +152,6 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.Damping.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
@@ -174,10 +173,7 @@
     <Compile Include="Game\TrackManager\TrackManager.cs" />
     <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
-    <Compile Include="Graphics\Camera.cs" />
-    <Compile Include="Graphics\Camera.CameraRestriction.cs">
-      <DependentUpon>Camera.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Graphics\Camera.CameraRestriction.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
@@ -185,7 +181,7 @@
     <Compile Include="Graphics\HUD\HUD.Image.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-	<Compile Include="Graphics\HUD\HUD.Transitions.cs">
+    <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Renderer\Background.cs" />
@@ -314,17 +310,12 @@
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Functions\TextEncoding.cs" />
-    <Compile Include="System\Input\Commands.CommandInfo.cs" />
-    <Compile Include="System\Input\Commands.cs" />
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
-    <Compile Include="System\Translations\InterfaceStrings.cs" />
-    <Compile Include="System\Translations\KeyInfo.cs" />
-    <Compile Include="System\Translations\LanguageFile.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -393,12 +384,6 @@
     </Compile>
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
-    <Compile Include="Graphics\Textures.Texture.cs">
-      <DependentUpon>Textures.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphics\Textures.TextureOrigin.cs">
-      <DependentUpon>Textures.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserInterface\formImage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -456,7 +441,6 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
-    <Compile Include="System\Functions\FileSystem.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
     <Compile Include="System\Input\JoystickManager.RailDriver.cs">
@@ -480,7 +464,6 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
-    
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -505,6 +488,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
+      <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
+      <Name>LBAHeader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
@@ -512,6 +499,7 @@
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
       <Name>OpenBve.Formats.Msts</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using OpenBve.UserInterface;
 using OpenBveApi.Packages;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -16,7 +17,7 @@ namespace OpenBve {
 		private formMain()
 		{
 			InitializeComponent();
-			this.Text = Interface.GetInterfaceString("program_title");
+			this.Text = Translations.GetInterfaceString("program_title");
 		}
 
 		public sealed override string Text
@@ -125,7 +126,10 @@ namespace OpenBve {
 			radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
 			// options
 			Interface.LoadLogs();
-			ListLanguages();
+			{
+				string Folder = Program.FileSystem.GetDataFolder("Languages");
+				Translations.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
+			}
 			{
 				int Tab = 0;
 				string[] Args = System.Environment.GetCommandLineArgs();
@@ -281,23 +285,23 @@ namespace OpenBve {
 					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
-					int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
-					if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
+					int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
+					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					labelReviewRouteValue.Text = Game.LogRouteName;
 					labelReviewTrainValue.Text = Game.LogTrainName;
 					labelReviewDateValue.Text = Game.LogDateTime.ToString("yyyy-MM-dd", Culture);
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
 					switch (Interface.CurrentOptions.GameMode)
 					{
-						case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
-						case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
-						case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
-						default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unknown"); break;
+						case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+						case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+						case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+						default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unknown"); break;
 					}
 					if (Game.CurrentScore.Maximum == 0)
 					{
 						labelRatingColor.BackColor = Color.Gray;
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
+						labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
 					}
 					else {
 						Color[] Colors = { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
@@ -308,7 +312,7 @@ namespace OpenBve {
 						else {
 							labelRatingColor.BackColor = Color.Gray;
 						}
-						labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(Culture));
+						labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(Culture));
 					}
 					labelRatingAchievedValue.Text = Game.CurrentScore.CurrentValue.ToString(Culture);
 					labelRatingMaximumValue.Text = Game.CurrentScore.Maximum.ToString(Culture);
@@ -439,33 +443,7 @@ namespace OpenBve {
 			// language
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
-				int j;
-				for (j = 0; j < LanguageFiles.Length; j++)
-				{
-					string File = OpenBveApi.Path.CombineFile(Folder, Interface.CurrentOptions.LanguageCode + ".cfg");
-					if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0)
-					{
-						comboboxLanguages.SelectedIndex = j;
-						break;
-					}
-				}
-				if (j == LanguageFiles.Length)
-				{
-#if !DEBUG
-					try
-					{
-#endif
-						string File = OpenBveApi.Path.CombineFile(Folder, "en-US.cfg");
-						Interface.LoadLanguage(File);
-						ApplyLanguage();
-#if !DEBUG
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-					}
-#endif
-				}
+				Translations.InitLanguage(Folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages);
 			}
 			if (Program.CurrentlyRunningOnMono)
 			{
@@ -492,216 +470,216 @@ namespace OpenBve {
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage()
 		{
-			Interface.SetInGameLanguage(Interface.CurrentLanguageCode);
+			Translations.SetInGameLanguage(Translations.CurrentLanguageCode);
 			/*
 			 * Localisation for strings in main panel
 			 */
-			radiobuttonStart.Text = Interface.GetInterfaceString("panel_start");
-			radiobuttonReview.Text = Interface.GetInterfaceString("panel_review");
-			radiobuttonControls.Text = Interface.GetInterfaceString("panel_controls");
-			radiobuttonOptions.Text = Interface.GetInterfaceString("panel_options");
-			linkHomepage.Text = Interface.GetInterfaceString("panel_homepage");
-			buttonClose.Text = Interface.GetInterfaceString("panel_close");
-			radioButtonPackages.Text = Interface.GetInterfaceString("panel_packages");
-			linkLabelCheckUpdates.Text = Interface.GetInterfaceString("panel_updates");
-			linkLabelReportBug.Text = Interface.GetInterfaceString("panel_reportbug");
-			aboutLabel.Text = Interface.GetInterfaceString("panel_about");
+			radiobuttonStart.Text = Translations.GetInterfaceString("panel_start");
+			radiobuttonReview.Text = Translations.GetInterfaceString("panel_review");
+			radiobuttonControls.Text = Translations.GetInterfaceString("panel_controls");
+			radiobuttonOptions.Text = Translations.GetInterfaceString("panel_options");
+			linkHomepage.Text = Translations.GetInterfaceString("panel_homepage");
+			buttonClose.Text = Translations.GetInterfaceString("panel_close");
+			radioButtonPackages.Text = Translations.GetInterfaceString("panel_packages");
+			linkLabelCheckUpdates.Text = Translations.GetInterfaceString("panel_updates");
+			linkLabelReportBug.Text = Translations.GetInterfaceString("panel_reportbug");
+			aboutLabel.Text = Translations.GetInterfaceString("panel_about");
 			/*
 			 * Localisation for strings in the options pane
 			 */
-			labelOptionsTitle.Text = Interface.GetInterfaceString("options_title");
+			labelOptionsTitle.Text = Translations.GetInterfaceString("options_title");
 			//Basic display mode settings
-			groupboxDisplayMode.Text = Interface.GetInterfaceString("options_display_mode");
-			radiobuttonWindow.Text = Interface.GetInterfaceString("options_display_mode_window");
-			radiobuttonFullscreen.Text = Interface.GetInterfaceString("options_display_mode_fullscreen");
-			labelVSync.Text = Interface.GetInterfaceString("options_display_vsync");
-			comboboxVSync.Items[0] = Interface.GetInterfaceString("options_display_vsync_off");
-			comboboxVSync.Items[1] = Interface.GetInterfaceString("options_display_vsync_on");
-			labelHUDScale.Text = Interface.GetInterfaceString("options_hud_size");
-			labelHUDSmall.Text = Interface.GetInterfaceString("options_hud_size_small");
-			labelHUDNormal.Text = Interface.GetInterfaceString("options_hud_size_normal");
-			labelHUDLarge.Text = Interface.GetInterfaceString("options_hud_size_large");
+			groupboxDisplayMode.Text = Translations.GetInterfaceString("options_display_mode");
+			radiobuttonWindow.Text = Translations.GetInterfaceString("options_display_mode_window");
+			radiobuttonFullscreen.Text = Translations.GetInterfaceString("options_display_mode_fullscreen");
+			labelVSync.Text = Translations.GetInterfaceString("options_display_vsync");
+			comboboxVSync.Items[0] = Translations.GetInterfaceString("options_display_vsync_off");
+			comboboxVSync.Items[1] = Translations.GetInterfaceString("options_display_vsync_on");
+			labelHUDScale.Text = Translations.GetInterfaceString("options_hud_size");
+			labelHUDSmall.Text = Translations.GetInterfaceString("options_hud_size_small");
+			labelHUDNormal.Text = Translations.GetInterfaceString("options_hud_size_normal");
+			labelHUDLarge.Text = Translations.GetInterfaceString("options_hud_size_large");
 			//Windowed Mode
-			groupboxWindow.Text = Interface.GetInterfaceString("options_display_window");
-			labelWindowWidth.Text = Interface.GetInterfaceString("options_display_window_width");
-			labelWindowHeight.Text = Interface.GetInterfaceString("options_display_window_height");
+			groupboxWindow.Text = Translations.GetInterfaceString("options_display_window");
+			labelWindowWidth.Text = Translations.GetInterfaceString("options_display_window_width");
+			labelWindowHeight.Text = Translations.GetInterfaceString("options_display_window_height");
 			//Fullscreen
-			groupboxFullscreen.Text = Interface.GetInterfaceString("options_display_fullscreen");
-			labelFullscreenWidth.Text = Interface.GetInterfaceString("options_display_fullscreen_width");
-			labelFullscreenHeight.Text = Interface.GetInterfaceString("options_display_fullscreen_height");
-			labelFullscreenBits.Text = Interface.GetInterfaceString("options_display_fullscreen_bits");
+			groupboxFullscreen.Text = Translations.GetInterfaceString("options_display_fullscreen");
+			labelFullscreenWidth.Text = Translations.GetInterfaceString("options_display_fullscreen_width");
+			labelFullscreenHeight.Text = Translations.GetInterfaceString("options_display_fullscreen_height");
+			labelFullscreenBits.Text = Translations.GetInterfaceString("options_display_fullscreen_bits");
 			//Interpolation, AA and AF
-			groupboxInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation");
-			labelInterpolation.Text = Interface.GetInterfaceString("options_quality_interpolation_mode");
-			comboboxInterpolation.Items[0] = Interface.GetInterfaceString("options_quality_interpolation_mode_nearest");
-			comboboxInterpolation.Items[1] = Interface.GetInterfaceString("options_quality_interpolation_mode_bilinear");
-			comboboxInterpolation.Items[2] = Interface.GetInterfaceString("options_quality_interpolation_mode_nearestmipmap");
-			comboboxInterpolation.Items[3] = Interface.GetInterfaceString("options_quality_interpolation_mode_bilinearmipmap");
-			comboboxInterpolation.Items[4] = Interface.GetInterfaceString("options_quality_interpolation_mode_trilinearmipmap");
-			comboboxInterpolation.Items[5] = Interface.GetInterfaceString("options_quality_interpolation_mode_anisotropic");
-			labelAnisotropic.Text = Interface.GetInterfaceString("options_quality_interpolation_anisotropic_level");
-			labelAntiAliasing.Text = Interface.GetInterfaceString("options_quality_interpolation_antialiasing_level");
-			labelTransparency.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency");
-			labelTransparencyPerformance.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_sharp");
-			labelTransparencyQuality.Text = Interface.GetInterfaceString("options_quality_interpolation_transparency_smooth");
-			groupboxDistance.Text = Interface.GetInterfaceString("options_quality_distance");
+			groupboxInterpolation.Text = Translations.GetInterfaceString("options_quality_interpolation");
+			labelInterpolation.Text = Translations.GetInterfaceString("options_quality_interpolation_mode");
+			comboboxInterpolation.Items[0] = Translations.GetInterfaceString("options_quality_interpolation_mode_nearest");
+			comboboxInterpolation.Items[1] = Translations.GetInterfaceString("options_quality_interpolation_mode_bilinear");
+			comboboxInterpolation.Items[2] = Translations.GetInterfaceString("options_quality_interpolation_mode_nearestmipmap");
+			comboboxInterpolation.Items[3] = Translations.GetInterfaceString("options_quality_interpolation_mode_bilinearmipmap");
+			comboboxInterpolation.Items[4] = Translations.GetInterfaceString("options_quality_interpolation_mode_trilinearmipmap");
+			comboboxInterpolation.Items[5] = Translations.GetInterfaceString("options_quality_interpolation_mode_anisotropic");
+			labelAnisotropic.Text = Translations.GetInterfaceString("options_quality_interpolation_anisotropic_level");
+			labelAntiAliasing.Text = Translations.GetInterfaceString("options_quality_interpolation_antialiasing_level");
+			labelTransparency.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency");
+			labelTransparencyPerformance.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency_sharp");
+			labelTransparencyQuality.Text = Translations.GetInterfaceString("options_quality_interpolation_transparency_smooth");
+			groupboxDistance.Text = Translations.GetInterfaceString("options_quality_distance");
 			//Viewing distance and motion blur
-			labelDistance.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance");
-			labelDistanceUnit.Text = Interface.GetInterfaceString("options_quality_distance_viewingdistance_meters");
-			labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
-			comboboxMotionBlur.Items[0] = Interface.GetInterfaceString("options_quality_distance_motionblur_none");
-			comboboxMotionBlur.Items[1] = Interface.GetInterfaceString("options_quality_distance_motionblur_low");
-			comboboxMotionBlur.Items[2] = Interface.GetInterfaceString("options_quality_distance_motionblur_medium");
-			comboboxMotionBlur.Items[3] = Interface.GetInterfaceString("options_quality_distance_motionblur_high");
-			labelMotionBlur.Text = Interface.GetInterfaceString("options_quality_distance_motionblur");
+			labelDistance.Text = Translations.GetInterfaceString("options_quality_distance_viewingdistance");
+			labelDistanceUnit.Text = Translations.GetInterfaceString("options_quality_distance_viewingdistance_meters");
+			labelMotionBlur.Text = Translations.GetInterfaceString("options_quality_distance_motionblur");
+			comboboxMotionBlur.Items[0] = Translations.GetInterfaceString("options_quality_distance_motionblur_none");
+			comboboxMotionBlur.Items[1] = Translations.GetInterfaceString("options_quality_distance_motionblur_low");
+			comboboxMotionBlur.Items[2] = Translations.GetInterfaceString("options_quality_distance_motionblur_medium");
+			comboboxMotionBlur.Items[3] = Translations.GetInterfaceString("options_quality_distance_motionblur_high");
+			labelMotionBlur.Text = Translations.GetInterfaceString("options_quality_distance_motionblur");
 			//Simulation
-			groupboxSimulation.Text = Interface.GetInterfaceString("options_misc_simulation");
-			checkboxToppling.Text = Interface.GetInterfaceString("options_misc_simulation_toppling");
-			checkboxCollisions.Text = Interface.GetInterfaceString("options_misc_simulation_collisions");
-			checkboxDerailments.Text = Interface.GetInterfaceString("options_misc_simulation_derailments");
-			checkboxBlackBox.Text = Interface.GetInterfaceString("options_misc_simulation_blackbox");
-			checkBoxLoadingSway.Text = Interface.GetInterfaceString("options_misc_simulation_loadingsway");
+			groupboxSimulation.Text = Translations.GetInterfaceString("options_misc_simulation");
+			checkboxToppling.Text = Translations.GetInterfaceString("options_misc_simulation_toppling");
+			checkboxCollisions.Text = Translations.GetInterfaceString("options_misc_simulation_collisions");
+			checkboxDerailments.Text = Translations.GetInterfaceString("options_misc_simulation_derailments");
+			checkboxBlackBox.Text = Translations.GetInterfaceString("options_misc_simulation_blackbox");
+			checkBoxLoadingSway.Text = Translations.GetInterfaceString("options_misc_simulation_loadingsway");
 			//Controls
-			groupboxControls.Text = Interface.GetInterfaceString("options_misc_controls");
-			checkboxJoysticksUsed.Text = Interface.GetInterfaceString("options_misc_controls_joysticks");
-			checkBoxEBAxis.Text = Interface.GetInterfaceString("options_misc_controls_ebaxis");
-			labelJoystickAxisThreshold.Text = Interface.GetInterfaceString("options_misc_controls_threshold");
+			groupboxControls.Text = Translations.GetInterfaceString("options_misc_controls");
+			checkboxJoysticksUsed.Text = Translations.GetInterfaceString("options_misc_controls_joysticks");
+			checkBoxEBAxis.Text = Translations.GetInterfaceString("options_misc_controls_ebaxis");
+			labelJoystickAxisThreshold.Text = Translations.GetInterfaceString("options_misc_controls_threshold");
 			//Sound
-			groupboxSound.Text = Interface.GetInterfaceString("options_misc_sound");
-			labelSoundNumber.Text = Interface.GetInterfaceString("options_misc_sound_number");
+			groupboxSound.Text = Translations.GetInterfaceString("options_misc_sound");
+			labelSoundNumber.Text = Translations.GetInterfaceString("options_misc_sound_number");
 			//Verbosity
-			groupboxVerbosity.Text = Interface.GetInterfaceString("options_verbosity");
-			checkboxWarningMessages.Text = Interface.GetInterfaceString("options_verbosity_warningmessages");
-			checkboxErrorMessages.Text = Interface.GetInterfaceString("options_verbosity_errormessages");
+			groupboxVerbosity.Text = Translations.GetInterfaceString("options_verbosity");
+			checkboxWarningMessages.Text = Translations.GetInterfaceString("options_verbosity_warningmessages");
+			checkboxErrorMessages.Text = Translations.GetInterfaceString("options_verbosity_errormessages");
 			//Advanced Options
-			groupBoxAdvancedOptions.Text = Interface.GetInterfaceString("options_advanced");
-			checkBoxLoadInAdvance.Text = Interface.GetInterfaceString("options_advanced_load_advance");
-			checkBoxUnloadTextures.Text = Interface.GetInterfaceString("options_advanced_unload_textures");
-			checkBoxDisableDisplayLists.Text = Interface.GetInterfaceString("options_advanced_disable_displaylists");
-			labelTimeAcceleration.Text = Interface.GetInterfaceString("options_advanced_timefactor");
+			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
+			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
+			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
+			checkBoxDisableDisplayLists.Text = Translations.GetInterfaceString("options_advanced_disable_displaylists");
+			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
 			//Other Options
-			groupBoxOther.Text = Interface.GetInterfaceString("options_other");
-			labelTimeTableDisplayMode.Text = Interface.GetInterfaceString("options_other_timetable_mode");
-			comboBoxTimeTableDisplayMode.Items[0] = Interface.GetInterfaceString("options_other_timetable_mode_none");
-			comboBoxTimeTableDisplayMode.Items[1] = Interface.GetInterfaceString("options_other_timetable_mode_default");
-			comboBoxTimeTableDisplayMode.Items[2] = Interface.GetInterfaceString("options_other_timetable_mode_autogenerated");
-			comboBoxTimeTableDisplayMode.Items[3] = Interface.GetInterfaceString("options_other_timetable_mode_prefercustom");
+			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
+			labelTimeTableDisplayMode.Text = Translations.GetInterfaceString("options_other_timetable_mode");
+			comboBoxTimeTableDisplayMode.Items[0] = Translations.GetInterfaceString("options_other_timetable_mode_none");
+			comboBoxTimeTableDisplayMode.Items[1] = Translations.GetInterfaceString("options_other_timetable_mode_default");
+			comboBoxTimeTableDisplayMode.Items[2] = Translations.GetInterfaceString("options_other_timetable_mode_autogenerated");
+			comboBoxTimeTableDisplayMode.Items[3] = Translations.GetInterfaceString("options_other_timetable_mode_prefercustom");
 			//Options Page
-			buttonOptionsPrevious.Text = Interface.GetInterfaceString("options_page_previous");
-			buttonOptionsNext.Text = Interface.GetInterfaceString("options_page_next");
+			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
+			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
 
 			/*
 			 * Options Page 2
 			 */
 			//Package directories
-			groupBoxPackageOptions.Text = Interface.GetInterfaceString("panel_packages");
-			buttonSetRouteDirectory.Text = Interface.GetInterfaceString("options_package_choose");
-			buttonTrainInstallationDirectory.Text = Interface.GetInterfaceString("options_package_choose");
-			buttonOtherDirectory.Text = Interface.GetInterfaceString("options_package_choose");
+			groupBoxPackageOptions.Text = Translations.GetInterfaceString("panel_packages");
+			buttonSetRouteDirectory.Text = Translations.GetInterfaceString("options_package_choose");
+			buttonTrainInstallationDirectory.Text = Translations.GetInterfaceString("options_package_choose");
+			buttonOtherDirectory.Text = Translations.GetInterfaceString("options_package_choose");
 			textBoxRouteDirectory.Text = Program.FileSystem.RouteInstallationDirectory;
 			textBoxTrainDirectory.Text = Program.FileSystem.TrainInstallationDirectory;
 			textBoxOtherDirectory.Text = Program.FileSystem.OtherInstallationDirectory;
-			labelRouteInstallDirectory.Text = Interface.GetInterfaceString("options_package_route_directory");
-			labelTrainInstallDirectory.Text = Interface.GetInterfaceString("options_package_train_directory");
-			labelOtherInstallDirectory.Text = Interface.GetInterfaceString("options_package_other_directory");
-			labelPackageCompression.Text = Interface.GetInterfaceString("options_package_compression");
-			groupBoxKioskMode.Text = Interface.GetInterfaceString("options_kiosk_mode");
-			checkBoxEnableKiosk.Text = Interface.GetInterfaceString("options_kiosk_mode_enable");
-			labelKioskTimeout.Text = Interface.GetInterfaceString("options_kiosk_mode_timer");
-			labelRailDriverSpeedUnits.Text = Interface.GetInterfaceString("raildriver_speedunits");
-			comboBoxRailDriverUnits.Items[0] = Interface.GetInterfaceString("raildriver_milesperhour");
-			comboBoxRailDriverUnits.Items[1] = Interface.GetInterfaceString("raildriver_kilometersperhour");
-			labelRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_setcalibration");
-			buttonRailDriverCalibration.Text = Interface.GetInterfaceString("raildriver_launch");
-			checkBoxTransparencyFix.Text = Interface.GetInterfaceString("options_transparencyfix");
-			checkBoxHacks.Text = Interface.GetInterfaceString("options_hacks_enable");
+			labelRouteInstallDirectory.Text = Translations.GetInterfaceString("options_package_route_directory");
+			labelTrainInstallDirectory.Text = Translations.GetInterfaceString("options_package_train_directory");
+			labelOtherInstallDirectory.Text = Translations.GetInterfaceString("options_package_other_directory");
+			labelPackageCompression.Text = Translations.GetInterfaceString("options_package_compression");
+			groupBoxKioskMode.Text = Translations.GetInterfaceString("options_kiosk_mode");
+			checkBoxEnableKiosk.Text = Translations.GetInterfaceString("options_kiosk_mode_enable");
+			labelKioskTimeout.Text = Translations.GetInterfaceString("options_kiosk_mode_timer");
+			labelRailDriverSpeedUnits.Text = Translations.GetInterfaceString("raildriver_speedunits");
+			comboBoxRailDriverUnits.Items[0] = Translations.GetInterfaceString("raildriver_milesperhour");
+			comboBoxRailDriverUnits.Items[1] = Translations.GetInterfaceString("raildriver_kilometersperhour");
+			labelRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_setcalibration");
+			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
+			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
+			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
 			/*
 			 * Localisation for strings in the game start pane
 			 */
-			labelStartTitle.Text = Interface.GetInterfaceString("start_title");
-			labelRoute.Text = @" " + Interface.GetInterfaceString("start_route");
-			groupboxRouteSelection.Text = Interface.GetInterfaceString("start_route_selection");
-			tabpageRouteBrowse.Text = Interface.GetInterfaceString("start_route_browse");
-			tabpageRouteRecently.Text = Interface.GetInterfaceString("start_route_recently");
-			groupboxRouteDetails.Text = Interface.GetInterfaceString("start_route_details");
-			tabpageRouteDescription.Text = Interface.GetInterfaceString("start_route_description");
-			tabpageRouteMap.Text = Interface.GetInterfaceString("start_route_map");
-			tabpageRouteGradient.Text = Interface.GetInterfaceString("start_route_gradient");
-			tabpageRouteSettings.Text = Interface.GetInterfaceString("start_route_settings");
-			labelRouteEncoding.Text = Interface.GetInterfaceString("start_route_settings_encoding");
-			comboboxRouteEncoding.Items[0] = Interface.GetInterfaceString("(UTF-8)");
-			labelRouteEncodingPreview.Text = Interface.GetInterfaceString("start_route_settings_encoding_preview");
-			labelTrain.Text = " " + Interface.GetInterfaceString("start_train");
-			groupboxTrainSelection.Text = Interface.GetInterfaceString("start_train_selection");
-			tabpageTrainBrowse.Text = Interface.GetInterfaceString("start_train_browse");
-			tabpageTrainRecently.Text = Interface.GetInterfaceString("start_train_recently");
-			tabpageTrainDefault.Text = Interface.GetInterfaceString("start_train_default");
-			checkboxTrainDefault.Text = Interface.GetInterfaceString("start_train_usedefault");
-			groupboxTrainDetails.Text = Interface.GetInterfaceString("start_train_details");
-			tabpageTrainDescription.Text = Interface.GetInterfaceString("start_train_description");
-			tabpageTrainSettings.Text = Interface.GetInterfaceString("start_train_settings");
-			labelTrainEncoding.Text = Interface.GetInterfaceString("start_train_settings_encoding");
-			comboboxTrainEncoding.Items[0] = Interface.GetInterfaceString("(UTF-8)");
-			labelTrainEncodingPreview.Text = Interface.GetInterfaceString("start_train_settings_encoding_preview");
-			labelStart.Text = @" " + Interface.GetInterfaceString("start_start");
-			labelMode.Text = Interface.GetInterfaceString("start_start_mode");
-			buttonStart.Text = Interface.GetInterfaceString("start_start_start");
-			comboboxMode.Items[0] = Interface.GetInterfaceString("mode_arcade");
-			comboboxMode.Items[1] = Interface.GetInterfaceString("mode_normal");
-			comboboxMode.Items[2] = Interface.GetInterfaceString("mode_expert");
+			labelStartTitle.Text = Translations.GetInterfaceString("start_title");
+			labelRoute.Text = @" " + Translations.GetInterfaceString("start_route");
+			groupboxRouteSelection.Text = Translations.GetInterfaceString("start_route_selection");
+			tabpageRouteBrowse.Text = Translations.GetInterfaceString("start_route_browse");
+			tabpageRouteRecently.Text = Translations.GetInterfaceString("start_route_recently");
+			groupboxRouteDetails.Text = Translations.GetInterfaceString("start_route_details");
+			tabpageRouteDescription.Text = Translations.GetInterfaceString("start_route_description");
+			tabpageRouteMap.Text = Translations.GetInterfaceString("start_route_map");
+			tabpageRouteGradient.Text = Translations.GetInterfaceString("start_route_gradient");
+			tabpageRouteSettings.Text = Translations.GetInterfaceString("start_route_settings");
+			labelRouteEncoding.Text = Translations.GetInterfaceString("start_route_settings_encoding");
+			comboboxRouteEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
+			labelRouteEncodingPreview.Text = Translations.GetInterfaceString("start_route_settings_encoding_preview");
+			labelTrain.Text = " " + Translations.GetInterfaceString("start_train");
+			groupboxTrainSelection.Text = Translations.GetInterfaceString("start_train_selection");
+			tabpageTrainBrowse.Text = Translations.GetInterfaceString("start_train_browse");
+			tabpageTrainRecently.Text = Translations.GetInterfaceString("start_train_recently");
+			tabpageTrainDefault.Text = Translations.GetInterfaceString("start_train_default");
+			checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault");
+			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
+			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
+			tabpageTrainSettings.Text = Translations.GetInterfaceString("start_train_settings");
+			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
+			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
+			labelStart.Text = @" " + Translations.GetInterfaceString("start_start");
+			labelMode.Text = Translations.GetInterfaceString("start_start_mode");
+			buttonStart.Text = Translations.GetInterfaceString("start_start_start");
+			comboboxMode.Items[0] = Translations.GetInterfaceString("mode_arcade");
+			comboboxMode.Items[1] = Translations.GetInterfaceString("mode_normal");
+			comboboxMode.Items[2] = Translations.GetInterfaceString("mode_expert");
 			/*
 			 * Localisation for strings in the game review pane
 			 */
-			labelReviewTitle.Text = Interface.GetInterfaceString("review_title");
-			labelConditions.Text = @" " + Interface.GetInterfaceString("review_conditions");
-			groupboxReviewRoute.Text = Interface.GetInterfaceString("review_conditions_route");
-			labelReviewRouteCaption.Text = Interface.GetInterfaceString("review_conditions_route_file");
-			groupboxReviewTrain.Text = Interface.GetInterfaceString("review_conditions_train");
-			labelReviewTrainCaption.Text = Interface.GetInterfaceString("review_conditions_train_folder");
-			groupboxReviewDateTime.Text = Interface.GetInterfaceString("review_conditions_datetime");
-			labelReviewDateCaption.Text = Interface.GetInterfaceString("review_conditions_datetime_date");
-			labelReviewTimeCaption.Text = Interface.GetInterfaceString("review_conditions_datetime_time");
-			labelScore.Text = @" " + Interface.GetInterfaceString("review_score");
-			groupboxRating.Text = Interface.GetInterfaceString("review_score_rating");
-			labelRatingModeCaption.Text = Interface.GetInterfaceString("review_score_rating_mode");
+			labelReviewTitle.Text = Translations.GetInterfaceString("review_title");
+			labelConditions.Text = @" " + Translations.GetInterfaceString("review_conditions");
+			groupboxReviewRoute.Text = Translations.GetInterfaceString("review_conditions_route");
+			labelReviewRouteCaption.Text = Translations.GetInterfaceString("review_conditions_route_file");
+			groupboxReviewTrain.Text = Translations.GetInterfaceString("review_conditions_train");
+			labelReviewTrainCaption.Text = Translations.GetInterfaceString("review_conditions_train_folder");
+			groupboxReviewDateTime.Text = Translations.GetInterfaceString("review_conditions_datetime");
+			labelReviewDateCaption.Text = Translations.GetInterfaceString("review_conditions_datetime_date");
+			labelReviewTimeCaption.Text = Translations.GetInterfaceString("review_conditions_datetime_time");
+			labelScore.Text = @" " + Translations.GetInterfaceString("review_score");
+			groupboxRating.Text = Translations.GetInterfaceString("review_score_rating");
+			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
 			switch (Interface.CurrentOptions.GameMode)
 			{
-				case Interface.GameMode.Arcade: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_arcade"); break;
-				case Interface.GameMode.Normal: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_normal"); break;
-				case Interface.GameMode.Expert: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_expert"); break;
-				default: labelRatingModeValue.Text = Interface.GetInterfaceString("mode_unkown"); break;
+				case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+				case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+				case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
 			}
 			{
 				double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 				if (ratio < 0.0) ratio = 0.0;
 				if (ratio > 1.0) ratio = 1.0;
-				int index = (int)Math.Floor(ratio * (double)Interface.RatingsCount);
-				if (index >= Interface.RatingsCount) index = Interface.RatingsCount - 1;
+				int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
+				if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 				if (Game.CurrentScore.Maximum == 0)
 				{
-					labelRatingDescription.Text = Interface.GetInterfaceString("rating_unknown");
+					labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
 				}
 				else {
-					labelRatingDescription.Text = Interface.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 			}
-			labelRatingAchievedCaption.Text = Interface.GetInterfaceString("review_score_rating_achieved");
-			labelRatingMaximumCaption.Text = Interface.GetInterfaceString("review_score_rating_maximum");
-			labelRatingRatioCaption.Text = Interface.GetInterfaceString("review_score_rating_ratio");
-			groupboxScore.Text = Interface.GetInterfaceString("review_score_log");
-			listviewScore.Columns[0].Text = Interface.GetInterfaceString("review_score_log_list_time");
-			listviewScore.Columns[1].Text = Interface.GetInterfaceString("review_score_log_list_position");
-			listviewScore.Columns[2].Text = Interface.GetInterfaceString("review_score_log_list_value");
-			listviewScore.Columns[3].Text = Interface.GetInterfaceString("review_score_log_list_cumulative");
-			listviewScore.Columns[4].Text = Interface.GetInterfaceString("review_score_log_list_reason");
+			labelRatingAchievedCaption.Text = Translations.GetInterfaceString("review_score_rating_achieved");
+			labelRatingMaximumCaption.Text = Translations.GetInterfaceString("review_score_rating_maximum");
+			labelRatingRatioCaption.Text = Translations.GetInterfaceString("review_score_rating_ratio");
+			groupboxScore.Text = Translations.GetInterfaceString("review_score_log");
+			listviewScore.Columns[0].Text = Translations.GetInterfaceString("review_score_log_list_time");
+			listviewScore.Columns[1].Text = Translations.GetInterfaceString("review_score_log_list_position");
+			listviewScore.Columns[2].Text = Translations.GetInterfaceString("review_score_log_list_value");
+			listviewScore.Columns[3].Text = Translations.GetInterfaceString("review_score_log_list_cumulative");
+			listviewScore.Columns[4].Text = Translations.GetInterfaceString("review_score_log_list_reason");
 			ShowScoreLog(checkboxScorePenalties.Checked);
-			checkboxScorePenalties.Text = Interface.GetInterfaceString("review_score_log_penalties");
-			buttonScoreExport.Text = Interface.GetInterfaceString("review_score_log_export");
-			labelBlackBox.Text = @" " + Interface.GetInterfaceString("review_blackbox");
-			labelBlackBoxFormat.Text = Interface.GetInterfaceString("review_blackbox_format");
-			comboboxBlackBoxFormat.Items[0] = Interface.GetInterfaceString("review_blackbox_format_csv");
-			comboboxBlackBoxFormat.Items[1] = Interface.GetInterfaceString("review_blackbox_format_text");
-			buttonBlackBoxExport.Text = Interface.GetInterfaceString("review_blackbox_export");
+			checkboxScorePenalties.Text = Translations.GetInterfaceString("review_score_log_penalties");
+			buttonScoreExport.Text = Translations.GetInterfaceString("review_score_log_export");
+			labelBlackBox.Text = @" " + Translations.GetInterfaceString("review_blackbox");
+			labelBlackBoxFormat.Text = Translations.GetInterfaceString("review_blackbox_format");
+			comboboxBlackBoxFormat.Items[0] = Translations.GetInterfaceString("review_blackbox_format_csv");
+			comboboxBlackBoxFormat.Items[1] = Translations.GetInterfaceString("review_blackbox_format_text");
+			buttonBlackBoxExport.Text = Translations.GetInterfaceString("review_blackbox_export");
 			/*
 			 * Localisation for strings related to controls (Keyboard etc.)
 			 */
@@ -709,54 +687,56 @@ namespace OpenBve {
 			{
 				listviewControls.SelectedItems[i].Selected = false;
 			}
-			labelControlsTitle.Text = Interface.GetInterfaceString("controls_title");
-			listviewControls.Columns[0].Text = Interface.GetInterfaceString("controls_list_command");
-			listviewControls.Columns[1].Text = Interface.GetInterfaceString("controls_list_type");
-			listviewControls.Columns[2].Text = Interface.GetInterfaceString("controls_list_description");
-			listviewControls.Columns[3].Text = Interface.GetInterfaceString("controls_list_assignment");
-			buttonControlAdd.Text = Interface.GetInterfaceString("controls_add");
-			buttonControlRemove.Text = Interface.GetInterfaceString("controls_remove");
-			buttonControlsImport.Text = Interface.GetInterfaceString("controls_import");
-			buttonControlsExport.Text = Interface.GetInterfaceString("controls_export");
-			buttonControlReset.Text = Interface.GetInterfaceString("controls_reset");
-			buttonControlUp.Text = Interface.GetInterfaceString("controls_up");
-			buttonControlDown.Text = Interface.GetInterfaceString("controls_down");
-			groupboxControl.Text = Interface.GetInterfaceString("controls_selection");
-			labelCommand.Text = Interface.GetInterfaceString("controls_selection_command");
-			radiobuttonKeyboard.Text = Interface.GetInterfaceString("controls_selection_keyboard");
-			labelKeyboardKey.Text = Interface.GetInterfaceString("controls_selection_keyboard_key");
-			labelKeyboardModifier.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers");
+			labelControlsTitle.Text = Translations.GetInterfaceString("controls_title");
+			listviewControls.Columns[0].Text = Translations.GetInterfaceString("controls_list_command");
+			listviewControls.Columns[1].Text = Translations.GetInterfaceString("controls_list_type");
+			listviewControls.Columns[2].Text = Translations.GetInterfaceString("controls_list_description");
+			listviewControls.Columns[3].Text = Translations.GetInterfaceString("controls_list_assignment");
+			listviewControls.Columns[4].Text = Translations.GetInterfaceString("controls_list_option");
+			buttonControlAdd.Text = Translations.GetInterfaceString("controls_add");
+			buttonControlRemove.Text = Translations.GetInterfaceString("controls_remove");
+			buttonControlsImport.Text = Translations.GetInterfaceString("controls_import");
+			buttonControlsExport.Text = Translations.GetInterfaceString("controls_export");
+			buttonControlReset.Text = Translations.GetInterfaceString("controls_reset");
+			buttonControlUp.Text = Translations.GetInterfaceString("controls_up");
+			buttonControlDown.Text = Translations.GetInterfaceString("controls_down");
+			groupboxControl.Text = Translations.GetInterfaceString("controls_selection");
+			labelCommand.Text = Translations.GetInterfaceString("controls_selection_command");
+			labelCommandOption.Text = Translations.GetInterfaceString("controls_selection_command_option");
+			radiobuttonKeyboard.Text = Translations.GetInterfaceString("controls_selection_keyboard");
+			labelKeyboardKey.Text = Translations.GetInterfaceString("controls_selection_keyboard_key");
+			labelKeyboardModifier.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers");
 			//Load text for SHIFT modifier
-			checkboxKeyboardShift.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
+			checkboxKeyboardShift.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_shift");
 			//Shift CTRL
 			checkboxKeyboardCtrl.Location = new Point(checkboxKeyboardShift.Location.X + (checkboxKeyboardShift.Text.Length + 5) * 5, checkboxKeyboardCtrl.Location.Y);
 			//Load text for CTRL modifier
-			checkboxKeyboardCtrl.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
+			checkboxKeyboardCtrl.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
 			//Shift ALT to suit
 			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
 			
-			checkboxKeyboardAlt.Text = Interface.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
-			radiobuttonJoystick.Text = Interface.GetInterfaceString("controls_selection_joystick");
-			labelJoystickAssignmentCaption.Text = Interface.GetInterfaceString("controls_selection_joystick_assignment");
-			textboxJoystickGrab.Text = Interface.GetInterfaceString("controls_selection_keyboard_assignment_grab");
-			groupboxJoysticks.Text = Interface.GetInterfaceString("controls_attached");
+			checkboxKeyboardAlt.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
+			radiobuttonJoystick.Text = Translations.GetInterfaceString("controls_selection_joystick");
+			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment");
+			textboxJoystickGrab.Text = Translations.GetInterfaceString("controls_selection_keyboard_assignment_grab");
+			groupboxJoysticks.Text = Translations.GetInterfaceString("controls_attached");
 			{
 				listviewControls.Items.Clear();
 				comboboxCommand.Items.Clear();
-				for (int i = 0; i < Interface.CommandInfos.Length; i++)
+				for (int i = 0; i < Translations.CommandInfos.Length; i++)
 				{
-					comboboxCommand.Items.Add(Interface.CommandInfos[i].Name + " - " + Interface.CommandInfos[i].Description);
+					comboboxCommand.Items.Add(Translations.CommandInfos[i].Name + " - " + Translations.CommandInfos[i].Description);
 				}
 				comboboxKeyboardKey.Items.Clear();
-				for (int i = 0; i < Interface.TranslatedKeys.Length; i++)
+				for (int i = 0; i < Translations.TranslatedKeys.Length; i++)
 				{
-					comboboxKeyboardKey.Items.Add(Interface.TranslatedKeys[i]);
+					comboboxKeyboardKey.Items.Add(Translations.TranslatedKeys[i]);
 				}
 
 				ListViewItem[] Items = new ListViewItem[Interface.CurrentControls.Length];
 				for (int i = 0; i < Interface.CurrentControls.Length; i++)
 				{
-					Items[i] = new ListViewItem(new string[] { "", "", "", "" });
+					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
 					UpdateControlListElement(Items[i], i, false);
 				}
 				listviewControls.Items.AddRange(Items);
@@ -767,118 +747,118 @@ namespace OpenBve {
 			 * 
 			 */
 			//Navigation buttons
-			buttonBack.Text = Interface.GetInterfaceString("packages_button_back");
-			buttonCreatePackage.Text = Interface.GetInterfaceString("packages_button_create");
-			buttonBack2.Text = Interface.GetInterfaceString("packages_button_back");
-			buttonNext.Text = Interface.GetInterfaceString("packages_button_next");
-			buttonCancel.Text = Interface.GetInterfaceString("packages_button_cancel");
-			buttonProceedAnyway1.Text = Interface.GetInterfaceString("packages_button_install");
-			buttonCancel2.Text = Interface.GetInterfaceString("packages_button_cancel");
-			buttonCreateProceed.Text = Interface.GetInterfaceString("packages_button_next");
-			buttonAbort.Text = Interface.GetInterfaceString("packages_button_abort");
-			buttonProceedAnyway.Text = Interface.GetInterfaceString("packages_button_ignore");
+			buttonBack.Text = Translations.GetInterfaceString("packages_button_back");
+			buttonCreatePackage.Text = Translations.GetInterfaceString("packages_button_create");
+			buttonBack2.Text = Translations.GetInterfaceString("packages_button_back");
+			buttonNext.Text = Translations.GetInterfaceString("packages_button_next");
+			buttonCancel.Text = Translations.GetInterfaceString("packages_button_cancel");
+			buttonProceedAnyway1.Text = Translations.GetInterfaceString("packages_button_install");
+			buttonCancel2.Text = Translations.GetInterfaceString("packages_button_cancel");
+			buttonCreateProceed.Text = Translations.GetInterfaceString("packages_button_next");
+			buttonAbort.Text = Translations.GetInterfaceString("packages_button_abort");
+			buttonProceedAnyway.Text = Translations.GetInterfaceString("packages_button_ignore");
 			//Main display tab
-			labelPackagesTitle.Text = Interface.GetInterfaceString("packages_title");
-			labelInstalledPackages.Text = Interface.GetInterfaceString("packages_list");
-			labelPackageListType.Text = Interface.GetInterfaceString("packages_list_type");
-			buttonInstallPackage.Text = Interface.GetInterfaceString("packages_install_button");
-			buttonUninstallPackage.Text = Interface.GetInterfaceString("packages_uninstall_button");
-			createPackageButton.Text = Interface.GetInterfaceString("packages_creation_button");
-			comboBoxPackageType.Items[0] = Interface.GetInterfaceString("packages_type_route");
-			comboBoxPackageType.Items[1] = Interface.GetInterfaceString("packages_type_train");
-			comboBoxPackageType.Items[2] = Interface.GetInterfaceString("packages_type_other");
-			routeName.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			routeVersion.HeaderText = Interface.GetInterfaceString("packages_list_version");
-			routeAuthor.HeaderText = Interface.GetInterfaceString("packages_list_author");
-			routeWebsite.HeaderText = Interface.GetInterfaceString("packages_list_website");
+			labelPackagesTitle.Text = Translations.GetInterfaceString("packages_title");
+			labelInstalledPackages.Text = Translations.GetInterfaceString("packages_list");
+			labelPackageListType.Text = Translations.GetInterfaceString("packages_list_type");
+			buttonInstallPackage.Text = Translations.GetInterfaceString("packages_install_button");
+			buttonUninstallPackage.Text = Translations.GetInterfaceString("packages_uninstall_button");
+			createPackageButton.Text = Translations.GetInterfaceString("packages_creation_button");
+			comboBoxPackageType.Items[0] = Translations.GetInterfaceString("packages_type_route");
+			comboBoxPackageType.Items[1] = Translations.GetInterfaceString("packages_type_train");
+			comboBoxPackageType.Items[2] = Translations.GetInterfaceString("packages_type_other");
+			routeName.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			routeVersion.HeaderText = Translations.GetInterfaceString("packages_list_version");
+			routeAuthor.HeaderText = Translations.GetInterfaceString("packages_list_author");
+			routeWebsite.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Creation tab 1
-			labelPackageCreationHeader.Text = Interface.GetInterfaceString("packages_creation_header");
-			SaveFileNameButton.Text = Interface.GetInterfaceString("packages_creation_saveas_button");
-			labelSaveAs.Text = Interface.GetInterfaceString("packages_creation_saveas_label");
-			labelDependanciesNextStep.Text = Interface.GetInterfaceString("packages_creation_dependancies_nextstep");
-			newPackageClearSelectionButton.Text = Interface.GetInterfaceString("packages_creation_clearselection");
-			addPackageItemsButton.Text = Interface.GetInterfaceString("packages_creation_additems");
-			labelSelectFiles.Text = Interface.GetInterfaceString("packages_creation_selecteditems");
-			labelNewGUID.Text = Interface.GetInterfaceString("packages_creation_new_guid");
-			dataGridViewTextBoxColumn21.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn22.HeaderText = Interface.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn23.HeaderText = Interface.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn24.HeaderText = Interface.GetInterfaceString("packages_list_website");
+			labelPackageCreationHeader.Text = Translations.GetInterfaceString("packages_creation_header");
+			SaveFileNameButton.Text = Translations.GetInterfaceString("packages_creation_saveas_button");
+			labelSaveAs.Text = Translations.GetInterfaceString("packages_creation_saveas_label");
+			labelDependanciesNextStep.Text = Translations.GetInterfaceString("packages_creation_dependancies_nextstep");
+			newPackageClearSelectionButton.Text = Translations.GetInterfaceString("packages_creation_clearselection");
+			addPackageItemsButton.Text = Translations.GetInterfaceString("packages_creation_additems");
+			labelSelectFiles.Text = Translations.GetInterfaceString("packages_creation_selecteditems");
+			labelNewGUID.Text = Translations.GetInterfaceString("packages_creation_new_guid");
+			dataGridViewTextBoxColumn21.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn22.HeaderText = Translations.GetInterfaceString("packages_list_version");
+			dataGridViewTextBoxColumn23.HeaderText = Translations.GetInterfaceString("packages_list_author");
+			dataGridViewTextBoxColumn24.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Replace package panel of creation tab
-			replacePackageButton.Text = Interface.GetInterfaceString("packages_replace_select");
-			packageToReplaceLabel.Text = Interface.GetInterfaceString("packages_replace_choose");
+			replacePackageButton.Text = Translations.GetInterfaceString("packages_replace_select");
+			packageToReplaceLabel.Text = Translations.GetInterfaceString("packages_replace_choose");
 			//New package panel
-			radioButtonQ2Other.Text = Interface.GetInterfaceString("packages_type_other");
-			radioButtonQ2Route.Text = Interface.GetInterfaceString("packages_type_route");
-			radioButtonQ2Train.Text = Interface.GetInterfaceString("packages_type_train");
-			labelPackageType.Text = Interface.GetInterfaceString("packages_type_select");
-			labelReplacePackage.Text = Interface.GetInterfaceString("packages_creation_replace");
-			radioButtonQ1Yes.Text = Interface.GetInterfaceString("packages_creation_yes");
-			radioButtonQ1No.Text = Interface.GetInterfaceString("packages_creation_no");
+			radioButtonQ2Other.Text = Translations.GetInterfaceString("packages_type_other");
+			radioButtonQ2Route.Text = Translations.GetInterfaceString("packages_type_route");
+			radioButtonQ2Train.Text = Translations.GetInterfaceString("packages_type_train");
+			labelPackageType.Text = Translations.GetInterfaceString("packages_type_select");
+			labelReplacePackage.Text = Translations.GetInterfaceString("packages_creation_replace");
+			radioButtonQ1Yes.Text = Translations.GetInterfaceString("packages_creation_yes");
+			radioButtonQ1No.Text = Translations.GetInterfaceString("packages_creation_no");
 			//Please wait tab
-			labelPleaseWait.Text = Interface.GetInterfaceString("packages_processing");
-			labelProgressFile.Text = Interface.GetInterfaceString("packages_unknown_file");
+			labelPleaseWait.Text = Translations.GetInterfaceString("packages_processing");
+			labelProgressFile.Text = Translations.GetInterfaceString("packages_unknown_file");
 			//Missing dependancies tab
 			/*
 			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND MAY BE UPDATED AT RUNTIME
 			 * REMEMBER TO RESET AFTERWARDS
 			 * 
 			 */
-			labelMissingDependanciesText1.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet");
-			labelMissingDependanciesText2.Text = Interface.GetInterfaceString("packages_shownlist");
-			labelDependancyErrorHeader.Text = Interface.GetInterfaceString("packages_install_dependancies_unmet_header");
+			labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
+			labelMissingDependanciesText2.Text = Translations.GetInterfaceString("packages_shownlist");
+			labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet_header");
 			//Install tab
 			/*
 			 * NOTE: THIS TAB IS MULTI-FUNCTIONAL, AND THE HEADER MAY BE UPDATED AT RUNTIME
 			 * REMEMBER TO RESET AFTERWARDS
 			 * 
 			 */
-			labelPackageName.Text = Interface.GetInterfaceString("packages_install_name");
-			labelPackageAuthor.Text = Interface.GetInterfaceString("packages_install_author");
-			labelPackageVersion.Text = Interface.GetInterfaceString("packages_install_version");
-			labelPackageWebsite.Text = Interface.GetInterfaceString("packages_install_website");
-			labelPackageDescription.Text = Interface.GetInterfaceString("packages_install_description");
+			labelPackageName.Text = Translations.GetInterfaceString("packages_install_name");
+			labelPackageAuthor.Text = Translations.GetInterfaceString("packages_install_author");
+			labelPackageVersion.Text = Translations.GetInterfaceString("packages_install_version");
+			labelPackageWebsite.Text = Translations.GetInterfaceString("packages_install_website");
+			labelPackageDescription.Text = Translations.GetInterfaceString("packages_install_description");
 
 			//Add dependancies panel
-			labelDependanciesHeader.Text = Interface.GetInterfaceString("packages_creation_dependancies");
-			labelInstalledDependancies.Text = Interface.GetInterfaceString("packages_list");
-			labelSelectedDependencies.Text = Interface.GetInterfaceString("packages_selected");
-			labelDependancyType.Text = Interface.GetInterfaceString("packages_list_type");
-			comboBoxDependancyType.Items[0] = Interface.GetInterfaceString("packages_type_route");
-			comboBoxDependancyType.Items[1] = Interface.GetInterfaceString("packages_type_train");
-			comboBoxDependancyType.Items[2] = Interface.GetInterfaceString("packages_type_other");
-			buttonDepends.Text = Interface.GetInterfaceString("packages_creation_dependancies_add");
-			buttonReccomends.Text = Interface.GetInterfaceString("packages_creation_reccommends_add");
-			dataGridViewTextBoxColumn13.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn14.HeaderText = Interface.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn15.HeaderText = Interface.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn16.HeaderText = Interface.GetInterfaceString("packages_list_website");
-			dataGridViewTextBoxColumn1.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn2.HeaderText = Interface.GetInterfaceString("packages_list_minimum");
-			dataGridViewTextBoxColumn3.HeaderText = Interface.GetInterfaceString("packages_list_maximum");
-			dataGridViewTextBoxColumn4.HeaderText = Interface.GetInterfaceString("packages_list_packagetype");
-			buttonRemove.Text = Interface.GetInterfaceString("packages_creation_dependancies_remove");
-			website.HeaderText = Interface.GetInterfaceString("packages_list_website");
+			labelDependanciesHeader.Text = Translations.GetInterfaceString("packages_creation_dependancies");
+			labelInstalledDependancies.Text = Translations.GetInterfaceString("packages_list");
+			labelSelectedDependencies.Text = Translations.GetInterfaceString("packages_selected");
+			labelDependancyType.Text = Translations.GetInterfaceString("packages_list_type");
+			comboBoxDependancyType.Items[0] = Translations.GetInterfaceString("packages_type_route");
+			comboBoxDependancyType.Items[1] = Translations.GetInterfaceString("packages_type_train");
+			comboBoxDependancyType.Items[2] = Translations.GetInterfaceString("packages_type_other");
+			buttonDepends.Text = Translations.GetInterfaceString("packages_creation_dependancies_add");
+			buttonReccomends.Text = Translations.GetInterfaceString("packages_creation_reccommends_add");
+			dataGridViewTextBoxColumn13.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn14.HeaderText = Translations.GetInterfaceString("packages_list_version");
+			dataGridViewTextBoxColumn15.HeaderText = Translations.GetInterfaceString("packages_list_author");
+			dataGridViewTextBoxColumn16.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			dataGridViewTextBoxColumn1.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn2.HeaderText = Translations.GetInterfaceString("packages_list_minimum");
+			dataGridViewTextBoxColumn3.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
+			dataGridViewTextBoxColumn4.HeaderText = Translations.GetInterfaceString("packages_list_packagetype");
+			buttonRemove.Text = Translations.GetInterfaceString("packages_creation_dependancies_remove");
+			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Version Error panel
-			labelBrokenDependancies.Text = Interface.GetInterfaceString("packages_install_dependancies_broken");
-			labelNewVersion.Text = Interface.GetInterfaceString("packages_version_new");
-			labelCurrentVersion.Text = Interface.GetInterfaceString("packages_version_current");
-			dataGridViewTextBoxColumn5.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn6.HeaderText = Interface.GetInterfaceString("packages_list_maximum");
-			dataGridViewTextBoxColumn7.HeaderText = Interface.GetInterfaceString("packages_list_minimum");
-			dataGridViewTextBoxColumn8.HeaderText = Interface.GetInterfaceString("packages_list_author");
-			website.HeaderText = Interface.GetInterfaceString("packages_list_website");
-			groupBoxVersionErrorAction.Text = Interface.GetInterfaceString("packages_error_action");
-			radioButtonOverwrite.Text = Interface.GetInterfaceString("packages_error_overwrite");
-			radioButtonReplace.Text = Interface.GetInterfaceString("packages_error_replace");
+			labelBrokenDependancies.Text = Translations.GetInterfaceString("packages_install_dependancies_broken");
+			labelNewVersion.Text = Translations.GetInterfaceString("packages_version_new");
+			labelCurrentVersion.Text = Translations.GetInterfaceString("packages_version_current");
+			dataGridViewTextBoxColumn5.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn6.HeaderText = Translations.GetInterfaceString("packages_list_maximum");
+			dataGridViewTextBoxColumn7.HeaderText = Translations.GetInterfaceString("packages_list_minimum");
+			dataGridViewTextBoxColumn8.HeaderText = Translations.GetInterfaceString("packages_list_author");
+			website.HeaderText = Translations.GetInterfaceString("packages_list_website");
+			groupBoxVersionErrorAction.Text = Translations.GetInterfaceString("packages_error_action");
+			radioButtonOverwrite.Text = Translations.GetInterfaceString("packages_error_overwrite");
+			radioButtonReplace.Text = Translations.GetInterfaceString("packages_error_replace");
 			// *** labelVersionError.Text is set dynamically at runtime ***
-			labelVersionErrorHeader.Text = Interface.GetInterfaceString("packages_install_version_error");
-			dataGridViewTextBoxColumn9.HeaderText = Interface.GetInterfaceString("packages_list_name");
-			dataGridViewTextBoxColumn10.HeaderText = Interface.GetInterfaceString("packages_list_version");
-			dataGridViewTextBoxColumn11.HeaderText = Interface.GetInterfaceString("packages_list_author");
-			dataGridViewTextBoxColumn12.HeaderText = Interface.GetInterfaceString("packages_list_website");
+			labelVersionErrorHeader.Text = Translations.GetInterfaceString("packages_install_version_error");
+			dataGridViewTextBoxColumn9.HeaderText = Translations.GetInterfaceString("packages_list_name");
+			dataGridViewTextBoxColumn10.HeaderText = Translations.GetInterfaceString("packages_list_version");
+			dataGridViewTextBoxColumn11.HeaderText = Translations.GetInterfaceString("packages_list_author");
+			dataGridViewTextBoxColumn12.HeaderText = Translations.GetInterfaceString("packages_list_website");
 			//Please Wait panel
-			labelPleaseWait.Text = Interface.GetInterfaceString("packages_processing");
+			labelPleaseWait.Text = Translations.GetInterfaceString("packages_processing");
 			//Success panel
 			// *** Multi-functional, all labels set at runtime ***
 			//Uninstall result panel
@@ -1079,7 +1059,7 @@ namespace OpenBve {
 			{
 #endif
 				Interface.SaveOptions();
-				FileSystem.SaveCurrentFileSystemConfiguration();
+				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
 			catch (Exception ex)
@@ -1194,68 +1174,6 @@ namespace OpenBve {
 			if (Result.RouteFile != null)
 			{
 				ShowRoute(false);
-			}
-		}
-
-		// list languages
-		private void ListLanguages()
-		{
-			string Folder = Program.FileSystem.GetDataFolder("Languages");
-			if (System.IO.Directory.Exists(Folder))
-			{
-				string[] Files = System.IO.Directory.GetFiles(Folder);
-				string[] LanguageNames = new string[Files.Length];
-				LanguageFiles = new string[Files.Length];
-				int n = 0;
-				for (int i = 0; i < Files.Length; i++)
-				{
-					string Title = System.IO.Path.GetFileName(Files[i]);
-					if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
-					{
-						string Code = Title.Substring(0, Title.Length - 4);
-						string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
-						string Section = "";
-						string languageName = Code;
-						for (int j = 0; j < Lines.Length; j++)
-						{
-							Lines[j] = Lines[j].Trim();
-							if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal))
-							{
-								Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
-							}
-							else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase))
-							{
-								int k = Lines[j].IndexOf('=');
-								if (k >= 0)
-								{
-									string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
-									string Value = Lines[j].Substring(k + 1).TrimStart();
-									if (Section == "language" & Key == "name")
-									{
-										languageName = Value;
-										break;
-									}
-								}
-							}
-						}
-						LanguageFiles[n] = Files[i];
-						LanguageNames[n] = languageName;
-						n++;
-					}
-				}
-				Array.Resize<string>(ref LanguageFiles, n);
-				Array.Resize<string>(ref LanguageNames, n);
-				Array.Sort<string, string>(LanguageNames, LanguageFiles);
-				comboboxLanguages.Items.Clear();
-				//Load all available languages
-				for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
-				{
-					comboboxLanguages.Items.Add(Interface.AvailableLangauges[i].Name);
-				}
-			}
-			else {
-				LanguageFiles = new string[] { };
-				comboboxLanguages.Items.Clear();
 			}
 		}
 
@@ -1669,22 +1587,22 @@ namespace OpenBve {
 			if (url == null)
 			{
 				//The internet connection is broken.....
-				MessageBox.Show(Interface.GetInterfaceString("panel_updates_invalid"));
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_invalid"));
 				return;
 			}
 			if (newerVersion)
 			{
-				string question = Interface.GetInterfaceString("panel_updates_new");
+				string question = Translations.GetInterfaceString("panel_updates_new");
 				question = question.Replace("[version]", newVersion.ToString());
 				question = question.Replace("[date]", date);
-				if (DialogResult.OK == MessageBox.Show(this, question, Interface.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+				if (DialogResult.OK == MessageBox.Show(this, question, Translations.GetInterfaceString("panel_updates"), MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
 				{
 					System.Diagnostics.Process.Start(url);
 				}
 			}
 			else
 			{
-				MessageBox.Show(Interface.GetInterfaceString("panel_updates_old"));
+				MessageBox.Show(Translations.GetInterfaceString("panel_updates_old"));
 			}
 		}
 

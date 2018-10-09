@@ -2,6 +2,7 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -284,11 +285,11 @@ namespace OpenBve
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
 										if (y > 1.0) y = 1.0;
-										int k = (int)Math.Floor(y * (double)Interface.RatingsCount);
-										if (k >= Interface.RatingsCount) k = Interface.RatingsCount - 1;
+										int k = (int)Math.Floor(y * (double)Translations.RatingsCount);
+										if (k >= Translations.RatingsCount) k = Translations.RatingsCount - 1;
 										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-										AddScore(Interface.GetInterfaceString("score_rating"), 20.0);
-										AddScore(Interface.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
+										AddScore(Translations.GetInterfaceString("score_rating"), 20.0);
+										AddScore(Translations.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
 									}
 								}
 							}

@@ -188,7 +188,6 @@ namespace OpenBve
 		}
 
 		internal static readonly object LoadingLock = new object();
-		internal static bool LoadingRemakeCurrent = false;
 
 		private static readonly object jobLock = new object();
 #pragma warning disable 0649

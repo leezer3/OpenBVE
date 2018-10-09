@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -44,7 +46,7 @@ namespace OpenBve
 				string file = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
 				if (System.IO.File.Exists(file))
 				{
-					TextureLoadingBkg = TextureManager.RegisterTexture(file, TextureManager.TextureWrapMode.ClampToEdge,TextureManager.TextureWrapMode.ClampToEdge, false);
+					TextureLoadingBkg = TextureManager.RegisterTexture(file, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 					TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
 				}
 			}
@@ -57,7 +59,7 @@ namespace OpenBve
 			fName = OpenBveApi.Path.CombineFile(Path, fName);
 			if (System.IO.File.Exists(fName))
 			{
-				TextureLogo = TextureManager.RegisterTexture(fName, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+				TextureLogo = TextureManager.RegisterTexture(fName, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 				TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
 			}
 
@@ -69,7 +71,7 @@ namespace OpenBve
 		/// <summary>Sets the loading screen background to a custom image</summary>
 		internal static void SetLoadingBkg(string fileName)
 		{
-			TextureLoadingBkg = TextureManager.RegisterTexture(fileName, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+			TextureLoadingBkg = TextureManager.RegisterTexture(fileName, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 			TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
 			customLoadScreen = true;
 		}

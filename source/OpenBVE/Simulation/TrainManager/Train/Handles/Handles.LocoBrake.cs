@@ -58,6 +58,11 @@
 			private AirBrakeHandleState DelayedValue;
 			private double DelayedTime;
 
+			internal LocoAirBrakeHandle()
+			{
+				this.MaximumNotch = 3;
+			}
+
 			internal override void Update()
 			{
 				if (DelayedValue != AirBrakeHandleState.Invalid)

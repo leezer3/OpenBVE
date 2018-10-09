@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using OpenBveApi;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class Illustrations {
@@ -363,7 +364,7 @@ namespace OpenBve {
 				// If we have track elements, but no stations, show a specific error message, rather
 				// than the more generic one thrown later
 				// NOTE: Will throw the generic error message on routes shorter than 900m with no stations
-				throw new Exception(Interface.GetInterfaceString("errors_route_corrupt_nostations"));
+				throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_nostations"));
 			}
 			// Track elements are assumed to be all of the same length, and this length
 			// is used as measure unit, rather than computing the incremental track length
@@ -510,7 +511,7 @@ namespace OpenBve {
 				{
 					//If k is equal to zero, this generally means that the WithTrack section is missing from our routefile
 					//Adding zero to the loop control variable will also produce an infinite loop, so that's a bad idea too
-					throw new Exception(Interface.GetInterfaceString("errors_route_corrupt_withtrack"));
+					throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_withtrack"));
 				}
 				for (int i = n0; i <= n1; i += k)
 				{

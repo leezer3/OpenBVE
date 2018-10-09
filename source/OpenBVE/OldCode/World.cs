@@ -6,6 +6,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static partial class World {
@@ -17,8 +18,8 @@ namespace OpenBve {
 			internal Color32 Color;
 			internal Color24 TransparentColor;
 			internal Color24 EmissiveColor;
-			internal Textures.Texture DaytimeTexture;
-			internal Textures.Texture NighttimeTexture;
+			internal Texture DaytimeTexture;
+			internal Texture NighttimeTexture;
 			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
 			internal byte DaytimeNighttimeBlend;
 			internal MeshMaterialBlendMode BlendMode;
@@ -26,7 +27,7 @@ namespace OpenBve {
 			internal ushort GlowAttenuationData;
 			internal const int EmissiveColorMask = 1;
 			internal const int TransparentColorMask = 2;
-			internal Textures.OpenGlTextureWrapMode? WrapMode;
+			internal OpenGlTextureWrapMode? WrapMode;
 			// operators
 			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
 				if (A.Flags != B.Flags) return false;
@@ -229,12 +230,6 @@ namespace OpenBve {
 			}
 		}
 
-		// glow
-		internal enum GlowAttenuationMode {
-			None = 0,
-			DivisionExponent2 = 1,
-			DivisionExponent4 = 2,
-		}
 		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
 		/// <param name="HalfDistance">The distance at which the glow is at 50% of its full intensity. The value is clamped to the integer range from 1 to 4096. Values less than or equal to 0 disable glow attenuation.</param>
 		/// <param name="Mode">The glow attenuation mode.</param>
@@ -281,11 +276,11 @@ namespace OpenBve {
 			internal double SlowX;
 			internal double FastX;
 			internal double Roll;
-			internal ObjectManager.Damping RollDamping;
+			internal Damping RollDamping;
 			internal double SlowY;
 			internal double FastY;
 			internal double Pitch;
-			internal ObjectManager.Damping PitchDamping;
+			internal Damping PitchDamping;
 
 			internal void Update(double TimeElapsed) {
 			if (CameraRestriction == Camera.RestrictionMode.NotAvailable) {
@@ -323,7 +318,7 @@ namespace OpenBve {
 						Pitch = 0.1;
 					}
 					if (PitchDamping == null) {
-						PitchDamping = new ObjectManager.Damping(6.0, 0.3);
+						PitchDamping = new Damping(6.0, 0.3);
 					}
 					PitchDamping.Update(TimeElapsed, ref Pitch, true);
 				}
@@ -381,7 +376,7 @@ namespace OpenBve {
 					diffX = (double)Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
 					if (RollDamping == null) {
-						RollDamping = new ObjectManager.Damping(6.0, 0.3);
+						RollDamping = new Damping(6.0, 0.3);
 					}
 					RollDamping.Update(TimeElapsed, ref Roll, true);
 				}
@@ -549,7 +544,7 @@ namespace OpenBve {
 				Vector2[] r = new Vector2[2];
 				for (int j = 0; j < 2; j++) {
 					// determine relative world coordinates
-					World.Rotate(ref p[j].X, ref p[j].Y, ref p[j].Z, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z);
+					p[j].Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
 					double rx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
 					double ry = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
 					double rz = -World.CameraCurrentAlignment.Position.Z;

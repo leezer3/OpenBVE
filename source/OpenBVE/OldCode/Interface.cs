@@ -31,7 +31,7 @@ namespace OpenBve {
 			Messages[MessageCount].Text = Text;
 			MessageCount++;
 			
-			Program.AppendToLogFile(Text);
+			Program.FileSystem.AppendToLogFile(Text);
 			
 		}
 		internal static void ClearMessages() {

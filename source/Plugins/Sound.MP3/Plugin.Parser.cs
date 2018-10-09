@@ -3,9 +3,6 @@ using NAudio.Wave;
 
 namespace Plugin {
 	public partial class Plugin : SoundInterface {
-		
-		
-		
 		/// <summary>Reads sound data from a MP3 file.</summary>
 		/// <param name="fileName">The file name of the MP3 file.</param>
 		/// <returns>The raw sound data.</returns>

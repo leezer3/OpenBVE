@@ -15,7 +15,7 @@ namespace OpenBveApi.Textures
 		/// <param name="bgcolor">The background color to use (Only relevant if creating a new image)</param>
 		/// <param name="fcolor">The font color to use</param>
 		/// <param name="Padding">The padding to use, or alternatively the X,Y inset if overlaying text</param>
-		public static Bitmap AddTextToBitmap(Bitmap bitmap, string txt, string fontname, int fontsize, Color bgcolor,Color fcolor, Vector2 Padding)
+		public static Bitmap AddTextToBitmap(Bitmap bitmap, string txt, string fontname, int fontsize, Color bgcolor, Color fcolor, Vector2 Padding)
 		{
 			bool overlay = true;
 			SizeF size;
@@ -24,24 +24,28 @@ namespace OpenBveApi.Textures
 				bitmap = new Bitmap(1024, 1024);
 				overlay = false;
 			}
-			using (Graphics graphics = Graphics.FromImage(bitmap))
+
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bitmap))
 			{
 				Font font = new Font(fontname, fontsize);
 				size = graphics.MeasureString(txt, font);
 				if (!overlay)
 				{
-					graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int) Padding.X*2,size.Height + (int) Padding.Y*2);
+					graphics.FillRectangle(new SolidBrush(bgcolor), 0, 0, size.Width + (int) Padding.X * 2, size.Height + (int) Padding.Y * 2);
 				}
+
 				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int) Padding.X, (int) Padding.Y);
 				graphics.Flush();
 				font.Dispose();
 				graphics.Dispose();
 			}
+
 			if (!overlay)
 			{
-				Rectangle cropArea = new Rectangle(0, 0, (int) size.Width + (int) Padding.X*2, (int) size.Height + (int) Padding.Y*2);
+				Rectangle cropArea = new Rectangle(0, 0, (int) size.Width + (int) Padding.X * 2, (int) size.Height + (int) Padding.Y * 2);
 				return bitmap.Clone(cropArea, bitmap.PixelFormat);
 			}
+
 			return bitmap;
 		}
 
@@ -52,9 +56,9 @@ namespace OpenBveApi.Textures
 			using (var testFont = new Font(fontName, 8))
 			{
 				return 0 == string.Compare(
-					fontName,
-					testFont.Name,
-					StringComparison.InvariantCultureIgnoreCase);
+					       fontName,
+					       testFont.Name,
+					       StringComparison.InvariantCultureIgnoreCase);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -95,7 +96,7 @@ namespace OpenBve
 		/// <param name="scale">The scale</param>
 		internal static void RenderBackground(BackgroundManager.StaticBackground Data, float Alpha, float scale)
 		{
-			if (Data.Texture != null && Textures.LoadTexture(Data.Texture, Textures.OpenGlTextureWrapMode.RepeatClamp))
+			if (Data.Texture != null && Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				if (LightingEnabled)
 				{
@@ -120,7 +121,7 @@ namespace OpenBve
 					GL.Enable(EnableCap.Blend);
 					BlendEnabled = true;
 				}
-				GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.RepeatClamp].Name);
+				GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
 
 				if (!BackgroundDisplayListAvailable)
@@ -259,16 +260,16 @@ namespace OpenBve
 				int m = Object.ObjectBackground.Mesh.Faces[i].Material;
 				if (m != Mat)
 				{
-					Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
 					for (int v = 0; v < Object.ObjectBackground.Mesh.Vertices.Length; v++)
 					{
 						if (Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.X < 0.0f | Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 						{
-							wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+							wrap |= OpenGlTextureWrapMode.RepeatClamp;
 						}
 						if (Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f | Object.ObjectBackground.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 						{
-							wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+							wrap |= OpenGlTextureWrapMode.ClampRepeat;
 						}
 					}
 

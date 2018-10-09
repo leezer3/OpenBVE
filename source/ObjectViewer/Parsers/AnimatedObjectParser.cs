@@ -1,6 +1,8 @@
 using System;
 using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -372,13 +374,13 @@ namespace OpenBve {
 															} else {
 																switch (a.ToLowerInvariant()) {
 																	case "rotatexdamping":
-																		Result.Objects[ObjectCount].RotateXDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateXDamping = new Damping(nf, dr);
 																		break;
 																	case "rotateydamping":
-																		Result.Objects[ObjectCount].RotateYDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateYDamping = new Damping(nf, dr);
 																		break;
 																	case "rotatezdamping":
-																		Result.Objects[ObjectCount].RotateZDamping = new ObjectManager.Damping(nf, dr);
+																		Result.Objects[ObjectCount].RotateZDamping = new Damping(nf, dr);
 																		break;
 																}
 															}
@@ -507,18 +509,18 @@ namespace OpenBve {
 												{
 													if (ForceTextureRepeatX && ForceTextureRepeatY)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 													}
 													else if (ForceTextureRepeatX)
 													{
 														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
-															case Textures.OpenGlTextureWrapMode.ClampRepeat:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+															case OpenGlTextureWrapMode.ClampRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.ClampClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatClamp;
+															case OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatClamp;
 																break;
 														}
 													}
@@ -527,11 +529,11 @@ namespace OpenBve {
 														
 														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
 														{
-															case Textures.OpenGlTextureWrapMode.RepeatClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+															case OpenGlTextureWrapMode.RepeatClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 																break;
-															case Textures.OpenGlTextureWrapMode.ClampClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = Textures.OpenGlTextureWrapMode.ClampRepeat;
+															case OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.ClampRepeat;
 																break;
 														}
 													}

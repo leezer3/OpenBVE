@@ -5,6 +5,7 @@ using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -126,8 +127,8 @@ namespace OpenBve {
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
 				Data.Backgrounds = new BackgroundManager.BackgroundHandle[] {};
-				Data.TimetableDaytime = new Textures.Texture[] {null, null, null, null};
-				Data.TimetableNighttime = new Textures.Texture[] {null, null, null, null};
+				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
+				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
 				string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
 				Data.Signals = new SignalData[7];
@@ -1672,7 +1673,7 @@ namespace OpenBve {
 												} else {
 													while (CommandIndex1 >= Data.TimetableDaytime.Length) {
 														int n = Data.TimetableDaytime.Length;
-														Array.Resize<Textures.Texture>(ref Data.TimetableDaytime, n << 1);
+														Array.Resize<OpenBveApi.Textures.Texture>(ref Data.TimetableDaytime, n << 1);
 														for (int i = n; i < Data.TimetableDaytime.Length; i++) {
 															Data.TimetableDaytime[i] = null;
 														}
@@ -1701,7 +1702,7 @@ namespace OpenBve {
 												} else {
 													while (CommandIndex1 >= Data.TimetableNighttime.Length) {
 														int n = Data.TimetableNighttime.Length;
-														Array.Resize<Textures.Texture>(ref Data.TimetableNighttime, n << 1);
+														Array.Resize<OpenBveApi.Textures.Texture>(ref Data.TimetableNighttime, n << 1);
 														for (int i = n; i < Data.TimetableNighttime.Length; i++) {
 															Data.TimetableNighttime[i] = null;
 														}
@@ -2377,7 +2378,7 @@ namespace OpenBve {
 															Interface.AddMessage(Interface.MessageType.Error, true, "The folder " + Folder + " could not be found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
 															Signal.SignalTextures = LoadAllTextures(f, false);
-															Signal.GlowTextures = new Textures.Texture[] { };
+															Signal.GlowTextures = new OpenBveApi.Textures.Texture[] { };
 															if (Arguments.Length >= 2 && Arguments[1].Length != 0) {
 																if (Path.ContainsInvalidChars(Arguments[1])) {
 																	Interface.AddMessage(Interface.MessageType.Error, false, "GlowFileWithoutExtension contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2422,7 +2423,7 @@ namespace OpenBve {
 																			for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++)
 																			{
 																				Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																				Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																				Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, GlowAttenuationMode.DivisionExponent4);
 																			}
 																		}
 																	}
@@ -3933,7 +3934,7 @@ namespace OpenBve {
 												}
 											}
 										}
-										Textures.Texture tdt = null, tnt = null;
+										OpenBveApi.Textures.Texture tdt = null, tnt = null;
 										if (!PreviewOnly)
 										{
 											int ttidx;
@@ -3968,6 +3969,50 @@ namespace OpenBve {
 												}
 											}
 										}
+										double reopenDoor = 0.0;
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 13 && Arguments[12].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[12], out reopenDoor)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenDoor = 0.0;
+											} else if (reopenDoor < 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenDoor is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenDoor = 0.0;
+											}
+										}
+										int reopenStationLimit = 5;
+										if(!PreviewOnly)
+										{
+											if (Arguments.Length >= 14 && Arguments[13].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[13], out reopenStationLimit)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenStationLimit = 5;
+											} else if (reopenStationLimit < 0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "ReopenStationLimit is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												reopenStationLimit = 0;
+											}
+										}
+										double interferenceInDoor = Program.RandomNumberGenerator.NextDouble() * 30.0;
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 15 && Arguments[14].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[14], out interferenceInDoor)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												interferenceInDoor = Program.RandomNumberGenerator.NextDouble() * 30.0;
+											} else if (interferenceInDoor < 0.0) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "InterferenceInDoor is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												interferenceInDoor = 0.0;
+											}
+										}
+										int maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+										if (!PreviewOnly)
+										{
+											if (Arguments.Length >= 16 && Arguments[15].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[15], out maxInterferingObjectRate)) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											} else if (maxInterferingObjectRate <= 0 || maxInterferingObjectRate >= 100) {
+												Interface.AddMessage(Interface.MessageType.Error, false, "MaxInterferingObjectRate is expected to be positive, less than 100 in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
+											}
+										}
 										if (Game.Stations[CurrentStation].Name.Length == 0 & (Game.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Game.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
 											Game.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
@@ -3985,6 +4030,10 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
 										Game.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Game.Stations[CurrentStation].ReopenDoor = 0.01 * reopenDoor;
+										Game.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
+										Game.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
+										Game.Stations[CurrentStation].MaxInterferingObjectRate = maxInterferingObjectRate;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 										CurrentStop = -1;
@@ -4097,6 +4146,10 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = null;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = null;
 										Game.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Game.Stations[CurrentStation].ReopenDoor = 0.0;
+										Game.Stations[CurrentStation].ReopenStationLimit = 0;
+										Game.Stations[CurrentStation].InterferenceInDoor = 0.0;
+										Game.Stations[CurrentStation].MaxInterferingObjectRate = 10;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = false;
 										CurrentStop = -1;
@@ -4589,7 +4642,7 @@ namespace OpenBve {
 													}
 													else
 													{
-														Textures.Texture t;
+														OpenBveApi.Textures.Texture t;
 														Textures.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
 														Data.Markers[n].Message = new MessageManager.MarkerImage(t);
 														

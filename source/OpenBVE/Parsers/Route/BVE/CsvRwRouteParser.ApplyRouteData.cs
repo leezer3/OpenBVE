@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.World;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -19,7 +20,7 @@ namespace OpenBve
 			{
 				if (freeObjCount == 0 && railtypeCount == 0)
 				{
-					throw new Exception(Interface.GetInterfaceString("errors_route_corrupt_noobjects"));
+					throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_noobjects"));
 				}
 			}
 			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;

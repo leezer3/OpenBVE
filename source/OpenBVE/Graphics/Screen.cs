@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using OpenBveApi.Interface;
 
 
 namespace OpenBve
@@ -179,8 +180,8 @@ namespace OpenBve
 			    System.Threading.Thread.Sleep(20);
 			    if (Program.currentGameWindow.WindowState != WindowState.Fullscreen)
 			    {
-                    MessageBox.Show(Interface.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
-                        Interface.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    MessageBox.Show(Translations.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
+                        Translations.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			        Fullscreen = false;
 			    }
 			}

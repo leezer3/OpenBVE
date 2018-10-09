@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -255,7 +256,7 @@ namespace OpenBve
 						if (axisState.ToString(CultureInfo.InvariantCulture) != Interface.CurrentControls[i].LastState)
 						{
 							Interface.CurrentControls[i].LastState = axisState.ToString(CultureInfo.InvariantCulture);
-							if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogHalf)
+							if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogHalf)
 							{
 								if (Math.Sign(axisState) == Math.Sign(Interface.CurrentControls[i].Direction))
 								{
@@ -274,7 +275,7 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Interface.CurrentControls[i].InheritedType == Interface.CommandType.AnalogFull)
+							else if (Interface.CurrentControls[i].InheritedType == Translations.CommandType.AnalogFull)
 							{
 								axisState *= (float)Interface.CurrentControls[i].Direction;
 								if (axisState > -Interface.CurrentOptions.JoystickAxisThreshold & axisState < Interface.CurrentOptions.JoystickAxisThreshold)

@@ -72,13 +72,6 @@ namespace OpenBve
 			px = x; py = y; pz = z;
 		}
 
-		internal static void Rotate(ref double px, ref double py, ref double pz, Transformation t)
-		{
-			var x = t.X.X * px + t.Y.X * py + t.Z.X * pz;
-			var y = t.X.Y * px + t.Y.Y * py + t.Z.Y * pz;
-			var z = t.X.Z * px + t.Y.Z * py + t.Z.Z * pz;
-			px = x; py = y; pz = z;
-		}
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina)
 		{
 			double u = Vector.X * cosa - Vector.Z * sina;

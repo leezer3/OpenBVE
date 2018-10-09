@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBveApi.Interface;
 using OpenTK.Input;
 using PIEHid32Net;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -59,19 +60,19 @@ namespace OpenBve
 												case "index":
 													if (!NumberFormats.TryParseIntVb6(n.InnerText, out idx))
 													{
-														Program.AppendToLogFile(@"Invalid index in RailDriver calibration file");
+														Program.FileSystem.AppendToLogFile(@"Invalid index in RailDriver calibration file");
 													}
 													break;
 												case "minimum":
 													if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMin))
 													{
-														Program.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+														Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 													}
 													break;
 												case "maximum":
 													if (!NumberFormats.TryParseIntVb6(n.InnerText, out lMax))
 													{
-														Program.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
+														Program.FileSystem.AppendToLogFile(@"Invalid minimum in RailDriver calibration file");
 													}
 													break;
 											}
@@ -117,7 +118,7 @@ namespace OpenBve
 					{
 						Calibration[i] = new AxisCalibration();
 					}
-					MessageBox.Show(Interface.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show(Translations.GetInterfaceString("raildriver_config_error"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					//Clear the calibration file
 					File.Delete(calibrationFile);
 				}

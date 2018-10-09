@@ -13,6 +13,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
+using OpenBveApi.Graphics;
 
 namespace OpenBve
 {
@@ -29,15 +30,7 @@ namespace OpenBve
         internal enum TransparencyMode { Sharp, Smooth }
 
         // object list
-        internal enum ObjectType : byte
-        {
-            /// <summary>The object is part of the static scenery. The matching ObjectListType is StaticOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Static = 1,
-            /// <summary>The object is part of the animated scenery or of a train exterior. The matching ObjectListType is DynamicOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-            Dynamic = 2,
-            /// <summary>The object is part of the cab. The matching ObjectListType is OverlayOpaque for fully opaque faces, and OverlayAlpha for all other faces.</summary>
-            Overlay = 3
-        }
+        
         private struct Object
         {
             internal int ObjectIndex;
@@ -164,7 +157,6 @@ namespace OpenBve
         internal static void Initialize()
         {
             // opengl
-            //GL.ShadeModel(ShadingModel.Decal); // what is decal?
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -234,9 +226,6 @@ namespace OpenBve
 		    SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 	    }
 
-        // render scene
-        internal static byte[] PixelBuffer = null;
-        internal static int PixelBufferOpenGlTextureIndex = 0;
         internal static void RenderScene()
         {
 	        // initialize
@@ -445,7 +434,7 @@ namespace OpenBve
         }
 
         // render face
-        private static Textures.OpenGlTexture LastBoundTexture = null;
+        private static OpenGlTexture LastBoundTexture = null;
 
 	    /// <summary>
 	    /// Restores the OpenGL alpha function to it's previous state
@@ -487,10 +476,10 @@ namespace OpenBve
         private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
         {
 	        // texture
-	        Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.RepeatRepeat;
+	        OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.RepeatRepeat;
 	        if (Material.WrapMode != null)
 	        {
-		        wrap = (Textures.OpenGlTextureWrapMode)Material.WrapMode;
+		        wrap = (OpenGlTextureWrapMode)Material.WrapMode;
 	        }
 			if (Material.DaytimeTexture != null)
 			{
@@ -1027,25 +1016,25 @@ namespace OpenBve
                             {
 	                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode == null)
 	                            {
-		                            Textures.OpenGlTextureWrapMode wrap = Textures.OpenGlTextureWrapMode.ClampClamp;
+		                            OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
 		                            // If the object does not have a stored wrapping mode, determine it now
 		                            for (int v = 0; v < ObjectManager.Objects[ObjectIndex].Mesh.Vertices.Length; v++)
 		                            {
 			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
 			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 			                            {
-				                            wrap |= Textures.OpenGlTextureWrapMode.RepeatClamp;
+				                            wrap |= OpenGlTextureWrapMode.RepeatClamp;
 			                            }
 			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
 			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 			                            {
-				                            wrap |= Textures.OpenGlTextureWrapMode.ClampRepeat;
+				                            wrap |= OpenGlTextureWrapMode.ClampRepeat;
 			                            }
 		                            }
 
 		                            ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode = wrap;
 	                            }
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (Textures.OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
@@ -1057,7 +1046,7 @@ namespace OpenBve
                             }
                             if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
                             {
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, Textures.OpenGlTextureWrapMode.ClampClamp);
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
@@ -1246,7 +1235,7 @@ namespace OpenBve
         {
             if (Face.Vertices.Length != 0)
             {
-                World.GlowAttenuationMode mode; double halfdistance;
+				GlowAttenuationMode mode; double halfdistance;
                 World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
                 int i = (int)Face.Vertices[0].Index;
                 double dx = Vertices[i].Coordinates.X - CameraX;
@@ -1254,12 +1243,12 @@ namespace OpenBve
                 double dz = Vertices[i].Coordinates.Z - CameraZ;
                 switch (mode)
                 {
-                    case World.GlowAttenuationMode.DivisionExponent2:
+                    case GlowAttenuationMode.DivisionExponent2:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             return t / (t + halfdistance * halfdistance);
                         }
-                    case World.GlowAttenuationMode.DivisionExponent4:
+                    case GlowAttenuationMode.DivisionExponent4:
                         {
                             double t = dx * dx + dy * dy + dz * dz;
                             t *= t; halfdistance *= halfdistance;

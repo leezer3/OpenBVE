@@ -1,24 +1,35 @@
-﻿namespace OpenBve
+﻿namespace OpenBveApi.Interface
 {
-	internal static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Information on an in-game command</summary>
-		internal struct CommandInfo
+		public struct CommandInfo
 		{
 			/// <summary>The actual command to be performed</summary>
-			internal readonly Command Command;
+			public readonly Command Command;
 			/// <summary>Whether this is a digital or analog control</summary>
-			internal readonly CommandType Type;
+			public readonly CommandType Type;
 			/// <summary>The command name</summary>
-			internal readonly string Name;
+			public readonly string Name;
 			/// <summary>The command's description</summary>
-			internal string Description;
+			public string Description;
+			/// <summary>Whether to enable command options</summary>
+			public bool EnableOption;
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;
 				this.Type = Type;
 				this.Name = Name;
 				this.Description = "N/A";
+				this.EnableOption = false;
+			}
+			internal CommandInfo(Command Command, CommandType Type, string Name, bool EnableOption)
+			{
+				this.Command = Command;
+				this.Type = Type;
+				this.Name = Name;
+				this.Description = "N/A";
+				this.EnableOption = EnableOption;
 			}
 		}
 
@@ -26,7 +37,7 @@
 		/// <param name="commandInfos">The array of command infos</param>
 		/// <param name="Value">The command</param>
 		/// <returns>The command info for Value, or a new command info if this is not in the array</returns>
-		internal static CommandInfo TryGetInfo(this CommandInfo[] commandInfos, Command Value)
+		public static CommandInfo TryGetInfo(this CommandInfo[] commandInfos, Command Value)
 		{
 			for (int i = 0; i < commandInfos.Length; i++) {
 				if (commandInfos[i].Command == Value)
@@ -38,7 +49,7 @@
 		}
 
 		/// <summary>Contains the list of all known command infos</summary>
-		internal static CommandInfo[] CommandInfos = {
+		public static CommandInfo[] CommandInfos = {
 			new CommandInfo(Command.PowerIncrease, CommandType.Digital, "POWER_INCREASE"),
 			new CommandInfo(Command.PowerDecrease, CommandType.Digital, "POWER_DECREASE"),
 			new CommandInfo(Command.PowerHalfAxis, CommandType.AnalogHalf, "POWER_HALFAXIS"),
@@ -55,6 +66,9 @@
 			new CommandInfo(Command.SingleBrake, CommandType.Digital, "SINGLE_BRAKE"),
 			new CommandInfo(Command.SingleEmergency, CommandType.Digital, "SINGLE_EMERGENCY"),
 			new CommandInfo(Command.SingleFullAxis, CommandType.AnalogFull, "SINGLE_FULLAXIS"),
+			new CommandInfo(Command.PowerAnyNotch,CommandType.Digital, "POWER_ANY_NOTCH", true),
+			new CommandInfo(Command.BrakeAnyNotch,CommandType.Digital, "BRAKE_ANY_NOTCH", true),
+			new CommandInfo(Command.HoldBrake,CommandType.Digital, "HOLD_BRAKE"),
 			new CommandInfo(Command.ReverserForward, CommandType.Digital, "REVERSER_FORWARD"),
 			new CommandInfo(Command.ReverserBackward, CommandType.Digital, "REVERSER_BACKWARD"),
 			new CommandInfo(Command.ReverserFullAxis, CommandType.AnalogFull, "REVERSER_FULLAXIS"),
@@ -145,6 +159,7 @@
 			new CommandInfo(Command.MiscClock, CommandType.Digital, "MISC_CLOCK"),
 			new CommandInfo(Command.MiscSpeed, CommandType.Digital, "MISC_SPEED"),
 			new CommandInfo(Command.MiscGradient, CommandType.Digital, "MISC_GRADIENT"),
+			new CommandInfo(Command.MiscDistanceToNextStation, CommandType.Digital, "MISC_DIST_NEXT_STATION"),
 			new CommandInfo(Command.MiscFps, CommandType.Digital, "MISC_FPS"),
 			new CommandInfo(Command.MiscAI, CommandType.Digital, "MISC_AI"),
 			new CommandInfo(Command.MiscFullscreen, CommandType.Digital, "MISC_FULLSCREEN"),

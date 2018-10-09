@@ -1,6 +1,8 @@
 ﻿using OpenBveApi.Colors;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
+using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -35,9 +37,9 @@ namespace OpenBve
 		// FIELDS
 		//
 		private state				currentState	= state.none;
-		private Textures.Texture	gradientImage	= null;
+		private Texture	gradientImage	= null;
 		private Size				gradientSize;
-		private Textures.Texture	mapImage		= null;
+		private Texture	mapImage		= null;
 		private Size				mapSize;
 
 		/********************
@@ -48,10 +50,10 @@ namespace OpenBve
 		//
 		/// <summary>Processes commands.</summary>
 		/// <returns><c>true</c>, if command was processed, <c>false</c> otherwise.</returns>
-		/// <param name="command">The Interface.Command command to process.</param>
-		internal bool ProcessCommand(Interface.Command command)
+		/// <param name="command">The Translations.Command command to process.</param>
+		internal bool ProcessCommand(Translations.Command command)
 		{
-			if (command != Interface.Command.RouteInformation)	// only accept RouteInformation command
+			if (command != Translations.Command.RouteInformation)	// only accept RouteInformation command
 				return false;
 			// cycle through available state
 			setState( (state)((int)(currentState + 1) % (int)state.numOf) );
@@ -132,14 +134,14 @@ namespace OpenBve
 			case state.map:
 				if (mapImage == null)
 				{
-					mapImage	= new Textures.Texture(Game.RouteInformation.RouteMap);
+					mapImage	= new Texture(Game.RouteInformation.RouteMap);
 					mapSize		= Game.RouteInformation.RouteMap.Size;
 				}
 				break;
 			case state.gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Textures.Texture(Game.RouteInformation.GradientProfile);
+					gradientImage	= new Texture(Game.RouteInformation.GradientProfile);
 					gradientSize	= Game.RouteInformation.GradientProfile.Size;
 				}
 				break;

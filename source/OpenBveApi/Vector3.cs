@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.World;
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a three-dimensional vector.</summary>
@@ -313,6 +314,16 @@ namespace OpenBveApi.Math {
 			double y = orientation.X.Y * this.X + orientation.Y.Y * this.Y + orientation.Z.Y * this.Z;
 			double z = orientation.X.Z * this.X + orientation.Y.Z * this.Y + orientation.Z.Z * this.Z;
 			this = new Vector3(x, y, z);
+		}
+
+		/// <summary>Rotates the vector using the specified transformation</summary>
+		/// <param name="transformation">The transformation</param>
+		public void Rotate(Transformation transformation)
+		{
+			double x = transformation.X.X * X + transformation.Y.X * Y + transformation.Z.X * Z;
+			double y = transformation.X.Y * X + transformation.Y.Y * Y + transformation.Z.Y * Z;
+			double z = transformation.X.Z * X + transformation.Y.Z * Y + transformation.Z.Z * Z;
+			this = new Vector3(x,y,z);
 		}
 		
 		/// <summary>Checks whether the vector is a null vector.</summary>

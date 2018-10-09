@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -89,7 +90,7 @@ namespace OpenBve {
 			Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
-			MarkerTextures = new Textures.Texture[] { };
+			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };
 			PrecedingTrainSpeedLimit = double.PositiveInfinity;

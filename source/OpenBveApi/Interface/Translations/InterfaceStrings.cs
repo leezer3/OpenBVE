@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OpenBve
+namespace OpenBveApi.Interface
 {
-	internal static partial class Interface
+	public static partial class Translations
 	{
 		/// <summary>Stores the current language-code</summary>
-		internal static string CurrentLanguageCode = "en-GB";
+		public static string CurrentLanguageCode = "en-GB";
 
 		internal struct InterfaceString
 		{
@@ -33,17 +33,17 @@ namespace OpenBve
 			InterfaceStringCount++;
 		}
 
-		internal static void SetInGameLanguage(string Language)
+		public static void SetInGameLanguage(string Language)
 		{
 			//Set command infos to the translated strings
-			for (int i = 0; i < Interface.AvailableLangauges.Count; i++)
+			for (int i = 0; i < AvailableLangauges.Count; i++)
 			{
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (Interface.AvailableLangauges[i].LanguageCode == Language)
+				if (AvailableLangauges[i].LanguageCode == Language)
 				{
-					Interface.CommandInfos = Interface.AvailableLangauges[i].CommandInfos;
-					Interface.QuickReferences = Interface.AvailableLangauges[i].QuickReferences;
-					Interface.TranslatedKeys = Interface.AvailableLangauges[i].KeyInfos;
+					CommandInfos = AvailableLangauges[i].CommandInfos;
+					QuickReferences = AvailableLangauges[i].QuickReferences;
+					TranslatedKeys = AvailableLangauges[i].KeyInfos;
 					break;
 				}
 			}
@@ -52,7 +52,7 @@ namespace OpenBve
 		/// <summary>Fetches a translated user interface string</summary>
 		/// <param name="Name">The name of the string to fetch</param>
 		/// <returns>The translated string</returns>
-		internal static string GetInterfaceString(string Name)
+		public static string GetInterfaceString(string Name)
 		{
 			List<string> FallbackLanguages = new List<string>();
 			//First, we need to find the default langauge file
@@ -127,27 +127,27 @@ namespace OpenBve
 			return Name;
 		}
 		/// <summary>The quick-reference strings displayed in-game</summary>
-		internal struct InterfaceQuickReference
+		public struct InterfaceQuickReference
 		{
-			internal string HandleForward;
-			internal string HandleNeutral;
-			internal string HandleBackward;
-			internal string HandlePower;
-			internal string HandlePowerNull;
-			internal string HandleBrake;
-			internal string HandleLocoBrake;
-			internal string HandleBrakeNull;
-			internal string HandleRelease;
-			internal string HandleLap;
-			internal string HandleService;
-			internal string HandleEmergency;
-			internal string HandleHoldBrake;
-			internal string DoorsLeft;
-			internal string DoorsRight;
-			internal string Score;
+			public string HandleForward;
+			public string HandleNeutral;
+			public string HandleBackward;
+			public string HandlePower;
+			public string HandlePowerNull;
+			public string HandleBrake;
+			public string HandleLocoBrake;
+			public string HandleBrakeNull;
+			public string HandleRelease;
+			public string HandleLap;
+			public string HandleService;
+			public string HandleEmergency;
+			public string HandleHoldBrake;
+			public string DoorsLeft;
+			public string DoorsRight;
+			public string Score;
 		}
-		internal static InterfaceQuickReference QuickReferences;
-		internal static int RatingsCount = 10;
+		public static InterfaceQuickReference QuickReferences;
+		public static int RatingsCount = 10;
 
 	}
 }

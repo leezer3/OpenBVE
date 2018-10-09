@@ -1,4 +1,6 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -62,18 +64,6 @@ namespace OpenBve
 			/// <summary>The face is partly transparent and originates from an object that is part of the cab.</summary>
 			OverlayAlpha = 5
 		}
-		/// <summary>
-		/// The type of object
-		/// </summary>
-		internal enum ObjectType : byte
-		{
-			/// <summary>The object is part of the static scenery. The matching ObjectListType is StaticOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-			Static = 1,
-			/// <summary>The object is part of the animated scenery or of a train exterior. The matching ObjectListType is DynamicOpaque for fully opaque faces, and DynamicAlpha for all other faces.</summary>
-			Dynamic = 2,
-			/// <summary>The object is part of the cab. The matching ObjectListType is OverlayOpaque for fully opaque faces, and OverlayAlpha for all other faces.</summary>
-			Overlay = 3
-		}
 
 		private struct ObjectListReference
 		{
@@ -99,7 +89,7 @@ namespace OpenBve
 			internal int ObjectIndex;
 			internal int FaceIndex;
 			internal double Distance;
-			internal Textures.OpenGlTextureWrapMode Wrap;
+			internal OpenGlTextureWrapMode Wrap;
 		}
 		private class ObjectList
 		{

@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -39,7 +40,7 @@ namespace OpenBve
 						bool EarlyDefined = false, LateDefined = false;
 						string EarlyText = null, Text = null, LateText = null;
 						string[] Trains = null;
-						Textures.Texture EarlyTexture = null, Texture = null, LateTexture = null;
+						Texture EarlyTexture = null, Texture = null, LateTexture = null;
 						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = Double.PositiveInfinity, EndingPosition = Double.PositiveInfinity;
 						OpenBveApi.Colors.MessageColor EarlyColor = MessageColor.White, OnTimeColor = MessageColor.White, LateColor = MessageColor.White;
 						foreach (XmlNode c in n.ChildNodes)

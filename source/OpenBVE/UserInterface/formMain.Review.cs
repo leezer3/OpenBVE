@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal partial class formMain : Form {
@@ -15,8 +16,8 @@ namespace OpenBve {
 		    {
 		        OverwritePrompt = true,
 		        Filter =
-		            Interface.GetInterfaceString("dialog_textfiles") + @"|*.txt|" +
-		            Interface.GetInterfaceString("dialog_allfiles") + @"|*"
+		            Translations.GetInterfaceString("dialog_textfiles") + @"|*.txt|" +
+		            Translations.GetInterfaceString("dialog_allfiles") + @"|*"
 		    };
 		    if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
@@ -36,9 +37,9 @@ namespace OpenBve {
 		private void buttonBlackBoxExport_Click(object sender, EventArgs e) {
 		    SaveFileDialog Dialog = new SaveFileDialog {OverwritePrompt = true};
 		    if (comboboxBlackBoxFormat.SelectedIndex == 0) {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_csvfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + @"|*";
+				Dialog.Filter = Translations.GetInterfaceString("dialog_csvfiles") + @"|*.txt|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			} else {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + @"|*";
+				Dialog.Filter = Translations.GetInterfaceString("dialog_textfiles") + @"|*.txt|" + Translations.GetInterfaceString("dialog_allfiles") + @"|*";
 			}
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {

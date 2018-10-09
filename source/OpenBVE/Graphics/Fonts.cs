@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	/// <summary>Provides font support.</summary>
@@ -36,7 +37,7 @@ namespace OpenBve {
 			/// <summary>The characters stored in this table.</summary>
 			internal OpenGlFontChar[] Characters;
 			/// <summary>The texture that stores the characters.</summary>
-			internal Textures.Texture Texture;
+			internal Texture Texture;
 			// --- constructors ---
 			/// <summary>Creates a new table of characters.</summary>
 			/// <param name="font">The font.</param>
@@ -138,7 +139,7 @@ namespace OpenBve {
 			/// <param name="texture">Receives the texture that contains the codepoint.</param>
 			/// <param name="data">Receives the data that describes the codepoint.</param>
 			/// <returns>The number of characters read.</returns>
-			internal int GetCharacterData(string text, int offset, out Textures.Texture texture, out OpenGlFontChar data) {
+			internal int GetCharacterData(string text, int offset, out Texture texture, out OpenGlFontChar data) {
 				int value = char.ConvertToUtf32(text, offset);
 				int hi = value >> 8;
 				int lo = value & 0xFF;

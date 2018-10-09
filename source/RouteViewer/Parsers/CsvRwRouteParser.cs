@@ -5,6 +5,8 @@ using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.World;
+using OpenBveApi.Textures;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -2619,7 +2621,7 @@ namespace OpenBve {
 																	if (Signal.GlowObject != null) {
 																		for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++) {
 																			Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, World.GlowAttenuationMode.DivisionExponent4);
+																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, GlowAttenuationMode.DivisionExponent4);
 																		}
 																	}
 																}
@@ -2655,7 +2657,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Data.Backgrounds[CommandIndex1].Texture = TextureManager.RegisterTexture(f, new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.Repeat, TextureManager.TextureWrapMode.ClampToEdge, false);
+														Data.Backgrounds[CommandIndex1].Texture = TextureManager.RegisterTexture(f, new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.RepeatRepeat, OpenGlTextureWrapMode.ClampClamp, false);
 													}
 												}
 											}
@@ -2961,6 +2963,7 @@ namespace OpenBve {
 								case "train.velocity":
 								case "train.acceleration":
 								case "train.station":
+								case "train.destination":
 								case "structure.rail":
 								case "structure.beacon":
 								case "structure.pole":
@@ -4580,7 +4583,7 @@ namespace OpenBve {
 													Array.Resize<Marker>(ref Data.Markers, n + 1);
 													Data.Markers[n].StartingPosition = start;
 													Data.Markers[n].EndingPosition = end;
-													Data.Markers[n].Texture = TextureManager.RegisterTexture(f, new Color24(64, 64, 64), 1, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+													Data.Markers[n].Texture = TextureManager.RegisterTexture(f, new Color24(64, 64, 64), 1, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 												}
 											}
 										}
@@ -5135,7 +5138,7 @@ namespace OpenBve {
 												Textures[k] = -1;
 											}
 										}
-										Textures[j] = TextureManager.RegisterTexture(Files[i], TransparentColor, TransparentColorUsed, LoadMode, TextureManager.TextureWrapMode.Repeat, TextureManager.TextureWrapMode.Repeat, true, 0, 0, 0, 0);
+										Textures[j] = TextureManager.RegisterTexture(Files[i], TransparentColor, TransparentColorUsed, LoadMode, OpenGlTextureWrapMode.RepeatRepeat, OpenGlTextureWrapMode.RepeatRepeat, true, 0, 0, 0, 0);
 										TextureManager.UseTexture(Textures[j], TextureManager.UseMode.Normal);
 										break;
 								}
@@ -6261,7 +6264,7 @@ namespace OpenBve {
 											int d0 = (int)Math.Round(lim);
 											int o = ObjectManager.CreateStaticObject(LimitOneDigit, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, true);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1) {
-												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 										} else if (lim < 100.0) {
 											int d1 = (int)Math.Round(lim);
@@ -6269,10 +6272,10 @@ namespace OpenBve {
 											d1 /= 10;
 											int o = ObjectManager.CreateStaticObject(LimitTwoDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, true);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1) {
-												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2) {
-												ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 										} else {
 											int d2 = (int)Math.Round(lim);
@@ -6281,13 +6284,13 @@ namespace OpenBve {
 											d2 /= 100;
 											int o = ObjectManager.CreateStaticObject(LimitThreeDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, true);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1) {
-												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2) {
-												ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 3) {
-												ObjectManager.Objects[o].Mesh.Materials[2].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, TextureManager.TextureWrapMode.ClampToEdge, TextureManager.TextureWrapMode.ClampToEdge, false);
+												ObjectManager.Objects[o].Mesh.Materials[2].DaytimeTextureIndex = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new Color24(0, 0, 0), 0, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
 											}
 										}
 									}

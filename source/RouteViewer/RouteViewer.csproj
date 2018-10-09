@@ -15,7 +15,6 @@
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,7 +57,7 @@
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\OpenTK.dll</HintPath>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -103,7 +102,6 @@
     <Compile Include="Audio\Sounds.SoundOrigin.cs" />
     <Compile Include="Audio\Sounds.SoundSource.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
-    <Compile Include="System\FileSystem.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Gamewindow.cs" />
     <Compile Include="System\Host.cs" />

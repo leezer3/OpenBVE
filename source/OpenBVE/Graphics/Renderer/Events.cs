@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenBveApi.Textures;
+using OpenTK.Graphics.OpenGL;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -6,17 +7,17 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		private static Textures.Texture BrightnessChangeTexture;
-		private static Textures.Texture BackgroundChangeTexture;
-		private static Textures.Texture StationStartTexture;
-		private static Textures.Texture StationEndTexture;
-		private static Textures.Texture LimitTexture;
-		private static Textures.Texture SectionTexture;
-		private static Textures.Texture TransponderTexture;
-		private static Textures.Texture SoundTexture;
-		private static Textures.Texture BufferTexture;
-		private static Textures.Texture StopTexture;
-		private static Textures.Texture PointSoundTexture;
+		private static Texture BrightnessChangeTexture;
+		private static Texture BackgroundChangeTexture;
+		private static Texture StationStartTexture;
+		private static Texture StationEndTexture;
+		private static Texture LimitTexture;
+		private static Texture SectionTexture;
+		private static Texture TransponderTexture;
+		private static Texture SoundTexture;
+		private static Texture BufferTexture;
+		private static Texture StopTexture;
+		private static Texture PointSoundTexture;
 
 		private static bool Initialized = false;
 
@@ -78,7 +79,7 @@ namespace OpenBve
 					{
 						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
-						double s; Textures.Texture t;
+						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent)
 						{
 							s = 0.15;
@@ -203,7 +204,7 @@ namespace OpenBve
 				}
 			}
 		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Textures.Texture TextureIndex)
+		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Texture TextureIndex)
 		{
 			
 			Vector3[] v = new Vector3[8];
@@ -217,7 +218,7 @@ namespace OpenBve
 			v[7] = new Vector3(-Size, Size, Size);
 			for (int i = 0; i < 8; i++)
 			{
-				World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
+				v[i].Rotate(Direction, Up, Side);
 				v[i].X += Position.X - CameraX;
 				v[i].Y += Position.Y - CameraY;
 				v[i].Z += Position.Z - CameraZ;
@@ -229,7 +230,7 @@ namespace OpenBve
 			Faces[3] = new int[] { 6, 5, 4, 7 };
 			Faces[4] = new int[] { 6, 7, 3, 2 };
 			Faces[5] = new int[] { 6, 2, 1, 5 };
-			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, Textures.OpenGlTextureWrapMode.ClampClamp))
+			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
 			{
 				if (TexturingEnabled)
 				{
@@ -253,7 +254,7 @@ namespace OpenBve
 				TexturingEnabled = true;
 				GL.Enable(EnableCap.Texture2D);
 			}
-			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 			Vector2[][] t = new Vector2[6][];
 				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
 				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };

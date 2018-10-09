@@ -1,11 +1,11 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 
-namespace OpenBve {
-	internal static partial class Interface
+namespace OpenBveApi.Interface {
+	public static partial class Translations
 	{
 		/// <summary>Defines the available commands which may be callled by a player during a simulation session</summary>
-		internal enum Command
+		public enum Command
 		{
 			//Basic controls
 			/// <summary>No command specified</summary>
@@ -38,6 +38,12 @@ namespace OpenBve {
 			SingleEmergency,
 			/// <summary>Controls a combined power and brake handle using a full joystick axis</summary>
 			SingleFullAxis,
+			/// <summary>Adjust to the power notch directly from command option value</summary>
+			PowerAnyNotch,
+			/// <summary>Adjust to the brake notch directly from command option value</summary>
+			BrakeAnyNotch,
+			/// <summary>Hold Brake</summary>
+			HoldBrake,
 			/// <summary>Moves the reverser in the forwards direction</summary>
 			ReverserForward,
 			/// <summary>Moves the reverser in the backwards direction</summary>
@@ -118,6 +124,8 @@ namespace OpenBve {
 			MiscSpeed,
 			/// <summary>Shows or hides the in-game gradient display</summary>
 			MiscGradient,
+			/// <summary>Show / hide the in-game remain distance of the next station</summary>
+			MiscDistanceToNextStation,
 			/// <summary>Shows or hides the in-game FPS display</summary>
 			MiscFps,
 			/// <summary>Toggles AI control of the player train</summary>
@@ -277,7 +285,7 @@ namespace OpenBve {
 		}
 
 		/// <summary>Defines the possible command types</summary>
-		internal enum CommandType
+		public enum CommandType
 		{
 			/// <summary>A digital input, comprising of ON and OFF states</summary>
 			Digital,
@@ -292,7 +300,7 @@ namespace OpenBve {
 		/// <summary>Converts the specified security command to a virtual key.</summary>
 		/// <returns>Virtual key for plugins.</returns>
 		/// <param name="cmd">The security command. If this isn't a recognized security command, ArgumentException will be thrown.</param>
-		internal static VirtualKeys SecurityToVirtualKey(Command cmd)
+		public static VirtualKeys SecurityToVirtualKey(Command cmd)
 		{
 			string cmdname = Enum.GetName(typeof(Command), cmd);
 			if (cmdname == null) throw new ArgumentNullException("cmd");

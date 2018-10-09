@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -34,9 +35,9 @@ namespace OpenBve
 			/// <summary>The ratio of passengers at this station (100 is a standard, fully loaded train)</summary>
 			internal double PassengerRatio;
 			/// <summary>The timetable to be shown from this point onwards (Daytime)</summary>
-			internal Textures.Texture TimetableDaytimeTexture;
+			internal Texture TimetableDaytimeTexture;
 			/// <summary>The timetable to be shown from this point onwards (Nighttime)</summary>
-			internal Textures.Texture TimetableNighttimeTexture;
+			internal Texture TimetableNighttimeTexture;
 			/// <summary>The origin vector for the arrival and departure sounds </summary>
 			internal Vector3 SoundOrigin;
 			/// <summary>The sound buffer to be played when the train arrives at this station</summary>

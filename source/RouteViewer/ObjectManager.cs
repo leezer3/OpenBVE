@@ -32,45 +32,7 @@ namespace OpenBve {
 		internal static double LastUpdatedTrackPosition = 0.0;
 
 		// animated objects
-		internal class Damping {
-			internal double NaturalFrequency;
-			internal double NaturalTime;
-			internal double DampingRatio;
-			internal double NaturalDampingFrequency;
-			internal double OriginalAngle;
-			internal double OriginalDerivative;
-			internal double TargetAngle;
-			internal double CurrentAngle;
-			internal double CurrentValue;
-			internal double CurrentTimeDelta;
-			internal Damping(double NaturalFrequency, double DampingRatio) {
-				if (NaturalFrequency < 0.0) {
-					throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
-				} else if (DampingRatio < 0.0) {
-					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
-				} else {
-					this.NaturalFrequency = NaturalFrequency;
-					this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-					this.DampingRatio = DampingRatio;
-					if (DampingRatio < 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-					} else if (DampingRatio == 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency;
-					} else {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-					}
-					this.OriginalAngle = 0.0;
-					this.OriginalDerivative = 0.0;
-					this.TargetAngle = 0.0;
-					this.CurrentAngle = 0.0;
-					this.CurrentValue = 1.0;
-					this.CurrentTimeDelta = 0.0;
-				}
-			}
-			internal Damping Clone() {
-				return (Damping)this.MemberwiseClone();
-			}
-		}
+		
 		internal struct AnimatedObjectState {
 			internal Vector3 Position;
 			internal ObjectManager.StaticObject Object;
@@ -206,9 +168,9 @@ namespace OpenBve {
 			Object.CurrentState = StateIndex;
 			if (Show) {
 				if (Overlay) {
-					Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+					Renderer.ShowObject(i, ObjectType.Overlay);
 				} else {
-					Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+					Renderer.ShowObject(i, ObjectType.Dynamic);
 				}
 			}
 		}
@@ -280,7 +242,10 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateXFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateXDamping, TimeElapsed, ref a);
+				if (Object.RotateXDamping != null)
+				{
+					Object.RotateXDamping.Update(TimeElapsed, ref a, true);
+				}
 				cosX = Math.Cos(a);
 				sinX = Math.Sin(a);
 			} else {
@@ -294,7 +259,10 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateYFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateYDamping, TimeElapsed, ref a);
+				if (Object.RotateYDamping != null)
+				{
+					Object.RotateYDamping.Update(TimeElapsed, ref a, true);
+				}
 				cosY = Math.Cos(a);
 				sinY = Math.Sin(a);
 			} else {
@@ -308,7 +276,10 @@ namespace OpenBve {
 				} else {
 					a = Object.RotateZFunction.LastResult;
 				}
-				ObjectManager.UpdateDamping(ref Object.RotateZDamping, TimeElapsed, ref a);
+				if (Object.RotateZDamping != null)
+				{
+					Object.RotateZDamping.Update(TimeElapsed, ref a, true);
+				}
 				cosZ = Math.Cos(a);
 				sinZ = Math.Sin(a);
 			} else {
@@ -600,68 +571,12 @@ namespace OpenBve {
 				// visibility changed
 				if (Show) {
 					if (Overlay) {
-						Renderer.ShowObject(i, Renderer.ObjectType.Overlay);
+						Renderer.ShowObject(i, ObjectType.Overlay);
 					} else {
-						Renderer.ShowObject(i, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(i, ObjectType.Dynamic);
 					}
 				} else {
 					Renderer.HideObject(i);
-				}
-			}
-		}
-
-		// update damping
-		internal static void UpdateDamping(ref Damping Damping, double TimeElapsed, ref double Angle) {
-			if (TimeElapsed < 0.0) {
-				TimeElapsed = 0.0;
-			} else if (TimeElapsed > 1.0) {
-				TimeElapsed = 1.0;
-			}
-			if (Damping != null) {
-				if (Damping.CurrentTimeDelta > Damping.NaturalTime) {
-					// update
-					double newDerivative;
-					if (Damping.NaturalFrequency == 0.0) {
-						newDerivative = 0.0;
-					} else if (Damping.DampingRatio == 0.0) {
-						newDerivative = Damping.OriginalDerivative * Math.Cos(Damping.NaturalFrequency * Damping.CurrentTimeDelta) - Damping.NaturalFrequency * Math.Sin(Damping.NaturalFrequency * Damping.CurrentTimeDelta);
-					} else if (Damping.DampingRatio < 1.0) {
-						newDerivative = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.NaturalDampingFrequency * Damping.OriginalDerivative * Math.Cos(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) - (Damping.NaturalDampingFrequency * Damping.NaturalDampingFrequency + Damping.DampingRatio * Damping.NaturalFrequency * (Damping.DampingRatio * Damping.NaturalFrequency + Damping.OriginalDerivative)) * Math.Sin(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta)) / Damping.NaturalDampingFrequency;
-					} else if (Damping.DampingRatio == 1.0) {
-						newDerivative = Math.Exp(-Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.OriginalDerivative - Damping.NaturalFrequency * (Damping.NaturalFrequency + Damping.OriginalDerivative) * Damping.CurrentTimeDelta);
-					} else {
-						newDerivative = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Damping.NaturalDampingFrequency * Damping.OriginalDerivative * Math.Cosh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + (Damping.NaturalDampingFrequency * Damping.NaturalDampingFrequency - Damping.DampingRatio * Damping.NaturalFrequency * (Damping.DampingRatio * Damping.NaturalFrequency + Damping.OriginalDerivative)) * Math.Sinh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta)) / Damping.NaturalDampingFrequency;
-					}
-					double a = Damping.TargetAngle - Damping.OriginalAngle;
-					Damping.OriginalAngle = Damping.CurrentAngle;
-					Damping.TargetAngle = Angle;
-					double b = Damping.TargetAngle - Damping.OriginalAngle;
-					double r = b == 0.0 ? 1.0 : a / b;
-					Damping.OriginalDerivative = newDerivative * r;
-					if (Damping.NaturalTime > 0.0) {
-						Damping.CurrentTimeDelta = Damping.CurrentTimeDelta % Damping.NaturalTime;
-					}
-				}
-				{
-					// perform
-					double newValue;
-					if (Damping.NaturalFrequency == 0.0) {
-						newValue = 1.0;
-					} else if (Damping.DampingRatio == 0.0) {
-						newValue = Math.Cos(Damping.NaturalFrequency * Damping.CurrentTimeDelta) + Damping.OriginalDerivative * Math.Sin(Damping.NaturalFrequency * Damping.CurrentTimeDelta) / Damping.NaturalFrequency;
-					} else if (Damping.DampingRatio < 1.0) {
-						double n = (Damping.OriginalDerivative + Damping.NaturalFrequency * Damping.DampingRatio) / Damping.NaturalDampingFrequency;
-						newValue = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Math.Cos(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + n * Math.Sin(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta));
-					} else if (Damping.DampingRatio == 1.0) {
-						newValue = Math.Exp(-Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (1.0 + (Damping.OriginalDerivative + Damping.NaturalFrequency) * Damping.CurrentTimeDelta);
-					} else {
-						double n = (Damping.OriginalDerivative + Damping.NaturalFrequency * Damping.DampingRatio) / Damping.NaturalDampingFrequency;
-						newValue = Math.Exp(-Damping.DampingRatio * Damping.NaturalFrequency * Damping.CurrentTimeDelta) * (Math.Cosh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta) + n * Math.Sinh(Damping.NaturalDampingFrequency * Damping.CurrentTimeDelta));
-					}
-					Damping.CurrentValue = newValue;
-					Damping.CurrentAngle = Damping.TargetAngle * (1.0 - newValue) + Damping.OriginalAngle * newValue;
-					Damping.CurrentTimeDelta += TimeElapsed;
-					Angle = Damping.CurrentAngle;
 				}
 			}
 		}
@@ -795,7 +710,7 @@ namespace OpenBve {
 						AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
 					}
 					if (!AnimatedWorldObjects[i].Visible) {
-						Renderer.ShowObject(AnimatedWorldObjects[i].Object.ObjectIndex, Renderer.ObjectType.Dynamic);
+						Renderer.ShowObject(AnimatedWorldObjects[i].Object.ObjectIndex, ObjectType.Dynamic);
 						AnimatedWorldObjects[i].Visible = true;
 					}
 				} else {
@@ -1463,7 +1378,7 @@ namespace OpenBve {
 					Object.Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
 				}
 				if (AccurateObjectDisposal) {
-					World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
+					Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
 					if (Object.Mesh.Vertices[j].Coordinates.Z < Object.StartingDistance) {
 						Object.StartingDistance = (float)Object.Mesh.Vertices[j].Coordinates.Z;
 					}
@@ -1472,8 +1387,8 @@ namespace OpenBve {
 					}
 					Object.Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
 				}
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, AuxTransformation);
-				World.Rotate(ref Object.Mesh.Vertices[j].Coordinates.X, ref Object.Mesh.Vertices[j].Coordinates.Y, ref Object.Mesh.Vertices[j].Coordinates.Z, BaseTransformation);
+				Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
+				Object.Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
 				Object.Mesh.Vertices[j].Coordinates.X += Position.X;
 				Object.Mesh.Vertices[j].Coordinates.Y += Position.Y;
 				Object.Mesh.Vertices[j].Coordinates.Z += Position.Z;
@@ -1494,8 +1409,8 @@ namespace OpenBve {
 					double ny = Object.Mesh.Faces[j].Vertices[k].Normal.Y;
 					double nz = Object.Mesh.Faces[j].Vertices[k].Normal.Z;
 					if (nx * nx + ny * ny + nz * nz != 0.0) {
-						World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal.X, ref Object.Mesh.Faces[j].Vertices[k].Normal.Y, ref Object.Mesh.Faces[j].Vertices[k].Normal.Z, AuxTransformation);
-						World.Rotate(ref Object.Mesh.Faces[j].Vertices[k].Normal.X, ref Object.Mesh.Faces[j].Vertices[k].Normal.Y, ref Object.Mesh.Faces[j].Vertices[k].Normal.Z, BaseTransformation);
+						Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
+						Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
 					}
 				}
 			}
@@ -1633,7 +1548,7 @@ namespace OpenBve {
 			for (int i = 0; i < ObjectsUsed; i++) {
 				if (!Objects[i].Dynamic) {
 					if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance) {
-						Renderer.ShowObject(i, Renderer.ObjectType.Static);
+						Renderer.ShowObject(i, ObjectType.Static);
 					}
 				}
 			}
@@ -1672,7 +1587,7 @@ namespace OpenBve {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance) {
 						if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance) {
-							Renderer.ShowObject(o, Renderer.ObjectType.Static);
+							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					} else {
@@ -1697,7 +1612,7 @@ namespace OpenBve {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance) {
 						if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance) {
-							Renderer.ShowObject(o, Renderer.ObjectType.Static);
+							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					} else {

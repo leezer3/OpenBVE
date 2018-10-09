@@ -55,18 +55,33 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress">
-      <HintPath>..\..\Dependencies\SharpCompress.dll</HintPath>
+      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Colors.cs">
     </Compile>
+    <Compile Include="FileSystem.cs" />
+    <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Hosts.cs" />
+    <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
+    <Compile Include="Interface\Input\Commands.cs" />
+    <Compile Include="Interface\Translations\InterfaceStrings.cs" />
+    <Compile Include="Interface\Translations\KeyInfo.cs" />
+    <Compile Include="Interface\Translations\LanguageFile.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Objects\Damping.cs" />
+    <Compile Include="Objects\Glow.AttenuationMode.cs" />
+    <Compile Include="Objects\ObjectType.cs" />
     <Compile Include="Orientation3.cs" />
     <Compile Include="Packages.cs" />
     <Compile Include="Packages.Database.cs" />
@@ -78,17 +93,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime.Station.cs" />
     <Compile Include="Text.cs" />
-    <Compile Include="Textures.TextOverlay.cs" />
+    <Compile Include="Textures\Textures.ClipRegion.cs" />
+    <Compile Include="Textures\Textures.OpenGLTexture.cs" />
+    <Compile Include="Textures\Textures.PathOrigin.cs" />
+    <Compile Include="Textures\Textures.RawOrigin.cs" />
+    <Compile Include="Textures\Textures.TextOverlay.cs" />
     <Compile Include="Sounds.cs" />
-    <Compile Include="Textures.cs" />
-    <Compile Include="Textures.Functions.cs">
+    <Compile Include="Textures\Textures.cs" />
+    <Compile Include="Textures\Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
+    <Compile Include="Textures\Textures.OpenGLWrapMode.cs" />
+    <Compile Include="Textures\Textures.BitmapOrigin.cs" />
+    <Compile Include="Textures\Textures.TextureInterface.cs" />
+    <Compile Include="Textures\Textures.TextureOrigin.cs" />
+    <Compile Include="Textures\Textures.TextureParameters.cs" />
+    <Compile Include="Textures\Textures.TransparencyType.cs" />
     <Compile Include="Transformations.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
