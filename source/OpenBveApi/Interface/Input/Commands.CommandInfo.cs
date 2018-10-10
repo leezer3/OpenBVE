@@ -1,5 +1,6 @@
 ﻿namespace OpenBveApi.Interface
 {
+	/// <summary>Contains functions for providing translations</summary>
 	public static partial class Translations
 	{
 		/// <summary>Information on an in-game command</summary>

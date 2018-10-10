@@ -33,6 +33,8 @@ namespace OpenBveApi.Interface
 			InterfaceStringCount++;
 		}
 
+		/// <summary>Sets the in-game language</summary>
+		/// <param name="Language">The language string to set</param>
 		public static void SetInGameLanguage(string Language)
 		{
 			//Set command infos to the translated strings
@@ -129,24 +131,43 @@ namespace OpenBveApi.Interface
 		/// <summary>The quick-reference strings displayed in-game</summary>
 		public struct InterfaceQuickReference
 		{
+			/// <summary>Reverser Forwards</summary>
 			public string HandleForward;
+			/// <summary>Reverser Neutral</summary>
 			public string HandleNeutral;
+			/// <summary>Reverser Reverse</summary>
 			public string HandleBackward;
+			/// <summary>Power P(n)</summary>
 			public string HandlePower;
+			/// <summary>Power Neutral</summary>
 			public string HandlePowerNull;
+			/// <summary>Brake B(n)</summary>
 			public string HandleBrake;
+			/// <summary>LocoBrake B(n)</summary>
 			public string HandleLocoBrake;
+			/// <summary>Brake / LocoBrake Neutral</summary>
 			public string HandleBrakeNull;
+			/// <summary>Air brake release</summary>
 			public string HandleRelease;
+			/// <summary>Air brake lap</summary>
 			public string HandleLap;
+			/// <summary>Air brake service</summary>
 			public string HandleService;
+			/// <summary>Brake emergency</summary>
 			public string HandleEmergency;
+			/// <summary>Hold brake applied</summary>
 			public string HandleHoldBrake;
+			/// <summary>Left Doors</summary>
 			public string DoorsLeft;
+			/// <summary>Right doors</summary>
 			public string DoorsRight;
+			/// <summary>Score (n)</summary>
 			public string Score;
 		}
+		/// <summary>Holds the current set of interface quick reference strings</summary>
 		public static InterfaceQuickReference QuickReferences;
+		/// <summary>The number of score events to be displayed</summary>
+		/// TODO: Appears to remain constant, investigate exact usages and whether we can dump
 		public static int RatingsCount = 10;
 
 	}

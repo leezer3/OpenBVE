@@ -128,7 +128,7 @@ namespace OpenBve {
 			Interface.LoadLogs();
 			{
 				string Folder = Program.FileSystem.GetDataFolder("Languages");
-				Translations.ListLanguages(Folder, ref LanguageFiles, comboboxLanguages);
+				Translations.ListLanguages(Folder, out LanguageFiles, comboboxLanguages);
 			}
 			{
 				int Tab = 0;

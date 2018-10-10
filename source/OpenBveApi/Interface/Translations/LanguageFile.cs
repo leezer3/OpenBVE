@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using OpenBveApi;
 
 namespace OpenBveApi.Interface {
 	public static partial class Translations {
 
+		/// <summary>Loads all available language files from the specificed folder</summary>
         public static void LoadLanguageFiles(string LanguageFolder) {
             try {
                 string[] LanguageFiles = System.IO.Directory.GetFiles(LanguageFolder, "*.cfg");
@@ -14,11 +14,14 @@ namespace OpenBveApi.Interface {
                 }
             } catch {
                 MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
-                //Environment.Exit(0);
             }
         }
 
-        public static void ListLanguages(string LanguageFolder, ref string[] LanguageFiles, ComboBox comboboxLanguages) {
+		/// <summary>Populates a list of languages in a combobox</summary>
+		/// <param name="LanguageFolder">The folder in which to search for language files</param>
+		/// <param name="LanguageFiles">The list of found language files</param>
+		/// <param name="comboboxLanguages">The combobox to populate</param>
+        public static void ListLanguages(string LanguageFolder, out string[] LanguageFiles, ComboBox comboboxLanguages) {
             if (System.IO.Directory.Exists(LanguageFolder)) {
                 string[] Files = System.IO.Directory.GetFiles(LanguageFolder);
                 string[] LanguageNames = new string[Files.Length];

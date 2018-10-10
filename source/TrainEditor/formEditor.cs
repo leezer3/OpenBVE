@@ -76,7 +76,7 @@ namespace TrainEditor {
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
 				Translations.LoadLanguageFiles(folder);
-				Translations.ListLanguages(folder, ref LanguageFiles, comboboxLanguages);
+				Translations.ListLanguages(folder, out LanguageFiles, comboboxLanguages);
 				if (Translations.InitLanguage(folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages)) {
 					ApplyLanguage();
 				}

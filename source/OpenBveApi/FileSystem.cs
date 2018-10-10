@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -98,6 +98,7 @@ namespace OpenBveApi.FileSystem {
 			
 		}
 
+		/// <summary>Saves the current file system configuration to disk</summary>
 		public void SaveCurrentFileSystemConfiguration()
 		{
 			string file = OpenBveApi.Path.CombineFile(this.SettingsFolder, "FileSystem.cfg");
