@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using OpenBveApi.Graphics;
 
 namespace OpenBve
 {
@@ -88,13 +89,13 @@ namespace OpenBve
 									switch (Key) {
 										case "interpolation":
 											switch (Value.ToLowerInvariant()) {
-													case "nearestneighbor": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor; break;
-                                                    case "bilinear": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear; break;
-                                                    case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped; break;
-                                                    case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
-                                                    case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped; break;
-                                                    case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering; break;
-                                                    default: Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped; break;
+													case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
+                                                    case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
+                                                    case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
+                                                    case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
+                                                    case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
+                                                    case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
+                                                    default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
 											} break;
 										case "anisotropicfilteringlevel":
 											{
@@ -186,12 +187,12 @@ namespace OpenBve
                 {
                     string t; switch (Interface.CurrentOptions.Interpolation)
                     {
-                        case TextureManager.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-                        case TextureManager.InterpolationMode.Bilinear: t = "bilinear"; break;
-                        case TextureManager.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-                        case TextureManager.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-                        case TextureManager.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-                        case TextureManager.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+                        case InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+                        case InterpolationMode.Bilinear: t = "bilinear"; break;
+                        case InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+                        case InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+                        case InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+                        case InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
                         default: t = "bilinearMipmapped"; break;
                     }
                     Builder.AppendLine("interpolation = " + t);

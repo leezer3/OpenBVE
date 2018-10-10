@@ -8,6 +8,7 @@
 using System;
 using System.Globalization;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 
 namespace OpenBve {
 
@@ -43,7 +44,7 @@ namespace OpenBve {
 		}
 #pragma warning disable 0649
 		internal struct Options {
-			internal TextureManager.InterpolationMode Interpolation;
+			internal InterpolationMode Interpolation;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;
 		    internal int AntialiasingLevel;

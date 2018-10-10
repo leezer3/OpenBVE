@@ -71,6 +71,7 @@
     <Compile Include="Colors.cs">
     </Compile>
     <Compile Include="FileSystem.cs" />
+    <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Interface\Input\Commands.CommandInfo.cs" />

@@ -180,7 +180,7 @@ namespace OpenBve
             var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MultMatrix(ref mat);
             GL.PopMatrix();
-            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.Bilinear;
+            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
 
         // initialize lighting

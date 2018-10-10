@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
@@ -29,7 +30,7 @@ namespace OpenBve
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Interface.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+            InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
             int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
             int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
@@ -37,22 +38,22 @@ namespace OpenBve
             switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighbor;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighbor;
                     break;
                 case 1:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.Bilinear;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.Bilinear;
                     break;
                 case 2:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighborMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighborMipmapped;
                     break;
                 case 3:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.BilinearMipmapped;
                     break;
                 case 4:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.TrilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.TrilinearMipmapped;
                     break;
                 case 5:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.AnisotropicFiltering;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
                     break;
             }
             //Ansiotropic filtering level
@@ -110,7 +111,7 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.Bilinear;
+            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
             Options.SaveOptions();
             this.Close();
         }

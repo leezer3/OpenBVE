@@ -7,6 +7,7 @@
 
 using System;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -121,15 +122,6 @@ namespace OpenBve {
 		}
 
 		// ================================
-		internal enum InterpolationMode
-		{
-			NearestNeighbor,
-			Bilinear,
-			NearestNeighborMipmapped,
-			BilinearMipmapped,
-			TrilinearMipmapped,
-			AnisotropicFiltering
-		}
 		internal struct Options {
 			internal InterpolationMode Interpolation;
             internal Renderer.TransparencyMode TransparencyMode;

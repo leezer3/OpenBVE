@@ -5,6 +5,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using OpenBve.UserInterface;
+using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
 using OpenBveApi.Interface;
 using OpenTK.Input;
@@ -889,7 +890,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.FullscreenWidth = (int)Math.Round(updownFullscreenWidth.Value);
 			Interface.CurrentOptions.FullscreenHeight = (int)Math.Round(updownFullscreenHeight.Value);
 			Interface.CurrentOptions.FullscreenBits = comboboxFullscreenBits.SelectedIndex == 0 ? 16 : 32;
-			Interface.CurrentOptions.Interpolation = (Interface.InterpolationMode)comboboxInterpolation.SelectedIndex;
+			Interface.CurrentOptions.Interpolation = (InterpolationMode)comboboxInterpolation.SelectedIndex;
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)trackbarTransparency.Value;
