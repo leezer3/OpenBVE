@@ -58,7 +58,7 @@ namespace OpenBve
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
 			{

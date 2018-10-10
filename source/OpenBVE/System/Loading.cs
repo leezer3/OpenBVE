@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Threading;
 using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -357,7 +358,7 @@ namespace OpenBve {
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
 							if (so == null) {
 								CarObjects[i] = null;
 							} else {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -72,7 +73,7 @@ namespace OpenBve
 										}
 										else
 										{
-											ObjectManager.UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+											ObjectManager.UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, ObjectLoadMode.Normal, false, false, false);
 											o = (ObjectManager.StaticObject) b;
 										}
 										break;

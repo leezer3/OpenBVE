@@ -11,7 +11,7 @@ namespace OpenBve {
 	internal static class XObjectParser {
 
 		// read object
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32) {
 				// not an x object
@@ -197,7 +197,7 @@ namespace OpenBve {
 		// ================================
 
 		// load textual x
-		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode) {
+		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
@@ -846,7 +846,7 @@ namespace OpenBve {
 		// ================================
 
 		// load binary x
-		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectManager.ObjectLoadMode LoadMode) {
+		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectLoadMode LoadMode) {
 			// parse file
 			AlternateStructure = false;
 			LoadedMaterials = new Structure[] {};
@@ -1285,7 +1285,7 @@ namespace OpenBve {
 		}
 
 		// process structure
-		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object, ObjectManager.ObjectLoadMode LoadMode) {
+		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object, ObjectLoadMode LoadMode) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			Object = new ObjectManager.StaticObject();
 			Object.Mesh.Faces = new World.MeshFace[] { };

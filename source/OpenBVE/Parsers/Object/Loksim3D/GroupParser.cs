@@ -26,7 +26,7 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection

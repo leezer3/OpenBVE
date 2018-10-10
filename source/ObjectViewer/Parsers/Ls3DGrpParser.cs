@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -37,7 +38,7 @@ namespace OpenBve
 		/// <param name="LoadMode">The object load mode</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
 		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
