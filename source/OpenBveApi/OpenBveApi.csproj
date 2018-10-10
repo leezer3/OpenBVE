@@ -73,6 +73,7 @@
     <Compile Include="FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />
+    <Compile Include="Graphics\TransparencyModes.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
     <Compile Include="Interface\Input\Commands.cs" />

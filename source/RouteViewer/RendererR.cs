@@ -26,7 +26,6 @@ namespace OpenBve {
 		// first frame behavior
 		internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
 		internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
-		internal enum TransparencyMode { Sharp, Smooth }
 
 		private struct Object {
 			internal int ObjectIndex;
@@ -171,7 +170,7 @@ namespace OpenBve {
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
 			GL.PopMatrix();
-			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
+			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality& Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
 		}
 
 		// initialize lighting
@@ -314,7 +313,7 @@ namespace OpenBve {
 			}
 			// alpha list
 			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, TimeElapsed);
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth) {
+			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
 				BlendEnabled = true; GL.Enable(EnableCap.Blend);
 				bool depthMask = true;
 				for (int i = 0; i < AlphaListCount; i++) {

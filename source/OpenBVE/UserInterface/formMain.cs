@@ -893,7 +893,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.Interpolation = (InterpolationMode)comboboxInterpolation.SelectedIndex;
 			Interface.CurrentOptions.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
-			Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)trackbarTransparency.Value;
+			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
 			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
 			Interface.CurrentOptions.MotionBlur = (Interface.MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;

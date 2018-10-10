@@ -71,7 +71,7 @@ namespace OpenBve
 			/// <summary>The current pixel interpolation mode </summary>
 			internal InterpolationMode Interpolation;
 			/// <summary>The current transparency quality mode</summary>
-			internal Renderer.TransparencyMode TransparencyMode;
+			internal TransparencyMode TransparencyMode;
 			/// <summary>The level of anisotropic filtering to be applied</summary>
 			internal int AnisotropicFilteringLevel;
 			/// <summary>The maximum level of anisotropic filtering supported by the system</summary>
@@ -198,7 +198,7 @@ namespace OpenBve
 				this.FullscreenBits = 32;
 				this.UserInterfaceFolder = "Default";
 				this.Interpolation = InterpolationMode.BilinearMipmapped;
-				this.TransparencyMode = Renderer.TransparencyMode.Quality;
+				this.TransparencyMode = TransparencyMode.Quality;
 				this.AnisotropicFilteringLevel = 0;
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
@@ -460,18 +460,18 @@ namespace OpenBve
 										case "transparencymode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "sharp": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Performance; break;
-												case "smooth": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Quality; break;
+												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
+												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 												default:
 													{
 														int a;
 														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
 														{
-															Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)a;
+															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														}
 														else
 														{
-															Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Quality;
+															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
 														}
 														break;
 													}

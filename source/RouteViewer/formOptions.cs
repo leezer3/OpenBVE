@@ -14,7 +14,7 @@ namespace OpenBve
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
-            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
+            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
@@ -80,10 +80,10 @@ namespace OpenBve
             switch (TransparencyQuality.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance;
                     break;
                 default:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
                     break;
             }
 			//Set width and height
@@ -95,7 +95,7 @@ namespace OpenBve
 				Program.currentGameWindow.Height = (int)height.Value;
 				Program.UpdateViewport();
 			}
-			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
+			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;

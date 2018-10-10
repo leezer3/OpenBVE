@@ -114,18 +114,18 @@ namespace OpenBve
                                         case "transparencymode":
                                             switch (Value.ToLowerInvariant())
                                             {
-                                                case "sharp": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp; break;
-                                                case "smooth": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth; break;
+                                                case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
+                                                case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
                                                 default:
                                                     {
                                                         int a;
                                                         if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
                                                         {
-                                                            Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)a;
+                                                            Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
                                                         }
                                                         else
                                                         {
-                                                            Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                                                            Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
                                                         }
                                                         break;
                                                     }

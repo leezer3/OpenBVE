@@ -27,7 +27,6 @@ namespace OpenBve
         // first frame behavior
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
-        internal enum TransparencyMode { Sharp, Smooth }
 
         // object list
         
@@ -180,7 +179,7 @@ namespace OpenBve
             var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
             GL.MultMatrix(ref mat);
             GL.PopMatrix();
-            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
+            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
 
         // initialize lighting
@@ -301,7 +300,7 @@ namespace OpenBve
 	        ResetOpenGlState();
             // transparent color list
 	        SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth) {
+			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
 				
 				GL.Disable(EnableCap.Blend); BlendEnabled = false;
 				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
@@ -351,7 +350,7 @@ namespace OpenBve
 			}
 	        ResetOpenGlState();
 			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Smooth) {
+			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
 				BlendEnabled = true; GL.Enable(EnableCap.Blend);
 				bool depthMask = true;
 				for (int i = 0; i < AlphaListCount; i++) {

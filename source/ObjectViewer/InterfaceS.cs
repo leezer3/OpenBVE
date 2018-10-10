@@ -124,7 +124,7 @@ namespace OpenBve {
 		// ================================
 		internal struct Options {
 			internal InterpolationMode Interpolation;
-            internal Renderer.TransparencyMode TransparencyMode;
+            internal TransparencyMode TransparencyMode;
 			internal int AnisotropicFilteringLevel;
 			internal int AnisotropicFilteringMaximum;
 		    internal int AntialiasingLevel;
