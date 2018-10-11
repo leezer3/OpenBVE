@@ -350,7 +350,7 @@ namespace OpenBveApi.Runtime {
 	public class Speed {
 		// --- members ---
 		/// <summary>The speed in meters per second.</summary>
-		private double MyValue;
+		private readonly double MyValue;
 		// --- properties ---
 		/// <summary>Gets the speed in meters per second.</summary>
 		public double MetersPerSecond {

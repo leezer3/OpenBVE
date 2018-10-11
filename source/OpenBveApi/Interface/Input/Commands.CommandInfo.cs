@@ -15,7 +15,7 @@
 			/// <summary>The command's description</summary>
 			public string Description;
 			/// <summary>Whether to enable command options</summary>
-			public bool EnableOption;
+			public readonly bool EnableOption;
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;
