@@ -57,7 +57,7 @@ namespace OpenBveApi.Interface {
                 }
                 Array.Resize<string>(ref LanguageFiles, n);
                 Array.Resize<string>(ref LanguageNames, n);
-                Array.Sort<string, string>(LanguageNames, LanguageFiles);
+                Array.Sort<string, string>(LanguageNames, LanguageFiles, StringComparer.InvariantCultureIgnoreCase);
                 comboboxLanguages.Items.Clear();
                 //Load all available languages
                 for (int i = 0; i < AvailableLangauges.Count; i++) {
