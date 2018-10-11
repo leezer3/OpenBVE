@@ -381,7 +381,7 @@ namespace OpenBve
 								Train.Cars[j].Doors[0].AnticipatedReopen = false;
 							}
 						}
-						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[0].InterferingObjectRate)
+						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[1].InterferingObjectRate)
 						{
 							if (Train.Cars[j].Doors[1].NextReopenTime == 0.0)
 							{
