@@ -72,7 +72,6 @@ namespace OpenBve
         internal static bool LightingEnabled = false;
         internal static bool FogEnabled = false;
         private static bool TexturingEnabled = false;
-        private static bool EmissiveEnabled = false;
         internal static bool TransparentColorDepthSorting = false;
 
         // options

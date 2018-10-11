@@ -20,8 +20,6 @@ namespace OpenBve
             {
             }
         }
-
-        internal const string[] commandLineArgs = null;
         
         private static double ReducedModeEnteringTime = 0;
         
