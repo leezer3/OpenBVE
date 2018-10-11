@@ -69,6 +69,12 @@ namespace OpenBveApi.Interface {
             }
         }
 
+		/// <summary>Attempts to initialise a language</summary>
+		/// <param name="LanguageFolder">The folder containing the language files</param>
+		/// <param name="LanguageFiles">The list of language files</param>
+		/// <param name="LanguageCodeOption">The language code to initialise</param>
+		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
+		/// <returns>True if initialising the language succeeded</returns>
         public static bool InitLanguage(string LanguageFolder, string[] LanguageFiles, string LanguageCodeOption, ComboBox comboboxLanguages) {
             int j;
             for (j = 0; j < LanguageFiles.Length; j++) {
@@ -93,7 +99,13 @@ namespace OpenBveApi.Interface {
             }
             return false;
         }
-
+		/// <summary>Attempts to set the flag image for the selected language code</summary>
+		/// <param name="FlagFolder">The folder containing flag images</param>
+		/// <param name="LanguageFiles">The list of language files</param>
+		/// <param name="CurrentLanguageCodeArgument">The language code we wish to get the flag for</param>
+		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
+		/// <param name="pictureboxLanguage">A reference to the picturebox in which to display the flag</param>
+		/// <returns>True if we have found and successfully loaded the flag image</returns>
         public static bool SelectedLanguage(string FlagFolder, string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage) {
             int i = comboboxLanguages.SelectedIndex;
             if (i >= 0 & i < LanguageFiles.Length) {
@@ -130,6 +142,11 @@ namespace OpenBveApi.Interface {
             return false;
         }
 
+		/// <summary>Selects a language</summary>
+		/// <param name="LanguageFiles">The list of language files</param>
+		/// <param name="CurrentLanguageCodeArgument">The language code to select</param>
+		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
+		/// <returns>True if the language was found and selected successfully</returns>
         public static bool SelectedLanguage(string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
             int i = comboboxLanguages.SelectedIndex;
             if (i >= 0 & i < LanguageFiles.Length) {
