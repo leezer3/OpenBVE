@@ -25,10 +25,10 @@ namespace OpenBveApi.Interface {
                 comboboxLanguages.Items.Clear();
                 //Load all available languages
 	            int idx = -1;
-                for (int i = 0; i < AvailableLangauges.Count; i++)
+                for (int i = 0; i < AvailableLanguages.Count; i++)
                 {
-                    comboboxLanguages.Items.Add(AvailableLangauges[i]);
-	                if (AvailableLangauges[i].LanguageCode == CurrentLanguageCode)
+                    comboboxLanguages.Items.Add(AvailableLanguages[i]);
+	                if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
 	                {
 		                idx = i;
 	                }
@@ -45,36 +45,6 @@ namespace OpenBveApi.Interface {
 			}
 		}
 
-		/// <summary>Attempts to initialise a language</summary>
-		/// <param name="LanguageFolder">The folder containing the language files</param>
-		/// <param name="LanguageFiles">The list of language files</param>
-		/// <param name="LanguageCodeOption">The language code to initialise</param>
-		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
-		/// <returns>True if initialising the language succeeded</returns>
-        public static bool InitLanguage(string LanguageFolder, string[] LanguageFiles, string LanguageCodeOption, ComboBox comboboxLanguages) {
-            int j;
-            for (j = 0; j < LanguageFiles.Length; j++) {
-                string File = OpenBveApi.Path.CombineFile(LanguageFolder, LanguageCodeOption + ".cfg");
-                if (string.Compare(File, LanguageFiles[j], StringComparison.OrdinalIgnoreCase) == 0) {
-                    comboboxLanguages.SelectedIndex = j;
-                    break;
-                }
-            }
-            if (j == LanguageFiles.Length) {
-#if !DEBUG
-                try {
-#endif
-                    string File = OpenBveApi.Path.CombineFile(LanguageFolder, "en-US.cfg");
-                    LoadLanguage(File);
-                    return true;
-#if !DEBUG
-                } catch (Exception ex) {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                }
-#endif
-            }
-            return false;
-        }
 		/// <summary>Attempts to set the flag image for the selected language code</summary>
 		/// <param name="FlagFolder">The folder containing flag images</param>
 		/// <param name="CurrentLanguageCodeArgument">The language code we wish to get the flag for</param>
@@ -129,118 +99,7 @@ namespace OpenBveApi.Interface {
             return false;
         }
 
-        /// <summary>Loads a translation from a language file</summary>
-        /// <param name="File">The absolute on-disk path to the language file we wish to load</param>
-        private static void LoadLanguage(string File)
-        {
-            try
-            {
-                string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
-                string Section = "";
-                InterfaceStrings = new InterfaceString[16];
-                InterfaceStringCount = 0;
-                QuickReferences.HandleForward = "F";
-                QuickReferences.HandleNeutral = "N";
-                QuickReferences.HandleBackward = "B";
-                QuickReferences.HandlePower = "P";
-                QuickReferences.HandlePowerNull = "N";
-                QuickReferences.HandleBrake = "B";
-                QuickReferences.HandleBrakeNull = "N";
-                QuickReferences.HandleRelease = "RL";
-                QuickReferences.HandleLap = "LP";
-                QuickReferences.HandleService = "SV";
-                QuickReferences.HandleEmergency = "EM";
-                QuickReferences.HandleHoldBrake = "HB";
-                QuickReferences.DoorsLeft = "L";
-                QuickReferences.DoorsRight = "R";
-                QuickReferences.Score = "Score: ";
-                for (int i = 0; i < Lines.Length; i++)
-                {
-                    Lines[i] = Lines[i].Trim();
-                    if (!Lines[i].StartsWith(";"))
-                    {
-                        if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-                        {
-                            Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
-                        }
-                        else
-                        {
-                            int j = Lines[i].IndexOf('=');
-                            if (j >= 0)
-                            {
-                                string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                string b = Lines[i].Substring(j + 1).TrimStart().Unescape();
-                                switch (Section)
-                                {
-                                    case "handles":
-                                        switch (a)
-                                        {
-                                            case "forward": QuickReferences.HandleForward = b; break;
-                                            case "neutral": QuickReferences.HandleNeutral = b; break;
-                                            case "backward": QuickReferences.HandleBackward = b; break;
-                                            case "power": QuickReferences.HandlePower = b; break;
-                                            case "powernull": QuickReferences.HandlePowerNull = b; break;
-                                            case "brake": QuickReferences.HandleBrake = b; break;
-	                                        case "locobrake": QuickReferences.HandleLocoBrake = b; break;
-                                            case "brakenull": QuickReferences.HandleBrakeNull = b; break;
-                                            case "release": QuickReferences.HandleRelease = b; break;
-                                            case "lap": QuickReferences.HandleLap = b; break;
-                                            case "service": QuickReferences.HandleService = b; break;
-                                            case "emergency": QuickReferences.HandleEmergency = b; break;
-                                            case "holdbrake": QuickReferences.HandleHoldBrake = b; break;
-                                        } break;
-                                    case "doors":
-                                        switch (a)
-                                        {
-                                            case "left": QuickReferences.DoorsLeft = b; break;
-                                            case "right": QuickReferences.DoorsRight = b; break;
-                                        } break;
-                                    case "misc":
-                                        switch (a)
-                                        {
-                                            case "score": QuickReferences.Score = b; break;
-                                        } break;
-                                    case "commands":
-                                        {
-                                            for (int k = 0; k < CommandInfos.Length; k++)
-                                            {
-                                                if (string.Compare(CommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-                                                {
-                                                    CommandInfos[k].Description = b;
-                                                    break;
-                                                }
-                                            }
-                                        } break;
-                                    case "keys":
-                                        {
-                                            for (int k = 0; k < TranslatedKeys.Length; k++)
-                                            {
-                                                if (string.Compare(TranslatedKeys[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-                                                {
-                                                    TranslatedKeys[k].Description = b;
-                                                    break;
-                                                }
-                                            }
-
-                                        } break;
-                                    default:
-                                        AddInterfaceString(Section + "_" + a, b);
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                //This message is shown when loading a language fails, and must not be translated, as otherwise it could produce a blank error message
-                MessageBox.Show(@"An error occurred whilst attempting to load the selected language file.");
-                Environment.Exit(0);
-            }
-        }
-
-	    private static readonly List<Language> AvailableLangauges = new List<Language>();
+		private static readonly List<Language> AvailableLanguages = new List<Language>();
 
 
         /// <summary>Adds a language file to the available langauge list</summary>
@@ -367,8 +226,8 @@ namespace OpenBveApi.Interface {
                 newLanguage.QuickReferences = QuickReference;
                 //We should always fall-back to en-US as the last-resort before failing to load a string
                 newLanguage.FallbackCodes.Add("en-US");
-                AvailableLangauges.Add(newLanguage);
-                AvailableLangauges.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
+                AvailableLanguages.Add(newLanguage);
+                AvailableLanguages.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
             }
             catch (Exception)
             {

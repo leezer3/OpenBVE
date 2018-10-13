@@ -434,11 +434,6 @@ namespace OpenBve {
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
-			// language
-			{
-				string Folder = Program.FileSystem.GetDataFolder("Languages");
-				Translations.InitLanguage(Folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages);
-			}
 			if (Program.CurrentlyRunningOnMono)
 			{
 				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug

@@ -38,14 +38,14 @@ namespace OpenBveApi.Interface
 		public static void SetInGameLanguage(string Language)
 		{
 			//Set command infos to the translated strings
-			for (int i = 0; i < AvailableLangauges.Count; i++)
+			for (int i = 0; i < AvailableLanguages.Count; i++)
 			{
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
-				if (AvailableLangauges[i].LanguageCode == Language)
+				if (AvailableLanguages[i].LanguageCode == Language)
 				{
-					CommandInfos = AvailableLangauges[i].CommandInfos;
-					QuickReferences = AvailableLangauges[i].QuickReferences;
-					TranslatedKeys = AvailableLangauges[i].KeyInfos;
+					CommandInfos = AvailableLanguages[i].CommandInfos;
+					QuickReferences = AvailableLanguages[i].QuickReferences;
+					TranslatedKeys = AvailableLanguages[i].KeyInfos;
 					break;
 				}
 			}
@@ -58,30 +58,30 @@ namespace OpenBveApi.Interface
 		{
 			List<string> FallbackLanguages = new List<string>();
 			//First, we need to find the default langauge file
-			for (int i = 0; i < AvailableLangauges.Count; i++)
+			for (int i = 0; i < AvailableLanguages.Count; i++)
 			{
-				if (AvailableLangauges[i].LanguageCode == CurrentLanguageCode)
+				if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
 				{
 					//Set the fallback languages
-					FallbackLanguages = AvailableLangauges[i].FallbackCodes;
+					FallbackLanguages = AvailableLanguages[i].FallbackCodes;
 					int n = Name.Length;
-					for (int k = 0; k < AvailableLangauges[i].InterfaceStringCount; k++)
+					for (int k = 0; k < AvailableLanguages[i].InterfaceStringCount; k++)
 					{
 						int t;
 						if ((k & 1) == 0)
 						{
-							t = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+							t = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
 						}
 						else
 						{
-							t = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+							t = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
 						}
-						if (AvailableLangauges[i].InterfaceStrings[t].Name.Length == n)
+						if (AvailableLanguages[i].InterfaceStrings[t].Name.Length == n)
 						{
-							if (AvailableLangauges[i].InterfaceStrings[t].Name == Name)
+							if (AvailableLanguages[i].InterfaceStrings[t].Name == Name)
 							{
-								CurrentInterfaceStringIndex = (t + 1) % AvailableLangauges[i].InterfaceStringCount;
-								return AvailableLangauges[i].InterfaceStrings[t].Text;
+								CurrentInterfaceStringIndex = (t + 1) % AvailableLanguages[i].InterfaceStringCount;
+								return AvailableLanguages[i].InterfaceStrings[t].Text;
 							}
 						}
 					}
@@ -94,29 +94,29 @@ namespace OpenBveApi.Interface
 			}
 			for (int m = 0; m < FallbackLanguages.Count; m++)
 			{
-				for (int i = 0; i < AvailableLangauges.Count; i++)
+				for (int i = 0; i < AvailableLanguages.Count; i++)
 				{
-					if (AvailableLangauges[i].LanguageCode == FallbackLanguages[m])
+					if (AvailableLanguages[i].LanguageCode == FallbackLanguages[m])
 					{
 						int j = Name.Length;
-						for (int k = 0; k < AvailableLangauges[i].InterfaceStringCount; k++)
+						for (int k = 0; k < AvailableLanguages[i].InterfaceStringCount; k++)
 						{
 							int l;
 							if ((k & 1) == 0)
 							{
-								l = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+								l = (CurrentInterfaceStringIndex + (k >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
 							}
 							else
 							{
-								l = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLangauges[i].InterfaceStringCount) % AvailableLangauges[i].InterfaceStringCount;
+								l = (CurrentInterfaceStringIndex - (k + 1 >> 1) + AvailableLanguages[i].InterfaceStringCount) % AvailableLanguages[i].InterfaceStringCount;
 							}
-							if (AvailableLangauges[i].InterfaceStrings[l].Name.Length == j)
+							if (AvailableLanguages[i].InterfaceStrings[l].Name.Length == j)
 							{
-								if (AvailableLangauges[i].InterfaceStrings[l].Name == Name)
+								if (AvailableLanguages[i].InterfaceStrings[l].Name == Name)
 								{
-									CurrentInterfaceStringIndex = (l + 1) % AvailableLangauges[i].InterfaceStringCount;
+									CurrentInterfaceStringIndex = (l + 1) % AvailableLanguages[i].InterfaceStringCount;
 									//We found the string in a fallback language, so let's return it!
-									return AvailableLangauges[i].InterfaceStrings[l].Text;
+									return AvailableLanguages[i].InterfaceStrings[l].Text;
 								}
 							}
 						}
