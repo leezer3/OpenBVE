@@ -10,8 +10,12 @@ namespace OpenBveApi.Interface {
             try {
                 string[] LanguageFiles = System.IO.Directory.GetFiles(LanguageFolder, "*.cfg");
                 foreach (var File in LanguageFiles) {
-					Language l = new Language(File);
-					AvailableLanguages.Add(l);
+	                try
+	                {
+		                Language l = new Language(File);
+		                AvailableLanguages.Add(l);
+	                }
+	                catch { }
                 }
             } catch {
                 MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
@@ -105,14 +109,14 @@ namespace OpenBveApi.Interface {
 	    private class Language
 	    {
             /// <summary>The interface strings for this language</summary>
-	        internal InterfaceString[] InterfaceStrings;
+	        internal readonly InterfaceString[] InterfaceStrings;
             /// <summary>The command information strings for this language</summary>
-	        internal CommandInfo[] CommandInfos;
+	        internal readonly CommandInfo[] myCommandInfos;
 			/// <summary>The key information strings for this language</summary>
-			internal KeyInfo[] KeyInfos;
+			internal readonly KeyInfo[] KeyInfos;
             /// <summary>The quick-reference strings for this language</summary>
-	        internal InterfaceQuickReference QuickReferences;
-
+	        internal readonly InterfaceQuickReference myQuickReferences;
+			/// <summary>Returns the number of translated strings contained in the language</summary>
 		    internal int InterfaceStringCount
 		    {
 			    get
@@ -130,16 +134,18 @@ namespace OpenBveApi.Interface {
             /// en-US should always be present in this list
 	        internal readonly List<String> FallbackCodes;
 
+			/// <summary>Creates a new language from an on-disk language file</summary>
+			/// <param name="languageFile">The absolute on-disk path to the language file we wish to load</param>
 		    public Language(string languageFile)
 		    {
 			    Name = "Unknown";
 			    LanguageCode = System.IO.Path.GetFileNameWithoutExtension(languageFile);
 			    FallbackCodes = new List<string> { "en-US" };
 			    InterfaceStrings = new InterfaceString[16];
-			    CommandInfos = new CommandInfo[Translations.CommandInfos.Length];
+			    myCommandInfos = new CommandInfo[Translations.CommandInfos.Length];
 			    KeyInfos = new KeyInfo[TranslatedKeys.Length];
-				QuickReferences = new InterfaceQuickReference();
-			    Array.Copy(Translations.CommandInfos, CommandInfos, CommandInfos.Length);
+				myQuickReferences = new InterfaceQuickReference();
+			    Array.Copy(Translations.CommandInfos, myCommandInfos, myCommandInfos.Length);
 			    Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
 			    try
 			    {
@@ -168,43 +174,43 @@ namespace OpenBveApi.Interface {
 										    switch (a)
 										    {
 											    case "forward":
-												    QuickReferences.HandleForward = b;
+												    myQuickReferences.HandleForward = b;
 												    break;
 											    case "neutral":
-												    QuickReferences.HandleNeutral = b;
+												    myQuickReferences.HandleNeutral = b;
 												    break;
 											    case "backward":
-												    QuickReferences.HandleBackward = b;
+												    myQuickReferences.HandleBackward = b;
 												    break;
 											    case "power":
-												    QuickReferences.HandlePower = b;
+												    myQuickReferences.HandlePower = b;
 												    break;
 											    case "powernull":
-												    QuickReferences.HandlePowerNull = b;
+												    myQuickReferences.HandlePowerNull = b;
 												    break;
 											    case "brake":
-												    QuickReferences.HandleBrake = b;
+												    myQuickReferences.HandleBrake = b;
 												    break;
 											    case "locobrake":
-												    QuickReferences.HandleLocoBrake = b;
+												    myQuickReferences.HandleLocoBrake = b;
 												    break;
 											    case "brakenull":
-												    QuickReferences.HandleBrakeNull = b;
+												    myQuickReferences.HandleBrakeNull = b;
 												    break;
 											    case "release":
-												    QuickReferences.HandleRelease = b;
+												    myQuickReferences.HandleRelease = b;
 												    break;
 											    case "lap":
-												    QuickReferences.HandleLap = b;
+												    myQuickReferences.HandleLap = b;
 												    break;
 											    case "service":
-												    QuickReferences.HandleService = b;
+												    myQuickReferences.HandleService = b;
 												    break;
 											    case "emergency":
-												    QuickReferences.HandleEmergency = b;
+												    myQuickReferences.HandleEmergency = b;
 												    break;
 											    case "holdbrake":
-												    QuickReferences.HandleHoldBrake = b;
+												    myQuickReferences.HandleHoldBrake = b;
 												    break;
 										    }
 
@@ -213,10 +219,10 @@ namespace OpenBveApi.Interface {
 										    switch (a)
 										    {
 											    case "left":
-												    QuickReferences.DoorsLeft = b;
+												    myQuickReferences.DoorsLeft = b;
 												    break;
 											    case "right":
-												    QuickReferences.DoorsRight = b;
+												    myQuickReferences.DoorsRight = b;
 												    break;
 										    }
 
@@ -225,18 +231,18 @@ namespace OpenBveApi.Interface {
 										    switch (a)
 										    {
 											    case "score":
-												    QuickReferences.Score = b;
+												    myQuickReferences.Score = b;
 												    break;
 										    }
 
 										    break;
 									    case "commands":
 									    {
-										    for (int k = 0; k < CommandInfos.Length; k++)
+										    for (int k = 0; k < myCommandInfos.Length; k++)
 										    {
-											    if (string.Compare(CommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
+											    if (string.Compare(myCommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
 											    {
-												    CommandInfos[k].Description = b;
+												    myCommandInfos[k].Description = b;
 												    break;
 											    }
 										    }
@@ -294,14 +300,17 @@ namespace OpenBveApi.Interface {
 				    }
 					Array.Resize(ref InterfaceStrings, LoadedStringCount);
 			    }
-			    catch (Exception ex)
+			    catch
 			    {
 				    //This message is shown when loading a language fails, and must not be translated, as otherwise it could produce a blank error message
 				    MessageBox.Show(@"An error occurred whilst attempting to load the language file: \n \n" + languageFile);
-				    Environment.Exit(0);
+					//Pass the exception down the line
+					//TODO: Not currently handled specifically, but may be in future
+				    throw;
 			    }
 		    }
 
+			/// <summary>Always returns the textual name of the language</summary>
 		    public override string ToString()
 		    {
 			    return Name;

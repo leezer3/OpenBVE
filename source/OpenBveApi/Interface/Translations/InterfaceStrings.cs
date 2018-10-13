@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OpenBveApi.Interface
 {
@@ -15,24 +14,7 @@ namespace OpenBveApi.Interface
 			/// <summary>The translated string text</summary>
 			internal string Text;
 		}
-		private static InterfaceString[] InterfaceStrings = new InterfaceString[16];
-		private static int InterfaceStringCount = 0;
-		private static int CurrentInterfaceStringIndex = 0;
-
-		/// <summary>Adds a translated user interface string to the current list</summary>
-		/// <param name="Name">The name of the string to add</param>
-		/// <param name="Text">The translated text of the string to add</param>
-		private static void AddInterfaceString(string Name, string Text)
-		{
-			if (InterfaceStringCount >= InterfaceStrings.Length)
-			{
-				Array.Resize<InterfaceString>(ref InterfaceStrings, InterfaceStrings.Length << 1);
-			}
-			InterfaceStrings[InterfaceStringCount].Name = Name;
-			InterfaceStrings[InterfaceStringCount].Text = Text;
-			InterfaceStringCount++;
-		}
-
+		
 		/// <summary>Sets the in-game language</summary>
 		/// <param name="Language">The language string to set</param>
 		public static void SetInGameLanguage(string Language)
@@ -43,13 +25,24 @@ namespace OpenBveApi.Interface
 				//This is a hack, but the commandinfos are used in too many places to twiddle with easily
 				if (AvailableLanguages[i].LanguageCode == Language)
 				{
-					CommandInfos = AvailableLanguages[i].CommandInfos;
-					QuickReferences = AvailableLanguages[i].QuickReferences;
+					CommandInfos = AvailableLanguages[i].myCommandInfos;
+					QuickReferences = AvailableLanguages[i].myQuickReferences;
 					TranslatedKeys = AvailableLanguages[i].KeyInfos;
 					break;
 				}
 			}
 		}
+
+		/*
+		 * This is used to very marginally speed up access in the array with some bitwise logic
+		 * 
+		 * I strongly suspect that any gains from this with our current string count
+		 * (~500) will be un-noticable
+		 *
+		 * TODO: Consider removal for ease of maintanence
+		 */
+		private static int CurrentInterfaceStringIndex = 0;
+
 
 		/// <summary>Fetches a translated user interface string</summary>
 		/// <param name="Name">The name of the string to fetch</param>
