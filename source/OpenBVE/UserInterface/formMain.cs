@@ -75,9 +75,6 @@ namespace OpenBve {
 		private Image JoystickImage = null;
 
 		private string[] LanguageFiles = new string[0];
-		private string CurrentLanguageCode = "en-US";
-
-
 
 		// ====
 		// form
@@ -127,10 +124,6 @@ namespace OpenBve {
 			radioButtonPackages.TextAlign = ContentAlignment.MiddleCenter;
 			// options
 			Interface.LoadLogs();
-			{
-				string Folder = Program.FileSystem.GetDataFolder("Languages");
-				Translations.ListLanguages(Folder, out LanguageFiles, comboboxLanguages);
-			}
 			{
 				int Tab = 0;
 				string[] Args = System.Environment.GetCommandLineArgs();
@@ -255,7 +248,7 @@ namespace OpenBve {
 				{
 					EncodingCodepages[i + 1] = Info[i].CodePage;
 					try
-					{ // MoMA says that DisplayName is flagged with [MonoTodo]
+					{
 						EncodingDescriptions[i + 1] = Info[i].DisplayName + " - " + Info[i].CodePage.ToString(Culture);
 					}
 					catch
@@ -463,7 +456,10 @@ namespace OpenBve {
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
 			trackBarTimeAccelerationFactor.ValueChanged += trackBarTimeAccelerationFactor_ValueChanged;
-			
+			//Load languages last to ensure that everything is populated
+			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
+			string languageFolder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.ListLanguages(languageFolder, comboboxLanguages);
 		}
 
 		
@@ -882,7 +878,6 @@ namespace OpenBve {
 		// form closing
 		private void formMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Interface.CurrentOptions.LanguageCode = CurrentLanguageCode;
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
 			Interface.CurrentOptions.WindowWidth = (int)Math.Round(updownWindowWidth.Value);

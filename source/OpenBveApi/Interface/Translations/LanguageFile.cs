@@ -19,55 +19,31 @@ namespace OpenBveApi.Interface {
 
 		/// <summary>Populates a list of languages in a combobox</summary>
 		/// <param name="LanguageFolder">The folder in which to search for language files</param>
-		/// <param name="LanguageFiles">The list of found language files</param>
 		/// <param name="comboboxLanguages">The combobox to populate</param>
-        public static void ListLanguages(string LanguageFolder, out string[] LanguageFiles, ComboBox comboboxLanguages) {
+        public static void ListLanguages(string LanguageFolder, ComboBox comboboxLanguages) {
             if (System.IO.Directory.Exists(LanguageFolder)) {
-                string[] Files = System.IO.Directory.GetFiles(LanguageFolder);
-                string[] LanguageNames = new string[Files.Length];
-                LanguageFiles = new string[Files.Length];
-                int n = 0;
-                for (int i = 0; i < Files.Length; i++) {
-                    string Title = System.IO.Path.GetFileName(Files[i]);
-                    if (Title != null && Title.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase)) {
-                        string Code = Title.Substring(0, Title.Length - 4);
-                        string[] Lines = System.IO.File.ReadAllLines(Files[i], System.Text.Encoding.UTF8);
-                        string Section = "";
-                        string languageName = Code;
-                        for (int j = 0; j < Lines.Length; j++) {
-                            Lines[j] = Lines[j].Trim();
-                            if (Lines[j].StartsWith("[", StringComparison.Ordinal) & Lines[j].EndsWith("]", StringComparison.Ordinal)) {
-                                Section = Lines[j].Substring(1, Lines[j].Length - 2).Trim().ToLowerInvariant();
-                            } else if (!Lines[j].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
-                                int k = Lines[j].IndexOf('=');
-                                if (k >= 0) {
-                                    string Key = Lines[j].Substring(0, k).TrimEnd().ToLowerInvariant();
-                                    string Value = Lines[j].Substring(k + 1).TrimStart();
-                                    if (Section == "language" & Key == "name") {
-                                        languageName = Value;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        LanguageFiles[n] = Files[i];
-                        LanguageNames[n] = languageName;
-                        n++;
-                    }
-                }
-                Array.Resize<string>(ref LanguageFiles, n);
-                Array.Resize<string>(ref LanguageNames, n);
-                Array.Sort<string, string>(LanguageNames, LanguageFiles);
                 comboboxLanguages.Items.Clear();
                 //Load all available languages
-                for (int i = 0; i < AvailableLangauges.Count; i++) {
-                    comboboxLanguages.Items.Add(AvailableLangauges[i].Name);
+	            int idx = -1;
+                for (int i = 0; i < AvailableLangauges.Count; i++)
+                {
+                    comboboxLanguages.Items.Add(AvailableLangauges[i]);
+	                if (AvailableLangauges[i].LanguageCode == CurrentLanguageCode)
+	                {
+		                idx = i;
+	                }
                 }
-            } else {
-                LanguageFiles = new string[] { };
-                comboboxLanguages.Items.Clear();
+
+	            if (idx != -1)
+	            {
+		            comboboxLanguages.SelectedIndex = idx;
+	            }
             }
-        }
+			else
+			{
+				comboboxLanguages.Items.Clear();
+			}
+		}
 
 		/// <summary>Attempts to initialise a language</summary>
 		/// <param name="LanguageFolder">The folder containing the language files</param>
@@ -101,80 +77,61 @@ namespace OpenBveApi.Interface {
         }
 		/// <summary>Attempts to set the flag image for the selected language code</summary>
 		/// <param name="FlagFolder">The folder containing flag images</param>
-		/// <param name="LanguageFiles">The list of language files</param>
 		/// <param name="CurrentLanguageCodeArgument">The language code we wish to get the flag for</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <param name="pictureboxLanguage">A reference to the picturebox in which to display the flag</param>
 		/// <returns>True if we have found and successfully loaded the flag image</returns>
-        public static bool SelectedLanguage(string FlagFolder, string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage) {
-            int i = comboboxLanguages.SelectedIndex;
-            if (i >= 0 & i < LanguageFiles.Length) {
-                string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
-#if !DEBUG
-                try {
-#endif
-                    CurrentLanguageCode = AvailableLangauges[i].LanguageCode;
-#if !DEBUG
-                } catch (Exception ex) {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                }
-#endif
-#if !DEBUG
-                try {
-#endif
-                    string File = OpenBveApi.Path.CombineFile(FlagFolder, AvailableLangauges[i].Flag);
-                    if (!System.IO.File.Exists(File)) {
-                        File = OpenBveApi.Path.CombineFile(FlagFolder, "unknown.png");
-                    }
-                    if (System.IO.File.Exists(File)) {
-                        using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
-                            pictureboxLanguage.Image = System.Drawing.Image.FromStream(fs);
-                        }
-                    } else {
-                        pictureboxLanguage.Image = null;
-                    }
-                    CurrentLanguageCodeArgument = Code;
-#if !DEBUG
-                } catch { }
-#endif
-                return true;
-            }
+        public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage)
+		{
+			int i = comboboxLanguages.SelectedIndex;
+			if (i != -1)
+			{
+				Language l = comboboxLanguages.Items[i] as Language;
+				if (l == null)
+				{
+					return false;
+				}
+				CurrentLanguageCode = l.LanguageCode;
+				CurrentLanguageCodeArgument = l.LanguageCode;
+				string File = Path.CombineFile(FlagFolder, l.Flag);
+				if (!System.IO.File.Exists(File)) {
+					File = Path.CombineFile(FlagFolder, "unknown.png");
+				}
+				if (System.IO.File.Exists(File)) {
+					using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+						pictureboxLanguage.Image = System.Drawing.Image.FromStream(fs);
+					}
+				} else {
+					pictureboxLanguage.Image = null;
+				}
+				return true;
+			}
             return false;
         }
 
 		/// <summary>Selects a language</summary>
-		/// <param name="LanguageFiles">The list of language files</param>
 		/// <param name="CurrentLanguageCodeArgument">The language code to select</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <returns>True if the language was found and selected successfully</returns>
-        public static bool SelectedLanguage(string[] LanguageFiles, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
+        public static bool SelectedLanguage(ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
             int i = comboboxLanguages.SelectedIndex;
-            if (i >= 0 & i < LanguageFiles.Length) {
-                string Code = System.IO.Path.GetFileNameWithoutExtension(LanguageFiles[i]);
-#if !DEBUG
-                try {
-#endif
-                    CurrentLanguageCode = AvailableLangauges[i].LanguageCode;
-#if !DEBUG
-                } catch (Exception ex) {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                }
-#endif
-#if !DEBUG
-                try {
-#endif
-                    CurrentLanguageCodeArgument = Code;
-#if !DEBUG
-                } catch { }
-#endif
-                return true;
-            }
+			if (i != -1)
+			{
+				Language l = comboboxLanguages.Items[i] as Language;
+				if (l == null)
+				{
+					return false;
+				}
+				CurrentLanguageCode = l.LanguageCode;
+				CurrentLanguageCodeArgument = l.LanguageCode;
+				return true;
+			}
             return false;
         }
 
         /// <summary>Loads a translation from a language file</summary>
         /// <param name="File">The absolute on-disk path to the language file we wish to load</param>
-        internal static void LoadLanguage(string File)
+        private static void LoadLanguage(string File)
         {
             try
             {
@@ -283,12 +240,12 @@ namespace OpenBveApi.Interface {
             }
         }
 
-	    internal static readonly List<Language> AvailableLangauges = new List<Language>();
+	    private static readonly List<Language> AvailableLangauges = new List<Language>();
 
 
         /// <summary>Adds a language file to the available langauge list</summary>
         /// <param name="File">The absolute on-disk path to the language file we wish to load</param>
-	    internal static void AddLanguage(string File)
+	    private static void AddLanguage(string File)
 	    {
             //Create new language
             Language newLanguage = new Language
@@ -421,7 +378,7 @@ namespace OpenBveApi.Interface {
             }
 	    }
 
-	    internal class Language
+	    private class Language
 	    {
             /// <summary>The interface strings for this language</summary>
 	        internal InterfaceString[] InterfaceStrings;
@@ -442,6 +399,11 @@ namespace OpenBveApi.Interface {
             /// <summary>The language codes on which to fall-back if a string is not found in this language(In order from best to worst)</summary>
             /// en-US should always be present in this list
 	        internal List<String> FallbackCodes;
+
+		    public override string ToString()
+		    {
+			    return Name;
+		    }
 	    }
     }
 }
