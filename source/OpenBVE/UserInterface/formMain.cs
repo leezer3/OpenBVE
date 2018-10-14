@@ -453,8 +453,7 @@ namespace OpenBve {
 			trackBarTimeAccelerationFactor.ValueChanged += trackBarTimeAccelerationFactor_ValueChanged;
 			//Load languages last to ensure that everything is populated
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
-			string languageFolder = Program.FileSystem.GetDataFolder("Languages");
-			Translations.ListLanguages(languageFolder, comboboxLanguages);
+			Translations.ListLanguages(comboboxLanguages);
 		}
 
 		

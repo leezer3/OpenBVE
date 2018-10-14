@@ -46,33 +46,27 @@ namespace OpenBveApi.Interface {
 				Language l = new Language(stream, "en-US");
 				AvailableLanguages.Add(l);
 			}
+			CurrentLanguageCode = "en-US";
 		}
 
 		/// <summary>Populates a list of languages in a combobox</summary>
-		/// <param name="LanguageFolder">The folder in which to search for language files</param>
 		/// <param name="comboboxLanguages">The combobox to populate</param>
-        public static void ListLanguages(string LanguageFolder, ComboBox comboboxLanguages) {
-            if (Directory.Exists(LanguageFolder)) {
-                comboboxLanguages.Items.Clear();
-                //Load all available languages
-	            int idx = -1;
-                for (int i = 0; i < AvailableLanguages.Count; i++)
-                {
-                    comboboxLanguages.Items.Add(AvailableLanguages[i]);
-	                if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
-	                {
-		                idx = i;
-	                }
-                }
-
-	            if (idx != -1)
-	            {
-		            comboboxLanguages.SelectedIndex = idx;
-	            }
-            }
-			else
+        public static void ListLanguages(ComboBox comboboxLanguages) {
+            comboboxLanguages.Items.Clear();
+            //Load all available languages
+	        int idx = -1;
+			for (int i = 0; i < AvailableLanguages.Count; i++)
 			{
-				comboboxLanguages.Items.Clear();
+				comboboxLanguages.Items.Add(AvailableLanguages[i]);
+				if (AvailableLanguages[i].LanguageCode == CurrentLanguageCode)
+				{
+					idx = i;
+				}
+			}
+
+			if (idx != -1)
+			{
+				comboboxLanguages.SelectedIndex = idx;
 			}
 		}
 
