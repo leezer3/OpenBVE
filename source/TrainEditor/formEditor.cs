@@ -74,12 +74,11 @@ namespace TrainEditor {
 			Interface.LoadOptions();
 			// language
 			{
+				Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 				string folder = Program.FileSystem.GetDataFolder("Languages");
 				Translations.LoadLanguageFiles(folder);
-				Translations.ListLanguages(folder, out LanguageFiles, comboboxLanguages);
-				if (Translations.InitLanguage(folder, LanguageFiles, Interface.CurrentOptions.LanguageCode, comboboxLanguages)) {
-					ApplyLanguage();
-				}
+				Translations.ListLanguages(comboboxLanguages);
+				ApplyLanguage();
 			}
 		}
 
@@ -1415,7 +1414,7 @@ namespace TrainEditor {
 		// language
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
-			if (Translations.SelectedLanguage(LanguageFiles, ref CurrentLanguageCode, comboboxLanguages)) {
+			if (Translations.SelectedLanguage(ref CurrentLanguageCode, comboboxLanguages)) {
 				ApplyLanguage();
 			}
 		}
