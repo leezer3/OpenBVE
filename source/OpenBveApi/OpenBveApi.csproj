@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Graphics\Colors.cs">
     </Compile>
+    <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />
@@ -117,7 +118,9 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\assets\Languages\en-US.cfg" />
+  </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
