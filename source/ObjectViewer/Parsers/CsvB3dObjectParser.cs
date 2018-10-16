@@ -208,7 +208,7 @@ namespace OpenBve {
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object

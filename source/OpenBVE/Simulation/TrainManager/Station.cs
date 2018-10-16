@@ -381,7 +381,7 @@ namespace OpenBve
 								Train.Cars[j].Doors[0].AnticipatedReopen = false;
 							}
 						}
-						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[0].InterferingObjectRate)
+						if (Train.Cars[j].Doors[1].AnticipatedReopen && Train.Cars[j].Doors[1].State == Train.Cars[j].Doors[1].InterferingObjectRate)
 						{
 							if (Train.Cars[j].Doors[1].NextReopenTime == 0.0)
 							{
@@ -400,7 +400,8 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Train.Specs.DoorCloseMode == DoorMode.Manual || GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors) == (TrainDoorState.Closed | TrainDoorState.AllClosed))
+					TrainDoorState doorState = GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors);
+					if (Train.Specs.DoorCloseMode == DoorMode.Manual || doorState == TrainDoorState.None || doorState == (TrainDoorState.Closed | TrainDoorState.AllClosed))
 					{
 						if (left | right)
 						{
@@ -421,7 +422,6 @@ namespace OpenBve
 								}
 								else if (Game.Stations[i].Type == StationType.ChangeEnds)
 								{
-									//Game.AddMessage("CHANGE ENDS", MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 5.0);
 									JumpTrain(Train, i + 1);
 								}
 							}

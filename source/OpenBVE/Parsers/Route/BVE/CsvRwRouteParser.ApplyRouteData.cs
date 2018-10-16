@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -32,23 +33,23 @@ namespace OpenBve
 				//TODO: These need to be shifted into the main compatibility manager
 				// load compatibility objects
 				SignalPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
-				SignalPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalPath, "signal_post.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				SignalPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalPath, "signal_post.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
 				LimitPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Limits");
 				LimitGraphicsPath = OpenBveApi.Path.CombineDirectory(LimitPath, "Graphics");
-				LimitPostStraight = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_straight.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitPostLeft = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitPostRight = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitPostInfinite = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitOneDigit = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitTwoDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				LimitThreeDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				StopPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				LimitPostStraight = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_straight.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitPostLeft = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitPostRight = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitPostInfinite = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitOneDigit = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitTwoDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				LimitThreeDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				StopPost = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
 				TransponderPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Transponders");
-				TransponderS = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderSN = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderFalseStart = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderPOrigin = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
-				TransponderPStop = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+				TransponderS = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				TransponderSN = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				TransponderFalseStart = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				TransponderPOrigin = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+				TransponderPStop = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
 			}
 			else
 			{

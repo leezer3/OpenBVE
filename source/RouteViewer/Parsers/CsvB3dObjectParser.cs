@@ -115,7 +115,7 @@ namespace OpenBve {
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis.</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
@@ -1408,7 +1408,7 @@ namespace OpenBve {
 		}
 		
 		// apply mesh builder
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			if (Builder.Faces.Length != 0) {
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
@@ -1466,7 +1466,7 @@ namespace OpenBve {
 						}
 						else
 						{
-							tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+							tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
 
 						}
 						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
@@ -1477,7 +1477,7 @@ namespace OpenBve {
 					}
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null) {
-						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
 						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
 					} else {
 						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = -1;

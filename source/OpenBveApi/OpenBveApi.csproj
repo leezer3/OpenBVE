@@ -68,37 +68,41 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Colors.cs">
+    <Compile Include="Graphics\Colors.cs">
     </Compile>
-    <Compile Include="FileSystem.cs" />
+    <Compile Include="Interface\Translations\Language.cs" />
+    <Compile Include="System\FileSystem.cs" />
+    <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />
-    <Compile Include="Hosts.cs" />
+    <Compile Include="Graphics\TransparencyModes.cs" />
+    <Compile Include="System\Hosts.cs" />
     <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
     <Compile Include="Interface\Input\Commands.cs" />
     <Compile Include="Interface\Translations\InterfaceStrings.cs" />
     <Compile Include="Interface\Translations\KeyInfo.cs" />
     <Compile Include="Interface\Translations\LanguageFile.cs" />
-    <Compile Include="Math.cs" />
+    <Compile Include="Math\Math.cs" />
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
+    <Compile Include="Objects\LoadMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
-    <Compile Include="Orientation3.cs" />
-    <Compile Include="Packages.cs" />
-    <Compile Include="Packages.Database.cs" />
-    <Compile Include="Packages.Loksim3D.cs" />
-    <Compile Include="Packages.SkippedFiles.cs" />
-    <Compile Include="Path.cs" />
-    <Compile Include="Path.Loksim3D.cs" />
-    <Compile Include="Runtime.cs" />
+    <Compile Include="World\Orientation3.cs" />
+    <Compile Include="Packages\Packages.cs" />
+    <Compile Include="Packages\Packages.Database.cs" />
+    <Compile Include="Packages\Packages.Loksim3D.cs" />
+    <Compile Include="Packages\Packages.SkippedFiles.cs" />
+    <Compile Include="System\Path.cs" />
+    <Compile Include="System\Path.Loksim3D.cs" />
+    <Compile Include="Runtime\Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime.Station.cs" />
-    <Compile Include="Text.cs" />
+    <Compile Include="Runtime\Runtime.Station.cs" />
+    <Compile Include="System\Text.cs" />
     <Compile Include="Textures\Textures.ClipRegion.cs" />
     <Compile Include="Textures\Textures.OpenGLTexture.cs" />
     <Compile Include="Textures\Textures.PathOrigin.cs" />
     <Compile Include="Textures\Textures.RawOrigin.cs" />
     <Compile Include="Textures\Textures.TextOverlay.cs" />
-    <Compile Include="Sounds.cs" />
+    <Compile Include="Sounds\Sounds.cs" />
     <Compile Include="Textures\Textures.cs" />
     <Compile Include="Textures\Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
@@ -109,12 +113,14 @@
     <Compile Include="Textures\Textures.TextureOrigin.cs" />
     <Compile Include="Textures\Textures.TextureParameters.cs" />
     <Compile Include="Textures\Textures.TransparencyType.cs" />
-    <Compile Include="Transformations.cs" />
-    <Compile Include="Vector2.cs" />
-    <Compile Include="Vector3.cs" />
-    <Compile Include="Vertex.cs" />
+    <Compile Include="World\Transformations.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="World\Vertex.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\assets\Languages\en-US.cfg" />
+  </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"

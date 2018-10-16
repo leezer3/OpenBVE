@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Globalization;
+using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
 
 namespace OpenBve
@@ -46,15 +47,7 @@ namespace OpenBve
 			Normal = 1,
 			Expert = 2,
 		}
-		internal enum InterpolationMode
-		{
-			NearestNeighbor,
-			Bilinear,
-			NearestNeighborMipmapped,
-			BilinearMipmapped,
-			TrilinearMipmapped,
-			AnisotropicFiltering
-		}
+		
 		internal class Options
 		{
 			/// <summary>The ISO 639-1 code for the current user interface language</summary>
@@ -78,7 +71,7 @@ namespace OpenBve
 			/// <summary>The current pixel interpolation mode </summary>
 			internal InterpolationMode Interpolation;
 			/// <summary>The current transparency quality mode</summary>
-			internal Renderer.TransparencyMode TransparencyMode;
+			internal TransparencyMode TransparencyMode;
 			/// <summary>The level of anisotropic filtering to be applied</summary>
 			internal int AnisotropicFilteringLevel;
 			/// <summary>The maximum level of anisotropic filtering supported by the system</summary>
@@ -204,8 +197,8 @@ namespace OpenBve
 				this.FullscreenHeight = 768;
 				this.FullscreenBits = 32;
 				this.UserInterfaceFolder = "Default";
-				this.Interpolation = Interface.InterpolationMode.BilinearMipmapped;
-				this.TransparencyMode = Renderer.TransparencyMode.Quality;
+				this.Interpolation = InterpolationMode.BilinearMipmapped;
+				this.TransparencyMode = TransparencyMode.Quality;
 				this.AnisotropicFilteringLevel = 0;
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
@@ -438,13 +431,13 @@ namespace OpenBve
 										case "interpolation":
 											switch (Value.ToLowerInvariant())
 											{
-												case "nearestneighbor": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighbor; break;
-												case "bilinear": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.Bilinear; break;
-												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighborMipmapped; break;
-												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped; break;
-												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.TrilinearMipmapped; break;
-												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.AnisotropicFiltering; break;
-												default: Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped; break;
+												case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
+												case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
+												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
+												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
+												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
+												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
+												default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
 											} break;
 										case "anisotropicfilteringlevel":
 											{
@@ -467,18 +460,18 @@ namespace OpenBve
 										case "transparencymode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "sharp": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Performance; break;
-												case "smooth": Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Quality; break;
+												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
+												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 												default:
 													{
 														int a;
 														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
 														{
-															Interface.CurrentOptions.TransparencyMode = (Renderer.TransparencyMode)a;
+															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														}
 														else
 														{
-															Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Quality;
+															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
 														}
 														break;
 													}
@@ -818,12 +811,12 @@ namespace OpenBve
 			{
 				string t; switch (CurrentOptions.Interpolation)
 				{
-					case Interface.InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
-					case Interface.InterpolationMode.Bilinear: t = "bilinear"; break;
-					case Interface.InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
-					case Interface.InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
-					case Interface.InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
-					case Interface.InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
+					case InterpolationMode.NearestNeighbor: t = "nearestNeighbor"; break;
+					case InterpolationMode.Bilinear: t = "bilinear"; break;
+					case InterpolationMode.NearestNeighborMipmapped: t = "nearestNeighborMipmapped"; break;
+					case InterpolationMode.BilinearMipmapped: t = "bilinearMipmapped"; break;
+					case InterpolationMode.TrilinearMipmapped: t = "trilinearMipmapped"; break;
+					case InterpolationMode.AnisotropicFiltering: t = "anisotropicFiltering"; break;
 					default: t = "bilinearMipmapped"; break;
 				}
 				Builder.AppendLine("interpolation = " + t);

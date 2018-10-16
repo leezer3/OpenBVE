@@ -9,6 +9,7 @@ using System;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -197,7 +198,7 @@ namespace OpenBve {
 				            {
 #endif
 				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-					ObjectManager.ObjectLoadMode.Normal, false, false, false);
+					ObjectLoadMode.Normal, false, false, false);
 				ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
@@ -301,7 +302,7 @@ namespace OpenBve {
 									try {
 										#endif
 	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-	                        ObjectManager.ObjectLoadMode.Normal, false, false, false);
+	                        ObjectLoadMode.Normal, false, false, false);
 	                    ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
@@ -346,7 +347,7 @@ namespace OpenBve {
 				            {
 #endif
 					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-						            ObjectManager.ObjectLoadMode.Normal, false, false, false);
+						            ObjectLoadMode.Normal, false, false, false);
 					            ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
 						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);

@@ -1,10 +1,10 @@
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
+using InterpolationMode = OpenBveApi.Graphics.InterpolationMode;
 
 namespace OpenBve
 {
@@ -205,23 +205,23 @@ namespace OpenBve
 
 					switch (Interface.CurrentOptions.Interpolation)
 					{
-						case Interface.InterpolationMode.NearestNeighbor:
+						case InterpolationMode.NearestNeighbor:
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
 							break;
-						case Interface.InterpolationMode.Bilinear:
+						case InterpolationMode.Bilinear:
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 							break;
-						case Interface.InterpolationMode.NearestNeighborMipmapped:
+						case InterpolationMode.NearestNeighborMipmapped:
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
 							break;
-						case Interface.InterpolationMode.BilinearMipmapped:
+						case InterpolationMode.BilinearMipmapped:
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 							break;
-						case Interface.InterpolationMode.TrilinearMipmapped:
+						case InterpolationMode.TrilinearMipmapped:
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
 							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 							break;
@@ -246,7 +246,7 @@ namespace OpenBve
 					{
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
 					}
-					if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor || Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear)
+					if (Interface.CurrentOptions.Interpolation == InterpolationMode.NearestNeighbor || Interface.CurrentOptions.Interpolation == InterpolationMode.Bilinear)
 					{
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
 					}
@@ -254,7 +254,7 @@ namespace OpenBve
 					{
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
 					}
-					if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.AnisotropicFiltering)
+					if (Interface.CurrentOptions.Interpolation == InterpolationMode.AnisotropicFiltering)
 					{
 						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Interface.CurrentOptions.AnisotropicFilteringLevel);
 					}
@@ -394,8 +394,8 @@ namespace OpenBve
 				 * */
 			Bitmap scaledBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			Graphics graphics = Graphics.FromImage(scaledBitmap);
-			graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
-			graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+			graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+			graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 			graphics.DrawImage(bitmap, new Rectangle(0, 0, width, height), new Rectangle(0, 0, texture.Width, texture.Height), GraphicsUnit.Pixel);
 			graphics.Dispose();
 			bitmap.Dispose();

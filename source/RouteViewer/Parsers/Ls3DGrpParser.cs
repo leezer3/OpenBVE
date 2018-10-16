@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -34,7 +35,7 @@ namespace OpenBve
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
 		/// <param name="LoadMode">The object load mode</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 
 namespace OpenBve {
@@ -16,7 +17,7 @@ namespace OpenBve {
 		private void comboboxLanguages_SelectedIndexChanged(object sender, EventArgs e) {
 			if (this.Tag != null) return;
 			string Folder = Program.FileSystem.GetDataFolder("Flags");
-			if (Translations.SelectedLanguage(Folder, LanguageFiles, ref CurrentLanguageCode, comboboxLanguages, pictureboxLanguage)) {
+			if (Translations.SelectedLanguage(Folder, ref Interface.CurrentOptions.LanguageCode, comboboxLanguages, pictureboxLanguage)) {
 				ApplyLanguage();
 			}
 		}
@@ -24,7 +25,7 @@ namespace OpenBve {
 		// interpolation
 		private void comboboxInterpolation_SelectedIndexChanged(object sender, EventArgs e) {
 			int i = comboboxInterpolation.SelectedIndex;
-			bool q = i == (int)Interface.InterpolationMode.AnisotropicFiltering;
+			bool q = i == (int)InterpolationMode.AnisotropicFiltering;
 			labelAnisotropic.Enabled = q;
 			updownAnisotropic.Enabled = q;
 		}

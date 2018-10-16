@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -14,6 +15,13 @@ namespace OpenBve
 		/// <param name="ForceTextureRepeatX">Whether texture repeat is forced on the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether texture repeat is forced on the Y-axis</param>
 		/// <returns>The new object, or a null reference if loading fails</returns>
+		/*
+		 * Notes for refactoring:
+		 *   * Unused vertices must only be preserved in deformable objects (e.g. Crack and Form)
+		 *   * ForceTextureRepeatX / Y is only used for animated objects using the TextureShiftFunction
+		 *   * TODO / BUG: ForceTextureRepeat is only supported by the B3D / CSV parser
+		 *   * TODO / BUG: No detection of actual file contents, which will make all parsers barf
+		 */
 		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			if (String.IsNullOrEmpty(FileName))

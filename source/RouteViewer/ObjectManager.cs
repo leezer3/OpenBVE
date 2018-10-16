@@ -724,7 +724,6 @@ namespace OpenBve {
 		}
 
 		// load object
-		internal enum ObjectLoadMode { Normal, DontAllowUnloadOfTextures }
 		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			#if !DEBUG
 			try {

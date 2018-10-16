@@ -58,7 +58,7 @@ namespace OpenBve
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
 			{
@@ -453,7 +453,7 @@ namespace OpenBve
 			Materials[Materials.Length - 1] = mm;
 		}
 
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			if (Builder.Faces.Count != 0)
 			{
@@ -540,7 +540,7 @@ namespace OpenBve
 					}
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
-						int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+						int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
 						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
 					}
 					else
@@ -550,7 +550,7 @@ namespace OpenBve
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
-						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectManager.ObjectLoadMode.Normal);
+						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
 						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
 					}
 					else

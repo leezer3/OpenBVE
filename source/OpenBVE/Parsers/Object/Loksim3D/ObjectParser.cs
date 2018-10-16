@@ -72,7 +72,7 @@ namespace OpenBve
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="Rotation">The rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, ObjectManager.ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
@@ -483,7 +483,7 @@ namespace OpenBve
 			Object.Mesh.CreateNormals();
 			return Object;
 		}
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			if (Builder.Faces.Length != 0)
 			{

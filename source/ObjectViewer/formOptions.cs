@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK.Graphics;
 
@@ -14,7 +16,7 @@ namespace OpenBve
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
-            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
+            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
         }
@@ -28,7 +30,7 @@ namespace OpenBve
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Interface.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+            InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
             int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
             int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
@@ -36,22 +38,22 @@ namespace OpenBve
             switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighbor;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighbor;
                     break;
                 case 1:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.Bilinear;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.Bilinear;
                     break;
                 case 2:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.NearestNeighborMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighborMipmapped;
                     break;
                 case 3:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.BilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.BilinearMipmapped;
                     break;
                 case 4:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.TrilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.TrilinearMipmapped;
                     break;
                 case 5:
-                    Interface.CurrentOptions.Interpolation = Interface.InterpolationMode.AnisotropicFiltering;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
                     break;
             }
             //Ansiotropic filtering level
@@ -66,10 +68,10 @@ namespace OpenBve
             switch (TransparencyQuality.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance;
                     break;
                 default:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
                     break;
             }
             //Set width and height
@@ -94,7 +96,7 @@ namespace OpenBve
 #if !DEBUG
 									try {
 #endif
-                        ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8,ObjectManager.ObjectLoadMode.Normal, false, false, false);
+                        ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
                         ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
                             new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
                             0.0, 25.0, 0.0);
@@ -109,7 +111,7 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != Interface.InterpolationMode.Bilinear;
+            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
             Options.SaveOptions();
             this.Close();
         }

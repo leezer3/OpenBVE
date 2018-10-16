@@ -76,7 +76,7 @@ namespace OpenBve
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
 		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
@@ -487,7 +487,7 @@ namespace OpenBve
             World.CreateNormals(ref Object.Mesh);
             return Object;
         }
-        private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectManager.ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+        private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
         {
             if (Builder.Faces.Length != 0)
             {

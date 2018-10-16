@@ -21,6 +21,7 @@ namespace OpenBveApi.Interface
 				this.Description = Name;
 			}
 
+			/// <returns>ToString for a key binding returns the binding description in textual format, NOT the phyisical key</returns>
 			public override string ToString()
 			{
 				return Description;

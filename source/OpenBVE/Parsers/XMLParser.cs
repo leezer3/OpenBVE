@@ -2,6 +2,7 @@
 using System.Text;
 using System.Xml;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -11,7 +12,7 @@ namespace OpenBve
         //properties than are currently available with the CSV and B3D formats, whilst
         //not requiring backwards incompatible changes
 
-        public static ObjectManager.UnifiedObject ReadObject(string fileName, Encoding encoding,ObjectManager.ObjectLoadMode LoadMode,bool ForceTextureRepeatX,bool ForceTextureRepeatY)
+        public static ObjectManager.UnifiedObject ReadObject(string fileName, Encoding encoding,ObjectLoadMode LoadMode,bool ForceTextureRepeatX,bool ForceTextureRepeatY)
         {
             //The current XML file to load
             XmlDocument currentXML = new XmlDocument();

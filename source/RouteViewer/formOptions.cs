@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using OpenBveApi.Graphics;
 using OpenTK.Graphics;
 
 namespace OpenBve
@@ -13,7 +14,7 @@ namespace OpenBve
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
-            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Sharp ? 0 : 2;
+            TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
@@ -35,7 +36,7 @@ namespace OpenBve
 
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
-	    readonly TextureManager.InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
+	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
 	    readonly bool PreviousSort = Renderer.TransparentColorDepthSorting;
 	    private bool GraphicsModeChanged = false;
 
@@ -48,22 +49,22 @@ namespace OpenBve
             switch (InterpolationMode.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighbor;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighbor;
                     break;
                 case 1:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.Bilinear;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.Bilinear;
                     break;
                 case 2:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.NearestNeighborMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.NearestNeighborMipmapped;
                     break;
                 case 3:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.BilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.BilinearMipmapped;
                     break;
                 case 4:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.TrilinearMipmapped;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.TrilinearMipmapped;
                     break;
                 case 5:
-                    Interface.CurrentOptions.Interpolation = TextureManager.InterpolationMode.AnisotropicFiltering;
+                    Interface.CurrentOptions.Interpolation = OpenBveApi.Graphics.InterpolationMode.AnisotropicFiltering;
                     break;
             }
             //Ansiotropic filtering level
@@ -79,10 +80,10 @@ namespace OpenBve
             switch (TransparencyQuality.SelectedIndex)
             {
                 case 0:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Sharp;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance;
                     break;
                 default:
-                    Interface.CurrentOptions.TransparencyMode = Renderer.TransparencyMode.Smooth;
+                    Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
                     break;
             }
 			//Set width and height
@@ -94,7 +95,7 @@ namespace OpenBve
 				Program.currentGameWindow.Height = (int)height.Value;
 				Program.UpdateViewport();
 			}
-			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == Renderer.TransparencyMode.Smooth & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != TextureManager.InterpolationMode.Bilinear;
+			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;

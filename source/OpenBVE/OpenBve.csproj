@@ -152,7 +152,6 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.ObjectLoadMode.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />

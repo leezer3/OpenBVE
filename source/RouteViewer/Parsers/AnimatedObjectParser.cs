@@ -12,7 +12,7 @@ namespace OpenBve {
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectManager.ObjectLoadMode LoadMode) {
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{

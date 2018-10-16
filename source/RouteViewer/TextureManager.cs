@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -11,18 +12,6 @@ namespace OpenBve
 {
 	internal static class TextureManager
 	{
-
-		// options
-		internal enum InterpolationMode
-		{
-			NearestNeighbor,
-			Bilinear,
-			NearestNeighborMipmapped,
-			BilinearMipmapped,
-			TrilinearMipmapped,
-			AnisotropicFiltering
-		}
-
 		// textures
 		internal enum TextureLoadMode { Normal, Bve4SignalGlow }
 

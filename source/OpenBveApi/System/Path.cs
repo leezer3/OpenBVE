@@ -22,38 +22,6 @@ namespace OpenBveApi {
 		/// <summary>The list of characters at which relative paths are separated into parts.</summary>
 		private static readonly char[] PathSeparationChars = new char[] { '/', '\\' };
 		
-		
-		// --- managed content ---
-		
-		/// <summary>The list of package names.</summary>
-		private static string[] PackageNames = null;
-		
-		/// <summary>The list of package directories.</summary>
-		private static string[] PackageDirectories = null;
-		
-		/// <summary>The object that serves as an authentication for the SetPackageLookupDirectories call.</summary>
-		private static object SetPackageLookupDirectoriesAuthentication = null;
-		
-		
-		// --- public functions ---
-		
-		/// <summary>Provides a list of package names and associated directories.</summary>
-		/// <param name="names">The list of names.</param>
-		/// <param name="directories">The list of fully qualified directories.</param>
-		/// <param name="authentication">A null reference on the first process-wide call to this function, otherwise the object returned by this function in the previous call.</param>
-		/// <exception cref="System.Security.SecurityException">Raised when the authentication failed.</exception>
-		public static object SetPackageLookupDirectories(string[] names, string[] directories, object authentication) {
-			if (authentication == SetPackageLookupDirectoriesAuthentication) {
-				PackageNames = (string[])names.Clone();
-				PackageDirectories = (string[])directories.Clone();
-				Array.Sort<string, string>(PackageNames, PackageDirectories);
-				SetPackageLookupDirectoriesAuthentication = new object();
-				return SetPackageLookupDirectoriesAuthentication;
-			} else {
-				throw new SecurityException();
-			}
-		}
-
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
 		/// <param name="relative">The platform-independent relative path.</param>
