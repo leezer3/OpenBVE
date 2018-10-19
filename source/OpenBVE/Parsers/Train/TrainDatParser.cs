@@ -420,7 +420,7 @@ namespace OpenBve {
 											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
 										}
-										if (a != 0 && trainBrakeType == BrakeSystemType.AutomaticAirBrake || ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
+										if (a != 0 && trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 										{
 											Interface.AddMessage(Interface.MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
