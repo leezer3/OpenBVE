@@ -246,11 +246,10 @@ namespace OpenBve
 					{
 						x = TranslateXFunction.LastResult;
 					}
-					double rx = TranslateXDirection.X, ry = TranslateXDirection.Y, rz = TranslateXDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
-					Position.X += x * rx;
-					Position.Y += x * ry;
-					Position.Z += x * rz;
+					Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= x;
+					Position += translationVector;
 				}
 				else if (TranslateXScriptFile != null)
 				{
@@ -275,12 +274,10 @@ namespace OpenBve
 					}
 					double x = TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
 						IsPartOfTrain, TimeElapsed);
-					double rx = TranslateXDirection.X, ry = TranslateXDirection.Y, rz = TranslateXDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-						Side.Z);
-					Position.X += x * rx;
-					Position.Y += x * ry;
-					Position.Z += x * rz;
+					Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= x;
+					Position += translationVector;
 				}
 
 
@@ -295,11 +292,10 @@ namespace OpenBve
 					{
 						y = TranslateYFunction.LastResult;
 					}
-					double rx = TranslateYDirection.X, ry = TranslateYDirection.Y, rz = TranslateYDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
-					Position.X += y * rx;
-					Position.Y += y * ry;
-					Position.Z += y * rz;
+					Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= y;
+					Position += translationVector;
 				}
 				else if (TranslateYScriptFile != null)
 				{
@@ -324,12 +320,10 @@ namespace OpenBve
 					}
 					double y = TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
 						IsPartOfTrain, TimeElapsed);
-					double rx = TranslateYDirection.X, ry = TranslateYDirection.Y, rz = TranslateYDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-						Side.Z);
-					Position.X += y * rx;
-					Position.Y += y * ry;
-					Position.Z += y * rz;
+					Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= y;
+					Position += translationVector;
 				}
 
 				if (TranslateZFunction != null)
@@ -343,11 +337,10 @@ namespace OpenBve
 					{
 						z = TranslateZFunction.LastResult;
 					}
-					double rx = TranslateZDirection.X, ry = TranslateZDirection.Y, rz = TranslateZDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
-					Position.X += z * rx;
-					Position.Y += z * ry;
-					Position.Z += z * rz;
+					Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= z;
+					Position += translationVector;
 				}
 				else if (TranslateZScriptFile != null)
 				{
@@ -372,12 +365,10 @@ namespace OpenBve
 					}
 					double z = TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
 						IsPartOfTrain, TimeElapsed);
-					double rx = TranslateZDirection.X, ry = TranslateZDirection.Y, rz = TranslateZDirection.Z;
-					World.Rotate(ref rx, ref ry, ref rz, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y,
-						Side.Z);
-					Position.X += z * rx;
-					Position.Y += z * ry;
-					Position.Z += z * rz;
+					Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= z;
+					Position += translationVector;
 				}
 				// rotation
 				bool rotateX = RotateXFunction != null;
