@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
@@ -61,7 +62,7 @@ namespace OpenBve
 												mode = BackgroundManager.BackgroundTransitionMode.None;
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
+												Interface.AddMessage(MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
 												break;
 										}
 										break;
@@ -69,7 +70,7 @@ namespace OpenBve
 										string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), c.InnerText);
 										if (!System.IO.File.Exists(f))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
+											Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
 										}
 										else
 										{
@@ -80,14 +81,14 @@ namespace OpenBve
 									case "repetitions":
 										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
 										}
 										break;
 									case "texture":
 										var file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
 										if (!System.IO.File.Exists(file))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
+											Interface.AddMessage(MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
 										}
 										else
 										{
@@ -98,13 +99,13 @@ namespace OpenBve
 									case "time":
 										if (!Interface.TryParseTime(Arguments[0].Trim(), out DisplayTime))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
 										break;
 									case "transitiontime":
 										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
 										}
 										break;
 								}

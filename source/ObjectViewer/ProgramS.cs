@@ -206,7 +206,7 @@ namespace OpenBve {
 				            }
 				            catch (Exception ex)
 				            {
-					            Interface.AddMessage(Interface.MessageType.Critical, false,
+					            Interface.AddMessage(MessageType.Critical, false,
 						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
 						            Files[i] + ".");
 				            }
@@ -308,7 +308,7 @@ namespace OpenBve {
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
-										Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
+										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 									}
 									#endif
 	                }
@@ -355,7 +355,7 @@ namespace OpenBve {
 				            }
 				            catch (Exception ex)
 				            {
-					            Interface.AddMessage(Interface.MessageType.Critical, false,
+					            Interface.AddMessage(MessageType.Critical, false,
 						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
 						            Files[i] + ".");
 				            }

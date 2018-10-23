@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 
@@ -95,10 +96,10 @@ namespace OpenBve {
 				UpdateReverser();
 				return true;
 			} else if (properties.FailureReason != null) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for the following reason: " + properties.FailureReason);
 				return false;
 			} else {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " failed to load for an unspecified reason.");
 				return false;
 			}
 		}

@@ -321,7 +321,7 @@ namespace OpenBve
             //             }
             //             catch (Exception ex)
             //             {
-            //                 Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
+            //                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
             //             }
             //             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
             //             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];

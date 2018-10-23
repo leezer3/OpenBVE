@@ -102,7 +102,7 @@ namespace OpenBve
                             0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
-										Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");
+										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");
 									}
 #endif
                     }

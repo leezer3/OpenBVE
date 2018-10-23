@@ -10,6 +10,7 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
+		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 		internal static OutputMode CurrentOutputMode = OutputMode.Default;
 		internal static OutputMode PreviousOutputMode = OutputMode.Default;
 		//Set LoadTextureImmediatelyMode to NotYet for the first frame
@@ -110,7 +111,7 @@ namespace OpenBve
 				GL.Clear(ClearBufferMask.DepthBufferBit);
 			}
 			GL.PushMatrix();
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.ChangeToScenery);
+			UpdateViewport(ViewPortChangeMode.ChangeToScenery);
 			if (LoadTexturesImmediately == LoadTextureImmediatelyMode.NotYet)
 			{
 				LoadTexturesImmediately = LoadTextureImmediatelyMode.Yes;
@@ -351,7 +352,7 @@ namespace OpenBve
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
 			GL.LoadIdentity();
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.ChangeToCab);
+			UpdateViewport(ViewPortChangeMode.ChangeToCab);
 			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);

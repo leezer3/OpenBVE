@@ -461,7 +461,7 @@ namespace OpenBve {
 				if (!PerformCameraRestrictionTest()) {
 					CameraCurrentAlignment = new CameraAlignment();
 					VerticalViewingAngle = OriginalVerticalViewingAngle;
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
 					if (!PerformCameraRestrictionTest()) {
@@ -713,7 +713,7 @@ namespace OpenBve {
 							zoom = 1.0;
 						}
 						World.VerticalViewingAngle = World.OriginalVerticalViewingAngle / zoom;
-						MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+						Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					}
 				}
 			} else {
@@ -977,7 +977,7 @@ namespace OpenBve {
 			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle * Math.Exp(World.CameraCurrentAlignment.Zoom);
 			if (World.VerticalViewingAngle < 0.001) World.VerticalViewingAngle = 0.001;
 			if (World.VerticalViewingAngle > 1.5) World.VerticalViewingAngle = 1.5;
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 		}
 
 		// update viewing distance

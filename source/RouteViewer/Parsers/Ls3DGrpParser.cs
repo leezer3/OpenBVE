@@ -106,7 +106,7 @@ namespace OpenBve
 				if (!tryLoad)
 				{
 					//Pass out the *original* XML error, not anything generated when we've tried to correct it
-					Interface.AddMessage(Interface.MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
+					Interface.AddMessage(MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
 					return null;
 				}
 			}
@@ -144,7 +144,7 @@ namespace OpenBve
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
-															Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
+															Interface.AddMessage(MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
 														}
 														else
 														{

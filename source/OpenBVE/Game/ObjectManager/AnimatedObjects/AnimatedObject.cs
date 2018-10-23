@@ -1,5 +1,6 @@
 ﻿using System;
 using CSScriptLibrary;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
@@ -266,7 +267,7 @@ namespace OpenBve
 						}
 						catch
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false,
+							Interface.AddMessage(MessageType.Error, false,
 								"An error occcured whilst parsing script " + TranslateXScriptFile);
 							TranslateXScriptFile = null;
 							return;
@@ -312,7 +313,7 @@ namespace OpenBve
 						}
 						catch
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false,
+							Interface.AddMessage(MessageType.Error, false,
 								"An error occcured whilst parsing script " + TranslateYScriptFile);
 							TranslateYScriptFile = null;
 							return;
@@ -357,7 +358,7 @@ namespace OpenBve
 						}
 						catch
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false,
+							Interface.AddMessage(MessageType.Error, false,
 								"An error occcured whilst parsing script " + TranslateZScriptFile);
 							TranslateZScriptFile = null;
 							return;

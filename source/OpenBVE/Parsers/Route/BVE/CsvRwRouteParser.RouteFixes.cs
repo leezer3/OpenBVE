@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Interface;
+
+namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
@@ -13,33 +15,33 @@
 			{
 				case "F0D6AC84D94F63144F9ED5497CDF7697BDB45FF11223E2C001CF8BDA943D4E66":
 					//Jundiai-Francisco Morato.rw
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Jundiai - Francisco Morato routefile detected- Applying fix to line endings.");
+					Interface.AddMessage(MessageType.Warning, false, "Jundiai - Francisco Morato routefile detected- Applying fix to line endings.");
 					Data.LineEndingFix = true;
 					break;
 				case "7C21D03D487E36CCA2D9D1003732614BEEF682E421CB861E8632418CCD8D9D41":
 					//kurra_fine1.csv
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "FD99B78D5A1847070A3ED3DFEE3E3B6BD56CE578DE1CEB056AFDA799989BF14B":
 					//FVES3.rw
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Linie S3 (FVE) routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Linie S3 (FVE) routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "FF2B19C253C09CB541E57AB144CE67792E069F6FC2022D918ED7CBD9B59A1994":
 					//kurrajong.csv
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "6BFDD2746C56A64FCB5BE116C64530FFA0AD7C2889B8F77DCFFBFAD526070704":
 					//camden_17.csv
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "83EE400BA3A9FE0112AD5146D12968B8BE981B28E5D27449027EFBBB6583B68A":
 					//Zwolle-Vlissingen.rw
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "54281BEA1964A11925E3B1E9F6CF8DBFF39156CBE6272977150A2B7F08799DD1":
 				case "D8B88EE63CF98D271EC8A75577539752E84A8B74A46EF1B49D57FCA6A53BDBB4":
@@ -54,7 +56,7 @@
 					//Sanbie-773-nonstop-bve4.csv
 					//Sanbie-773-rain-nonstop-bve4.csv
 					Data.IgnorePitchRoll = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					Interface.AddMessage(MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "DDBE5CFDE20F0AD7D03AFC187F70B1B6044B637109758B392B9EBA61FA169F69":
 					//目蒲線普.csv
@@ -72,14 +74,14 @@
 					//Queen's Park to Harrow SILVERLINK Cl313.csv
 					//Followed by BVE4 versions, same filenames
 					CylinderHack = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Bakerloo v3 routefile detected- Applying cylinder hack.");
+					Interface.AddMessage(MessageType.Warning, false, "Bakerloo v3 routefile detected- Applying cylinder hack.");
 					break;
 				case "AA6528402BE457A20DF77A8B7CAFBC2580F3F8326BB56B9A691A4558174AE152":
 				case "2EB087770AEC2C6A0F2AADC0A8D531117502B1AB33E94CBBC11940DA4FFF4A30":
 					//V.2.1.1 Aldwych BVE4- no fog.csv
 					//V.2.1.1 Aldwych BVE4.csv
 					CylinderHack = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
+					Interface.AddMessage(MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
 					break;
 				case "9D87539BAC426DE5B1ECB638A935EF8AC37B31AD6B16D645B1D3F2A7E2D1B23F":
 				case "078324311EC9048F313513849B5EBDCF3C3CAF193520F947258324FEDDD6A2BD":
@@ -94,7 +96,7 @@
 					//Barons Ct to Wood Green.csv
 					//Hyde Pk Cnr to Wood Green.csv
 					CylinderHack = true;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
+					Interface.AddMessage(MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
 					break;
 			}
 		}

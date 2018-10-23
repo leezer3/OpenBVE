@@ -2,6 +2,7 @@
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Objects;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class ExtensionsCfgParser {
@@ -71,7 +72,7 @@ namespace OpenBve {
 											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n)) {
 												if (n >= 0 & n < Train.Cars.Length) {
 													if (Path.ContainsInvalidChars(b)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Interface.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} else {
 														string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 														if (System.IO.File.Exists(File)) {
@@ -80,17 +81,17 @@ namespace OpenBve {
 																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
 															}
 														} else {
-															Interface.AddMessage(Interface.MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													}
 												} else {
-													Interface.AddMessage(Interface.MessageType.Error, false, "The car index " + a + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													Interface.AddMessage(MessageType.Error, false, "The car index " + a + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												}
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											}
 										} else {
-											Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
 									i++;
@@ -106,7 +107,7 @@ namespace OpenBve {
 										{
 											if (CarsDefined[n])
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, "Car " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "Car " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											}
 											CarsDefined[n] = true;
 											bool DefinedLength = false;
@@ -122,11 +123,11 @@ namespace OpenBve {
 															case "object":
 																if (string.IsNullOrEmpty(b))
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, true, "An empty car object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	Interface.AddMessage(MessageType.Error, true, "An empty car object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	break;
 																}
 																if (Path.ContainsInvalidChars(b)) {
-																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	Interface.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																} else {
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
 																	if (System.IO.File.Exists(File)) {
@@ -135,7 +136,7 @@ namespace OpenBve {
 																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
 																		}
 																	} else {
-																		Interface.AddMessage(Interface.MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																}
 																break;
@@ -148,10 +149,10 @@ namespace OpenBve {
 																			Train.Cars[n].BeaconReceiverPosition = 0.5 * m;
 																			DefinedLength = true;
 																		} else {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}
 																	} else {
-																		Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, false, "Value is expected to be a positive floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																}
 																break;
@@ -163,18 +164,18 @@ namespace OpenBve {
 																		string d = b.Substring(k + 1).TrimStart();
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front)) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (rear >= front) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
 																			Train.Cars[n].RearAxle.Position = rear;
 																			Train.Cars[n].FrontAxle.Position = front;
 																			DefinedAxles = true;
 																		}
 																	} else {
-																		Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																}
 																break;
@@ -182,11 +183,11 @@ namespace OpenBve {
 																CarObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 																break;
 															default:
-																Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 												}
 												i++;
@@ -198,10 +199,10 @@ namespace OpenBve {
 												Train.Cars[n].FrontAxle.Position = AxleDistance;
 											}
 										} else {
-											Interface.AddMessage(Interface.MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								} else if (Lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 									// coupler
@@ -223,33 +224,33 @@ namespace OpenBve {
 																		string d = b.Substring(k + 1).TrimStart();
 																		double min, max;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min)) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max)) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else if (min > max) {
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
 																			Train.Couplers[n].MinimumDistanceBetweenCars = min;
 																			Train.Couplers[n].MaximumDistanceBetweenCars = max;
 																		}
 																	} else {
-																		Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																} break;
 															default:
-																Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 												} i++;
 											} i--;
 										} else {
-											Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index " + t + " does not reference an existing coupler at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "The coupler index " + t + " does not reference an existing coupler at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 								else if (Lines[i].StartsWith("[bogie", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -264,7 +265,7 @@ namespace OpenBve {
 										}
 										if (BogiesDefined[n])
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Bogie " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "Bogie " + n.ToString(Culture) + " has already been declared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 										BogiesDefined[n] = true;
 										//Assuming that there are two bogies per car
@@ -288,13 +289,13 @@ namespace OpenBve {
 															case "object":
 																if (Path.ContainsInvalidChars(b))
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	Interface.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}
 																else
 																{
 																	if (string.IsNullOrEmpty(b))
 																	{
-																		Interface.AddMessage(Interface.MessageType.Error, true, "An empty bogie object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, true, "An empty bogie object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		break;
 																	}
 																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
@@ -307,13 +308,13 @@ namespace OpenBve {
 																	}
 																	else
 																	{
-																		Interface.AddMessage(Interface.MessageType.Error, true, "The bogie object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, true, "The bogie object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																}
 																break;
 															case "length":
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "A defined length is not supported for bogies at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	Interface.AddMessage(MessageType.Error, false, "A defined length is not supported for bogies at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}
 																break;
 															case "axles":
@@ -326,15 +327,15 @@ namespace OpenBve {
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear))
 																		{
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}
 																		else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
 																		{
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}
 																		else if (rear >= front)
 																		{
-																			Interface.AddMessage(Interface.MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		}
 																		else
 																		{
@@ -353,7 +354,7 @@ namespace OpenBve {
 																	}
 																	else
 																	{
-																		Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																}
 																break;
@@ -361,13 +362,13 @@ namespace OpenBve {
 																BogieObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 																break;
 															default:
-																Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;
 														}
 													}
 													else
 													{
-														Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 												}
 												i++;
@@ -391,12 +392,12 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "The car index " + t + " does not reference an existing car at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
 									else
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Interface.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 								else
@@ -413,7 +414,7 @@ namespace OpenBve {
 										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, Train, LoadObjects);
 										return;
 									}
-									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								break;
 						}
@@ -516,12 +517,12 @@ namespace OpenBve {
 				}
 				
 				if (carObjects > 0 & carObjects < Train.Cars.Length) {
-					Interface.AddMessage(Interface.MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
+					Interface.AddMessage(MessageType.Warning, false, "An incomplete set of exterior objects was provided in file " + FileName);
 				}
 				
 				if (bogieObjects > 0 & bogieObjects < Train.Cars.Length * 2)
 				{
-					Interface.AddMessage(Interface.MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
+					Interface.AddMessage(MessageType.Warning, false, "An incomplete set of bogie objects was provided in file " + FileName);
 				}
 			}
 		}

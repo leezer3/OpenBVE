@@ -108,7 +108,7 @@ namespace OpenBve
 						}
 						catch (Exception ex)
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Internal error in TextureManager.cs::UseTexture: " + ex.Message);
+							Interface.AddMessage(MessageType.Error, false, "Internal error in TextureManager.cs::UseTexture: " + ex.Message);
 							throw;
 						}
 					}
@@ -382,7 +382,7 @@ namespace OpenBve
 			}
 			catch (Exception ex)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "Internal error in TextureManager.cs::GetImageDimensions: " + ex.Message);
+				Interface.AddMessage(MessageType.Error, false, "Internal error in TextureManager.cs::GetImageDimensions: " + ex.Message);
 				throw;
 			}
 		}
@@ -471,7 +471,7 @@ namespace OpenBve
 			}
 			catch (Exception ex)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "Internal error in TextureManager.cs::LoadTextureRGBForData: " + ex.Message);
+				Interface.AddMessage(MessageType.Error, false, "Internal error in TextureManager.cs::LoadTextureRGBForData: " + ex.Message);
 				throw;
 			}
 		}
@@ -795,7 +795,7 @@ namespace OpenBve
 			}
 			catch (Exception ex)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "Internal error in TextureManager.cs::LoadTextureRGBAForData: " + ex.Message);
+				Interface.AddMessage(MessageType.Error, false, "Internal error in TextureManager.cs::LoadTextureRGBAForData: " + ex.Message);
 				throw;
 			}
 		}

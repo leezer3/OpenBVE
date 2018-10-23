@@ -131,7 +131,7 @@ namespace OpenBve {
 				for (int i = 0; i < TrainManager.Trains.Length; i++) {
 					if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 						if (TrainManager.Trains[i].Plugin.LastException != null) {
-							Interface.AddMessage(Interface.MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
+							Interface.AddMessage(MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
 							CrashHandler.LoadingCrash(TrainManager.Trains[i].Plugin.LastException + Environment.StackTrace, true);
 							 Program.RestartArguments = " ";
 							 Cancel = true;    
@@ -141,7 +141,7 @@ namespace OpenBve {
 				}
 				if (ex is System.DllNotFoundException)
 				{
-					Interface.AddMessage(Interface.MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
+					Interface.AddMessage(MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
 					switch (ex.Message)
 					{
 						case "libopenal.so.1":
@@ -154,7 +154,7 @@ namespace OpenBve {
 				}
 				else
 				{
-					Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+					Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 					CrashHandler.LoadingCrash(ex + Environment.StackTrace, false);
 				}
 				
