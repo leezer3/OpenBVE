@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Loading.cs for the Route Viewer                             ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace OpenBve {

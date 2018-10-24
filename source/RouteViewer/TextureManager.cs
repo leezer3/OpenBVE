@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using GDIPixelFormat = System.Drawing.Imaging.PixelFormat;

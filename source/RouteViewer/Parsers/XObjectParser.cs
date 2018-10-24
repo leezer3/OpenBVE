@@ -5,6 +5,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
+using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 
 namespace OpenBve {

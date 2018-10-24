@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 

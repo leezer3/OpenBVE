@@ -7,6 +7,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.World;
 using OpenBveApi.Textures;
 using OpenBveApi.Objects;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {

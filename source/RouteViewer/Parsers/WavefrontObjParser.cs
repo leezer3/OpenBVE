@@ -3,6 +3,7 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 

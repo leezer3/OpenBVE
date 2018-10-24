@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {

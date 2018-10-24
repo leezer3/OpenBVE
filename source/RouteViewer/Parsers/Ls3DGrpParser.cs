@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
 namespace OpenBve

@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
 namespace OpenBve {
