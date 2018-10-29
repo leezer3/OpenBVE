@@ -766,6 +766,12 @@ namespace OpenBve
 												train.Cars[c].Sounds.Rub = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, SoundCfgParser.mediumRadius);
 											}
 											break;
+										case "halt":
+											for (int c = 0; c < train.Cars.Length; c++)
+											{
+												train.Cars[c].Sounds.Halt = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
+											}
+											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
