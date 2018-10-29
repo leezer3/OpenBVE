@@ -6657,9 +6657,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(g);
 									double sing = Math.Sin(g);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide.X, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Y, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Z, 0.0, 1.0, 0.0, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
 									p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
 									TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
 									TrackManager.UpdateTrackFollower(ref follower, p, true, false);
@@ -6675,9 +6675,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(newAngle);
 									double sing = Math.Sin(newAngle);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide.X, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Y, ref TrackManager.CurrentTrack.Elements[i].WorldSide.Z, 0.0, 1.0, 0.0, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
@@ -6717,8 +6717,8 @@ namespace OpenBve {
 							if (b * b > 0.00000001) {
 								double cosa = Math.Cos(b);
 								double sina = Math.Sin(b);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection.X, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Y, ref TrackManager.CurrentTrack.Elements[i].WorldDirection.Z, TrackManager.CurrentTrack.Elements[i].WorldSide.X, TrackManager.CurrentTrack.Elements[i].WorldSide.Y, TrackManager.CurrentTrack.Elements[i].WorldSide.Z, cosa, sina);
-								World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp.X, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Y, ref TrackManager.CurrentTrack.Elements[i].WorldUp.Z, TrackManager.CurrentTrack.Elements[i].WorldSide.X, TrackManager.CurrentTrack.Elements[i].WorldSide.Y, TrackManager.CurrentTrack.Elements[i].WorldSide.Z, cosa, sina);
+								TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
+								TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(TrackManager.CurrentTrack.Elements[i].WorldSide, cosa, sina);
 							}
 						}
 					}

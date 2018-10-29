@@ -691,13 +691,13 @@ namespace OpenBve
 			double sina = Math.Sin(a);
 			for (int i = 0; i < Builder.Vertices.Length; i++)
 			{
-				World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+				Builder.Vertices[i].Coordinates.Rotate(new Vector3(x,y,z), cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++)
 			{
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
 				{
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+					Builder.Faces[i].Vertices[j].Normal.Rotate(new Vector3(x,y,z), cosa, sina);
 				}
 			}
 		}

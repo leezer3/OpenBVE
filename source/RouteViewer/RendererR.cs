@@ -916,7 +916,7 @@ namespace OpenBve {
 			v[6] = new Vector3(-Size, -Size, Size);
 			v[7] = new Vector3(-Size, Size, Size);
 			for (int i = 0; i < 8; i++) {
-				World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
+				v[i].Rotate(Direction, Up, Side);
 				v[i].X += Position.X - CameraX;
 				v[i].Y += Position.Y - CameraY;
 				v[i].Z += Position.Z - CameraZ;

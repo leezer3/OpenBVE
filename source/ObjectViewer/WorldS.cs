@@ -488,14 +488,7 @@ namespace OpenBve {
 			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
 			px = x; py = y; pz = z;
 		}
-		
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * px + ux * py + dx * pz;
-			y = sy * px + uy * py + dy * pz;
-			z = sz * px + uz * py + dz * pz;
-			px = x; py = y; pz = z;
-		}
+
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
 			double u = Vector.X * cosa - Vector.Z * sina;
 			double v = Vector.X * sina + Vector.Z * cosa;

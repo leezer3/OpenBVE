@@ -431,23 +431,7 @@ namespace OpenBve {
 			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
 			px = x; py = y; pz = z;
 		}
-		internal static void Rotate(ref float px, ref float py, ref float pz, double dx, double dy, double dz, double cosa, double sina) {
-			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-			dx *= t; dy *= t; dz *= t;
-			double oc = 1.0 - cosa;
-			double x = (cosa + oc * dx * dx) * (double)px + (oc * dx * dy - sina * dz) * (double)py + (oc * dx * dz + sina * dy) * (double)pz;
-			double y = (cosa + oc * dy * dy) * (double)py + (oc * dx * dy + sina * dz) * (double)px + (oc * dy * dz - sina * dx) * (double)pz;
-			double z = (cosa + oc * dz * dz) * (double)pz + (oc * dx * dz - sina * dy) * (double)px + (oc * dy * dz + sina * dx) * (double)py;
-			px = (float)x; py = (float)y; pz = (float)z;
-		}
 		
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * px + ux * py + dx * pz;
-			y = sy * px + uy * py + dy * pz;
-			z = sz * px + uz * py + dz * pz;
-			px = x; py = y; pz = z;
-		}
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
 			double u = Vector.X * cosa - Vector.Z * sina;
 			double v = Vector.X * sina + Vector.Z * cosa;
