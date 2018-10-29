@@ -188,6 +188,60 @@ namespace OpenBve {
 					this.Faces[i] = new MeshFace(FaceVertices[i]);
 				}
 			}
+
+			/// <summary>Creates the normals for all faces within this mesh</summary>
+			internal void CreateNormals()
+			{
+				for (int i = 0; i < Faces.Length; i++)
+				{
+					CreateNormals(i);
+				}
+			}
+
+			/// <summary>Creates the normals for the specified face index</summary>
+			private void CreateNormals(int FaceIndex)
+			{
+				if (Faces[FaceIndex].Vertices.Length >= 3)
+				{
+					int i0 = (int)Faces[FaceIndex].Vertices[0].Index;
+					int i1 = (int)Faces[FaceIndex].Vertices[1].Index;
+					int i2 = (int)Faces[FaceIndex].Vertices[2].Index;
+					double ax = Vertices[i1].Coordinates.X - Vertices[i0].Coordinates.X;
+					double ay = Vertices[i1].Coordinates.Y - Vertices[i0].Coordinates.Y;
+					double az = Vertices[i1].Coordinates.Z - Vertices[i0].Coordinates.Z;
+					double bx = Vertices[i2].Coordinates.X - Vertices[i0].Coordinates.X;
+					double by = Vertices[i2].Coordinates.Y - Vertices[i0].Coordinates.Y;
+					double bz = Vertices[i2].Coordinates.Z - Vertices[i0].Coordinates.Z;
+					double nx = ay * bz - az * by;
+					double ny = az * bx - ax * bz;
+					double nz = ax * by - ay * bx;
+					double t = nx * nx + ny * ny + nz * nz;
+					if (t != 0.0)
+					{
+						t = 1.0 / Math.Sqrt(t);
+						float mx = (float)(nx * t);
+						float my = (float)(ny * t);
+						float mz = (float)(nz * t);
+						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
+						{
+							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
+							{
+								Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
+							}
+						}
+					}
+					else
+					{
+						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
+						{
+							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
+							{
+								Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
+							}
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
@@ -454,47 +508,5 @@ namespace OpenBve {
 				x *= t; y *= t; z *= t;
 			}
 		}
-
-		// create normals
-		internal static void CreateNormals(ref Mesh Mesh) {
-			for (int i = 0; i < Mesh.Faces.Length; i++) {
-				CreateNormals(ref Mesh, i);
-			}
-		}
-		internal static void CreateNormals(ref Mesh Mesh, int FaceIndex) {
-			if (Mesh.Faces[FaceIndex].Vertices.Length >= 3) {
-				int i0 = (int)Mesh.Faces[FaceIndex].Vertices[0].Index;
-				int i1 = (int)Mesh.Faces[FaceIndex].Vertices[1].Index;
-				int i2 = (int)Mesh.Faces[FaceIndex].Vertices[2].Index;
-				double ax = Mesh.Vertices[i1].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double ay = Mesh.Vertices[i1].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double az = Mesh.Vertices[i1].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double bx = Mesh.Vertices[i2].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double by = Mesh.Vertices[i2].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double bz = Mesh.Vertices[i2].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double nx = ay * bz - az * by;
-				double ny = az * bx - ax * bz;
-				double nz = ax * by - ay * bx;
-				double t = nx * nx + ny * ny + nz * nz;
-				if (t != 0.0) {
-					t = 1.0 / Math.Sqrt(t);
-					float mx = (float)(nx * t);
-					float my = (float)(ny * t);
-					float mz = (float)(nz * t);
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
-						}
-					}
-				} else {
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
-						}
-					}
-				}
-			}
-		}
-
 	}
 }

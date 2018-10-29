@@ -483,7 +483,7 @@ namespace OpenBve
 
 			}
 			ApplyMeshBuilder(ref Object, Builder, LoadMode, false, false);
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return Object;
 		}
 		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)

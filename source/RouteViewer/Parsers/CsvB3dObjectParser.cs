@@ -1041,7 +1041,7 @@ namespace OpenBve {
 			}
 			// finalize object
 			ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return Object;
 		}
 

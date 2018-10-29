@@ -344,7 +344,7 @@ namespace OpenBve
 				}
 			}
 			ApplyMeshBuilder(ref Object, Builder);
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return Object;
 		}
 

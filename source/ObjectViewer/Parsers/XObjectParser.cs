@@ -2248,7 +2248,7 @@ namespace OpenBve {
 				}
 			}
 			// return
-			World.CreateNormals(ref Object.Mesh);
+			Object.Mesh.CreateNormals();
 			return true;
 		}
 
