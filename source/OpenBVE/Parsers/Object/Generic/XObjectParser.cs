@@ -2118,8 +2118,8 @@ namespace OpenBve {
 												double x = (double)normals[k].Data[0];
 												double y = (double)normals[k].Data[1];
 												double z = (double)normals[k].Data[2];
-												World.Normalize(ref x, ref y, ref z);
 												Normals[k] = new Vector3((float)x, (float)y, (float)z);
+												Normals[k].Normalize();
 											}
 											// collect faces
 											for (int k = 0; k < nFaceNormals; k++)

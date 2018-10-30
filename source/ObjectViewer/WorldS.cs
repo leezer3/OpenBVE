@@ -470,14 +470,6 @@ namespace OpenBve {
 		}
 
 		// ================================
-
-		// cross
-		internal static void Cross(double ax, double ay, double az, double bx, double by, double bz, out double cx, out double cy, out double cz) {
-			cx = ay * bz - az * by;
-			cy = az * bx - ax * bz;
-			cz = ax * by - ay * bx;
-		}
-
 		
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
 			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
@@ -487,13 +479,6 @@ namespace OpenBve {
 			double y = (cosa + oc * dy * dy) * py + (oc * dx * dy + sina * dz) * px + (oc * dy * dz - sina * dx) * pz;
 			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
 			px = x; py = y; pz = z;
-		}
-
-		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Z * sina;
-			double v = Vector.X * sina + Vector.Z * cosa;
-			Vector.X = u;
-			Vector.Z = v;
 		}
 		
 		internal static void Normalize(ref double x, ref double y, ref double z) {

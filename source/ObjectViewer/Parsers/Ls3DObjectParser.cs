@@ -308,13 +308,13 @@ namespace OpenBve
                                                         break;
                                                 }
                                             }
-                                            World.Normalize(ref nx, ref ny, ref nz);
 											//Resize temp arrays
                                             Array.Resize<VertexTemplate>(ref tempVertices, tempVertices.Length + 1);
                                             Array.Resize<Vector3>(ref tempNormals, tempNormals.Length + 1);
                                             //Add vertex and normals to temp array
                                             tempVertices[tempVertices.Length - 1] = new Vertex(vx, vy, vz);
                                             tempNormals[tempNormals.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
+	                                        tempNormals[tempNormals.Length - 1].Normalize();
                                             Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
                                             while (Builder.Vertices.Length >= Normals.Length)
                                             {

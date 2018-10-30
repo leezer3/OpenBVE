@@ -396,39 +396,40 @@ namespace OpenBve {
 								if (Arguments.Length > 6) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 6 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double vx = 0.0, vy = 0.0, vz = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out vx)) {
+
+								Vertex currentVertex = new Vertex();
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out currentVertex.Coordinates.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument vX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vx = 0.0;
+									currentVertex.Coordinates.X = 0.0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out vy)) {
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out currentVertex.Coordinates.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument vY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vy = 0.0;
+									currentVertex.Coordinates.Y = 0.0;
 								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out vz)) {
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out currentVertex.Coordinates.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									vz = 0.0;
+									currentVertex.Coordinates.Z = 0.0;
 								}
-								double nx = 0.0, ny = 0.0, nz = 0.0;
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out nx)) {
+								Vector3 currentNormal = new Vector3();
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out currentNormal.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument nX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									nx = 0.0;
+									currentNormal.X = 0.0;
 								}
-								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out ny)) {
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out currentNormal.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument nY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									ny = 0.0;
+									currentNormal.Y = 0.0;
 								}
-								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out nz)) {
+								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out currentNormal.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									nz = 0.0;
+									currentNormal.Z = 0.0;
 								}
-								World.Normalize(ref nx, ref ny, ref nz);
+								currentNormal.Normalize();
 								Array.Resize<VertexTemplate>(ref Builder.Vertices, Builder.Vertices.Length + 1);
 								while (Builder.Vertices.Length >= Normals.Length) {
 									Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 								}
-								Builder.Vertices[Builder.Vertices.Length - 1] = new Vertex(vx, vy, vz);
-								Normals[Builder.Vertices.Length - 1] = new Vector3((float)nx, (float)ny, (float)nz);
+								Builder.Vertices[Builder.Vertices.Length - 1] = currentVertex;
+								Normals[Builder.Vertices.Length - 1] = currentNormal;
 							} break;
 						case "addface":
 						case "addface2":
@@ -1345,12 +1346,11 @@ namespace OpenBve {
 				double uz = dz * r1;
 				Builder.Vertices[v + 2 * i + 0] = new Vertex(ux, g, uz);
 				Builder.Vertices[v + 2 * i + 1] = new Vertex(lx, -g, lz);
-				double nx = dx * ns, ny = 0.0, nz = dz * ns;
-				double sx, sy, sz;
-				World.Cross(nx, ny, nz, 0.0, 1.0, 0.0, out sx, out sy, out sz);
-				World.Rotate(ref nx, ref ny, ref nz, sx, sy, sz, cosa, sina);
-				Normals[2 * i + 0] = new Vector3((float)nx, (float)ny, (float)nz);
-				Normals[2 * i + 1] = new Vector3((float)nx, (float)ny, (float)nz);
+				Vector3 normal = new Vector3(dx * ns, 0.0, dz * ns);
+				Vector3 s = Vector3.Cross(normal, new Vector3(0.0, 1.0, 0.0));
+				normal.Rotate(s, cosa, sina);
+				Normals[2 * i + 0] = new Vector3(normal);
+				Normals[2 * i + 1] = new Vector3(normal);
 				t += d;
 			}
 			// faces
@@ -1515,10 +1515,10 @@ namespace OpenBve {
 						nx -= dx * n;
 						ny -= dy * n;
 						nz -= dz * n;
-						World.Normalize(ref nx, ref ny, ref nz);
 						Builder.Faces[j].Vertices[k].Normal.X = (float)nx;
 						Builder.Faces[j].Vertices[k].Normal.Y = (float)ny;
 						Builder.Faces[j].Vertices[k].Normal.Z = (float)nz;
+						Builder.Faces[j].Vertices[k].Normal.Normalize();
 					}
 				}
 			}
