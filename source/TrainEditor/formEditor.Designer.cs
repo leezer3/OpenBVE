@@ -73,10 +73,14 @@
 			this.groupboxHandle = new System.Windows.Forms.GroupBox();
 			this.numericUpDownBrakeNotches = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDownPowerNotches = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownDriverBrakeNotches = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownDriverPowerNotches = new System.Windows.Forms.NumericUpDown();
 			this.textboxPowerNotchReduceSteps = new System.Windows.Forms.TextBox();
 			this.labelPowerNotchReduceSteps = new System.Windows.Forms.Label();
 			this.labelBrakeNotches = new System.Windows.Forms.Label();
 			this.labelPowerNotches = new System.Windows.Forms.Label();
+			this.labelDriverBrakeNotches = new System.Windows.Forms.Label();
+			this.labelDriverPowerNotches = new System.Windows.Forms.Label();
 			this.comboboxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.groupboxBrake = new System.Windows.Forms.GroupBox();
@@ -258,6 +262,8 @@
 			this.groupboxHandle.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).BeginInit();
 			this.groupboxBrake.SuspendLayout();
 			this.groupboxPerformance.SuspendLayout();
 			this.tabpagePropertiesTwo.SuspendLayout();
@@ -309,7 +315,7 @@
 			this.tabcontrolTabs.Location = new System.Drawing.Point(128, 8);
 			this.tabcontrolTabs.Name = "tabcontrolTabs";
 			this.tabcontrolTabs.SelectedIndex = 0;
-			this.tabcontrolTabs.Size = new System.Drawing.Size(680, 464);
+			this.tabcontrolTabs.Size = new System.Drawing.Size(680, 512);
 			this.tabcontrolTabs.TabIndex = 0;
 			this.tabcontrolTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabcontrolTabsSelecting);
 			// 
@@ -324,7 +330,7 @@
 			this.tabpagePropertiesOne.Location = new System.Drawing.Point(4, 22);
 			this.tabpagePropertiesOne.Name = "tabpagePropertiesOne";
 			this.tabpagePropertiesOne.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpagePropertiesOne.Size = new System.Drawing.Size(672, 438);
+			this.tabpagePropertiesOne.Size = new System.Drawing.Size(672, 486);
 			this.tabpagePropertiesOne.TabIndex = 1;
 			this.tabpagePropertiesOne.Text = "Properties (1)";
 			this.tabpagePropertiesOne.UseVisualStyleBackColor = true;
@@ -804,15 +810,19 @@
 			// 
 			this.groupboxHandle.Controls.Add(this.numericUpDownBrakeNotches);
 			this.groupboxHandle.Controls.Add(this.numericUpDownPowerNotches);
+			this.groupboxHandle.Controls.Add(this.numericUpDownDriverBrakeNotches);
+			this.groupboxHandle.Controls.Add(this.numericUpDownDriverPowerNotches);
 			this.groupboxHandle.Controls.Add(this.textboxPowerNotchReduceSteps);
 			this.groupboxHandle.Controls.Add(this.labelPowerNotchReduceSteps);
 			this.groupboxHandle.Controls.Add(this.labelBrakeNotches);
 			this.groupboxHandle.Controls.Add(this.labelPowerNotches);
+			this.groupboxHandle.Controls.Add(this.labelDriverBrakeNotches);
+			this.groupboxHandle.Controls.Add(this.labelDriverPowerNotches);
 			this.groupboxHandle.Controls.Add(this.comboboxHandleType);
 			this.groupboxHandle.Controls.Add(this.labelHandleType);
 			this.groupboxHandle.Location = new System.Drawing.Point(296, 304);
 			this.groupboxHandle.Name = "groupboxHandle";
-			this.groupboxHandle.Size = new System.Drawing.Size(336, 120);
+			this.groupboxHandle.Size = new System.Drawing.Size(336, 168);
 			this.groupboxHandle.TabIndex = 5;
 			this.groupboxHandle.TabStop = false;
 			this.groupboxHandle.Text = "Handle";
@@ -853,6 +863,40 @@
             0});
 			this.numericUpDownPowerNotches.ValueChanged += new System.EventHandler(this.numericUpDownPowerNotches_ValueChanged);
 			// 
+			// numericUpDownDriverBrakeNotches
+			// 
+			this.numericUpDownDriverBrakeNotches.Location = new System.Drawing.Point(168, 136);
+			this.numericUpDownDriverBrakeNotches.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownDriverBrakeNotches.Name = "numericUpDownDriverBrakeNotches";
+			this.numericUpDownDriverBrakeNotches.Size = new System.Drawing.Size(160, 20);
+			this.numericUpDownDriverBrakeNotches.TabIndex = 11;
+			this.numericUpDownDriverBrakeNotches.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
+			// numericUpDownDriverPowerNotches
+			// 
+			this.numericUpDownDriverPowerNotches.Location = new System.Drawing.Point(168, 112);
+			this.numericUpDownDriverPowerNotches.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownDriverPowerNotches.Name = "numericUpDriverDownPowerNotches";
+			this.numericUpDownDriverPowerNotches.Size = new System.Drawing.Size(160, 20);
+			this.numericUpDownDriverPowerNotches.TabIndex = 9;
+			this.numericUpDownDriverPowerNotches.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
 			// textboxPowerNotchReduceSteps
 			// 
 			this.textboxPowerNotchReduceSteps.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -888,6 +932,24 @@
 			this.labelPowerNotches.TabIndex = 2;
 			this.labelPowerNotches.Text = "PowerNotches:";
 			this.labelPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDriverBrakeNotches
+			// 
+			this.labelDriverBrakeNotches.Location = new System.Drawing.Point(8, 136);
+			this.labelDriverBrakeNotches.Name = "labelDriverBrakeNotches";
+			this.labelDriverBrakeNotches.Size = new System.Drawing.Size(160, 16);
+			this.labelDriverBrakeNotches.TabIndex = 10;
+			this.labelDriverBrakeNotches.Text = "DriverBrakeNotches:";
+			this.labelDriverBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPowerNotches
+			// 
+			this.labelDriverPowerNotches.Location = new System.Drawing.Point(8, 112);
+			this.labelDriverPowerNotches.Name = "labelDriverPowerNotches";
+			this.labelDriverPowerNotches.Size = new System.Drawing.Size(160, 16);
+			this.labelDriverPowerNotches.TabIndex = 8;
+			this.labelDriverPowerNotches.Text = "DriverPowerNotches:";
+			this.labelDriverPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// comboboxHandleType
 			// 
@@ -1104,7 +1166,7 @@
 			this.tabpagePropertiesTwo.Location = new System.Drawing.Point(4, 22);
 			this.tabpagePropertiesTwo.Name = "tabpagePropertiesTwo";
 			this.tabpagePropertiesTwo.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpagePropertiesTwo.Size = new System.Drawing.Size(672, 438);
+			this.tabpagePropertiesTwo.Size = new System.Drawing.Size(672, 486);
 			this.tabpagePropertiesTwo.TabIndex = 2;
 			this.tabpagePropertiesTwo.Text = "Properties (2)";
 			this.tabpagePropertiesTwo.UseVisualStyleBackColor = true;
@@ -1797,7 +1859,7 @@
 			this.tabpageAcceleration.Location = new System.Drawing.Point(4, 22);
 			this.tabpageAcceleration.Name = "tabpageAcceleration";
 			this.tabpageAcceleration.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageAcceleration.Size = new System.Drawing.Size(672, 438);
+			this.tabpageAcceleration.Size = new System.Drawing.Size(672, 486);
 			this.tabpageAcceleration.TabIndex = 0;
 			this.tabpageAcceleration.Text = "Acceleration";
 			this.tabpageAcceleration.UseVisualStyleBackColor = true;
@@ -1811,7 +1873,7 @@
 			this.pictureboxAcceleration.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.pictureboxAcceleration.Location = new System.Drawing.Point(8, 8);
 			this.pictureboxAcceleration.Name = "pictureboxAcceleration";
-			this.pictureboxAcceleration.Size = new System.Drawing.Size(472, 424);
+			this.pictureboxAcceleration.Size = new System.Drawing.Size(472, 472);
 			this.pictureboxAcceleration.TabIndex = 5;
 			this.pictureboxAcceleration.TabStop = false;
 			this.pictureboxAcceleration.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureboxAccelerationPaint);
@@ -2101,7 +2163,7 @@
 			this.tabpageMotor.Location = new System.Drawing.Point(4, 22);
 			this.tabpageMotor.Name = "tabpageMotor";
 			this.tabpageMotor.Padding = new System.Windows.Forms.Padding(3);
-			this.tabpageMotor.Size = new System.Drawing.Size(672, 438);
+			this.tabpageMotor.Size = new System.Drawing.Size(672, 486);
 			this.tabpageMotor.TabIndex = 3;
 			this.tabpageMotor.Text = "Motor sound";
 			this.tabpageMotor.UseVisualStyleBackColor = true;
@@ -2359,7 +2421,7 @@
 			// splitMotorPB.Panel2
 			// 
 			this.splitMotorPB.Panel2.Controls.Add(this.splitMotorB);
-			this.splitMotorPB.Size = new System.Drawing.Size(472, 424);
+			this.splitMotorPB.Size = new System.Drawing.Size(472, 472);
 			this.splitMotorPB.SplitterDistance = 236;
 			this.splitMotorPB.TabIndex = 12;
 			// 
@@ -2469,7 +2531,7 @@
 			this.tabPageExtended.Location = new System.Drawing.Point(4, 22);
 			this.tabPageExtended.Name = "tabPageExtended";
 			this.tabPageExtended.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageExtended.Size = new System.Drawing.Size(672, 438);
+			this.tabPageExtended.Size = new System.Drawing.Size(672, 486);
 			this.tabPageExtended.TabIndex = 4;
 			this.tabPageExtended.Text = "Extended Features";
 			this.tabPageExtended.UseVisualStyleBackColor = true;
@@ -2684,7 +2746,7 @@
 			this.panelPane.Controls.Add(this.pictureboxLogo);
 			this.panelPane.Location = new System.Drawing.Point(0, 0);
 			this.panelPane.Name = "panelPane";
-			this.panelPane.Size = new System.Drawing.Size(120, 480);
+			this.panelPane.Size = new System.Drawing.Size(120, 528);
 			this.panelPane.TabIndex = 0;
 			// 
 			// labelLineHorizontal
@@ -2701,7 +2763,7 @@
 			// 
 			this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonClose.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonClose.Location = new System.Drawing.Point(8, 448);
+			this.buttonClose.Location = new System.Drawing.Point(8, 496);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(103, 24);
 			this.buttonClose.TabIndex = 5;
@@ -2772,7 +2834,7 @@
 			this.labelLineVertical.BackColor = System.Drawing.Color.White;
 			this.labelLineVertical.Location = new System.Drawing.Point(120, 0);
 			this.labelLineVertical.Name = "labelLineVertical";
-			this.labelLineVertical.Size = new System.Drawing.Size(2, 480);
+			this.labelLineVertical.Size = new System.Drawing.Size(2, 528);
 			this.labelLineVertical.TabIndex = 13;
 			//
 			// textboxDoorWidth
@@ -2829,7 +2891,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(816, 480);
+			this.ClientSize = new System.Drawing.Size(816, 528);
 			this.Controls.Add(this.panelPane);
 			this.Controls.Add(this.tabcontrolTabs);
 			this.Controls.Add(this.labelLineVertical);
@@ -2851,6 +2913,8 @@
 			this.groupboxHandle.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).EndInit();
 			this.groupboxBrake.ResumeLayout(false);
 			this.groupboxBrake.PerformLayout();
 			this.groupboxPerformance.ResumeLayout(false);
@@ -3091,6 +3155,8 @@
 		private System.Windows.Forms.Label labelPowerNotchReduceSteps;
 		private System.Windows.Forms.Label labelBrakeNotches;
 		private System.Windows.Forms.Label labelPowerNotches;
+		private System.Windows.Forms.Label labelDriverBrakeNotches;
+		private System.Windows.Forms.Label labelDriverPowerNotches;
 		private System.Windows.Forms.ComboBox comboboxHandleType;
 		private System.Windows.Forms.Label labelHandleType;
 		private System.Windows.Forms.GroupBox groupboxDelay;
@@ -3106,6 +3172,8 @@
 		private System.Windows.Forms.Button buttonSetDelayPowerDown;
 		private System.Windows.Forms.NumericUpDown numericUpDownBrakeNotches;
 		private System.Windows.Forms.NumericUpDown numericUpDownPowerNotches;
+		private System.Windows.Forms.NumericUpDown numericUpDownDriverBrakeNotches;
+		private System.Windows.Forms.NumericUpDown numericUpDownDriverPowerNotches;
 		private System.Windows.Forms.TabPage tabPageExtended;
 		private System.Windows.Forms.GroupBox groupBoxLocoBrake;
 		private System.Windows.Forms.Label labelMinVersion;

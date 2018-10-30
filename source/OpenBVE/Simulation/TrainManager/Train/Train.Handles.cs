@@ -13,7 +13,7 @@ namespace OpenBve
 			/// <param name="PowerRelative">Whether this is relative to the current notch</param>
 			/// <param name="BrakeValue">The brake notch value</param>
 			/// <param name="BrakeRelative">Whether this is relative to the current notch</param>
-			internal void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative)
+			internal void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 			{
 				// determine notch
 				int p = PowerRelative ? PowerValue + Handles.Power.Driver : PowerValue;
@@ -25,6 +25,10 @@ namespace OpenBve
 				{
 					p = Handles.Power.MaximumNotch;
 				}
+				if (!IsOverMaxDriverNotch && p > Handles.Power.MaximumDriverNotch)
+				{
+					p = Handles.Power.MaximumDriverNotch;
+				}
 
 				int b = BrakeRelative ? BrakeValue + Handles.Brake.Driver : BrakeValue;
 				if (b < 0)
@@ -34,6 +38,10 @@ namespace OpenBve
 				else if (b > Handles.Brake.MaximumNotch)
 				{
 					b = Handles.Brake.MaximumNotch;
+				}
+				if (!IsOverMaxDriverNotch && b > Handles.Brake.MaximumDriverNotch)
+				{
+					b = Handles.Brake.MaximumDriverNotch;
 				}
 
 				// power sound
@@ -62,7 +70,7 @@ namespace OpenBve
 				}
 				else if (p > Handles.Power.Driver)
 				{
-					if (p < Handles.Power.MaximumNotch)
+					if (p < Handles.Power.MaximumDriverNotch)
 					{
 						// up (not max)
 						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerUp.Buffer;

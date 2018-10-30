@@ -145,11 +145,17 @@ namespace OpenBve {
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Translations.CurrentLanguageCode, this.Train.Destination);
+				ElapseData inputDevicePluginData = data;
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.Specs.DoorInterlockState = (TrainManager.DoorInterlockStates)data.DoorInterlockState;
 				DisableTimeAcceleration = data.DisableTimeAcceleration;
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++) {
+					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
+						InputDevicePlugin.AvailablePlugins[i].SetElapseData(inputDevicePluginData);
+					}
+				}
 				/*
 				 * Set the virtual handles.
 				 * */
@@ -208,7 +214,7 @@ namespace OpenBve {
 					if (virtualHandles) {
 						this.Train.Handles.Power.Safety = handles.PowerNotch;
 					} else {
-						Train.ApplyNotch(handles.PowerNotch, false, 0, true);
+						Train.ApplyNotch(handles.PowerNotch, false, 0, true, true);
 					}
 				} else {
 					if (virtualHandles) {
@@ -264,7 +270,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
 							} else {
 								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false);
+								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false, true);
 								this.Train.ApplyEmergencyBrake();
 							}
 						} else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch + 1) {
@@ -273,7 +279,7 @@ namespace OpenBve {
 							} else {
 								this.Train.UnapplyEmergencyBrake();
 								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false);
+								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false, true);
 							}
 						} else if (handles.BrakeNotch == 1) {
 							if (virtualHandles) {
@@ -281,7 +287,7 @@ namespace OpenBve {
 								this.Train.Handles.HoldBrake.Actual = true;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false);
+								Train.ApplyNotch(0, true, 0, false, true);
 								this.Train.ApplyHoldBrake(true);
 							}
 						} else if (handles.BrakeNotch == 0) {
@@ -289,7 +295,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = 0;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false);
+								Train.ApplyNotch(0, true, 0, false, true);
 								this.Train.ApplyHoldBrake(false);
 							}
 						} else {
@@ -312,7 +318,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = handles.BrakeNotch;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, handles.BrakeNotch, false);
+								Train.ApplyNotch(0, true, handles.BrakeNotch, false, true);
 							}
 						} else {
 							if (virtualHandles) {

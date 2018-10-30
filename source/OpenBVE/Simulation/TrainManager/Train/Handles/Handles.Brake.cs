@@ -5,9 +5,10 @@
 		/// <summary>A brake handle</summary>
 		internal class BrakeHandle : NotchedHandle
 		{
-			internal BrakeHandle(int max, EmergencyHandle eb, double[] delayUp, double[] delayDown)
+			internal BrakeHandle(int max, int driverMax, EmergencyHandle eb, double[] delayUp, double[] delayDown)
 			{
 				this.MaximumNotch = max;
+				this.MaximumDriverNotch = driverMax;
 				this.EmergencyBrake = eb;
 				this.DelayUp = delayUp;
 				this.DelayDown = delayDown;

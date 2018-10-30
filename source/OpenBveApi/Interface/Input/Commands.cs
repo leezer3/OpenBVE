@@ -42,6 +42,8 @@ namespace OpenBveApi.Interface {
 			PowerAnyNotch,
 			/// <summary>Adjust to the brake notch directly from command option value</summary>
 			BrakeAnyNotch,
+			/// <summary>Adjust to the reverser directly from command option value</summary>
+			ReverserAnyPostion,
 			/// <summary>Hold Brake</summary>
 			HoldBrake,
 			/// <summary>Moves the reverser in the forwards direction</summary>
