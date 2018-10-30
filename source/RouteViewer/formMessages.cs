@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -48,28 +49,28 @@ namespace OpenBve
                 string t = "Unknown";
                 string g = "information";
 
-                switch (Interface.Messages[i].Type)
+                switch (Interface.LogMessages[i].Type)
                 {
-                    case Interface.MessageType.Information:
+                    case MessageType.Information:
                         t = "Information";
                         g = "information";
                         break;
-                    case Interface.MessageType.Warning:
+                    case MessageType.Warning:
                         t = "Warning";
                         g = "warning";
                         break;
-                    case Interface.MessageType.Error:
+                    case MessageType.Error:
                         t = "Error";
                         g = "error";
                         break;
-                    case Interface.MessageType.Critical:
+                    case MessageType.Critical:
                         t = "Critical";
                         g = "critical";
                         break;
                 }
 
                 ListViewItem a = Dialog.listviewMessages.Items.Add(t, g);
-                a.SubItems.Add(Interface.Messages[i].Text);
+                a.SubItems.Add(Interface.LogMessages[i].Text);
             }
             Dialog.listviewMessages.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             DialogResult Result = Dialog.ShowDialog();
@@ -98,7 +99,7 @@ namespace OpenBve
 
             for (int i = 0; i < Interface.MessageCount; i++)
             {
-                Builder.AppendLine(Interface.Messages[i].Text);
+                Builder.AppendLine(Interface.LogMessages[i].Text);
             }
             // save
             SaveFileDialog Dialog = new SaveFileDialog();

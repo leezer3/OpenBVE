@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -11,7 +12,7 @@ namespace OpenBve {
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
 		public override void ReportProblem(OpenBveApi.Hosts.ProblemType type, string text) {
-			Interface.AddMessage(Interface.MessageType.Error, false, text);
+			Interface.AddMessage(MessageType.Error, false, text);
 		}
 		
 		
@@ -32,23 +33,23 @@ namespace OpenBve {
 									if (Plugins.LoadedPlugins[i].Texture.QueryTextureDimensions(path, out width, out height)) {
 										return true;
 									}
-									Interface.AddMessage(Interface.MessageType.Error, false,
+									Interface.AddMessage(MessageType.Error, false,
 									                     "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at QueryTextureDimensions"
 									                    );
 								} catch (Exception ex) {
-									Interface.AddMessage(Interface.MessageType.Error, false,
+									Interface.AddMessage(MessageType.Error, false,
 									                     "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at QueryTextureDimensions:" + ex.Message
 									                    );
 								}
 							}
 						} catch (Exception ex) {
-							Interface.AddMessage(Interface.MessageType.Error, false,
+							Interface.AddMessage(MessageType.Error, false,
 							                     "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadTexture:" + ex.Message
 							                    );
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Error, false,
+				Interface.AddMessage(MessageType.Error, false,
 				                     "No plugin found that is capable of loading texture " + path
 				                    );
 			} else {
@@ -76,17 +77,17 @@ namespace OpenBve {
 										texture = texture.ApplyParameters(parameters);
 										return true;
 									}
-									Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadTexture");
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadTexture");
 								} catch (Exception ex) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadTexture:" + ex.Message);
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadTexture:" + ex.Message);
 								}
 							}
 						} catch (Exception ex) {
-							Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadTexture:" + ex.Message);
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadTexture:" + ex.Message);
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
@@ -141,17 +142,17 @@ namespace OpenBve {
 									if (Plugins.LoadedPlugins[i].Sound.LoadSound(path, out sound)) {
 										return true;
 									}
-									Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadSound");
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadSound");
 								} catch (Exception ex) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadSound:" + ex.Message);
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadSound:" + ex.Message);
 								}
 							}
 						} catch (Exception ex) {
-							Interface.AddMessage(Interface.MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadSound:" + ex.Message);
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadSound:" + ex.Message);
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Error, false, "No plugin found that is capable of loading sound " + path);
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading sound " + path);
 			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}

@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Drawing;
 using System.Linq;
+using OpenBveApi.Interface;
 
 namespace OpenBve.Parsers.Train
 {
@@ -40,7 +41,7 @@ namespace OpenBve.Parsers.Train
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Car");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
-					Interface.AddMessage(Interface.MessageType.Error, false, "No car nodes defined in XML file " + fileName);
+					Interface.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty train.xml file");
 				}
@@ -49,7 +50,7 @@ namespace OpenBve.Parsers.Train
 				{
 					if (i > Train.Cars.Length)
 					{
-						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
+						Interface.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
 					}
 					if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
@@ -72,14 +73,14 @@ namespace OpenBve.Parsers.Train
 						}
 						catch
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
+							Interface.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
 						}
 					}
 					if (i == DocumentNodes.Count && i < Train.Cars.Length)
 					{
 						//If this is the case, the number of motor cars is the primary thing which may get confused....
 						//Not a lot to be done about this until a full replacement is built for the train.dat file & we can dump it entirely
-						Interface.AddMessage(Interface.MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
+						Interface.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 				}
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)

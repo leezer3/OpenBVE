@@ -40,7 +40,7 @@ namespace OpenBve
 
 		/// <summary>Renders a graphical visualisation of any events within camera range</summary>
 		/// <param name="Camera">The absolute camera position</param>
-		internal static void RenderEvents(Vector3 Camera)
+		private static void RenderEvents(Vector3 Camera)
 		{
 			if (Interface.CurrentOptions.ShowEvents == false || TrackManager.CurrentTrack.Elements == null)
 			{

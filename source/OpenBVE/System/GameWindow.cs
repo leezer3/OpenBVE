@@ -306,7 +306,7 @@ namespace OpenBve
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
 			Renderer.Initialize();
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
@@ -385,9 +385,9 @@ namespace OpenBve
 			//Check if any critical errors have occured during the route or train loading
 			for (int i = 0; i < Interface.MessageCount; i++)
 			{
-				if (Interface.Messages[i].Type == Interface.MessageType.Critical)
+				if (Interface.LogMessages[i].Type == MessageType.Critical)
 				{
-					MessageBox.Show("A critical error has occured:\n\n" + Interface.Messages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show("A critical error has occured:\n\n" + Interface.LogMessages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
 			}
@@ -718,15 +718,15 @@ namespace OpenBve
 				int warnings = 0;
 				for (int i = 0; i < Interface.MessageCount; i++)
 				{
-					if (Interface.Messages[i].FileNotFound)
+					if (Interface.LogMessages[i].FileNotFound)
 					{
 						filesNotFound++;
 					}
-					else if (Interface.Messages[i].Type == Interface.MessageType.Error)
+					else if (Interface.LogMessages[i].Type == MessageType.Error)
 					{
 						errors++;
 					}
-					else if (Interface.Messages[i].Type == Interface.MessageType.Warning)
+					else if (Interface.LogMessages[i].Type == MessageType.Warning)
 					{
 						warnings++;
 					}
@@ -788,7 +788,7 @@ namespace OpenBve
 					}
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -810,7 +810,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -832,7 +832,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -854,7 +854,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;

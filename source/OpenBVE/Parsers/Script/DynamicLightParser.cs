@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -53,7 +54,7 @@ namespace OpenBve
 										}
 										if (b > 255 || b < 0)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
 											currentLight.CabBrightness = 255;
 											break;
 										}
@@ -70,7 +71,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
 										break;
 									case "ambientlight":
@@ -84,7 +85,7 @@ namespace OpenBve
 											}
 											else
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 											}
 										}
 										else
@@ -97,7 +98,7 @@ namespace OpenBve
 													break;
 												}
 											}
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "directionallight":
@@ -111,7 +112,7 @@ namespace OpenBve
 											}
 											else
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 											}
 										}
 										else
@@ -124,7 +125,7 @@ namespace OpenBve
 													break;
 												}
 											}
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "cartesianlightdirection":
@@ -139,12 +140,12 @@ namespace OpenBve
 											}
 											else
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+												Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
 											}
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "sphericallightdirection":
@@ -158,12 +159,12 @@ namespace OpenBve
 											}
 											else
 											{
-												Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+												Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
 											}
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
 										}
 										break;
 								}
@@ -181,11 +182,11 @@ namespace OpenBve
 										Break = true;
 										if (ts == null)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Multiple undefined times were encountered in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, "Multiple undefined times were encountered in file " + fileName);
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "Duplicate time found: " + ts + " in file " + fileName);
+											Interface.AddMessage(MessageType.Error, false, "Duplicate time found: " + ts + " in file " + fileName);
 										}
 										break;
 									}

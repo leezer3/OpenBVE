@@ -1,4 +1,5 @@
 using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -2287,13 +2288,13 @@ namespace OpenBve {
                             if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
                             if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
                             Result.Instructions[n] = Instructions.MathRandom;
-                            Interface.AddMessage(Interface.MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
+                            Interface.AddMessage(MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
                             n++; s--; break;
                         case "randomint":
                             if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
                             if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
                             Result.Instructions[n] = Instructions.MathRandomInt;
-                            Interface.AddMessage(Interface.MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
+                            Interface.AddMessage(MessageType.Information, false, "" + Arguments[i] + " is only supported in OpenBVE versions 1.4.4.0 and above.");
                             n++; s--; break;
 						case "floor":
 							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);

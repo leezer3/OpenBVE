@@ -470,14 +470,6 @@ namespace OpenBve {
 		}
 
 		// ================================
-
-		// cross
-		internal static void Cross(double ax, double ay, double az, double bx, double by, double bz, out double cx, out double cy, out double cz) {
-			cx = ay * bz - az * by;
-			cy = az * bx - ax * bz;
-			cz = ax * by - ay * bx;
-		}
-
 		
 		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
 			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
@@ -489,20 +481,6 @@ namespace OpenBve {
 			px = x; py = y; pz = z;
 		}
 		
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * px + ux * py + dx * pz;
-			y = sy * px + uy * py + dy * pz;
-			z = sz * px + uz * py + dz * pz;
-			px = x; py = y; pz = z;
-		}
-		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Z * sina;
-			double v = Vector.X * sina + Vector.Z * cosa;
-			Vector.X = u;
-			Vector.Z = v;
-		}
-		
 		internal static void Normalize(ref double x, ref double y, ref double z) {
 			double t = x * x + y * y + z * z;
 			if (t != 0.0) {
@@ -510,47 +488,5 @@ namespace OpenBve {
 				x *= t; y *= t; z *= t;
 			}
 		}
-
-		// create normals
-		internal static void CreateNormals(ref Mesh Mesh) {
-			for (int i = 0; i < Mesh.Faces.Length; i++) {
-				CreateNormals(ref Mesh, i);
-			}
-		}
-		internal static void CreateNormals(ref Mesh Mesh, int FaceIndex) {
-			if (Mesh.Faces[FaceIndex].Vertices.Length >= 3) {
-				int i0 = (int)Mesh.Faces[FaceIndex].Vertices[0].Index;
-				int i1 = (int)Mesh.Faces[FaceIndex].Vertices[1].Index;
-				int i2 = (int)Mesh.Faces[FaceIndex].Vertices[2].Index;
-				double ax = Mesh.Vertices[i1].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double ay = Mesh.Vertices[i1].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double az = Mesh.Vertices[i1].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double bx = Mesh.Vertices[i2].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double by = Mesh.Vertices[i2].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double bz = Mesh.Vertices[i2].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double nx = ay * bz - az * by;
-				double ny = az * bx - ax * bz;
-				double nz = ax * by - ay * bx;
-				double t = nx * nx + ny * ny + nz * nz;
-				if (t != 0.0) {
-					t = 1.0 / Math.Sqrt(t);
-					float mx = (float)(nx * t);
-					float my = (float)(ny * t);
-					float mz = (float)(nz * t);
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
-						}
-					}
-				} else {
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
-						}
-					}
-				}
-			}
-		}
-
 	}
 }

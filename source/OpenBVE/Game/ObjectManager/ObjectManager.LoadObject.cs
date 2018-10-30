@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -114,7 +115,7 @@ namespace OpenBve
 			string e = System.IO.Path.GetExtension(FileName);
 			if (e == null)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
+				Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
 				return null;
 			}
 			switch (e.ToLowerInvariant())
@@ -145,7 +146,7 @@ namespace OpenBve
 					Result = MsTsShapeParser.ReadObject(FileName);
 					break;
 				default:
-					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
+					Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
 					return null;
 			}
 			if (Result != null)
@@ -155,7 +156,7 @@ namespace OpenBve
 			return Result;
 #if !DEBUG
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
+				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
 				return null;
 			}
 #endif
@@ -197,7 +198,7 @@ namespace OpenBve
 			string e = System.IO.Path.GetExtension(FileName);
 			if (e == null)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
+				Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
 				return null;
 			}
 			switch (e.ToLowerInvariant())
@@ -211,7 +212,7 @@ namespace OpenBve
 					break;
 				case ".animated":
 				case ".s":
-					Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
+					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 					return null;
 				case ".obj":
 					Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
@@ -224,7 +225,7 @@ namespace OpenBve
 				break;
 				 */
 				default:
-					Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
+					Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
 					return null;
 			}
 			if (Result != null)
@@ -234,7 +235,7 @@ namespace OpenBve
 			return Result;
 #if !DEBUG
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
+				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
 				return null;
 			}
 #endif

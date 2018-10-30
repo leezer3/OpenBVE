@@ -124,7 +124,7 @@ namespace OpenBve
             Height = newHeight;
             if (Loading.Complete)
             {
-                MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+                Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
                 World.InitializeCameraRestriction();
                 if (Renderer.OptionBackfaceCulling)
                 {
@@ -196,7 +196,7 @@ namespace OpenBve
                 Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}
 			Renderer.InitializeLighting();
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Timetable.CreateTimetable();
 			Timetable.UpdateCustomTimetable(null, null);

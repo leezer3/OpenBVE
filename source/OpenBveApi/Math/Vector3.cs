@@ -65,16 +65,24 @@ namespace OpenBveApi.Math {
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The sum of the two vectors.</returns>
-		public static Vector3 operator +(Vector3 a, Vector3 b) {
-			return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+		public static Vector3 operator +(Vector3 a, Vector3 b)
+		{
+			a.X += b.X;
+			a.Y += b.Y;
+			a.Z += b.Z;
+			return a;
 		}
 		
 		/// <summary>Adds a vector and a scalar.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The sum of the vector and the scalar.</returns>
-		public static Vector3 operator +(Vector3 a, double b) {
-			return new Vector3(a.X + b, a.Y + b, a.Z + b);
+		public static Vector3 operator +(Vector3 a, double b)
+		{
+			a.X += b;
+			a.Y += b;
+			a.Z += b;
+			return a;
 		}
 		
 		/// <summary>Adds a scalar and a vector.</summary>
@@ -82,61 +90,92 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The vector.</param>
 		/// <returns>The sum of the scalar and the vector.</returns>
 		public static Vector3 operator +(double a, Vector3 b) {
-			return new Vector3(a + b.X, a + b.Y, a + b.Z);
+			b.X += a;
+			b.Y += a;
+			b.Z += a;
+			return b;
 		}
 		
 		/// <summary>Subtracts two vectors.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The difference of the two vectors.</returns>
-		public static Vector3 operator -(Vector3 a, Vector3 b) {
-			return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+		public static Vector3 operator -(Vector3 a, Vector3 b)
+		{
+			a.X -= b.X;
+			a.Y -= b.Y;
+			a.Z -= b.Z;
+			return a;
 		}
 		
 		/// <summary>Subtracts a scalar from a vector.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The difference of the vector and the scalar.</returns>
-		public static Vector3 operator -(Vector3 a, double b) {
-			return new Vector3(a.X - b, a.Y - b, a.Z - b);
+		public static Vector3 operator -(Vector3 a, double b)
+		{
+			a.X -= b;
+			a.Y -= b;
+			a.Z -= b;
+			return a;
 		}
 		
 		/// <summary>Subtracts a vector from a scalar.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
 		/// <returns>The difference of the scalar and the vector.</returns>
-		public static Vector3 operator -(double a, Vector3 b) {
-			return new Vector3(a - b.X, a - b.Y, a - b.Z);
+		public static Vector3 operator -(double a, Vector3 b)
+		{
+			b.X -= a;
+			b.Y -= a;
+			b.Z -= a;
+			return b;
 		}
 		
 		/// <summary>Negates a vector.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <returns>The negation of the vector.</returns>
-		public static Vector3 operator -(Vector3 vector) {
-			return new Vector3(-vector.X, -vector.Y, -vector.Z);
+		public static Vector3 operator -(Vector3 vector)
+		{
+			vector.X = -vector.X;
+			vector.Y = -vector.Y;
+			vector.Z = -vector.Z;
+			return vector;
 		}
 		
 		/// <summary>Multiplies two vectors.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The product of the two vectors.</returns>
-		public static Vector3 operator *(Vector3 a, Vector3 b) {
-			return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+		public static Vector3 operator *(Vector3 a, Vector3 b)
+		{
+			a.X *= b.X;
+			a.Y *= b.Y;
+			a.Z *= b.Z;
+			return a;
 		}
 		/// <summary>Multiplies a vector and a scalar.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The product of the vector and the scalar.</returns>
-		public static Vector3 operator *(Vector3 a, double b) {
-			return new Vector3(a.X * b, a.Y * b, a.Z * b);
+		public static Vector3 operator *(Vector3 a, double b)
+		{
+			a.X *= b;
+			a.Y *= b;
+			a.Z *= b;
+			return a;
 		}
 		
 		/// <summary>Multiplies a scalar and a vector.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
 		/// <returns>The product of the scalar and the vector.</returns>
-		public static Vector3 operator *(double a, Vector3 b) {
-			return new Vector3(a * b.X, a * b.Y, a * b.Z);
+		public static Vector3 operator *(double a, Vector3 b)
+		{
+			b.X *= a;
+			b.Y *= a;
+			b.Z *= a;
+			return b;
 		}
 		
 		/// <summary>Divides two vectors.</summary>
@@ -144,12 +183,16 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The second vector.</param>
 		/// <returns>The quotient of the two vectors.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
-		public static Vector3 operator /(Vector3 a, Vector3 b) {
+		public static Vector3 operator /(Vector3 a, Vector3 b)
+		{
 			if (b.X == 0.0 | b.Y == 0.0 | b.Z == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
 			}
+
+			a.X /= b.X;
+			a.Y /= b.Y;
+			a.Z /= b.Z;
+			return a;
 		}
 		
 		/// <summary>Divides a vector by a scalar.</summary>
@@ -160,10 +203,12 @@ namespace OpenBveApi.Math {
 		public static Vector3 operator /(Vector3 a, double b) {
 			if (b == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / b;
-				return new Vector3(a.X * factor, a.Y * factor, a.Z * factor);
 			}
+			double factor = 1.0 / b;
+			a.X *= factor;
+			a.Y *= factor;
+			a.Z *= factor;
+			return a;
 		}
 		
 		/// <summary>Divides a scalar by a vector.</summary>
@@ -171,12 +216,16 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The vector.</param>
 		/// <returns>The quotient of the scalar and the vector.</returns>
 		/// <exception cref="DivideByZeroException">Raised when any member of the vector is zero.</exception>
-		public static Vector3 operator /(double a, Vector3 b) {
+		public static Vector3 operator /(double a, Vector3 b)
+		{
 			if (b.X == 0.0 | b.Y == 0.0 | b.Z == 0.0) {
 				throw new DivideByZeroException();
-			} else {
-				return new Vector3(a / b.X, a / b.Y, a / b.Z);
 			}
+
+			b.X /= a;
+			b.Y /= a;
+			b.Z /= a;
+			return b;
 		}
 
 		
@@ -245,17 +294,16 @@ namespace OpenBveApi.Math {
 		// --- instance functions ---
 		
 		/// <summary>Normalizes the vector.</summary>
-		/// <exception cref="System.DivideByZeroException">Raised when the vector is a null vector.</exception>
 		public void Normalize() {
 			double norm = this.X * this.X + this.Y * this.Y + this.Z * this.Z;
-			if (norm == 0.0) {
-				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / System.Math.Sqrt(norm);
-				this.X *= factor;
-				this.Y *= factor;
-				this.Z *= factor;
+			if (norm == 0.0)
+			{
+				return;
 			}
+			double factor = 1.0 / System.Math.Sqrt(norm);
+			this.X *= factor;
+			this.Y *= factor;
+			this.Z *= factor;
 		}
 		
 		/// <summary>Translates the vector by a specified offset.</summary>
@@ -292,7 +340,9 @@ namespace OpenBveApi.Math {
 			double x = (cosineOfAngle + cosineComplement * direction.X * direction.X) * this.X + (cosineComplement * direction.X * direction.Y - sineOfAngle * direction.Z) * this.Y + (cosineComplement * direction.X * direction.Z + sineOfAngle * direction.Y) * this.Z;
 			double y = (cosineOfAngle + cosineComplement * direction.Y * direction.Y) * this.Y + (cosineComplement * direction.X * direction.Y + sineOfAngle * direction.Z) * this.X + (cosineComplement * direction.Y * direction.Z - sineOfAngle * direction.X) * this.Z;
 			double z = (cosineOfAngle + cosineComplement * direction.Z * direction.Z) * this.Z + (cosineComplement * direction.X * direction.Z - sineOfAngle * direction.Y) * this.X + (cosineComplement * direction.Y * direction.Z + sineOfAngle * direction.X) * this.Y;
-			this = new Vector3(x, y, z);
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
 		/// <summary>Rotates the vector based upon three other vectors</summary>
@@ -303,7 +353,9 @@ namespace OpenBveApi.Math {
 			var x = thirdVector.X * this.X + secondVector.X * this.Y + firstVector.X * this.Z;
 			var y = thirdVector.Y * this.X + secondVector.Y * this.Y + firstVector.Y * this.Z;
 			var z = thirdVector.Z * this.X + secondVector.Z * this.Y + firstVector.Z * this.Z;
-			this = new Vector3(x, y, z);
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
 		/// <summary>Rotates the vector from the default orientation into a specified orientation.</summary>
@@ -313,7 +365,9 @@ namespace OpenBveApi.Math {
 			double x = orientation.X.X * this.X + orientation.Y.X * this.Y + orientation.Z.X * this.Z;
 			double y = orientation.X.Y * this.X + orientation.Y.Y * this.Y + orientation.Z.Y * this.Z;
 			double z = orientation.X.Z * this.X + orientation.Y.Z * this.Y + orientation.Z.Z * this.Z;
-			this = new Vector3(x, y, z);
+			X = x;
+			Y = y;
+			Z = z;
 		}
 
 		/// <summary>Rotates the vector using the specified transformation</summary>
@@ -323,7 +377,9 @@ namespace OpenBveApi.Math {
 			double x = transformation.X.X * X + transformation.Y.X * Y + transformation.Z.X * Z;
 			double y = transformation.X.Y * X + transformation.Y.Y * Y + transformation.Z.Y * Z;
 			double z = transformation.X.Z * X + transformation.Y.Z * Y + transformation.Z.Z * Z;
-			this = new Vector3(x,y,z);
+			X = x;
+			Y = y;
+			Z = z;
 		}
 		
 		/// <summary>Checks whether the vector is a null vector.</summary>

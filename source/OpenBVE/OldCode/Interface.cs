@@ -1,41 +1,28 @@
 ﻿using System;
 using System.Globalization;
 using OpenBveApi;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static partial class Interface {
-
-		// messages
-		internal enum MessageType {
-			Warning,
-			Error,
-			Critical
-		}
-		internal struct Message {
-			internal MessageType Type;
-			internal bool FileNotFound;
-			internal string Text;
-		}
-		internal static Message[] Messages = new Message[] { };
+		internal static LogMessage[] LogMessages = new LogMessage[] { };
 		internal static int MessageCount = 0;
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
 			if (Type == MessageType.Warning & !CurrentOptions.ShowWarningMessages) return;
 			if (Type == MessageType.Error & !CurrentOptions.ShowErrorMessages) return;
 			if (MessageCount == 0) {
-				Messages = new Message[16];
-			} else if (MessageCount >= Messages.Length) {
-				Array.Resize<Message>(ref Messages, Messages.Length << 1);
+				LogMessages = new LogMessage[16];
+			} else if (MessageCount >= LogMessages.Length) {
+				Array.Resize<LogMessage>(ref LogMessages, LogMessages.Length << 1);
 			}
-			Messages[MessageCount].Type = Type;
-			Messages[MessageCount].FileNotFound = FileNotFound;
-			Messages[MessageCount].Text = Text;
+			LogMessages[MessageCount] = new LogMessage(Type, FileNotFound, Text);
 			MessageCount++;
 			
 			Program.FileSystem.AppendToLogFile(Text);
 			
 		}
 		internal static void ClearMessages() {
-			Messages = new Message[] { };
+			LogMessages = new LogMessage[] { };
 			MessageCount = 0;
 		}
 		
@@ -64,7 +51,7 @@ namespace OpenBve {
 						} else if (n >= 3) {
 							if (n > 4)
 							{
-								Interface.AddMessage(Interface.MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
+								Interface.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {

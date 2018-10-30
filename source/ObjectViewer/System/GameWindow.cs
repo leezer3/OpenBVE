@@ -77,9 +77,9 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateXSpeed * timeElapsed);
                 double sina = Math.Sin(RotateXSpeed * timeElapsed);
-                World.Rotate(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z, 0.0, 1.0, 0.0, cosa, sina);
-                World.Rotate(ref World.AbsoluteCameraUp.X, ref World.AbsoluteCameraUp.Y, ref World.AbsoluteCameraUp.Z, 0.0, 1.0, 0.0, cosa, sina);
-                World.Rotate(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z, 0.0, 1.0, 0.0, cosa, sina);
+				World.AbsoluteCameraDirection.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+	            World.AbsoluteCameraUp.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+	            World.AbsoluteCameraSide.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
                 keep = true;
             }
             // rotate y
@@ -113,8 +113,8 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateYSpeed * timeElapsed);
                 double sina = Math.Sin(RotateYSpeed * timeElapsed);
-                World.Rotate(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z, cosa, sina);
-                World.Rotate(ref World.AbsoluteCameraUp.X, ref World.AbsoluteCameraUp.Y, ref World.AbsoluteCameraUp.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z, cosa, sina);
+				World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
+	            World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
                 keep = true;
             }
             // move x
@@ -260,8 +260,8 @@ namespace OpenBve
                 {
                     Program.ReducedMode = true;
                     World.AbsoluteCameraSide.Y = 0.0;
-                    World.Normalize(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z);
-                    World.Normalize(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z);
+                    World.AbsoluteCameraSide.Normalize();
+                    World.AbsoluteCameraDirection.Normalize();
                     World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
                 }
                 else
@@ -321,7 +321,7 @@ namespace OpenBve
             //             }
             //             catch (Exception ex)
             //             {
-            //                 Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
+            //                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
             //             }
             //             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
             //             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];

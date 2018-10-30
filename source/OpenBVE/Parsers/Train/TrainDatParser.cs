@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static partial class TrainDatParser {
@@ -72,19 +73,19 @@ namespace OpenBve {
 									currentFormat = TrainDatFormats.openBVE;
 									if (myVersion > currentVersion)
 									{
-										Interface.AddMessage(Interface.MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
+										Interface.AddMessage(MessageType.Warning, false, "The train.dat " + FileName + " was created with a newer version of openBVE. Please check for an update.");
 									}
 								}
 								else
 								{
 									currentFormat = TrainDatFormats.Unsupported;
-									Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
+									Interface.AddMessage(MessageType.Error, false, "The train.dat version " + Lines[0].ToLowerInvariant() + " is invalid in " + FileName);
 								}
 							}
 							else
 							{
 								currentFormat = TrainDatFormats.Unsupported;
-								Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
+								Interface.AddMessage(MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + FileName);
 							}
 							break;
 					}
@@ -163,29 +164,29 @@ namespace OpenBve {
 									switch (m) {
 										case 0:
 											if (a <= 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a0 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "a0 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageZeroAcceleration = a * 0.277777777777778;
 											} break;
 										case 1:
 											if (a <= 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "a1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneAcceleration = a * 0.277777777777778;
 											} break;
 										case 2:
 											if (a <= 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "v1 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneSpeed = a * 0.277777777777778;
 											} break;
 										case 3:
 											if (a <= 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageTwoSpeed = a * 0.277777777777778;
 												if (AccelerationCurves[n].StageTwoSpeed < AccelerationCurves[n].StageOneSpeed) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than or equal to v1 at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													Interface.AddMessage(MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than or equal to v1 at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													AccelerationCurves[n].StageTwoSpeed = AccelerationCurves[n].StageOneSpeed;
 												}
 											} break;
@@ -194,7 +195,7 @@ namespace OpenBve {
 												if (currentFormat == TrainDatFormats.BVE1200000 || currentFormat == TrainDatFormats.BVE1210000 || currentFormat == TrainDatFormats.BVE1220000) {
 													if (a <= 0.0) {
 														AccelerationCurves[n].StageTwoExponent = 1.0;
-														Interface.AddMessage(Interface.MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Interface.AddMessage(MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} else {
 														const double c = 4.439346232277577;
 														AccelerationCurves[n].StageTwoExponent = 1.0 - Math.Log(a) * AccelerationCurves[n].StageTwoSpeed * c;
@@ -222,25 +223,25 @@ namespace OpenBve {
 								switch (n) {
 									case 0:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeDeceleration is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeDeceleration is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeDeceleration = a * 0.277777777777778;
 										} break;
 									case 1:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CoefficientOfStaticFriction = a;
 										} break;
 									case 3:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "CoefficientOfRollingResistance is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "CoefficientOfRollingResistance is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CoefficientOfRollingResistance = a;
 										} break;
 									case 4:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "AerodynamicDragCoefficient is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "AerodynamicDragCoefficient is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											AerodynamicDragCoefficient = a;
 										} break;
@@ -329,7 +330,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "JerkPowerUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "JerkPowerUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 1:
@@ -339,7 +340,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "JerkPowerDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "JerkPowerDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 2:
@@ -349,7 +350,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "JerkBrakeUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "JerkBrakeUp is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 3:
@@ -359,7 +360,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "JerkBrakeDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "JerkBrakeDown is expected to be non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 4:
@@ -369,7 +370,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderUp is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeCylinderUp is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 5:
@@ -379,7 +380,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderDown is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeCylinderDown is expected to be greater than zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 								}
@@ -398,7 +399,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											trainBrakeType = BrakeSystemType.ElectromagneticStraightAirBrake;
 										}
 										break;
@@ -410,19 +411,19 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											ElectropneumaticType = EletropneumaticBrakeType.None;
 										}
 										break;
 									case 2:
 										if (a < 0)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeControlSpeed must be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
 										}
-										if (a != 0 && trainBrakeType == BrakeSystemType.AutomaticAirBrake || ElectropneumaticType == EletropneumaticBrakeType.DelayFillingControl)
+										if (a != 0 && trainBrakeType == BrakeSystemType.AutomaticAirBrake)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Warning, false, "BrakeControlSpeed will be ignored due to the current brake setup at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
 										}
 										BrakeControlSpeed = a * 0.277777777777778; //Convert to m/s
@@ -455,31 +456,31 @@ namespace OpenBve {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderServiceMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeCylinderServiceMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeCylinderServiceMaximumPressure = a * 1000.0;
 										} break;
 									case 1:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderEmergencyMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakeCylinderEmergencyMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeCylinderEmergencyMaximumPressure = a * 1000.0;
 										} break;
 									case 2:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MainReservoirMinimumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "MainReservoirMinimumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MainReservoirMinimumPressure = a * 1000.0;
 										} break;
 									case 3:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MainReservoirMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "MainReservoirMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MainReservoirMaximumPressure = a * 1000.0;
 										} break;
 									case 4:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakePipePressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "BrakePipePressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakePipePressure = a * 1000.0;
 										} break;
@@ -499,7 +500,7 @@ namespace OpenBve {
 										else
 										{
 											powerNotches = 8;
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 									break;
 									case 2:
@@ -510,7 +511,7 @@ namespace OpenBve {
 										else
 										{
 											brakeNotches = 8;
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 3:
@@ -519,7 +520,7 @@ namespace OpenBve {
 									case 4:
 										if (a < 0 || a > 3)
 										{
-											Interface.AddMessage(Interface.MessageType.Error, false, "EbHandleBehaviour is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "EbHandleBehaviour is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											break;
 										}
 										Train.Handles.EmergencyBrake.OtherHandlesBehaviour = (TrainManager.EbHandleBehaviour) a;
@@ -533,7 +534,7 @@ namespace OpenBve {
 										else
 										{
 											locoBrakeNotches = 8;
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfLocoBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfLocoBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										
 										break;
@@ -548,7 +549,7 @@ namespace OpenBve {
 										else
 										{
 											driverPowerNotches = 8;
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 									break;
 									case 8:
@@ -559,7 +560,7 @@ namespace OpenBve {
 										else
 										{
 											driverBrakeNotches = 8;
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfDriverBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 								}
@@ -583,33 +584,33 @@ namespace OpenBve {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MotorCarMass is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "MotorCarMass is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MotorCarMass = a * 1000.0;
 										} break;
 									case 1:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfMotorCars is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfMotorCars is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MotorCars = (int)Math.Round(a);
 										} break;
 										case 2: TrailerCarMass = a * 1000.0; break;
 									case 3:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfTrailerCars is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "NumberOfTrailerCars is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											TrailerCars = (int)Math.Round(a);
 										} break;
 									case 4:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "LengthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "LengthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarLength = a;
 										} break;
 										case 5: FrontCarIsMotorCar = a == 1.0; break;
 									case 6:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarWidth = a;
 											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
@@ -617,7 +618,7 @@ namespace OpenBve {
 										} break;
 									case 7:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "HeightOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "HeightOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarHeight = a;
 											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
@@ -626,14 +627,14 @@ namespace OpenBve {
 										case 8: CenterOfGravityHeight = a; break;
 									case 9:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "ExposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "ExposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarExposedFrontalArea = a;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 										} break;
 									case 10:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "UnexposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "UnexposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarExposedFrontalArea = a;
 										} break;
@@ -675,7 +676,7 @@ namespace OpenBve {
 										else
 										{
 											ReAdhesionDevice = TrainManager.ReadhesionDeviceType.NotFitted;
-											Interface.AddMessage(Interface.MessageType.Error, false, "ReAdhesionDeviceType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Interface.AddMessage(MessageType.Error, false, "ReAdhesionDeviceType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case 7:
@@ -684,7 +685,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.PassAlarm = (TrainManager.PassAlarmType)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 8:
@@ -693,7 +694,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.DoorOpenMode = (TrainManager.DoorMode)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 9:
@@ -702,7 +703,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.DoorCloseMode = (TrainManager.DoorMode)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 10:
@@ -710,7 +711,7 @@ namespace OpenBve {
 											if (a >= 0.0) {
 												Train.Specs.DoorWidth = a;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorWidth is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "DoorWidth is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 11:
@@ -718,7 +719,7 @@ namespace OpenBve {
 											if (a >= 0.0) {
 												Train.Specs.DoorMaxTolerance = a;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorMaxTolerance is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Interface.AddMessage(MessageType.Error, false, "DoorMaxTolerance is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 								}
@@ -777,28 +778,28 @@ namespace OpenBve {
 			}
 			
 			if (TrailerCars > 0 & TrailerCarMass <= 0.0) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
 				TrailerCarMass = 1.0;
 			}
 
 			if (powerNotches == 0)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "NumberOfPowerNotches was not set in " + FileName);
 				powerNotches = 8;
 			}
 			if (brakeNotches == 0)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
 				brakeNotches = 8;
 			}
 			if (driverPowerNotches == 0)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfDriverPowerNotches was not set in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches was not set in " + FileName);
 				driverPowerNotches = powerNotches;
 			}
 			if (driverBrakeNotches == 0)
 			{
-				Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfDriverBrakeNotches was not set in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches was not set in " + FileName);
 				driverBrakeNotches = brakeNotches;
 			}
 			Train.Handles.Reverser = new TrainManager.ReverserHandle();
@@ -842,7 +843,7 @@ namespace OpenBve {
 			double DistanceBetweenTheCars = 0.3;
 			
 			if (DriverCar < 0 | DriverCar >= Cars) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
+				Interface.AddMessage(MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
 				DriverCar = 0;
 
 			}
@@ -870,7 +871,7 @@ namespace OpenBve {
 			if (AccelerationCurves.Length != Train.Handles.Power.MaximumNotch && !FileName.ToLowerInvariant().EndsWith("compatibility\\pretrain\\train.dat"))
 			{
 				//NOTE: The compatibility train.dat is only used to load some properties, hence this warning does not apply
-				Interface.AddMessage(Interface.MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Handles.Power.MaximumNotch + " power notches in " + FileName);
+				Interface.AddMessage(MessageType.Warning, false, "The #ACCELERATION section defines " + AccelerationCurves.Length + " curves, but the #HANDLE section defines " + Train.Handles.Power.MaximumNotch + " power notches in " + FileName);
 			}
 			
 			for (int i = 0; i < Math.Min(AccelerationCurves.Length, Train.Handles.Power.MaximumNotch); i++) {
@@ -902,7 +903,7 @@ namespace OpenBve {
 					errors = true;
 				}
 				if (errors) {
-					Interface.AddMessage(Interface.MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
+					Interface.AddMessage(MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
 				}
 				if (AccelerationCurves[i].StageZeroAcceleration > MaximumAcceleration) {
 					MaximumAcceleration = AccelerationCurves[i].StageZeroAcceleration;

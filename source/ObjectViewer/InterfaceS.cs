@@ -8,6 +8,7 @@
 using System;
 using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
 namespace OpenBve {
@@ -93,31 +94,19 @@ namespace OpenBve {
 	// --- Interface.cs ---
 	internal static class Interface {
 
-		// messages
-		internal enum MessageType {
-			Information = 1,
-			Warning = 2,
-			Error = 3,
-			Critical = 4
-		}
-		internal struct Message {
-			internal MessageType Type;
-			internal string Text;
-		}
-		internal static Message[] Messages = new Message[] { };
+		internal static LogMessage[] LogMessages = new LogMessage[] { };
 		internal static int MessageCount = 0;
 		internal static void AddMessage(MessageType Type, bool FileNotFound, string Text) {
 			if (MessageCount == 0) {
-				Messages = new Message[16];
-			} else if (MessageCount >= Messages.Length) {
-				Array.Resize<Message>(ref Messages, Messages.Length << 1);
+				LogMessages = new LogMessage[16];
+			} else if (MessageCount >= LogMessages.Length) {
+				Array.Resize<LogMessage>(ref LogMessages, LogMessages.Length << 1);
 			}
-			Messages[MessageCount].Type = Type;
-			Messages[MessageCount].Text = Text;
+			LogMessages[MessageCount] = new LogMessage(Type, FileNotFound, Text);
 			MessageCount++;
 		}
 		internal static void ClearMessages() {
-			Messages = new Message[] { };
+			LogMessages = new LogMessage[] { };
 			MessageCount = 0;
 		}
 

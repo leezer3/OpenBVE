@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
 using OpenBve.BrakeSystems;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -50,7 +51,7 @@ namespace OpenBve
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CarSounds");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
-					Interface.AddMessage(Interface.MessageType.Error, false, "No car sound nodes defined in XML file " + fileName);
+					Interface.AddMessage(MessageType.Error, false, "No car sound nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty sound.xml file");
 				}
@@ -66,7 +67,7 @@ namespace OpenBve
 								case "plugin":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of plugin sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -78,7 +79,7 @@ namespace OpenBve
 								case "brake":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of brake sounds was defined in in XML file " + fileName);
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -106,7 +107,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.Brake, center, SoundCfgParser.smallRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -114,7 +115,7 @@ namespace OpenBve
 								case "brakehandle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of brake handle sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -140,7 +141,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.BrakeHandleMax, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -148,7 +149,7 @@ namespace OpenBve
 								case "breaker":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of breaker sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -166,7 +167,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.BreakerResumeOrInterrupt, panel, SoundCfgParser.smallRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -181,7 +182,7 @@ namespace OpenBve
 								case "compressor":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of compressor sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (car.CarBrake.brakeType != BrakeType.Main)
@@ -208,7 +209,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.CpEnd, center, SoundCfgParser.mediumRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -216,7 +217,7 @@ namespace OpenBve
 								case "door":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of door sounds was defined in in XML file " + fileName);
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -240,7 +241,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Doors[1].CloseSound, right, SoundCfgParser.smallRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -248,7 +249,7 @@ namespace OpenBve
 								case "flange":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of flange sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Flange, center, SoundCfgParser.mediumRadius);
@@ -256,7 +257,7 @@ namespace OpenBve
 								case "horn":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of horn sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -280,7 +281,7 @@ namespace OpenBve
 												ParseHornNode(cc, out car.Horns[2], front, SoundCfgParser.largeRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -293,7 +294,7 @@ namespace OpenBve
 								case "powerhandle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of power handle sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -321,7 +322,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.MasterControllerMax, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -336,7 +337,7 @@ namespace OpenBve
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of pilot-lamp sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -354,7 +355,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.PilotLampOff, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -363,7 +364,7 @@ namespace OpenBve
 								case "switchfrontaxle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.FrontAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
@@ -372,7 +373,7 @@ namespace OpenBve
 								case "switchrearaxle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.RearAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
@@ -381,7 +382,7 @@ namespace OpenBve
 								case "reverserhandle":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of reverser sounds was defined in in XML file " + fileName);
 										break;
 									}
 									if (!isDriverCar)
@@ -399,7 +400,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.ReverserOff, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -407,7 +408,7 @@ namespace OpenBve
 								case "run":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of run sounds was defined in in XML file " + fileName);
 										break;
 									}
 									ParseArrayNode(c, out car.Sounds.Run, center, SoundCfgParser.mediumRadius);
@@ -420,7 +421,7 @@ namespace OpenBve
 								case "spring":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -436,7 +437,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.SpringR, right, SoundCfgParser.smallRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -444,7 +445,7 @@ namespace OpenBve
 								case "requeststop":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "An empty list of request stop sounds was defined in in XML file " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "An empty list of request stop sounds was defined in in XML file " + fileName);
 										break;
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -461,7 +462,7 @@ namespace OpenBve
 												ParseNode(cc, out car.Sounds.RequestStop[2], center, SoundCfgParser.smallRadius);
 												break;
 											default:
-												Interface.AddMessage(Interface.MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
 												break;
 										}
 									}
@@ -556,7 +557,7 @@ namespace OpenBve
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
-								Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
+								Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
 								Sound = null;
 								return;
 							}
@@ -564,7 +565,7 @@ namespace OpenBve
 						catch
 						{
 							//Probably invalid filename characters
-							Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 							Sound = null;
 							return;
 						}
@@ -574,17 +575,17 @@ namespace OpenBve
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
 							x = 0.0;
 						}
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
 							y = 0.0;
 						}
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
 							z = 0.0;
 						}
 						Position = new Vector3(x, y, z);
@@ -592,7 +593,7 @@ namespace OpenBve
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 						}
 						break;
 
@@ -601,7 +602,7 @@ namespace OpenBve
 			if (fileName == null)
 			{
 				//No valid filename node specified
-				Interface.AddMessage(Interface.MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
+				Interface.AddMessage(MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
 				Sound = null;
 				return;
 			}
@@ -627,7 +628,7 @@ namespace OpenBve
 							if (!System.IO.File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
-								Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
+								Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
 								Sound = TrainManager.CarSound.Empty;
 								return;
 							}
@@ -635,7 +636,7 @@ namespace OpenBve
 						catch
 						{
 							//Probably invalid filename characters
-							Interface.AddMessage(Interface.MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 							Sound = TrainManager.CarSound.Empty;
 							return;
 						}
@@ -645,17 +646,17 @@ namespace OpenBve
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius X " + Arguments[0] + " in XML node " + node.Name + " is invalid.");
 							x = 0.0;
 						}
 						if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius Y " + Arguments[1] + " in XML node " + node.Name + " is invalid.");
 							y = 0.0;
 						}
 						if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
 							z = 0.0;
 						}
 						Position = new Vector3(x,y,z);
@@ -663,7 +664,7 @@ namespace OpenBve
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
+							Interface.AddMessage(MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 						}
 						break;
 					
@@ -672,7 +673,7 @@ namespace OpenBve
 			if (fileName == null)
 			{
 				//No valid filename node specified
-				Interface.AddMessage(Interface.MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
+				Interface.AddMessage(MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
 				Sound = TrainManager.CarSound.Empty;
 				return;
 			}
@@ -692,7 +693,7 @@ namespace OpenBve
 				int idx = -1;
 				if (c.Name.ToLowerInvariant() != "sound")
 				{
-					Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
+					Interface.AddMessage(MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
 				}
 				else
 				{
@@ -702,7 +703,7 @@ namespace OpenBve
 						{
 							if (!NumberFormats.TryParseIntVb6(c.ChildNodes[i].InnerText.ToLowerInvariant(), out idx))
 							{
-								Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+								Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
 								return;
 							}
 							break;
@@ -721,7 +722,7 @@ namespace OpenBve
 					}
 					else
 					{
-						Interface.AddMessage(Interface.MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+						Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
 					}
 				}
 			}

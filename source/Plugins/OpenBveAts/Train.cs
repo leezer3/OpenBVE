@@ -114,6 +114,10 @@ namespace Plugin {
 		/// <param name="file">The train.dat file.</param>
 		/// <returns>Whether loading the train.dat file was successful.</returns>
 		internal bool LoadTrainDatFile(string file) {
+			if (!File.Exists(file))
+			{
+				return false;
+			}
 			string[] lines = File.ReadAllLines(file, Encoding.UTF8);
 			for (int i = 0; i < lines.Length; i++) {
 				int semicolon = lines[i].IndexOf(';');
