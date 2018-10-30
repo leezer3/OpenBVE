@@ -294,17 +294,16 @@ namespace OpenBveApi.Math {
 		// --- instance functions ---
 		
 		/// <summary>Normalizes the vector.</summary>
-		/// <exception cref="System.DivideByZeroException">Raised when the vector is a null vector.</exception>
 		public void Normalize() {
 			double norm = this.X * this.X + this.Y * this.Y + this.Z * this.Z;
-			if (norm == 0.0) {
-				throw new DivideByZeroException();
-			} else {
-				double factor = 1.0 / System.Math.Sqrt(norm);
-				this.X *= factor;
-				this.Y *= factor;
-				this.Z *= factor;
+			if (norm == 0.0)
+			{
+				return;
 			}
+			double factor = 1.0 / System.Math.Sqrt(norm);
+			this.X *= factor;
+			this.Y *= factor;
+			this.Z *= factor;
 		}
 		
 		/// <summary>Translates the vector by a specified offset.</summary>
