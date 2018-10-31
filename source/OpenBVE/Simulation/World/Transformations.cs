@@ -1,19 +1,10 @@
 ﻿using System;
 using OpenBveApi.Math;
-using OpenBveApi.World;
 
 namespace OpenBve
 {
 	internal static partial class World
 	{
-		/// <summary>Creates the cross product of two vectors, input as induvidual co-ordinates</summary>
-		internal static void Cross(double ax, double ay, double az, double bx, double by, double bz, out double cx, out double cy, out double cz)
-		{
-			cx = ay * bz - az * by;
-			cy = az * bx - ax * bz;
-			cz = ax * by - ay * bx;
-		}
-
 		/// <summary>Rotates one vector based upon a second vector, input as induvidual co-ordinates</summary>
 		/// <param name="p">The vector to rotate</param>
 		/// <param name="dx">The X co-ordinate of the second vector</param>

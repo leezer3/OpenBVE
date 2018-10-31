@@ -227,27 +227,23 @@ namespace OpenBve
 					//FRONT BOGIE
 
 					// get direction, up and side vectors
-					double dx, dy, dz;
-					double ux, uy, uz;
-					double sx, sy, sz;
+					Vector3 d = new Vector3();
+					Vector3 u;
+					Vector3 s;
 					{
-						dx = FrontAxle.Follower.WorldPosition.X -
+						d.X = FrontAxle.Follower.WorldPosition.X -
 						     RearAxle.Follower.WorldPosition.X;
-						dy = FrontAxle.Follower.WorldPosition.Y -
+						d.Y = FrontAxle.Follower.WorldPosition.Y -
 						     RearAxle.Follower.WorldPosition.Y;
-						dz = FrontAxle.Follower.WorldPosition.Z -
+						d.Z = FrontAxle.Follower.WorldPosition.Z -
 						     RearAxle.Follower.WorldPosition.Z;
-						double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-						dx *= t;
-						dy *= t;
-						dz *= t;
-						t = 1.0 / Math.Sqrt(dx * dx + dz * dz);
-						double ex = dx * t;
-						double ez = dz * t;
-						sx = ez;
-						sy = 0.0;
-						sz = -ex;
-						World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
+						double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
+						d *= t;
+						t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
+						double ex = d.X * t;
+						double ez = d.Z * t;
+						s = new Vector3(ez, 0.0, -ex);
+						u = Vector3.Cross(d, s);
 					}
 					// cant and radius
 					
@@ -258,15 +254,9 @@ namespace OpenBve
 						           baseCar.Specs.CurrentRollDueToCantAngle;
 						double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 						double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-						double cx = sx * x + ux * y;
-						double cy = sy * x + uy * y;
-						double cz = sz * x + uz * y;
-						FrontAxle.Follower.WorldPosition.X += cx;
-						FrontAxle.Follower.WorldPosition.Y += cy;
-						FrontAxle.Follower.WorldPosition.Z += cz;
-						RearAxle.Follower.WorldPosition.X += cx;
-						RearAxle.Follower.WorldPosition.Y += cy;
-						RearAxle.Follower.WorldPosition.Z += cz;
+						Vector3 c = new Vector3(s.X * x + u.X * y, s.Y * x + u.Y * y, s.Z * x + u.Z * y);
+						FrontAxle.Follower.WorldPosition += c;
+						RearAxle.Follower.WorldPosition += c;
 					}
 					// apply rolling
 					{
@@ -274,11 +264,9 @@ namespace OpenBve
 						           baseCar.Specs.CurrentRollDueToCantAngle;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
-						World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
-						World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-						Up.X = ux;
-						Up.Y = uy;
-						Up.Z = uz;
+						s.Rotate(d, cosa, sina);
+						u.Rotate(d, cosa, sina);
+						Up = u;
 					}
 					// apply pitching
 					if (CurrentCarSection >= 0 &&
@@ -287,8 +275,8 @@ namespace OpenBve
 						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
-						World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-						World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+						d.Rotate(s, cosa, sina);
+						u.Rotate(s, cosa, sina);
 						double cx = 0.5 *
 						            (FrontAxle.Follower.WorldPosition.X +
 						             RearAxle.Follower.WorldPosition.X);
@@ -304,17 +292,15 @@ namespace OpenBve
 						RearAxle.Follower.WorldPosition.X -= cx;
 						RearAxle.Follower.WorldPosition.Y -= cy;
 						RearAxle.Follower.WorldPosition.Z -= cz;
-						World.Rotate(ref FrontAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
-						World.Rotate(ref RearAxle.Follower.WorldPosition, sx, sy, sz, cosa, sina);
+						FrontAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
+						RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
 						FrontAxle.Follower.WorldPosition.X += cx;
 						FrontAxle.Follower.WorldPosition.Y += cy;
 						FrontAxle.Follower.WorldPosition.Z += cz;
 						RearAxle.Follower.WorldPosition.X += cx;
 						RearAxle.Follower.WorldPosition.Y += cy;
 						RearAxle.Follower.WorldPosition.Z += cz;
-						Up.X = ux;
-						Up.Y = uy;
-						Up.Z = uz;
+						Up = u;
 					}
 				}
 			}

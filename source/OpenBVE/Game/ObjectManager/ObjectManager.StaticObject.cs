@@ -311,11 +311,6 @@ namespace OpenBve
 					Mesh.Vertices[j].Coordinates.Y += sy * n;
 					Mesh.Vertices[j].Coordinates.Z += sz * n;
 				}
-
-				// ReSharper disable NotAccessedVariable
-				double ux, uy, uz;
-				// ReSharper restore NotAccessedVariable
-				World.Cross(sx, sy, sz, dx, dy, dz, out ux, out uy, out uz);
 				for (int j = 0; j < Mesh.Faces.Length; j++)
 				{
 					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
