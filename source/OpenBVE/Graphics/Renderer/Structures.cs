@@ -159,7 +159,7 @@ namespace OpenBve
 				this.List = new ObjectList();
 				this.OpenGlDisplayList = 0;
 				this.OpenGlDisplayListAvailable = false;
-				this.WorldPosition = new Vector3(0.0, 0.0, 0.0);
+				this.WorldPosition = Vector3.Zero;
 				this.Update = true;
 			}
 		}

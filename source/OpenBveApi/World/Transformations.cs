@@ -20,23 +20,23 @@ namespace OpenBveApi.World
 		{
 			if (Yaw == 0.0 & Pitch == 0.0 & Roll == 0.0)
 			{
-				this.X = new Vector3(1.0, 0.0, 0.0);
-				this.Y = new Vector3(0.0, 1.0, 0.0);
-				this.Z = new Vector3(0.0, 0.0, 1.0);
+				this.X = Vector3.Right;
+				this.Y = Vector3.Down;
+				this.Z = Vector3.Forward;
 			}
 			else if (Pitch == 0.0 & Roll == 0.0)
 			{
 				double cosYaw = System.Math.Cos(Yaw);
 				double sinYaw = System.Math.Sin(Yaw);
 				this.X = new Vector3(cosYaw, 0.0, -sinYaw);
-				this.Y = new Vector3(0.0, 1.0, 0.0);
+				this.Y = Vector3.Down;
 				this.Z = new Vector3(sinYaw, 0.0, cosYaw);
 			}
 			else
 			{
-				X = new Vector3(1.0, 0.0, 0.0);
-				Y = new Vector3(0.0, 1.0, 0.0);
-				Z = new Vector3(0.0, 0.0, 1.0);
+				X = Vector3.Right;
+				Y = Vector3.Down;
+				Z = Vector3.Forward;
 				double cosYaw = System.Math.Cos(Yaw);
 				double sinYaw = System.Math.Sin(Yaw);
 				double cosPitch = System.Math.Cos(-Pitch);

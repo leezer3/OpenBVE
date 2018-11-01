@@ -1092,7 +1092,7 @@ namespace OpenBve {
 				Builder.Vertices[v + 2 * i + 0] = new Vertex(ux, g, uz);
 				Builder.Vertices[v + 2 * i + 1] = new Vertex(lx, -g, lz);
 				Vector3 normal = new Vector3(dx * ns, 0.0, dz * ns);
-				Vector3 s = Vector3.Cross(normal, new Vector3(0.0, 1.0, 0.0));
+				Vector3 s = Vector3.Cross(normal, Vector3.Down);
 				normal.Rotate(s, cosa, sina);
 				Normals[2 * i + 0] = new Vector3(normal);
 				Normals[2 * i + 1] = new Vector3(normal);

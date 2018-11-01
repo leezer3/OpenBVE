@@ -51,7 +51,7 @@ namespace OpenBve
 						case "[include]":
 							{
 								i++;
-								Vector3 position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 position = Vector3.Zero;
 								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
@@ -183,18 +183,18 @@ namespace OpenBve
 								{
 									States = new ObjectManager.AnimatedObjectState[] {},
 									CurrentState = -1,
-									TranslateXDirection = new Vector3(1.0, 0.0, 0.0),
-									TranslateYDirection = new Vector3(0.0, 1.0, 0.0),
-									TranslateZDirection = new Vector3(0.0, 0.0, 1.0),
-									RotateXDirection = new Vector3(1.0, 0.0, 0.0),
-									RotateYDirection = new Vector3(0.0, 1.0, 0.0),
-									RotateZDirection = new Vector3(0.0, 0.0, 1.0),
+									TranslateXDirection = Vector3.Right,
+									TranslateYDirection = Vector3.Down,
+									TranslateZDirection = Vector3.Forward,
+									RotateXDirection = Vector3.Right,
+									RotateYDirection = Vector3.Down,
+									RotateZDirection = Vector3.Forward,
 									TextureShiftXDirection = new Vector2(1.0, 0.0),
 									TextureShiftYDirection = new Vector2(0.0, 1.0),
 									RefreshRate = 0.0,
 									ObjectIndex = -1
 								};
-								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 Position = Vector3.Zero;
 								double RotateX = 0;
 								bool StaticXRotation = false;
 								double RotateY = 0;
@@ -802,7 +802,7 @@ namespace OpenBve
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++)
 									{
-										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
+										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null)
 										{
 											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
@@ -920,7 +920,7 @@ namespace OpenBve
 								{
 									Array.Resize<ObjectManager.WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
 								}
-								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 Position = Vector3.Zero;
 								string fileName = null;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -1199,7 +1199,7 @@ namespace OpenBve
 								{
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
 								}
-								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 Position = Vector3.Zero;
 								string[] fileNames = new string[0];
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{

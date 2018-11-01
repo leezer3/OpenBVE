@@ -385,7 +385,7 @@ namespace OpenBve
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
 					CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
-					CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
+					CarSections[j].Elements[0].States[0].Position = Vector3.Zero;
 					CarSections[j].Elements[0].States[0].Object = s;
 					CarSections[j].Elements[0].CurrentState = 0;
 					CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();

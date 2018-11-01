@@ -5288,7 +5288,7 @@ namespace OpenBve {
 				}
 			}
 			// create objects and track
-			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+			Vector3 Position = Vector3.Zero;
 			Vector2 Direction = new Vector2(0.0, 1.0);
 			TrackManager.CurrentTrack = new TrackManager.Track();
 			TrackManager.CurrentTrack.Elements = new TrackManager.TrackElement[] { };
@@ -5436,7 +5436,7 @@ namespace OpenBve {
 						if (q) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, null, false, false, true, new Vector3(0.0, 0.0, 0.0), 12.5);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, null, false, false, true, Vector3.Zero, 12.5);
 						}
 					}
 				}
@@ -5530,10 +5530,10 @@ namespace OpenBve {
 							double d = Data.Blocks[i].Sound[j].TrackPosition - StartingDistance;
 							switch (Data.Blocks[i].Sound[j].Type) {
 								case SoundType.TrainStatic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, true, true, false, new Vector3(0.0, 0.0, 0.0), 0.0);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0);
 									break;
 								case SoundType.TrainDynamic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, false, false, true, new Vector3(0.0, 0.0, 0.0), Data.Blocks[i].Sound[j].Speed);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].Sound[j].Speed);
 									break;
 							}
 						}
@@ -6652,9 +6652,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(g);
 									double sing = Math.Sin(g);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
-									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
-									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 									p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
 									TrackManager.UpdateTrackFollower(ref follower, p - 1.0, true, false);
 									TrackManager.UpdateTrackFollower(ref follower, p, true, false);
@@ -6670,9 +6670,9 @@ namespace OpenBve {
 									double cosg = Math.Cos(newAngle);
 									double sing = Math.Sin(newAngle);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
-									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
-									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(new Vector3(0.0, 1.0, 0.0), cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;

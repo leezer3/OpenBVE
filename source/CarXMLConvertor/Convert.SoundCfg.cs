@@ -13,7 +13,7 @@ namespace CarXmlConvertor
 	    private static MainForm mainForm;
 	    internal static Vector3 DriverPosition = new Vector3(0, 1, 0);
 	    //3D center of the car
-	    internal static Vector3 center = new Vector3(0.0, 0.0, 0.0);
+	    internal static Vector3 center = Vector3.Zero;
 		//Positioned to the left of the car, but centered Y & Z
 	    internal static Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 		//Positioned to the right of the car, but centered Y & Z

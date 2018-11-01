@@ -34,11 +34,8 @@ namespace OpenBve
 				}
 				if (anyfree && !allfree && Objects.Length > 1)
 				{
-					var X = new Vector3(1.0, 0.0, 0.0);
-					var Y = new Vector3(0.0, 1.0, 0.0);
-					var Z = new Vector3(0.0, 0.0, 1.0);
 					//Optimise a little: If *all* are free of functions, this can safely be converted into a static object without regard to below
-					if (AuxTransformation.X != X || AuxTransformation.Y != Y || AuxTransformation.Z != Z)
+					if (AuxTransformation.X != Vector3.Right || AuxTransformation.Y != Vector3.Down || AuxTransformation.Z != Vector3.Forward)
 					{
 						//HACK:
 						//An animated object containing a mix of functions and non-functions and using yaw, pitch or roll must not be converted into a mix

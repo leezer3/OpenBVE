@@ -563,8 +563,8 @@ namespace OpenBve {
 										double nx = n * w;
 										double ny = n * h;
 										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color, false);
-										Train.Cars[Car].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Car].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+										Train.Cars[Car].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Car].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Car].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Elements[j].RotateXDirection);
 										string f;
 										switch (Subject.ToLowerInvariant()) {
