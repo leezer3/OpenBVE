@@ -65,9 +65,13 @@ namespace OpenBve
 				//Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
-				if (MainLoop.Quit)
+				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 				{
 					Close();
+					if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+					{
+						Environment.Exit(0);
+					}
 				}
 				//If the menu state has not changed, don't update the rendered simulation
 				return;
@@ -132,9 +136,13 @@ namespace OpenBve
 			}
 
 			World.CameraAlignmentDirection = new World.CameraAlignment();
-			if (MainLoop.Quit)
+			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
 				Program.currentGameWindow.Exit();
+				if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+				{
+					Environment.Exit(0);
+				}				
 			}
 			Renderer.UpdateLighting();
 			Renderer.RenderScene(TimeElapsed);
@@ -331,6 +339,12 @@ namespace OpenBve
 				}
 			}
 			Textures.UnloadAllTextures();
+			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentlyRunningOnMono)
+			{
+				//More forcefully close under Mono, stuff *still* hanging around....
+				Environment.Exit(0);
+			}
+			base.OnClosing(e);
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()

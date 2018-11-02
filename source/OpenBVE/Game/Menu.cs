@@ -687,7 +687,7 @@ namespace OpenBve
 								Reset();
 								Program.RestartArguments =
 									Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? "/review" : "";
-								MainLoop.Quit = true;
+								MainLoop.Quit = MainLoop.QuitMode.ExitToMenu;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION
 								PushMenu(MenuType.Control, ((MenuCommand)menu.Items[menu.Selection]).Data);
@@ -696,7 +696,7 @@ namespace OpenBve
 								break;
 							case MenuTag.Quit:                  // QUIT PROGRAMME
 								Reset();
-								MainLoop.Quit = true;
+								MainLoop.Quit = MainLoop.QuitMode.QuitProgram;
 								break;
 						}
 					}
