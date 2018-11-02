@@ -5682,12 +5682,10 @@ namespace OpenBve {
 								double y2 = Data.Blocks[i + 1].Rail[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
 								Vector3 pos2 = Position2 + offset2;
-								double rx = pos2.X - pos.X;
-								double ry = pos2.Y - pos.Y;
-								double rz = pos2.Z - pos.Z;
-								World.Normalize(ref rx, ref ry, ref rz);
-								RailTransformation.Z = new Vector3(rx, ry, rz);
-								RailTransformation.X = new Vector3(rz, 0.0, -rx);
+								Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);
+								r.Normalize();
+								RailTransformation.Z = r;
+								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								World.Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
 								double dx = Data.Blocks[i + 1].Rail[j].RailEndX - Data.Blocks[i].Rail[j].RailStartX;
@@ -5747,14 +5745,12 @@ namespace OpenBve {
 									int m = Data.Blocks[i].RailPole[j].Mode;
 									double dx = -Data.Blocks[i].RailPole[j].Location * 3.8;
 									double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
-									double wx = Math.Cos(wa);
-									double wy = Math.Tan(updown);
-									double wz = Math.Sin(wa);
-									World.Normalize(ref wx, ref wy, ref wz);
+									Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
+									w.Normalize();
 									double sx = Direction.Y;
 									double sy = 0.0;
 									double sz = -Direction.X;
-									Vector3 wpos = pos + new Vector3(sx * dx + wx * dz, sy * dx + wy * dz, sz * dx + wz * dz);
+									Vector3 wpos = pos + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
 									int type = Data.Blocks[i].RailPole[j].Type;
 									ObjectManager.CreateObject(Data.Structure.Poles[m][type], wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 								}

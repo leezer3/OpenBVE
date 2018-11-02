@@ -358,46 +358,38 @@ namespace OpenBve {
 			if (q) {
 				UpdateViewingDistances();
 			}
-			double dx = World.CameraTrackFollower.WorldDirection.X;
-			double dy = World.CameraTrackFollower.WorldDirection.Y;
-			double dz = World.CameraTrackFollower.WorldDirection.Z;
-			double ux = World.CameraTrackFollower.WorldUp.X;
-			double uy = World.CameraTrackFollower.WorldUp.Y;
-			double uz = World.CameraTrackFollower.WorldUp.Z;
-			double sx = World.CameraTrackFollower.WorldSide.X;
-			double sy = World.CameraTrackFollower.WorldSide.Y;
-			double sz = World.CameraTrackFollower.WorldSide.Z;
-			double tx = World.CameraCurrentAlignment.Position.X;
-			double ty = World.CameraCurrentAlignment.Position.Y;
-			double tz = World.CameraCurrentAlignment.Position.Z;
-			double dx2 = dx, dy2 = dy, dz2 = dz;
-			double ux2 = ux, uy2 = uy, uz2 = uz;
-			double cx = World.CameraTrackFollower.WorldPosition.X + sx * tx + ux2 * ty + dx2 * tz;
-			double cy = World.CameraTrackFollower.WorldPosition.Y + sy * tx + uy2 * ty + dy2 * tz;
-			double cz = World.CameraTrackFollower.WorldPosition.Z + sz * tx + uz2 * ty + dz2 * tz;
+			Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
+			Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
+			Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
+			Vector3 pF = new Vector3(CameraCurrentAlignment.Position);
+			Vector3 dx2 = new Vector3(dF);
+			Vector3 ux2 = new Vector3(uF);
+			double cx = World.CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
+			double cy = World.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
+			double cz = World.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
 			if (World.CameraCurrentAlignment.Yaw != 0.0) {
 				double cosa = Math.Cos(World.CameraCurrentAlignment.Yaw);
 				double sina = Math.Sin(World.CameraCurrentAlignment.Yaw);
-				World.Rotate(ref dx, ref dy, ref dz, ux, uy, uz, cosa, sina);
-				World.Rotate(ref sx, ref sy, ref sz, ux, uy, uz, cosa, sina);
+				dF.Rotate(uF, cosa, sina);
+				sF.Rotate(uF, cosa, sina);
 			}
 			double p = World.CameraCurrentAlignment.Pitch;
 			if (p != 0.0) {
 				double cosa = Math.Cos(-p);
 				double sina = Math.Sin(-p);
-				World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-				World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+				dF.Rotate(sF, cosa, sina);
+				uF.Rotate(sF, cosa, sina);
 			}
 			if (World.CameraCurrentAlignment.Roll != 0.0) {
 				double cosa = Math.Cos(-World.CameraCurrentAlignment.Roll);
 				double sina = Math.Sin(-World.CameraCurrentAlignment.Roll);
-				World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-				World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+				uF.Rotate(dF, cosa, sina);
+				sF.Rotate(dF, cosa, sina);
 			}
 			AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-			AbsoluteCameraDirection = new Vector3(dx, dy, dz);
-			AbsoluteCameraUp = new Vector3(ux, uy, uz);
-			AbsoluteCameraSide = new Vector3(sx, sy, sz);
+			AbsoluteCameraDirection = new Vector3(dF.X, dF.Y, dF.Z);
+			AbsoluteCameraUp = new Vector3(uF.X, uF.Y, uF.Z);
+			AbsoluteCameraSide = new Vector3(sF.X, sF.Y, sF.Z);
 		}
 		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
 			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);
@@ -468,17 +460,6 @@ namespace OpenBve {
 
 		// ================================
 
-		// rotate
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
-			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-			dx *= t; dy *= t; dz *= t;
-			double oc = 1.0 - cosa;
-			double x = (cosa + oc * dx * dx) * px + (oc * dx * dy - sina * dz) * py + (oc * dx * dz + sina * dy) * pz;
-			double y = (cosa + oc * dy * dy) * py + (oc * dx * dy + sina * dz) * px + (oc * dy * dz - sina * dx) * pz;
-			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
-			px = x; py = y; pz = z;
-		}
-		
 		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
 			double u = Vector.X * cosa - Vector.Z * sina;
 			double v = Vector.X * sina + Vector.Z * cosa;
@@ -492,13 +473,6 @@ namespace OpenBve {
 			if (t != 0.0) {
 				t = 1.0 / Math.Sqrt(t);
 				x *= t; y *= t;
-			}
-		}
-		internal static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t; y *= t; z *= t;
 			}
 		}
 	}

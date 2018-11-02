@@ -652,12 +652,10 @@ namespace OpenBve
 								double y2 = Data.Blocks[i + 1].Rails[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
 								Vector3 pos2 = Position2 + offset2;
-								double rx = pos2.X - pos.X;
-								double ry = pos2.Y - pos.Y;
-								double rz = pos2.Z - pos.Z;
-								World.Normalize(ref rx, ref ry, ref rz);
-								RailTransformation.Z = new Vector3(rx, ry, rz);
-								RailTransformation.X = new Vector3(rz, 0.0, -rx);
+								Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);
+								r.Normalize();
+								RailTransformation.Z = r;
+								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								World.Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
 								double dx = Data.Blocks[i + 1].Rails[j].RailEndX - Data.Blocks[i].Rails[j].RailStartX;

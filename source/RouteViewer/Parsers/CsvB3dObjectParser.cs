@@ -1349,32 +1349,6 @@ namespace OpenBve {
 		}
 
 		// apply shear
-		private static void ApplyShear(MeshBuilder Builder, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
-			for (int j = 0; j < Builder.Vertices.Length; j++) {
-				double n = r * (dx * Builder.Vertices[j].Coordinates.X + dy * Builder.Vertices[j].Coordinates.Y + dz * Builder.Vertices[j].Coordinates.Z);
-				Builder.Vertices[j].Coordinates.X += sx * n;
-				Builder.Vertices[j].Coordinates.Y += sy * n;
-				Builder.Vertices[j].Coordinates.Z += sz * n;
-			}
-			for (int j = 0; j < Builder.Faces.Length; j++) {
-				for (int k = 0; k < Builder.Faces[j].Vertices.Length; k++) {
-					if (Builder.Faces[j].Vertices[k].Normal.X != 0.0f | Builder.Faces[j].Vertices[k].Normal.Y != 0.0f | Builder.Faces[j].Vertices[k].Normal.Z != 0.0f) {
-						double nx = (double)Builder.Faces[j].Vertices[k].Normal.X;
-						double ny = (double)Builder.Faces[j].Vertices[k].Normal.Y;
-						double nz = (double)Builder.Faces[j].Vertices[k].Normal.Z;
-						double n = r * (sx * nx + sy * ny + sz * nz);
-						nx -= dx * n;
-						ny -= dy * n;
-						nz -= dz * n;
-						World.Normalize(ref nx, ref ny, ref nz);
-						Builder.Faces[j].Vertices[k].Normal.X = (float)nx;
-						Builder.Faces[j].Vertices[k].Normal.Y = (float)ny;
-						Builder.Faces[j].Vertices[k].Normal.Z = (float)nz;
-					}
-				}
-			}
-		}
-		// apply shear
 		private static void ApplyShear(MeshBuilder Builder, Vector3 d, Vector3 s, double r) {
 			for (int j = 0; j < Builder.Vertices.Length; j++) {
 				double n = r * (d.X * Builder.Vertices[j].Coordinates.X + d.Y * Builder.Vertices[j].Coordinates.Y + d.Z * Builder.Vertices[j].Coordinates.Z);
