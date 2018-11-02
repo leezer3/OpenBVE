@@ -344,6 +344,7 @@ namespace OpenBve
 				//More forcefully close under Mono, stuff *still* hanging around....
 				Environment.Exit(0);
 			}
+			base.OnClosing(e);
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
