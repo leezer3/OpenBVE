@@ -302,36 +302,23 @@ namespace OpenBve
 				}
 			}
 
-			internal void ApplyShear(double dx, double dy, double dz, double sx, double sy, double sz, double r)
+			internal void ApplyShear(Vector3 d, Vector3 s, double r)
 			{
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
-					double n = r * (dx * Mesh.Vertices[j].Coordinates.X + dy * Mesh.Vertices[j].Coordinates.Y + dz * Mesh.Vertices[j].Coordinates.Z);
-					Mesh.Vertices[j].Coordinates.X += sx * n;
-					Mesh.Vertices[j].Coordinates.Y += sy * n;
-					Mesh.Vertices[j].Coordinates.Z += sz * n;
+					double n = r * (d.X * Mesh.Vertices[j].Coordinates.X + d.Y * Mesh.Vertices[j].Coordinates.Y + d.Z * Mesh.Vertices[j].Coordinates.Z);
+					Mesh.Vertices[j].Coordinates.X += s.X * n;
+					Mesh.Vertices[j].Coordinates.Y += s.Y * n;
+					Mesh.Vertices[j].Coordinates.Z += s.Z * n;
 				}
-
-				// ReSharper disable NotAccessedVariable
-				double ux, uy, uz;
-				// ReSharper restore NotAccessedVariable
-				World.Cross(sx, sy, sz, dx, dy, dz, out ux, out uy, out uz);
 				for (int j = 0; j < Mesh.Faces.Length; j++)
 				{
 					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
 					{
 						if (Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f)
 						{
-							double nx = (double) Mesh.Faces[j].Vertices[k].Normal.X;
-							double ny = (double) Mesh.Faces[j].Vertices[k].Normal.Y;
-							double nz = (double) Mesh.Faces[j].Vertices[k].Normal.Z;
-							double n = r * (sx * nx + sy * ny + sz * nz);
-							nx -= dx * n;
-							ny -= dy * n;
-							nz -= dz * n;
-							Mesh.Faces[j].Vertices[k].Normal.X = (float) nx;
-							Mesh.Faces[j].Vertices[k].Normal.Y = (float) ny;
-							Mesh.Faces[j].Vertices[k].Normal.Z = (float) nz;
+							double n = r * (s.X * Mesh.Faces[j].Vertices[k].Normal.X + s.Y * Mesh.Faces[j].Vertices[k].Normal.Y + s.Z * Mesh.Faces[j].Vertices[k].Normal.Z);
+							Mesh.Faces[j].Vertices[k].Normal -= d * n;
 							Mesh.Faces[j].Vertices[k].Normal.Normalize();
 						}
 					}

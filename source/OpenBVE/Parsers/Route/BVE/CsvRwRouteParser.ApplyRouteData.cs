@@ -736,14 +736,12 @@ namespace OpenBve
 									int m = Data.Blocks[i].RailPole[j].Mode;
 									double dx = -Data.Blocks[i].RailPole[j].Location * 3.8;
 									double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
-									double wx = Math.Cos(wa);
-									double wy = Math.Tan(updown);
-									double wz = Math.Sin(wa);
-									World.Normalize(ref wx, ref wy, ref wz);
+									Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
+									w.Normalize();
 									double sx = Direction.Y;
 									double sy = 0.0;
 									double sz = -Direction.X;
-									Vector3 wpos = pos + new Vector3(sx * dx + wx * dz, sy * dx + wy * dz, sz * dx + wz * dz);
+									Vector3 wpos = pos + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
 									int type = Data.Blocks[i].RailPole[j].Type;
 									Data.Structure.Poles[m][type].CreateObject(wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 								}
@@ -786,16 +784,11 @@ namespace OpenBve
 										double dx = Data.Blocks[i].SoundEvents[k].X;
 										double dy = Data.Blocks[i].SoundEvents[k].Y;
 										double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
-										double wx = Math.Cos(wa);
-										double wy = Math.Tan(updown);
-										double wz = Math.Sin(wa);
-										World.Normalize(ref wx, ref wy, ref wz);
-										double sx = Direction.Y;
-										double sy = 0.0;
-										double sz = -Direction.X;
-										double ux, uy, uz;
-										World.Cross(wx, wy, wz, sx, sy, sz, out ux, out uy, out uz);
-										Vector3 wpos = pos + new Vector3(sx * dx + ux * dy + wx * d, sy * dx + uy * dy + wy * d, sz * dx + uz * dy + wz * d);
+										Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
+										w.Normalize();
+										Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
+										Vector3 u = Vector3.Cross(w, s);
+										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
 										Sounds.PlaySound(Data.Blocks[i].SoundEvents[k].SoundBuffer, 1.0, 1.0, wpos, true);
 									}
 								}

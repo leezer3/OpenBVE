@@ -437,7 +437,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Z *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder, 1, 0, 0, Rotation.Z);
+					ApplyRotation(Builder,new Vector3(1,0,0), Rotation.Z);
 				}
 
 
@@ -447,7 +447,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.X *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder, 0, 1, 0, Rotation.X);
+					ApplyRotation(Builder,new Vector3(0,1,0), Rotation.X);
 				}
 				if (Rotation.Y != 0.0)
 				{
@@ -455,7 +455,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Y *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder, 0, 0, 1, Rotation.Y);
+					ApplyRotation(Builder,new Vector3(0,0,1), Rotation.Y);
 				}
 
 
@@ -680,19 +680,19 @@ namespace OpenBve
 			return Output;
 		}
 
-		private static void ApplyRotation(MeshBuilder Builder, double x, double y, double z, double a)
+		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double a)
 		{
 			double cosa = Math.Cos(a);
 			double sina = Math.Sin(a);
 			for (int i = 0; i < Builder.Vertices.Length; i++)
 			{
-				World.Rotate(ref Builder.Vertices[i].Coordinates.X, ref Builder.Vertices[i].Coordinates.Y, ref Builder.Vertices[i].Coordinates.Z, x, y, z, cosa, sina);
+				Builder.Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
 			}
 			for (int i = 0; i < Builder.Faces.Length; i++)
 			{
 				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
 				{
-					World.Rotate(ref Builder.Faces[i].Vertices[j].Normal.X, ref Builder.Faces[i].Vertices[j].Normal.Y, ref Builder.Faces[i].Vertices[j].Normal.Z, x, y, z, cosa, sina);
+					Builder.Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
 				}
 			}
 		}

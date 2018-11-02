@@ -480,13 +480,5 @@ namespace OpenBve {
 			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
 			px = x; py = y; pz = z;
 		}
-		
-		internal static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t; y *= t; z *= t;
-			}
-		}
 	}
 }

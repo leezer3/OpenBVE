@@ -635,42 +635,36 @@ namespace OpenBve {
 								if (Arguments.Length > 7) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 7 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double dx = 0.0, dy = 0.0, dz = 0.0;
-								double sx = 0.0, sy = 0.0, sz = 0.0;
+								Vector3 d = new Vector3();
+								Vector3 s = new Vector3();
 								double r = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out dx)) {
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out d.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument dX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									dx = 0.0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out dy)) {
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out d.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument dY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									dy = 0.0;
 								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out dz)) {
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out d.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument dZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									dz = 0.0;
 								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out sx)) {
+								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out s.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument sX in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									sx = 0.0;
 								}
-								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out sy)) {
+								if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out s.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument sY in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									sy = 0.0;
 								}
-								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out sz)) {
+								if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], out s.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument sZ in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									sz = 0.0;
 								}
 								if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], out r)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Ratio in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									r = 0.0;
 								}
-								World.Normalize(ref dx, ref dy, ref dz);
-								World.Normalize(ref sx, ref sy, ref sz);
-								ApplyShear(Builder, dx, dy, dz, sx, sy, sz, r);
+								d.Normalize();
+								s.Normalize();
+								ApplyShear(Builder, d, s, r);
 								if (cmd == "shearall") {
-									ApplyShear(Object, dx, dy, dz, sx, sy, sz, r);
+									ApplyShear(Object, d, s, r);
 								}
 							} break;
 						case "mirror":
@@ -1556,51 +1550,36 @@ namespace OpenBve {
 		}
 
 		// apply shear
-		private static void ApplyShear(MeshBuilder Builder, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
+		private static void ApplyShear(MeshBuilder Builder, Vector3 d, Vector3 s, double r) {
 			for (int j = 0; j < Builder.Vertices.Length; j++) {
-				double n = r * (dx * Builder.Vertices[j].Coordinates.X + dy * Builder.Vertices[j].Coordinates.Y + dz * Builder.Vertices[j].Coordinates.Z);
-				Builder.Vertices[j].Coordinates.X += sx * n;
-				Builder.Vertices[j].Coordinates.Y += sy * n;
-				Builder.Vertices[j].Coordinates.Z += sz * n;
+				double n = r * (d.X * Builder.Vertices[j].Coordinates.X + d.Y * Builder.Vertices[j].Coordinates.Y + d.Z * Builder.Vertices[j].Coordinates.Z);
+				Builder.Vertices[j].Coordinates.X += s.X * n;
+				Builder.Vertices[j].Coordinates.Y += s.Y * n;
+				Builder.Vertices[j].Coordinates.Z += s.Z * n;
 			}
 			for (int j = 0; j < Builder.Faces.Length; j++) {
 				for (int k = 0; k < Builder.Faces[j].Vertices.Length; k++) {
 					if (Builder.Faces[j].Vertices[k].Normal.X != 0.0f | Builder.Faces[j].Vertices[k].Normal.Y != 0.0f | Builder.Faces[j].Vertices[k].Normal.Z != 0.0f) {
-						double nx = (double)Builder.Faces[j].Vertices[k].Normal.X;
-						double ny = (double)Builder.Faces[j].Vertices[k].Normal.Y;
-						double nz = (double)Builder.Faces[j].Vertices[k].Normal.Z;
-						double n = r * (sx * nx + sy * ny + sz * nz);
-						nx -= dx * n;
-						ny -= dy * n;
-						nz -= dz * n;
-						Builder.Faces[j].Vertices[k].Normal.X = (float)nx;
-						Builder.Faces[j].Vertices[k].Normal.Y = (float)ny;
-						Builder.Faces[j].Vertices[k].Normal.Z = (float)nz;
+						double n = r * (s.X * Builder.Faces[j].Vertices[k].Normal.X + s.Y * Builder.Faces[j].Vertices[k].Normal.Y + s.Z * Builder.Faces[j].Vertices[k].Normal.Z);
+						Builder.Faces[j].Vertices[k].Normal -= d * n;
 						Builder.Faces[j].Vertices[k].Normal.Normalize();
 					}
 				}
 			}
 		}
-		private static void ApplyShear(ObjectManager.StaticObject Object, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
+		private static void ApplyShear(ObjectManager.StaticObject Object, Vector3 d, Vector3 s, double r) {
 			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				double n = r * (dx * Object.Mesh.Vertices[j].Coordinates.X + dy * Object.Mesh.Vertices[j].Coordinates.Y + dz * Object.Mesh.Vertices[j].Coordinates.Z);
-				Object.Mesh.Vertices[j].Coordinates.X += sx * n;
-				Object.Mesh.Vertices[j].Coordinates.Y += sy * n;
-				Object.Mesh.Vertices[j].Coordinates.Z += sz * n;
+				double n = r * (d.X * Object.Mesh.Vertices[j].Coordinates.X + d.Y * Object.Mesh.Vertices[j].Coordinates.Y + d.Z * Object.Mesh.Vertices[j].Coordinates.Z);
+				Object.Mesh.Vertices[j].Coordinates.X += s.X * n;
+				Object.Mesh.Vertices[j].Coordinates.Y += s.Y * n;
+				Object.Mesh.Vertices[j].Coordinates.Z += s.Z * n;
 			}
 			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
 				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					if (Object.Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f) {
-						double nx = (double)Object.Mesh.Faces[j].Vertices[k].Normal.X;
-						double ny = (double)Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-						double nz = (double)Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-						double n = r * (sx * nx + sy * ny + sz * nz);
-						nx -= dx * n;
-						ny -= dy * n;
-						nz -= dz * n;
-						Object.Mesh.Faces[j].Vertices[k].Normal.X = (float)nx;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Y = (float)ny;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Z = (float)nz;
+					if (Object.Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Object.Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f)
+					{
+						double n = r * (s.X * Object.Mesh.Faces[j].Vertices[k].Normal.X + s.Y * Object.Mesh.Faces[j].Vertices[k].Normal.Y + s.Z * Object.Mesh.Faces[j].Vertices[k].Normal.Z);
+						Object.Mesh.Faces[j].Vertices[k].Normal -= d * n;
 						Object.Mesh.Faces[j].Vertices[k].Normal.Normalize();
 					}
 				}
