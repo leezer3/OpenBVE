@@ -103,6 +103,10 @@ namespace OpenBve
 					Expressions[737].Text = "2550";
 					Expressions[767].Text = "2925";
 					break;
+				case "CCF88CCB0C1345746406F7E98798D8924FDA93888788E596601C55E3C7C35C8A":
+					//B1649ﾃｼiﾄ・ﾄｺJﾃｼﾄ佚架・ｹﾃ嘉ｼj.csv
+					Expressions[1441].Text = ".curve 1000;20";
+					break;
 			}
 		}
 	}
