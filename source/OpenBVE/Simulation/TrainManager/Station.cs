@@ -456,7 +456,11 @@ namespace OpenBve
 			}
 			else
 			{
-				Train.StationState = TrainStopState.Pending;
+				if (Train.StationState != TrainStopState.Jumping)
+				{
+					Train.StationState = TrainStopState.Pending;
+				}
+				
 			}
 			// automatically close doors
 			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)
