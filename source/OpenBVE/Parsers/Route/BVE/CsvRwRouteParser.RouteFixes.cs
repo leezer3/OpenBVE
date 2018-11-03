@@ -98,6 +98,11 @@ namespace OpenBve
 					CylinderHack = true;
 					Interface.AddMessage(MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
 					break;
+				case "C4061E0E53862BA4951A76746B2AB1AFA3A7D4126F375D5EF96E4DEBDFC969EF":
+					//citta2.csv
+					Expressions[737].Text = "2550";
+					Expressions[767].Text = "2925";
+					break;
 			}
 		}
 	}
