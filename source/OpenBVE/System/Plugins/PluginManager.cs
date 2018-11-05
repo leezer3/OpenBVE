@@ -485,23 +485,39 @@ namespace OpenBve {
 			if (!System.IO.File.Exists(config)) {
 				return false;
 			}
-			string[] lines = System.IO.File.ReadAllLines(config, encoding);
-			if (lines.Length == 0) {
+			string Text = System.IO.File.ReadAllText(config, encoding);
+			Text = Text.Replace( "\r", "").Replace( "\n", "" );
+			string file;
+			try
+			{
+				file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+			}
+			catch
+			{
+				Interface.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
 				return false;
 			}
-			string file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
 			string title = System.IO.Path.GetFileName(file);
 			if (!System.IO.File.Exists(file))
 			{
-				if(lines[0].EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
+				if(Text.EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
 				{
 					// Our filename ends with .dll so probably is not mangled Unicode
 					Interface.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 					return false;
 				}
 				// Try again with ASCII encoding
-				lines = System.IO.File.ReadAllLines(config, System.Text.Encoding.GetEncoding(1252));
-				file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
+				Text = System.IO.File.ReadAllText(config, System.Text.Encoding.GetEncoding(1252));
+				Text = Text.Replace( "\r", "").Replace( "\n", "" );
+				try
+				{
+					file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+				}
+				catch
+				{
+					Interface.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
+					return false;
+				}
 				title = System.IO.Path.GetFileName(file);
 				if (!System.IO.File.Exists(file))
 				{
