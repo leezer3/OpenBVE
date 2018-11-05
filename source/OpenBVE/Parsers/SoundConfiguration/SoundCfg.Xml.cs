@@ -29,7 +29,7 @@ namespace OpenBve
 		internal static void Parse(string fileName, ref TrainManager.Car car, bool isDriverCar)
 		{
 			//3D center of the car
-			Vector3 center = new Vector3(0.0, 0.0, 0.0);
+			Vector3 center = Vector3.Zero;
 			//Positioned to the left of the car, but centered Y & Z
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 			//Positioned to the right of the car, but centered Y & Z

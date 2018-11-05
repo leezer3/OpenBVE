@@ -149,7 +149,7 @@ namespace OpenBve
 				}
 			}
 			// create objects and track
-			Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+			Vector3 Position = Vector3.Zero;
 			Vector2 Direction = new Vector2(0.0, 1.0);
 			TrackManager.CurrentTrack = new TrackManager.Track { Elements = new TrackManager.TrackElement[] { } };
 			double CurrentSpeedLimit = double.PositiveInfinity;
@@ -472,10 +472,10 @@ namespace OpenBve
 							switch (Data.Blocks[i].SoundEvents[j].Type)
 							{
 								case SoundType.TrainStatic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, new Vector3(0.0, 0.0, 0.0), 0.0);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0);
 									break;
 								case SoundType.TrainDynamic:
-									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, new Vector3(0.0, 0.0, 0.0), Data.Blocks[i].SoundEvents[j].Speed);
+									TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 							}
 						}
@@ -652,12 +652,10 @@ namespace OpenBve
 								double y2 = Data.Blocks[i + 1].Rails[j].RailEndY;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
 								Vector3 pos2 = Position2 + offset2;
-								double rx = pos2.X - pos.X;
-								double ry = pos2.Y - pos.Y;
-								double rz = pos2.Z - pos.Z;
-								World.Normalize(ref rx, ref ry, ref rz);
-								RailTransformation.Z = new Vector3(rx, ry, rz);
-								RailTransformation.X = new Vector3(rz, 0.0, -rx);
+								Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);
+								r.Normalize();
+								RailTransformation.Z = r;
+								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								World.Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
 								double dx = Data.Blocks[i + 1].Rails[j].RailEndX - Data.Blocks[i].Rails[j].RailStartX;
@@ -2012,9 +2010,9 @@ namespace OpenBve
 									double cosg = Math.Cos(g);
 									double sing = Math.Sin(g);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide, 0.0, 1.0, 0.0, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 									p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
 									follower.Update(p - 1.0, true, false);
 									follower.Update(p, true, false);
@@ -2031,9 +2029,9 @@ namespace OpenBve
 									double cosg = Math.Cos(newAngle);
 									double sing = Math.Sin(newAngle);
 									TrackManager.CurrentTrack.Elements[i] = originalTrackElement;
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldDirection, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldUp, 0.0, 1.0, 0.0, cosg, sing);
-									World.Rotate(ref TrackManager.CurrentTrack.Elements[i].WorldSide, 0.0, 1.0, 0.0, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									TrackManager.CurrentTrack.Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.CurrentTrack.Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;

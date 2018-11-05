@@ -125,7 +125,7 @@ namespace OpenBve
 							break;
 						default:
 							position = Sources[i].Position;
-							velocity = OpenBveApi.Math.Vector3.Null;
+							velocity = OpenBveApi.Math.Vector3.Zero;
 							break;
 					}
 					OpenBveApi.Math.Vector3 positionDifference = position - listenerPosition;
@@ -355,7 +355,7 @@ namespace OpenBve
 			}
 			else
 			{
-				listenerVelocity = OpenBveApi.Math.Vector3.Null;
+				listenerVelocity = OpenBveApi.Math.Vector3.Zero;
 			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
@@ -637,7 +637,7 @@ namespace OpenBve
 					else
 					{
 						position = source.Position;
-						velocity = OpenBveApi.Math.Vector3.Null;
+						velocity = OpenBveApi.Math.Vector3.Zero;
 					}
 					position -= listenerPosition;
 					AL.Source(source.OpenAlSourceName, ALSource3f.Position, (float)position.X, (float)position.Y, (float)position.Z);

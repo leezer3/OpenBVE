@@ -361,8 +361,8 @@ namespace OpenBve {
 												double w = (double)t.Width;
 												double h = (double)t.Height;
 												int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - (double)(4 + k) * StackDistance, Train.Cars[Train.DriverCar].Driver, t, NeedleColor[k], false);
-												Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-												Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+												Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+												Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 												Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 												double c0 = (Angle * (Maximum - Minimum) - 2.0 * Minimum * Math.PI) / (Maximum - Minimum) + Math.PI;
 												double c1 = 2.0 * (Math.PI - Angle) / (Maximum - Minimum);
@@ -639,8 +639,8 @@ namespace OpenBve {
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										double c0 = Angle + Math.PI;
 										double c1 = 2.0 * (Math.PI - Angle) / Maximum;
@@ -995,8 +995,8 @@ namespace OpenBve {
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time 0.000277777777777778 * floor 0.523598775598298 *");
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
@@ -1012,8 +1012,8 @@ namespace OpenBve {
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time 0.0166666666666667 * floor 0.10471975511966 *");
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);
@@ -1029,8 +1029,8 @@ namespace OpenBve {
 										double w = (double)t.Width;
 										double h = (double)t.Height;
 										int j = CreateElement(Train, CenterX - Radius * w / h, CenterY + SemiHeight - Radius, 2.0 * Radius * w / h, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 6.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Needle, false);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("time floor 0.10471975511966 *");
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDamping = new Damping(20.0, 0.4);

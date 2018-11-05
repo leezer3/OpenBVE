@@ -44,10 +44,10 @@ namespace OpenBve
 				this.CurveCantTangent = 0.0;
 				this.AdhesionMultiplier = 1.0;
 				this.CsvRwAccuracyLevel = 2.0;
-				this.WorldPosition = new Vector3(0.0, 0.0, 0.0);
-				this.WorldDirection = new Vector3(0.0, 0.0, 1.0);
-				this.WorldUp = new Vector3(0.0, 1.0, 0.0);
-				this.WorldSide = new Vector3(1.0, 0.0, 0.0);
+				this.WorldPosition = Vector3.Zero;
+				this.WorldDirection = Vector3.Forward;
+				this.WorldUp = Vector3.Down;
+				this.WorldSide = Vector3.Right;
 				this.Events = new GeneralEvent[] { };
 			}
 		}

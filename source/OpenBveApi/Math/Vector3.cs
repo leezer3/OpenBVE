@@ -575,7 +575,7 @@ namespace OpenBveApi.Math {
 		// --- read-only fields ---
 		
 		/// <summary>Represents a null vector.</summary>
-		public static readonly Vector3 Null = new Vector3(0.0, 0.0, 0.0);
+		public static readonly Vector3 Zero = new Vector3(0.0, 0.0, 0.0);
 		
 		/// <summary>Represents a vector pointing left.</summary>
 		public static readonly Vector3 Left = new Vector3(-1.0, 0.0, 0.0);
@@ -587,7 +587,7 @@ namespace OpenBveApi.Math {
 		public static readonly Vector3 Up = new Vector3(0.0, -1.0, 0.0);
 		
 		/// <summary>Represents a vector pointing down.</summary>
-		public static readonly Vector3 Down = new Vector3(0.0, 1.0, 0.0);
+		public static readonly Vector3 Down = new Vector3(0.0 , 1.0, 0.0);
 		
 		/// <summary>Represents a vector pointing up.</summary>
 		public static readonly Vector3 Backward = new Vector3(0.0, 0.0, -1.0);

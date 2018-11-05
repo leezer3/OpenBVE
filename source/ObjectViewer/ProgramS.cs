@@ -30,10 +30,10 @@ namespace OpenBve {
 	    internal static bool[] SkipArgs;
 
 		// mouse
-		internal static Vector3 MouseCameraPosition = new Vector3(0.0, 0.0, 0.0);
-		internal static Vector3 MouseCameraDirection = new Vector3(0.0, 0.0, 1.0);
-		internal static Vector3 MouseCameraUp = new Vector3(0.0, 1.0, 0.0);
-		internal static Vector3 MouseCameraSide = new Vector3(1.0, 0.0, 0.0);
+		internal static Vector3 MouseCameraPosition = Vector3.Zero;
+		internal static Vector3 MouseCameraDirection = Vector3.Forward;
+		internal static Vector3 MouseCameraUp = Vector3.Down;
+		internal static Vector3 MouseCameraSide = Vector3.Right;
 	    internal static int MouseButton;
 
 	    internal static int MoveX = 0;
@@ -200,7 +200,7 @@ namespace OpenBve {
 #endif
 				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 					ObjectLoadMode.Normal, false, false, false);
-				ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+				ObjectManager.CreateObject(o, Vector3.Zero,
 					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
 #if !DEBUG
@@ -237,9 +237,9 @@ namespace OpenBve {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
                         double cosa = Math.Cos(dx);
                         double sina = Math.Sin(dx);
-						World.AbsoluteCameraDirection.Rotate(new Vector3(0.0, 1.0, 0.0), cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(new Vector3(0.0, 1.0, 0.0), cosa, sina);
-	                    World.AbsoluteCameraSide.Rotate(new Vector3(0.0, 1.0, 0.0), cosa, sina);
+						World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
+	                    World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
+	                    World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
@@ -304,7 +304,7 @@ namespace OpenBve {
 										#endif
 	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 	                        ObjectLoadMode.Normal, false, false, false);
-	                    ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+	                    ObjectManager.CreateObject(o, Vector3.Zero,
 	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
@@ -349,7 +349,7 @@ namespace OpenBve {
 #endif
 					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 						            ObjectLoadMode.Normal, false, false, false);
-					            ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+					            ObjectManager.CreateObject(o, Vector3.Zero,
 						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);
 #if !DEBUG

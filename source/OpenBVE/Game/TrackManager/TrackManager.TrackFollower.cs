@@ -81,11 +81,11 @@ namespace OpenBve
 							D.Normalize();
 							double cosa = Math.Cos(a);
 							double sina = Math.Sin(a);
-							World.Rotate(ref D, 0.0, 1.0, 0.0, cosa, sina);
+							D.Rotate(Vector3.Down, cosa, sina);
 							WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + c * D.X;
 							WorldPosition.Y = CurrentTrack.Elements[i].WorldPosition.Y + h;
 							WorldPosition.Z = CurrentTrack.Elements[i].WorldPosition.Z + c * D.Z;
-							World.Rotate(ref D, 0.0, 1.0, 0.0, cosa, sina);
+							D.Rotate(Vector3.Down, cosa, sina);
 							WorldDirection.X = D.X;
 							WorldDirection.Y = p;
 							WorldDirection.Z = D.Z;
@@ -93,7 +93,7 @@ namespace OpenBve
 							double cos2a = Math.Cos(2.0 * a);
 							double sin2a = Math.Sin(2.0 * a);
 							WorldSide = CurrentTrack.Elements[i].WorldSide;
-							World.Rotate(ref WorldSide, 0.0, 1.0, 0.0, cos2a, sin2a);
+							WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
 							WorldUp = Vector3.Cross(WorldDirection, WorldSide);
 
 						}

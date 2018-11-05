@@ -43,7 +43,7 @@ namespace OpenBve {
 						case "[include]":
 							{
 								i++;
-								Vector3 position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 position = Vector3.Zero;
 								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
@@ -139,17 +139,17 @@ namespace OpenBve {
 								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
 								Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
 								Result.Objects[ObjectCount].CurrentState = -1;
-								Result.Objects[ObjectCount].TranslateXDirection = new Vector3(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].TranslateYDirection = new Vector3(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].TranslateZDirection = new Vector3(0.0, 0.0, 1.0);
-								Result.Objects[ObjectCount].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
-								Result.Objects[ObjectCount].RotateYDirection = new Vector3(0.0, 1.0, 0.0);
-								Result.Objects[ObjectCount].RotateZDirection = new Vector3(0.0, 0.0, 1.0);
+								Result.Objects[ObjectCount].TranslateXDirection = Vector3.Right;
+								Result.Objects[ObjectCount].TranslateYDirection = Vector3.Down;
+								Result.Objects[ObjectCount].TranslateZDirection = Vector3.Forward;
+								Result.Objects[ObjectCount].RotateXDirection = Vector3.Right;
+								Result.Objects[ObjectCount].RotateYDirection = Vector3.Down;
+								Result.Objects[ObjectCount].RotateZDirection = Vector3.Forward;
 								Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(1.0, 0.0);
 								Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(0.0, 1.0);
 								Result.Objects[ObjectCount].RefreshRate = 0.0;
 								Result.Objects[ObjectCount].ObjectIndex = -1;
-								Vector3 Position = new Vector3(0.0, 0.0, 0.0);
+								Vector3 Position = Vector3.Zero;
 								bool timetableUsed = false;
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;
@@ -502,7 +502,7 @@ namespace OpenBve {
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++) {
-										Result.Objects[ObjectCount].States[k].Position = new Vector3(0.0, 0.0, 0.0);
+										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null) {
 											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
 											if (Result.Objects[ObjectCount].States[k].Object != null) {
