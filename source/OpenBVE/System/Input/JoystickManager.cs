@@ -61,14 +61,28 @@ namespace OpenBve {
 			{
 				//Load the list of attached openTK joysticks
 				var state = OpenTK.Input.Joystick.GetState(i);
-				var description = OpenTK.Input.Joystick.GetCapabilities(i).ToString();
-				if (description == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
+				var description = OpenTK.Input.Joystick.GetCapabilities(i);
+				if (description.ToString() == "{Axes: 0; Buttons: 0; Hats: 0; IsConnected: True}")
 				{
 					break;
 				}
 				//A joystick with 56 buttons and zero axis is likely the RailDriver, which is bugged in openTK
-				if (state.IsConnected && description != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
+				if (description.ToString() != "{Axes: 0; Buttons: 56; Hats: 0; IsConnected: True}")
 				{
+					if (Program.CurrentlyRunningOnMono)
+					{
+						if (description.AxisCount == 0 && description.ButtonCount == 0 && description.HatCount == 0)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						if (!state.IsConnected)
+						{
+							continue;
+						}
+					}
 					StandardJoystick newJoystick = new StandardJoystick
 					{
 						Name = "Joystick" + i,
