@@ -542,25 +542,31 @@ namespace OpenBve {
 										locoBrakeType = a;
 										break;
 									case 7:
-										if (a > 0)
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
 										{
-											driverPowerNotches = a;
-										}
-										else
-										{
-											driverPowerNotches = 8;
-											Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											if (a > 0)
+											{
+												driverPowerNotches = a;
+											}
+											else
+											{
+												driverPowerNotches = 8;
+												Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
 										}
 									break;
 									case 8:
-										if (a > 0)
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
 										{
-											driverBrakeNotches = a;
-										}
-										else
-										{
-											driverBrakeNotches = 8;
-											Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											if (a > 0)
+											{
+												driverBrakeNotches = a;
+											}
+											else
+											{
+												driverBrakeNotches = 8;
+												Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
 										}
 										break;
 								}
@@ -794,12 +800,18 @@ namespace OpenBve {
 			}
 			if (driverPowerNotches == 0)
 			{
-				Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches was not set in " + FileName);
+				if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+				{
+					Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches was not set in " + FileName);
+				}
 				driverPowerNotches = powerNotches;
 			}
 			if (driverBrakeNotches == 0)
 			{
-				Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches was not set in " + FileName);
+				if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+				{
+					Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches was not set in " + FileName);
+				}
 				driverBrakeNotches = brakeNotches;
 			}
 			Train.Handles.Reverser = new TrainManager.ReverserHandle();
