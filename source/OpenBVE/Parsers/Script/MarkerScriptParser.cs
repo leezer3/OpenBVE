@@ -63,7 +63,16 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageEarlyTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out EarlyTexture))
@@ -104,7 +113,16 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out Texture))
@@ -142,7 +160,16 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageLateTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out LateTexture))

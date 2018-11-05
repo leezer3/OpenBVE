@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -67,7 +68,16 @@ namespace OpenBve
 										}
 										break;
 									case "object":
-										string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), c.InnerText);
+										string f;
+										try
+										{
+											f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), c.InnerText);
+										}
+										catch
+										{
+											Interface.AddMessage(MessageType.Error, true, "BackgroundObject FileName is malformed in file " + fileName);
+											break;
+										}
 										if (!System.IO.File.Exists(f))
 										{
 											Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
@@ -85,7 +95,16 @@ namespace OpenBve
 										}
 										break;
 									case "texture":
-										var file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
+										string file;
+										try
+										{
+											file = OpenBveApi.Path.CombineFile(Path, c.InnerText);
+										}
+										catch
+										{
+											Interface.AddMessage(MessageType.Error, true, "BackgroundTexture FileName is malformed in file " + fileName);
+											break;
+										}									
 										if (!System.IO.File.Exists(file))
 										{
 											Interface.AddMessage(MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
@@ -95,7 +114,6 @@ namespace OpenBve
 											Textures.RegisterTexture(file, out t);
 										}
 										break;
-									
 									case "time":
 										if (!Interface.TryParseTime(Arguments[0].Trim(), out DisplayTime))
 										{
