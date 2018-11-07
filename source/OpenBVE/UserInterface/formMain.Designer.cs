@@ -160,6 +160,7 @@
 			this.pictureboxLanguage = new System.Windows.Forms.PictureBox();
 			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
 			this.groupBoxInputDevice = new System.Windows.Forms.GroupBox();
+			this.labelInputDevice = new System.Windows.Forms.Label();
 			this.listviewInputDevice = new System.Windows.Forms.ListView();
 			this.columnheaderInputDeviceName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnheaderInputDeviceStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -2301,6 +2302,7 @@
 			// 
 			// groupBoxInputDevice
 			// 
+			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
 			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
 			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
@@ -2310,6 +2312,17 @@
 			this.groupBoxInputDevice.TabIndex = 23;
 			this.groupBoxInputDevice.TabStop = false;
 			this.groupBoxInputDevice.Text = "Input Device Plugin";
+			// 
+			// labelInputDevice
+			// 
+			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
+			this.labelInputDevice.Name = "labelSoundNumber";
+			this.labelInputDevice.Size = new System.Drawing.Size(618, 14);
+			this.labelInputDevice.TabIndex = 0;
+			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conflict of input setting(s).";
+			this.labelInputDevice.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			// 
 			// listviewInputDevice
 			// 
@@ -2326,11 +2339,11 @@
 			this.listviewInputDevice.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listviewInputDevice.HideSelection = false;
 			this.listviewInputDevice.LabelWrap = false;
-			this.listviewInputDevice.Location = new System.Drawing.Point(8, 20);
+			this.listviewInputDevice.Location = new System.Drawing.Point(8, 38);
 			this.listviewInputDevice.MultiSelect = false;
 			this.listviewInputDevice.Name = "listviewInputDevice";
 			this.listviewInputDevice.ShowGroups = false;
-			this.listviewInputDevice.Size = new System.Drawing.Size(618, 88);
+			this.listviewInputDevice.Size = new System.Drawing.Size(618, 70);
 			this.listviewInputDevice.TabIndex = 1;
 			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
 			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
@@ -6066,6 +6079,7 @@
 		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
 		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
 		private System.Windows.Forms.GroupBox groupBoxInputDevice;
+		private System.Windows.Forms.Label labelInputDevice;
         private System.Windows.Forms.ListView listviewInputDevice;
         private System.Windows.Forms.ColumnHeader columnheaderInputDeviceName;
         private System.Windows.Forms.ColumnHeader columnheaderInputDeviceStatus;

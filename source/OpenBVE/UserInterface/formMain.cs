@@ -587,6 +587,7 @@ namespace OpenBve {
 			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
 			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
 			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
+			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
 			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
 			listviewInputDevice.Columns[1].Text = Translations.GetInterfaceString("options_input_device_plugin_status");
 			listviewInputDevice.Columns[2].Text = Translations.GetInterfaceString("options_input_device_plugin_version");
