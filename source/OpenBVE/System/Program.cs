@@ -161,6 +161,7 @@ namespace OpenBve {
 				Interface.LoadControls(file, out controls);
 				Interface.AddControls(ref Interface.CurrentControls, controls);
 			}
+			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();

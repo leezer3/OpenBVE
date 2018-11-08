@@ -159,6 +159,16 @@
 			this.labelSoundNumber = new System.Windows.Forms.Label();
 			this.pictureboxLanguage = new System.Windows.Forms.PictureBox();
 			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
+			this.groupBoxInputDevice = new System.Windows.Forms.GroupBox();
+			this.labelInputDevice = new System.Windows.Forms.Label();
+			this.listviewInputDevice = new System.Windows.Forms.ListView();
+			this.columnheaderInputDeviceName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceProvider = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
+			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
 			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
 			this.labelKioskTimeout = new System.Windows.Forms.Label();
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
@@ -482,6 +492,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLanguage)).BeginInit();
 			this.panelOptionsPage2.SuspendLayout();
+			this.groupBoxInputDevice.SuspendLayout();
 			this.groupBoxKioskMode.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
@@ -2280,6 +2291,7 @@
 			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptionsPage2.Controls.Add(this.groupBoxInputDevice);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxKioskMode);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
@@ -2287,6 +2299,101 @@
 			this.panelOptionsPage2.Name = "panelOptionsPage2";
 			this.panelOptionsPage2.Size = new System.Drawing.Size(643, 528);
 			this.panelOptionsPage2.TabIndex = 20;
+			// 
+			// groupBoxInputDevice
+			// 
+			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
+			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
+			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
+			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
+			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
+			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
+			this.groupBoxInputDevice.Size = new System.Drawing.Size(634, 148);
+			this.groupBoxInputDevice.TabIndex = 23;
+			this.groupBoxInputDevice.TabStop = false;
+			this.groupBoxInputDevice.Text = "Input Device Plugin";
+			// 
+			// labelInputDevice
+			// 
+			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
+			this.labelInputDevice.Name = "labelSoundNumber";
+			this.labelInputDevice.Size = new System.Drawing.Size(618, 14);
+			this.labelInputDevice.TabIndex = 0;
+			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conflict of input setting(s).";
+			this.labelInputDevice.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			// 
+			// listviewInputDevice
+			// 
+			this.listviewInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewInputDevice.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnheaderInputDeviceName,
+            this.columnheaderInputDeviceStatus,
+            this.columnheaderInputDeviceVersion,
+            this.columnheaderInputDeviceProvider,
+            this.columnheaderInputDeviceFileName});
+			this.listviewInputDevice.FullRowSelect = true;
+			this.listviewInputDevice.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.listviewInputDevice.HideSelection = false;
+			this.listviewInputDevice.LabelWrap = false;
+			this.listviewInputDevice.Location = new System.Drawing.Point(8, 38);
+			this.listviewInputDevice.MultiSelect = false;
+			this.listviewInputDevice.Name = "listviewInputDevice";
+			this.listviewInputDevice.ShowGroups = false;
+			this.listviewInputDevice.Size = new System.Drawing.Size(618, 70);
+			this.listviewInputDevice.TabIndex = 1;
+			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
+			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
+			this.listviewInputDevice.SelectedIndexChanged += new System.EventHandler(this.listviewInputDevice_SelectedIndexChanged);
+			// 
+			// columnheaderInputDeviceName
+			// 
+			this.columnheaderInputDeviceName.Text = "Name";
+			// 
+			// columnheaderInputDeviceStatus
+			// 
+			this.columnheaderInputDeviceStatus.Text = "Status";
+			// 
+			// columnheaderInputDeviceVersion
+			// 
+			this.columnheaderInputDeviceVersion.Text = "Version";
+			// 
+			// columnheaderInputDeviceProvider
+			// 
+			this.columnheaderInputDeviceProvider.Text = "Provider";
+			// 
+			// columnheaderInputDeviceFileName
+			// 
+			this.columnheaderInputDeviceFileName.Text = "File Name";
+			// 
+			// checkBoxInputDeviceEnable
+			// 
+			this.checkBoxInputDeviceEnable.AutoSize = true;
+			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
+			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
+			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(118, 17);
+			this.checkBoxInputDeviceEnable.TabIndex = 2;
+			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
+			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;
+			this.checkBoxInputDeviceEnable.Enabled = false;
+			this.checkBoxInputDeviceEnable.Checked = false;
+			this.checkBoxInputDeviceEnable.CheckedChanged += new System.EventHandler(this.checkBoxInputDeviceEnable_CheckedChanged);
+			// 
+			// buttonInputDeviceConfig
+			// 
+			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 116);
+			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
+			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(96, 24);
+			this.buttonInputDeviceConfig.TabIndex = 3;
+			this.buttonInputDeviceConfig.Text = "Config";
+			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
+			this.buttonInputDeviceConfig.Enabled = false;
+			this.buttonInputDeviceConfig.Click += new System.EventHandler(this.buttonInputDeviceConfig_Click);
 			// 
 			// groupBoxKioskMode
 			// 
@@ -5497,6 +5604,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLanguage)).EndInit();
 			this.panelOptionsPage2.ResumeLayout(false);
+			this.groupBoxInputDevice.ResumeLayout(false);
+			this.groupBoxInputDevice.PerformLayout();
 			this.groupBoxKioskMode.ResumeLayout(false);
 			this.groupBoxKioskMode.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
@@ -5969,6 +6078,16 @@
 		private System.Windows.Forms.Button buttonRailDriverCalibration;
 		private System.Windows.Forms.ComboBox comboBoxRailDriverUnits;
 		private System.Windows.Forms.Label labelRailDriverSpeedUnits;
+		private System.Windows.Forms.GroupBox groupBoxInputDevice;
+		private System.Windows.Forms.Label labelInputDevice;
+        private System.Windows.Forms.ListView listviewInputDevice;
+        private System.Windows.Forms.ColumnHeader columnheaderInputDeviceName;
+        private System.Windows.Forms.ColumnHeader columnheaderInputDeviceStatus;
+        private System.Windows.Forms.ColumnHeader columnheaderInputDeviceVersion;
+        private System.Windows.Forms.ColumnHeader columnheaderInputDeviceProvider;
+        private System.Windows.Forms.ColumnHeader columnheaderInputDeviceFileName;
+        private System.Windows.Forms.Button buttonInputDeviceConfig;
+		private System.Windows.Forms.CheckBox checkBoxInputDeviceEnable;
 		private System.Windows.Forms.GroupBox groupBoxKioskMode;
 		private System.Windows.Forms.NumericUpDown numericUpDownKioskTimeout;
 		private System.Windows.Forms.CheckBox checkBoxEnableKiosk;

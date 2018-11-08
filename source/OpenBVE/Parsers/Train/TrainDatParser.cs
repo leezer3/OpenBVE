@@ -39,7 +39,7 @@ namespace OpenBve {
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
-			const int currentVersion = 1535;
+			const int currentVersion = 15311;
 			int myVersion = -1;
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -129,7 +129,7 @@ namespace OpenBve {
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
-			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0;
+			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
 			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
 			for (int i = 0; i < 4; i++) {
 				Tables[i].Entries = new TrainManager.MotorSoundTableEntry[16];
@@ -541,6 +541,34 @@ namespace OpenBve {
 									case 6:
 										locoBrakeType = a;
 										break;
+									case 7:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+										{
+											if (a > 0)
+											{
+												driverPowerNotches = a;
+											}
+											else
+											{
+												driverPowerNotches = 8;
+												Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
+										}
+									break;
+									case 8:
+										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+										{
+											if (a > 0)
+											{
+												driverBrakeNotches = a;
+											}
+											else
+											{
+												driverBrakeNotches = 8;
+												Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
+										}
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -770,8 +798,24 @@ namespace OpenBve {
 				Interface.AddMessage(MessageType.Error, false, "NumberOfBrakeNotches was not set in " + FileName);
 				brakeNotches = 8;
 			}
+			if (driverPowerNotches == 0)
+			{
+				if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+				{
+					Interface.AddMessage(MessageType.Error, false, "NumberOfDriverPowerNotches was not set in " + FileName);
+				}
+				driverPowerNotches = powerNotches;
+			}
+			if (driverBrakeNotches == 0)
+			{
+				if (currentFormat == TrainDatFormats.openBVE && myVersion >= 15311)
+				{
+					Interface.AddMessage(MessageType.Error, false, "NumberOfDriverBrakeNotches was not set in " + FileName);
+				}
+				driverBrakeNotches = brakeNotches;
+			}
 			Train.Handles.Reverser = new TrainManager.ReverserHandle();
-			Train.Handles.Power = new TrainManager.PowerHandle(powerNotches, powerDelayUp, powerDelayDown);
+			Train.Handles.Power = new TrainManager.PowerHandle(powerNotches, driverPowerNotches, powerDelayUp, powerDelayDown);
 			if (powerReduceSteps != -1)
 			{
 				Train.Handles.Power.ReduceSteps = powerReduceSteps;
@@ -783,7 +827,7 @@ namespace OpenBve {
 			}
 			else
 			{
-				Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
+				Train.Handles.Brake = new TrainManager.BrakeHandle(brakeNotches, driverBrakeNotches, Train.Handles.EmergencyBrake, brakeDelayUp, brakeDelayDown);
 				
 			}
 

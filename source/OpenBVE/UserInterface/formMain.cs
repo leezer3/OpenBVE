@@ -435,6 +435,7 @@ namespace OpenBve {
 			comboBoxRailDriverUnits.SelectedIndex = Interface.CurrentOptions.RailDriverMPH ? 0 : 1;
 			checkBoxEnableKiosk.Checked = Interface.CurrentOptions.KioskMode;
 			numericUpDownKioskTimeout.Value = (Decimal)Interface.CurrentOptions.KioskModeTimer;
+			ListInputDevicePlugins();
 			if (Program.CurrentlyRunningOnMono)
 			{
 				//HACK: If we're running on Mono, manually select the tabpage at start. This avoids the 'grey tab' bug
@@ -585,6 +586,26 @@ namespace OpenBve {
 			buttonRailDriverCalibration.Text = Translations.GetInterfaceString("raildriver_launch");
 			checkBoxTransparencyFix.Text = Translations.GetInterfaceString("options_transparencyfix");
 			checkBoxHacks.Text = Translations.GetInterfaceString("options_hacks_enable");
+			groupBoxInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin");
+			labelInputDevice.Text = Translations.GetInterfaceString("options_input_device_plugin_warning");
+			listviewInputDevice.Columns[0].Text = Translations.GetInterfaceString("options_input_device_plugin_name");
+			listviewInputDevice.Columns[1].Text = Translations.GetInterfaceString("options_input_device_plugin_status");
+			listviewInputDevice.Columns[2].Text = Translations.GetInterfaceString("options_input_device_plugin_version");
+			listviewInputDevice.Columns[3].Text = Translations.GetInterfaceString("options_input_device_plugin_provider");
+			listviewInputDevice.Columns[4].Text = Translations.GetInterfaceString("options_input_device_plugin_file_name");
+			{
+				listviewInputDevice.Items.Clear();
+				ListViewItem[] Items = new ListViewItem[InputDevicePlugin.AvailablePluginInfos.Count];
+				for (int i = 0; i < Items.Length; i++)
+				{
+					Items[i] = new ListViewItem(new string[] { "", "", "", "", "" });
+					UpdateInputDeviceListViewItem(Items[i], i, false);
+				}
+				listviewInputDevice.Items.AddRange(Items);
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
+			checkBoxInputDeviceEnable.Text = Translations.GetInterfaceString("options_input_device_plugin_switch");
+			buttonInputDeviceConfig.Text = Translations.GetInterfaceString("options_input_device_plugin_config");
 			/*
 			 * Localisation for strings in the game start pane
 			 */
@@ -1035,6 +1056,25 @@ namespace OpenBve {
 				}
 				Array.Resize<TextEncoding.EncodingValue>(ref a, n);
 				Interface.CurrentOptions.TrainEncodings = a;
+			}
+			{
+				int n = 0;
+				string[] a = new string[InputDevicePlugin.AvailablePluginInfos.Count];
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				{
+					InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
+					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
+						continue;
+					}
+					string PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
+					if (System.IO.File.Exists(PluginPath))
+					{
+						a[n] = Info.FileName;
+						n++;
+					}
+				}
+				Array.Resize<string>(ref a, n);
+				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
 			Sounds.Deinitialize();
 			routeWorkerThread.Dispose();

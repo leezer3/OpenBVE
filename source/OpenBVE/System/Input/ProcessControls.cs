@@ -1264,6 +1264,9 @@ namespace OpenBve
 											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, Interface.CurrentControls[i].Option, false);
 										}
 										break;
+									case Translations.Command.ReverserAnyPostion:
+										TrainManager.PlayerTrain.ApplyReverser(Interface.CurrentControls[i].Option, false);
+										break;
 									case Translations.Command.HoldBrake:
 										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)
 										{
