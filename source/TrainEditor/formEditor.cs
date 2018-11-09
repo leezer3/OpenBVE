@@ -16,7 +16,6 @@ namespace TrainEditor {
 		private TrainEditor.TrainDat.Train Train = new TrainDat.Train();
 		private string FileName = null;
 
-		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
 		

@@ -75,8 +75,6 @@ namespace OpenBve {
 		private int[] EncodingCodepages = new int[0];
 		private Image JoystickImage = null;
 
-		private string[] LanguageFiles = new string[0];
-
 		// ====
 		// form
 		// ====
