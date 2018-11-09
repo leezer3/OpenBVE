@@ -63,7 +63,14 @@ namespace OpenBve {
 				UpdateInputDeviceListViewItem(Items[i], i, false);
 			}
 			listviewInputDevice.Items.AddRange(Items);
-			listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			if (Items.Length != 0)
+			{
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			}
+			else
+			{
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
+			}
 		}
 
 		private void UpdateInputDeviceListViewItem(ListViewItem Item, int Index, bool ResizeColumns) {

@@ -602,7 +602,7 @@ namespace OpenBve {
 					UpdateInputDeviceListViewItem(Items[i], i, false);
 				}
 				listviewInputDevice.Items.AddRange(Items);
-				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+				listviewInputDevice.AutoResizeColumns(ColumnHeaderAutoResizeStyle.None);
 			}
 			checkBoxInputDeviceEnable.Text = Translations.GetInterfaceString("options_input_device_plugin_switch");
 			buttonInputDeviceConfig.Text = Translations.GetInterfaceString("options_input_device_plugin_config");

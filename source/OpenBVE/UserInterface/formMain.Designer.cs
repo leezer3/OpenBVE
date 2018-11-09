@@ -510,6 +510,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxJoysticks)).BeginInit();
 			this.groupboxControl.SuspendLayout();
 			this.panelKeyboard.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.updownCommandOption)).BeginInit();
 			this.panelJoystick.SuspendLayout();
 			this.panelInfo.SuspendLayout();
 			this.panelPackages.SuspendLayout();
@@ -2318,11 +2319,11 @@
 			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
-			this.labelInputDevice.Name = "labelSoundNumber";
+			this.labelInputDevice.Name = "labelInputDevice";
 			this.labelInputDevice.Size = new System.Drawing.Size(618, 14);
 			this.labelInputDevice.TabIndex = 0;
-			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conflict of input setting(s).";
-			this.labelInputDevice.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conf" +
+    "lict of input setting(s).";
 			// 
 			// listviewInputDevice
 			// 
@@ -2368,31 +2369,31 @@
 			// columnheaderInputDeviceFileName
 			// 
 			this.columnheaderInputDeviceFileName.Text = "File Name";
+			this.columnheaderInputDeviceFileName.Width = 200;
 			// 
 			// checkBoxInputDeviceEnable
 			// 
 			this.checkBoxInputDeviceEnable.AutoSize = true;
+			this.checkBoxInputDeviceEnable.Enabled = false;
 			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
 			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
-			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(118, 17);
+			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(174, 17);
 			this.checkBoxInputDeviceEnable.TabIndex = 2;
 			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
 			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;
-			this.checkBoxInputDeviceEnable.Enabled = false;
-			this.checkBoxInputDeviceEnable.Checked = false;
 			this.checkBoxInputDeviceEnable.CheckedChanged += new System.EventHandler(this.checkBoxInputDeviceEnable_CheckedChanged);
 			// 
 			// buttonInputDeviceConfig
 			// 
 			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInputDeviceConfig.Enabled = false;
 			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 116);
 			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
 			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(96, 24);
 			this.buttonInputDeviceConfig.TabIndex = 3;
 			this.buttonInputDeviceConfig.Text = "Config";
 			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
-			this.buttonInputDeviceConfig.Enabled = false;
 			this.buttonInputDeviceConfig.Click += new System.EventHandler(this.buttonInputDeviceConfig_Click);
 			// 
 			// groupBoxKioskMode
@@ -3483,12 +3484,8 @@
 			// 
 			// columnheaderControlsAssignment
 			// 
-			this.columnheaderControlsAssignment.Text = "Assignment";
-			this.columnheaderControlsAssignment.Width = 172;
-			// 
-			// columnheaderControlsOption
-			// 
 			this.columnheaderControlsAssignment.Text = "Command Option";
+			this.columnheaderControlsAssignment.Width = 172;
 			// 
 			// labelControlsTitleSeparator
 			// 
@@ -3637,24 +3634,22 @@
 			this.comboboxCommand.Size = new System.Drawing.Size(547, 21);
 			this.comboboxCommand.TabIndex = 1;
 			this.comboboxCommand.SelectedIndexChanged += new System.EventHandler(this.comboboxCommand_SelectedIndexChanged);
-			//
+			// 
 			// updownCommandOption
-			//
-			this.updownCommandOption.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left));
+			// 
 			this.updownCommandOption.Location = new System.Drawing.Point(583, 48);
-			this.updownCommandOption.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
-			this.updownCommandOption.Minimum = new decimal(new int[] { 0, 0, 0, 0 });
 			this.updownCommandOption.Name = "updownCommandOption";
-			this.updownCommandOption.Size = new System.Drawing.Size(52, 21);
-			this.updownCommandOption.Value = new decimal(new int[] { 0, 0, 0, 0 });
+			this.updownCommandOption.Size = new System.Drawing.Size(52, 20);
+			this.updownCommandOption.TabIndex = 6;
 			this.updownCommandOption.ValueChanged += new System.EventHandler(this.updownCommandOption_ValueChanged);
-			//
+			// 
 			// labelCommandOption
-			//
+			// 
 			this.labelCommandOption.AutoEllipsis = true;
 			this.labelCommandOption.Location = new System.Drawing.Point(463, 51);
 			this.labelCommandOption.Name = "labelCommandOption";
 			this.labelCommandOption.Size = new System.Drawing.Size(120, 16);
+			this.labelCommandOption.TabIndex = 7;
 			this.labelCommandOption.Text = "CommandOption:";
 			this.labelCommandOption.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
@@ -5634,6 +5629,7 @@
 			this.groupboxControl.PerformLayout();
 			this.panelKeyboard.ResumeLayout(false);
 			this.panelKeyboard.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.updownCommandOption)).EndInit();
 			this.panelJoystick.ResumeLayout(false);
 			this.panelInfo.ResumeLayout(false);
 			this.panelPackages.ResumeLayout(false);
