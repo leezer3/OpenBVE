@@ -1347,10 +1347,10 @@ namespace OpenBve {
 			}
 		}
 
-		private bool Closing = false;
+		private bool currentlyClosing = false;
 		private void buttonClose_Click(object sender, EventArgs e)
 		{
-			Closing = true;
+			currentlyClosing = true;
 			if (sender != null)
 			{
 				//Don't cause an infinite loop
@@ -1370,7 +1370,7 @@ namespace OpenBve {
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			if (Closing)
+			if (currentlyClosing)
 			{
 				return;
 			}
