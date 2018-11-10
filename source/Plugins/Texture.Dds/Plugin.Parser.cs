@@ -920,8 +920,11 @@ namespace Plugin
             int depth = (int)header.depth;
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
-
-            uint valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        uint valMask;
+	        unchecked
+	        {
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        }
             uint pixSize = (uint)(((int)header.pixelFormat.rgbbitcount + 7) / 8);
             int rShift1 = 0; int rMul = 0; int rShift2 = 0;
             ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);
@@ -963,9 +966,11 @@ namespace Plugin
             int depth = (int)header.depth;
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
-
-            uint valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
-            
+	        uint valMask;
+	        unchecked
+	        {
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        }
             int pixSize = (header.pixelFormat.rgbbitcount + 7) / 8;
             int rShift1 = 0; int rMul = 0; int rShift2 = 0;
             ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);
