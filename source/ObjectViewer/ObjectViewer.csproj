@@ -82,7 +82,9 @@
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
+    <Compile Include="Parsers\MeshBuilder.cs" />
     <Compile Include="Parsers\MSTS\ShapeParser.cs" />
+    <Compile Include="Parsers\NewXParser.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Renderer.Strings.cs" />
@@ -121,6 +123,11 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
+      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
+      <Name>Formats.DirectX</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>

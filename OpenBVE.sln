@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Dds", "source\Plugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.Msts", "source\Plugins\Formats.Msts\Formats.Msts.csproj", "{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formats.DirectX", "source\Plugins\Formats.DirectX\Formats.DirectX.csproj", "{B8955CA6-E002-48A6-8FBF-90C2084C3508}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.MP3", "source\Plugins\Sound.MP3\Sound.MP3.csproj", "{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InputDevicePlugins", "InputDevicePlugins", "{851ADF1E-4500-4A14-B4AA-C1087A6C537E}"
@@ -278,6 +280,18 @@ Global
 		{3D833D81-4F14-4A68-B0DE-6469B8CF4E62}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3D833D81-4F14-4A68-B0DE-6469B8CF4E62}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3D833D81-4F14-4A68-B0DE-6469B8CF4E62}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -294,6 +308,7 @@ Global
 		{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{0C73C749-FCAE-4254-A614-AE1B03AF45C9} = {851ADF1E-4500-4A14-B4AA-C1087A6C537E}
 		{3D833D81-4F14-4A68-B0DE-6469B8CF4E62} = {851ADF1E-4500-4A14-B4AA-C1087A6C537E}
+		{B8955CA6-E002-48A6-8FBF-90C2084C3508} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

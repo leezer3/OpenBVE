@@ -1,0 +1,37 @@
+﻿namespace OpenBve.Formats.DirectX
+{
+	enum TokenID : short
+	{
+		NAME = 0x01,
+		STRING = 0x02,
+		INT = 0x03,
+		GUID = 0x05,
+		INT_LIST = 0x06,
+		FLOAT_LIST = 0x07,
+		OBRACE = 0x0a,
+		CBRACE = 0x0b,
+		OBRACKET = 0x0c,
+		CBRACKET = 0x0d,
+		OSQUARE = 0x0e,
+		CSQUARE = 0x0f,
+		LTHAN = 0x10,
+		GTHAN = 0x11,
+		PERIOD = 0x12,
+		COMMA = 0x13,
+		SEMICOLON = 0x14,
+		TEMPLATE = 0x1f,
+		WORD = 0x28,
+		DWORD = 0x29,
+		FLOAT = 0x2a,
+		DOUBLE = 0x2b,
+		CHAR = 0x2c,
+		UCHAR = 0x2d,
+		SWORD = 0x2e,
+		SDWORD = 0x2f,
+		VOID = 0x30,
+		STRING2 = 0x31,
+		UNICODE = 0x32,
+		CSTRING = 0x33,
+		ARRAY = 0x34
+	}
+}

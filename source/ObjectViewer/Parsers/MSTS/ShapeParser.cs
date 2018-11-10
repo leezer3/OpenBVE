@@ -87,29 +87,6 @@ namespace OpenBve
 			}
 		}
 
-		private class Material
-		{
-			internal Color32 Color;
-			internal Color24 EmissiveColor;
-			internal bool EmissiveColorUsed;
-			internal string DaytimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
-			internal OpenGlTextureWrapMode? WrapMode;
-			internal ushort GlowAttenuationData;
-
-			internal Material(string texture)
-			{
-				this.Color = new Color32(255, 255, 255, 255);
-				this.EmissiveColor = new Color24(0, 0, 0);
-				this.EmissiveColorUsed = false;
-				this.DaytimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
-				this.GlowAttenuationData = 0;
-				this.WrapMode = null;
-				this.DaytimeTexture = texture;
-			}
-		}
-
 		private struct Face
 		{
 			internal readonly int[] Vertices;

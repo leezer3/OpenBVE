@@ -1540,7 +1540,7 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-                    Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+                    Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
                     break;
                 case ".animated":
                     Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
@@ -1613,7 +1613,7 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-                    Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+                    Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
                     break;
                 case ".l3dobj":
                     Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY, new Vector3());
