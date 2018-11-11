@@ -9,6 +9,7 @@ using System;
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -915,7 +916,7 @@ namespace OpenBve {
 			v[6] = new Vector3(-Size, -Size, Size);
 			v[7] = new Vector3(-Size, Size, Size);
 			for (int i = 0; i < 8; i++) {
-				World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
+				v[i].Rotate(Direction, Up, Side);
 				v[i].X += Position.X - CameraX;
 				v[i].Y += Position.Y - CameraY;
 				v[i].Z += Position.Z - CameraZ;
@@ -1083,7 +1084,7 @@ namespace OpenBve {
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
 						RenderKeys(4, 72, 24, Keys);
-						if (Interface.Messages[0].Type != Interface.MessageType.Information)
+						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
 							DrawString(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
 						}
@@ -1098,7 +1099,7 @@ namespace OpenBve {
 						bool error = false;
 						for (int i = 0; i < Interface.MessageCount; i++)
 						{
-							if (Interface.Messages[i].Type != Interface.MessageType.Information)
+							if (Interface.LogMessages[i].Type != MessageType.Information)
 							{
 								error = true;
 								break;

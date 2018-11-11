@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
@@ -65,9 +66,13 @@ namespace OpenBve
 				//Renderer.UpdateLighting();
 				Renderer.RenderScene(TimeElapsed);
 				Program.currentGameWindow.SwapBuffers();
-				if (MainLoop.Quit)
+				if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 				{
 					Close();
+					if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+					{
+						Environment.Exit(0);
+					}
 				}
 				//If the menu state has not changed, don't update the rendered simulation
 				return;
@@ -132,9 +137,13 @@ namespace OpenBve
 			}
 
 			World.CameraAlignmentDirection = new World.CameraAlignment();
-			if (MainLoop.Quit)
+			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
 				Program.currentGameWindow.Exit();
+				if (Program.CurrentlyRunningOnMono && MainLoop.Quit == MainLoop.QuitMode.QuitProgram)
+				{
+					Environment.Exit(0);
+				}				
 			}
 			Renderer.UpdateLighting();
 			Renderer.RenderScene(TimeElapsed);
@@ -267,6 +276,14 @@ namespace OpenBve
 				Game.CurrentScore.Update(TimeElapsed);
 				Game.UpdateMessages();
 				Game.UpdateScoreMessages(TimeElapsed);
+
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+				{
+					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+					{
+						InputDevicePlugin.AvailablePlugins[i].OnUpdateFrame();
+					}
+				}
 			}
 			RenderTimeElapsed += TimeElapsed;
 			RenderRealTimeElapsed += RealTimeElapsed;
@@ -297,7 +314,7 @@ namespace OpenBve
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
 			Renderer.Initialize();
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
@@ -308,6 +325,34 @@ namespace OpenBve
 			MouseDown	+= MainLoop.mouseDownEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
+
+			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+			{
+				if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable)
+				{
+					int AddControlsLength = InputDevicePlugin.AvailablePlugins[i].Controls.Length;
+					Interface.Control[] AddControls = new Interface.Control[AddControlsLength];
+					for (int j = 0; j < AddControlsLength; j++)
+					{
+						AddControls[j].Command = InputDevicePlugin.AvailablePlugins[i].Controls[j].Command;
+						AddControls[j].Method = Interface.ControlMethod.InputDevicePlugin;
+						AddControls[j].Option = InputDevicePlugin.AvailablePlugins[i].Controls[j].Option;
+					}
+					Interface.CurrentControls = Interface.CurrentControls.Concat(AddControls).ToArray();
+					foreach (var Train in TrainManager.Trains)
+					{
+						if (Train.State != TrainManager.TrainState.Bogus)
+						{
+							if (Train == TrainManager.PlayerTrain)
+							{
+								InputDevicePlugin.AvailablePlugins[i].SetMaxNotch(Train.Handles.Power.MaximumDriverNotch, Train.Handles.Brake.MaximumDriverNotch);
+							}
+						}
+					}
+					InputDevicePlugin.AvailablePlugins[i].KeyDown += MainLoop.InputDevicePluginKeyDown;
+					InputDevicePlugin.AvailablePlugins[i].KeyUp += MainLoop.InputDevicePluginKeyUp;
+				}
+			}
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -331,6 +376,16 @@ namespace OpenBve
 				}
 			}
 			Textures.UnloadAllTextures();
+			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
+			{
+				InputDevicePlugin.CallPluginUnload(i);
+			}
+			if (MainLoop.Quit == MainLoop.QuitMode.ContinueGame && Program.CurrentlyRunningOnMono)
+			{
+				//More forcefully close under Mono, stuff *still* hanging around....
+				Environment.Exit(0);
+			}
+			base.OnClosing(e);
 		}
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
@@ -343,9 +398,9 @@ namespace OpenBve
 			//Check if any critical errors have occured during the route or train loading
 			for (int i = 0; i < Interface.MessageCount; i++)
 			{
-				if (Interface.Messages[i].Type == Interface.MessageType.Critical)
+				if (Interface.LogMessages[i].Type == MessageType.Critical)
 				{
-					MessageBox.Show("A critical error has occured:\n\n" + Interface.Messages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					MessageBox.Show("A critical error has occured:\n\n" + Interface.LogMessages[i].Text + "\n\nPlease inspect the error log file for further information.", "Load", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Close();
 				}
 			}
@@ -676,15 +731,15 @@ namespace OpenBve
 				int warnings = 0;
 				for (int i = 0; i < Interface.MessageCount; i++)
 				{
-					if (Interface.Messages[i].FileNotFound)
+					if (Interface.LogMessages[i].FileNotFound)
 					{
 						filesNotFound++;
 					}
-					else if (Interface.Messages[i].Type == Interface.MessageType.Error)
+					else if (Interface.LogMessages[i].Type == MessageType.Error)
 					{
 						errors++;
 					}
-					else if (Interface.Messages[i].Type == Interface.MessageType.Warning)
+					else if (Interface.LogMessages[i].Type == MessageType.Warning)
 					{
 						warnings++;
 					}
@@ -746,7 +801,7 @@ namespace OpenBve
 					}
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -768,7 +823,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -790,7 +845,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -812,7 +867,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;

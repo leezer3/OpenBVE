@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
 namespace OpenBve
@@ -109,7 +110,7 @@ namespace OpenBve
 				if (!tryLoad)
 				{
 					//Pass out the *original* XML error, not anything generated when we've tried to correct it
-					Interface.AddMessage(Interface.MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
+					Interface.AddMessage(MessageType.Error, false, "Error parsing Loksim3D XML: " + ex.Message);
 					return null;
 				}
 			}
@@ -150,7 +151,7 @@ namespace OpenBve
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
-															Interface.AddMessage(Interface.MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
+															Interface.AddMessage(MessageType.Warning, true, "Ls3d Object file " + attribute.Value + " not found.");
 														}
 														else
 														{
@@ -237,7 +238,7 @@ namespace OpenBve
 							}							
 						}
 						catch (Exception ex) {
-							Interface.AddMessage(Interface.MessageType.Error, false, ex.Message);
+							Interface.AddMessage(MessageType.Error, false, ex.Message);
 						}
 						if (Object != null)
 						{
@@ -358,7 +359,7 @@ namespace OpenBve
 			}
 			if (Level != 0)
 			{
-				Interface.AddMessage(Interface.MessageType.Warning, false, "Script error in Loksim3D object file....");
+				Interface.AddMessage(MessageType.Warning, false, "Script error in Loksim3D object file....");
 				return String.Empty;
 			}
 			return script;

@@ -101,10 +101,10 @@ namespace Plugin
 			byte[] textureData = new byte[size];
 	        for (int i = 0; i < size; i += 4)
 	        {
-		        textureData[i] = rawData[i + 2]; // blue
+		        textureData[i] = rawData[i]; // red
 		        textureData[i + 1] = rawData[i + 1]; // green
-		        textureData[i + 2] = rawData[i];   // red
-		        textureData[i + 3] = rawData[i + 3];
+		        textureData[i + 2] = rawData[i + 2]; // blue
+		        textureData[i + 3] = rawData[i + 3]; // alpha
 	        }
 	        myTexture = new Texture(width, height, 32, textureData, null);
         }
@@ -920,8 +920,11 @@ namespace Plugin
             int depth = (int)header.depth;
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
-
-            uint valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        uint valMask;
+	        unchecked
+	        {
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        }
             uint pixSize = (uint)(((int)header.pixelFormat.rgbbitcount + 7) / 8);
             int rShift1 = 0; int rMul = 0; int rShift2 = 0;
             ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);
@@ -963,9 +966,11 @@ namespace Plugin
             int depth = (int)header.depth;
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
-
-            uint valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
-            
+	        uint valMask;
+	        unchecked
+	        {
+		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
+	        }
             int pixSize = (header.pixelFormat.rgbbitcount + 7) / 8;
             int rShift1 = 0; int rMul = 0; int rShift2 = 0;
             ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);

@@ -8,15 +8,6 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-		internal enum DoorMode
-		{
-			AutomaticManualOverride = 0,
-			Automatic = 1,
-			Manual = 2
-		}
-
-		
-
 		// trains
 		/// <summary>The list of trains available in the simulation.</summary>
 		internal static Train[] Trains = new Train[] { };
@@ -497,6 +488,5 @@ namespace OpenBve
 				}
 			});
 		}
-		// update train physics and controls
 	}
 }

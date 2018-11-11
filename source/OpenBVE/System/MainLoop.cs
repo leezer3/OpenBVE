@@ -11,15 +11,20 @@ namespace OpenBve
 {
 	internal static partial class MainLoop
 	{
-
+		internal enum QuitMode
+		{
+			ContinueGame = 0,
+			QuitProgram = 1,
+			ExitToMenu = 2
+		}
 		// declarations
 		internal static bool LimitFramerate = false;
-		internal static bool Quit = false;
+		internal static QuitMode Quit = QuitMode.ContinueGame;
 		/// <summary>BlockKeyRepeat should be set to 'true' whilst processing a KeyUp or KeyDown event.</summary>
 		internal static bool BlockKeyRepeat;
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
-		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
+		
 		internal static formMain.MainDialogResult currentResult;
 		//		internal static formRouteInformation RouteInformationForm;
 		//		internal static Thread RouteInfoThread;
@@ -90,7 +95,7 @@ namespace OpenBve
 
 		private static void OpenTKQuit(object sender, CancelEventArgs e)
 		{
-			Quit = true;
+			Quit = QuitMode.QuitProgram;
 		}
 
 		/********************
@@ -423,55 +428,7 @@ namespace OpenBve
 			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
 		}
 
-		// --------------------------------
-
-		// update viewport
-		internal enum ViewPortMode
-		{
-			Scenery = 0,
-			Cab = 1
-		}
-		internal enum ViewPortChangeMode
-		{
-			ChangeToScenery = 0,
-			ChangeToCab = 1,
-			NoChange = 2
-		}
-		internal static void UpdateViewport(ViewPortChangeMode Mode)
-		{
-			if (Mode == ViewPortChangeMode.ChangeToCab)
-			{
-				CurrentViewPortMode = ViewPortMode.Cab;
-			}
-			else
-			{
-				CurrentViewPortMode = ViewPortMode.Scenery;
-			}
-
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
-			World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.LoadIdentity();
-			if (CurrentViewPortMode == ViewPortMode.Cab)
-			{
-
-				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
-				GL.MultMatrix(ref perspective);
-			}
-			else
-			{
-				var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
-				var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
-				Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
-				GL.MultMatrix(ref perspective);
-			}
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadIdentity();
-		}
-
-
-
+		
 #if DEBUG
 
 		/// <summary>Checks whether an OpenGL error has occured this frame</summary>

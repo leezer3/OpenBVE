@@ -361,46 +361,37 @@ namespace OpenBve {
 			if (q) {
 				UpdateViewingDistances();
 			}
-			double dx = World.CameraTrackFollower.WorldDirection.X;
-			double dy = World.CameraTrackFollower.WorldDirection.Y;
-			double dz = World.CameraTrackFollower.WorldDirection.Z;
-			double ux = World.CameraTrackFollower.WorldUp.X;
-			double uy = World.CameraTrackFollower.WorldUp.Y;
-			double uz = World.CameraTrackFollower.WorldUp.Z;
-			double sx = World.CameraTrackFollower.WorldSide.X;
-			double sy = World.CameraTrackFollower.WorldSide.Y;
-			double sz = World.CameraTrackFollower.WorldSide.Z;
-			double tx = World.CameraCurrentAlignment.Position.X;
-			double ty = World.CameraCurrentAlignment.Position.Y;
-			double tz = World.CameraCurrentAlignment.Position.Z;
-			double dx2 = dx, dy2 = dy, dz2 = dz;
-			double ux2 = ux, uy2 = uy, uz2 = uz;
-			double cx = World.CameraTrackFollower.WorldPosition.X + sx * tx + ux2 * ty + dx2 * tz;
-			double cy = World.CameraTrackFollower.WorldPosition.Y + sy * tx + uy2 * ty + dy2 * tz;
-			double cz = World.CameraTrackFollower.WorldPosition.Z + sz * tx + uz2 * ty + dz2 * tz;
+
+			Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
+			Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
+			Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
+			Vector3 pF = new Vector3(CameraCurrentAlignment.Position);
+			Vector3 dx2 = new Vector3(dF);
+			Vector3 ux2 = new Vector3(uF);
 			if (World.CameraCurrentAlignment.Yaw != 0.0) {
 				double cosa = Math.Cos(World.CameraCurrentAlignment.Yaw);
 				double sina = Math.Sin(World.CameraCurrentAlignment.Yaw);
-				World.Rotate(ref dx, ref dy, ref dz, ux, uy, uz, cosa, sina);
-				World.Rotate(ref sx, ref sy, ref sz, ux, uy, uz, cosa, sina);
+				dF.Rotate(uF, cosa, sina);
+				sF.Rotate(uF, cosa, sina);
 			}
 			double p = World.CameraCurrentAlignment.Pitch;
 			if (p != 0.0) {
 				double cosa = Math.Cos(-p);
 				double sina = Math.Sin(-p);
-				World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-				World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+				dF.Rotate(sF, cosa, sina);
+				uF.Rotate(sF, cosa, sina);
+				uF.Rotate(sF, cosa, sina);
 			}
 			if (World.CameraCurrentAlignment.Roll != 0.0) {
 				double cosa = Math.Cos(-World.CameraCurrentAlignment.Roll);
 				double sina = Math.Sin(-World.CameraCurrentAlignment.Roll);
-				World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-				World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+				uF.Rotate(dF, cosa, sina);
+				sF.Rotate(dF, cosa, sina);
 			}
-			AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-			AbsoluteCameraDirection = new Vector3(dx, dy, dz);
-			AbsoluteCameraUp = new Vector3(ux, uy, uz);
-			AbsoluteCameraSide = new Vector3(sx, sy, sz);
+			AbsoluteCameraPosition = new Vector3(CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z, CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z, CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z);
+			AbsoluteCameraDirection = dF;
+			AbsoluteCameraUp = uF;
+			AbsoluteCameraSide = sF;
 		}
 		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
 			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);
@@ -468,89 +459,5 @@ namespace OpenBve {
 			World.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z, true);
 		}
-
-		// ================================
-
-		// cross
-		internal static void Cross(double ax, double ay, double az, double bx, double by, double bz, out double cx, out double cy, out double cz) {
-			cx = ay * bz - az * by;
-			cy = az * bx - ax * bz;
-			cz = ax * by - ay * bx;
-		}
-
-		
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double cosa, double sina) {
-			double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-			dx *= t; dy *= t; dz *= t;
-			double oc = 1.0 - cosa;
-			double x = (cosa + oc * dx * dx) * px + (oc * dx * dy - sina * dz) * py + (oc * dx * dz + sina * dy) * pz;
-			double y = (cosa + oc * dy * dy) * py + (oc * dx * dy + sina * dz) * px + (oc * dy * dz - sina * dx) * pz;
-			double z = (cosa + oc * dz * dz) * pz + (oc * dx * dz - sina * dy) * px + (oc * dy * dz + sina * dx) * py;
-			px = x; py = y; pz = z;
-		}
-		
-		internal static void Rotate(ref double px, ref double py, ref double pz, double dx, double dy, double dz, double ux, double uy, double uz, double sx, double sy, double sz) {
-			double x, y, z;
-			x = sx * px + ux * py + dx * pz;
-			y = sy * px + uy * py + dy * pz;
-			z = sz * px + uz * py + dz * pz;
-			px = x; py = y; pz = z;
-		}
-		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Z * sina;
-			double v = Vector.X * sina + Vector.Z * cosa;
-			Vector.X = u;
-			Vector.Z = v;
-		}
-		
-		internal static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t; y *= t; z *= t;
-			}
-		}
-
-		// create normals
-		internal static void CreateNormals(ref Mesh Mesh) {
-			for (int i = 0; i < Mesh.Faces.Length; i++) {
-				CreateNormals(ref Mesh, i);
-			}
-		}
-		internal static void CreateNormals(ref Mesh Mesh, int FaceIndex) {
-			if (Mesh.Faces[FaceIndex].Vertices.Length >= 3) {
-				int i0 = (int)Mesh.Faces[FaceIndex].Vertices[0].Index;
-				int i1 = (int)Mesh.Faces[FaceIndex].Vertices[1].Index;
-				int i2 = (int)Mesh.Faces[FaceIndex].Vertices[2].Index;
-				double ax = Mesh.Vertices[i1].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double ay = Mesh.Vertices[i1].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double az = Mesh.Vertices[i1].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double bx = Mesh.Vertices[i2].Coordinates.X - Mesh.Vertices[i0].Coordinates.X;
-				double by = Mesh.Vertices[i2].Coordinates.Y - Mesh.Vertices[i0].Coordinates.Y;
-				double bz = Mesh.Vertices[i2].Coordinates.Z - Mesh.Vertices[i0].Coordinates.Z;
-				double nx = ay * bz - az * by;
-				double ny = az * bx - ax * bz;
-				double nz = ax * by - ay * bx;
-				double t = nx * nx + ny * ny + nz * nz;
-				if (t != 0.0) {
-					t = 1.0 / Math.Sqrt(t);
-					float mx = (float)(nx * t);
-					float my = (float)(ny * t);
-					float mz = (float)(nz * t);
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
-						}
-					}
-				} else {
-					for (int j = 0; j < Mesh.Faces[FaceIndex].Vertices.Length; j++) {
-						if (Vector3.IsZero(Mesh.Faces[FaceIndex].Vertices[j].Normal)) {
-							Mesh.Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
-						}
-					}
-				}
-			}
-		}
-
 	}
 }

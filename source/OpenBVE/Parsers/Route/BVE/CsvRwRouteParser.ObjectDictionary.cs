@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -17,7 +18,7 @@ namespace OpenBve
 				if (this.ContainsKey(key))
 				{
 					this[key] = unifiedObject;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+					Interface.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 				}
 				else
 				{
@@ -34,7 +35,7 @@ namespace OpenBve
 				if (this.ContainsKey(key))
 				{
 					this[key] = staticObject;
-					Interface.AddMessage(Interface.MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+					Interface.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 				}
 				else
 				{

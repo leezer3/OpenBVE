@@ -14,6 +14,7 @@ using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
 using OpenBveApi.Graphics;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -88,6 +89,7 @@ namespace OpenBve
 
         // background color
         internal static int BackgroundColor = 0;
+	    internal static Color128 TextColor = Color128.White;
         internal const int MaxBackgroundColor = 4;
         internal static string GetBackgroundColorName()
         {
@@ -106,15 +108,19 @@ namespace OpenBve
             {
                 case 0:
                     GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
+					TextColor = Color128.White;
                     break;
                 case 1:
                     GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	                TextColor = Color128.Black;
                     break;
                 case 2:
                     GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	                TextColor = Color128.White;
                     break;
                 case 3:
                     GL.ClearColor(0.33f, 0.33f, 0.33f, 1.0f);
+	                TextColor = Color128.White;
                     break;
             }
         }
@@ -281,11 +287,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 1.0, 0.0);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 0.0, 1.0);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
                 if (LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -410,11 +416,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                RenderBox(new Vector3(0.0, 0.0, 0.0), new Vector3(0.0, 0.0, 1.0), new Vector3(0.0, 1.0, 0.0), new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Right, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
             }
 	        RenderOverlays();
 	        LastBoundTexture = null; //We bind the character texture, so must reset it at the end of the render sequence
@@ -773,7 +779,7 @@ namespace OpenBve
             v[7] = new Vector3(-Size.X, Size.Y, Size.Z);
             for (int i = 0; i < 8; i++)
             {
-                World.Rotate(ref v[i].X, ref v[i].Y, ref v[i].Z, Direction.X, Direction.Y, Direction.Z, Up.X, Up.Y, Up.Z, Side.X, Side.Y, Side.Z);
+	            v[i].Rotate(Direction, Up, Side);
                 v[i].X += Position.X - CameraX;
                 v[i].Y += Position.Y - CameraY;
                 v[i].Z += Position.Z - CameraZ;
@@ -809,7 +815,6 @@ namespace OpenBve
 	        GL.MatrixMode(MatrixMode.Modelview);
 	        GL.PushMatrix();
 	        GL.LoadIdentity();
-
             System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
             // render
             if (OptionInterface)
@@ -819,28 +824,28 @@ namespace OpenBve
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F7" }, new string[] { "F8" } };
                     RenderKeys(4.0, 4.0, 20.0, Keys);
-					DrawString(Fonts.SmallFont, "Open one or more objects", new Point(32,4),TextAlignment.TopLeft, Color128.White);
-	                DrawString(Fonts.SmallFont, "Display the options window", new Point(32,24),TextAlignment.TopLeft, Color128.White);
-	                DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 20),TextAlignment.TopLeft, Color128.White);
+					DrawString(Fonts.SmallFont, "Open one or more objects", new Point(32,4),TextAlignment.TopLeft, TextColor);
+	                DrawString(Fonts.SmallFont, "Display the options window", new Point(32,24),TextAlignment.TopLeft, TextColor);
+	                DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 20),TextAlignment.TopLeft, TextColor);
                 }
                 else
                 {
-	                DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * ScreenWidth -88),4),TextAlignment.TopLeft, Color128.White);
+	                DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * ScreenWidth -88),4),TextAlignment.TopLeft, TextColor);
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" }, new string[] { "F8" } };
                     RenderKeys(4.0, 4.0, 24.0, Keys);
-	                DrawString(Fonts.SmallFont, "Reload the currently open objects", new Point(32,4),TextAlignment.TopLeft, Color128.White);
-	                DrawString(Fonts.SmallFont, "Open additional objects", new Point(32,24),TextAlignment.TopLeft, Color128.White);
-	                DrawString(Fonts.SmallFont, "Clear currently open objects", new Point(32,44),TextAlignment.TopLeft, Color128.White);
-	                DrawString(Fonts.SmallFont, "Display the options window", new Point(32,64),TextAlignment.TopLeft, Color128.White);
+	                DrawString(Fonts.SmallFont, "Reload the currently open objects", new Point(32,4),TextAlignment.TopLeft, TextColor);
+	                DrawString(Fonts.SmallFont, "Open additional objects", new Point(32,24),TextAlignment.TopLeft, TextColor);
+	                DrawString(Fonts.SmallFont, "Clear currently open objects", new Point(32,44),TextAlignment.TopLeft, TextColor);
+	                DrawString(Fonts.SmallFont, "Display the options window", new Point(32,64),TextAlignment.TopLeft, TextColor);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "L" }, new string[] { "G" }, new string[] { "B" }, new string[] { "I" } };
                     RenderKeys((double)ScreenWidth - 20.0, 4.0, 16.0, Keys);
-	                DrawString(Fonts.SmallFont, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), new Point(ScreenWidth - 28,4),TextAlignment.TopRight, Color128.White);
-	                DrawString(Fonts.SmallFont, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), new Point(ScreenWidth - 28,24),TextAlignment.TopRight, Color128.White);
-	                DrawString(Fonts.SmallFont, "Lighting: " + (Program.LightingTarget == 0 ? "night" : "day"), new Point(ScreenWidth - 28,44),TextAlignment.TopRight, Color128.White);
-	                DrawString(Fonts.SmallFont, "Grid: " + (Renderer.OptionCoordinateSystem ? "on" : "off"), new Point(ScreenWidth - 28,64),TextAlignment.TopRight, Color128.White);
-	                DrawString(Fonts.SmallFont, "Background: " + GetBackgroundColorName(), new Point(ScreenWidth - 28,84),TextAlignment.TopRight, Color128.White);
-	                DrawString(Fonts.SmallFont, "Hide interface", new Point(ScreenWidth - 28,104),TextAlignment.TopRight, Color128.White);
+	                DrawString(Fonts.SmallFont, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), new Point(ScreenWidth - 28,4),TextAlignment.TopRight, TextColor);
+	                DrawString(Fonts.SmallFont, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), new Point(ScreenWidth - 28,24),TextAlignment.TopRight, TextColor);
+	                DrawString(Fonts.SmallFont, "Lighting: " + (Program.LightingTarget == 0 ? "night" : "day"), new Point(ScreenWidth - 28,44),TextAlignment.TopRight, TextColor);
+	                DrawString(Fonts.SmallFont, "Grid: " + (Renderer.OptionCoordinateSystem ? "on" : "off"), new Point(ScreenWidth - 28,64),TextAlignment.TopRight, TextColor);
+	                DrawString(Fonts.SmallFont, "Background: " + GetBackgroundColorName(), new Point(ScreenWidth - 28,84),TextAlignment.TopRight, TextColor);
+	                DrawString(Fonts.SmallFont, "Hide interface", new Point(ScreenWidth - 28,104),TextAlignment.TopRight, TextColor);
                     Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
                     RenderKeys(4.0, (double)ScreenHeight - 40.0, 16.0, Keys);
                     Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
@@ -851,14 +856,14 @@ namespace OpenBve
                     {
                         Keys = new string[][] { new string[] { "F9" } };
                         RenderKeys(4.0, 92.0, 20.0, Keys);
-	                    if (Interface.Messages[0].Type != Interface.MessageType.Information)
+	                    if (Interface.LogMessages[0].Type != MessageType.Information)
 	                    {
 		                    DrawString(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32,92),TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
 						}
 	                    else
 	                    {
 							//If all of our messages are information, then print the message text in grey
-		                    DrawString(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32,92),TextAlignment.TopLeft, Color128.White);
+		                    DrawString(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32,92),TextAlignment.TopLeft, TextColor);
 						}
 						
                     }
@@ -869,7 +874,7 @@ namespace OpenBve
 	                    bool error = false;
 	                    for (int i = 0; i < Interface.MessageCount; i++)
 	                    {
-		                    if (Interface.Messages[i].Type != Interface.MessageType.Information)
+		                    if (Interface.LogMessages[i].Type != MessageType.Information)
 		                    {
 			                    error = true;
 			                    break;
@@ -882,7 +887,7 @@ namespace OpenBve
 						}
 	                    else
 	                    {
-		                    DrawString(Fonts.SmallFont, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", new Point(32,92),TextAlignment.TopLeft, Color128.White);
+		                    DrawString(Fonts.SmallFont, "Display the " + Interface.MessageCount.ToString(Culture) + " messages recently generated.", new Point(32,92),TextAlignment.TopLeft, TextColor);
 						}
 						
                     }

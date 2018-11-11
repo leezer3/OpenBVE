@@ -16,7 +16,6 @@ namespace TrainEditor {
 		private TrainEditor.TrainDat.Train Train = new TrainDat.Train();
 		private string FileName = null;
 
-		private string[] LanguageFiles = new string[0];
 		private string CurrentLanguageCode = "en-US";
 
 		
@@ -154,6 +153,8 @@ namespace TrainEditor {
 			comboboxHandleType.SelectedIndex = (int)Train.Handle.HandleType;
 			numericUpDownPowerNotches.Value = Train.Handle.PowerNotches;
 			numericUpDownBrakeNotches.Value = Train.Handle.BrakeNotches;
+			numericUpDownDriverPowerNotches.Value = Train.Handle.DriverPowerNotches;
+			numericUpDownDriverBrakeNotches.Value = Train.Handle.DriverBrakeNotches;
 			textboxPowerNotchReduceSteps.Text = Train.Handle.PowerNotchReduceSteps.ToString(Culture);
 			// cab
 			textboxX.Text = Train.Cab.X.ToString(Culture);
@@ -222,6 +223,20 @@ namespace TrainEditor {
 				MessageBox.Show(Translations.GetInterfaceString("editor_handle_brake_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
 				numericUpDownBrakeNotches.Focus();
+				return false;
+			}
+			Train.Handle.DriverPowerNotches = (int)numericUpDownDriverPowerNotches.Value;
+			if (Train.Handle.DriverPowerNotches > Train.Handle.PowerNotches) {
+				MessageBox.Show(Translations.GetInterfaceString("editor_handle_driver_power_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
+				numericUpDownDriverPowerNotches.Focus();
+				return false;
+			}
+			Train.Handle.DriverBrakeNotches = (int)numericUpDownDriverBrakeNotches.Value;
+			if (Train.Handle.DriverBrakeNotches > Train.Handle.BrakeNotches) {
+				MessageBox.Show(Translations.GetInterfaceString("editor_handle_driver_brake_notches_error_message"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				tabcontrolTabs.SelectedTab = tabpagePropertiesOne;
+				numericUpDownDriverBrakeNotches.Focus();
 				return false;
 			}
 			Train.Handle.HandleBehaviour = (TrainDat.Handle.EbHandleBehaviour) comboBoxEBHandleBehaviour.SelectedIndex;
@@ -1480,6 +1495,8 @@ namespace TrainEditor {
 			labelHandleType.Text = Translations.GetInterfaceString("editor_handle_type");
 			labelPowerNotches.Text = Translations.GetInterfaceString("editor_handle_power_notches");
 			labelBrakeNotches.Text = Translations.GetInterfaceString("editor_handle_brake_notches");
+			labelDriverPowerNotches.Text = Translations.GetInterfaceString("editor_handle_driver_power_notches");
+			labelDriverBrakeNotches.Text = Translations.GetInterfaceString("editor_handle_driver_brake_notches");
 			labelPowerNotchReduceSteps.Text = Translations.GetInterfaceString("editor_handle_power_notch_reduce_steps");
 			comboboxHandleType.Items[0] = Translations.GetInterfaceString("editor_handle_separated");
 			comboboxHandleType.Items[1] = Translations.GetInterfaceString("editor_handle_combined");

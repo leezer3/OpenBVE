@@ -461,7 +461,7 @@ namespace OpenBve {
 				if (!PerformCameraRestrictionTest()) {
 					CameraCurrentAlignment = new CameraAlignment();
 					VerticalViewingAngle = OriginalVerticalViewingAngle;
-					MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
 					if (!PerformCameraRestrictionTest()) {
@@ -697,7 +697,7 @@ namespace OpenBve {
 					AbsoluteCameraDirection = new Vector3(dx, dy, dz);
 					AbsoluteCameraSide = new Vector3(dz, 0.0, -dx);
 					AbsoluteCameraSide.Normalize();
-					World.Cross(dx, dy, dz, AbsoluteCameraSide.X, AbsoluteCameraSide.Y, AbsoluteCameraSide.Z, out AbsoluteCameraUp.X, out AbsoluteCameraUp.Y, out AbsoluteCameraUp.Z);
+					AbsoluteCameraUp = Vector3.Cross(new Vector3(dx, dy, dz), AbsoluteCameraSide);
 					UpdateViewingDistances();
 					if (CameraMode == CameraViewMode.FlyByZooming) {
 						// zoom
@@ -713,7 +713,7 @@ namespace OpenBve {
 							zoom = 1.0;
 						}
 						World.VerticalViewingAngle = World.OriginalVerticalViewingAngle / zoom;
-						MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+						Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					}
 				}
 			} else {
@@ -743,18 +743,10 @@ namespace OpenBve {
 					}
 				}
 				// camera
-				double cx = World.CameraTrackFollower.WorldPosition.X;
-				double cy = World.CameraTrackFollower.WorldPosition.Y;
-				double cz = World.CameraTrackFollower.WorldPosition.Z;
-				double dx = World.CameraTrackFollower.WorldDirection.X;
-				double dy = World.CameraTrackFollower.WorldDirection.Y;
-				double dz = World.CameraTrackFollower.WorldDirection.Z;
-				double ux = World.CameraTrackFollower.WorldUp.X;
-				double uy = World.CameraTrackFollower.WorldUp.Y;
-				double uz = World.CameraTrackFollower.WorldUp.Z;
-				double sx = World.CameraTrackFollower.WorldSide.X;
-				double sy = World.CameraTrackFollower.WorldSide.Y;
-				double sz = World.CameraTrackFollower.WorldSide.Z;
+				Vector3 cF = new Vector3(CameraTrackFollower.WorldPosition);
+				Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
+				Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
+				Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
 				double lookaheadYaw;
 				double lookaheadPitch;
 				if (CameraMode == CameraViewMode.InteriorLookAhead) {
@@ -767,17 +759,17 @@ namespace OpenBve {
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
 					f.TriggerType = TrackManager.EventTriggerType.None;
 					f.Update(f.TrackPosition + d, true, false);
-					double rx = f.WorldPosition.X - cx + World.CameraTrackFollower.WorldSide.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double ry = f.WorldPosition.Y - cy + World.CameraTrackFollower.WorldSide.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double rz = f.WorldPosition.Z - cz + World.CameraTrackFollower.WorldSide.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
+					double rx = f.WorldPosition.X - cF.X + World.CameraTrackFollower.WorldSide.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
+					double ry = f.WorldPosition.Y - cF.Y + World.CameraTrackFollower.WorldSide.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
+					double rz = f.WorldPosition.Z - cF.Z + World.CameraTrackFollower.WorldSide.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
 					World.Normalize(ref rx, ref ry, ref rz);
-					double t = dz * (sy * ux - sx * uy) + dy * (-sz * ux + sx * uz) + dx * (sz * uy - sy * uz);
+					double t = dF.Z * (sF.Y * uF.X - sF.X * uF.Y) + dF.Y * (-sF.Z * uF.X + sF.X * uF.Z) + dF.X * (sF.Z * uF.Y - sF.Y * uF.Z);
 					if (t != 0.0) {
 						t = 1.0 / t;
 
-						double tx = (rz * (-dy * ux + dx * uy) + ry * (dz * ux - dx * uz) + rx * (-dz * uy + dy * uz)) * t;
-						double ty = (rz * (dy * sx - dx * sy) + ry * (-dz * sx + dx * sz) + rx * (dz * sy - dy * sz)) * t;
-						double tz = (rz * (sy * ux - sx * uy) + ry * (-sz * ux + sx * uz) + rx * (sz * uy - sy * uz)) * t;
+						double tx = (rz * (-dF.Y * uF.X + dF.X * uF.Y) + ry * (dF.Z * uF.X - dF.X * uF.Z) + rx * (-dF.Z * uF.Y + dF.Y * uF.Z)) * t;
+						double ty = (rz * (dF.Y * sF.X - dF.X * sF.Y) + ry * (-dF.Z * sF.X + dF.X * sF.Z) + rx * (dF.Z * sF.Y - dF.Y * sF.Z)) * t;
+						double tz = (rz * (sF.Y * uF.X - sF.X * uF.Y) + ry * (-sF.Z * uF.X + sF.X * uF.Z) + rx * (sF.Z * uF.Y - sF.Y * uF.Z)) * t;
 						lookaheadYaw = tx * tz != 0.0 ? Math.Atan2(tx, tz) : 0.0;
 						if (ty < -1.0) {
 							lookaheadPitch = -0.5 * Math.PI;
@@ -796,11 +788,8 @@ namespace OpenBve {
 				}
 				{
 					// cab pitch and yaw
-					double tx = World.CameraCurrentAlignment.Position.X;
-					double ty = World.CameraCurrentAlignment.Position.Y;
-					double tz = World.CameraCurrentAlignment.Position.Z;
-					double dx2 = dx, dy2 = dy, dz2 = dz;
-					double ux2 = ux, uy2 = uy, uz2 = uz;
+					Vector3 d2 = new Vector3(dF);
+					Vector3 u2 = new Vector3(uF);
 					if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
@@ -808,14 +797,14 @@ namespace OpenBve {
 								double a = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
 								double cosa = Math.Cos(-a);
 								double sina = Math.Sin(-a);
-								World.Rotate(ref dx2, ref dy2, ref dz2, sx, sy, sz, cosa, sina);
-								World.Rotate(ref ux2, ref uy2, ref uz2, sx, sy, sz, cosa, sina);
+								d2.Rotate(sF, cosa, sina);
+								u2.Rotate(sF, cosa, sina);
 							}
 						}
 					}
-					cx += sx * tx + ux2 * ty + dx2 * tz;
-					cy += sy * tx + uy2 * ty + dy2 * tz;
-					cz += sz * tx + uz2 * ty + dz2 * tz;
+					cF.X += sF.X * CameraCurrentAlignment.Position.X + u2.X * CameraCurrentAlignment.Position.Y + d2.X * CameraCurrentAlignment.Position.Z;
+					cF.Y += sF.Y * CameraCurrentAlignment.Position.X + u2.Y * CameraCurrentAlignment.Position.Y + d2.Y * CameraCurrentAlignment.Position.Z;
+					cF.Z += sF.Z * CameraCurrentAlignment.Position.X + u2.Z * CameraCurrentAlignment.Position.Y + d2.Z * CameraCurrentAlignment.Position.Z;
 				}
 				// yaw, pitch, roll
 				double headYaw = World.CameraCurrentAlignment.Yaw + lookaheadYaw;
@@ -846,70 +835,70 @@ namespace OpenBve {
 						// body pitch
 						double ry = (Math.Cos(-bodyPitch) - 1.0) * bodyHeight;
 						double rz = Math.Sin(-bodyPitch) * bodyHeight;
-						cx += dx * rz + ux * ry;
-						cy += dy * rz + uy * ry;
-						cz += dz * rz + uz * ry;
+						cF.X += dF.X * rz + uF.X * ry;
+						cF.Y += dF.Y * rz + uF.Y * ry;
+						cF.Z += dF.Z * rz + uF.Z * ry;
 						if (bodyPitch != 0.0) {
 							double cosa = Math.Cos(-bodyPitch);
 							double sina = Math.Sin(-bodyPitch);
-							World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-							World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+							dF.Rotate(sF, cosa, sina);
+							uF.Rotate(sF, cosa, sina);
 						}
 					}
 					{
 						// body roll
 						double rx = Math.Sin(bodyRoll) * bodyHeight;
 						double ry = (Math.Cos(bodyRoll) - 1.0) * bodyHeight;
-						cx += sx * rx + ux * ry;
-						cy += sy * rx + uy * ry;
-						cz += sz * rx + uz * ry;
+						cF.X += sF.X * rx + uF.X * ry;
+						cF.Y += sF.Y * rx + uF.Y * ry;
+						cF.Z += sF.Z * rx + uF.Z * ry;
 						if (bodyRoll != 0.0) {
 							double cosa = Math.Cos(-bodyRoll);
 							double sina = Math.Sin(-bodyRoll);
-							World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-							World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+							uF.Rotate(dF, cosa, sina);
+							sF.Rotate(dF, cosa, sina);
 						}
 					}
 					{
 						// head yaw
 						double rx = Math.Sin(headYaw) * headHeight;
 						double rz = (Math.Cos(headYaw) - 1.0) * headHeight;
-						cx += sx * rx + dx * rz;
-						cy += sy * rx + dy * rz;
-						cz += sz * rx + dz * rz;
+						cF.X += sF.X * rx + dF.X * rz;
+						cF.Y += sF.Y * rx + dF.Y * rz;
+						cF.Z += sF.Z * rx + dF.Z * rz;
 						if (headYaw != 0.0) {
 							double cosa = Math.Cos(headYaw);
 							double sina = Math.Sin(headYaw);
-							World.Rotate(ref dx, ref dy, ref dz, ux, uy, uz, cosa, sina);
-							World.Rotate(ref sx, ref sy, ref sz, ux, uy, uz, cosa, sina);
+							dF.Rotate(uF, cosa, sina);
+							sF.Rotate(uF, cosa, sina);
 						}
 					}
 					{
 						// head pitch
 						double ry = (Math.Cos(-headPitch) - 1.0) * headHeight;
 						double rz = Math.Sin(-headPitch) * headHeight;
-						cx += dx * rz + ux * ry;
-						cy += dy * rz + uy * ry;
-						cz += dz * rz + uz * ry;
+						cF.X += dF.X * rz + uF.X * ry;
+						cF.Y += dF.Y * rz + uF.Y * ry;
+						cF.Z += dF.Z * rz + uF.Z * ry;
 						if (headPitch != 0.0) {
 							double cosa = Math.Cos(-headPitch);
 							double sina = Math.Sin(-headPitch);
-							World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-							World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+							dF.Rotate(sF, cosa, sina);
+							uF.Rotate(sF, cosa, sina);
 						}
 					}
 					{
 						// head roll
 						double rx = Math.Sin(headRoll) * headHeight;
 						double ry = (Math.Cos(headRoll) - 1.0) * headHeight;
-						cx += sx * rx + ux * ry;
-						cy += sy * rx + uy * ry;
-						cz += sz * rx + uz * ry;
+						cF.X += sF.X * rx + uF.X * ry;
+						cF.Y += sF.Y * rx + uF.Y * ry;
+						cF.Z += sF.Z * rx + uF.Z * ry;
 						if (headRoll != 0.0) {
 							double cosa = Math.Cos(-headRoll);
 							double sina = Math.Sin(-headRoll);
-							World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-							World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+							uF.Rotate(dF, cosa, sina);
+							sF.Rotate(dF, cosa, sina);
 						}
 					}
 				} else {
@@ -920,27 +909,27 @@ namespace OpenBve {
 					if (totalYaw != 0.0) {
 						double cosa = Math.Cos(totalYaw);
 						double sina = Math.Sin(totalYaw);
-						World.Rotate(ref dx, ref dy, ref dz, ux, uy, uz, cosa, sina);
-						World.Rotate(ref sx, ref sy, ref sz, ux, uy, uz, cosa, sina);
+						dF.Rotate(uF, cosa, sina);
+						sF.Rotate(uF, cosa, sina);
 					}
 					if (totalPitch != 0.0) {
 						double cosa = Math.Cos(-totalPitch);
 						double sina = Math.Sin(-totalPitch);
-						World.Rotate(ref dx, ref dy, ref dz, sx, sy, sz, cosa, sina);
-						World.Rotate(ref ux, ref uy, ref uz, sx, sy, sz, cosa, sina);
+						dF.Rotate(sF, cosa, sina);
+						uF.Rotate(sF, cosa, sina);
 					}
 					if (totalRoll != 0.0) {
 						double cosa = Math.Cos(-totalRoll);
 						double sina = Math.Sin(-totalRoll);
-						World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-						World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
+						uF.Rotate(dF, cosa, sina);
+						sF.Rotate(dF, cosa, sina);
 					}
 				}
 				// finish
-				AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-				AbsoluteCameraDirection = new Vector3(dx, dy, dz);
-				AbsoluteCameraUp = new Vector3(ux, uy, uz);
-				AbsoluteCameraSide = new Vector3(sx, sy, sz);
+				AbsoluteCameraPosition = cF;
+				AbsoluteCameraDirection = dF;
+				AbsoluteCameraUp = uF;
+				AbsoluteCameraSide = sF;
 			}
 		}
 		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
@@ -977,7 +966,7 @@ namespace OpenBve {
 			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle * Math.Exp(World.CameraCurrentAlignment.Zoom);
 			if (World.VerticalViewingAngle < 0.001) World.VerticalViewingAngle = 0.001;
 			if (World.VerticalViewingAngle > 1.5) World.VerticalViewingAngle = 1.5;
-			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 		}
 
 		// update viewing distance

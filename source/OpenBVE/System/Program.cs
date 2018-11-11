@@ -161,6 +161,7 @@ namespace OpenBve {
 				Interface.LoadControls(file, out controls);
 				Interface.AddControls(ref Interface.CurrentControls, controls);
 			}
+			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
@@ -248,7 +249,7 @@ namespace OpenBve {
 						{
 							if (ex is System.DllNotFoundException)
 							{
-								Interface.AddMessage(Interface.MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
+								Interface.AddMessage(MessageType.Critical, false, "The required system library " + ex.Message + " was not found on the system.");
 								switch (ex.Message)
 								{
 									case "libopenal.so.1":
@@ -261,7 +262,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+								Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 								CrashHandler.LoadingCrash(ex + Environment.StackTrace, false);
 							}
 							RestartArguments = "";

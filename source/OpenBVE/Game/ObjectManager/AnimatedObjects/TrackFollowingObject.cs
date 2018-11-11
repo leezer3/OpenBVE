@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -107,24 +108,20 @@ namespace OpenBve
 			private void UpdateObjectPosition()
 			{
 				//Get vectors
-				double dx, dy, dz;
-				double ux, uy, uz;
-				double sx, sy, sz;
+				Vector3 d = new Vector3();
+				Vector3 u;
+				Vector3 s;
 				{
-					dx = FrontAxleFollower.WorldPosition.X - RearAxleFollower.WorldPosition.X;
-					dy = FrontAxleFollower.WorldPosition.Y - RearAxleFollower.WorldPosition.Y;
-					dz = FrontAxleFollower.WorldPosition.Z - RearAxleFollower.WorldPosition.Z;
-					double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-					dx *= t;
-					dy *= t;
-					dz *= t;
-					t = 1.0 / Math.Sqrt(dx * dx + dz * dz);
-					double ex = dx * t;
-					double ez = dz * t;
-					sx = ez;
-					sy = 0.0;
-					sz = -ex;
-					World.Cross(dx, dy, dz, sx, sy, sz, out ux, out uy, out uz);
+					d.X = FrontAxleFollower.WorldPosition.X - RearAxleFollower.WorldPosition.X;
+					d.Y = FrontAxleFollower.WorldPosition.Y - RearAxleFollower.WorldPosition.Y;
+					d.Z = FrontAxleFollower.WorldPosition.Z - RearAxleFollower.WorldPosition.Z;
+					double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
+					d *= t;
+					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
+					double ex = d.X * t;
+					double ez = d.Z * t;
+					s = new Vector3(ez, 0.0, -ex);
+					u = Vector3.Cross(d, s);
 				}
 
 				// apply position due to cant/toppling
@@ -132,9 +129,9 @@ namespace OpenBve
 					double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-					double cx = sx * x + ux * y;
-					double cy = sy * x + uy * y;
-					double cz = sz * x + uz * y;
+					double cx = s.X * x + u.X * y;
+					double cy = s.Y * x + u.Y * y;
+					double cz = s.Z * x + u.Z * y;
 					FrontAxleFollower.WorldPosition.X += cx;
 					FrontAxleFollower.WorldPosition.Y += cy;
 					FrontAxleFollower.WorldPosition.Z += cz;
@@ -147,18 +144,12 @@ namespace OpenBve
 					double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
-					World.Rotate(ref sx, ref sy, ref sz, dx, dy, dz, cosa, sina);
-					World.Rotate(ref ux, ref uy, ref uz, dx, dy, dz, cosa, sina);
-					Up.X = ux;
-					Up.Y = uy;
-					Up.Z = uz;
+					s.Rotate(d, cosa, sina);
+					u.Rotate(d, cosa, sina);
+					Up = u;
 				}
-				Direction.X = dx;
-				Direction.Y = dy;
-				Direction.Z = dz;
-				Side.X = sx;
-				Side.Y = sy;
-				Side.Z = sz;
+				Direction = d;
+				Side = s;
 			}
 
 			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 WorldPosition, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)

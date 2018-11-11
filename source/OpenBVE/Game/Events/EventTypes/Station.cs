@@ -68,7 +68,7 @@ namespace OpenBve
 					}
 					else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None || Train.StationState == TrainManager.TrainStopState.Jumping)
 						{
 							return;
 						}
@@ -154,7 +154,11 @@ namespace OpenBve
 							}
 							Train.Station = -1;
 							Train.StationRearCar = false;
-							Train.StationState = TrainManager.TrainStopState.Pending;
+							if (Train.StationState != TrainManager.TrainStopState.Jumping)
+							{
+								Train.StationState = TrainManager.TrainStopState.Pending;
+							}
+							
 							int d = Train.DriverCar;
 							Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}

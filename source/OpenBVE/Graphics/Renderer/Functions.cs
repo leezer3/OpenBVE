@@ -9,9 +9,7 @@ namespace OpenBve
 {
     internal static partial class Renderer
     {
-        /// <summary>
-        /// Performs a reset of OpenGL to the default state
-        /// </summary>
+        /// <summary>Performs a reset of OpenGL to the default state</summary>
         private static void ResetOpenGlState()
         {
             LastBoundTexture = null;
@@ -26,9 +24,7 @@ namespace OpenBve
             SetAlphaFunc(AlphaFunction.Greater, 0.9f);
         }
 
-        /// <summary>
-        /// Specifies the OpenGL alpha function to perform
-        /// </summary>
+        /// <summary>Specifies the OpenGL alpha function to perform</summary>
         /// <param name="Comparison">The comparison to use</param>
         /// <param name="Value">The value to compare</param>
         internal static void SetAlphaFunc(AlphaFunction Comparison, float Value)
@@ -40,9 +36,7 @@ namespace OpenBve
             GL.Enable(EnableCap.AlphaTest);
         }
 
-        /// <summary>
-        /// Disables OpenGL alpha testing
-        /// </summary>
+        /// <summary>Disables OpenGL alpha testing</summary>
         private static void UnsetAlphaFunc()
         {
             AlphaTestEnabled = false;
@@ -65,9 +59,7 @@ namespace OpenBve
             }
         }
 
-        /// <summary>
-        /// Clears all currently registered OpenGL display lists
-        /// </summary>
+        /// <summary>Clears all currently registered OpenGL display lists</summary>
         internal static void ClearDisplayLists()
         {
             for (int i = 0; i < StaticOpaque.Length; i++)
@@ -84,9 +76,7 @@ namespace OpenBve
             StaticOpaqueForceUpdate = true;
         }
 
-        /// <summary>
-        /// Resets the state of the renderer
-        /// </summary>
+        /// <summary>Resets the state of the renderer</summary>
         internal static void Reset()
         {
             LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
@@ -107,9 +97,7 @@ namespace OpenBve
             OptionBrakeSystems = false;
         }
 
-        /// <summary>
-        /// Call this once to initialise the renderer
-        /// </summary>
+        /// <summary>Call this once to initialise the renderer</summary>
         internal static void Initialize()
         {
             GL.ShadeModel(ShadingModel.Smooth);
@@ -140,17 +128,13 @@ namespace OpenBve
             GL.Disable(EnableCap.Fog);
         }
 
-        /// <summary>
-        /// De-initialize the renderer, and clear all remaining OpenGL display lists
-        /// </summary>
+        /// <summary>De-initialize the renderer, and clear all remaining OpenGL display lists</summary>
         internal static void Deinitialize()
         {
             ClearDisplayLists();
         }
 
-        /// <summary>
-        /// Determines the maximum Anisotropic filtering level the system supports
-        /// </summary>
+        /// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
         internal static void DetermineMaxAFLevel()
         {
 
@@ -184,5 +168,40 @@ namespace OpenBve
                 Interface.CurrentOptions.AnisotropicFilteringLevel = Interface.CurrentOptions.AnisotropicFilteringMaximum;
             }
         }
+
+		/// <summary>Updates the openGL viewport</summary>
+		/// <param name="Mode">The viewport change mode</param>
+	    internal static void UpdateViewport(ViewPortChangeMode Mode)
+	    {
+		    if (Mode == ViewPortChangeMode.ChangeToCab)
+		    {
+			    CurrentViewPortMode = ViewPortMode.Cab;
+		    }
+		    else
+		    {
+			    CurrentViewPortMode = ViewPortMode.Scenery;
+		    }
+
+		    GL.Viewport(0, 0, Screen.Width, Screen.Height);
+		    World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
+		    World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+		    GL.MatrixMode(MatrixMode.Projection);
+		    GL.LoadIdentity();
+		    if (CurrentViewPortMode == ViewPortMode.Cab)
+		    {
+
+			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			    GL.MultMatrix(ref perspective);
+		    }
+		    else
+		    {
+			    var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
+			    var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
+			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
+			    GL.MultMatrix(ref perspective);
+		    }
+		    GL.MatrixMode(MatrixMode.Modelview);
+		    GL.LoadIdentity();
+	    }
     }
 }

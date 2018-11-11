@@ -158,6 +158,8 @@ namespace OpenBve
 			internal bool EnableBveTsHacks;
 			/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
 			internal bool OldTransparencyMode;
+			/// <summary>The list of enable Input Device Plugins</summary>
+			internal string[] EnableInputDevicePlugins;
 
 			internal TimeTableMode TimeTableStyle;
 
@@ -247,6 +249,7 @@ namespace OpenBve
 				this.OldTransparencyMode = true;
 				this.KioskMode = false;
 				this.KioskModeTimer = 300;
+				this.EnableInputDevicePlugins = new string[] { };
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -727,6 +730,12 @@ namespace OpenBve
 										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
 										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
 									} break;
+								case "enableinputdeviceplugins":
+									{
+										int n = Interface.CurrentOptions.EnableInputDevicePlugins.Length;
+										Array.Resize<string>(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
+										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
+									} break;
 							}
 						}
 					}
@@ -931,6 +940,12 @@ namespace OpenBve
 			for (int i = 0; i < CurrentOptions.TrainEncodings.Length; i++)
 			{
 				Builder.AppendLine(CurrentOptions.TrainEncodings[i].Codepage.ToString(Culture) + " = " + CurrentOptions.TrainEncodings[i].Value);
+			}
+			Builder.AppendLine();
+			Builder.AppendLine("[enableInputDevicePlugins]");
+			for (int i = 0; i < CurrentOptions.EnableInputDevicePlugins.Length; i++)
+			{
+				Builder.AppendLine(CurrentOptions.EnableInputDevicePlugins[i]);
 			}
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));

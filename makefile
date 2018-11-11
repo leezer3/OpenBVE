@@ -76,6 +76,12 @@ OPEN_BVE_FILE         :=OpenBve.exe
 OPEN_BVE_API_ROOT     :=source/OpenBveApi
 OPEN_BVE_API_FILE     :=OpenBveApi.dll
 
+DEFAULT_DISPLAY_ROOT     :=source/InputDevicePlugins/DefaultDisplayPlugin
+DEFAULT_DISPLAY_FILE     :=Data/InputDevicePlugins/DefaultDisplayPlugin.dll
+
+SAN_YING_INPUT_ROOT     :=source/InputDevicePlugins/SanYingInput
+SAN_YING_INPUT_FILE     :=Data/InputDevicePlugins/SanYingInput.dll
+
 FORMATS_MSTS_ROOT     :=source/Plugins/Formats.Msts
 FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 
@@ -193,8 +199,8 @@ endif
 print_csc_type:
 	@echo $(COLOR_RED)Using $(CSC_NAME) as c\# compiler$(COLOR_END)
 
-$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/Data/Formats $(DEBUG_DIR)/DevTools
-$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Formats $(RELEASE_DIR)/DevTools
+$(DEBUG_DEPEND): $(patsubst $(DEBUG_DIR)/%,dependencies/%,$@) | $(DEBUG_DIR) $(DEBUG_DIR)/Data/InputDevicePlugins $(DEBUG_DIR) $(DEBUG_DIR)/Data/Plugins $(DEBUG_DIR)/Data/Formats $(DEBUG_DIR)/DevTools
+$(RELEASE_DEPEND): $(patsubst $(RELEASE_DIR)/%,dependencies/%,$@) | $(RELEASE_DIR) $(RELEASE_DIR)/Data/InputDevicePlugins $(RELEASE_DIR) $(RELEASE_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Formats $(RELEASE_DIR)/DevTools
 
 $(DEBUG_DEPEND) $(RELEASE_DEPEND):
 	@echo $(COLOR_BLUE)Copying dependency $(COLOR_CYAN)$@$(COLOR_END)
@@ -212,6 +218,9 @@ $(DEBUG_DIR)/Data $(RELEASE_DIR)/Data:
 	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/Data/
 
+$(DEBUG_DIR)/Data/InputDevicePlugins $(RELEASE_DIR)/Data/InputDevicePlugins:
+	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/InputDevicePlugins$(COLOR_END)
+	@mkdir -p $(OUTPUT_DIR)/Data/InputDevicePlugins/
 $(DEBUG_DIR)/Data/Plugins $(RELEASE_DIR)/Data/Plugins:
 	@echo $(COLOR_BLUE)Creating directory $(COLOR_CYAN)$(OUTPUT_DIR)/Data/Plugins$(COLOR_END)
 	@mkdir -p $(OUTPUT_DIR)/Data/Plugins/
@@ -238,6 +247,8 @@ clean:
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
+	rm -f bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.dll* bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.pdb
+	rm -f bin*/Data/InputDevicePlugins/SanYingInput.dll* bin*/Data/InputDevicePlugins/SanYingInput.pdb
 	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
 	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
 	rm -f bin*/Data/Plugins/Sound.RiffWave.dll* bin*/Data/Plugins/Sound.RiffWave.pdb
@@ -333,6 +344,8 @@ $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/Assembl
 $(call create_resource, $(OPEN_BVE_RESOURCE), $(OPEN_BVE_RESX))
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SAN_YING_INPUT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
@@ -344,6 +357,8 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
@@ -390,6 +405,48 @@ $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BV
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
 
 
+########################
+# DefaultDisplayPlugin #
+########################
+
+DEFAULT_DISPLAY_FOLDERS  := $(shell find $(DEFAULT_DISPLAY_ROOT) -type d)
+DEFAULT_DISPLAY_SRC      := $(foreach sdir, $(DEFAULT_DISPLAY_FOLDERS), $(wildcard $(sdir)/*.cs))
+DEFAULT_DISPLAY_DOC      := $(addprefix /doc:, $(foreach sdir, $(DEFAULT_DISPLAY_FOLDERS), $(wildcard $(sdir)/*.xml)))
+DEFAULT_DISPLAY_RESX     := $(foreach sdir, $(DEFAULT_DISPLAY_FOLDERS), $(wildcard $(sdir)/*.resx))
+DEFAULT_DISPLAY_RESOURCE := $(addprefix $(DEFAULT_DISPLAY_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(DEFAULT_DISPLAY_ROOT))%.resx, %.resources, $(DEFAULT_DISPLAY_RESX)))))
+DEFAULT_DISPLAY_OUT       =$(OUTPUT_DIR)/$(DEFAULT_DISPLAY_FILE)
+
+$(call create_resource, $(DEFAULT_DISPLAY_RESOURCE), $(DEFAULT_DISPLAY_RESX))
+
+$(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE) $(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE): $(DEFAULT_DISPLAY_SRC) $(DEFAULT_DISPLAY_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(DEFAULT_DISPLAY_OUT)$(COLOR_END)
+	@$(CSC) /out:$(DEFAULT_DISPLAY_OUT) /target:library $(DEFAULT_DISPLAY_SRC) $(ARGS) $(DEFAULT_DISPLAY_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(DEFAULT_DISPLAY_RESOURCE))
+	
+################
+# SanYingInput #
+################
+
+SAN_YING_INPUT_FOLDERS  := $(shell find $(SAN_YING_INPUT_ROOT) -type d)
+SAN_YING_INPUT_SRC      := $(foreach sdir, $(SAN_YING_INPUT_FOLDERS), $(wildcard $(sdir)/*.cs))
+SAN_YING_INPUT_DOC      := $(addprefix /doc:, $(foreach sdir, $(SAN_YING_INPUT_FOLDERS), $(wildcard $(sdir)/*.xml)))
+SAN_YING_INPUT_RESX     := $(foreach sdir, $(SAN_YING_INPUT_FOLDERS), $(wildcard $(sdir)/*.resx))
+SAN_YING_INPUT_RESOURCE := $(addprefix $(SAN_YING_INPUT_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(SAN_YING_INPUT_ROOT))%.resx, %.resources, $(SAN_YING_INPUT_RESX)))))
+SAN_YING_INPUT_OUT       =$(OUTPUT_DIR)/$(SAN_YING_INPUT_FILE)
+
+$(call create_resource, $(SAN_YING_INPUT_RESOURCE), $(SAN_YING_INPUT_RESX))
+
+$(DEBUG_DIR)/$(SAN_YING_INPUT_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SAN_YING_INPUT_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(SAN_YING_INPUT_FILE) $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE): $(SAN_YING_INPUT_SRC) $(SAN_YING_INPUT_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SAN_YING_INPUT_OUT)$(COLOR_END)
+	@$(CSC) /out:$(SAN_YING_INPUT_OUT) /target:library $(SAN_YING_INPUT_SRC) $(ARGS) $(SAN_YING_INPUT_DOC) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(SAN_YING_INPUT_RESOURCE))
+	
 ##############
 # OpenBveAts #
 ##############

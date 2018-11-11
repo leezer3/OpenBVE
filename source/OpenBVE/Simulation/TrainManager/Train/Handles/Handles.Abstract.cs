@@ -19,6 +19,8 @@ namespace OpenBve
 
 			internal int MaximumNotch;
 
+			internal int MaximumDriverNotch;
+
 			internal HandleChange[] DelayedChanges;
 
 			internal abstract void Update();

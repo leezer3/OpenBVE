@@ -159,6 +159,8 @@ namespace TrainEditor {
 			internal EbHandleBehaviour HandleBehaviour;
 			internal LocoBrakeType LocoBrake;
 			internal int LocoBrakeNotches;
+			internal int DriverPowerNotches;
+			internal int DriverBrakeNotches;
 			internal Handle() {
 				this.HandleType = HandleTypes.Separate;
 				this.PowerNotches = 8;
@@ -167,6 +169,8 @@ namespace TrainEditor {
 				this.LocoBrakeNotches = 0;
 				this.HandleBehaviour = EbHandleBehaviour.NoAction;
 				this.LocoBrake = LocoBrakeType.Combined;
+				this.DriverPowerNotches = 8;
+				this.DriverBrakeNotches = 8;
 			}
 		}
 		
@@ -328,7 +332,7 @@ namespace TrainEditor {
 			}
 		}
 
-		const int currentVersion = 1535;
+		const int currentVersion = 15311;
 
 		// load
 		/// <summary>Loads a file into an instance of the Train class.</summary>
@@ -602,6 +606,12 @@ namespace TrainEditor {
 									case 6:
 										if (a <= 0 && a > 3) t.Handle.LocoBrake = (Handle.LocoBrakeType) b;
 										break;
+									case 7:
+										if (b > 0) t.Handle.DriverPowerNotches = b;
+										break;
+									case 8:
+										if (b > 0) t.Handle.DriverBrakeNotches = b;
+										break;
 								}
 							} i++; n++;
 						} i--; break;
@@ -871,6 +881,8 @@ namespace TrainEditor {
 			b.AppendLine(((int)t.Handle.HandleBehaviour).ToString(Culture).PadRight(n, ' ') + "; EbHandleBehaviour (1.5.3.3+)");
 			b.AppendLine(t.Handle.LocoBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; LocoBrakeNotches (1.5.3.4+)");
 			b.AppendLine(((int)t.Handle.LocoBrake).ToString(Culture).PadRight(n, ' ') + "; LocoBrakeType (1.5.3.4+)");
+			b.AppendLine(t.Handle.DriverPowerNotches.ToString(Culture).PadRight(n, ' ') + "; DriverPowerNotches");
+			b.AppendLine(t.Handle.DriverBrakeNotches.ToString(Culture).PadRight(n, ' ') + "; DriverBrakeNotches");
 			b.AppendLine("#CAB");
 			b.AppendLine(t.Cab.X.ToString(Culture).PadRight(n, ' ') + "; X");
 			b.AppendLine(t.Cab.Y.ToString(Culture).PadRight(n, ' ') + "; Y");

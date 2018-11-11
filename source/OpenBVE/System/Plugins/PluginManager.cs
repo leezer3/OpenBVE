@@ -145,11 +145,17 @@ namespace OpenBve {
 				 */
 				CurrentCameraViewMode = (CameraViewMode)World.CameraMode;
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, (DoorInterlockStates)this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CurrentCameraViewMode, Translations.CurrentLanguageCode, this.Train.Destination);
+				ElapseData inputDevicePluginData = data;
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.Specs.DoorInterlockState = (TrainManager.DoorInterlockStates)data.DoorInterlockState;
 				DisableTimeAcceleration = data.DisableTimeAcceleration;
+				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++) {
+					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
+						InputDevicePlugin.AvailablePlugins[i].SetElapseData(inputDevicePluginData);
+					}
+				}
 				/*
 				 * Set the virtual handles.
 				 * */
@@ -208,7 +214,7 @@ namespace OpenBve {
 					if (virtualHandles) {
 						this.Train.Handles.Power.Safety = handles.PowerNotch;
 					} else {
-						Train.ApplyNotch(handles.PowerNotch, false, 0, true);
+						Train.ApplyNotch(handles.PowerNotch, false, 0, true, true);
 					}
 				} else {
 					if (virtualHandles) {
@@ -264,7 +270,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = this.Train.Handles.Brake.MaximumNotch;
 							} else {
 								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false);
+								Train.ApplyNotch(0, true, this.Train.Handles.Brake.MaximumNotch, false, true);
 								this.Train.ApplyEmergencyBrake();
 							}
 						} else if (handles.BrakeNotch >= 2 & handles.BrakeNotch <= this.Train.Handles.Brake.MaximumNotch + 1) {
@@ -273,7 +279,7 @@ namespace OpenBve {
 							} else {
 								this.Train.UnapplyEmergencyBrake();
 								this.Train.ApplyHoldBrake(false);
-								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false);
+								Train.ApplyNotch(0, true, handles.BrakeNotch - 1, false, true);
 							}
 						} else if (handles.BrakeNotch == 1) {
 							if (virtualHandles) {
@@ -281,7 +287,7 @@ namespace OpenBve {
 								this.Train.Handles.HoldBrake.Actual = true;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false);
+								Train.ApplyNotch(0, true, 0, false, true);
 								this.Train.ApplyHoldBrake(true);
 							}
 						} else if (handles.BrakeNotch == 0) {
@@ -289,7 +295,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = 0;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, 0, false);
+								Train.ApplyNotch(0, true, 0, false, true);
 								this.Train.ApplyHoldBrake(false);
 							}
 						} else {
@@ -312,7 +318,7 @@ namespace OpenBve {
 								this.Train.Handles.Brake.Safety = handles.BrakeNotch;
 							} else {
 								this.Train.UnapplyEmergencyBrake();
-								Train.ApplyNotch(0, true, handles.BrakeNotch, false);
+								Train.ApplyNotch(0, true, handles.BrakeNotch, false, true);
 							}
 						} else {
 							if (virtualHandles) {
@@ -485,28 +491,44 @@ namespace OpenBve {
 			if (!System.IO.File.Exists(config)) {
 				return false;
 			}
-			string[] lines = System.IO.File.ReadAllLines(config, encoding);
-			if (lines.Length == 0) {
+			string Text = System.IO.File.ReadAllText(config, encoding);
+			Text = Text.Replace( "\r", "").Replace( "\n", "" );
+			string file;
+			try
+			{
+				file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+			}
+			catch
+			{
+				Interface.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
 				return false;
 			}
-			string file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
 			string title = System.IO.Path.GetFileName(file);
 			if (!System.IO.File.Exists(file))
 			{
-				if(lines[0].EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
+				if(Text.EndsWith(".dll") && encoding.Equals(System.Text.Encoding.Unicode))
 				{
 					// Our filename ends with .dll so probably is not mangled Unicode
-					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					Interface.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 					return false;
 				}
 				// Try again with ASCII encoding
-				lines = System.IO.File.ReadAllLines(config, System.Text.Encoding.GetEncoding(1252));
-				file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
+				Text = System.IO.File.ReadAllText(config, System.Text.Encoding.GetEncoding(1252));
+				Text = Text.Replace( "\r", "").Replace( "\n", "" );
+				try
+				{
+					file = OpenBveApi.Path.CombineFile(trainFolder, Text);
+				}
+				catch
+				{
+					Interface.AddMessage(MessageType.Error, true, "The train plugin path was malformed in " + config);
+					return false;
+				}
 				title = System.IO.Path.GetFileName(file);
 				if (!System.IO.File.Exists(file))
 				{
 					// Nope, still not found
-					Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+					Interface.AddMessage(MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 					return false;
 				}
 
@@ -544,7 +566,7 @@ namespace OpenBve {
 		private static bool LoadPlugin(TrainManager.Train train, string pluginFile, string trainFolder) {
 			string pluginTitle = System.IO.Path.GetFileName(pluginFile);
 			if (!System.IO.File.Exists(pluginFile)) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
+				Interface.AddMessage(MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
 				return false;
 			}
 			/*
@@ -583,7 +605,7 @@ namespace OpenBve {
 			} catch (BadImageFormatException) {
 				assembly = null;
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
 				return false;
 			}
 			if (assembly != null) {
@@ -592,7 +614,7 @@ namespace OpenBve {
 					types = assembly.GetTypes();
 				} catch (ReflectionTypeLoadException ex) {
 					foreach (Exception e in ex.LoaderExceptions) {
-						Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
+						Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
 					}
 					return false;
 				}
@@ -613,7 +635,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
 				return false;
 			}
 			/*
@@ -622,20 +644,20 @@ namespace OpenBve {
 			 */
 			try {
 				if (!CheckWin32Header(pluginFile)) {
-					Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
+					Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
 					return false;
 				}
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
 				return false;
 			}
 			if (!Program.CurrentlyRunningOnWindows | IntPtr.Size != 4) {
-				Interface.AddMessage(Interface.MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
+				Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 				return false;
 			}
 			if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
 			{
-				Interface.AddMessage(Interface.MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
+				Interface.AddMessage(MessageType.Warning, false, "AtsPluginProxy.dll is missing or corrupt- Please reinstall.");
 				return false;
 			}
 			train.Plugin = new Win32Plugin(pluginFile, train);
@@ -643,7 +665,7 @@ namespace OpenBve {
 				return true;
 			} else {
 				train.Plugin = null;
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
 				return false;
 			}
 		}

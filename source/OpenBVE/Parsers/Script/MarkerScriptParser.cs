@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
 using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 
 namespace OpenBve
 {
@@ -29,7 +30,7 @@ namespace OpenBve
 				}
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
-					Interface.AddMessage(Interface.MessageType.Error, false, "No marker nodes defined in XML file " + fileName);
+					Interface.AddMessage(MessageType.Error, false, "No marker nodes defined in XML file " + fileName);
 					return false;
 				}
 				//marker = new CsvRwRouteParser.Marker();
@@ -50,7 +51,7 @@ namespace OpenBve
 								case "early":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false,
+										Interface.AddMessage(MessageType.Error, false,
 											"No paramaters defined for the early message in " + fileName);
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -62,23 +63,32 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageEarlyTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out EarlyTexture))
 													{
-														Interface.AddMessage(Interface.MessageType.Error, false, "Loading MessageEarlyTexture " + f + " failed.");
+														Interface.AddMessage(MessageType.Error, false, "Loading MessageEarlyTexture " + f + " failed.");
 													}
 												}
 												else
 												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "MessageEarlyTexture " + f + " does not exist.");
+													Interface.AddMessage(MessageType.Error, false, "MessageEarlyTexture " + f + " does not exist.");
 												}
 												break;
 											case "time":
 												if (!Interface.TryParseTime(cc.InnerText, out EarlyTime))
 												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Early message time invalid in " + fileName);
+													Interface.AddMessage(MessageType.Error, false, "Early message time invalid in " + fileName);
 												}
 												EarlyDefined = true;
 												break;
@@ -91,7 +101,7 @@ namespace OpenBve
 								case "ontime":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false,
+										Interface.AddMessage(MessageType.Error, false,
 											"No paramaters defined for the on-time message in " + fileName);
 									}
 									foreach (XmlNode cc in c.ChildNodes)
@@ -103,24 +113,33 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out Texture))
 													{
-														Interface.AddMessage(Interface.MessageType.Error, false, "Loading MessageTexture " + f + " failed.");
+														Interface.AddMessage(MessageType.Error, false, "Loading MessageTexture " + f + " failed.");
 													}
 												}
 												else
 												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "MessageTexture " + f + " does not exist.");
+													Interface.AddMessage(MessageType.Error, false, "MessageTexture " + f + " does not exist.");
 												}
 												break;
 											case "color":
 												OnTimeColor = ParseColor(cc.InnerText, fileName);
 												break;
 											case "time":
-												Interface.AddMessage(Interface.MessageType.Error, false, "OnTime should not contain a TIME declaration in " + fileName);
+												Interface.AddMessage(MessageType.Error, false, "OnTime should not contain a TIME declaration in " + fileName);
 												break;
 										}
 									}
@@ -128,7 +147,7 @@ namespace OpenBve
 								case "late":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false,
+										Interface.AddMessage(MessageType.Error, false,
 											"No paramaters defined for the late message in " + fileName);
 									}
 									
@@ -141,23 +160,32 @@ namespace OpenBve
 												break;
 											case "texture":
 											case "image":
-												var f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(Path, cc.InnerText);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, false, "MessageLateTexture path was malformed in file " + fileName);
+													break;
+												}
 												if (System.IO.File.Exists(f))
 												{
 													if (!Textures.RegisterTexture(f, out LateTexture))
 													{
-														Interface.AddMessage(Interface.MessageType.Error, false, "Loading MessageLateTexture " + f + " failed.");
+														Interface.AddMessage(MessageType.Error, false, "Loading MessageLateTexture " + f + " failed.");
 													}
 												}
 												else
 												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "MessageLateTexture " + f + " does not exist.");
+													Interface.AddMessage(MessageType.Error, false, "MessageLateTexture " + f + " does not exist.");
 												}
 												break;
 											case "time":
 												if (!Interface.TryParseTime(cc.InnerText, out LateTime))
 												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Early message time invalid in " + fileName);
+													Interface.AddMessage(MessageType.Error, false, "Early message time invalid in " + fileName);
 												}
 												LateDefined = true;
 												break;
@@ -170,13 +198,13 @@ namespace OpenBve
 								case "timeout":
 									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out TimeOut))
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Marker timeout invalid in " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "Marker timeout invalid in " + fileName);
 									}
 									break;
 								case "distance":
 									if (!NumberFormats.TryParseDouble(c.InnerText, new[] {1.0}, out EndingPosition))
 									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "Marker distance invalid in " + fileName);
+										Interface.AddMessage(MessageType.Error, false, "Marker distance invalid in " + fileName);
 									}
 									break;
 								case "trains":
@@ -188,7 +216,7 @@ namespace OpenBve
 						//Check this marker is valid
 						if (TimeOut == Double.PositiveInfinity && EndingPosition == Double.PositiveInfinity)
 						{
-							Interface.AddMessage(Interface.MessageType.Error, false, "No marker timeout or distance defined in marker XML " + fileName);
+							Interface.AddMessage(MessageType.Error, false, "No marker timeout or distance defined in marker XML " + fileName);
 							return false;
 						}
 						if (EndingPosition != Double.PositiveInfinity)
@@ -220,7 +248,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Interface.AddMessage(Interface.MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
+									Interface.AddMessage(MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
 								}
 								
 							}
@@ -234,7 +262,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Interface.AddMessage(Interface.MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
+									Interface.AddMessage(MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
 								}
 							}
 						}
@@ -249,7 +277,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Interface.AddMessage(Interface.MessageType.Warning, false, "A late time was defined, but no message was specified in MarkerXML " + fileName);
+									Interface.AddMessage(MessageType.Warning, false, "A late time was defined, but no message was specified in MarkerXML " + fileName);
 								}
 
 							}
@@ -263,7 +291,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Interface.AddMessage(Interface.MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
+									Interface.AddMessage(MessageType.Warning, false, "An early time was defined, but no message was specified in MarkerXML " + fileName);
 								}
 							}
 						}
@@ -333,7 +361,7 @@ namespace OpenBve
 				case "8":
 					return MessageColor.Magenta;
 				default:
-					Interface.AddMessage(Interface.MessageType.Error, false, "MessageColor is invalid in MarkerXML " + f);
+					Interface.AddMessage(MessageType.Error, false, "MessageColor is invalid in MarkerXML " + f);
 					return MessageColor.White;
 			}
 		}

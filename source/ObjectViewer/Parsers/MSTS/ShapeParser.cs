@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
@@ -896,13 +897,13 @@ namespace OpenBve
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
 									if (!File.Exists(txF))
 									{
-										Interface.AddMessage(Interface.MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
+										Interface.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
 										txF = null;
 									}
 								}
 								catch
 								{
-									Interface.AddMessage(Interface.MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
+									Interface.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
 								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(txF));
 								break;

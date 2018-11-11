@@ -83,7 +83,7 @@ namespace OpenBve
 
 					World.CameraAlignmentDirection = new World.CameraAlignment();
 					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(TimeElapsed);
 					World.UpdateViewingDistances();
 					if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
@@ -689,7 +689,7 @@ namespace OpenBve
 										}
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
-										UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+										Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
 										if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
@@ -723,7 +723,7 @@ namespace OpenBve
 										}
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
-										UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
+										Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
 										break;
@@ -771,7 +771,7 @@ namespace OpenBve
 										}
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
-										UpdateViewport(ViewPortChangeMode.NoChange);
+										Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
 									}
@@ -820,7 +820,7 @@ namespace OpenBve
 											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
 											World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
-											UpdateViewport(ViewPortChangeMode.NoChange);
+											Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
 										}
@@ -869,7 +869,7 @@ namespace OpenBve
 											World.CameraCurrentAlignment.TrackPosition =
 												World.CameraTrackFollower.TrackPosition;
 											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
-											UpdateViewport(ViewPortChangeMode.NoChange);
+											Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
 										}
@@ -918,7 +918,7 @@ namespace OpenBve
 										World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
 										World.CameraAlignmentDirection = new World.CameraAlignment();
 										World.CameraAlignmentSpeed = new World.CameraAlignment();
-										UpdateViewport(ViewPortChangeMode.NoChange);
+										Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
 										if ((World.CameraMode == World.CameraViewMode.Interior |
@@ -1263,6 +1263,9 @@ namespace OpenBve
 											TrainManager.PlayerTrain.ApplyHoldBrake(false);
 											TrainManager.PlayerTrain.ApplyNotch(0, !TrainManager.PlayerTrain.Handles.SingleHandle, Interface.CurrentControls[i].Option, false);
 										}
+										break;
+									case Translations.Command.ReverserAnyPostion:
+										TrainManager.PlayerTrain.ApplyReverser(Interface.CurrentControls[i].Option, false);
 										break;
 									case Translations.Command.HoldBrake:
 										if (TrainManager.PlayerTrain.Handles.HasHoldBrake && (TrainManager.PlayerTrain.Handles.Brake.Driver == 0 || TrainManager.PlayerTrain.Handles.Brake.Driver == 1) && !TrainManager.PlayerTrain.Handles.HoldBrake.Driver)

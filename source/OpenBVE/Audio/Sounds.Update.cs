@@ -117,11 +117,11 @@ namespace OpenBve {
 							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
 							//TODO: Calculate speed...
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
-							velocity = Vector3.Null;
+							velocity = Vector3.Zero;
 							break;
 						default:
 							position = Sources[i].Position;
-							velocity = Vector3.Null;
+							velocity = Vector3.Zero;
 							break;
 					}
 					Vector3 positionDifference = position - listenerPosition;
@@ -299,7 +299,7 @@ namespace OpenBve {
 					listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff);
 				}
 			} else {
-				listenerVelocity = Vector3.Null;
+				listenerVelocity = Vector3.Zero;
 			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
@@ -538,11 +538,11 @@ namespace OpenBve {
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)source.Parent;
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
-							velocity = Vector3.Null;
+							velocity = Vector3.Zero;
 							break;
 						default:
 							position = source.Position;
-							velocity = Vector3.Null;
+							velocity = Vector3.Zero;
 							break;
 					}
 					position -= listenerPosition;

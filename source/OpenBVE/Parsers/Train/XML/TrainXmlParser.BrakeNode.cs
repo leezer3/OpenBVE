@@ -2,6 +2,7 @@
 using System.Xml;
 using OpenBveApi.Math;
 using OpenBve.BrakeSystems;
+using OpenBveApi.Interface;
 
 namespace OpenBve.Parsers.Train
 {
@@ -31,7 +32,7 @@ namespace OpenBve.Parsers.Train
 									case "rate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorRate) | compressorRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid compression rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid compression rate defined for Car " + Car + " in XML file " + fileName);
 											compressorRate = 5000.0;
 										}
 										break;
@@ -49,14 +50,14 @@ namespace OpenBve.Parsers.Train
 									case "minimumpressure":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorMinimumPressure) | compressorMinimumPressure <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid main reservoir minumum pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid main reservoir minumum pressure defined for Car " + Car + " in XML file " + fileName);
 											compressorMinimumPressure = 690000.0;
 										}
 										break;
 									case "maximumpressure":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out compressorMaximumPressure) | compressorMaximumPressure <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid main reservoir maximum pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid main reservoir maximum pressure defined for Car " + Car + " in XML file " + fileName);
 											compressorMaximumPressure = 780000.0;
 										}
 										break;
@@ -74,7 +75,7 @@ namespace OpenBve.Parsers.Train
 									case "chargerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out auxiliaryReservoirChargeRate) | auxiliaryReservoirChargeRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid auxiliary reservoir charge rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid auxiliary reservoir charge rate defined for Car " + Car + " in XML file " + fileName);
 											auxiliaryReservoirChargeRate = 200000.0;
 										}
 										break;
@@ -92,21 +93,21 @@ namespace OpenBve.Parsers.Train
 									case "chargerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirChargeRate) | equalizingReservoirChargeRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid equalizing reservoir charge rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir charge rate defined for Car " + Car + " in XML file " + fileName);
 											equalizingReservoirChargeRate = 50000.0;
 										}
 										break;
 									case "servicerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirServiceRate) | equalizingReservoirServiceRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid equalizing reservoir service rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir service rate defined for Car " + Car + " in XML file " + fileName);
 											equalizingReservoirServiceRate = 50000.0;
 										}
 										break;
 									case "emergencyrate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out equalizingReservoirEmergencyRate) | equalizingReservoirEmergencyRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid equalizing reservoir emergency rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid equalizing reservoir emergency rate defined for Car " + Car + " in XML file " + fileName);
 											equalizingReservoirEmergencyRate = 50000.0;
 										}
 										break;
@@ -124,28 +125,28 @@ namespace OpenBve.Parsers.Train
 									case "normalpressure":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeNormalPressure) | brakePipeNormalPressure <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake pipe normal pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake pipe normal pressure defined for Car " + Car + " in XML file " + fileName);
 											brakePipeNormalPressure = 0.0;
 										}
 										break;
 									case "chargerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeChargeRate) | brakePipeChargeRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake pipe charge rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake pipe charge rate defined for Car " + Car + " in XML file " + fileName);
 											brakePipeChargeRate = 10000000.0;
 										}
 										break;
 									case "servicerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeServiceRate) | brakePipeServiceRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake pipe service rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake pipe service rate defined for Car " + Car + " in XML file " + fileName);
 											brakePipeServiceRate = 1500000.0;
 										}
 										break;
 									case "emergencyrate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakePipeEmergencyRate) | brakePipeEmergencyRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
 											brakePipeEmergencyRate = 400000.0;
 										}
 										break;
@@ -163,21 +164,21 @@ namespace OpenBve.Parsers.Train
 									case "servicerate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeServiceRate) | straightAirPipeServiceRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid straight air pipe service rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid straight air pipe service rate defined for Car " + Car + " in XML file " + fileName);
 											 straightAirPipeServiceRate = 300000.0;
 										}
 										break;
 									case "emergencyrate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeEmergencyRate) | straightAirPipeEmergencyRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
 											straightAirPipeEmergencyRate = 400000.0;
 										}
 										break;
 									case "releaserate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out straightAirPipeReleaseRate) | straightAirPipeReleaseRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid straight air pipe emergency rate defined for Car " + Car + " in XML file " + fileName);
 											straightAirPipeReleaseRate = 200000.0;
 										}
 										break;
@@ -195,28 +196,28 @@ namespace OpenBve.Parsers.Train
 									case "servicemaximumpressure":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderServiceMaximumPressure) | brakeCylinderServiceMaximumPressure <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake cylinder service pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake cylinder service pressure defined for Car " + Car + " in XML file " + fileName);
 											brakeCylinderServiceMaximumPressure = 440000.0;
 										}
 										break;
 									case "emergencymaximumpressure":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderEmergencyMaximumPressure) | brakeCylinderEmergencyMaximumPressure <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
 											brakeCylinderEmergencyMaximumPressure = 440000.0;
 										}
 										break;
 									case "emergencyrate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderEmergencyRate) | brakeCylinderEmergencyRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
 											brakeCylinderEmergencyRate = 300000.0;
 										}
 										break;
 									case "releaserate":
 										if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out brakeCylinderReleaseRate) | brakeCylinderReleaseRate <= 0.0)
 										{
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, "Invalid brake cylinder emergency pressure defined for Car " + Car + " in XML file " + fileName);
 											brakeCylinderReleaseRate = 200000.0;
 										}
 										break;

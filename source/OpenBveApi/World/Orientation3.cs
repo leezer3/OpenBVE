@@ -30,7 +30,7 @@
 		// --- read-only fields ---
 		
 		/// <summary>Represents a null orientation.</summary>
-		public static readonly Orientation3 Null = new Orientation3(Vector3.Null, Vector3.Null, Vector3.Null);
+		public static readonly Orientation3 Null = new Orientation3(Vector3.Zero, Vector3.Zero, Vector3.Zero);
 		
 		/// <summary>Represents the default orientation with X = {1, 0, 0}, Y = {0, 1, 0} and Z = {0, 0, 1}.</summary>
 		public static readonly Orientation3 Default = new Orientation3(Vector3.Right, Vector3.Up, Vector3.Forward);

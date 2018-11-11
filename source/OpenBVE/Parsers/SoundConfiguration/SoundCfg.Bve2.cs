@@ -12,7 +12,7 @@ namespace OpenBve
 		{
 			// set sound positions and radii
 			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
-			Vector3 center = new Vector3(0.0, 0.0, 0.0);
+			Vector3 center = Vector3.Zero;
 			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
 			Vector3 right = new Vector3(1.3, 0.0, 0.0);
 			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z - 0.5);

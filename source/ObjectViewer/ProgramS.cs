@@ -9,6 +9,7 @@ using System;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
@@ -29,10 +30,10 @@ namespace OpenBve {
 	    internal static bool[] SkipArgs;
 
 		// mouse
-		internal static Vector3 MouseCameraPosition = new Vector3(0.0, 0.0, 0.0);
-		internal static Vector3 MouseCameraDirection = new Vector3(0.0, 0.0, 1.0);
-		internal static Vector3 MouseCameraUp = new Vector3(0.0, 1.0, 0.0);
-		internal static Vector3 MouseCameraSide = new Vector3(1.0, 0.0, 0.0);
+		internal static Vector3 MouseCameraPosition = Vector3.Zero;
+		internal static Vector3 MouseCameraDirection = Vector3.Forward;
+		internal static Vector3 MouseCameraUp = Vector3.Down;
+		internal static Vector3 MouseCameraSide = Vector3.Right;
 	    internal static int MouseButton;
 
 	    internal static int MoveX = 0;
@@ -125,8 +126,8 @@ namespace OpenBve {
 			World.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
 			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
 			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
-			World.Normalize(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z);
-			World.Normalize(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z);
+			World.AbsoluteCameraDirection.Normalize();
+			World.AbsoluteCameraSide.Normalize();
 			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
 			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
@@ -199,14 +200,14 @@ namespace OpenBve {
 #endif
 				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 					ObjectLoadMode.Normal, false, false, false);
-				ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+				ObjectManager.CreateObject(o, Vector3.Zero,
 					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
 #if !DEBUG
 				            }
 				            catch (Exception ex)
 				            {
-					            Interface.AddMessage(Interface.MessageType.Critical, false,
+					            Interface.AddMessage(MessageType.Critical, false,
 						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
 						            Files[i] + ".");
 				            }
@@ -236,16 +237,16 @@ namespace OpenBve {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
                         double cosa = Math.Cos(dx);
                         double sina = Math.Sin(dx);
-                        World.Rotate(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z, 0.0, 1.0, 0.0, cosa, sina);
-                        World.Rotate(ref World.AbsoluteCameraUp.X, ref World.AbsoluteCameraUp.Y, ref World.AbsoluteCameraUp.Z, 0.0, 1.0, 0.0, cosa, sina);
-                        World.Rotate(ref World.AbsoluteCameraSide.X, ref World.AbsoluteCameraSide.Y, ref World.AbsoluteCameraSide.Z, 0.0, 1.0, 0.0, cosa, sina);
+						World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
+	                    World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
+	                    World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
                         double cosa = Math.Cos(dy);
                         double sina = Math.Sin(dy);
-                        World.Rotate(ref World.AbsoluteCameraDirection.X, ref World.AbsoluteCameraDirection.Y, ref World.AbsoluteCameraDirection.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z, cosa, sina);
-                        World.Rotate(ref World.AbsoluteCameraUp.X, ref World.AbsoluteCameraUp.Y, ref World.AbsoluteCameraUp.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z, cosa, sina);
+						World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
+	                    World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
                     }
                     ReducedMode = false;
 	            }
@@ -303,12 +304,12 @@ namespace OpenBve {
 										#endif
 	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 	                        ObjectLoadMode.Normal, false, false, false);
-	                    ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+	                    ObjectManager.CreateObject(o, Vector3.Zero,
 	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
-										Interface.AddMessage(Interface.MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
+										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
 									}
 									#endif
 	                }
@@ -348,14 +349,14 @@ namespace OpenBve {
 #endif
 					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 						            ObjectLoadMode.Normal, false, false, false);
-					            ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+					            ObjectManager.CreateObject(o, Vector3.Zero,
 						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);
 #if !DEBUG
 				            }
 				            catch (Exception ex)
 				            {
-					            Interface.AddMessage(Interface.MessageType.Critical, false,
+					            Interface.AddMessage(MessageType.Critical, false,
 						            "Unhandled error (" + ex.Message + ") encountered while processing the file " +
 						            Files[i] + ".");
 				            }

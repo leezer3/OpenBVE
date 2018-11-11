@@ -5,9 +5,10 @@
 		/// <summary>A power handle</summary>
 		internal class PowerHandle : NotchedHandle
 		{
-			internal PowerHandle(int max, double[] delayUp, double[] delayDown)
+			internal PowerHandle(int max, int driverMax, double[] delayUp, double[] delayDown)
 			{
 				this.MaximumNotch = max;
+				this.MaximumDriverNotch = driverMax;
 				this.DelayUp = delayUp;
 				this.DelayDown = delayDown;
 			}

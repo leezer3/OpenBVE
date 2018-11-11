@@ -70,6 +70,9 @@
   <ItemGroup>
     <Compile Include="Graphics\Colors.cs">
     </Compile>
+    <Compile Include="Interface\Input\InputDevice.cs" />
+    <Compile Include="Interface\Logging\LogMessage.cs" />
+    <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />

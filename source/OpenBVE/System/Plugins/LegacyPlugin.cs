@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -155,7 +156,7 @@ namespace OpenBve {
 			if (result == 0) {
 				int errorCode = Marshal.GetLastWin32Error();
 				string errorMessage = new Win32Exception(errorCode).Message;
-				Interface.AddMessage(Interface.MessageType.Error, true,
+				Interface.AddMessage(MessageType.Error, true,
 					String.Format("Error loading Win32 plugin: {0} (0x{1})", errorMessage, errorCode.ToString("x")));
 				return false;
 			}
@@ -173,7 +174,7 @@ namespace OpenBve {
 				throw;
 			}
 			if (version != 131072) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
+				Interface.AddMessage(MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
 				try {
 					Win32Dispose();
 				} catch (Exception ex) {
