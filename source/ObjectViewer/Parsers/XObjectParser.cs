@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 
@@ -142,7 +143,7 @@ namespace OpenBve {
 			//Presumably appears around each Mesh (??), Blender exported models
 			new Template("Frame", new string[] { "[...]" }),
 			//Transforms the mesh, UNSUPPORTED
-			new Template("FrameTransformMatrix", new string[] { "[...]" }),
+			new Template("FrameTransformMatrix", new string[] { "[???]" }),
 		};
 
 		// data
@@ -254,11 +255,36 @@ namespace OpenBve {
 			}
 			Lines[0] = Lines[0].Substring(16);
 			// join lines
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+			StringBuilder Builder = new StringBuilder();
 			for (int i = 0; i < Lines.Length; i++) {
 				Builder.Append(Lines[i]);
 			}
 			string Content = Builder.ToString();
+			//Horrible hack to make Blender generated materials work
+			int idx = Content.IndexOf("Material ", StringComparison.InvariantCultureIgnoreCase);
+			while(idx != -1)
+			{
+				int idx2 = idx + 9;
+				if (Content[idx2] != '{')
+				{
+					int idx3 = idx2;
+					while (idx3 < Content.Length)
+					{
+						idx3++;
+						if (Content[idx3] == '{')
+						{
+							break;
+						}
+
+						
+					}
+					StringBuilder sb = new StringBuilder(Content);
+					sb.Remove(idx2, idx3 - idx2);
+					Content = sb.ToString();
+				}
+
+				idx = Content.IndexOf("Material ", idx + 9, StringComparison.InvariantCultureIgnoreCase);
+			}
 			// parse file
 			int Position = 0;
 			Structure Structure;
