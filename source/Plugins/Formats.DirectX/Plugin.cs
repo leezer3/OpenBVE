@@ -125,12 +125,8 @@ namespace OpenBve.Formats.DirectX
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
-				Label = s.Substring(0, ws);
-				s = s.Substring(ws, s.Length - ws).Trim();
-				if (string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(Label))
-				{
-					s = Label;
-				}
+				Label = s.Substring(ws, s.Length - ws).Trim();
+				s = s.Substring(0, ws);
 			}
 
 			TemplateID currentToken;
@@ -150,6 +146,13 @@ namespace OpenBve.Formats.DirectX
 		public override Block ReadSubBlock(TemplateID newToken)
 		{
 			startPosition = currentPosition;
+			while (myText[startPosition] == ';')
+			{
+				//Arrays with 'incorrect' additional terminator
+				//e.g. Mesquioa
+				currentPosition++;
+				startPosition++;
+			}
 			string s = String.Empty;
 			while (currentPosition < myText.Length)
 			{
@@ -175,7 +178,7 @@ namespace OpenBve.Formats.DirectX
 			{
 				//The block has the optional label
 				Label = s.Substring(ws, s.Length - ws).Trim();
-				s = s.Substring(ws, s.Length - ws).Trim();
+				s = s.Substring(0, ws);
 			}
 
 			if (!Enum.TryParse(s, true, out currentToken))
@@ -217,6 +220,13 @@ namespace OpenBve.Formats.DirectX
 		public override Block ReadSubBlock(TemplateID[] validTokens)
 		{
 			startPosition = currentPosition;
+			while (myText[startPosition] == ';')
+			{
+				//Arrays with 'incorrect' additional terminator
+				//e.g. Mesquioa
+				currentPosition++;
+				startPosition++;
+			}
 			string s = String.Empty;
 			while (currentPosition < myText.Length)
 			{
@@ -279,6 +289,13 @@ namespace OpenBve.Formats.DirectX
 		public override Block ReadSubBlock()
 		{
 			startPosition = currentPosition;
+			while (myText[startPosition] == ';')
+			{
+				//Arrays with 'incorrect' additional terminator
+				//e.g. Mesquioa
+				currentPosition++;
+				startPosition++;
+			}
 			string s = String.Empty;
 			while (currentPosition < myText.Length)
 			{
@@ -304,7 +321,7 @@ namespace OpenBve.Formats.DirectX
 			{
 				//The block has the optional label
 				Label = s.Substring(ws, s.Length - ws).Trim();
-				s = s.Substring(ws, s.Length - ws).Trim();
+				s = s.Substring(0, ws).Trim();
 			}
 
 			if (!Enum.TryParse(s, true, out currentToken))

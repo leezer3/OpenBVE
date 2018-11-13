@@ -26,6 +26,6 @@
 		Boolean2d,
 		MaterialWrap,
 		MeshFaceWraps,
-
+		Template,
 	}
 }
