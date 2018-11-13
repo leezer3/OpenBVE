@@ -179,6 +179,20 @@ namespace OpenBve
 							break;
 					}
 					return;
+				case TemplateID.Frame:
+					while (block.Position() < block.Length() - 5)
+					{
+						subBlock = block.ReadSubBlock();
+						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+					}
+					break;
+				case TemplateID.FrameTransformMatrix:
+					double[] frameTransformMatrix = new double[16];
+					for (int i = 0; i < 16; i++)
+					{
+						frameTransformMatrix[i] = block.ReadSingle();
+					}
+					break;
 				case TemplateID.Mesh:
 					if (builder.Vertices.Length != 0)
 					{
