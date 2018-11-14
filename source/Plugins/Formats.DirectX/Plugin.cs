@@ -268,7 +268,7 @@ namespace OpenBve.Formats.DirectX
 					level++;
 				}
 
-				if (myText[currentPosition] == '{')
+				if (myText[currentPosition] == '}')
 				{
 					currentPosition++;
 					if (level == 0)
