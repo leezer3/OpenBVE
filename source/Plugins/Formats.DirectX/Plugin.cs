@@ -399,11 +399,14 @@ namespace OpenBve.Formats.DirectX
 		public override string ReadString()
 		{
 			startPosition = currentPosition;
-			while (!char.IsWhiteSpace(myText[currentPosition]))
+			while (currentPosition < myText.Length)
 			{
+				if (!char.IsWhiteSpace(myText[currentPosition]))
+				{
+					break;
+				}
 				currentPosition++;
 			}
-
 			return getNextValue();
 		}
 

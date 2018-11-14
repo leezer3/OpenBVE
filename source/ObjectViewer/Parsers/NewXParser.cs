@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using OpenBve.Formats.DirectX;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenTK.Graphics.OpenGL;
 
 
 namespace OpenBve 
@@ -53,7 +55,30 @@ namespace OpenBve
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32)
 			{
 				// textual flavor
-				return LoadTextualX(File.ReadAllText(FileName, Encoding), LoadMode);
+				string[] Lines = File.ReadAllLines(FileName, Encoding);
+				// strip away comments
+				bool Quote = false;
+				for (int i = 0; i < Lines.Length; i++) {
+					for (int j = 0; j < Lines[i].Length; j++) {
+						if (Lines[i][j] == '"') Quote = !Quote;
+						if (!Quote) {
+							if (Lines[i][j] == '#' || j < Lines[i].Length - 1 && Lines[i].Substring(j, 2) == "//") {
+								Lines[i] = Lines[i].Substring(0, j);
+								break;
+							}
+						}
+					}
+					//Convert runs of whitespace to single
+					var list = Lines[i].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s));
+					Lines[i] = string.Join(" ", list);
+				}
+				StringBuilder Builder = new StringBuilder();
+				for (int i = 0; i < Lines.Length; i++) {
+					Builder.Append(Lines[i]);
+					Builder.Append(" ");
+				}
+				string Content = Builder.ToString();
+				return LoadTextualX(Content, LoadMode);
 			}
 
 			byte[] newData;
