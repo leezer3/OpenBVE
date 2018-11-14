@@ -446,6 +446,23 @@ namespace OpenBve.Formats.DirectX
 					return myText.Substring(startPosition, l).Trim();
 				}
 			}
+			else if (myText[currentPosition] == '<')
+			{
+				//Template GUID
+				currentPosition++;
+				startPosition++;
+				while (myText[currentPosition] != '>')
+				{
+					currentPosition++;
+				}
+
+				int l = currentPosition - startPosition;
+				currentPosition++;
+				if (l > 0)
+				{
+					return myText.Substring(startPosition, l).Trim();
+				}
+			}
 			else
 			{
 				while (char.IsDigit(myText[currentPosition]) || myText[currentPosition] == '.' || myText[currentPosition] == '+' || myText[currentPosition] == '-')

@@ -139,13 +139,21 @@ namespace OpenBve
 		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
-			if (block.Label == "template")
-			{
-				return;
-			}
 			switch (block.Token)
 			{
 				default:
+					return;
+				case TemplateID.Template:
+					string GUID = block.ReadString();
+					/*
+					 * Valid Microsoft templates are listed here:
+					 * https://docs.microsoft.com/en-us/windows/desktop/direct3d9/dx9-graphics-reference-x-file-format-templates
+					 * However, an application may define it's own template (or by the looks of things override another)
+					 * by declaring this at the head of the file, and using a unique GUID
+					 *
+					 * Mesquoia does this by defining a copy of the Boolean template using a WORD as opposed to a DWORD
+					 * No practical effect in this case, however be wary of this....
+					 */
 					return;
 				case TemplateID.Header:
 					int majorVersion = block.ReadUInt16();
@@ -182,7 +190,8 @@ namespace OpenBve
 				case TemplateID.Frame:
 					while (block.Position() < block.Length() - 5)
 					{
-						subBlock = block.ReadSubBlock();
+						TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
+						subBlock = block.ReadSubBlock(validTokens);
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					break;
