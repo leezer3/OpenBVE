@@ -1625,9 +1625,9 @@ namespace OpenBve {
 												Array.Resize<Material>(ref Materials, mn + nMaterials);
 												for (int k = 0; k < nMaterials; k++)
 												{
-													Materials[mn + k].faceColor = new Color32(255, 255, 255, 255);
-													Materials[mn + k].specularColor = new Color24(0, 0, 0);
-													Materials[mn + k].emissiveColor = new Color24(0, 0, 0);
+													Materials[mn + k].faceColor = Color32.White;
+													Materials[mn + k].specularColor = Color24.Black;
+													Materials[mn + k].emissiveColor = Color24.Black;
 													Materials[mn + k].TextureFilename = null;
 												}
 												int MaterialIndex = mn;
@@ -2205,9 +2205,9 @@ namespace OpenBve {
 							if (Materials.Length == 0)
 							{
 								Materials = new Material[1];
-								Materials[0].faceColor = new Color32(255, 255, 255, 255);
-								Materials[0].emissiveColor = new Color24(0, 0, 0);
-								Materials[0].specularColor = new Color24(0, 0, 0);
+								Materials[0].faceColor = Color32.White;
+								Materials[0].emissiveColor = Color24.Black;
+								Materials[0].specularColor = Color24.Black;
 								Materials[0].TextureFilename = null;
 								for (int j = 0; j < nFaces; j++)
 								{
@@ -2238,7 +2238,7 @@ namespace OpenBve {
 								}
 								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
-								Object.Mesh.Materials[mm + j].TransparentColor = new Color24(0, 0, 0);
+								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
 								Object.Mesh.Materials[mm + j].NighttimeTexture = null;
 								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;
