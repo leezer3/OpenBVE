@@ -15,6 +15,7 @@ namespace OpenBve
 	{
 		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, ObjectLoadMode LoadMode)
 		{
+			rootMatrix = Matrix4D.NoTransformation;
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
@@ -172,7 +173,7 @@ namespace OpenBve
 		private static string currentFile;
 
 		private static bool frameRoot;
-		private static Matrix4D rootMatrix = Matrix4D.NoTransformation;
+		private static Matrix4D rootMatrix;
 
 		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
