@@ -142,7 +142,7 @@ namespace OpenBve {
 			//Presumably appears around each Mesh (??), Blender exported models
 			new Template("Frame", new string[] { "[...]" }),
 			//Transforms the mesh, UNSUPPORTED
-			new Template("FrameTransformMatrix", new string[] { "[...]" }),
+			new Template("FrameTransformMatrix", new string[] { "[???]" }),
 		};
 
 		// data
