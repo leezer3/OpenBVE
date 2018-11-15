@@ -1174,7 +1174,7 @@ namespace OpenBve {
 			Object.Mesh.Materials = new World.MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = Texture != null ? (byte)World.MeshMaterial.TransparentColorMask : (byte)0;
 			Object.Mesh.Materials[0].Color = Color;
-			Object.Mesh.Materials[0].TransparentColor = new Color24(0, 0, 255);
+			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = Texture;
 			Object.Mesh.Materials[0].NighttimeTexture = null;
 			Object.Dynamic = true;

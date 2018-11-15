@@ -27,10 +27,10 @@ namespace OpenBve
 			internal string Key;
 			internal Material()
 			{
-				this.Color = new Color32(255, 255, 255, 255);
-				this.EmissiveColor = new Color24(0, 0, 0);
+				this.Color = Color32.White;
+				this.EmissiveColor = Color24.Black;
 				this.EmissiveColorUsed = false;
-				this.TransparentColor = new Color24(0, 0, 0);
+				this.TransparentColor = Color24.Black;
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
@@ -471,7 +471,7 @@ namespace OpenBve
 						 */
 						Array.Resize(ref Object.Mesh.Materials, 1);
 						Object.Mesh.Materials[0] = new World.MeshMaterial();
-						Object.Mesh.Materials[0].Color = new Color32(255,255,255);
+						Object.Mesh.Materials[0].Color = Color32.White;
 						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
 						Object.Mesh.Materials[0].DaytimeTextureIndex = -1;
 						Object.Mesh.Materials[0].NighttimeTextureIndex = -1;

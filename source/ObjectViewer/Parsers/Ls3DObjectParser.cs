@@ -33,10 +33,10 @@ namespace OpenBve
             internal ushort GlowAttenuationData;
             internal Material()
             {
-                this.Color = new Color32(255, 255, 255, 255);
-                this.EmissiveColor = new Color24(0, 0, 0);
+                this.Color = Color32.White;
+                this.EmissiveColor = Color24.Black;
                 this.EmissiveColorUsed = false;
-                this.TransparentColor = new Color24(0, 0, 0);
+                this.TransparentColor = Color24.Black;
                 this.TransparentColorUsed = false;
                 this.DaytimeTexture = null;
                 this.NighttimeTexture = null;
@@ -184,7 +184,7 @@ namespace OpenBve
 													if (attribute.Value == "TRUE")
 													{
 														TransparencyUsed = true;
-														transparentColor = new Color24(0,0,0);
+														transparentColor = Color24.Black;
 													}
                                                     break;
 	                                            case "TransTexture":
@@ -212,7 +212,7 @@ namespace OpenBve
                                                         case "1":
                                                             //Transparency is solid black
                                                             TransparencyUsed = true;
-                                                            transparentColor = new Color24(0,0,0);
+                                                            transparentColor = Color24.Black;
 	                                                        FirstPxTransparent = false;
                                                             break;
                                                         case "2":

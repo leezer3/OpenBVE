@@ -44,7 +44,7 @@ namespace OpenBve {
 			double PanelBitmapWidth = 1024.0, PanelBitmapHeight = 1024.0;
 			string PanelDaytimeImage = null;
 			string PanelNighttimeImage = null;
-			Color24 PanelTransparentColor = new Color24(0, 0, 255);
+			Color24 PanelTransparentColor = Color24.Blue;
 			// parse lines for panel
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
@@ -302,7 +302,7 @@ namespace OpenBve {
 									string Subject = "true";
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
-									Color24 TransparentColor = new Color24(0, 0, 255);
+									Color24 TransparentColor = Color24.Blue;
 									int Layer = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
@@ -390,8 +390,8 @@ namespace OpenBve {
 									string Subject = "true";
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
-									Color32 Color = new Color32(255, 255, 255, 255);
-									Color24 TransparentColor = new Color24(0, 0, 255);
+									Color32 Color = Color32.White;
+									Color24 TransparentColor = Color24.Blue;
 									double OriginX = -1.0, OriginY = -1.0;
 									bool OriginDefined = false;
 									double Layer = 0.0, Radius = 0.0;
@@ -606,7 +606,7 @@ namespace OpenBve {
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
 									double Minimum = 0.0, Maximum = 0.0;
-									Color24 TransparentColor = new Color24(0, 0, 255);
+									Color24 TransparentColor = Color24.Blue;
 									int Layer = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
@@ -744,7 +744,7 @@ namespace OpenBve {
 									string Subject = "true";
 									double LocationX = 0.0, LocationY = 0.0;
 									string DaytimeImage = null, NighttimeImage = null;
-									Color24 TransparentColor = new Color24(0, 0, 255);
+									Color24 TransparentColor = Color24.Blue;
 									double Layer = 0.0; int Interval = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
@@ -1450,7 +1450,7 @@ namespace OpenBve {
 			Object.Mesh.Materials = new World.MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? World.MeshMaterial.TransparentColorMask : 0);
 			Object.Mesh.Materials[0].Color = Color;
-			Object.Mesh.Materials[0].TransparentColor = new Color24(0, 0, 255);
+			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
 			Object.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
 			Object.Dynamic = true;
