@@ -8,8 +8,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenTK.Graphics.OpenGL;
-
 
 namespace OpenBve 
 {
@@ -155,11 +153,26 @@ namespace OpenBve
 			}
 			builder.Apply(ref obj);
 			obj.Mesh.CreateNormals();
+			if (rootMatrix != Matrix4D.NoTransformation)
+			{
+				for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
+				{
+					double x = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.X) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.X) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.X) + (1 * rootMatrix.Row3.X);
+					double y = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.Y) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.Y) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.Y) + (1 * rootMatrix.Row3.Y);
+					double z = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.Z) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.Z) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.Z) + (1 * rootMatrix.Row3.Z);
+					obj.Mesh.Vertices[i].Coordinates.X = x;
+					obj.Mesh.Vertices[i].Coordinates.Y = y;
+					obj.Mesh.Vertices[i].Coordinates.Z = z;
+				}
+			}
 			return obj;
 		}
 
 		private static string currentFolder;
 		private static string currentFile;
+
+		private static bool frameRoot;
+		private static Matrix4D rootMatrix = Matrix4D.NoTransformation;
 
 		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
@@ -213,6 +226,20 @@ namespace OpenBve
 					}
 					return;
 				case TemplateID.Frame:
+					if (block.Label.ToLowerInvariant() == "root")
+					{
+						//TODO:Shitty code, fixme
+						frameRoot = true;
+					}
+					else
+					{
+						frameRoot = false;
+					}
+					if (builder.Vertices.Length != 0)
+					{
+						builder.Apply(ref obj);
+						builder = new MeshBuilder();
+					}
 					while (block.Position() < block.Length() - 5)
 					{
 						TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
@@ -226,7 +253,16 @@ namespace OpenBve
 					{
 						matrixValues[i] = block.ReadSingle();
 					}
-					Matrix4D currentMatrix = new Matrix4D(matrixValues);
+
+					if (!frameRoot)
+					{
+						builder.TransformMatrix = new Matrix4D(matrixValues);
+					}
+					else
+					{
+						//TODO:Shitty code, fixme
+						rootMatrix = new Matrix4D(matrixValues);
+					}
 					break;
 				case TemplateID.Mesh:
 					if (builder.Vertices.Length != 0)
