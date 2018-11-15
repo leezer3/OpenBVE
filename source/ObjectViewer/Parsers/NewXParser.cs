@@ -221,11 +221,12 @@ namespace OpenBve
 					}
 					break;
 				case TemplateID.FrameTransformMatrix:
-					double[] frameTransformMatrix = new double[16];
+					double[] matrixValues = new double[16];
 					for (int i = 0; i < 16; i++)
 					{
-						frameTransformMatrix[i] = block.ReadSingle();
+						matrixValues[i] = block.ReadSingle();
 					}
+					Matrix4D currentMatrix = new Matrix4D(matrixValues);
 					break;
 				case TemplateID.Mesh:
 					if (builder.Vertices.Length != 0)
