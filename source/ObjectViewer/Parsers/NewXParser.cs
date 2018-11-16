@@ -167,8 +167,8 @@ namespace OpenBve
 		private static string currentFolder;
 		private static string currentFile;
 
-		private static bool frameRoot;
 		private static Matrix4D rootMatrix;
+		private static int currentLevel = 0;
 
 		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
@@ -222,15 +222,7 @@ namespace OpenBve
 					}
 					return;
 				case TemplateID.Frame:
-					if (block.Label.ToLowerInvariant() == "root")
-					{
-						//TODO:Shitty code, fixme
-						frameRoot = true;
-					}
-					else
-					{
-						frameRoot = false;
-					}
+					currentLevel++;
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
@@ -242,6 +234,7 @@ namespace OpenBve
 						subBlock = block.ReadSubBlock(validTokens);
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
+					currentLevel--;
 					break;
 				case TemplateID.FrameTransformMatrix:
 					double[] matrixValues = new double[16];
@@ -250,13 +243,12 @@ namespace OpenBve
 						matrixValues[i] = block.ReadSingle();
 					}
 
-					if (!frameRoot)
+					if (currentLevel > 1)
 					{
 						builder.TransformMatrix = new Matrix4D(matrixValues);
 					}
 					else
 					{
-						//TODO:Shitty code, fixme
 						rootMatrix = new Matrix4D(matrixValues);
 					}
 					break;
