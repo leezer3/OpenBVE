@@ -158,12 +158,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
 				{
-					double x = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.X) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.X) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.X) + (1 * rootMatrix.Row3.X);
-					double y = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.Y) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.Y) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.Y) + (1 * rootMatrix.Row3.Y);
-					double z = (obj.Mesh.Vertices[i].Coordinates.X * rootMatrix.Row0.Z) + (obj.Mesh.Vertices[i].Coordinates.Y * rootMatrix.Row1.Z) + (obj.Mesh.Vertices[i].Coordinates.Z * rootMatrix.Row2.Z) + (1 * rootMatrix.Row3.Z);
-					obj.Mesh.Vertices[i].Coordinates.X = x;
-					obj.Mesh.Vertices[i].Coordinates.Y = y;
-					obj.Mesh.Vertices[i].Coordinates.Z = z;
+					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix);
 				}
 			}
 			return obj;

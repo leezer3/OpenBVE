@@ -561,6 +561,19 @@ namespace OpenBveApi.Math {
 			double t = 1.0 / System.Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
 			return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
 		}
+
+		/// <summary>Transforms the Vector based upon the given transform matrix</summary>
+		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
+		public void Transform(Matrix4D transformMatrix)
+		{
+			double x = (X * transformMatrix.Row0.X) + (Y * transformMatrix.Row1.X) + (Z * transformMatrix.Row2.X) + (1 * transformMatrix.Row3.X);
+			double y = (X * transformMatrix.Row0.Y) + (Y * transformMatrix.Row1.Y) + (Z * transformMatrix.Row2.Y) + (1 * transformMatrix.Row3.Y);
+			double z = (X * transformMatrix.Row0.Z) + (Y * transformMatrix.Row1.Z) + (Z * transformMatrix.Row2.Z) + (1 * transformMatrix.Row3.Z);
+			X = x;
+			Y = y;
+			Z = z;
+		}
+
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>
 		/// <param name="Vector"></param>
 		/// <returns>True if this is a zero vector, false otherwise</returns>
