@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable 169, 414 //We don't use a bunch of fields, but keep them in case required later
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
