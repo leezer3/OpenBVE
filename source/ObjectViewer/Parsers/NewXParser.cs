@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using OpenBve.Formats.DirectX;
@@ -92,7 +91,7 @@ namespace OpenBve
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
 			{
 				// compressed textual flavor
-				newData = Decompress(Data);
+				newData = MSZip.Decompress(Data);
 				string Text = Encoding.GetString(newData);
 				return LoadTextualX(Text, LoadMode);
 			}
@@ -101,7 +100,7 @@ namespace OpenBve
 			{
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
-				byte[] Uncompressed = Decompress(Data);
+				byte[] Uncompressed = MSZip.Decompress(Data);
 				return LoadBinaryX(Uncompressed, FloatingPointSize, LoadMode);
 			}
 
@@ -109,32 +108,7 @@ namespace OpenBve
 			Interface.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
 			return null;
 		}
-
-		private static byte[] Decompress(byte[] Data) {
-			byte[] Target;
-			using (Stream InputStream = new MemoryStream(Data)) {
-				InputStream.Position = 26;
-				using (DeflateStream Deflate = new DeflateStream(InputStream, CompressionMode.Decompress, true)) {
-					using (MemoryStream OutputStream = new MemoryStream()) {
-						byte[] Buffer = new byte[4096];
-						while (true) {
-							int Count = Deflate.Read(Buffer, 0, Buffer.Length);
-							if (Count != 0) {
-								OutputStream.Write(Buffer, 0, Count);
-							}
-							if (Count != Buffer.Length) {
-								break;
-							}
-						}
-						Target = new byte[OutputStream.Length];
-						OutputStream.Position = 0;
-						OutputStream.Read(Target, 0, Target.Length);
-					}
-				}
-			}
-			return Target;
-		}
-
+		
 		private static ObjectManager.StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
 		{
 			
