@@ -165,14 +165,14 @@ namespace OpenBve
 				normals[i].Normalize();
 			}
 			int nFaceNormals = mesh.NormFaces.Count;
-			if (nFaceNormals != builder.Faces.Length)
+			if (nFaceNormals > builder.Faces.Length)
 			{
 				throw new Exception("nFaceNormals must match the number of faces in the mesh");
 			}
 			for (int i = 0; i < nFaceNormals; i++)
 			{
 				int nVertexNormals = mesh.NormFaces[i].Indices.Count;
-				if (nVertexNormals != builder.Faces[i].Vertices.Length)
+				if (nVertexNormals > builder.Faces[i].Vertices.Length)
 				{
 					throw new Exception("nVertexNormals must match the number of verticies in the face");
 				}

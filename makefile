@@ -438,7 +438,7 @@ $(RELEASE_DIR)/$(ASSIMP_X_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(ASSIMP_X_FILE) $(RELEASE_DIR)/$(ASSIMP_X_FILE): $(ASSIMP_X_SRC) $(ASSIMP_X_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ASSIMP_X_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ASSIMP_X_OUT) /target:library $(ASSIMP_X_SRC) $(ARGS) $(ASSIMP_X_DOC) \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OUTPUT_DIR)/OpenTK.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(ASSIMP_X_RESOURCE))
 
@@ -546,7 +546,7 @@ $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE) $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(FORMATS_DIRECTX_SRC) $(FORMATS_DIRECTX_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(FORMATS_DIRECTX_OUT)$(COLOR_END)
 	@$(CSC) /out:$(FORMATS_DIRECTX_OUT) /target:library $(FORMATS_DIRECTX_SRC) $(ARGS) $(FORMATS_DIRECTX_DOC) \
-	/reference:System.Core.dll /reference:System.dll \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(FORMATS_DIRECTX_RESOURCE))
 
 ##############
