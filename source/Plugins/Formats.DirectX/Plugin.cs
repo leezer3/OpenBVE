@@ -579,10 +579,7 @@ namespace OpenBve.Formats.DirectX
 						}
 						break;
 					default:
-						if (currentToken.EndsWith(".bmp"))
-						{
-							cachedStrings.Add(currentToken);
-						}
+						cachedStrings.Add(currentToken);
 						TemplateID newBlockToken;
 						if (Enum.TryParse(currentToken, true, out newBlockToken) && newBlockToken != TemplateID.Header)
 						{
@@ -676,9 +673,13 @@ namespace OpenBve.Formats.DirectX
 
 		public override string ReadString()
 		{
-			string s = cachedStrings[0];
-			cachedStrings.RemoveAt(0);
-			return s;
+			if (cachedStrings.Count > 0)
+			{
+				string s = cachedStrings[0];
+				cachedStrings.RemoveAt(0);
+				return s;
+			}
+			return string.Empty;
 		}
 
 		public override long Length()

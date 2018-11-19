@@ -38,5 +38,8 @@
 		XSkinMeshHeader,
 		AnimTicksPerSecond,
 		AnimationSet,
+
+		//Source: Mesquioa zipped txt
+		VertexDuplicationIndices
 	}
 }

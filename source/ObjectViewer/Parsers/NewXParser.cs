@@ -76,6 +76,7 @@ namespace OpenBve
 					Builder.Append(" ");
 				}
 				string Content = Builder.ToString();
+				Content = Content.Substring(17);
 				return LoadTextualX(Content, LoadMode);
 			}
 
@@ -111,8 +112,6 @@ namespace OpenBve
 		
 		private static ObjectManager.StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
 		{
-			
-			Text = Text.Substring(17);
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
 			obj.Mesh.Faces = new World.MeshFace[] { };
