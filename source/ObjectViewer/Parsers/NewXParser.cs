@@ -204,8 +204,14 @@ namespace OpenBve
 					}
 					while (block.Position() < block.Length() - 5)
 					{
-						TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
-						subBlock = block.ReadSubBlock(validTokens);
+						/*
+						 * TODO: Whilst https://docs.microsoft.com/en-us/windows/desktop/direct3d9/frame suggests the Frame template should only contain
+						 * Mesh, FrameTransformMatrix or Frame templates by default, 3DS Max stuffs all manner of things into here
+						 *
+						 * It would be nice to get 3DS max stuff detected specifically, especially as we don't support most of this
+						 */
+						//TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
+						subBlock = block.ReadSubBlock();
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
 					currentLevel--;

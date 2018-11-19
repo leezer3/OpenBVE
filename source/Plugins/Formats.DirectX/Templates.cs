@@ -27,5 +27,16 @@
 		MaterialWrap,
 		MeshFaceWraps,
 		Template,
+
+		//Templates below this are not in the Microsoft DirectX specification
+		//However, the X file format is extensible by declaring the template structure at the top
+		//of your object
+
+		//Source: 3DS Max files
+		ObjectMatrixComment,
+		SkinWeights,
+		XSkinMeshHeader,
+		AnimTicksPerSecond,
+		AnimationSet,
 	}
 }
