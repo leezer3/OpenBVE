@@ -268,7 +268,7 @@ namespace OpenBve.Formats.DirectX
 					level++;
 				}
 
-				if (myText[currentPosition] == '{')
+				if (myText[currentPosition] == '}')
 				{
 					currentPosition++;
 					if (level == 0)
@@ -399,11 +399,14 @@ namespace OpenBve.Formats.DirectX
 		public override string ReadString()
 		{
 			startPosition = currentPosition;
-			while (!char.IsWhiteSpace(myText[currentPosition]))
+			while (currentPosition < myText.Length)
 			{
+				if (!char.IsWhiteSpace(myText[currentPosition]))
+				{
+					break;
+				}
 				currentPosition++;
 			}
-
 			return getNextValue();
 		}
 
@@ -435,6 +438,23 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				startPosition++;
 				while (myText[currentPosition] != '"')
+				{
+					currentPosition++;
+				}
+
+				int l = currentPosition - startPosition;
+				currentPosition++;
+				if (l > 0)
+				{
+					return myText.Substring(startPosition, l).Trim();
+				}
+			}
+			else if (myText[currentPosition] == '<')
+			{
+				//Template GUID
+				currentPosition++;
+				startPosition++;
+				while (myText[currentPosition] != '>')
 				{
 					currentPosition++;
 				}

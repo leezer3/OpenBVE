@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using OpenBve.Formats.DirectX;
 using OpenBveApi.Colors;
@@ -8,13 +8,13 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
-
 namespace OpenBve 
 {
 	class NewXParser
 	{
 		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, ObjectLoadMode LoadMode)
 		{
+			rootMatrix = Matrix4D.NoTransformation;
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
@@ -53,7 +53,30 @@ namespace OpenBve
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32)
 			{
 				// textual flavor
-				return LoadTextualX(File.ReadAllText(FileName, Encoding), LoadMode);
+				string[] Lines = File.ReadAllLines(FileName, Encoding);
+				// strip away comments
+				bool Quote = false;
+				for (int i = 0; i < Lines.Length; i++) {
+					for (int j = 0; j < Lines[i].Length; j++) {
+						if (Lines[i][j] == '"') Quote = !Quote;
+						if (!Quote) {
+							if (Lines[i][j] == '#' || j < Lines[i].Length - 1 && Lines[i].Substring(j, 2) == "//") {
+								Lines[i] = Lines[i].Substring(0, j);
+								break;
+							}
+						}
+					}
+					//Convert runs of whitespace to single
+					var list = Lines[i].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s));
+					Lines[i] = string.Join(" ", list);
+				}
+				StringBuilder Builder = new StringBuilder();
+				for (int i = 0; i < Lines.Length; i++) {
+					Builder.Append(Lines[i]);
+					Builder.Append(" ");
+				}
+				string Content = Builder.ToString();
+				return LoadTextualX(Content, LoadMode);
 			}
 
 			byte[] newData;
@@ -68,7 +91,7 @@ namespace OpenBve
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
 			{
 				// compressed textual flavor
-				newData = Decompress(Data);
+				newData = MSZip.Decompress(Data);
 				string Text = Encoding.GetString(newData);
 				return LoadTextualX(Text, LoadMode);
 			}
@@ -77,7 +100,7 @@ namespace OpenBve
 			{
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
-				byte[] Uncompressed = Decompress(Data);
+				byte[] Uncompressed = MSZip.Decompress(Data);
 				return LoadBinaryX(Uncompressed, FloatingPointSize, LoadMode);
 			}
 
@@ -85,32 +108,7 @@ namespace OpenBve
 			Interface.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
 			return null;
 		}
-
-		private static byte[] Decompress(byte[] Data) {
-			byte[] Target;
-			using (Stream InputStream = new MemoryStream(Data)) {
-				InputStream.Position = 26;
-				using (DeflateStream Deflate = new DeflateStream(InputStream, CompressionMode.Decompress, true)) {
-					using (MemoryStream OutputStream = new MemoryStream()) {
-						byte[] Buffer = new byte[4096];
-						while (true) {
-							int Count = Deflate.Read(Buffer, 0, Buffer.Length);
-							if (Count != 0) {
-								OutputStream.Write(Buffer, 0, Count);
-							}
-							if (Count != Buffer.Length) {
-								break;
-							}
-						}
-						Target = new byte[OutputStream.Length];
-						OutputStream.Position = 0;
-						OutputStream.Read(Target, 0, Target.Length);
-					}
-				}
-			}
-			return Target;
-		}
-
+		
 		private static ObjectManager.StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
 		{
 			
@@ -130,22 +128,40 @@ namespace OpenBve
 			}
 			builder.Apply(ref obj);
 			obj.Mesh.CreateNormals();
+			if (rootMatrix != Matrix4D.NoTransformation)
+			{
+				for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
+				{
+					obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix);
+				}
+			}
 			return obj;
 		}
 
 		private static string currentFolder;
 		private static string currentFile;
 
+		private static Matrix4D rootMatrix;
+		private static int currentLevel = 0;
+
 		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
-			if (block.Label == "template")
-			{
-				return;
-			}
 			switch (block.Token)
 			{
 				default:
+					return;
+				case TemplateID.Template:
+					string GUID = block.ReadString();
+					/*
+					 * Valid Microsoft templates are listed here:
+					 * https://docs.microsoft.com/en-us/windows/desktop/direct3d9/dx9-graphics-reference-x-file-format-templates
+					 * However, an application may define it's own template (or by the looks of things override another)
+					 * by declaring this at the head of the file, and using a unique GUID
+					 *
+					 * Mesquoia does this by defining a copy of the Boolean template using a WORD as opposed to a DWORD
+					 * No practical effect in this case, however be wary of this....
+					 */
 					return;
 				case TemplateID.Header:
 					int majorVersion = block.ReadUInt16();
@@ -180,17 +196,34 @@ namespace OpenBve
 					}
 					return;
 				case TemplateID.Frame:
+					currentLevel++;
+					if (builder.Vertices.Length != 0)
+					{
+						builder.Apply(ref obj);
+						builder = new MeshBuilder();
+					}
 					while (block.Position() < block.Length() - 5)
 					{
-						subBlock = block.ReadSubBlock();
+						TemplateID[] validTokens = { TemplateID.Mesh , TemplateID.FrameTransformMatrix, TemplateID.Frame };
+						subBlock = block.ReadSubBlock(validTokens);
 						ParseSubBlock(subBlock, ref obj, ref builder, ref material);
 					}
+					currentLevel--;
 					break;
 				case TemplateID.FrameTransformMatrix:
-					double[] frameTransformMatrix = new double[16];
+					double[] matrixValues = new double[16];
 					for (int i = 0; i < 16; i++)
 					{
-						frameTransformMatrix[i] = block.ReadSingle();
+						matrixValues[i] = block.ReadSingle();
+					}
+
+					if (currentLevel > 1)
+					{
+						builder.TransformMatrix = new Matrix4D(matrixValues);
+					}
+					else
+					{
+						rootMatrix = new Matrix4D(matrixValues);
 					}
 					break;
 				case TemplateID.Mesh:

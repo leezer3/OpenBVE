@@ -12,6 +12,7 @@ namespace OpenBve
 		internal VertexTemplate[] Vertices;
 		internal World.MeshFace[] Faces;
 		internal Material[] Materials;
+		internal Matrix4D TransformMatrix = Matrix4D.NoTransformation;
 
 		internal MeshBuilder()
 		{
@@ -22,6 +23,13 @@ namespace OpenBve
 
 		internal void Apply(ref ObjectManager.StaticObject Object)
 		{
+			if (TransformMatrix != Matrix4D.NoTransformation)
+			{
+				for (int i = 0; i < Vertices.Length; i++)
+				{
+					Vertices[i].Coordinates.Transform(TransformMatrix);
+				}
+			}
 			if (Faces.Length != 0)
 			{
 				int mf = Object.Mesh.Faces.Length;
