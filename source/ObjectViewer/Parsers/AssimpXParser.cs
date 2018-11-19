@@ -11,11 +11,13 @@ namespace OpenBve
 	{
 		private static string currentFolder;
 		private static string currentFile;
+		private static Matrix4D rootMatrix;
 
 		internal static ObjectManager.StaticObject ReadObject(string FileName)
 		{
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
+			rootMatrix = Matrix4D.NoTransformation;
 
 #if !DEBUG
 			try
@@ -39,6 +41,8 @@ namespace OpenBve
 				if (scene.RootNode != null)
 				{
 					// Root Node
+					rootMatrix = ConvertMatrix(scene.RootNode.TrafoMatrix);
+
 					foreach (var mesh in scene.RootNode.Meshes)
 					{
 						MeshBuilder(ref obj, ref builder, mesh);
@@ -53,6 +57,13 @@ namespace OpenBve
 
 				builder.Apply(ref obj);
 				obj.Mesh.CreateNormals();
+				if (rootMatrix != Matrix4D.NoTransformation)
+				{
+					for (int i = 0; i < obj.Mesh.Vertices.Length; i++)
+					{
+						obj.Mesh.Vertices[i].Coordinates.Transform(rootMatrix);
+					}
+				}
 				return obj;
 #if !DEBUG
 			}
@@ -178,16 +189,27 @@ namespace OpenBve
 			}
 		}
 
-		private static void ChildrenNode(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Node parent)
+		private static void ChildrenNode(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Node child)
 		{
-			foreach (var mesh in parent.Meshes)
+			builder.TransformMatrix = ConvertMatrix(child.TrafoMatrix);
+
+			foreach (var mesh in child.Meshes)
 			{
 				MeshBuilder(ref obj, ref builder, mesh);
 			}
-			foreach (var child in parent.Children)
+			foreach (var grandchild in child.Children)
 			{
-				ChildrenNode(ref obj, ref builder, child);
+				ChildrenNode(ref obj, ref builder, grandchild);
 			}
+		}
+
+		private static Matrix4D ConvertMatrix(OpenTK.Matrix4 matrix)
+		{
+			Vector4 Row0 = new Vector4(matrix.Row0.X, matrix.Row0.Y, matrix.Row0.Z, matrix.Row0.W);
+			Vector4 Row1 = new Vector4(matrix.Row1.X, matrix.Row1.Y, matrix.Row1.Z, matrix.Row1.W);
+			Vector4 Row2 = new Vector4(matrix.Row2.X, matrix.Row2.Y, matrix.Row2.Z, matrix.Row2.W);
+			Vector4 Row3 = new Vector4(matrix.Row3.X, matrix.Row3.Y, matrix.Row3.Z, matrix.Row3.W);
+			return new Matrix4D(Row0, Row1, Row2, Row3);
 		}
 	}
 }
