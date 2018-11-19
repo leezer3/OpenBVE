@@ -45,7 +45,7 @@
 			this.TransparencyQuality = new System.Windows.Forms.ComboBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
-			this.checkBoxNewXParser = new System.Windows.Forms.CheckBox();
+			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -229,22 +229,25 @@
 			this.label9.Size = new System.Drawing.Size(97, 13);
 			this.label9.TabIndex = 20;
 			this.label9.Text = "Use New X Parser:";
-			// 
-			// checkBoxNewXParser
-			// 
-			this.checkBoxNewXParser.AutoSize = true;
-			this.checkBoxNewXParser.Location = new System.Drawing.Point(259, 255);
-			this.checkBoxNewXParser.Name = "checkBoxNewXParser";
-			this.checkBoxNewXParser.Size = new System.Drawing.Size(15, 14);
-			this.checkBoxNewXParser.TabIndex = 21;
-			this.checkBoxNewXParser.UseVisualStyleBackColor = true;
+			//
+			// comboBoxNewXParser
+			//
+			this.comboBoxNewXParser.FormattingEnabled = true;
+			this.comboBoxNewXParser.Location = new System.Drawing.Point(166, 255);
+			this.comboBoxNewXParser.Name = "comboBoxNewXParser";
+			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 20);
+			this.comboBoxNewXParser.TabIndex = 21;
+			this.comboBoxNewXParser.Items.AddRange(new object[] {
+			"OriginalXParser",
+			"NewXParser",
+			"AssimpXParser"});
 			// 
 			// formOptions
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(311, 342);
-			this.Controls.Add(this.checkBoxNewXParser);
+			this.Controls.Add(this.comboBoxNewXParser);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label4);
@@ -294,6 +297,6 @@
         private System.Windows.Forms.ComboBox TransparencyQuality;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.CheckBox checkBoxNewXParser;
+		private System.Windows.Forms.ComboBox comboBoxNewXParser;
 	}
 }

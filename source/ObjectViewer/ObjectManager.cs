@@ -1540,11 +1540,18 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-	                if (Interface.CurrentOptions.UseNewXParser)
+	                if (Interface.CurrentOptions.UseNewXParser > 0)
 	                {
 		                try
 		                {
-		                    Result = AssimpXParser.ReadObject(FileName);
+                            if (Interface.CurrentOptions.UseNewXParser == 1)
+                            {
+                                Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+                            }
+                            else
+                            {
+                                Result = AssimpXParser.ReadObject(FileName);
+                            }
 		                }
 		                catch (Exception e)
 		                {
@@ -1629,11 +1636,18 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-	                if (Interface.CurrentOptions.UseNewXParser)
+	                if (Interface.CurrentOptions.UseNewXParser > 0)
 	                {
 		                try
 		                {
-		                    Result = AssimpXParser.ReadObject(FileName);
+                            if (Interface.CurrentOptions.UseNewXParser == 1)
+                            {
+                                Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+                            }
+                            else
+                            {
+                                Result = AssimpXParser.ReadObject(FileName);
+                            }
 		                }
 		                catch (Exception e)
 		                {
