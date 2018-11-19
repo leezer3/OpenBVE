@@ -41,7 +41,10 @@ namespace OpenBve
 				if (scene.RootNode != null)
 				{
 					// Root Node
-					rootMatrix = ConvertMatrix(scene.RootNode.TrafoMatrix);
+					if (scene.RootNode.TrafoMatrix != OpenTK.Matrix4.Zero)
+					{
+						rootMatrix = ConvertMatrix(scene.RootNode.TrafoMatrix);
+					}
 
 					foreach (var mesh in scene.RootNode.Meshes)
 					{
