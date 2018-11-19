@@ -82,10 +82,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.IO.Compression;
 using System.Diagnostics;
 using OpenTK;
 using OpenTK.Graphics;
+using ZlibWithDictionary;
 using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3>;
 using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
 using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
@@ -125,9 +125,6 @@ namespace AssimpNET
 			P = End = -1;
 			LineNumber = 0;
 			Scene = null;
-
-			// vector to store uncompressed file for INFLATE'd X files
-			byte[] uncompressed;
 
 			// set up memory pointers
 			P = 0;
@@ -217,66 +214,79 @@ namespace AssimpNET
 				 * ///////////////////////////////////////////////////////////////////////
 				 */
 
-				// skip unknown data (checksum, flags?)
-				P += 6;
+				// Read file size after decompression excluding header
+				uint uncompressedFinalSize = BitConverter.ToUInt32(Buffer, P) - 16;
+				P += 4;
 
-				// First find out how much storage we'll need. Count sections.
-				int P1 = P;
-				uint est_out = 0;
-
-				while (P1 + 3 < End)
-				{
-					// read next offset
-					ushort ofs = BitConverter.ToUInt16(Buffer, P1);
-					P1 += 2;
-
-					if (ofs > MSZIP_BLOCK)
-					{
-						throw new Exception("X: Invalid offset to next MSZIP compressed block");
-					}
-
-					// check magic word
-					ushort magic = BitConverter.ToUInt16(Buffer, P1);
-					P1 += 2;
-
-					if (magic != MSZIP_MAGIC)
-					{
-						throw new Exception("X: Unsupported compressed format, expected MSZIP header");
-					}
-
-					// and advance to the next offset
-					P1 += ofs;
-					est_out += MSZIP_BLOCK; // one decompressed block is 32786 in size
-				}
-
-				// Allocate storage and terminating zero and do the actual uncompressing
-				uncompressed = new byte[est_out + 1];
-				int uncompressedOut = 0;
-				MemoryStream stream = new MemoryStream(Buffer);
+				// Preparing for decompression
+				MemoryStream inputStream = new MemoryStream(Buffer);
+				MemoryStream outputStream = new MemoryStream();
+				int currentBlock = 0;
+				byte[] previousBlockBytes = new byte[(int)MSZIP_BLOCK];
+				byte[] blockBytes;
 				while (P + 3 < End)
 				{
-					ushort ofs = BitConverter.ToUInt16(Buffer, P);
-					P += 4;
+					// Read compressed block size after decompression
+					ushort uncompressedBlockSize = BitConverter.ToUInt16(Buffer, P);
+					P += 2;
 
-					if (P + ofs > End + 2)
+					// Read compressed block size
+					ushort compressedBlockSize = BitConverter.ToUInt16(Buffer, P);
+					P += 2;
+
+					// Check compressed block size
+					if (compressedBlockSize > MSZIP_BLOCK)
+					{
+						throw new Exception("Compressed block size is larger than MSZIP standard.");
+					}
+
+					if (P + compressedBlockSize > End + 2)
 					{
 						throw new Exception("X: Unexpected EOF in compressed chunk");
 					}
-					stream.Position = P;
 
-					// and decompress the data ....
-					DeflateStream deflate = new DeflateStream(stream, CompressionMode.Decompress);
-					int count = deflate.Read(uncompressed, 0, (int)MSZIP_BLOCK);
+					// Check MSZIP signature of compressed block
+					ushort signature = BitConverter.ToUInt16(Buffer, P);
 
-					// and advance to the next offset
-					uncompressedOut += count;
-					P += ofs;
+					if (signature != MSZIP_MAGIC)
+					{
+						throw new Exception("The compressed block's signature is incorrect.");
+					}
+
+					// Skip MSZIP signature
+					inputStream.Position = P + 2;
+
+					// Decompress the compressed block
+					blockBytes = new byte[compressedBlockSize - 2];
+					inputStream.Read(blockBytes, 0, compressedBlockSize - 2);
+					byte[] decompressedBytes;
+
+					if (currentBlock == 0)
+					{
+						decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, null);
+					}
+					else
+					{
+						decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, previousBlockBytes);
+					}
+
+					outputStream.Write(decompressedBytes, 0, decompressedBytes.Length);
+					previousBlockBytes = decompressedBytes;
+
+					// Preparing to move to the next data block
+					P += compressedBlockSize;
+					currentBlock++;
 				}
 
 				// ok, update pointers to point to the uncompressed file data
-                Buffer = uncompressed;
+				Buffer = outputStream.ToArray();
 				P = 0;
-				End = uncompressedOut;
+				End = Buffer.Length;
+
+				if (Buffer.Length != uncompressedFinalSize)
+				{
+                    throw new Exception("The size after uncompression is incorrect.");
+				}
 			}
 			else
 			{

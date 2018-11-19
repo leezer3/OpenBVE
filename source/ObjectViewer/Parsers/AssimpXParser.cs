@@ -17,8 +17,10 @@ namespace OpenBve
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 
+#if !DEBUG
 			try
 			{
+#endif
 				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
 				Scene scene = parser.GetImportedData();
 
@@ -52,12 +54,14 @@ namespace OpenBve
 				builder.Apply(ref obj);
 				obj.Mesh.CreateNormals();
 				return obj;
+#if !DEBUG
 			}
 			catch (Exception e)
 			{
 				Interface.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
 				return null;
 			}
+#endif
 		}
 
 		private static void  MeshBuilder(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Mesh mesh)
