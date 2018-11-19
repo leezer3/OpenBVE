@@ -641,7 +641,7 @@ namespace Plugin
 				 * to the array in BGRA format.
 				 * */
 				byte[] raw = new byte[data.Stride * data.Height];
-				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
+				Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
 				int width = bitmap.Width;
 				int height = bitmap.Height;
@@ -655,7 +655,7 @@ namespace Plugin
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new Texture(width, height, 32, raw);
+				texture = new Texture(width, height, 32, raw, null);
 				return true;
 			}
 			else

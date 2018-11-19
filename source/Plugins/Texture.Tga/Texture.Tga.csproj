@@ -49,10 +49,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
-      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
+    <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
 </Project>
