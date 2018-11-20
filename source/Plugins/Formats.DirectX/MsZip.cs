@@ -122,7 +122,7 @@ namespace OpenBve.Formats.DirectX
                         //implies bytesToWrite was 0
                         var dictionaryAdler32 = ((int)Adler.Adler32(1u, dictionary, 0, dictionary.Length));
                         if (codec.Adler32 != dictionaryAdler32) {
-                            throw new InvalidOperationException($"Compressed data is requesting a dictionary with adler32 {codec.Adler32}, but the dictionary is actually {dictionaryAdler32}");
+                            throw new InvalidOperationException("Compressed data is requesting a dictionary with adler32 " + codec.Adler32 + ", but the dictionary is actually " + dictionaryAdler32);
                         }
 
                         codec.AssertOk("SetDictionary", codec.SetDictionary(dictionary));
