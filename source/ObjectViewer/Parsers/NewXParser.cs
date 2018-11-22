@@ -308,7 +308,15 @@ namespace OpenBve
 					}
 					break;
 				case TemplateID.TextureFilename:
-					material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, block.ReadString());
+					try
+					{
+						material.DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, block.ReadString());
+					}
+					catch
+					{
+						//Empty / malformed texture argument
+						material.DaytimeTexture = string.Empty;
+					}
 					if (!System.IO.File.Exists(material.DaytimeTexture))
 					{
 						Interface.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
@@ -368,8 +376,11 @@ namespace OpenBve
 			obj.Mesh.Vertices = new VertexTemplate[] { };
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
-			Block subBlock = block.ReadSubBlock(); //Mesh
-			ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+			while (block.Position() < block.Length())
+			{
+				Block subBlock = block.ReadSubBlock();
+				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+			}
 			builder.Apply(ref obj);
 			obj.Mesh.CreateNormals();
 			return obj;

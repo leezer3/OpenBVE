@@ -634,10 +634,7 @@ namespace OpenBve.Formats.DirectX
 						}
 						break;
 					default:
-						if (currentToken.EndsWith(".bmp"))
-						{
-							cachedStrings.Add(currentToken);
-						}
+						cachedStrings.Add(currentToken);
 						TemplateID newBlockToken;
 						if (Enum.TryParse(currentToken, true, out newBlockToken))
 						{
@@ -705,7 +702,13 @@ namespace OpenBve.Formats.DirectX
 
 		public override Block ReadSubBlock(TemplateID[] validTokens)
 		{
-			throw new NotImplementedException();
+			Block b = ReadSubBlock();
+			if (!validTokens.Contains(b.Token))
+			{
+				throw new Exception();
+			}
+
+			return b;
 		}
 
 		public override Block ReadSubBlock()
