@@ -91,13 +91,14 @@ namespace OpenBve.Formats.DirectX
 
 		public TextualBlock(string text, TemplateID token)
 		{
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < text.Length; i++)
 			{
 				//Convert multiple whitespace chars to single
 				//whilst building new string
 				if (!char.IsWhiteSpace(text[i]))
 				{
-					myText += text[i];
+					sb.Append(text[i]);
 				}
 				else
 				{
@@ -105,9 +106,10 @@ namespace OpenBve.Formats.DirectX
 					{
 						continue;
 					}
-					myText += ' ';
+					sb.Append(' ');
 				}
 			}
+			myText = sb.ToString();
 			Token = token;
 			currentPosition = 0;
 			Label = string.Empty;
