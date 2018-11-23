@@ -47,6 +47,16 @@ namespace OpenBve
 			Normal = 1,
 			Expert = 2,
 		}
+
+		internal enum XParsers
+		{
+			/// <summary>Michelle's original parser</summary>
+			Original = 0,
+			/// <summary>The new X parser</summary>
+			NewXParser = 1,
+			/// <summary>C# port of Assimp</summary>
+			Assimp = 2
+		}
 		
 		internal class Options
 		{
@@ -161,6 +171,8 @@ namespace OpenBve
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 
+			internal XParsers CurrentXParser;
+
 			internal TimeTableMode TimeTableStyle;
 
 			internal CompressionType packageCompressionType;
@@ -250,6 +262,7 @@ namespace OpenBve
 				this.KioskMode = false;
 				this.KioskModeTimer = 300;
 				this.EnableInputDevicePlugins = new string[] { };
+				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -736,6 +749,22 @@ namespace OpenBve
 										Array.Resize<string>(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
 										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
 									} break;
+								case "parsers":
+									switch (Key)
+									{
+										case "xobject":
+											int p;
+											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+											{
+												Interface.CurrentOptions.CurrentXParser = XParsers.Original;
+											}
+											else
+											{
+												Interface.CurrentOptions.CurrentXParser = (XParsers)p;
+											}
+											break;
+									}
+									break;
 							}
 						}
 					}
@@ -947,6 +976,9 @@ namespace OpenBve
 			{
 				Builder.AppendLine(CurrentOptions.EnableInputDevicePlugins[i]);
 			}
+
+			Builder.AppendLine("[Parsers]");
+			Builder.AppendLine("xobject=" + (int) Interface.CurrentOptions.CurrentXParser);
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}

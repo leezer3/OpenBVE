@@ -100,9 +100,9 @@ namespace AssimpNET
 
 		private byte[] Buffer;
 
-		protected uint MajorVersion, MinorVersion; ///< version numbers
-		protected bool IsBinaryFormat; ///< true if the file is in binary, false if it's in text form
-		protected uint BinaryFloatSize; ///< float size in bytes, either 4 or 8
+		protected uint MajorVersion, MinorVersion; // version numbers
+		protected bool IsBinaryFormat; // true if the file is in binary, false if it's in text form
+		protected uint BinaryFloatSize; // float size in bytes, either 4 or 8
 		// counter for number arrays in binary format
 		protected uint BinaryNumCount;
 

@@ -213,7 +213,10 @@
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Graphics\Renderer\ViewportModes.cs" />
+    <Compile Include="Parsers\Object\Generic\AssimpXParser.cs" />
+    <Compile Include="Parsers\Object\Generic\NewXParser.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
+    <Compile Include="Parsers\Object\MeshBuilder.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
@@ -491,6 +494,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AssimpXParser\AssimpXParser.csproj">
+      <Project>{572cd7ff-a0c9-4a48-81b7-79b65e37d3c7}</Project>
+      <Name>AssimpXParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>
@@ -498,6 +505,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
+      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
+      <Name>Formats.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>

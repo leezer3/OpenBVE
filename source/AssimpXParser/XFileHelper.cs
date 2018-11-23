@@ -116,7 +116,7 @@ namespace AssimpNET
 		public Color4 Emissive;
 		public List<TexEntry> Textures = new List<TexEntry>();
 
-		public uint SceneIndex; ///< the index under which it was stored in the scene's material list
+		public uint SceneIndex; // the index under which it was stored in the scene's material list
 	}
 
 	/** Helper structure to represent a bone weight */
