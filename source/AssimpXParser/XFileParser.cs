@@ -83,6 +83,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 using OpenTK;
 using OpenTK.Graphics;
 using ZlibWithDictionary;
@@ -98,11 +99,11 @@ namespace AssimpNET
 		private const uint MSZIP_MAGIC = 0x4B43;
 		private const uint MSZIP_BLOCK = 32786;
 
-		private byte[] Buffer;
+		private readonly byte[] Buffer;
 
 		protected uint MajorVersion, MinorVersion; // version numbers
-		protected bool IsBinaryFormat; // true if the file is in binary, false if it's in text form
-		protected uint BinaryFloatSize; // float size in bytes, either 4 or 8
+		protected readonly bool IsBinaryFormat; // true if the file is in binary, false if it's in text form
+		protected readonly uint BinaryFloatSize; // float size in bytes, either 4 or 8
 		// counter for number arrays in binary format
 		protected uint BinaryNumCount;
 
@@ -369,6 +370,7 @@ namespace AssimpNET
 		protected void ParseDataObjectTemplate()
 		{
 			// parse a template data object. Currently not stored.
+			// ReSharper disable once NotAccessedVariable
 			string name;
 			ReadHeadOfDataObject(out name);
 
@@ -419,7 +421,7 @@ namespace AssimpNET
 					if (Scene.RootNode.Name != "$dummy_root")
 					{
 						Node exroot = Scene.RootNode;
-						Scene.RootNode = new Node(null);
+						Scene.RootNode = new Node();
 						Scene.RootNode.Name = "$dummy_root";
 						Scene.RootNode.Children.Add(exroot);
 						exroot.Parent = Scene.RootNode;
@@ -504,6 +506,7 @@ namespace AssimpNET
 		{
 			mesh = new Mesh();
 
+			// ReSharper disable once NotAccessedVariable
 			string name;
 			ReadHeadOfDataObject(out name);
 
@@ -1711,14 +1714,14 @@ namespace AssimpNET
 				++position;
 			}
 
-			if (string.Compare(Ascii.GetString(Buffer, position, 3), "nan", true) == 0)
+			if (string.Compare(Ascii.GetString(Buffer, position, 3), "nan", true, CultureInfo.InvariantCulture) == 0)
 			{
 				result = float.NaN;
 				position += 3;
 				return position;
 			}
 
-			if (string.Compare(Ascii.GetString(Buffer, position, 3), "inf", true) == 0)
+			if (string.Compare(Ascii.GetString(Buffer, position, 3), "inf", true, CultureInfo.InvariantCulture) == 0)
 			{
 				result = float.PositiveInfinity;
 				if (inv)
@@ -1726,7 +1729,7 @@ namespace AssimpNET
 					result = -result;
 				}
 				position += 3;
-				if (string.Compare(Ascii.GetString(Buffer, position, 5), "inity", true) == 0)
+				if (string.Compare(Ascii.GetString(Buffer, position, 5), "inity", true, CultureInfo.InvariantCulture) == 0)
 				{
 					position += 5;
 				}
