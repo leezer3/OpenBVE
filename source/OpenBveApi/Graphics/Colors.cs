@@ -111,9 +111,11 @@ namespace OpenBveApi.Colors {
 		/// <summary>Parses a hexadecimal string into a Color24</summary>
 		/// <param name="Expression">The color in hexadecimal format</param>
 		/// <param name="Color">The Color24, updated via 'out'</param>
+		/// <remarks>Sets Color to blue if the parse fails</remarks>
 		/// <returns>True if the parse succeds, false if it does not</returns>
 		public static bool TryParseHexColor(string Expression, out Color24 Color)
 		{
+			Color = Blue;
 			if (Expression.StartsWith("#"))
 			{
 				string a = Expression.Substring(1).TrimStart();
@@ -127,23 +129,10 @@ namespace OpenBveApi.Colors {
 						Color = new Color24((byte)r, (byte)g, (byte)b);
 						return true;
 					}
-					else
-					{
-						Color = new Color24(0, 0, 255);
-						return false;
-					}
 				}
-				else
-				{
-					Color = new Color24(0, 0, 255);
-					return false;
-				}
-			}
-			else
-			{
-				Color = new Color24(0, 0, 255);
 				return false;
 			}
+			return false;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color24, discarding the alpha component</summary>

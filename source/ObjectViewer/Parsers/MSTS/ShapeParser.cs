@@ -269,7 +269,7 @@ namespace OpenBve
 					{
 						Object.Mesh.Materials[mm + i].Flags = 0;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
-						Object.Mesh.Materials[mm + i].TransparentColor = new Color24(0,0,0);
+						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
 						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{

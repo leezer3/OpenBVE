@@ -157,7 +157,7 @@ namespace OpenBve
 														case "1":
 															//Transparency is solid black
 															TransparencyUsed = true;
-															transparentColor = new Color24(0, 0, 0);
+															transparentColor = Color24.Black;
 															FirstPxTransparent = false;
 															break;
 														case "2":

@@ -112,6 +112,9 @@ TEXTURE_BGJPT_FILE    :=Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 TEXTURE_DDS_ROOT      :=source/Plugins/Texture.Dds
 TEXTURE_DDS_FILE      :=Data/Plugins/Texture.Dds.dll
 
+TEXTURE_TGA_ROOT      :=source/Plugins/Texture.Tga
+TEXTURE_TGA_FILE      :=Data/Plugins/Texture.Tga.dll
+
 ROUTE_VIEWER_ROOT     :=source/RouteViewer
 ROUTE_VIEWER_FILE     :=RouteViewer.exe
 
@@ -266,6 +269,7 @@ clean:
 	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
+	rm -f bin*/Data/Plugins/Texture.Tga.dll* bin*/Data/Plugins/Texture.Tga.pdb
 
 	# Release Files
 	rm -f $(MAC_BUILD_RESULT) $(LINUX_BUILD_RESULT)
@@ -363,7 +367,8 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
-$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE)
@@ -379,6 +384,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE)
@@ -674,6 +680,27 @@ $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) $(RELEASE_DIR)/$(TEXTURE_DDS_FILE): $(TEXTURE_D
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_DDS_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TEXTURE_DDS_OUT) /target:library $(TEXTURE_DDS_SRC) $(ARGS) $(TEXTURE_DDS_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll $(addprefix /resource:, $(TEXTURE_DDS_RESOURCE))
+	
+###############
+# Texture.Tga #
+###############
+
+TEXTURE_TGA_FOLDERS  := $(shell find $(TEXTURE_TGA_ROOT) -type d)
+TEXTURE_TGA_SRC      := $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.cs))
+TEXTURE_TGA_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.xml)))
+TEXTURE_TGA_RESX     := $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.resx))
+TEXTURE_TGA_RESOURCE := $(addprefix $(TEXTURE_TGA_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(TEXTURE_TGA_ROOT))%.resx, %.resources, $(TEXTURE_TGA_RESX)))))
+TEXTURE_TGA_OUT       =$(OUTPUT_DIR)/$(TEXTURE_TGA_FILE)
+
+$(call create_resource, $(TEXTURE_TGA_RESOURCE), $(TEXTURE_TGA_RESX))
+
+$(DEBUG_DIR)/$(TEXTURE_TGA_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(TEXTURE_TGA_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(TEXTURE_TGA_FILE) $(RELEASE_DIR)/$(TEXTURE_TGA_FILE): $(TEXTURE_TGA_SRC) $(TEXTURE_TGA_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_TGA_OUT)$(COLOR_END)
+	@$(CSC) /out:$(TEXTURE_TGA_OUT) /target:library $(TEXTURE_TGA_SRC) $(ARGS) $(TEXTURE_TGA_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll $(addprefix /resource:, $(TEXTURE_TGA_RESOURCE))
 
 ###############
 # RouteViewer #
