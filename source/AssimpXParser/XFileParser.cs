@@ -312,8 +312,7 @@ namespace AssimpNET
 
 		protected void ParseFile()
 		{
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				// read name of next object
 				string objectName = GetNextToken();
@@ -377,8 +376,7 @@ namespace AssimpNET
 			string guid = GetNextToken();
 
 			// read and ignore data members
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string s = GetNextToken();
 
@@ -439,8 +437,7 @@ namespace AssimpNET
 
 			// Now inside a frame.
 			// read tokens until closing brace is reached.
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 				if (objectName.Length == 0)
@@ -537,8 +534,7 @@ namespace AssimpNET
 			}
 
 			// here, other data objects may follow
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 
@@ -793,8 +789,7 @@ namespace AssimpNET
 			}
 
 			// read following data objects
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 				if (objectName.Length == 0)
@@ -854,8 +849,7 @@ namespace AssimpNET
 			material.Emissive = ReadRGB();
 
 			// read other data objects
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 				if (objectName.Length == 0)
@@ -903,8 +897,7 @@ namespace AssimpNET
 			Animation anim = new Animation();
 			anim.Name = animName;
 
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 				if (objectName.Length == 0)
@@ -934,8 +927,7 @@ namespace AssimpNET
 			ReadHeadOfDataObject();
 			AnimBone banim = new AnimBone();
 
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string objectName = GetNextToken();
 
@@ -1087,14 +1079,13 @@ namespace AssimpNET
 			}
 
 			// some exporters write double backslash paths out. We simply replace them if we find them
-			name.Replace("\\\\", "\\");
+			name = name.Replace("\\\\", "\\");
 		}
 
 		protected void ParseUnknownDataObject()
 		{
 			// find opening delimiter
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				string t = GetNextToken();
 				if (t.Length == 0)
@@ -1138,8 +1129,7 @@ namespace AssimpNET
 				return;
 			}
 
-			bool running = true;
-			while (running)
+			while (true)
 			{
 				while (P < End && char.IsWhiteSpace((char)Buffer[P]))
 				{
