@@ -68,13 +68,16 @@ namespace OpenBve
 					}
 					else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None || Train.StationState == TrainManager.TrainStopState.Jumping)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
 							return;
 						}
 						Train.Station = StationIndex;
 						Train.StationFrontCar = true;
-						Train.StationState = TrainManager.TrainStopState.Pending;
+						if (Train.StationState != TrainManager.TrainStopState.Jumping)
+						{
+							Train.StationState = TrainManager.TrainStopState.Pending;
+						}
 						Train.LastStation = this.StationIndex;
 					}
 				}

@@ -21,6 +21,11 @@ namespace OpenBve
 		/// <param name="message">The message to add</param>
 		internal static void AddMessage(Message message)
 		{
+			if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Jumping)
+			{
+				//Ignore messages triggered during a jump
+				return;
+			}
 			if (message is MarkerImage || message is TextureMessage)
 			{
 				for (int i = 0; i < ImageMessages.Count; i++)
