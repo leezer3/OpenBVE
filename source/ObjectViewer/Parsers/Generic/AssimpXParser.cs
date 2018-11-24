@@ -99,10 +99,6 @@ namespace OpenBve
 			}
 
 			int nFaces = mesh.PosFaces.Count;
-			if (nFaces == 0)
-			{
-				throw new Exception("nFaces must be greater than zero");
-			}
 			int f = builder.Faces.Length;
 			Array.Resize(ref builder.Faces, f + nFaces);
 			for (int i = 0; i < nFaces; i++)

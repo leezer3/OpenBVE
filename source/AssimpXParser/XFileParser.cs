@@ -687,6 +687,10 @@ namespace AssimpNET
 				TestForSeparator();
 			}
 
+			if ((int) numFaces == 0)
+			{
+				TestForSeparator();
+			}
 			CheckForClosingBrace();
 		}
 
