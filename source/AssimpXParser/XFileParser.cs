@@ -322,47 +322,46 @@ namespace AssimpNET
 					break;
 				}
 
-				// parse specific object
-				if (objectName == "template")
+				switch (objectName.ToLowerInvariant())
 				{
-					ParseDataObjectTemplate();
-				}
-				else if (objectName == "Frame")
-				{
-					ParseDataObjectFrame(null);
-				}
-				else if (objectName == "Mesh")
-				{
-					// some meshes have no frames at all
-					Mesh mesh;
-					ParseDataObjectMesh(out mesh);
-					Scene.GlobalMeshes.Add(mesh);
-				}
-				else if (objectName == "AnimTicksPerSecond")
-				{
-					ParseDataObjectAnimTicksPerSecond();
-				}
-				else if (objectName == "AnimationSet")
-				{
-					ParseDataObjectAnimationSet();
-				}
-				else if (objectName == "Material")
-				{
-					// Material outside of a mesh or node
-					Material material;
-					ParseDataObjectMaterial(out material);
-					Scene.GlobalMaterials.Add(material);
-				}
-				else if (objectName == "}")
-				{
-					// whatever?
-					Debug.WriteLine("} found in dataObject");
-				}
-				else
-				{
-					// unknown format
-					Debug.WriteLine("Unknown data object in animation of .x file");
-					ParseUnknownDataObject();
+					// parse specific object
+					case "template":
+						ParseDataObjectTemplate();
+						break;
+					case "frame":
+						ParseDataObjectFrame(null);
+						break;
+					case "mesh":
+					{
+						// some meshes have no frames at all
+						Mesh mesh;
+						ParseDataObjectMesh(out mesh);
+						Scene.GlobalMeshes.Add(mesh);
+						break;
+					}
+					case "animtickspersecond":
+						ParseDataObjectAnimTicksPerSecond();
+						break;
+					case "animationset":
+						ParseDataObjectAnimationSet();
+						break;
+					case "material":
+					{
+						// Material outside of a mesh or node
+						Material material;
+						ParseDataObjectMaterial(out material);
+						Scene.GlobalMaterials.Add(material);
+						break;
+					}
+					case "}":
+						// whatever?
+						Debug.WriteLine("} found in dataObject");
+						break;
+					default:
+						// unknown format
+						Debug.WriteLine("Unknown data object in animation of .x file");
+						ParseUnknownDataObject();
+						break;
 				}
 			}
 		}
@@ -439,6 +438,7 @@ namespace AssimpNET
 
 			// Now inside a frame.
 			// read tokens until closing brace is reached.
+			bool frameFinished = false;
 			while (true)
 			{
 				string objectName = GetNextToken();
@@ -446,29 +446,34 @@ namespace AssimpNET
 				{
 					ThrowException("Unexpected end of file reached while parsing frame");
 				}
+				
+				switch (objectName.ToLowerInvariant())
+				{
+					case "}":
+						frameFinished = true;
+						break;
+					case "frame":
+						ParseDataObjectFrame(node); // child frame
+						break;
+					case "frametransformmatrix":
+						ParseDataObjectTransformationMatrix(out node.TrafoMatrix);
+						break;
+					case "mesh":
+					{
+						Mesh mesh;
+						ParseDataObjectMesh(out mesh);
+						node.Meshes.Add(mesh);
+						break;
+					}
+					default:
+						Debug.WriteLine("Unknown data object in frame in x file");
+						ParseUnknownDataObject();
+						break;
+				}
 
-				if (objectName == "}")
+				if (frameFinished)
 				{
-					break; // frame finished
-				}
-				else if (objectName == "Frame")
-				{
-					ParseDataObjectFrame(node); // child frame
-				}
-				else if (objectName == "FrameTransformMatrix")
-				{
-					ParseDataObjectTransformationMatrix(out node.TrafoMatrix);
-				}
-				else if (objectName == "Mesh")
-				{
-					Mesh mesh;
-					ParseDataObjectMesh(out mesh);
-					node.Meshes.Add(mesh);
-				}
-				else
-				{
-					Debug.WriteLine("Unknown data object in frame in x file");
-					ParseUnknownDataObject();
+					break;
 				}
 			}
 		}
@@ -537,50 +542,47 @@ namespace AssimpNET
 			}
 
 			// here, other data objects may follow
+			bool meshFinished = false;
 			while (true)
 			{
 				string objectName = GetNextToken();
-
-				if (objectName.Length == 0)
+				switch (objectName.ToLowerInvariant())
 				{
-					ThrowException("Unexpected end of file while parsing mesh structure");
+					case "":
+						ThrowException("Unexpected end of file while parsing mesh structure");
+						break;
+					case "}":
+						meshFinished = true;
+						break;
+					case "meshnormals":
+						ParseDataObjectMeshNormals(ref mesh);
+						break;
+					case "meshtexturecoords":
+						ParseDataObjectMeshTextureCoords(ref mesh);
+						break;
+					case "meshvertexcolors":
+						ParseDataObjectMeshVertexColors(ref mesh);
+						break;
+					case "meshmateriallist":
+						ParseDataObjectMeshMaterialList(ref mesh);
+						break;
+					case "vertexduplicationindices":
+						ParseUnknownDataObject(); // we'll ignore vertex duplication indices
+						break;
+					case "xskinmeshheader":
+						ParseDataObjectSkinMeshHeader(ref mesh);
+						break;
+					case "skinweights":
+						ParseDataObjectSkinWeights(ref mesh);
+						break;
+					default:
+						Debug.WriteLine("Unknown data object in mesh in x file");
+						ParseUnknownDataObject();
+						break;
 				}
-				else if (objectName == "}")
+				if (meshFinished)
 				{
-					break; // mesh finished
-				}
-				else if (objectName == "MeshNormals")
-				{
-					ParseDataObjectMeshNormals(ref mesh);
-				}
-				else if (objectName == "MeshTextureCoords")
-				{
-					ParseDataObjectMeshTextureCoords(ref mesh);
-				}
-				else if (objectName == "MeshVertexColors")
-				{
-					ParseDataObjectMeshVertexColors(ref mesh);
-				}
-				else if (objectName == "MeshMaterialList")
-				{
-					ParseDataObjectMeshMaterialList(ref mesh);
-				}
-				else if (objectName == "VertexDuplicationIndices")
-				{
-					ParseUnknownDataObject(); // we'll ignore vertex duplication indices
-				}
-				else if (objectName == "XSkinMeshHeader")
-				{
-					ParseDataObjectSkinMeshHeader(ref mesh);
-				}
-				else if (objectName == "SkinWeights")
-				{
-					ParseDataObjectSkinWeights(ref mesh);
-				}
-				else
-				{
-					Debug.WriteLine("Unknown data object in mesh in x file");
-					ParseUnknownDataObject();
+					break;
 				}
 			}
 		}

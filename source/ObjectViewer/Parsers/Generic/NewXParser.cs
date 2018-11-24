@@ -251,7 +251,31 @@ namespace OpenBve
 					int nFaces = block.ReadUInt16();
 					if (nFaces == 0)
 					{
-						throw new Exception("nFaces must be greater than zero");
+						try
+						{
+							/*
+							 * A mesh has been defined with no faces.
+							 * If we are not at the end of the block,
+							 * attempt to read the next sub-block
+							 *
+							 * If this fails, the face count is probably incorrect
+							 *
+							 * NOTE: In this case, the face statement will be an empty string / whitespace
+							 * hence the block.ReadString() call
+							 */
+							block.ReadString();
+							if (block.Position() < block.Length() - 5)
+							{
+								subBlock = block.ReadSubBlock();
+								ParseSubBlock(subBlock, ref obj, ref builder, ref material);
+							}
+							goto NoFaces;
+						}
+						catch
+						{
+							throw new Exception("nFaces was declared as zero, but unrecognised data remains in the block");
+						}
+						
 					}
 					int f = builder.Faces.Length;
 					Array.Resize(ref builder.Faces, f + nFaces);
@@ -269,6 +293,7 @@ namespace OpenBve
 							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();
 						}
 					}
+					NoFaces:
 					while (block.Position() < block.Length() - 5)
 					{
 						subBlock = block.ReadSubBlock();
