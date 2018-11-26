@@ -165,7 +165,11 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					break;
 				}
-
+				if (myText[currentPosition] == '}')
+				{
+					//Incorrectly closed previous block
+					startPosition = currentPosition + 1;
+				}
 				currentPosition++;
 			}
 
@@ -239,7 +243,11 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					break;
 				}
-
+				if (myText[currentPosition] == '}')
+				{
+					//Incorrectly closed previous block
+					startPosition = currentPosition + 1;
+				}
 				currentPosition++;
 			}
 
@@ -308,7 +316,11 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					break;
 				}
-
+				if (myText[currentPosition] == '}')
+				{
+					//Incorrectly closed previous block
+					startPosition = currentPosition + 1;
+				}
 				currentPosition++;
 			}
 

@@ -76,7 +76,7 @@ namespace OpenBve
 					Builder.Append(" ");
 				}
 				string Content = Builder.ToString();
-				Content = Content.Substring(17);
+				Content = Content.Substring(17).Trim();
 				return LoadTextualX(Content, LoadMode);
 			}
 
@@ -120,7 +120,7 @@ namespace OpenBve
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
-			while (block.Position() < block.Length())
+			while (block.Position() < block.Length() - 5)
 			{
 				Block subBlock = block.ReadSubBlock();
 				ParseSubBlock(subBlock, ref obj, ref builder, ref material);
