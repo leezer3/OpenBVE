@@ -303,12 +303,27 @@ namespace OpenBve
 				case TemplateID.MeshMaterialList:
 					int nMaterials = block.ReadUInt16();
 					int nFaceIndices = block.ReadUInt16();
-					for (int i = 0; i < nFaceIndices; i++)
+					if (nFaceIndices == 1 && builder.Faces.Length > 1)
 					{
-						int fMaterial = block.ReadUInt16();
-						builder.Faces[i].Material = (ushort) (fMaterial + 1);
+						//Single material for all faces
+						int globalMaterial = block.ReadUInt16();
+						for (int i = 0; i < builder.Faces.Length; i++)
+						{
+							builder.Faces[i].Material = (ushort)(globalMaterial + 1);
+						}
 					}
-
+					else if(nFaceIndices == builder.Faces.Length)
+					{
+						for (int i = 0; i < nFaceIndices; i++)
+						{
+							int fMaterial = block.ReadUInt16();
+							builder.Faces[i].Material = (ushort) (fMaterial + 1);
+						}
+					}
+					else
+					{
+						throw new Exception("nFaceIndices must match the number of faces in the mesh");
+					}
 					for (int i = 0; i < nMaterials; i++)
 					{
 						subBlock = block.ReadSubBlock(TemplateID.Material);
