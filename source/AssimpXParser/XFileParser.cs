@@ -286,7 +286,7 @@ namespace AssimpNET
 
 				if (Buffer.Length != uncompressedFinalSize)
 				{
-                    throw new Exception("The size after uncompression is incorrect.");
+					throw new Exception("The size after uncompression is incorrect.");
 				}
 			}
 			else
@@ -332,13 +332,13 @@ namespace AssimpNET
 						ParseDataObjectFrame(null);
 						break;
 					case "mesh":
-					{
-						// some meshes have no frames at all
-						Mesh mesh;
-						ParseDataObjectMesh(out mesh);
-						Scene.GlobalMeshes.Add(mesh);
-						break;
-					}
+						{
+							// some meshes have no frames at all
+							Mesh mesh;
+							ParseDataObjectMesh(out mesh);
+							Scene.GlobalMeshes.Add(mesh);
+							break;
+						}
 					case "animtickspersecond":
 						ParseDataObjectAnimTicksPerSecond();
 						break;
@@ -346,13 +346,13 @@ namespace AssimpNET
 						ParseDataObjectAnimationSet();
 						break;
 					case "material":
-					{
-						// Material outside of a mesh or node
-						Material material;
-						ParseDataObjectMaterial(out material);
-						Scene.GlobalMaterials.Add(material);
-						break;
-					}
+						{
+							// Material outside of a mesh or node
+							Material material;
+							ParseDataObjectMaterial(out material);
+							Scene.GlobalMaterials.Add(material);
+							break;
+						}
 					case "}":
 						// whatever?
 						Debug.WriteLine("} found in dataObject");
@@ -446,7 +446,7 @@ namespace AssimpNET
 				{
 					ThrowException("Unexpected end of file reached while parsing frame");
 				}
-				
+
 				switch (objectName.ToLowerInvariant())
 				{
 					case "}":
@@ -459,12 +459,12 @@ namespace AssimpNET
 						ParseDataObjectTransformationMatrix(out node.TrafoMatrix);
 						break;
 					case "mesh":
-					{
-						Mesh mesh;
-						ParseDataObjectMesh(out mesh);
-						node.Meshes.Add(mesh);
-						break;
-					}
+						{
+							Mesh mesh;
+							ParseDataObjectMesh(out mesh);
+							node.Meshes.Add(mesh);
+							break;
+						}
 					default:
 						Debug.WriteLine("Unknown data object in frame in x file");
 						ParseUnknownDataObject();
@@ -525,6 +525,11 @@ namespace AssimpNET
 				mesh.Positions.Add(ReadVector3());
 			}
 
+			if ((int) numVertices == 0)
+			{
+				TestForSeparator();
+			}
+
 			// read position faces
 			uint numPosFaces = ReadInt();
 			mesh.PosFaces = new List<Face>((int)numPosFaces);
@@ -538,6 +543,11 @@ namespace AssimpNET
 					face.Indices.Add(ReadInt());
 				}
 				mesh.PosFaces.Add(face);
+				TestForSeparator();
+			}
+
+			if ((int) numPosFaces == 0)
+			{
 				TestForSeparator();
 			}
 
@@ -666,6 +676,11 @@ namespace AssimpNET
 				mesh.Normals.Add(ReadVector3());
 			}
 
+			if ((int) numNormals == 0)
+			{
+				TestForSeparator();
+			}
+
 			// read normal indices
 			uint numFaces = ReadInt();
 			if (numFaces != (uint)mesh.PosFaces.Count)
@@ -716,6 +731,10 @@ namespace AssimpNET
 			}
 			mesh.TexCoords[(int)mesh.NumTextures++] = coords;
 
+			if ((int) numCoords == 0)
+			{
+				TestForSeparator();
+			}
 			CheckForClosingBrace();
 		}
 
@@ -755,6 +774,10 @@ namespace AssimpNET
 			}
 			mesh.Colors[(int)mesh.NumColorSets++] = colors;
 
+			if ((int) numColors == 0)
+			{
+				TestForSeparator();
+			}
 			CheckForClosingBrace();
 		}
 
@@ -990,82 +1013,82 @@ namespace AssimpNET
 				// read keys
 				switch (keyType)
 				{
-				case 0: // rotation quaternion
-				{
-					// read count
-					if (ReadInt() != 4)
-					{
-						ThrowException("Invalid number of arguments for quaternion key in animation");
-					}
-					Quaternion quat = new Quaternion();
-					quat.W = ReadFloat();
-					quat.X = ReadFloat();
-					quat.Y = ReadFloat();
-					quat.Z = ReadFloat();
+					case 0: // rotation quaternion
+						{
+							// read count
+							if (ReadInt() != 4)
+							{
+								ThrowException("Invalid number of arguments for quaternion key in animation");
+							}
+							Quaternion quat = new Quaternion();
+							quat.W = ReadFloat();
+							quat.X = ReadFloat();
+							quat.Y = ReadFloat();
+							quat.Z = ReadFloat();
 
-					QuatKey key = new QuatKey((double)time, quat);
-					animBone.RotKeys.Add(key);
+							QuatKey key = new QuatKey((double)time, quat);
+							animBone.RotKeys.Add(key);
 
-					CheckForSemicolon();
-				}
-				break;
-				case 1: // scale vector
-				case 2: // position vector
-				{
-					// read count
-					if (ReadInt() != 3)
-					{
-						ThrowException("Invalid number of arguments for vector key in animation");
-					}
-					VectorKey key = new VectorKey((double)time, ReadVector3());
+							CheckForSemicolon();
+						}
+						break;
+					case 1: // scale vector
+					case 2: // position vector
+						{
+							// read count
+							if (ReadInt() != 3)
+							{
+								ThrowException("Invalid number of arguments for vector key in animation");
+							}
+							VectorKey key = new VectorKey((double)time, ReadVector3());
 
-					if (keyType == 2)
-					{
-						animBone.PosKeys.Add(key);
-					}
-					else
-					{
-						animBone.ScaleKeys.Add(key);
-					}
-				}
-				break;
-				case 3: // combined transformation matrix
-				case 4: // denoted both as 3 or as 4
-				{
-					// read count
-					if (ReadInt() != 16)
-					{
-						ThrowException("Invalid number of arguments for matrix key in animation");
-					}
+							if (keyType == 2)
+							{
+								animBone.PosKeys.Add(key);
+							}
+							else
+							{
+								animBone.ScaleKeys.Add(key);
+							}
+						}
+						break;
+					case 3: // combined transformation matrix
+					case 4: // denoted both as 3 or as 4
+						{
+							// read count
+							if (ReadInt() != 16)
+							{
+								ThrowException("Invalid number of arguments for matrix key in animation");
+							}
 
-					// read matrix
-					Matrix4 matrix = new Matrix4();
-					matrix.M11 = ReadFloat();
-					matrix.M21 = ReadFloat();
-					matrix.M31 = ReadFloat();
-					matrix.M41 = ReadFloat();
-					matrix.M12 = ReadFloat();
-					matrix.M22 = ReadFloat();
-					matrix.M32 = ReadFloat();
-					matrix.M42 = ReadFloat();
-					matrix.M13 = ReadFloat();
-					matrix.M23 = ReadFloat();
-					matrix.M33 = ReadFloat();
-					matrix.M43 = ReadFloat();
-					matrix.M14 = ReadFloat();
-					matrix.M24 = ReadFloat();
-					matrix.M34 = ReadFloat();
-					matrix.M44 = ReadFloat();
+							// read matrix
+							Matrix4 matrix = new Matrix4();
+							matrix.M11 = ReadFloat();
+							matrix.M21 = ReadFloat();
+							matrix.M31 = ReadFloat();
+							matrix.M41 = ReadFloat();
+							matrix.M12 = ReadFloat();
+							matrix.M22 = ReadFloat();
+							matrix.M32 = ReadFloat();
+							matrix.M42 = ReadFloat();
+							matrix.M13 = ReadFloat();
+							matrix.M23 = ReadFloat();
+							matrix.M33 = ReadFloat();
+							matrix.M43 = ReadFloat();
+							matrix.M14 = ReadFloat();
+							matrix.M24 = ReadFloat();
+							matrix.M34 = ReadFloat();
+							matrix.M44 = ReadFloat();
 
-					MatrixKey key = new MatrixKey((double)time, matrix);
-					animBone.TrafoKeys.Add(key);
+							MatrixKey key = new MatrixKey((double)time, matrix);
+							animBone.TrafoKeys.Add(key);
 
-					CheckForSemicolon();
-				}
-				break;
-				default:
-					ThrowException("Unknown key type " + keyType + " in animation.");
-					break;
+							CheckForSemicolon();
+						}
+						break;
+					default:
+						ThrowException("Unknown key type " + keyType + " in animation.");
+						break;
 				} // end switch
 
 				// key separator
@@ -1187,102 +1210,102 @@ namespace AssimpNET
 				// standalone tokens
 				switch (tok)
 				{
-				case 1:
-					// name token
-					if (End - P < 4)
-					{
+					case 1:
+						// name token
+						if (End - P < 4)
+						{
+							return s;
+						}
+						len = ReadBinDWord();
+						if (End - P < (int)len)
+						{
+							return s;
+						}
+						s = Ascii.GetString(Buffer, P, (int)len);
+						P += (int)len;
 						return s;
-					}
-					len = ReadBinDWord();
-					if (End - P < (int)len)
-					{
+					case 2:
+						// string token
+						if (End - P < 4)
+						{
+							return s;
+						}
+						len = ReadBinDWord();
+						if (End - P < (int)len)
+						{
+							return s;
+						}
+						s = Ascii.GetString(Buffer, P, (int)len);
+						P += (int)(len + 2);
 						return s;
-					}
-					s = Ascii.GetString(Buffer, P, (int)len);
-					P += (int)len;
-					return s;
-				case 2:
-					// string token
-					if (End - P < 4)
-					{
-						return s;
-					}
-					len = ReadBinDWord();
-					if (End - P < (int)len)
-					{
-						return s;
-					}
-					s = Ascii.GetString(Buffer, P, (int)len);
-					P += (int)(len + 2);
-					return s;
-				case 3:
-					// integer token
-					P += 4;
-					return "<integer>";
-				case 5:
-					// GUID token
-					P += 16;
-					return "<guid>";
-				case 6:
-					if (End - P < 4) return s;
-					len = ReadBinDWord();
-					P += (int)(len * 4);
-					return "<int_list>";
-				case 7:
-					if (End - P < 4) return s;
-					len = ReadBinDWord();
-					P += (int)(len * BinaryFloatSize);
-					return "<flt_list>";
-				case 0x0a:
-					return "{";
-				case 0x0b:
-					return "}";
-				case 0x0c:
-					return "(";
-				case 0x0d:
-					return ")";
-				case 0x0e:
-					return "[";
-				case 0x0f:
-					return "]";
-				case 0x10:
-					return "<";
-				case 0x11:
-					return ">";
-				case 0x12:
-					return ".";
-				case 0x13:
-					return ",";
-				case 0x14:
-					return ";";
-				case 0x1f:
-					return "template";
-				case 0x28:
-					return "WORD";
-				case 0x29:
-					return "DWORD";
-				case 0x2a:
-					return "FLOAT";
-				case 0x2b:
-					return "DOUBLE";
-				case 0x2c:
-					return "CHAR";
-				case 0x2d:
-					return "UCHAR";
-				case 0x2e:
-					return "SWORD";
-				case 0x2f:
-					return "SDWORD";
-				case 0x30:
-					return "void";
-				case 0x31:
-					return "string";
-				case 0x32:
-					return "unicode";
-				case 0x33:
-					return "cstring";
-				case 0x34:
-					return "array";
+					case 3:
+						// integer token
+						P += 4;
+						return "<integer>";
+					case 5:
+						// GUID token
+						P += 16;
+						return "<guid>";
+					case 6:
+						if (End - P < 4) return s;
+						len = ReadBinDWord();
+						P += (int)(len * 4);
+						return "<int_list>";
+					case 7:
+						if (End - P < 4) return s;
+						len = ReadBinDWord();
+						P += (int)(len * BinaryFloatSize);
+						return "<flt_list>";
+					case 0x0a:
+						return "{";
+					case 0x0b:
+						return "}";
+					case 0x0c:
+						return "(";
+					case 0x0d:
+						return ")";
+					case 0x0e:
+						return "[";
+					case 0x0f:
+						return "]";
+					case 0x10:
+						return "<";
+					case 0x11:
+						return ">";
+					case 0x12:
+						return ".";
+					case 0x13:
+						return ",";
+					case 0x14:
+						return ";";
+					case 0x1f:
+						return "template";
+					case 0x28:
+						return "WORD";
+					case 0x29:
+						return "DWORD";
+					case 0x2a:
+						return "FLOAT";
+					case 0x2b:
+						return "DOUBLE";
+					case 0x2c:
+						return "CHAR";
+					case 0x2d:
+						return "UCHAR";
+					case 0x2e:
+						return "SWORD";
+					case 0x2f:
+						return "SDWORD";
+					case 0x30:
+						return "void";
+					case 0x31:
+						return "string";
+					case 0x32:
+						return "unicode";
+					case 0x33:
+						return "cstring";
+					case 0x34:
+						return "array";
 				}
 			}
 			// process text-formatted file
