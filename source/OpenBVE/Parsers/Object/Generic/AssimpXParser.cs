@@ -89,7 +89,8 @@ namespace OpenBve
 			int nVerts = mesh.Positions.Count;
 			if (nVerts == 0)
 			{
-				throw new Exception("nVertices must be greater than zero");
+				//Some null objects contain an empty mesh
+				Interface.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
 			}
 			int v = builder.Vertices.Length;
 			Array.Resize(ref builder.Vertices, v + nVerts);
@@ -99,10 +100,6 @@ namespace OpenBve
 			}
 
 			int nFaces = mesh.PosFaces.Count;
-			if (nFaces == 0)
-			{
-				throw new Exception("nFaces must be greater than zero");
-			}
 			int f = builder.Faces.Length;
 			Array.Resize(ref builder.Faces, f + nFaces);
 			for (int i = 0; i < nFaces; i++)

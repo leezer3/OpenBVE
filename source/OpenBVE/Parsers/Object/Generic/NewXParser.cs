@@ -240,7 +240,8 @@ namespace OpenBve
 					int nVerts = block.ReadUInt16();
 					if (nVerts == 0)
 					{
-						throw new Exception("nVertices must be greater than zero");
+						//Some null objects contain an empty mesh
+						Interface.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
 					}
 					int v = builder.Vertices.Length;
 					Array.Resize(ref builder.Vertices, v + nVerts);
