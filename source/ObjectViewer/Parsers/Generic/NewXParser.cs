@@ -356,9 +356,9 @@ namespace OpenBve
 					catch
 					{
 						//Empty / malformed texture argument
-						material.DaytimeTexture = string.Empty;
+						material.DaytimeTexture = null;
 					}
-					if (!System.IO.File.Exists(material.DaytimeTexture))
+					if (!System.IO.File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
 						Interface.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
 						material.DaytimeTexture = null;
