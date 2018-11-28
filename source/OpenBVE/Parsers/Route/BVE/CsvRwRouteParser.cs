@@ -1166,6 +1166,17 @@ namespace OpenBve {
 										}
 										Data.BlockInterval = length;
 									} break;
+								case "options.xparser":
+								if(!PreviewOnly){
+									int parser = 0;
+									if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out parser) | parser < 0 | parser > 3) {
+										Interface.AddMessage(MessageType.Error, false, "XParser is invalid in Options.XParser at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									}
+									else
+									{
+										Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)parser;
+									}
+								} break;
 								case "options.unitoflength":
 								case "options.unitofspeed":
 								case "options.objectvisibility":

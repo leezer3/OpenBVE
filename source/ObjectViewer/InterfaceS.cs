@@ -119,6 +119,7 @@ namespace OpenBve {
 		    internal int AntialiasingLevel;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;
+			internal int UseNewXParser;
 		}
 		internal static Options CurrentOptions;
 

@@ -18,58 +18,7 @@ namespace OpenBve
 	/// <summary>Parses a Loksim3D xml format object</summary>
     internal static class Ls3DObjectParser
     {
-        // structures
-        private class Material
-        {
-            internal Color32 Color;
-            internal Color24 EmissiveColor;
-            internal bool EmissiveColorUsed;
-            internal Color24 TransparentColor;
-            internal bool TransparentColorUsed;
-            internal string DaytimeTexture;
-	        internal string TransparencyTexture;
-            internal string NighttimeTexture;
-            internal World.MeshMaterialBlendMode BlendMode;
-            internal ushort GlowAttenuationData;
-            internal Material()
-            {
-                this.Color = Color32.White;
-                this.EmissiveColor = Color24.Black;
-                this.EmissiveColorUsed = false;
-                this.TransparentColor = Color24.Black;
-                this.TransparentColorUsed = false;
-                this.DaytimeTexture = null;
-                this.NighttimeTexture = null;
-                this.BlendMode = World.MeshMaterialBlendMode.Normal;
-                this.GlowAttenuationData = 0;
-            }
-            internal Material(Material Prototype)
-            {
-                this.Color = Prototype.Color;
-                this.EmissiveColor = Prototype.EmissiveColor;
-                this.EmissiveColorUsed = Prototype.EmissiveColorUsed;
-                this.TransparentColor = Prototype.TransparentColor;
-                this.TransparentColorUsed = Prototype.TransparentColorUsed;
-                this.DaytimeTexture = Prototype.DaytimeTexture;
-                this.NighttimeTexture = Prototype.NighttimeTexture;
-                this.BlendMode = Prototype.BlendMode;
-                this.GlowAttenuationData = Prototype.GlowAttenuationData;
-            }
-        }
-        private class MeshBuilder
-        {
-            internal VertexTemplate[] Vertices;
-            internal World.MeshFace[] Faces;
-            internal Material[] Materials;
-            internal MeshBuilder()
-            {
-                this.Vertices = new VertexTemplate[] { };
-                this.Faces = new World.MeshFace[] { };
-                this.Materials = new Material[] { new Material() };
-            }
-        }
-
-		/// <summary>Loads a Loksim3D object from a file.</summary>
+        /// <summary>Loads a Loksim3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="LoadMode">The texture load mode.</param>
@@ -484,87 +433,11 @@ namespace OpenBve
                 }
                  
             }
-            ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+			Builder.Apply(ref Object);
             Object.Mesh.CreateNormals();
             return Object;
         }
-        private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
-        {
-            if (Builder.Faces.Length != 0)
-            {
-                int mf = Object.Mesh.Faces.Length;
-                int mm = Object.Mesh.Materials.Length;
-                int mv = Object.Mesh.Vertices.Length;
-                Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
-                Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
-                Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
-                for (int i = 0; i < Builder.Vertices.Length; i++)
-                {
-                    Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
-                }
-                for (int i = 0; i < Builder.Faces.Length; i++)
-                {
-                    Object.Mesh.Faces[mf + i] = Builder.Faces[i];
-                    for (int j = 0; j < Object.Mesh.Faces[mf + i].Vertices.Length; j++)
-                    {
-                        Object.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-                    }
-                    Object.Mesh.Faces[mf + i].Material += (ushort)mm;
-                }
-                for (int i = 0; i < Builder.Materials.Length; i++)
-                {
-                    Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
-                    Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
-                    Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-                    if (Builder.Materials[i].DaytimeTexture != null)
-                    {
-	                    Texture tday;
-						
-
-	                    if (!string.IsNullOrEmpty(Builder.Materials[i].TransparencyTexture))
-	                    {
-		                    Bitmap Main = new Bitmap(Builder.Materials[i].DaytimeTexture);
-		                    Main = ResizeImage(Main, Main.Size.Width, Main.Size.Height);
-							Bitmap Alpha = new Bitmap(Builder.Materials[i].TransparencyTexture);
-							if (Alpha.Size != Main.Size)
-							{
-								Alpha = ResizeImage(Alpha, Main.Size.Width, Main.Size.Height);
-							}
-							Bitmap texture = MergeAlphaBitmap(Main, Alpha);
-							//Dispose of both main and alpha
-							Main.Dispose();
-							Alpha.Dispose();
-							tday = Textures.RegisterTexture(texture);
-						}
-						else
-						{
-							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tday);
-						}
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
-					if (Builder.Materials[i].NighttimeTexture != null)
-					{
-						Texture tnight;
-						Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, Builder.Materials[i].TransparentColor), out tnight);
-						Object.Mesh.Materials[mm + i].DaytimeTexture = tnight;
-					}
-					else
-					{
-						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
-					}
-					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
-					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
-					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
-				}
-			}
-		}
-
-	    private static Bitmap MergeAlphaBitmap(Bitmap Main, Bitmap Alpha)
+        private static Bitmap MergeAlphaBitmap(Bitmap Main, Bitmap Alpha)
 	    {
 		    Bitmap Output = new Bitmap(Main.Width, Main.Height, PixelFormat.Format32bppArgb);
 

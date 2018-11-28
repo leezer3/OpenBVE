@@ -125,7 +125,29 @@ namespace OpenBve
 					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".x":
-					Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
+					{
+						try
+						{
+							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
+							{
+								Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+							}
+							else
+							{
+								Result = AssimpXParser.ReadObject(FileName);
+							}
+						}
+						catch (Exception ex)
+						{
+							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
+							Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+						}
+					}
+					else
+					{
+						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+					}
 					break;
 				case ".animated":
 					Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
@@ -208,7 +230,29 @@ namespace OpenBve
 					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".x":
-					Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
+					{
+						try
+						{
+							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
+							{
+								Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+							}
+							else
+							{
+								Result = AssimpXParser.ReadObject(FileName);
+							}
+						}
+						catch (Exception ex)
+						{
+							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
+							Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+						}
+					}
+					else
+					{
+						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+					}
 					break;
 				case ".animated":
 				case ".s":

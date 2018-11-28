@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
@@ -6,8 +6,8 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Interface;
 using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class XObjectParser {

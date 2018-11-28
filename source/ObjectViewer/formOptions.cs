@@ -20,6 +20,7 @@ namespace OpenBve
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
+	        comboBoxNewXParser.SelectedIndex = Interface.CurrentOptions.UseNewXParser;
         }
 
         internal static DialogResult ShowOptions()
@@ -113,6 +114,7 @@ namespace OpenBve
                     
             }
             Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
+	        Interface.CurrentOptions.UseNewXParser = comboBoxNewXParser.SelectedIndex;
             Options.SaveOptions();
             this.Close();
         }

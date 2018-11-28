@@ -451,6 +451,7 @@ namespace OpenBve {
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
 			trackBarTimeAccelerationFactor.ValueChanged += trackBarTimeAccelerationFactor_ValueChanged;
+			comboBoxXparser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
 			//Load languages last to ensure that everything is populated
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 			Translations.ListLanguages(comboboxLanguages);
@@ -928,6 +929,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
+			Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)comboBoxXparser.SelectedIndex;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:

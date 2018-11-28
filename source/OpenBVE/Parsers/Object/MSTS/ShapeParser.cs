@@ -7,13 +7,12 @@ using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
 using OpenBveApi.Interface;
-using OpenBveApi.Textures;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
-// hopefully this will be used un a later build
+// hopefully this will be used in a later build
 
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable RedundantAssignment
@@ -84,29 +83,6 @@ namespace OpenBve
 			{
 				this.Coordinates = new Vector3(c.X, c.Y, c.Z);
 				this.Normal = new Vector3(n.X, n.Y, n.Z);
-			}
-		}
-
-		private class Material
-		{
-			internal Color32 Color;
-			internal Color24 EmissiveColor;
-			internal bool EmissiveColorUsed;
-			internal string DaytimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
-			internal OpenGlTextureWrapMode? WrapMode;
-			internal ushort GlowAttenuationData;
-
-			internal Material(string texture)
-			{
-				this.Color = Color32.White;
-				this.EmissiveColor = Color24.Black;
-				this.EmissiveColorUsed = false;
-				this.DaytimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
-				this.GlowAttenuationData = 0;
-				this.WrapMode = null;
-				this.DaytimeTexture = texture;
 			}
 		}
 
