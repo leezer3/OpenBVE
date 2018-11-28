@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Sounds;
+﻿using OpenBveApi.FunctionScripting;
+using OpenBveApi.Sounds;
 
 namespace OpenBve {
 	internal static partial class Sounds {
@@ -19,9 +20,9 @@ namespace OpenBve {
 			/// <summary>Whether to ignore further attemps to load the sound after previous attempts have failed.</summary>
 			internal bool Ignore;
 			/// <summary>The function script controlling this sound's volume.</summary>
-			internal FunctionScripts.FunctionScript PitchFunction;
+			internal FunctionScript PitchFunction;
 			/// <summary>The function script controlling this sound's volume.</summary>
-			internal FunctionScripts.FunctionScript VolumeFunction;
+			internal FunctionScript VolumeFunction;
 
 			internal double InternalVolumeFactor;
 

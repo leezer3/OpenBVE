@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Sounds;
+﻿using OpenBveApi.Math;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 
 namespace OpenBveApi.Hosts {
@@ -98,7 +99,19 @@ namespace OpenBveApi.Hosts {
 		public virtual bool RegisterSound(Sounds.Sound sound, out SoundHandle handle) {
 			handle = null;
 			return false;
-		}		
+		}
+		
+		/// <summary>Executes a function script in the host application</summary>
+		/// <param name="functionScript">The function script to execute</param>
+		/// <param name="train">The train or a null reference</param>
+		/// <param name="CarIndex">The car index</param>
+		/// <param name="Position">The world position</param>
+		/// <param name="TrackPosition">The linear track position</param>
+		/// <param name="SectionIndex">The index to the signalling section</param>
+		/// <param name="IsPartOfTrain">Whether this is part of a train</param>
+		/// <param name="TimeElapsed">The frame time elapsed</param>
+		/// <param name="CurrentState">The current state of the attached object</param>
+		public virtual void ExecuteFunctionScript(FunctionScripting.FunctionScript functionScript, Train train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) { }
 	}
 	
 }

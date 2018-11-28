@@ -68,6 +68,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FunctionScripts\AnimationScripts.cs" />
+    <Compile Include="FunctionScripts\FunctionScript.cs" />
+    <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\LoadMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
+    <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

@@ -435,7 +435,7 @@ namespace OpenBve {
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
-		internal class Train {
+		internal class Train : OpenBveApi.Train {
 			//internal int TrainIndex;
 			internal TrainState State;
 			//internal bool Disposed;

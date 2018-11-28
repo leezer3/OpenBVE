@@ -13,7 +13,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
-		public partial class Train
+		public partial class Train : OpenBveApi.Train
 		{
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;

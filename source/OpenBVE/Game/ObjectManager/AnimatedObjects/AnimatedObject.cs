@@ -1,5 +1,6 @@
 ﻿using System;
 using CSScriptLibrary;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -19,34 +20,34 @@ namespace OpenBve
 		{
 			// states
 			internal AnimatedObjectState[] States;
-			internal FunctionScripts.FunctionScript StateFunction;
+			internal FunctionScript StateFunction;
 			internal int CurrentState;
 			internal Vector3 TranslateXDirection;
 			internal Vector3 TranslateYDirection;
 			internal Vector3 TranslateZDirection;
-			internal FunctionScripts.FunctionScript TranslateXFunction;
-			internal FunctionScripts.FunctionScript TranslateYFunction;
-			internal FunctionScripts.FunctionScript TranslateZFunction;
+			internal FunctionScript TranslateXFunction;
+			internal FunctionScript TranslateYFunction;
+			internal FunctionScript TranslateZFunction;
 
 			internal Vector3 RotateXDirection;
 			internal Vector3 RotateYDirection;
 			internal Vector3 RotateZDirection;
-			internal FunctionScripts.FunctionScript RotateXFunction;
-			internal FunctionScripts.FunctionScript RotateYFunction;
-			internal FunctionScripts.FunctionScript RotateZFunction;
+			internal FunctionScript RotateXFunction;
+			internal FunctionScript RotateYFunction;
+			internal FunctionScript RotateZFunction;
 			internal Damping RotateXDamping;
 			internal Damping RotateYDamping;
 			internal Damping RotateZDamping;
 			internal Vector2 TextureShiftXDirection;
 			internal Vector2 TextureShiftYDirection;
-			internal FunctionScripts.FunctionScript TextureShiftXFunction;
-			internal FunctionScripts.FunctionScript TextureShiftYFunction;
+			internal FunctionScript TextureShiftXFunction;
+			internal FunctionScript TextureShiftYFunction;
 			internal bool LEDClockwiseWinding;
 			internal double LEDInitialAngle;
 			internal double LEDLastAngle;
 			/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
 			internal Vector3[] LEDVectors;
-			internal FunctionScripts.FunctionScript LEDFunction;
+			internal FunctionScript LEDFunction;
 			internal double RefreshRate;
 			internal double SecondsSinceLastUpdate;
 			internal int ObjectIndex;
@@ -62,7 +63,7 @@ namespace OpenBve
 			internal AnimationScript TranslateZAnimationScript;
 			internal string TranslateZScriptFile;
 
-			internal FunctionScripts.FunctionScript TrackFollowerFunction;
+			internal FunctionScript TrackFollowerFunction;
 			//This section holds parameters used by the track following function
 			internal double FrontAxlePosition = 1;
 			internal double RearAxlePosition = -1;

@@ -1,5 +1,7 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -182,6 +184,11 @@ namespace OpenBve {
 		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle) {
 			handle = Sounds.RegisterBuffer(sound, 0.0); // TODO
 			return true;
+		}
+
+		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, Train train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		{
+			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 		
 	}
