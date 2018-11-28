@@ -148,7 +148,7 @@ namespace OpenBve
 				}
 			}
 
-			if (mesh.TexCoords.Length > 0)
+			if (mesh.TexCoords.Length > 0 && mesh.TexCoords[0] != null)
 			{
 				int nCoords = mesh.TexCoords[0].Count;
 				for (int i = 0; i < nCoords; i++)
