@@ -91,6 +91,45 @@
 			this.panelOptions = new System.Windows.Forms.Panel();
 			this.buttonOptionsPrevious = new System.Windows.Forms.Button();
 			this.buttonOptionsNext = new System.Windows.Forms.Button();
+			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
+			this.groupBoxInputDevice = new System.Windows.Forms.GroupBox();
+			this.labelInputDevice = new System.Windows.Forms.Label();
+			this.listviewInputDevice = new System.Windows.Forms.ListView();
+			this.columnheaderInputDeviceName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceProvider = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnheaderInputDeviceFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
+			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
+			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
+			this.labelKioskTimeout = new System.Windows.Forms.Label();
+			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
+			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+			this.labelXparser = new System.Windows.Forms.Label();
+			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
+			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
+			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
+			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
+			this.labelNumberFive = new System.Windows.Forms.Label();
+			this.labelNumberZero = new System.Windows.Forms.Label();
+			this.labelTimeAcceleration = new System.Windows.Forms.Label();
+			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
+			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
+			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
+			this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
+			this.comboBoxCompressionFormat = new System.Windows.Forms.ComboBox();
+			this.labelPackageCompression = new System.Windows.Forms.Label();
+			this.buttonOtherDirectory = new System.Windows.Forms.Button();
+			this.labelOtherInstallDirectory = new System.Windows.Forms.Label();
+			this.textBoxOtherDirectory = new System.Windows.Forms.TextBox();
+			this.buttonTrainInstallationDirectory = new System.Windows.Forms.Button();
+			this.labelTrainInstallDirectory = new System.Windows.Forms.Label();
+			this.textBoxTrainDirectory = new System.Windows.Forms.TextBox();
+			this.buttonSetRouteDirectory = new System.Windows.Forms.Button();
+			this.labelRouteInstallDirectory = new System.Windows.Forms.Label();
+			this.textBoxRouteDirectory = new System.Windows.Forms.TextBox();
 			this.panelOptionsLeft = new System.Windows.Forms.Panel();
 			this.groupboxDisplayMode = new System.Windows.Forms.GroupBox();
 			this.labelHUDLarge = new System.Windows.Forms.Label();
@@ -158,43 +197,6 @@
 			this.updownSoundNumber = new System.Windows.Forms.NumericUpDown();
 			this.labelSoundNumber = new System.Windows.Forms.Label();
 			this.pictureboxLanguage = new System.Windows.Forms.PictureBox();
-			this.panelOptionsPage2 = new System.Windows.Forms.Panel();
-			this.groupBoxInputDevice = new System.Windows.Forms.GroupBox();
-			this.labelInputDevice = new System.Windows.Forms.Label();
-			this.listviewInputDevice = new System.Windows.Forms.ListView();
-			this.columnheaderInputDeviceName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnheaderInputDeviceStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnheaderInputDeviceVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnheaderInputDeviceProvider = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnheaderInputDeviceFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
-			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
-			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
-			this.labelKioskTimeout = new System.Windows.Forms.Label();
-			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
-			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
-			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
-			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
-			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
-			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
-			this.labelNumberFive = new System.Windows.Forms.Label();
-			this.labelNumberZero = new System.Windows.Forms.Label();
-			this.labelTimeAcceleration = new System.Windows.Forms.Label();
-			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
-			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
-			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
-			this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
-			this.comboBoxCompressionFormat = new System.Windows.Forms.ComboBox();
-			this.labelPackageCompression = new System.Windows.Forms.Label();
-			this.buttonOtherDirectory = new System.Windows.Forms.Button();
-			this.labelOtherInstallDirectory = new System.Windows.Forms.Label();
-			this.textBoxOtherDirectory = new System.Windows.Forms.TextBox();
-			this.buttonTrainInstallationDirectory = new System.Windows.Forms.Button();
-			this.labelTrainInstallDirectory = new System.Windows.Forms.Label();
-			this.textBoxTrainDirectory = new System.Windows.Forms.TextBox();
-			this.buttonSetRouteDirectory = new System.Windows.Forms.Button();
-			this.labelRouteInstallDirectory = new System.Windows.Forms.Label();
-			this.textBoxRouteDirectory = new System.Windows.Forms.TextBox();
 			this.comboboxLanguages = new System.Windows.Forms.ComboBox();
 			this.labelOptionsTitleSeparator = new System.Windows.Forms.Label();
 			this.labelOptionsTitle = new System.Windows.Forms.Label();
@@ -466,6 +468,13 @@
 			this.tabpageRouteSettings.SuspendLayout();
 			this.panelRouteEncoding.SuspendLayout();
 			this.panelOptions.SuspendLayout();
+			this.panelOptionsPage2.SuspendLayout();
+			this.groupBoxInputDevice.SuspendLayout();
+			this.groupBoxKioskMode.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
+			this.groupBoxAdvancedOptions.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
+			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelOptionsLeft.SuspendLayout();
 			this.groupboxDisplayMode.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarHUDSize)).BeginInit();
@@ -491,13 +500,6 @@
 			this.groupboxSound.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLanguage)).BeginInit();
-			this.panelOptionsPage2.SuspendLayout();
-			this.groupBoxInputDevice.SuspendLayout();
-			this.groupBoxKioskMode.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
-			this.groupBoxAdvancedOptions.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
-			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelPanels.SuspendLayout();
 			this.panelReview.SuspendLayout();
 			this.groupboxReviewDateTime.SuspendLayout();
@@ -1377,10 +1379,10 @@
 			this.panelOptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(243)))));
 			this.panelOptions.Controls.Add(this.buttonOptionsPrevious);
 			this.panelOptions.Controls.Add(this.buttonOptionsNext);
+			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Controls.Add(this.panelOptionsLeft);
 			this.panelOptions.Controls.Add(this.panelOptionsRight);
 			this.panelOptions.Controls.Add(this.pictureboxLanguage);
-			this.panelOptions.Controls.Add(this.panelOptionsPage2);
 			this.panelOptions.Controls.Add(this.comboboxLanguages);
 			this.panelOptions.Controls.Add(this.labelOptionsTitleSeparator);
 			this.panelOptions.Controls.Add(this.labelOptionsTitle);
@@ -1411,6 +1413,429 @@
 			this.buttonOptionsNext.Text = "Next Page...";
 			this.buttonOptionsNext.UseVisualStyleBackColor = true;
 			this.buttonOptionsNext.Click += new System.EventHandler(this.buttonOptionsPrevious_Click);
+			// 
+			// panelOptionsPage2
+			// 
+			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panelOptionsPage2.Controls.Add(this.groupBoxInputDevice);
+			this.panelOptionsPage2.Controls.Add(this.groupBoxKioskMode);
+			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
+			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
+			this.panelOptionsPage2.Location = new System.Drawing.Point(0, 72);
+			this.panelOptionsPage2.Name = "panelOptionsPage2";
+			this.panelOptionsPage2.Size = new System.Drawing.Size(643, 528);
+			this.panelOptionsPage2.TabIndex = 20;
+			// 
+			// groupBoxInputDevice
+			// 
+			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
+			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
+			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
+			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
+			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
+			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
+			this.groupBoxInputDevice.Size = new System.Drawing.Size(634, 148);
+			this.groupBoxInputDevice.TabIndex = 23;
+			this.groupBoxInputDevice.TabStop = false;
+			this.groupBoxInputDevice.Text = "Input Device Plugin";
+			// 
+			// labelInputDevice
+			// 
+			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
+			this.labelInputDevice.Name = "labelInputDevice";
+			this.labelInputDevice.Size = new System.Drawing.Size(618, 14);
+			this.labelInputDevice.TabIndex = 0;
+			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conf" +
+    "lict of input setting(s).";
+			// 
+			// listviewInputDevice
+			// 
+			this.listviewInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listviewInputDevice.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnheaderInputDeviceName,
+            this.columnheaderInputDeviceStatus,
+            this.columnheaderInputDeviceVersion,
+            this.columnheaderInputDeviceProvider,
+            this.columnheaderInputDeviceFileName});
+			this.listviewInputDevice.FullRowSelect = true;
+			this.listviewInputDevice.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.listviewInputDevice.HideSelection = false;
+			this.listviewInputDevice.LabelWrap = false;
+			this.listviewInputDevice.Location = new System.Drawing.Point(8, 38);
+			this.listviewInputDevice.MultiSelect = false;
+			this.listviewInputDevice.Name = "listviewInputDevice";
+			this.listviewInputDevice.ShowGroups = false;
+			this.listviewInputDevice.Size = new System.Drawing.Size(618, 70);
+			this.listviewInputDevice.TabIndex = 1;
+			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
+			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
+			this.listviewInputDevice.SelectedIndexChanged += new System.EventHandler(this.listviewInputDevice_SelectedIndexChanged);
+			// 
+			// columnheaderInputDeviceName
+			// 
+			this.columnheaderInputDeviceName.Text = "Name";
+			// 
+			// columnheaderInputDeviceStatus
+			// 
+			this.columnheaderInputDeviceStatus.Text = "Status";
+			// 
+			// columnheaderInputDeviceVersion
+			// 
+			this.columnheaderInputDeviceVersion.Text = "Version";
+			// 
+			// columnheaderInputDeviceProvider
+			// 
+			this.columnheaderInputDeviceProvider.Text = "Provider";
+			// 
+			// columnheaderInputDeviceFileName
+			// 
+			this.columnheaderInputDeviceFileName.Text = "File Name";
+			this.columnheaderInputDeviceFileName.Width = 200;
+			// 
+			// checkBoxInputDeviceEnable
+			// 
+			this.checkBoxInputDeviceEnable.AutoSize = true;
+			this.checkBoxInputDeviceEnable.Enabled = false;
+			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
+			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
+			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(174, 17);
+			this.checkBoxInputDeviceEnable.TabIndex = 2;
+			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
+			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;
+			this.checkBoxInputDeviceEnable.CheckedChanged += new System.EventHandler(this.checkBoxInputDeviceEnable_CheckedChanged);
+			// 
+			// buttonInputDeviceConfig
+			// 
+			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
+			this.buttonInputDeviceConfig.Enabled = false;
+			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 116);
+			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
+			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(96, 24);
+			this.buttonInputDeviceConfig.TabIndex = 3;
+			this.buttonInputDeviceConfig.Text = "Config";
+			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
+			this.buttonInputDeviceConfig.Click += new System.EventHandler(this.buttonInputDeviceConfig_Click);
+			// 
+			// groupBoxKioskMode
+			// 
+			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
+			this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
+			this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
+			this.groupBoxKioskMode.Location = new System.Drawing.Point(334, 164);
+			this.groupBoxKioskMode.Name = "groupBoxKioskMode";
+			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 88);
+			this.groupBoxKioskMode.TabIndex = 22;
+			this.groupBoxKioskMode.TabStop = false;
+			this.groupBoxKioskMode.Text = "Kiosk Mode";
+			// 
+			// labelKioskTimeout
+			// 
+			this.labelKioskTimeout.AutoSize = true;
+			this.labelKioskTimeout.Location = new System.Drawing.Point(8, 43);
+			this.labelKioskTimeout.Name = "labelKioskTimeout";
+			this.labelKioskTimeout.Size = new System.Drawing.Size(91, 13);
+			this.labelKioskTimeout.TabIndex = 2;
+			this.labelKioskTimeout.Text = "Control timeout (s)";
+			// 
+			// numericUpDownKioskTimeout
+			// 
+			this.numericUpDownKioskTimeout.DecimalPlaces = 2;
+			this.numericUpDownKioskTimeout.Location = new System.Drawing.Point(166, 41);
+			this.numericUpDownKioskTimeout.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+			this.numericUpDownKioskTimeout.Name = "numericUpDownKioskTimeout";
+			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 20);
+			this.numericUpDownKioskTimeout.TabIndex = 1;
+			// 
+			// checkBoxEnableKiosk
+			// 
+			this.checkBoxEnableKiosk.AutoSize = true;
+			this.checkBoxEnableKiosk.Location = new System.Drawing.Point(9, 20);
+			this.checkBoxEnableKiosk.Name = "checkBoxEnableKiosk";
+			this.checkBoxEnableKiosk.Size = new System.Drawing.Size(118, 17);
+			this.checkBoxEnableKiosk.TabIndex = 0;
+			this.checkBoxEnableKiosk.Text = "Enable Kiosk Mode";
+			this.checkBoxEnableKiosk.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxAdvancedOptions
+			// 
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelXparser);
+			this.groupBoxAdvancedOptions.Controls.Add(this.comboBoxXparser);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberFive);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
+			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
+			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
+			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
+			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 208);
+			this.groupBoxAdvancedOptions.TabIndex = 21;
+			this.groupBoxAdvancedOptions.TabStop = false;
+			this.groupBoxAdvancedOptions.Text = "Advanced Options";
+			// 
+			// labelXparser
+			// 
+			this.labelXparser.AutoSize = true;
+			this.labelXparser.Location = new System.Drawing.Point(7, 125);
+			this.labelXparser.Name = "labelXparser";
+			this.labelXparser.Size = new System.Drawing.Size(84, 13);
+			this.labelXparser.TabIndex = 17;
+			this.labelXparser.Text = "X Object Parser:";
+			// 
+			// comboBoxXparser
+			// 
+			this.comboBoxXparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxXparser.FormattingEnabled = true;
+			this.comboBoxXparser.Items.AddRange(new object[] {
+            "Original",
+            "NewXParser",
+            "Assimp"});
+			this.comboBoxXparser.Location = new System.Drawing.Point(96, 121);
+			this.comboBoxXparser.Name = "comboBoxXparser";
+			this.comboBoxXparser.Size = new System.Drawing.Size(207, 21);
+			this.comboBoxXparser.TabIndex = 16;
+			// 
+			// checkBoxHacks
+			// 
+			this.checkBoxHacks.AutoSize = true;
+			this.checkBoxHacks.Location = new System.Drawing.Point(8, 100);
+			this.checkBoxHacks.Name = "checkBoxHacks";
+			this.checkBoxHacks.Size = new System.Drawing.Size(203, 17);
+			this.checkBoxHacks.TabIndex = 15;
+			this.checkBoxHacks.Text = "Enable hacks for buggy older content";
+			this.checkBoxHacks.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxTransparencyFix
+			// 
+			this.checkBoxTransparencyFix.AutoSize = true;
+			this.checkBoxTransparencyFix.Location = new System.Drawing.Point(8, 81);
+			this.checkBoxTransparencyFix.Name = "checkBoxTransparencyFix";
+			this.checkBoxTransparencyFix.Size = new System.Drawing.Size(259, 17);
+			this.checkBoxTransparencyFix.TabIndex = 14;
+			this.checkBoxTransparencyFix.Text = "Attempt to fix transparency issues in older content";
+			this.checkBoxTransparencyFix.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxUnloadTextures
+			// 
+			this.checkBoxUnloadTextures.AutoSize = true;
+			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 62);
+			this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
+			this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
+			this.checkBoxUnloadTextures.TabIndex = 13;
+			this.checkBoxUnloadTextures.Text = "Unload unused textures";
+			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
+			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxUnloadTextures_CheckedChanged);
+			// 
+			// labelNumberFive
+			// 
+			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelNumberFive.AutoSize = true;
+			this.labelNumberFive.Location = new System.Drawing.Point(266, 189);
+			this.labelNumberFive.Name = "labelNumberFive";
+			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberFive.TabIndex = 12;
+			this.labelNumberFive.Text = "5";
+			// 
+			// labelNumberZero
+			// 
+			this.labelNumberZero.AutoSize = true;
+			this.labelNumberZero.Location = new System.Drawing.Point(185, 189);
+			this.labelNumberZero.Name = "labelNumberZero";
+			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberZero.TabIndex = 11;
+			this.labelNumberZero.Text = "0";
+			// 
+			// labelTimeAcceleration
+			// 
+			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 155);
+			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
+			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
+			this.labelTimeAcceleration.TabIndex = 10;
+			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
+			this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// trackBarTimeAccelerationFactor
+			// 
+			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarTimeAccelerationFactor.LargeChange = 1;
+			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 145);
+			this.trackBarTimeAccelerationFactor.Maximum = 5;
+			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
+			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
+			this.trackBarTimeAccelerationFactor.TabIndex = 3;
+			this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
+			// 
+			// checkBoxDisableDisplayLists
+			// 
+			this.checkBoxDisableDisplayLists.AutoSize = true;
+			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 43);
+			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
+			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
+			this.checkBoxDisableDisplayLists.TabIndex = 2;
+			this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
+			this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxLoadInAdvance
+			// 
+			this.checkBoxLoadInAdvance.AutoSize = true;
+			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(8, 24);
+			this.checkBoxLoadInAdvance.Name = "checkBoxLoadInAdvance";
+			this.checkBoxLoadInAdvance.Size = new System.Drawing.Size(106, 17);
+			this.checkBoxLoadInAdvance.TabIndex = 1;
+			this.checkBoxLoadInAdvance.Text = "Load in advance";
+			this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
+			this.checkBoxLoadInAdvance.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
+			// 
+			// groupBoxPackageOptions
+			// 
+			this.groupBoxPackageOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxPackageOptions.Controls.Add(this.comboBoxCompressionFormat);
+			this.groupBoxPackageOptions.Controls.Add(this.labelPackageCompression);
+			this.groupBoxPackageOptions.Controls.Add(this.buttonOtherDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.labelOtherInstallDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.textBoxOtherDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.buttonTrainInstallationDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.labelTrainInstallDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.textBoxTrainDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.buttonSetRouteDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.labelRouteInstallDirectory);
+			this.groupBoxPackageOptions.Controls.Add(this.textBoxRouteDirectory);
+			this.groupBoxPackageOptions.ForeColor = System.Drawing.Color.Black;
+			this.groupBoxPackageOptions.Location = new System.Drawing.Point(0, 0);
+			this.groupBoxPackageOptions.Name = "groupBoxPackageOptions";
+			this.groupBoxPackageOptions.Size = new System.Drawing.Size(640, 154);
+			this.groupBoxPackageOptions.TabIndex = 19;
+			this.groupBoxPackageOptions.TabStop = false;
+			this.groupBoxPackageOptions.Text = "Package Management";
+			// 
+			// comboBoxCompressionFormat
+			// 
+			this.comboBoxCompressionFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCompressionFormat.Items.AddRange(new object[] {
+            "LZMA ZIP ( .zip )",
+            "GZip ( .tgz )",
+            "BZip2 ( .bz2 )"});
+			this.comboBoxCompressionFormat.Location = new System.Drawing.Point(200, 117);
+			this.comboBoxCompressionFormat.Name = "comboBoxCompressionFormat";
+			this.comboBoxCompressionFormat.Size = new System.Drawing.Size(188, 21);
+			this.comboBoxCompressionFormat.TabIndex = 10;
+			this.comboBoxCompressionFormat.SelectedIndexChanged += new System.EventHandler(this.comboBoxCompressionFormat_SelectedIndexChanged);
+			// 
+			// labelPackageCompression
+			// 
+			this.labelPackageCompression.AutoSize = true;
+			this.labelPackageCompression.Location = new System.Drawing.Point(6, 121);
+			this.labelPackageCompression.Name = "labelPackageCompression";
+			this.labelPackageCompression.Size = new System.Drawing.Size(147, 13);
+			this.labelPackageCompression.TabIndex = 9;
+			this.labelPackageCompression.Text = "Package compression format:";
+			// 
+			// buttonOtherDirectory
+			// 
+			this.buttonOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOtherDirectory.Location = new System.Drawing.Point(560, 82);
+			this.buttonOtherDirectory.Name = "buttonOtherDirectory";
+			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonOtherDirectory.TabIndex = 8;
+			this.buttonOtherDirectory.Text = "Choose...";
+			this.buttonOtherDirectory.UseVisualStyleBackColor = true;
+			this.buttonOtherDirectory.Click += new System.EventHandler(this.buttonOtherDirectory_Click);
+			// 
+			// labelOtherInstallDirectory
+			// 
+			this.labelOtherInstallDirectory.AutoSize = true;
+			this.labelOtherInstallDirectory.Location = new System.Drawing.Point(6, 85);
+			this.labelOtherInstallDirectory.Name = "labelOtherInstallDirectory";
+			this.labelOtherInstallDirectory.Size = new System.Drawing.Size(158, 13);
+			this.labelOtherInstallDirectory.TabIndex = 7;
+			this.labelOtherInstallDirectory.Text = "Other items installation directory:";
+			// 
+			// textBoxOtherDirectory
+			// 
+			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxOtherDirectory.Location = new System.Drawing.Point(200, 84);
+			this.textBoxOtherDirectory.Name = "textBoxOtherDirectory";
+			this.textBoxOtherDirectory.ReadOnly = true;
+			this.textBoxOtherDirectory.Size = new System.Drawing.Size(353, 20);
+			this.textBoxOtherDirectory.TabIndex = 6;
+			// 
+			// buttonTrainInstallationDirectory
+			// 
+			this.buttonTrainInstallationDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(560, 49);
+			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
+			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonTrainInstallationDirectory.TabIndex = 5;
+			this.buttonTrainInstallationDirectory.Text = "Choose...";
+			this.buttonTrainInstallationDirectory.UseVisualStyleBackColor = true;
+			this.buttonTrainInstallationDirectory.Click += new System.EventHandler(this.buttonTrainInstallationDirectory_Click);
+			// 
+			// labelTrainInstallDirectory
+			// 
+			this.labelTrainInstallDirectory.AutoSize = true;
+			this.labelTrainInstallDirectory.Location = new System.Drawing.Point(6, 52);
+			this.labelTrainInstallDirectory.Name = "labelTrainInstallDirectory";
+			this.labelTrainInstallDirectory.Size = new System.Drawing.Size(129, 13);
+			this.labelTrainInstallDirectory.TabIndex = 4;
+			this.labelTrainInstallDirectory.Text = "Train installation directory:";
+			// 
+			// textBoxTrainDirectory
+			// 
+			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
+			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
+			this.textBoxTrainDirectory.ReadOnly = true;
+			this.textBoxTrainDirectory.Size = new System.Drawing.Size(353, 20);
+			this.textBoxTrainDirectory.TabIndex = 3;
+			// 
+			// buttonSetRouteDirectory
+			// 
+			this.buttonSetRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(560, 18);
+			this.buttonSetRouteDirectory.Name = "buttonSetRouteDirectory";
+			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 23);
+			this.buttonSetRouteDirectory.TabIndex = 2;
+			this.buttonSetRouteDirectory.Text = "Choose...";
+			this.buttonSetRouteDirectory.UseVisualStyleBackColor = true;
+			this.buttonSetRouteDirectory.Click += new System.EventHandler(this.buttonSetRouteDirectory_Click);
+			// 
+			// labelRouteInstallDirectory
+			// 
+			this.labelRouteInstallDirectory.AutoSize = true;
+			this.labelRouteInstallDirectory.Location = new System.Drawing.Point(6, 21);
+			this.labelRouteInstallDirectory.Name = "labelRouteInstallDirectory";
+			this.labelRouteInstallDirectory.Size = new System.Drawing.Size(134, 13);
+			this.labelRouteInstallDirectory.TabIndex = 1;
+			this.labelRouteInstallDirectory.Text = "Route installation directory:";
+			// 
+			// textBoxRouteDirectory
+			// 
+			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxRouteDirectory.Location = new System.Drawing.Point(200, 20);
+			this.textBoxRouteDirectory.Name = "textBoxRouteDirectory";
+			this.textBoxRouteDirectory.ReadOnly = true;
+			this.textBoxRouteDirectory.Size = new System.Drawing.Size(353, 20);
+			this.textBoxRouteDirectory.TabIndex = 0;
 			// 
 			// panelOptionsLeft
 			// 
@@ -2286,405 +2711,6 @@
 			this.pictureboxLanguage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureboxLanguage.TabIndex = 15;
 			this.pictureboxLanguage.TabStop = false;
-			// 
-			// panelOptionsPage2
-			// 
-			this.panelOptionsPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelOptionsPage2.Controls.Add(this.groupBoxInputDevice);
-			this.panelOptionsPage2.Controls.Add(this.groupBoxKioskMode);
-			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
-			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
-			this.panelOptionsPage2.Location = new System.Drawing.Point(0, 72);
-			this.panelOptionsPage2.Name = "panelOptionsPage2";
-			this.panelOptionsPage2.Size = new System.Drawing.Size(643, 528);
-			this.panelOptionsPage2.TabIndex = 20;
-			// 
-			// groupBoxInputDevice
-			// 
-			this.groupBoxInputDevice.Controls.Add(this.labelInputDevice);
-			this.groupBoxInputDevice.Controls.Add(this.listviewInputDevice);
-			this.groupBoxInputDevice.Controls.Add(this.checkBoxInputDeviceEnable);
-			this.groupBoxInputDevice.Controls.Add(this.buttonInputDeviceConfig);
-			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
-			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
-			this.groupBoxInputDevice.Size = new System.Drawing.Size(634, 148);
-			this.groupBoxInputDevice.TabIndex = 23;
-			this.groupBoxInputDevice.TabStop = false;
-			this.groupBoxInputDevice.Text = "Input Device Plugin";
-			// 
-			// labelInputDevice
-			// 
-			this.labelInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelInputDevice.Location = new System.Drawing.Point(4, 20);
-			this.labelInputDevice.Name = "labelInputDevice";
-			this.labelInputDevice.Size = new System.Drawing.Size(618, 14);
-			this.labelInputDevice.TabIndex = 0;
-			this.labelInputDevice.Text = "WARNING: If you are turn on the Input Device Plugin(s), it may be happen the conf" +
-    "lict of input setting(s).";
-			// 
-			// listviewInputDevice
-			// 
-			this.listviewInputDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.listviewInputDevice.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnheaderInputDeviceName,
-            this.columnheaderInputDeviceStatus,
-            this.columnheaderInputDeviceVersion,
-            this.columnheaderInputDeviceProvider,
-            this.columnheaderInputDeviceFileName});
-			this.listviewInputDevice.FullRowSelect = true;
-			this.listviewInputDevice.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.listviewInputDevice.HideSelection = false;
-			this.listviewInputDevice.LabelWrap = false;
-			this.listviewInputDevice.Location = new System.Drawing.Point(8, 38);
-			this.listviewInputDevice.MultiSelect = false;
-			this.listviewInputDevice.Name = "listviewInputDevice";
-			this.listviewInputDevice.ShowGroups = false;
-			this.listviewInputDevice.Size = new System.Drawing.Size(618, 70);
-			this.listviewInputDevice.TabIndex = 1;
-			this.listviewInputDevice.UseCompatibleStateImageBehavior = false;
-			this.listviewInputDevice.View = System.Windows.Forms.View.Details;
-			this.listviewInputDevice.SelectedIndexChanged += new System.EventHandler(this.listviewInputDevice_SelectedIndexChanged);
-			// 
-			// columnheaderInputDeviceName
-			// 
-			this.columnheaderInputDeviceName.Text = "Name";
-			// 
-			// columnheaderInputDeviceStatus
-			// 
-			this.columnheaderInputDeviceStatus.Text = "Status";
-			// 
-			// columnheaderInputDeviceVersion
-			// 
-			this.columnheaderInputDeviceVersion.Text = "Version";
-			// 
-			// columnheaderInputDeviceProvider
-			// 
-			this.columnheaderInputDeviceProvider.Text = "Provider";
-			// 
-			// columnheaderInputDeviceFileName
-			// 
-			this.columnheaderInputDeviceFileName.Text = "File Name";
-			this.columnheaderInputDeviceFileName.Width = 200;
-			// 
-			// checkBoxInputDeviceEnable
-			// 
-			this.checkBoxInputDeviceEnable.AutoSize = true;
-			this.checkBoxInputDeviceEnable.Enabled = false;
-			this.checkBoxInputDeviceEnable.Location = new System.Drawing.Point(8, 116);
-			this.checkBoxInputDeviceEnable.Name = "checkBoxInputDeviceEnable";
-			this.checkBoxInputDeviceEnable.Size = new System.Drawing.Size(174, 17);
-			this.checkBoxInputDeviceEnable.TabIndex = 2;
-			this.checkBoxInputDeviceEnable.Text = "Enable this Input Device Plugin";
-			this.checkBoxInputDeviceEnable.UseVisualStyleBackColor = true;
-			this.checkBoxInputDeviceEnable.CheckedChanged += new System.EventHandler(this.checkBoxInputDeviceEnable_CheckedChanged);
-			// 
-			// buttonInputDeviceConfig
-			// 
-			this.buttonInputDeviceConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonInputDeviceConfig.BackColor = System.Drawing.SystemColors.ButtonFace;
-			this.buttonInputDeviceConfig.Enabled = false;
-			this.buttonInputDeviceConfig.Location = new System.Drawing.Point(220, 116);
-			this.buttonInputDeviceConfig.Name = "buttonInputDeviceConfig";
-			this.buttonInputDeviceConfig.Size = new System.Drawing.Size(96, 24);
-			this.buttonInputDeviceConfig.TabIndex = 3;
-			this.buttonInputDeviceConfig.Text = "Config";
-			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
-			this.buttonInputDeviceConfig.Click += new System.EventHandler(this.buttonInputDeviceConfig_Click);
-			// 
-			// groupBoxKioskMode
-			// 
-			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
-			this.groupBoxKioskMode.Controls.Add(this.numericUpDownKioskTimeout);
-			this.groupBoxKioskMode.Controls.Add(this.checkBoxEnableKiosk);
-			this.groupBoxKioskMode.Location = new System.Drawing.Point(334, 164);
-			this.groupBoxKioskMode.Name = "groupBoxKioskMode";
-			this.groupBoxKioskMode.Size = new System.Drawing.Size(305, 88);
-			this.groupBoxKioskMode.TabIndex = 22;
-			this.groupBoxKioskMode.TabStop = false;
-			this.groupBoxKioskMode.Text = "Kiosk Mode";
-			// 
-			// labelKioskTimeout
-			// 
-			this.labelKioskTimeout.AutoSize = true;
-			this.labelKioskTimeout.Location = new System.Drawing.Point(8, 43);
-			this.labelKioskTimeout.Name = "labelKioskTimeout";
-			this.labelKioskTimeout.Size = new System.Drawing.Size(91, 13);
-			this.labelKioskTimeout.TabIndex = 2;
-			this.labelKioskTimeout.Text = "Control timeout (s)";
-			// 
-			// numericUpDownKioskTimeout
-			// 
-			this.numericUpDownKioskTimeout.DecimalPlaces = 2;
-			this.numericUpDownKioskTimeout.Location = new System.Drawing.Point(166, 41);
-			this.numericUpDownKioskTimeout.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-			this.numericUpDownKioskTimeout.Name = "numericUpDownKioskTimeout";
-			this.numericUpDownKioskTimeout.Size = new System.Drawing.Size(131, 20);
-			this.numericUpDownKioskTimeout.TabIndex = 1;
-			// 
-			// checkBoxEnableKiosk
-			// 
-			this.checkBoxEnableKiosk.AutoSize = true;
-			this.checkBoxEnableKiosk.Location = new System.Drawing.Point(9, 20);
-			this.checkBoxEnableKiosk.Name = "checkBoxEnableKiosk";
-			this.checkBoxEnableKiosk.Size = new System.Drawing.Size(118, 17);
-			this.checkBoxEnableKiosk.TabIndex = 0;
-			this.checkBoxEnableKiosk.Text = "Enable Kiosk Mode";
-			this.checkBoxEnableKiosk.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxAdvancedOptions
-			// 
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberFive);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
-			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
-			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
-			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
-			this.groupBoxAdvancedOptions.Size = new System.Drawing.Size(316, 208);
-			this.groupBoxAdvancedOptions.TabIndex = 21;
-			this.groupBoxAdvancedOptions.TabStop = false;
-			this.groupBoxAdvancedOptions.Text = "Advanced Options";
-			// 
-			// checkBoxHacks
-			// 
-			this.checkBoxHacks.AutoSize = true;
-			this.checkBoxHacks.Location = new System.Drawing.Point(8, 100);
-			this.checkBoxHacks.Name = "checkBoxHacks";
-			this.checkBoxHacks.Size = new System.Drawing.Size(203, 17);
-			this.checkBoxHacks.TabIndex = 15;
-			this.checkBoxHacks.Text = "Enable hacks for buggy older content";
-			this.checkBoxHacks.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxTransparencyFix
-			// 
-			this.checkBoxTransparencyFix.AutoSize = true;
-			this.checkBoxTransparencyFix.Location = new System.Drawing.Point(8, 81);
-			this.checkBoxTransparencyFix.Name = "checkBoxTransparencyFix";
-			this.checkBoxTransparencyFix.Size = new System.Drawing.Size(259, 17);
-			this.checkBoxTransparencyFix.TabIndex = 14;
-			this.checkBoxTransparencyFix.Text = "Attempt to fix transparency issues in older content";
-			this.checkBoxTransparencyFix.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxUnloadTextures
-			// 
-			this.checkBoxUnloadTextures.AutoSize = true;
-			this.checkBoxUnloadTextures.Location = new System.Drawing.Point(8, 62);
-			this.checkBoxUnloadTextures.Name = "checkBoxUnloadTextures";
-			this.checkBoxUnloadTextures.Size = new System.Drawing.Size(138, 17);
-			this.checkBoxUnloadTextures.TabIndex = 13;
-			this.checkBoxUnloadTextures.Text = "Unload unused textures";
-			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
-			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxUnloadTextures_CheckedChanged);
-			// 
-			// labelNumberFive
-			// 
-			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelNumberFive.AutoSize = true;
-			this.labelNumberFive.Location = new System.Drawing.Point(267, 163);
-			this.labelNumberFive.Name = "labelNumberFive";
-			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberFive.TabIndex = 12;
-			this.labelNumberFive.Text = "5";
-			// 
-			// labelNumberZero
-			// 
-			this.labelNumberZero.AutoSize = true;
-			this.labelNumberZero.Location = new System.Drawing.Point(186, 163);
-			this.labelNumberZero.Name = "labelNumberZero";
-			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberZero.TabIndex = 11;
-			this.labelNumberZero.Text = "0";
-			// 
-			// labelTimeAcceleration
-			// 
-			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 132);
-			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
-			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
-			this.labelTimeAcceleration.TabIndex = 10;
-			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-			this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// trackBarTimeAccelerationFactor
-			// 
-			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarTimeAccelerationFactor.LargeChange = 1;
-			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 122);
-			this.trackBarTimeAccelerationFactor.Maximum = 5;
-			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
-			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
-			this.trackBarTimeAccelerationFactor.TabIndex = 3;
-			this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
-			// 
-			// checkBoxDisableDisplayLists
-			// 
-			this.checkBoxDisableDisplayLists.AutoSize = true;
-			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 43);
-			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
-			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
-			this.checkBoxDisableDisplayLists.TabIndex = 2;
-			this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
-			this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxLoadInAdvance
-			// 
-			this.checkBoxLoadInAdvance.AutoSize = true;
-			this.checkBoxLoadInAdvance.Location = new System.Drawing.Point(8, 24);
-			this.checkBoxLoadInAdvance.Name = "checkBoxLoadInAdvance";
-			this.checkBoxLoadInAdvance.Size = new System.Drawing.Size(106, 17);
-			this.checkBoxLoadInAdvance.TabIndex = 1;
-			this.checkBoxLoadInAdvance.Text = "Load in advance";
-			this.checkBoxLoadInAdvance.UseVisualStyleBackColor = true;
-			this.checkBoxLoadInAdvance.CheckedChanged += new System.EventHandler(this.checkBoxLoadInAdvance_CheckedChanged);
-			// 
-			// groupBoxPackageOptions
-			// 
-			this.groupBoxPackageOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxPackageOptions.Controls.Add(this.comboBoxCompressionFormat);
-			this.groupBoxPackageOptions.Controls.Add(this.labelPackageCompression);
-			this.groupBoxPackageOptions.Controls.Add(this.buttonOtherDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.labelOtherInstallDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.textBoxOtherDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.buttonTrainInstallationDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.labelTrainInstallDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.textBoxTrainDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.buttonSetRouteDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.labelRouteInstallDirectory);
-			this.groupBoxPackageOptions.Controls.Add(this.textBoxRouteDirectory);
-			this.groupBoxPackageOptions.ForeColor = System.Drawing.Color.Black;
-			this.groupBoxPackageOptions.Location = new System.Drawing.Point(0, 0);
-			this.groupBoxPackageOptions.Name = "groupBoxPackageOptions";
-			this.groupBoxPackageOptions.Size = new System.Drawing.Size(640, 154);
-			this.groupBoxPackageOptions.TabIndex = 19;
-			this.groupBoxPackageOptions.TabStop = false;
-			this.groupBoxPackageOptions.Text = "Package Management";
-			// 
-			// comboBoxCompressionFormat
-			// 
-			this.comboBoxCompressionFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxCompressionFormat.Items.AddRange(new object[] {
-            "LZMA ZIP ( .zip )",
-            "GZip ( .tgz )",
-            "BZip2 ( .bz2 )"});
-			this.comboBoxCompressionFormat.Location = new System.Drawing.Point(200, 117);
-			this.comboBoxCompressionFormat.Name = "comboBoxCompressionFormat";
-			this.comboBoxCompressionFormat.Size = new System.Drawing.Size(188, 21);
-			this.comboBoxCompressionFormat.TabIndex = 10;
-			this.comboBoxCompressionFormat.SelectedIndexChanged += new System.EventHandler(this.comboBoxCompressionFormat_SelectedIndexChanged);
-			// 
-			// labelPackageCompression
-			// 
-			this.labelPackageCompression.AutoSize = true;
-			this.labelPackageCompression.Location = new System.Drawing.Point(6, 121);
-			this.labelPackageCompression.Name = "labelPackageCompression";
-			this.labelPackageCompression.Size = new System.Drawing.Size(147, 13);
-			this.labelPackageCompression.TabIndex = 9;
-			this.labelPackageCompression.Text = "Package compression format:";
-			// 
-			// buttonOtherDirectory
-			// 
-			this.buttonOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOtherDirectory.Location = new System.Drawing.Point(560, 82);
-			this.buttonOtherDirectory.Name = "buttonOtherDirectory";
-			this.buttonOtherDirectory.Size = new System.Drawing.Size(75, 23);
-			this.buttonOtherDirectory.TabIndex = 8;
-			this.buttonOtherDirectory.Text = "Choose...";
-			this.buttonOtherDirectory.UseVisualStyleBackColor = true;
-			this.buttonOtherDirectory.Click += new System.EventHandler(this.buttonOtherDirectory_Click);
-			// 
-			// labelOtherInstallDirectory
-			// 
-			this.labelOtherInstallDirectory.AutoSize = true;
-			this.labelOtherInstallDirectory.Location = new System.Drawing.Point(6, 85);
-			this.labelOtherInstallDirectory.Name = "labelOtherInstallDirectory";
-			this.labelOtherInstallDirectory.Size = new System.Drawing.Size(158, 13);
-			this.labelOtherInstallDirectory.TabIndex = 7;
-			this.labelOtherInstallDirectory.Text = "Other items installation directory:";
-			// 
-			// textBoxOtherDirectory
-			// 
-			this.textBoxOtherDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxOtherDirectory.Location = new System.Drawing.Point(200, 84);
-			this.textBoxOtherDirectory.Name = "textBoxOtherDirectory";
-			this.textBoxOtherDirectory.ReadOnly = true;
-			this.textBoxOtherDirectory.Size = new System.Drawing.Size(353, 20);
-			this.textBoxOtherDirectory.TabIndex = 6;
-			// 
-			// buttonTrainInstallationDirectory
-			// 
-			this.buttonTrainInstallationDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonTrainInstallationDirectory.Location = new System.Drawing.Point(560, 49);
-			this.buttonTrainInstallationDirectory.Name = "buttonTrainInstallationDirectory";
-			this.buttonTrainInstallationDirectory.Size = new System.Drawing.Size(75, 23);
-			this.buttonTrainInstallationDirectory.TabIndex = 5;
-			this.buttonTrainInstallationDirectory.Text = "Choose...";
-			this.buttonTrainInstallationDirectory.UseVisualStyleBackColor = true;
-			this.buttonTrainInstallationDirectory.Click += new System.EventHandler(this.buttonTrainInstallationDirectory_Click);
-			// 
-			// labelTrainInstallDirectory
-			// 
-			this.labelTrainInstallDirectory.AutoSize = true;
-			this.labelTrainInstallDirectory.Location = new System.Drawing.Point(6, 52);
-			this.labelTrainInstallDirectory.Name = "labelTrainInstallDirectory";
-			this.labelTrainInstallDirectory.Size = new System.Drawing.Size(129, 13);
-			this.labelTrainInstallDirectory.TabIndex = 4;
-			this.labelTrainInstallDirectory.Text = "Train installation directory:";
-			// 
-			// textBoxTrainDirectory
-			// 
-			this.textBoxTrainDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTrainDirectory.Location = new System.Drawing.Point(200, 51);
-			this.textBoxTrainDirectory.Name = "textBoxTrainDirectory";
-			this.textBoxTrainDirectory.ReadOnly = true;
-			this.textBoxTrainDirectory.Size = new System.Drawing.Size(353, 20);
-			this.textBoxTrainDirectory.TabIndex = 3;
-			// 
-			// buttonSetRouteDirectory
-			// 
-			this.buttonSetRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSetRouteDirectory.Location = new System.Drawing.Point(560, 18);
-			this.buttonSetRouteDirectory.Name = "buttonSetRouteDirectory";
-			this.buttonSetRouteDirectory.Size = new System.Drawing.Size(75, 23);
-			this.buttonSetRouteDirectory.TabIndex = 2;
-			this.buttonSetRouteDirectory.Text = "Choose...";
-			this.buttonSetRouteDirectory.UseVisualStyleBackColor = true;
-			this.buttonSetRouteDirectory.Click += new System.EventHandler(this.buttonSetRouteDirectory_Click);
-			// 
-			// labelRouteInstallDirectory
-			// 
-			this.labelRouteInstallDirectory.AutoSize = true;
-			this.labelRouteInstallDirectory.Location = new System.Drawing.Point(6, 21);
-			this.labelRouteInstallDirectory.Name = "labelRouteInstallDirectory";
-			this.labelRouteInstallDirectory.Size = new System.Drawing.Size(134, 13);
-			this.labelRouteInstallDirectory.TabIndex = 1;
-			this.labelRouteInstallDirectory.Text = "Route installation directory:";
-			// 
-			// textBoxRouteDirectory
-			// 
-			this.textBoxRouteDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxRouteDirectory.Location = new System.Drawing.Point(200, 20);
-			this.textBoxRouteDirectory.Name = "textBoxRouteDirectory";
-			this.textBoxRouteDirectory.ReadOnly = true;
-			this.textBoxRouteDirectory.Size = new System.Drawing.Size(353, 20);
-			this.textBoxRouteDirectory.TabIndex = 0;
 			// 
 			// comboboxLanguages
 			// 
@@ -5567,6 +5593,17 @@
 			this.panelRouteEncoding.ResumeLayout(false);
 			this.panelOptions.ResumeLayout(false);
 			this.panelOptions.PerformLayout();
+			this.panelOptionsPage2.ResumeLayout(false);
+			this.groupBoxInputDevice.ResumeLayout(false);
+			this.groupBoxInputDevice.PerformLayout();
+			this.groupBoxKioskMode.ResumeLayout(false);
+			this.groupBoxKioskMode.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
+			this.groupBoxAdvancedOptions.ResumeLayout(false);
+			this.groupBoxAdvancedOptions.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
+			this.groupBoxPackageOptions.ResumeLayout(false);
+			this.groupBoxPackageOptions.PerformLayout();
 			this.panelOptionsLeft.ResumeLayout(false);
 			this.groupboxDisplayMode.ResumeLayout(false);
 			this.groupboxDisplayMode.PerformLayout();
@@ -5598,17 +5635,6 @@
 			this.groupboxSound.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.updownSoundNumber)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxLanguage)).EndInit();
-			this.panelOptionsPage2.ResumeLayout(false);
-			this.groupBoxInputDevice.ResumeLayout(false);
-			this.groupBoxInputDevice.PerformLayout();
-			this.groupBoxKioskMode.ResumeLayout(false);
-			this.groupBoxKioskMode.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
-			this.groupBoxAdvancedOptions.ResumeLayout(false);
-			this.groupBoxAdvancedOptions.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
-			this.groupBoxPackageOptions.ResumeLayout(false);
-			this.groupBoxPackageOptions.PerformLayout();
 			this.panelPanels.ResumeLayout(false);
 			this.panelPanels.PerformLayout();
 			this.panelReview.ResumeLayout(false);
@@ -6093,5 +6119,7 @@
 		private System.Windows.Forms.Label labelHUDSmall;
 		private System.Windows.Forms.TrackBar trackBarHUDSize;
 		private System.Windows.Forms.Label labelHUDScale;
+		private System.Windows.Forms.Label labelXparser;
+		private System.Windows.Forms.ComboBox comboBoxXparser;
 	}
 }
