@@ -1075,6 +1075,11 @@ namespace OpenBve
 
 		                            ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode = wrap;
 	                            }
+	                            else
+	                            {
+		                            //Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
+		                            wrap = (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
+	                            }
 	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
