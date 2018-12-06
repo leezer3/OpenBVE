@@ -5,6 +5,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 
 
 namespace OpenBve
@@ -215,7 +216,7 @@ namespace OpenBve
 
             //Reset the camera when switching between fullscreen and windowed mode
             //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
-            if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+            if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
             {
                 World.CameraCurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0, 0.0);
             }

@@ -6,6 +6,7 @@ using System.Threading;
 using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -177,7 +178,7 @@ namespace OpenBve {
 			Game.MinimalisticSimulation = true;
 			// screen
 			World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
-			World.CameraMode = World.CameraViewMode.Interior;
+			World.CameraMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);

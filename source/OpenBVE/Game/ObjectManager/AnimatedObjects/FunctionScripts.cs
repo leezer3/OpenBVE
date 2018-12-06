@@ -1,6 +1,7 @@
 using System;
 using OpenBveApi.Math;
 using OpenBveApi.FunctionScripting;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -225,7 +226,7 @@ namespace OpenBve {
 						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
-						if (World.CameraMode == World.CameraViewMode.Interior || World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+						if (World.CameraMode == CameraViewMode.Interior || World.CameraMode == CameraViewMode.InteriorLookAhead)
 						{
 							Function.Stack[s] = 0;
 						}

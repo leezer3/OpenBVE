@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Runtime;
 using OpenTK.Audio.OpenAL;
 
 
@@ -138,7 +139,7 @@ namespace OpenBve
 					{
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
 						{
 							if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 							{
@@ -340,7 +341,7 @@ namespace OpenBve
 			OpenBveApi.Math.Vector3 listenerPosition = World.AbsoluteCameraPosition;
 			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
 			OpenBveApi.Math.Vector3 listenerVelocity;
-			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior)
+			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior)
 			{
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				OpenBveApi.Math.Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
@@ -468,7 +469,7 @@ namespace OpenBve
 					OpenBveApi.Math.Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+					if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
 					{
 						if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 						{

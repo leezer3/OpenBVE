@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -389,16 +390,16 @@ namespace OpenBve
 		{
 			switch (World.CameraMode)
 			{
-				case World.CameraViewMode.Interior:
-				case World.CameraViewMode.InteriorLookAhead:
+				case CameraViewMode.Interior:
+				case CameraViewMode.InteriorLookAhead:
 					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = World.CameraCurrentAlignment;
 					break;
-				case World.CameraViewMode.Exterior:
+				case CameraViewMode.Exterior:
 					World.CameraSavedExterior = World.CameraCurrentAlignment;
 					break;
-				case World.CameraViewMode.Track:
-				case World.CameraViewMode.FlyBy:
-				case World.CameraViewMode.FlyByZooming:
+				case CameraViewMode.Track:
+				case CameraViewMode.FlyBy:
+				case CameraViewMode.FlyByZooming:
 					World.CameraSavedTrack = World.CameraCurrentAlignment;
 					break;
 			}
@@ -409,16 +410,16 @@ namespace OpenBve
 		{
 			switch (World.CameraMode)
 			{
-				case World.CameraViewMode.Interior:
-				case World.CameraViewMode.InteriorLookAhead:
+				case CameraViewMode.Interior:
+				case CameraViewMode.InteriorLookAhead:
 					World.CameraCurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
 					break;
-				case World.CameraViewMode.Exterior:
+				case CameraViewMode.Exterior:
 					World.CameraCurrentAlignment = World.CameraSavedExterior;
 					break;
-				case World.CameraViewMode.Track:
-				case World.CameraViewMode.FlyBy:
-				case World.CameraViewMode.FlyByZooming:
+				case CameraViewMode.Track:
+				case CameraViewMode.FlyBy:
+				case CameraViewMode.FlyByZooming:
 					World.CameraCurrentAlignment = World.CameraSavedTrack;
 					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
 					World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;

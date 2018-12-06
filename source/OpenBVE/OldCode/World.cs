@@ -6,6 +6,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -432,7 +433,6 @@ namespace OpenBve {
 		internal const double CameraExteriorTopSpeed = 50.0;
 		internal const double CameraExteriorTopAngularSpeed = 10.0;
 		internal const double CameraZoomTopSpeed = 2.0;
-		internal enum CameraViewMode { Interior, InteriorLookAhead, Exterior, Track, FlyBy, FlyByZooming }
 		internal static CameraViewMode CameraMode;
 		/// <summary>The index of the car which the camera is currently anchored to</summary>
 		internal static int CameraCar;
@@ -701,7 +701,7 @@ namespace OpenBve {
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.X, World.CameraAlignmentDirection.Position.X, ref World.CameraAlignmentSpeed.Position.X, TimeElapsed);
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.Y, World.CameraAlignmentDirection.Position.Y, ref World.CameraAlignmentSpeed.Position.Y, TimeElapsed);
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.Z, World.CameraAlignmentDirection.Position.Z, ref World.CameraAlignmentSpeed.Position.Z, TimeElapsed);
-					if ((CameraMode == CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) & CameraRestriction == Camera.RestrictionMode.On) {
+					if ((CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & CameraRestriction == Camera.RestrictionMode.On) {
 						if (CameraCurrentAlignment.Position.Z > 0.75) {
 							CameraCurrentAlignment.Position.Z = 0.75;
 						}
@@ -768,7 +768,7 @@ namespace OpenBve {
 					// cab pitch and yaw
 					Vector3 d2 = new Vector3(dF);
 					Vector3 u2 = new Vector3(uF);
-					if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+					if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
 							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || !TrainManager.PlayerTrain.Cars[c].CarSections[0].Overlay) {
@@ -786,13 +786,13 @@ namespace OpenBve {
 				}
 				// yaw, pitch, roll
 				double headYaw = World.CameraCurrentAlignment.Yaw + lookaheadYaw;
-				if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+				if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 					if (TrainManager.PlayerTrain.DriverCar >= 0) {
 						headYaw += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverYaw;
 					}
 				}
 				double headPitch = World.CameraCurrentAlignment.Pitch + lookaheadPitch;
-				if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+				if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 					if (TrainManager.PlayerTrain.DriverCar >= 0) {
 						headPitch += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
 					}
