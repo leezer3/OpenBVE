@@ -623,31 +623,9 @@ namespace OpenBve {
 							double x1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.X + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * bestTrain.Cars[0].Height;
 							double z1 = 0.5 * (bestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + bestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
-							
-							/*
-							 * d1 is never used, so don't calculate it
-							double d1;
-							{
-								double dx = x1 - px;
-								double dy = y1 - py;
-								double dz = z1 - pz;
-								d1 = dx * dx + dy * dy + dz * dz;
-							}
-							 */
 							double x2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.X + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Y + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * secondBestTrain.Cars[0].Height;
 							double z2 = 0.5 * (secondBestTrain.Cars[0].FrontAxle.Follower.WorldPosition.Z + secondBestTrain.Cars[0].RearAxle.Follower.WorldPosition.Z);
-
-							/*
-							 * d2 is never used, so don't calculate it
-							double d2;
-							{
-								double dx = x2 - px;
-								double dy = y2 - py;
-								double dz = z2 - pz;
-								d2 = dx * dx + dy * dy + dz * dz;
-							}
-							 */
 							double t = 0.5 - (secondBestDistance - bestDistance) / (2.0 * maxDistance);
 							if (t < 0.0) t = 0.0;
 							t = 2.0 * t * t; /* in order to change the shape of the interpolation curve */
