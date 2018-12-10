@@ -46,6 +46,8 @@
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.comboBoxNewXParser = new System.Windows.Forms.ComboBox();
+			this.label10 = new System.Windows.Forms.Label();
+			this.comboBoxNewObjParser = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.width)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.height)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AnsiotropicLevel)).BeginInit();
@@ -106,7 +108,7 @@
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(212, 307);
+			this.button1.Location = new System.Drawing.Point(212, 333);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 9;
@@ -242,11 +244,33 @@
 			"NewXParser",
 			"AssimpXParser"});
 			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(15, 281);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(97, 13);
+			this.label10.TabIndex = 22;
+			this.label10.Text = "Use New Obj Parser:";
+			//
+			// comboBoxNewObjParser
+			//
+			this.comboBoxNewObjParser.FormattingEnabled = true;
+			this.comboBoxNewObjParser.Location = new System.Drawing.Point(166, 281);
+			this.comboBoxNewObjParser.Name = "comboBoxNewObjParser";
+			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 20);
+			this.comboBoxNewObjParser.TabIndex = 23;
+			this.comboBoxNewObjParser.Items.AddRange(new object[] {
+			"OriginalObjParser",
+			"AssimpObjParser"});
+			// 
 			// formOptions
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(311, 342);
+			this.ClientSize = new System.Drawing.Size(311, 368);
+			this.Controls.Add(this.comboBoxNewObjParser);
+			this.Controls.Add(this.label10);
 			this.Controls.Add(this.comboBoxNewXParser);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
@@ -298,5 +322,7 @@
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.ComboBox comboBoxNewXParser;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.ComboBox comboBoxNewObjParser;
 	}
 }

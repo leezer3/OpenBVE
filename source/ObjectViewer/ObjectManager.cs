@@ -1541,11 +1541,11 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-	                if (Interface.CurrentOptions.UseNewXParser > 0)
+	                if (Interface.CurrentOptions.CurrentXParser > 0)
 	                {
 		                try
 		                {
-                            if (Interface.CurrentOptions.UseNewXParser == 1)
+                            if (Interface.CurrentOptions.CurrentXParser == 1)
                             {
                                 Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
                             }
@@ -1576,7 +1576,22 @@ namespace OpenBve
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, Rotation);
                     break;
 	            case ".obj":
-		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    if (Interface.CurrentOptions.CurrentObjParser == 1)
+                    {
+                        try
+                        {
+                            Result = AssimpObjParser.ReadObject(FileName);
+                        }
+                        catch (Exception e)
+                        {
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        }
+                    }
+                    else
+                    {
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    }
 		            break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -1637,11 +1652,11 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-	                if (Interface.CurrentOptions.UseNewXParser > 0)
+	                if (Interface.CurrentOptions.CurrentXParser > 0)
 	                {
 		                try
 		                {
-                            if (Interface.CurrentOptions.UseNewXParser == 1)
+                            if (Interface.CurrentOptions.CurrentXParser == 1)
                             {
                                 Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
                             }
@@ -1672,7 +1687,22 @@ namespace OpenBve
                     Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
                     return null;
 	            case ".obj":
-		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    if (Interface.CurrentOptions.CurrentObjParser == 1)
+                    {
+                        try
+                        {
+                            Result = AssimpObjParser.ReadObject(FileName);
+                        }
+                        catch (Exception e)
+                        {
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        }
+                    }
+                    else
+                    {
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    }
 		            break;
 				default:
                     Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);

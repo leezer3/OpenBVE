@@ -107,7 +107,6 @@ namespace OpenBve {
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        Interface.CurrentOptions.AntialiasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
-		    Interface.CurrentOptions.UseNewXParser = 1; //TODO: Either save in options or remove when the new parser is fully functional
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);

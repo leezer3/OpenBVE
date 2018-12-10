@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Tga", "source\Plugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpXParser", "source\AssimpXParser\AssimpXParser.csproj", "{572CD7FF-A0C9-4A48-81B7-79B65E37D3C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpObjParser", "source\AssimpObjParser\AssimpObjParser.csproj", "{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -319,6 +321,16 @@ Global
 		{572CD7FF-A0C9-4A48-81B7-79B65E37D3C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{572CD7FF-A0C9-4A48-81B7-79B65E37D3C7}.Release|x86.ActiveCfg = Release|Any CPU
 		{572CD7FF-A0C9-4A48-81B7-79B65E37D3C7}.Release|x86.Build.0 = Release|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CB10DCBB-F747-425E-BEEF-B01DF20CFDEE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
