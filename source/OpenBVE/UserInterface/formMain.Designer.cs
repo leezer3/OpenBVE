@@ -102,13 +102,16 @@
 			this.columnheaderInputDeviceFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
 			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
+			this.groupBoxObjectParser = new System.Windows.Forms.GroupBox();
+			this.labelXparser = new System.Windows.Forms.Label();
+			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
+			this.labelObjparser = new System.Windows.Forms.Label();
+			this.comboBoxObjparser = new System.Windows.Forms.ComboBox();
 			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
 			this.labelKioskTimeout = new System.Windows.Forms.Label();
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
 			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
-			this.labelXparser = new System.Windows.Forms.Label();
-			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
 			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
 			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
@@ -1420,6 +1423,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelOptionsPage2.Controls.Add(this.groupBoxInputDevice);
+			this.panelOptionsPage2.Controls.Add(this.groupBoxObjectParser);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxKioskMode);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxAdvancedOptions);
 			this.panelOptionsPage2.Controls.Add(this.groupBoxPackageOptions);
@@ -1437,7 +1441,7 @@
 			this.groupBoxInputDevice.Location = new System.Drawing.Point(6, 374);
 			this.groupBoxInputDevice.Name = "groupBoxInputDevice";
 			this.groupBoxInputDevice.Size = new System.Drawing.Size(634, 148);
-			this.groupBoxInputDevice.TabIndex = 23;
+			this.groupBoxInputDevice.TabIndex = 24;
 			this.groupBoxInputDevice.TabStop = false;
 			this.groupBoxInputDevice.Text = "Input Device Plugin";
 			// 
@@ -1523,6 +1527,62 @@
 			this.buttonInputDeviceConfig.UseVisualStyleBackColor = true;
 			this.buttonInputDeviceConfig.Click += new System.EventHandler(this.buttonInputDeviceConfig_Click);
 			// 
+			// groupBoxObjectParser
+			// 
+			this.groupBoxObjectParser.Controls.Add(this.labelObjparser);
+			this.groupBoxObjectParser.Controls.Add(this.comboBoxObjparser);
+			this.groupBoxObjectParser.Controls.Add(this.labelXparser);
+			this.groupBoxObjectParser.Controls.Add(this.comboBoxXparser);
+			this.groupBoxObjectParser.Location = new System.Drawing.Point(334, 258);
+			this.groupBoxObjectParser.Name = "groupBoxObjectParser";
+			this.groupBoxObjectParser.Size = new System.Drawing.Size(305, 110);
+			this.groupBoxObjectParser.TabIndex = 23;
+			this.groupBoxObjectParser.TabStop = false;
+			this.groupBoxObjectParser.Text = "Object Parser";
+			// 
+			// labelXparser
+			// 
+			this.labelXparser.AutoSize = true;
+			this.labelXparser.Location = new System.Drawing.Point(17, 25);
+			this.labelXparser.Name = "labelXparser";
+			this.labelXparser.Size = new System.Drawing.Size(84, 13);
+			this.labelXparser.TabIndex = 0;
+			this.labelXparser.Text = "X Object Parser:";
+			// 
+			// comboBoxXparser
+			// 
+			this.comboBoxXparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxXparser.FormattingEnabled = true;
+			this.comboBoxXparser.Items.AddRange(new object[] {
+            "Original",
+            "NewXParser",
+            "Assimp"});
+			this.comboBoxXparser.Location = new System.Drawing.Point(107, 21);
+			this.comboBoxXparser.Name = "comboBoxXparser";
+			this.comboBoxXparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxXparser.TabIndex = 1;
+			// 
+			// labelObjparser
+			// 
+			this.labelObjparser.AutoSize = true;
+			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
+			this.labelObjparser.Name = "labelObjparser";
+			this.labelObjparser.Size = new System.Drawing.Size(84, 13);
+			this.labelObjparser.TabIndex = 0;
+			this.labelObjparser.Text = "Obj Object Parser:";
+			// 
+			// comboBoxObjparser
+			// 
+			this.comboBoxObjparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxObjparser.FormattingEnabled = true;
+			this.comboBoxObjparser.Items.AddRange(new object[] {
+            "Original",
+            "Assimp"});
+			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
+			this.comboBoxObjparser.Name = "comboBoxObjparser";
+			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxObjparser.TabIndex = 1;
+			// 
 			// groupBoxKioskMode
 			// 
 			this.groupBoxKioskMode.Controls.Add(this.labelKioskTimeout);
@@ -1569,8 +1629,6 @@
 			// 
 			// groupBoxAdvancedOptions
 			// 
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelXparser);
-			this.groupBoxAdvancedOptions.Controls.Add(this.comboBoxXparser);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
@@ -1586,28 +1644,6 @@
 			this.groupBoxAdvancedOptions.TabIndex = 21;
 			this.groupBoxAdvancedOptions.TabStop = false;
 			this.groupBoxAdvancedOptions.Text = "Advanced Options";
-			// 
-			// labelXparser
-			// 
-			this.labelXparser.AutoSize = true;
-			this.labelXparser.Location = new System.Drawing.Point(7, 125);
-			this.labelXparser.Name = "labelXparser";
-			this.labelXparser.Size = new System.Drawing.Size(84, 13);
-			this.labelXparser.TabIndex = 17;
-			this.labelXparser.Text = "X Object Parser:";
-			// 
-			// comboBoxXparser
-			// 
-			this.comboBoxXparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxXparser.FormattingEnabled = true;
-			this.comboBoxXparser.Items.AddRange(new object[] {
-            "Original",
-            "NewXParser",
-            "Assimp"});
-			this.comboBoxXparser.Location = new System.Drawing.Point(96, 121);
-			this.comboBoxXparser.Name = "comboBoxXparser";
-			this.comboBoxXparser.Size = new System.Drawing.Size(207, 21);
-			this.comboBoxXparser.TabIndex = 16;
 			// 
 			// checkBoxHacks
 			// 
@@ -1644,7 +1680,7 @@
 			// 
 			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNumberFive.AutoSize = true;
-			this.labelNumberFive.Location = new System.Drawing.Point(266, 189);
+			this.labelNumberFive.Location = new System.Drawing.Point(267, 163);
 			this.labelNumberFive.Name = "labelNumberFive";
 			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
 			this.labelNumberFive.TabIndex = 12;
@@ -1653,7 +1689,7 @@
 			// labelNumberZero
 			// 
 			this.labelNumberZero.AutoSize = true;
-			this.labelNumberZero.Location = new System.Drawing.Point(185, 189);
+			this.labelNumberZero.Location = new System.Drawing.Point(186, 163);
 			this.labelNumberZero.Name = "labelNumberZero";
 			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
 			this.labelNumberZero.TabIndex = 11;
@@ -1661,7 +1697,7 @@
 			// 
 			// labelTimeAcceleration
 			// 
-			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 155);
+			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 132);
 			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
 			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
 			this.labelTimeAcceleration.TabIndex = 10;
@@ -1673,7 +1709,7 @@
 			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarTimeAccelerationFactor.LargeChange = 1;
-			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 145);
+			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 122);
 			this.trackBarTimeAccelerationFactor.Maximum = 5;
 			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
 			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -6119,7 +6155,10 @@
 		private System.Windows.Forms.Label labelHUDSmall;
 		private System.Windows.Forms.TrackBar trackBarHUDSize;
 		private System.Windows.Forms.Label labelHUDScale;
+		private System.Windows.Forms.GroupBox groupBoxObjectParser;
 		private System.Windows.Forms.Label labelXparser;
 		private System.Windows.Forms.ComboBox comboBoxXparser;
+		private System.Windows.Forms.Label labelObjparser;
+		private System.Windows.Forms.ComboBox comboBoxObjparser;
 	}
 }

@@ -77,130 +77,45 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System.Collections.Generic;
-using OpenTK;
-using OpenTK.Graphics;
-using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3>;
-using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
-using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
-
-namespace AssimpNET
+namespace AssimpNET.Obj
 {
-	/** Helper structure representing a XFile mesh face */
-	public class Face
+	// ---------------------------------------------------------------------------
+	/** @brief Enumerates the types of geometric primitives supported by Assimp.
+	 *
+	 *  @see aiFace Face data structure
+	 *  @see aiProcess_SortByPType Per-primitive sorting of meshes
+	 *  @see aiProcess_Triangulate Automatic triangulation
+	 *  @see AI_CONFIG_PP_SBP_REMOVE Removal of specific primitive types.
+	 */
+	public enum PrimitiveType
 	{
-		public List<uint> Indices = new List<uint>();
-	}
+		/** A point primitive.
+		 *
+		 * This is just a single vertex in the virtual world,
+		 * #aiFace contains just one index for such a primitive.
+		 */
+		PrimitiveType_POINT = 0x1,
 
-	/** Helper structure representing a texture filename inside a material and its potential source */
-	public class TexEntry
-	{
-		public string Name;
-		public bool IsNormalMap; // true if the texname was specified in a NormalmapFilename tag
+		/** A line primitive.
+		 *
+		 * This is a line defined through a start and an end position.
+		 * #aiFace contains exactly two indices for such a primitive.
+		 */
+		PrimitiveType_LINE = 0x2,
 
-		public TexEntry(string name, bool isNormalMap = false)
-		{
-			Name = name;
-			IsNormalMap = isNormalMap;
-		}
-	}
+		/** A triangular primitive.
+		 *
+		 * A triangle consists of three indices.
+		 */
+		PrimitiveType_TRIANGLE = 0x4,
 
-	/** Helper structure representing a XFile material */
-	public class Material
-	{
-		public string Name;
-		public bool IsReference; // if true, mName holds a name by which the actual material can be found in the material list
-		public Color4 Diffuse;
-		public float SpecularExponent;
-		public Color4 Specular;
-		public Color4 Emissive;
-		public List<TexEntry> Textures = new List<TexEntry>();
-
-		public uint SceneIndex; // the index under which it was stored in the scene's material list
-	}
-
-	/** Helper structure to represent a bone weight */
-	public class BoneWeight
-	{
-		public uint Vertex;
-		public float Weight;
-	}
-
-	/** Helper structure to represent a bone in a mesh */
-	public class Bone
-	{
-		public string Name;
-		public List<BoneWeight> Weights = new List<BoneWeight>();
-		public Matrix4 OffsetMatrix;
-	}
-
-	/** Helper structure to represent an XFile mesh */
-	public class Mesh
-	{
-		public const uint AI_MAX_NUMBER_OF_TEXTURECOORDS = 0x8;
-		public const uint AI_MAX_NUMBER_OF_COLOR_SETS = 0x8;
-
-		public string Name;
-		public List<Vector3> Positions = new List<Vector3>();
-		public List<Face> PosFaces = new List<Face>();
-		public List<Vector3> Normals = new List<Vector3>();
-		public List<Face> NormFaces = new List<Face>();
-		public uint NumTextures = 0;
-		public List<Vector2>[] TexCoords = new List<Vector2>[AI_MAX_NUMBER_OF_TEXTURECOORDS];
-		public uint NumColorSets = 0;
-		public List<Color4>[] Colors = new List<Color4>[AI_MAX_NUMBER_OF_COLOR_SETS];
-
-		public List<uint> FaceMaterials = new List<uint>();
-		public List<Material> Materials = new List<Material>();
-
-		public List<Bone> Bones = new List<Bone>();
-
-		public Mesh(string name = "")
-		{
-			Name = name;
-		}
-	}
-
-	/** Helper structure to represent a XFile frame */
-	public class Node
-	{
-		public string Name;
-		public Matrix4 TrafoMatrix;
-		public Node Parent;
-		public List<Node> Children = new List<Node>();
-		public List<Mesh> Meshes = new List<Mesh>();
-
-		public Node(Node parent = null)
-		{
-			Parent = parent;
-		}
-	}
-
-	/** Helper structure representing a single animated bone in a XFile */
-	public class AnimBone
-	{
-		public string BoneName;
-		public List<VectorKey> PosKeys = new List<VectorKey>();  // either three separate key sequences for position, rotation, scaling
-		public List<QuatKey> RotKeys = new List<QuatKey>();
-		public List<VectorKey> ScaleKeys = new List<VectorKey>();
-		public List<MatrixKey> TrafoKeys = new List<MatrixKey>(); // or a combined key sequence of transformation matrices.
-	}
-
-	/** Helper structure to represent an animation set in a XFile */
-	public class Animation
-	{
-		public string Name;
-		public List<AnimBone> Anims = new List<AnimBone>();
-	}
-
-	/** Helper structure analogue to aiScene */
-	public class Scene
-	{
-		public Node RootNode = null;
-		public List<Mesh> GlobalMeshes = new List<Mesh>(); // global meshes found outside of any frames
-		public List<Material> GlobalMaterials = new List<Material>(); // global materials found outside of any meshes.
-
-		public List<Animation> Anims = new List<Animation>();
-		public uint AnimTicksPerSecond = 0;
-	}
+		/** A higher-level polygon with more than 3 edges.
+		 *
+		 * A triangle is a polygon, but polygon in this context means
+		 * "all polygons that are not triangles". The "Triangulate"-Step
+		 * is provided for your convenience, it splits all polygons in
+		 * triangles (which are much easier to handle).
+		 */
+		PrimitiveType_POLYGON = 0x8
+	};
 }

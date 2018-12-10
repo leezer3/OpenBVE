@@ -3,7 +3,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using AssimpNET;
+using AssimpNET.X;
 
 namespace OpenBve
 {

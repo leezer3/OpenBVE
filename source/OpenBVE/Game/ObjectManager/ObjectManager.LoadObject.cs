@@ -162,7 +162,22 @@ namespace OpenBve
 					Result = Ls3DObjectParser.ReadObject(FileName, LoadMode, new Vector3());
 					break;
 				case ".obj":
-					Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
+					{
+						try
+						{
+							Result = AssimpObjParser.ReadObject(FileName);
+						}
+						catch (Exception ex)
+						{
+							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						}
+					}
+					else
+					{
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					}
 					break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -259,7 +274,22 @@ namespace OpenBve
 					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 					return null;
 				case ".obj":
-					Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
+					{
+						try
+						{
+							Result = AssimpObjParser.ReadObject(FileName);
+						}
+						catch (Exception ex)
+						{
+							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						}
+					}
+					else
+					{
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					}
 					break;
 				/*
 				 * This will require implementing a specific static object load function- Leave alone for the moment

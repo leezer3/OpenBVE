@@ -91,7 +91,7 @@ using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3
 using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
 using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
 
-namespace AssimpNET
+namespace AssimpNET.X
 {
 	public class XFileParser
 	{
