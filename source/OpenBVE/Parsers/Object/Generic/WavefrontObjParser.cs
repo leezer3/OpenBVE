@@ -425,8 +425,7 @@ namespace OpenBve
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
 						}
-						a *= 255;
-						mm.Color.A = (byte)a;
+						mm.Color.A = (byte)((1 - a) * 255);
 						break;
 					case "map_kd":
 					case "map_ka":
