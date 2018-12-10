@@ -386,7 +386,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Z *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(1,0,0), Rotation.Z);
+					ApplyRotation(Builder, Vector3.Right, Rotation.Z);
 				}
 
 
@@ -396,7 +396,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.X *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(0,1,0), Rotation.X);
+					ApplyRotation(Builder, Vector3.Down, Rotation.X);
 				}
 				if (Rotation.Y != 0.0)
 				{
@@ -404,7 +404,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Y *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(0,0,1), Rotation.Y);
+					ApplyRotation(Builder, Vector3.Forward, Rotation.Y);
 				}
 
 

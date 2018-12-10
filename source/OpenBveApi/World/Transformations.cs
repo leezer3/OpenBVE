@@ -59,9 +59,9 @@ namespace OpenBveApi.World
 		/// <param name="Roll">The roll to apply</param>
 		public Transformation(Transformation Transformation, double Yaw, double Pitch, double Roll)
 		{
-			X = new Vector3(Transformation.X.X, Transformation.X.Y, Transformation.X.Z);
-			Y = new Vector3(Transformation.Y.X, Transformation.Y.Y, Transformation.Y.Z);
-			Z = new Vector3(Transformation.Z.X, Transformation.Z.Y, Transformation.Z.Z);
+			X = new Vector3(Transformation.X);
+			Y = new Vector3(Transformation.Y);
+			Z = new Vector3(Transformation.Z);
 			double cosYaw = System.Math.Cos(Yaw);
 			double sinYaw = System.Math.Sin(Yaw);
 			double cosPitch = System.Math.Cos(-Pitch);
@@ -81,9 +81,9 @@ namespace OpenBveApi.World
 		/// <param name="AuxTransformation">The auxiliary transformation</param>
 		public Transformation(Transformation BaseTransformation, Transformation AuxTransformation)
 		{
-			X = new Vector3(BaseTransformation.X.X, BaseTransformation.X.Y, BaseTransformation.X.Z);
-			Y = new Vector3(BaseTransformation.Y.X, BaseTransformation.Y.Y, BaseTransformation.Y.Z);
-			Z = new Vector3(BaseTransformation.Z.X, BaseTransformation.Z.Y, BaseTransformation.Z.Z);
+			X = new Vector3(BaseTransformation.X);
+			Y = new Vector3(BaseTransformation.Y);
+			Z = new Vector3(BaseTransformation.Z);
 			X.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 			Y.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 			Z.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);

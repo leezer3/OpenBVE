@@ -288,11 +288,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 1.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color3(0.0, 0.0, 1.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
                 if (LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -438,11 +438,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), cx, cy, cz);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, new Vector3(1.0, 0.0, 0.0), new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
+                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), cx, cy, cz);
             }
 	        RenderOverlays();
 	        LastBoundTexture = null; //We bind the character texture, so must reset it at the end of the render sequence

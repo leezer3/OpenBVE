@@ -77,9 +77,9 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateXSpeed * timeElapsed);
                 double sina = Math.Sin(RotateXSpeed * timeElapsed);
-				World.AbsoluteCameraDirection.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
-	            World.AbsoluteCameraUp.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
-	            World.AbsoluteCameraSide.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+				World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
+	            World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
+	            World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
                 keep = true;
             }
             // rotate y
