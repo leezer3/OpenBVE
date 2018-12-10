@@ -495,13 +495,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssimpObjParser\AssimpObjParser.csproj">
-      <Project>{cb10dcbb-f747-425e-beef-b01df20cfdee}</Project>
-      <Name>AssimpObjParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AssimpXParser\AssimpXParser.csproj">
-      <Project>{572cd7ff-a0c9-4a48-81b7-79b65e37d3c7}</Project>
-      <Name>AssimpXParser</Name>
+    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
+      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
+      <Name>AssimpParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>

@@ -122,13 +122,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssimpObjParser\AssimpObjParser.csproj">
-      <Project>{cb10dcbb-f747-425e-beef-b01df20cfdee}</Project>
-      <Name>AssimpObjParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AssimpXParser\AssimpXParser.csproj">
-      <Project>{572cd7ff-a0c9-4a48-81b7-79b65e37d3c7}</Project>
-      <Name>AssimpXParser</Name>
+    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
+      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
+      <Name>AssimpParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
