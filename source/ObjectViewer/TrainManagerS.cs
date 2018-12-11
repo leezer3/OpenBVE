@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -396,7 +397,7 @@ namespace OpenBve {
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
-		internal class Train : OpenBveApi.Train {
+		internal class Train : AbstractTrain {
 			internal TrainState State;
 			internal Car[] Cars;
 			internal int Destination;

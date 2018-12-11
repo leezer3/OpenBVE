@@ -95,6 +95,7 @@
     <Compile Include="Objects\LoadMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
+    <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

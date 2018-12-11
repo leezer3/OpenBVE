@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -13,7 +14,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		/// <summary>The root class for a train within the simulation</summary>
-		public partial class Train : OpenBveApi.Train
+		public partial class Train : AbstractTrain
 		{
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;

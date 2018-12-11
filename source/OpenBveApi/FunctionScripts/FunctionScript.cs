@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi.FunctionScripting
 {
@@ -22,7 +23,7 @@ namespace OpenBveApi.FunctionScripting
 		public double Minimum = Double.NaN;
 
 		/// <summary>Performs the function script, and returns the current result</summary>
-		public double Perform(Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		public double Perform(AbstractTrain Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			currentHost.ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 

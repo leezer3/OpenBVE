@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -47,15 +48,7 @@ namespace OpenBve {
 		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
 		
 
-		/// <summary>The startup state of the train</summary>
-		internal enum TrainStartMode {
-            /// <summary>The train will start with the service brakes applied, and the safety-system plugin initialised</summary>
-			ServiceBrakesAts = -1,
-            /// <summary>The train will start with the EB brakes applied, and the safety-system plugin initialised</summary>
-			EmergencyBrakesAts = 0,
-            /// <summary>The train will start with the EB brakes applied, and the safety-system plugin inactive</summary>
-			EmergencyBrakesNoAts = 1
-		}
+		
         /// <summary>The default mode for the train's safety system to start in</summary>
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
         /// <summary>The name of the current train</summary>

@@ -1,7 +1,7 @@
-﻿namespace OpenBveApi
+﻿namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
-	public abstract class Train
+	public abstract class AbstractTrain
 	{
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi.Hosts {
 
@@ -111,7 +112,7 @@ namespace OpenBveApi.Hosts {
 		/// <param name="IsPartOfTrain">Whether this is part of a train</param>
 		/// <param name="TimeElapsed">The frame time elapsed</param>
 		/// <param name="CurrentState">The current state of the attached object</param>
-		public virtual void ExecuteFunctionScript(FunctionScripting.FunctionScript functionScript, Train train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) { }
+		public virtual void ExecuteFunctionScript(FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) { }
 	}
 	
 }

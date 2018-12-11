@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -1267,7 +1268,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "Mode is expected to be -1, 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											change = 0;
 										}
-										Game.TrainStart = (Game.TrainStartMode)change;
+										Game.TrainStart = (TrainStartMode)change;
 									} break;
 								case "route.gauge":
 								case "train.gauge":
