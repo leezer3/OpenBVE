@@ -112,7 +112,7 @@ namespace OpenBve {
 					{
 						case SoundType.TrainCar:
 							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							velocity = Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
@@ -393,7 +393,7 @@ namespace OpenBve {
 						case SoundType.TrainCar:
 							Vector3 direction;
 							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
@@ -534,7 +534,7 @@ namespace OpenBve {
 						case SoundType.TrainCar:
 							Vector3 direction;
 							var Train = (TrainManager.Train)source.Parent;
-							Train.Cars[source.Car].CreateWorldCoordinates(source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
 							velocity = Train.Cars[source.Car].Specs.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:

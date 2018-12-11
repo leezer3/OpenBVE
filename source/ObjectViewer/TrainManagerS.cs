@@ -405,13 +405,5 @@ namespace OpenBve {
 		internal static Train[] Trains = new Train[] { };
 		internal static Train PlayerTrain = new Train();
 
-		// ================================
-
-		// create world coordinates
-		internal static void CreateWorldCoordinates(Train Train, int CarIndex, double relx, double rely, double relz, out double posx, out double posy, out double posz, out double dirx, out double diry, out double dirz) {
-			posx = 0.0; posy = 0.0; posz = 0.0;
-			dirx = 0.0; diry = 0.0; dirz = 1.0;
-		}
-
 	}
 }

@@ -122,7 +122,7 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							OpenBveApi.Math.Vector3 direction;
-							Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							velocity = Sources[i].Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
 							break;
 						default:
@@ -461,7 +461,7 @@ namespace OpenBve
 					if (Sources[i].Train != null)
 					{
 						OpenBveApi.Math.Vector3 direction;
-						Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 					}
 					else
 					{
@@ -633,7 +633,7 @@ namespace OpenBve
 					if (source.Train != null)
 					{
 						OpenBveApi.Math.Vector3 direction;
-						source.Train.Cars[source.Car].CreateWorldCoordinates(source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						source.Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
 						velocity = source.Train.Cars[source.Car].Specs.CurrentSpeed * direction;
 					}
 					else
