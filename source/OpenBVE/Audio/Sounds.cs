@@ -368,9 +368,11 @@ namespace OpenBve
 
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
-		internal static void PlayMicSound(OpenBveApi.Math.Vector3 position)
+		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+		internal static void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
 		{
-			MicSources.Add(new MicSource(position));
+			MicSources.Add(new MicSource(position, backwardTolerance, forwardTolerance));
 		}
 
 		/// <summary>Stops the specified sound source.</summary>

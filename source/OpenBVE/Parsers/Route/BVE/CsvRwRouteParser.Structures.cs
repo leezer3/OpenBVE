@@ -144,6 +144,8 @@
 #pragma warning restore 414
 			internal double Speed;
 			internal bool IsMicSound;
+			internal double ForwardTolerance;
+			internal double BackwardTolerance;
 		}
 		private struct Transponder
 		{

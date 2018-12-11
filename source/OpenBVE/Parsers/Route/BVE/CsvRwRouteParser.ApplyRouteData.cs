@@ -790,7 +790,7 @@ namespace OpenBve
 										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
 										if (SoundEvent.IsMicSound)
 										{
-											Sounds.PlayMicSound(wpos);
+											Sounds.PlayMicSound(wpos, SoundEvent.BackwardTolerance, SoundEvent.ForwardTolerance);
 										}
 										else
 										{

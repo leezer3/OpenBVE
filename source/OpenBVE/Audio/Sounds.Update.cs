@@ -594,6 +594,10 @@ namespace OpenBve {
 			sample = OpenAlMic.AvailableSamples;
 
 			for (int i = 0; i < MicSources.Count; i++) {
+				if (listenerPosition.Z < MicSources[i].Position.Z - MicSources[i].BackwardTolerance || listenerPosition.Z > MicSources[i].Position.Z + MicSources[i].ForwardTolerance) {
+					continue;
+				}
+
 				// When playback is completed and recording is possible.
 				if (sample > 0 && states[i] == 1) {
 					// Store the recorded data in the buffer.
@@ -623,11 +627,8 @@ namespace OpenBve {
 						if (IsLinear) {
 							double outerRadius = OuterRadiusFactor * innerRadius;
 							if (distance < outerRadius) {
-								if (distance <= innerRadius) {
-									gain = Sources[i].Volume;
-								} else {
+								if (distance > innerRadius) {
 									gain = (distance - outerRadius) / (innerRadius - outerRadius);
-									gain *= Sources[i].Volume;
 								}
 								gain = 3.0 * gain * gain - 2.0 * gain * gain * gain;
 							} else {

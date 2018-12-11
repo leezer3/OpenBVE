@@ -140,12 +140,20 @@ namespace OpenBve {
 			internal int OpenAlSourceName;
 			/// <summary>The position.</summary>
 			internal OpenBveApi.Math.Vector3 Position { get; private set; }
+			/// <summary>Backward tolerance of position</summary>
+			internal double BackwardTolerance;
+			/// <summary>Forward tolerance of position</summary>
+			internal double ForwardTolerance;
 
 			// --- constructors ---
 			/// <summary>Creates a new microphone source.</summary>
 			/// <param name="position">The position.</param>
-			internal MicSource(OpenBveApi.Math.Vector3 position) {
+			/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+			/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+			internal MicSource(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance) {
 				this.Position = position;
+				this.BackwardTolerance = backwardTolerance;
+				this.ForwardTolerance = forwardTolerance;
 				AL.GenSources(1, out OpenAlSourceName);
 
 				// Prepare for monitoring the playback state.
