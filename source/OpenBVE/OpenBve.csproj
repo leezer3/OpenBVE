@@ -310,7 +310,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
-    <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Functions\TextEncoding.cs" />

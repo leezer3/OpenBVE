@@ -488,8 +488,8 @@ namespace OpenBve
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
 					Direction.Rotate(cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldDirection.RotatePlane(cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				}
 				//Pitch

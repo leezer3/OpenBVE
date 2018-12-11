@@ -345,6 +345,17 @@ namespace OpenBveApi.Math {
 			Z = z;
 		}
 
+		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
+		/// <param name="cosa">The cosine of the angle.</param>
+		/// <param name="sina">The sine of the angle.</param>
+		public void RotatePlane(double cosa, double sina)
+		{
+			double u = X * cosa - Z * sina;
+			double v = X * sina + Z * cosa;
+			X = u;
+			Z = v;
+		}
+
 		/// <summary>Rotates the vector based upon three other vectors</summary>
 		/// <param name="firstVector">The first vector</param>
 		/// <param name="secondVector">The second vector</param>
@@ -504,6 +515,8 @@ namespace OpenBveApi.Math {
 			double z = orientation.X.Z * vector.X + orientation.Y.Z * vector.Y + orientation.Z.Z * vector.Z;
 			return new Vector3(x, y, z);
 		}
+
+
 		
 		/// <summary>Creates a unit vector perpendicular to the plane described by three spatial coordinates, suitable for being a surface normal.</summary>
 		/// <param name="a">The first spatial coordinate.</param>
