@@ -4952,6 +4952,27 @@ namespace OpenBve {
 											}
 										}
 									} break;
+								case "track.micsound":
+									{
+										if (!PreviewOnly) {
+											double x = 0.0, y = 0.0;
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x)) {
+												Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												x = 0.0;
+											}
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y)) {
+												Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												y = 0.0;
+											}
+											int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+											Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+											Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
+											Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
+											Data.Blocks[BlockIndex].SoundEvents[n].X = x;
+											Data.Blocks[BlockIndex].SoundEvents[n].Y = y;
+											Data.Blocks[BlockIndex].SoundEvents[n].IsMicSound = true;
+										}
+									} break;
 								case "track.pretrain":
 									{
 										if (!PreviewOnly) {

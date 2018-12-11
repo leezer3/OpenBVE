@@ -1,4 +1,6 @@
-﻿namespace OpenBve {
+﻿using OpenTK.Audio.OpenAL;
+
+namespace OpenBve {
 	internal static partial class Sounds {
 		
 		/// <summary>Represents the state of a sound source.</summary>
@@ -130,6 +132,30 @@
 				}
 			}
 		}
-		
+
+		/// <summary>Represents a microphone source</summary>
+		private class MicSource {
+			// --- members ---
+			/// <summary>The OpenAL source name. Only valid if the sound is playing.</summary>
+			internal int OpenAlSourceName;
+			/// <summary>The position.</summary>
+			internal OpenBveApi.Math.Vector3 Position { get; private set; }
+
+			// --- constructors ---
+			/// <summary>Creates a new microphone source.</summary>
+			/// <param name="position">The position.</param>
+			internal MicSource(OpenBveApi.Math.Vector3 position) {
+				this.Position = position;
+				AL.GenSources(1, out OpenAlSourceName);
+
+				// Prepare for monitoring the playback state.
+				int dummyBuffer = AL.GenBuffer();
+				AL.BufferData(dummyBuffer, OpenAlMic.SampleFormat, MicStore, 0, OpenAlMic.SampleFrequency);
+				AL.SourceQueueBuffer(OpenAlSourceName, dummyBuffer);
+				AL.SourcePlay(OpenAlSourceName);
+
+				AL.Source(OpenAlSourceName, ALSourceb.SourceRelative, true);
+			}
+		}
 	}
 }
