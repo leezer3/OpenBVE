@@ -269,37 +269,37 @@ namespace OpenBve {
 			internal bool Topples;
 			internal CarBrightness Brightness;
 
-			internal void CreateWorldCoordinates(double CarX, double CarY, double CarZ, out double PositionX, out double PositionY, out double PositionZ, out double DirectionX, out double DirectionY, out double DirectionZ)
+			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
-				DirectionX = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				DirectionY = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				DirectionZ = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = DirectionX * DirectionX + DirectionY * DirectionY + DirectionZ * DirectionZ;
+				Direction.X = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
+				Direction.Y = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
+				Direction.Z = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
+				double t = Direction.X * Direction.X + Direction.Y * Direction.Y + Direction.Z * Direction.Z;
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
-					DirectionX *= t; DirectionY *= t; DirectionZ *= t;
+					Direction.X *= t; Direction.Y *= t; Direction.Z *= t;
 					double ux = Up.X;
 					double uy = Up.Y;
 					double uz = Up.Z;
-					double sx = DirectionZ * uy - DirectionY * uz;
-					double sy = DirectionX * uz - DirectionZ * ux;
-					double sz = DirectionY * ux - DirectionX * uy;
+					double sx = Direction.Z * uy - Direction.Y * uz;
+					double sy = Direction.X * uz - Direction.Z * ux;
+					double sz = Direction.Y * ux - Direction.X * uy;
 					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-					PositionX = rx + sx * CarX + ux * CarY + DirectionX * CarZ;
-					PositionY = ry + sy * CarX + uy * CarY + DirectionY * CarZ;
-					PositionZ = rz + sz * CarX + uz * CarY + DirectionZ * CarZ;
+					Position.X = rx + sx * Car.X + ux * Car.Y + Direction.X * Car.Z;
+					Position.Y = ry + sy * Car.X + uy * Car.Y + Direction.Y * Car.Z;
+					Position.Z = rz + sz * Car.X + uz * Car.Y + Direction.Z * Car.Z;
 				}
 				else
 				{
-					PositionX = FrontAxle.Follower.WorldPosition.X;
-					PositionY = FrontAxle.Follower.WorldPosition.Y;
-					PositionZ = FrontAxle.Follower.WorldPosition.Z;
-					DirectionX = 0.0;
-					DirectionY = 1.0;
-					DirectionZ = 0.0;
+					Position.X = FrontAxle.Follower.WorldPosition.X;
+					Position.Y = FrontAxle.Follower.WorldPosition.Y;
+					Position.Z = FrontAxle.Follower.WorldPosition.Z;
+					Direction.X = 0.0;
+					Direction.Y = 1.0;
+					Direction.Z = 0.0;
 				}
 			}
 		}
