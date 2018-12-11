@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveShared;
+
+namespace OpenBve
 {
 	internal static partial class Renderer
 	{

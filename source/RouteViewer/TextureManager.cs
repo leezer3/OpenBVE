@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Textures;
+using OpenBveShared;
 using OpenTK.Graphics.OpenGL;
 namespace OpenBve
 {

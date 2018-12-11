@@ -410,7 +410,6 @@
     </Compile>
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="System\Plugins\PluginManager.cs" />
-    <Compile Include="System\Functions\Timers.cs" />
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />

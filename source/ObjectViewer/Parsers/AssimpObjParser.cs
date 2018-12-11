@@ -49,7 +49,7 @@ namespace OpenBve
 					allNormals.Add(new Vector3(normal.X, normal.Y, normal.Z));
 				}
 
-				foreach (Mesh mesh in model.Meshes)
+				foreach (AssimpNET.Obj.Mesh mesh in model.Meshes)
 				{
 					foreach (Face face in mesh.Faces)
 					{
