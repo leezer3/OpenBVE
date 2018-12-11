@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveShared;
+using TrackManager;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -32,10 +34,10 @@ namespace OpenBve {
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding) {
 			// members
-			Renderer.InitLoading();
+			OpenBveShared.Renderer.InitLoading(Program.FileSystem.GetDataFolder("In-game"), OpenBveShared.Renderer.Width, OpenBveShared.Renderer.Height, "Version " + typeof(Program).Assembly.GetName().Version);
 			RouteProgress = 0.0;
-			TrainProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
+			TrainProgress = 1.0;
+			TrainProgressCurrentSum = 1.0;
 			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
@@ -100,8 +102,8 @@ namespace OpenBve {
 		{
 			// members
 			RouteProgress = 0.0;
-			TrainProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
+			TrainProgress = 1.0;
+			TrainProgressCurrentSum = 1.0;
 			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
@@ -122,10 +124,10 @@ namespace OpenBve {
 			Game.Reset();
 			Game.MinimalisticSimulation = true;
 			// screen
-			World.CameraTrackFollower = new TrackManager.TrackFollower();
+			World.CameraTrackFollower = new TrackFollower();
 			World.CameraTrackFollower.Train = null;
 			World.CameraTrackFollower.CarIndex = -1;
-			World.CameraMode = CameraViewMode.Interior;
+			Camera.CameraView = CameraViewMode.Interior;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
@@ -134,10 +136,10 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.1, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -0.1, true, false);
-			World.CameraTrackFollower.TriggerType = TrackManager.EventTriggerType.Camera;
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, 0.0, true, false);
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, 0.1, true, false);
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, -0.1, true, false);
+			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
@@ -171,11 +173,11 @@ namespace OpenBve {
 				}
 			}
 			// initialize camera
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
-			World.CameraCurrentAlignment = new World.CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, -1.0, true, false);
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, FirstStationPosition, true, false);
+			OpenBveShared.Camera.CameraCurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
+			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + OpenBveShared.Camera.CameraCurrentAlignment.Position.Z);
 		}
 
 	}

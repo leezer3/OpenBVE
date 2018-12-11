@@ -1,6 +1,8 @@
 ﻿using System;
+using OpenBveShared;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
+using TrackManager;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -15,36 +17,15 @@ namespace OpenBve {
 		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
-
-		/// <summary>Defines a region of fog</summary>
-		internal struct Fog {
-			/// <summary>The offset at which the fog starts</summary>
-			internal float Start;
-			/// <summary>The offset at which the fog ends</summary>
-			internal float End;
-			/// <summary>The color of the fog</summary>
-			internal Color24 Color;
-			/// <summary>The track position at which the fog is placed</summary>
-			internal double TrackPosition;
-			/// <summary>Creates a new region of fog</summary>
-			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
-				this.Start = Start;
-				this.End = End;
-				this.Color = Color;
-				this.TrackPosition = TrackPosition;
-			}
-		}
-		internal static float NoFogStart = 800.0f; // must not be 600 or below
-		internal static float NoFogEnd = 1600.0f;
-		internal static Fog PreviousFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.0);
-		internal static Fog CurrentFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.5);
-		internal static Fog NextFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 1.0);
+		
+		
+		
 		
 		
 
 		// other trains
 		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
-		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
+		internal static double PrecedingTrainSpeedLimit = Double.PositiveInfinity;
 		
 
 		/// <summary>The startup state of the train</summary>
@@ -71,7 +52,7 @@ namespace OpenBve {
         /// <param name="ResetLogs">Whether the logs should be reset</param>
 		internal static void Reset(bool ResetLogs) {
 			// track manager
-			TrackManager.CurrentTrack = new TrackManager.Track();
+			TrackManager.CurrentTrack = new Track(1.435);
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
@@ -80,7 +61,6 @@ namespace OpenBve {
 			RouteComment = "";
 			RouteImage = "";
 			RouteAccelerationDueToGravity = 9.80665;
-			RouteRailGauge = 1.435;
 			RouteInitialAirPressure = 101325.0;
 			RouteInitialAirTemperature = 293.15;
 			RouteInitialElevation = 0.0;
@@ -93,21 +73,21 @@ namespace OpenBve {
 			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };
-			PrecedingTrainSpeedLimit = double.PositiveInfinity;
+			PrecedingTrainSpeedLimit = Double.PositiveInfinity;
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
-			NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
-			PreviousFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.0);
-			CurrentFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.5);
-			NextFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 1.0);
-			InfoTotalTriangles = 0;
-			InfoTotalTriangleStrip = 0;
-			InfoTotalQuads = 0;
-			InfoTotalQuadStrip = 0;
-			InfoTotalPolygon = 0;
-			InfoStaticOpaqueFaceCount = 0;
+			OpenBveShared.Renderer.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+	        OpenBveShared.Renderer.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+	        OpenBveShared.Renderer.PreviousFog = new Fog(OpenBveShared.Renderer.NoFogStart, OpenBveShared.Renderer.NoFogEnd, new Color24(128, 128, 128), 0.0);
+	        OpenBveShared.Renderer.CurrentFog = new Fog(OpenBveShared.Renderer.NoFogStart, OpenBveShared.Renderer.NoFogEnd, new Color24(128, 128, 128), 0.5);
+	        OpenBveShared.Renderer.NextFog = new Fog(OpenBveShared.Renderer.NoFogStart, OpenBveShared.Renderer.NoFogEnd, new Color24(128, 128, 128), 1.0);
+	        OpenBveShared.Renderer.Statistics.TotalTriangles = 0;
+	        OpenBveShared.Renderer.Statistics.TotalTriangleStrip = 0;
+	        OpenBveShared.Renderer.Statistics.TotalQuads = 0;
+	        OpenBveShared.Renderer.Statistics.TotalQuadStrip = 0;
+	        OpenBveShared.Renderer.Statistics.TotalPolygon = 0;
+	        OpenBveShared.Renderer.Statistics.StaticOpaqueFaceCount = 0;
 			if (ResetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";

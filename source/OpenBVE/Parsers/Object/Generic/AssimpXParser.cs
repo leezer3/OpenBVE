@@ -3,7 +3,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using AssimpNET;
+using AssimpNET.X;
 
 namespace OpenBve
 {
@@ -13,7 +13,7 @@ namespace OpenBve
 		private static string currentFile;
 		private static Matrix4D rootMatrix;
 
-		internal static ObjectManager.StaticObject ReadObject(string FileName)
+		internal static StaticObject ReadObject(string FileName)
 		{
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
@@ -26,11 +26,11 @@ namespace OpenBve
 				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
 				Scene scene = parser.GetImportedData();
 
-				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-				obj.Mesh.Faces = new World.MeshFace[] { };
-				obj.Mesh.Materials = new World.MeshMaterial[] { };
+				StaticObject obj = new StaticObject(Program.CurrentHost);
+				obj.Mesh.Faces = new MeshFace[] { };
+				obj.Mesh.Materials = new MeshMaterial[] { };
 				obj.Mesh.Vertices = new VertexTemplate[] { };
-				MeshBuilder builder = new MeshBuilder();
+				MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 
 				// Global
 				foreach (var mesh in scene.GlobalMeshes)
@@ -78,12 +78,12 @@ namespace OpenBve
 #endif
 		}
 
-		private static void  MeshBuilder(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Mesh mesh)
+		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
 			if (builder.Vertices.Length != 0)
 			{
 				builder.Apply(ref obj);
-				builder = new MeshBuilder();
+				builder = new MeshBuilder(Program.CurrentHost);
 			}
 
 			int nVerts = mesh.Positions.Count;
@@ -109,8 +109,8 @@ namespace OpenBve
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				builder.Faces[f + i] = new World.MeshFace();
-				builder.Faces[f + i].Vertices = new World.MeshFaceVertex[fVerts];
+				builder.Faces[f + i] = new MeshFace();
+				builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
 				for (int j = 0; j < fVerts; j++)
 				{
 					builder.Faces[f + i].Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];
@@ -128,7 +128,7 @@ namespace OpenBve
 			{
 				int m = builder.Materials.Length;
 				Array.Resize(ref builder.Materials, m + 1);
-				builder.Materials[m] = new Material();
+				builder.Materials[m] = new OpenBveApi.Objects.Material();
 				builder.Materials[m].Color = new Color32((byte)(255 * mesh.Materials[i].Diffuse.R), (byte)(255 * mesh.Materials[i].Diffuse.G), (byte)(255 * mesh.Materials[i].Diffuse.B), (byte)(255 * mesh.Materials[i].Diffuse.A));
 				double mPower = mesh.Materials[i].SpecularExponent; //TODO: Unsure what this does...
 				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
@@ -189,7 +189,7 @@ namespace OpenBve
 			}
 		}
 
-		private static void ChildrenNode(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Node child)
+		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
 		{
 			builder.TransformMatrix = ConvertMatrix(child.TrafoMatrix);
 

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
+using OpenBveShared;
 using OpenTK.Input;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -388,19 +389,19 @@ namespace OpenBve
 		// save camera setting
 		internal static void SaveCameraSettings()
 		{
-			switch (World.CameraMode)
+			switch (Camera.CameraView)
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = World.CameraCurrentAlignment;
+					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = Camera.CameraCurrentAlignment;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraSavedExterior = World.CameraCurrentAlignment;
+					World.CameraSavedExterior = Camera.CameraCurrentAlignment;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraSavedTrack = World.CameraCurrentAlignment;
+					World.CameraSavedTrack = Camera.CameraCurrentAlignment;
 					break;
 			}
 		}
@@ -408,25 +409,25 @@ namespace OpenBve
 		// restore camera setting
 		internal static void RestoreCameraSettings()
 		{
-			switch (World.CameraMode)
+			switch (Camera.CameraView)
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					World.CameraCurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
+					Camera.CameraCurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraCurrentAlignment = World.CameraSavedExterior;
+					Camera.CameraCurrentAlignment = World.CameraSavedExterior;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraCurrentAlignment = World.CameraSavedTrack;
-					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
-					World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+					Camera.CameraCurrentAlignment = World.CameraSavedTrack;
+					World.CameraTrackFollower.Update(TrackManager.CurrentTrack, World.CameraSavedTrack.TrackPosition, true, false);
+					Camera.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 					break;
 			}
-			World.CameraCurrentAlignment.Zoom = 0.0;
-			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
+			Camera.CameraCurrentAlignment.Zoom = 0.0;
+			OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle;
 		}
 
 		

@@ -32,6 +32,7 @@ namespace OpenBve
                 }
             }
 
+	        Interface.CurrentOptions.LanguageCode = "en-US";
             if (System.IO.File.Exists(configFile))
             {
                 // load options
@@ -63,6 +64,14 @@ namespace OpenBve
                             }
                             switch (Section)
                             {
+								case "language":
+								switch (Key)
+								{
+									case "code":
+										Interface.CurrentOptions.LanguageCode = Value;
+										break;
+								}
+								break;
                                 case "display":
                                 switch (Key) {
 										case "vsync":
@@ -74,7 +83,7 @@ namespace OpenBve
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
 													a = 960;
 												}
-												Renderer.ScreenWidth = a;
+												OpenBveShared.Renderer.Width = a;
 											} break;
 										case "windowheight":
 											{
@@ -82,7 +91,7 @@ namespace OpenBve
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
 													a = 600;
 												}
-												Renderer.ScreenHeight = a;
+												OpenBveShared.Renderer.Height = a;
 											} break;
 									} break;
 								case "quality":
@@ -178,10 +187,12 @@ namespace OpenBve
                 Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
                 Builder.AppendLine("; Route Viewer specific options file");
                 Builder.AppendLine();
+	            Builder.AppendLine("[language]");
+				Builder.AppendLine("code = " + (Interface.CurrentOptions.LanguageCode));
                 Builder.AppendLine("[display]");
                 Builder.AppendLine("vsync = " + (Interface.CurrentOptions.VerticalSynchronization ? "true" : "false"));
-                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + OpenBveShared.Renderer.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + OpenBveShared.Renderer.Height.ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

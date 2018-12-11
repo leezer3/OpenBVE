@@ -8,27 +8,6 @@ namespace OpenBve
 		 * This file contains functions used when rendering screen overlays
 		 * -------------------------------------------------------------- */
 
-		/// <summary>Renders an overlay texture</summary>
-		/// <param name="texture">The texture</param>
-		/// <param name="left">The left co-ordinate</param>
-		/// <param name="top">The top co-ordinate</param>
-		/// <param name="right">The right co-ordinate</param>
-		/// <param name="bottom">The bottom co-ordinate</param>
-		internal static void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
-		{
-			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
-		}
-
-		/// <summary>Renders a solid color rectangular overlay</summary>
-		/// <param name="left">The left co-ordinate</param>
-		/// <param name="top">The top co-ordinate</param>
-		/// <param name="right">The right co-ordinate</param>
-		/// <param name="bottom">The bottom co-ordinate</param>
-		internal static void RenderOverlaySolid(double left, double top, double right, double bottom)
-		{
-			DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
-		}
-
 		/// <summary>Calculates the viewing plane size for the given HUD element</summary>
 		/// <param name="Element">The element</param>
 		/// <param name="LeftWidth">The left width of the viewing plane</param>

@@ -88,6 +88,9 @@ namespace OpenBve.Formats.MsTs
 		private readonly BinaryReader myReader;
 		private readonly MemoryStream myStream;
 
+		/// <summary>Creates a new binary block</summary>
+		/// <param name="bytes">A byte array containing the data for this block</param>
+		/// <param name="token">The token for this block</param>
 		public BinaryBlock(byte[] bytes, KujuTokenID token)
 		{
 			Token = token;

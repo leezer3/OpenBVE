@@ -80,7 +80,6 @@
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="LoadingR.cs" />
-    <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />
     <Compile Include="InterfaceR.cs" />
     <Compile Include="Options.cs" />
@@ -92,9 +91,6 @@
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Parsers\XObjectParser.cs" />
-    <Compile Include="Renderer.Loading.cs" />
-    <Compile Include="Renderer.Primitives.cs" />
-    <Compile Include="Renderer.Strings.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="Audio\Sounds.Convert.cs" />
     <Compile Include="Audio\Sounds.cs" />
@@ -140,9 +136,21 @@
     <Compile Include="WorldR.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\TrackManager\TrackManager.csproj">
+      <Project>{44C8713A-8650-488A-B5AA-E7EB38784A68}</Project>
+      <Name>TrackManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BackgroundManager\BackgroundManager.csproj">
+      <Project>{4172403e-61b2-491e-8d9a-d8aef1a93cab}</Project>
+      <Name>BackgroundManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenBveShared\OpenBveShared.csproj">
+      <Project>{82d0fd53-3145-47a4-845e-58a197db3650}</Project>
+      <Name>OpenBveShared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

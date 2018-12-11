@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveShared;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -13,7 +14,7 @@ namespace OpenBve
 		public static bool ReadLightingXML(string fileName)
 		{
 			//Prep
-			Renderer.LightDefinitions = new Renderer.LightDefinition[0];
+			OpenBveShared.Renderer.LightDefinitions = new LightDefinition[0];
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -36,7 +37,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode n in DocumentNodes)
 					{
-						Renderer.LightDefinition currentLight = new Renderer.LightDefinition();
+						LightDefinition currentLight = new LightDefinition();
 						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							bool tf = false, al = false, dl = false, ld = false, cb = false;
@@ -174,10 +175,10 @@ namespace OpenBve
 							{
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;
-								int l = Renderer.LightDefinitions.Length;
+								int l = OpenBveShared.Renderer.LightDefinitions.Length;
 								for (int i = 0; i > l; i++)
 								{
-									if (Renderer.LightDefinitions[i].Time == currentLight.Time)
+									if (OpenBveShared.Renderer.LightDefinitions[i].Time == currentLight.Time)
 									{
 										Break = true;
 										if (ts == null)
@@ -199,14 +200,14 @@ namespace OpenBve
 								int t = 0;
 								if (l == 1)
 								{
-									t = currentLight.Time > Renderer.LightDefinitions[0].Time ? 1 : 0;
+									t = currentLight.Time > OpenBveShared.Renderer.LightDefinitions[0].Time ? 1 : 0;
 								}
 								else if (l > 1)
 								{
 									for (int i = 1; i < l; i++)
 									{
 										t = i + 1;
-										if (currentLight.Time > Renderer.LightDefinitions[i - 1].Time && currentLight.Time < Renderer.LightDefinitions[i].Time)
+										if (currentLight.Time > OpenBveShared.Renderer.LightDefinitions[i - 1].Time && currentLight.Time < OpenBveShared.Renderer.LightDefinitions[i].Time)
 										{
 											break;
 										}
@@ -214,20 +215,20 @@ namespace OpenBve
 								}
 								//Resize array
 								defined = true;
-								Array.Resize(ref Renderer.LightDefinitions, l + 1);
+								Array.Resize(ref OpenBveShared.Renderer.LightDefinitions, l + 1);
 								if (t == l)
 								{
 									//Straight insert at the end of the array
-									Renderer.LightDefinitions[l] = currentLight;
+									OpenBveShared.Renderer.LightDefinitions[l] = currentLight;
 								}
 								else
 								{
 									for (int u = t; u < l; u++)
 									{
 										//Otherwise, shift all elements to compensate
-										Renderer.LightDefinitions[u + 1] = Renderer.LightDefinitions[u];
+										OpenBveShared.Renderer.LightDefinitions[u + 1] = OpenBveShared.Renderer.LightDefinitions[u];
 									}
-									Renderer.LightDefinitions[t] = currentLight;
+									OpenBveShared.Renderer.LightDefinitions[t] = currentLight;
 								}
 								
 							}

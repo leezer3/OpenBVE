@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
+using TrackManager;
 using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -52,21 +53,21 @@ namespace OpenBve
 				Init();
 				Initialized = true;
 			}
-			GL.Enable(EnableCap.CullFace); CullEnabled = true;
+			GL.Enable(EnableCap.CullFace); OpenBveShared.Renderer.CullEnabled = true;
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			if (LightingEnabled)
+			if (OpenBveShared.Renderer.LightingEnabled)
 			{
 				GL.Disable(EnableCap.Lighting);
-				LightingEnabled = false;
+				OpenBveShared.Renderer.LightingEnabled = false;
 			}
-			if (AlphaTestEnabled)
+			if (OpenBveShared.Renderer.AlphaTestEnabled)
 			{
 				GL.Disable(EnableCap.AlphaTest);
-				AlphaTestEnabled = false;
+				OpenBveShared.Renderer.AlphaTestEnabled = false;
 			}
-			double da = -World.BackwardViewingDistance - World.ExtraViewingDistance;
-			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
+			double da = -OpenBveShared.World.BackwardViewingDistance - OpenBveShared.World.ExtraViewingDistance;
+			double db = OpenBveShared.World.ForwardViewingDistance + OpenBveShared.World.ExtraViewingDistance;
 			bool[] sta = new bool[Game.Stations.Length];
 			// events
 			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++)
@@ -77,7 +78,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
 					{
-						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
+						GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent)
@@ -86,7 +87,7 @@ namespace OpenBve
 							dy = 4.0;
 							t = BrightnessChangeTexture;
 						}
-						else if (e is TrackManager.BackgroundChangeEvent)
+						else if (e is BackgroundChangeEvent)
 						{
 							s = 0.25;
 							dy = 3.5;
@@ -151,14 +152,14 @@ namespace OpenBve
 						}
 						if (t != null)
 						{
-							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-							f.TriggerType = TrackManager.EventTriggerType.None;
+							TrackFollower f = new TrackFollower();
+							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
-							f.Update(p + e.TrackPositionDelta, true, false);
+							f.Update(TrackManager.CurrentTrack, p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
 							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
-							RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.X, Camera.Y, Camera.Z, t);
+							OpenBveShared.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
 						}
 					}
 				}
@@ -173,14 +174,14 @@ namespace OpenBve
 						const double dy = 1.4;
 						const double s = 0.2;
 						double p = Game.Stations[i].Stops[j].TrackPosition;
-						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-						f.TriggerType = TrackManager.EventTriggerType.None;
+						TrackFollower f = new TrackFollower();
+						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
-						f.Update(p, true, false);
+						f.Update(TrackManager.CurrentTrack, p, true, false);
 						f.WorldPosition.X += dy * f.WorldUp.X;
 						f.WorldPosition.Y += dy * f.WorldUp.Y;
 						f.WorldPosition.Z += dy * f.WorldUp.Z;
-						RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.X, Camera.Y, Camera.Z, StopTexture);
+						OpenBveShared.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
 					}
 				}
 			}
@@ -193,86 +194,17 @@ namespace OpenBve
 				{
 					const double dy = 2.5;
 					const double s = 0.25;
-					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-					f.TriggerType = TrackManager.EventTriggerType.None;
+					TrackFollower f = new TrackFollower();
+					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
-					f.Update(p, true, false);
+					f.Update(TrackManager.CurrentTrack, p, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;
-					RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera.X, Camera.Y, Camera.Z, BufferTexture);
+					OpenBveShared.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
 				}
 			}
 		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Texture TextureIndex)
-		{
-			
-			Vector3[] v = new Vector3[8];
-			v[0] = new Vector3(Size, Size, -Size);
-			v[1] = new Vector3(Size, -Size, -Size);
-			v[2] = new Vector3(-Size, -Size, -Size);
-			v[3] = new Vector3(-Size, Size, -Size);
-			v[4] = new Vector3(Size, Size, Size);
-			v[5] = new Vector3(Size, -Size, Size);
-			v[6] = new Vector3(-Size, -Size, Size);
-			v[7] = new Vector3(-Size, Size, Size);
-			for (int i = 0; i < 8; i++)
-			{
-				v[i].Rotate(Direction, Up, Side);
-				v[i].X += Position.X - CameraX;
-				v[i].Y += Position.Y - CameraY;
-				v[i].Z += Position.Z - CameraZ;
-			}
-			int[][] Faces = new int[6][];
-			Faces[0] = new int[] { 0, 1, 2, 3 };
-			Faces[1] = new int[] { 0, 4, 5, 1 };
-			Faces[2] = new int[] { 0, 3, 7, 4 };
-			Faces[3] = new int[] { 6, 5, 4, 7 };
-			Faces[4] = new int[] { 6, 7, 3, 2 };
-			Faces[5] = new int[] { 6, 2, 1, 5 };
-			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
-			{
-				if (TexturingEnabled)
-				{
-					GL.Disable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-				}
-				for (int i = 0; i < 6; i++)
-				{
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color3(1.0, 1.0, 1.0);
-					for (int j = 0; j < 4; j++)
-					{
-						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-					}
-					GL.End();
-				}
-				return;
-			}
-			else
-			{
-				TexturingEnabled = true;
-				GL.Enable(EnableCap.Texture2D);
-			}
-			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
-			Vector2[][] t = new Vector2[6][];
-				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
-				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
-				t[2] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-				t[3] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-				t[4] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-				t[5] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-			for (int i = 0; i < 6; i++)
-			{
-				GL.Begin(PrimitiveType.Quads);
-				GL.Color3(1.0, 1.0, 1.0);
-				for (int j = 0; j < 4; j++)
-				{
-					GL.TexCoord2(t[i][j].X, t[i][j].Y);
-					GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-				}
-				GL.End();
-			}
-		}
+		
 	}
 }

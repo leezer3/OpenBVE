@@ -15,8 +15,8 @@ namespace OpenBve
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
+            width.Value = OpenBveShared.Renderer.Width;
+            height.Value = OpenBveShared.Renderer.Height;
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
 			checkBoxBackgrounds.Checked = Interface.CurrentOptions.LoadingBackground;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
@@ -37,7 +37,6 @@ namespace OpenBve
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-	    readonly bool PreviousSort = Renderer.TransparentColorDepthSorting;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
@@ -87,21 +86,20 @@ namespace OpenBve
                     break;
             }
 			//Set width and height
-			if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+			if (OpenBveShared.Renderer.Width != width.Value || OpenBveShared.Renderer.Height != height.Value)
 			{
-				Renderer.ScreenWidth = (int)width.Value;
-				Renderer.ScreenHeight = (int)height.Value;
+				OpenBveShared.Renderer.Width = (int)width.Value;
+				OpenBveShared.Renderer.Height = (int)height.Value;
 				Program.currentGameWindow.Width = (int)width.Value;
 				Program.currentGameWindow.Height = (int)height.Value;
-				Program.UpdateViewport();
+				OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
 			}
-			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
 			Options.SaveOptions();
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || PreviousSort != Renderer.TransparentColorDepthSorting || GraphicsModeChanged)
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged)
 			{
 				this.DialogResult = DialogResult.OK;
 			}

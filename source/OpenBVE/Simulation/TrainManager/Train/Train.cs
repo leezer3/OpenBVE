@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using OpenBve.BrakeSystems;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Math;
@@ -20,7 +21,7 @@ namespace OpenBve
 
 			internal Handles Handles;
 			internal int TrainIndex;
-			internal TrainState State;
+
 			internal Car[] Cars;
 			internal Coupler[] Couplers;
 			internal int DriverCar;
@@ -28,8 +29,6 @@ namespace OpenBve
 			internal TrainPassengers Passengers;
 			internal int LastStation;
 			internal int Station;
-
-			internal int Destination = -1;
 
 			internal bool StationFrontCar;
 			internal bool StationRearCar;
@@ -41,8 +40,6 @@ namespace OpenBve
 			internal double StationDistanceToStopPoint;
 			internal double[] RouteLimits;
 			internal double CurrentRouteLimit;
-			internal double CurrentSectionLimit;
-			internal int CurrentSectionIndex;
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
 			private double InternalTimerTimeElapsed;

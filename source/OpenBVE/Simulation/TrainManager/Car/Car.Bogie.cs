@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -77,9 +78,9 @@ namespace OpenBve
 				py -= dy * d;
 				pz -= dz * d;
 				// determine visibility
-				double cdx = px - World.AbsoluteCameraPosition.X;
-				double cdy = py - World.AbsoluteCameraPosition.Y;
-				double cdz = pz - World.AbsoluteCameraPosition.Z;
+				double cdx = px - Camera.AbsoluteCameraPosition.X;
+				double cdy = py - Camera.AbsoluteCameraPosition.Y;
+				double cdz = pz - Camera.AbsoluteCameraPosition.Z;
 				double dist = cdx * cdx + cdy * cdy + cdz * cdz;
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
@@ -110,35 +111,35 @@ namespace OpenBve
 
 						// brightness change
 						int o = CarSections[s].Elements[i].ObjectIndex;
-						if (ObjectManager.Objects[o] != null)
+						if (GameObjectManager.Objects[o] != null)
 						{
-							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+							for (int j = 0; j < GameObjectManager.Objects[o].Mesh.Materials.Length; j++)
 							{
-								ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+								GameObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}
 				}
 			}
 
-			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection();
-				if (currentObject is ObjectManager.StaticObject)
+				if (currentObject is StaticObject)
 				{
-					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
+					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
 					{
-						States = new ObjectManager.AnimatedObjectState[1]
+						States = new AnimatedObjectState[1]
 						
 					};
 					CarSections[j].Elements[0].States[0].Position = Vector3.Zero;
 					CarSections[j].Elements[0].States[0].Object = s;
 					CarSections[j].Elements[0].CurrentState = 0;
-					CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
+					CarSections[j].Elements[0].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 				}
 				else if (currentObject is ObjectManager.AnimatedObjectCollection)
 				{
@@ -147,7 +148,7 @@ namespace OpenBve
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Elements[h] = a.Objects[h].Clone();
-						CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
+						CarSections[j].Elements[h].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 					}
 				}
 			}
@@ -165,7 +166,7 @@ namespace OpenBve
 					for (int j = 0; j < CarSections[i].Elements.Length; j++)
 					{
 						int o = CarSections[i].Elements[j].ObjectIndex;
-						Renderer.HideObject(o);
+						OpenBveShared.Renderer.HideObject(o);
 					}
 				}
 				if (SectionIndex >= 0)
@@ -174,7 +175,7 @@ namespace OpenBve
 					for (int j = 0; j < CarSections[SectionIndex].Elements.Length; j++)
 					{
 						int o = CarSections[SectionIndex].Elements[j].ObjectIndex;
-						Renderer.ShowObject(o, ObjectType.Dynamic);
+						OpenBveShared.Renderer.ShowObject(o, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 					}
 				}
 				CurrentCarSection = SectionIndex;
@@ -252,8 +253,8 @@ namespace OpenBve
 					{
 						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
 						           baseCar.Specs.CurrentRollDueToCantAngle;
-						double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
-						double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+						double x = Math.Sign(a) * 0.5 * TrackManager.CurrentTrack.RailGauge * (1.0 - Math.Cos(a));
+						double y = Math.Abs(0.5 * TrackManager.CurrentTrack.RailGauge * Math.Sin(a));
 						Vector3 c = new Vector3(s.X * x + u.X * y, s.Y * x + u.Y * y, s.Z * x + u.Z * y);
 						FrontAxle.Follower.WorldPosition += c;
 						RearAxle.Follower.WorldPosition += c;

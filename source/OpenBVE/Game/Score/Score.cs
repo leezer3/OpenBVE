@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -287,7 +288,7 @@ namespace OpenBve
 										if (y > 1.0) y = 1.0;
 										int k = (int)Math.Floor(y * (double)Translations.RatingsCount);
 										if (k >= Translations.RatingsCount) k = Translations.RatingsCount - 1;
-										System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+										CultureInfo Culture = CultureInfo.InvariantCulture;
 										AddScore(Translations.GetInterfaceString("score_rating"), 20.0);
 										AddScore(Translations.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
 									}
@@ -366,7 +367,7 @@ namespace OpenBve
 					int n = ScoreMessages.Length;
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
-					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(CultureInfo.InvariantCulture);
 					ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;

@@ -10,6 +10,8 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveShared;
 
 namespace OpenBve {
 
@@ -62,16 +64,20 @@ namespace OpenBve {
 		internal static int InfoTotalQuadStrip = 0;
 		internal static int InfoTotalPolygon = 0;
 		internal static void Reset() {
+			for (int i = 0; i < GameObjectManager.ObjectsUsed; i++)
+			{
+				OpenBveShared.Renderer.HideObject(i);
+			}
 			Renderer.Reset();
-			ObjectManager.Objects = new ObjectManager.StaticObject[16];
-			ObjectManager.ObjectsUsed = 0;
-			ObjectManager.ObjectsSortedByStart = new int[] { };
-			ObjectManager.ObjectsSortedByEnd = new int[] { };
-			ObjectManager.ObjectsSortedByStartPointer = 0;
-			ObjectManager.ObjectsSortedByEndPointer = 0;
-			ObjectManager.LastUpdatedTrackPosition = 0.0;
-			ObjectManager.AnimatedWorldObjects = new ObjectManager.AnimatedWorldObject[4];
-			ObjectManager.AnimatedWorldObjectsUsed = 0;
+			GameObjectManager.Objects = new StaticObject[16];
+			GameObjectManager.ObjectsUsed = 0;
+			GameObjectManager.ObjectsSortedByStart = new int[] { };
+			GameObjectManager.ObjectsSortedByEnd = new int[] { };
+			GameObjectManager.ObjectsSortedByStartPointer = 0;
+			GameObjectManager.ObjectsSortedByEndPointer = 0;
+			GameObjectManager.LastUpdatedTrackPosition = 0.0;
+			GameObjectManager.AnimatedWorldObjects = new WorldObject[4];
+			GameObjectManager.AnimatedWorldObjectsUsed = 0;
 		}
 	}
 	
@@ -119,7 +125,8 @@ namespace OpenBve {
 		    internal int AntialiasingLevel;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;
-			internal int UseNewXParser;
+			internal int CurrentXParser;
+			internal int CurrentObjParser;
 		}
 		internal static Options CurrentOptions;
 

@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -243,17 +244,17 @@ namespace OpenBve {
 			}
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
-				if (Screen.Width >= Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / World.AspectRatio;
+				if (OpenBveShared.Renderer.Width >= OpenBveShared.Renderer.Height) {
+					WorldWidth = 2.0 * Math.Tan(0.5 * OpenBveShared.World.HorizontalViewingAngle) * EyeDistance;
+					WorldHeight = WorldWidth / OpenBveShared.World.AspectRatio;
 				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-					WorldWidth = WorldHeight * World.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * EyeDistance / OpenBveShared.World.AspectRatio;
+					WorldWidth = WorldHeight * OpenBveShared.World.AspectRatio;
 				}
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * World.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * World.AspectRatio;
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * OpenBveShared.World.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * OpenBveShared.World.AspectRatio;
 				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
 				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
@@ -1022,7 +1023,7 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Car].CarSections[0].Elements[j].States[0].Object.Mesh = new World.Mesh(vertices, faces, Color);
+										Train.Cars[Car].CarSections[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Color);
 										Train.Cars[Car].CarSections[0].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 										Train.Cars[Car].CarSections[0].Elements[j].LEDInitialAngle = InitialAngle;
 										Train.Cars[Car].CarSections[0].Elements[j].LEDLastAngle = LastAngle;
@@ -1413,20 +1414,20 @@ namespace OpenBve {
 
 		private static int CreateElement(TrainManager.CarSection Section, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelLeft, double PanelRight, double PanelTop, double PanelBottom, double PanelBitmapWidth, double PanelBitmapHeight, Vector2 PanelCenter, Vector2 PanelOrigin, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement) {
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / World.AspectRatio;
+			if (OpenBveShared.Renderer.Width >= OpenBveShared.Renderer.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * OpenBveShared.World.HorizontalViewingAngle) * EyeDistance;
+				WorldHeight = WorldWidth / OpenBveShared.World.AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-				WorldWidth = WorldHeight * World.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * EyeDistance / OpenBveShared.World.AspectRatio;
+				WorldWidth = WorldHeight * OpenBveShared.World.AspectRatio;
 			}
 			double x0 = Left / PanelResolution;
 			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * World.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * World.AspectRatio;
+			double y0 = (PanelBottom - Top) / PanelResolution * OpenBveShared.World.AspectRatio;
+			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * OpenBveShared.World.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd; x1 += xd;
-			double yt = PanelBottom - PanelResolution / World.AspectRatio;
+			double yt = PanelBottom - PanelResolution / OpenBveShared.World.AspectRatio;
 			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd; y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;
@@ -1444,11 +1445,11 @@ namespace OpenBve {
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };
-			Object.Mesh.Materials = new World.MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? World.MeshMaterial.TransparentColorMask : 0);
+			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Materials = new MeshMaterial[1];
+			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? MeshMaterial.TransparentColorMask : 0);
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;
@@ -1463,7 +1464,7 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Section.Elements.Length - 1;
 				int j = Section.Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Section.Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Section.Elements[n].States, j + 1);
 				Section.Elements[n].States[j].Position = o;
 				Section.Elements[n].States[j].Object = Object;
 				return n;
@@ -1471,12 +1472,12 @@ namespace OpenBve {
 				int n = Section.Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Section.Elements, n + 1);
 				Section.Elements[n] = new ObjectManager.AnimatedObject();
-				Section.Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Section.Elements[n].States = new AnimatedObjectState[1];
 				Section.Elements[n].States[0].Position = o;
 				Section.Elements[n].States[0].Object = Object;
 				Section.Elements[n].CurrentState = 0;
-				Section.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Section.Elements[n].ObjectIndex] = Object.Clone();
+				Section.Elements[n].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
+				GameObjectManager.Objects[Section.Elements[n].ObjectIndex] = Object.Clone();
 				return n;
 			}
 		}

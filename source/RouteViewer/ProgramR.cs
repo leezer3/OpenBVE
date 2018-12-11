@@ -11,6 +11,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Interface;
+using OpenBveApi.Textures;
+using OpenBveShared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -65,6 +68,7 @@ namespace OpenBve {
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
+			
 			Plugins.LoadPlugins();
 			// command line arguments
 			SkipArgs = new bool[args.Length];
@@ -96,13 +100,16 @@ namespace OpenBve {
 				}
 			}
 			Options.LoadOptions();
+			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
+			string folder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.LoadLanguageFiles(folder);
 			Interface.CurrentOptions.UseSound = true;
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
-			currentGameWindow = new RouteViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			currentGameWindow = new RouteViewer(OpenBveShared.Renderer.Width, OpenBveShared.Renderer.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
 			currentGameWindow.TargetUpdateFrequency = 0;
 			currentGameWindow.TargetRenderFrequency = 0;
@@ -110,43 +117,29 @@ namespace OpenBve {
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
-			TextureManager.UnuseAllTextures();
+			Textures.UnloadAllTextures();
 			Sounds.Deinitialize();
 		}
 
 		// reset camera
 		internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new Vector3(0.0, 2.5, -5.0);
-			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
-			World.AbsoluteCameraDirection.Normalize();
-			World.AbsoluteCameraSide.Normalize();
-			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
-			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
-		}
-
-		// update viewport
-		internal static void UpdateViewport() {
-			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
-			World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.LoadIdentity();
-			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
-			GL.MultMatrix(ref perspective);
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadIdentity();
+			Camera.AbsoluteCameraPosition = new Vector3(0.0, 2.5, -5.0);
+			Camera.AbsoluteCameraDirection = new Vector3(-Camera.AbsoluteCameraPosition.X, -Camera.AbsoluteCameraPosition.Y, -Camera.AbsoluteCameraPosition.Z);
+			Camera.AbsoluteCameraSide = new Vector3(-Camera.AbsoluteCameraPosition.Z, 0.0, Camera.AbsoluteCameraPosition.X);
+			Camera.AbsoluteCameraDirection.Normalize();
+			Camera.AbsoluteCameraSide.Normalize();
+			Camera.AbsoluteCameraUp = Vector3.Cross(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraSide);
+			OpenBveShared.World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
+			OpenBveShared.World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * OpenBveShared.World.AspectRatio);
+			OpenBveShared.World.OriginalVerticalViewingAngle = OpenBveShared.World.VerticalViewingAngle;
 		}
 
 		// load route
 		internal static bool LoadRoute() {
 			CurrentStation = -1;
 			Game.Reset();
-			Renderer.Initialize();
-			Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
-			UpdateViewport();
+			OpenBveShared.Renderer.Initialize(Program.CurrentHost);
+			OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
 			bool result;
 			try {
 				Loading.Load(CurrentRoute, System.Text.Encoding.UTF8);
@@ -157,7 +150,7 @@ namespace OpenBve {
 				CurrentRoute = null;
 				result = false;
 			}
-			Renderer.InitializeLighting();
+			OpenBveShared.Renderer.InitializeLighting();
 			ObjectManager.InitializeVisibility();
 			return result;
 		}
@@ -169,8 +162,8 @@ namespace OpenBve {
 					if (Game.Stations[i].Stops.Length != 0) {
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
-							World.CameraCurrentAlignment.TrackPosition = p;
+							World.CameraTrackFollower.Update(TrackManager.CurrentTrack, p, true, false);
+							OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
 						}
@@ -181,8 +174,8 @@ namespace OpenBve {
 					if (Game.Stations[i].Stops.Length != 0) {
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
-							World.CameraCurrentAlignment.TrackPosition = p;
+							World.CameraTrackFollower.Update(TrackManager.CurrentTrack, p, true, false);
+							OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
 						}
@@ -198,18 +191,17 @@ namespace OpenBve {
 				Program.CurrentlyLoading = true;
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
-				World.CameraAlignment a = World.CameraCurrentAlignment;
-				TextureManager.ClearTextures();
-				Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
+				CameraAlignment a = OpenBveShared.Camera.CameraCurrentAlignment;
+				Textures.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
-					World.CameraCurrentAlignment = a;
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					OpenBveShared.Camera.CameraCurrentAlignment = a;
+					World.CameraTrackFollower.Update(TrackManager.CurrentTrack, -1.0, true, false);
+					World.CameraTrackFollower.Update(TrackManager.CurrentTrack, a.TrackPosition, true, false);
+					OpenBveShared.Camera.CameraAlignmentDirection = new CameraAlignment();
+					OpenBveShared.Camera.CameraAlignmentSpeed = new CameraAlignment();
 					ObjectManager.UpdateVisibility(a.TrackPosition, true);
-					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+					GameObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
 				Program.CurrentlyLoading = false;
 			}
@@ -232,10 +224,10 @@ namespace OpenBve {
 			previousMouseState = Mouse.GetState();
 			if (MouseButton == 0)
 			{
-				World.CameraAlignmentDirection.Yaw = 0.0;
-				World.CameraAlignmentDirection.Pitch = 0.0;
-				World.CameraAlignmentDirection.Position.X = 0.0;
-				World.CameraAlignmentDirection.Position.Y = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Yaw = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Pitch = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Position.X = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = 0.0;
 			}
 		}
 
@@ -251,19 +243,19 @@ namespace OpenBve {
 			currentMouseState = Mouse.GetState();
 			if (currentMouseState != previousMouseState)
 			{
-				World.CameraAlignmentDirection.Yaw = 0.0;
-				World.CameraAlignmentDirection.Pitch = 0.0;
-				World.CameraAlignmentDirection.Position.X = 0.0;
-				World.CameraAlignmentDirection.Position.Y = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Yaw = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Pitch = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Position.X = 0.0;
+				OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					World.CameraAlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
-					World.CameraAlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
+					OpenBveShared.Camera.CameraAlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
+					OpenBveShared.Camera.CameraAlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
 				else if (MouseButton == 2)
 				{
-					World.CameraAlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
-					World.CameraAlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
 				
 			}
@@ -274,7 +266,7 @@ namespace OpenBve {
 			CurrentlyLoading = true;
 			CurrentRoute = e.FileName;
 			LoadRoute();
-			ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+			GameObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 			CurrentlyLoading = false;
 			UpdateCaption();
 		}
@@ -305,29 +297,29 @@ namespace OpenBve {
 						{
 							Renderer.RenderScene(0.0);
 							currentGameWindow.SwapBuffers();
-							Bitmap bitmap = new Bitmap(Renderer.ScreenWidth, Renderer.ScreenHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+							Bitmap bitmap = new Bitmap(OpenBveShared.Renderer.Width, OpenBveShared.Renderer.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 							BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-							GL.ReadPixels(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
+							GL.ReadPixels(0, 0, OpenBveShared.Renderer.Width, OpenBveShared.Renderer.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, false);
-							bitmap.Dispose();
+							Texture t = Textures.RegisterTexture(bitmap);
+							OpenBveShared.Renderer.SetLoadingBkg(t);
+							//bitmap.Dispose();
 						}
-						World.CameraAlignment a = World.CameraCurrentAlignment;
+						CameraAlignment a = OpenBveShared.Camera.CameraCurrentAlignment;
 						if (LoadRoute())
 						{
-							World.CameraCurrentAlignment = a;
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
-							World.CameraAlignmentDirection = new World.CameraAlignment();
-							World.CameraAlignmentSpeed = new World.CameraAlignment();
+							OpenBveShared.Camera.CameraCurrentAlignment = a;
+							World.CameraTrackFollower.Update(TrackManager.CurrentTrack, -1.0, true, false);
+							World.CameraTrackFollower.Update(TrackManager.CurrentTrack, a.TrackPosition, true, false);
+							OpenBveShared.Camera.CameraAlignmentDirection = new CameraAlignment();
+							OpenBveShared.Camera.CameraAlignmentSpeed = new CameraAlignment();
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
-							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+							GameObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
 						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						TextureManager.UnregisterTexture(ref Renderer.TextureLoadingBkg);
 					}
 					break;
 				case Key.F7:
@@ -344,7 +336,7 @@ namespace OpenBve {
 						CurrentlyLoading = true;
 						CurrentRoute = Dialog.FileName;
 						LoadRoute();
-						ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+						GameObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						CurrentlyLoading = false;
 						UpdateCaption();
 					}
@@ -383,62 +375,62 @@ namespace OpenBve {
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					World.CameraAlignmentDirection.Position.X = -World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.X = -Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					World.CameraAlignmentDirection.Position.X = World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.X = Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad2:
-					World.CameraAlignmentDirection.Position.Y = -World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = -Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad8:
-					World.CameraAlignmentDirection.Position.Y = World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					World.CameraAlignmentDirection.TrackPosition = World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.TrackPosition = Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					World.CameraAlignmentDirection.TrackPosition = -World.CameraExteriorTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.TrackPosition = -Camera.CameraExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Left:
-					World.CameraAlignmentDirection.Yaw = -World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Yaw = -Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Right:
-					World.CameraAlignmentDirection.Yaw = World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Yaw = Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Up:
-					World.CameraAlignmentDirection.Pitch = World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Pitch = Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Down:
-					World.CameraAlignmentDirection.Pitch = -World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Pitch = -Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadDivide:
-					World.CameraAlignmentDirection.Roll = -World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Roll = -Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadMultiply:
-					World.CameraAlignmentDirection.Roll = World.CameraExteriorTopAngularSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Roll = Camera.CameraExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad0:
-					World.CameraAlignmentDirection.Zoom = World.CameraZoomTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Zoom = Camera.CameraZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadPeriod:
-					World.CameraAlignmentDirection.Zoom = -World.CameraZoomTopSpeed*speedModified;
+					OpenBveShared.Camera.CameraAlignmentDirection.Zoom = -Camera.CameraZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad1:
@@ -458,23 +450,23 @@ namespace OpenBve {
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad5:
-					World.CameraCurrentAlignment.Yaw = 0.0;
-					World.CameraCurrentAlignment.Pitch = 0.0;
-					World.CameraCurrentAlignment.Roll = 0.0;
-					World.CameraCurrentAlignment.Position = new Vector3(0.0, 2.5, 0.0);
-					World.CameraCurrentAlignment.Zoom = 0.0;
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
-					UpdateViewport();
+					OpenBveShared.Camera.CameraCurrentAlignment.Yaw = 0.0;
+					OpenBveShared.Camera.CameraCurrentAlignment.Pitch = 0.0;
+					OpenBveShared.Camera.CameraCurrentAlignment.Roll = 0.0;
+					OpenBveShared.Camera.CameraCurrentAlignment.Position = new Vector3(0.0, 2.5, 0.0);
+					OpenBveShared.Camera.CameraCurrentAlignment.Zoom = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection = new CameraAlignment();
+					OpenBveShared.Camera.CameraAlignmentSpeed = new CameraAlignment();
+					OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle;
+					OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					CpuReducedMode = false;
 					break;
 				case Key.F:
-					Renderer.OptionWireframe = !Renderer.OptionWireframe;
+					OpenBveShared.Renderer.OptionWireframe = !OpenBveShared.Renderer.OptionWireframe;
 					CpuReducedMode = false;
-					if (Renderer.OptionWireframe)
+					if (OpenBveShared.Renderer.OptionWireframe)
 					{
 						GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 					}
@@ -484,7 +476,7 @@ namespace OpenBve {
 					}
 					break;
 				case Key.N:
-					Renderer.OptionNormals = !Renderer.OptionNormals;
+					OpenBveShared.Renderer.OptionNormals = !OpenBveShared.Renderer.OptionNormals;
 					CpuReducedMode = false;
 					break;
 				case Key.E:
@@ -586,8 +578,8 @@ namespace OpenBve {
 								{
 									value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
 								}
-								TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
-								World.CameraCurrentAlignment.TrackPosition = value;
+								World.CameraTrackFollower.Update(TrackManager.CurrentTrack, value, true, false);
+								OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition = value;
 								World.UpdateAbsoluteCamera(0.0);
 								World.UpdateViewingDistances();
 		                        }
@@ -624,33 +616,33 @@ namespace OpenBve {
 				case Key.Keypad4:
 				case Key.D:
 				case Key.Keypad6:
-					World.CameraAlignmentDirection.Position.X = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.X = 0.0;
 					break;
 				case Key.Keypad2:
 				case Key.Keypad8:
-					World.CameraAlignmentDirection.Position.Y = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Position.Y = 0.0;
 					break;
 				case Key.W:
 				case Key.Keypad9:
 				case Key.S:
 				case Key.Keypad3:
-					World.CameraAlignmentDirection.TrackPosition = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.TrackPosition = 0.0;
 					break;
 				case Key.Left:
 				case Key.Right:
-					World.CameraAlignmentDirection.Yaw = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Yaw = 0.0;
 					break;
 				case Key.Up:
 				case Key.Down:
-					World.CameraAlignmentDirection.Pitch = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Pitch = 0.0;
 					break;
 				case Key.KeypadDivide:
 				case Key.KeypadMultiply:
-					World.CameraAlignmentDirection.Roll = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Roll = 0.0;
 					break;
 				case Key.Keypad0:
 				case Key.KeypadPeriod:
-					World.CameraAlignmentDirection.Zoom = 0.0;
+					OpenBveShared.Camera.CameraAlignmentDirection.Zoom = 0.0;
 					break;
 			}
 		}

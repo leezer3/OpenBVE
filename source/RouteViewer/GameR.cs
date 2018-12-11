@@ -6,8 +6,12 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveShared;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Textures;
+using TrackManager;
 
 namespace OpenBve {
 	internal static class Game {
@@ -21,30 +25,10 @@ namespace OpenBve {
 		internal static bool MinimalisticSimulation = false;
 		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
 
-		// fog
-		internal struct Fog {
-			internal float Start;
-			internal float End;
-			internal Color24 Color;
-			internal double TrackPosition;
-			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
-				this.Start = Start;
-				this.End = End;
-				this.Color = Color;
-				this.TrackPosition = TrackPosition;
-			}
-		}
-		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
-		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
-		internal static Fog NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
-		internal static float NoFogStart = 800.0f;
-		internal static float NoFogEnd = 1600.0f;
-
 		// route constants
 		internal static string RouteComment = "";
 		internal static string RouteImage = "";
 		internal static double RouteAccelerationDueToGravity = 9.80665;
-		internal static double RouteRailGauge = 1.435;
 		internal static double RouteInitialAirPressure = 101325.0;
 		internal static double RouteInitialAirTemperature = 293.15;
 		internal static double RouteInitialElevation = 0.0;
@@ -131,7 +115,7 @@ namespace OpenBve {
 
 		internal static void Reset() {
 			// track manager
-			TrackManager.CurrentTrack = new TrackManager.Track();
+			
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
@@ -139,7 +123,7 @@ namespace OpenBve {
 			RouteComment = "";
 			RouteImage = "";
 			RouteAccelerationDueToGravity = 9.80665;
-			RouteRailGauge = 1.435;
+			TrackManager.CurrentTrack = new Track(1.435);
 			RouteInitialAirPressure = 101325.0;
 			RouteInitialAirTemperature = 293.15;
 			RouteInitialElevation = 0.0;
@@ -148,31 +132,35 @@ namespace OpenBve {
 			Stations = new Station[] { };
 			Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			MarkerTextures = new int[] { };
+			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
-			CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
-			NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
-			NoFogStart = (float)World.BackgroundImageDistance + 200.0f;
-			NoFogEnd = 2.0f * NoFogStart;
+			OpenBveShared.Renderer.PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
+			OpenBveShared.Renderer.CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
+			OpenBveShared.Renderer.NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
+			OpenBveShared.Renderer.NoFogStart = (float)OpenBveShared.Renderer.BackgroundImageDistance + 200.0f;
+			OpenBveShared.Renderer.NoFogEnd = 2.0f * OpenBveShared.Renderer.NoFogStart;
 			InfoTotalTriangles = 0;
 			InfoTotalTriangleStrip = 0;
 			InfoTotalQuads = 0;
 			InfoTotalQuadStrip = 0;
 			InfoTotalPolygon = 0;
 			// object manager
-			ObjectManager.Objects = new ObjectManager.StaticObject[16];
-			ObjectManager.ObjectsUsed = 0;
-			ObjectManager.ObjectsSortedByStart = new int[] { };
-			ObjectManager.ObjectsSortedByEnd = new int[] { };
-			ObjectManager.ObjectsSortedByStartPointer = 0;
-			ObjectManager.ObjectsSortedByEndPointer = 0;
-			ObjectManager.LastUpdatedTrackPosition = 0.0;
-			ObjectManager.AnimatedWorldObjects = new ObjectManager.AnimatedWorldObject[4];
-			ObjectManager.AnimatedWorldObjectsUsed = 0;
+			for (int i = 0; i < GameObjectManager.ObjectsUsed; i++)
+			{
+				OpenBveShared.Renderer.HideObject(i);
+			}
+			GameObjectManager.Objects = new StaticObject[16];
+			GameObjectManager.ObjectsUsed = 0;
+			GameObjectManager.ObjectsSortedByStart = new int[] { };
+			GameObjectManager.ObjectsSortedByEnd = new int[] { };
+			GameObjectManager.ObjectsSortedByStartPointer = 0;
+			GameObjectManager.ObjectsSortedByEndPointer = 0;
+			GameObjectManager.LastUpdatedTrackPosition = 0.0;
+			GameObjectManager.AnimatedWorldObjects = new WorldObject[4];
+			GameObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
 			Sounds.StopAllSounds();
@@ -380,20 +368,20 @@ namespace OpenBve {
 		// ================================
 
 		// marker
-		internal static int[] MarkerTextures = new int[] { };
-		internal static void AddMarker(int TextureIndex) {
+		internal static Texture[] MarkerTextures = new Texture[] { };
+		internal static void AddMarker(Texture TextureIndex) {
 			int n = MarkerTextures.Length;
-			Array.Resize<int>(ref MarkerTextures, n + 1);
+			Array.Resize<Texture>(ref MarkerTextures, n + 1);
 			MarkerTextures[n] = TextureIndex;
 		}
-		internal static void RemoveMarker(int TextureIndex) {
+		internal static void RemoveMarker(Texture TextureIndex) {
 			int n = MarkerTextures.Length;
 			for (int i = 0; i < n; i++) {
 				if (MarkerTextures[i] == TextureIndex) {
 					for (int j = i; j < n - 1; j++) {
 						MarkerTextures[j] = MarkerTextures[j + 1];
 					}
-					Array.Resize<int>(ref MarkerTextures, n - 1);
+					Array.Resize<Texture>(ref MarkerTextures, n - 1);
 					break;
 				}
 			}
@@ -454,12 +442,12 @@ namespace OpenBve {
 			}
 			// process poi
 			if (j >= 0) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-				World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-				World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-				World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
-				World.CameraCurrentAlignment.TrackPosition = t;
+				World.CameraTrackFollower.Update(TrackManager.CurrentTrack, t, true, false);
+				OpenBveShared.Camera.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
+				OpenBveShared.Camera.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
+				OpenBveShared.Camera.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
+				OpenBveShared.Camera.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+				OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
 			} else {

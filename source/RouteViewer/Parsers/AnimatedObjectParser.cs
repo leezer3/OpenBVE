@@ -44,7 +44,7 @@ namespace OpenBve {
 							{
 								i++;
 								Vector3 position = Vector3.Zero;
-								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
+								UnifiedObject[] obj = new UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									if (Lines[i].Length != 0) {
@@ -83,7 +83,7 @@ namespace OpenBve {
 												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
 												if (System.IO.File.Exists(file)) {
 													if (obj.Length == objCount) {
-														Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length << 1);
+														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
 													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false);
 													objCount++;
@@ -98,17 +98,17 @@ namespace OpenBve {
 								i--;
 								for (int j = 0; j < objCount; j++) {
 									if (obj[j] != null) {
-										if (obj[j] is ObjectManager.StaticObject) {
-											ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
+										if (obj[j] is StaticObject) {
+											StaticObject s = (StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length) {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
+											AnimatedObjectState aos = new AnimatedObjectState();
 											aos.Object = s;
 											aos.Position = position;
-											a.States = new ObjectManager.AnimatedObjectState[] { aos };
+											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										} else if (obj[j] is ObjectManager.AnimatedObjectCollection) {
@@ -137,7 +137,7 @@ namespace OpenBve {
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
 								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
-								Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
+								Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
 								Result.Objects[ObjectCount].CurrentState = -1;
 								Result.Objects[ObjectCount].TranslateXDirection = Vector3.Right;
 								Result.Objects[ObjectCount].TranslateYDirection = Vector3.Down;
@@ -496,7 +496,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
-									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[StateFiles.Length];
+									Result.Objects[ObjectCount].States = new AnimatedObjectState[StateFiles.Length];
 									bool ForceTextureRepeatX = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
@@ -516,7 +516,7 @@ namespace OpenBve {
 										}
 									}
 								} else {
-									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
+									Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
 								}
 								ObjectCount++;
 							}

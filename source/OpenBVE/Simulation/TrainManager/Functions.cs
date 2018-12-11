@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -31,16 +32,16 @@ namespace OpenBve
 		{
 			if (train == PlayerTrain)
 			{
-				for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
+				for (int i = 0; i < GameObjectManager.AnimatedWorldObjects.Length; i++)
 				{
-					var obj = ObjectManager.AnimatedWorldObjects[i] as ObjectManager.TrackFollowingObject;
+					var obj = GameObjectManager.AnimatedWorldObjects[i] as ObjectManager.TrackFollowingObject;
 					if (obj != null)
 					{
 						//Track followers should be reset if we jump between stations
-						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;
-						obj.FrontAxleFollower.TrackPosition = ObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.RearAxlePosition;
-						obj.FrontAxleFollower.UpdateWorldCoordinates(false);
-						obj.RearAxleFollower.UpdateWorldCoordinates(false);
+						obj.FrontAxleFollower.TrackPosition = GameObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.FrontAxlePosition;
+						obj.FrontAxleFollower.TrackPosition = GameObjectManager.AnimatedWorldObjects[i].TrackPosition + obj.RearAxlePosition;
+						obj.FrontAxleFollower.UpdateWorldCoordinates(TrackManager.CurrentTrack, false);
+						obj.RearAxleFollower.UpdateWorldCoordinates(TrackManager.CurrentTrack, false);
 					}
 				 
 				}
@@ -136,7 +137,7 @@ namespace OpenBve
 					Game.CurrentInterface = Game.InterfaceType.Normal;
 					//Game.Messages = new Game.Message[] { };
 				}
-				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
+				GameObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				TrainManager.UpdateTrainObjects(0.0, true);
 				if (train == PlayerTrain)
 				{

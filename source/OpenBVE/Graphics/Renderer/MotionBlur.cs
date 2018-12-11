@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveShared;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -23,8 +24,8 @@ namespace OpenBve
 			    GL.DeleteTextures(1, new int[] {PixelBufferOpenGlTextureIndex});
 			    PixelBufferOpenGlTextureIndex = 0;
 		    }
-		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
+		    int w = Interface.CurrentOptions.NoTextureResize ? OpenBveShared.Renderer.Width : Textures.RoundUpToPowerOfTwo(OpenBveShared.Renderer.Width);
+		    int h = Interface.CurrentOptions.NoTextureResize ? OpenBveShared.Renderer.Height : Textures.RoundUpToPowerOfTwo(OpenBveShared.Renderer.Height);
 		    PixelBuffer = new byte[4 * w * h];
 		    int[] a = new int[1];
 		    GL.GenTextures(1, a);
@@ -39,7 +40,7 @@ namespace OpenBve
 	    /// <summary>This function renderers full-screen motion blur if selected</summary>
 		private static void RenderFullscreenMotionBlur()
         {
-			if(Screen.Minimized)
+			if(OpenBveShared.Renderer.Minimized)
 			{
 				/*
 				 * HACK:
@@ -47,8 +48,8 @@ namespace OpenBve
 				 */
 				return;
 			}
-            int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-            int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
+            int w = Interface.CurrentOptions.NoTextureResize ? OpenBveShared.Renderer.Width : Textures.RoundUpToPowerOfTwo(OpenBveShared.Renderer.Width);
+            int h = Interface.CurrentOptions.NoTextureResize ? OpenBveShared.Renderer.Height : Textures.RoundUpToPowerOfTwo(OpenBveShared.Renderer.Height);
             // render
             if (PixelBufferOpenGlTextureIndex >= 0)
             {
@@ -60,8 +61,8 @@ namespace OpenBve
                     case Interface.MotionBlurMode.High: strength = 0.0064; break;
                     default: strength = 0.0040; break;
                 }
-                double speed = Math.Abs(World.CameraSpeed);
-                double denominator = strength * Game.InfoFrameRate * Math.Sqrt(speed);
+                double speed = Math.Abs(Camera.CameraSpeed);
+                double denominator = strength * OpenBveShared.Renderer.Statistics.FrameRate * Math.Sqrt(speed);
                 float factor;
                 if (denominator > 0.001)
                 {
@@ -73,27 +74,27 @@ namespace OpenBve
                 }
                 // initialize
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-                if (!BlendEnabled)
+                if (!OpenBveShared.Renderer.BlendEnabled)
                 {
                     GL.Enable(EnableCap.Blend);
-                    BlendEnabled = true;
+	                OpenBveShared.Renderer.BlendEnabled = true;
                 }
-                if (LightingEnabled)
+                if (OpenBveShared.Renderer.LightingEnabled)
                 {
                     GL.Disable(EnableCap.Lighting);
-                    LightingEnabled = false;
+	                OpenBveShared.Renderer.LightingEnabled = false;
                 }
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.PushMatrix();
                 GL.LoadIdentity();
-                GL.Ortho(0.0, (double)Screen.Width, 0.0, (double)Screen.Height, -1.0, 1.0);
+                GL.Ortho(0.0, (double)OpenBveShared.Renderer.Width, 0.0, (double)OpenBveShared.Renderer.Height, -1.0, 1.0);
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 GL.LoadIdentity();
-                if (!TexturingEnabled)
+                if (!OpenBveShared.Renderer.TexturingEnabled)
                 {
                     GL.Enable(EnableCap.Texture2D);
-                    TexturingEnabled = true;
+	                OpenBveShared.Renderer.TexturingEnabled = true;
                 }
                 // render
                 GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);

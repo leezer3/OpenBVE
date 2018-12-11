@@ -13,7 +13,7 @@ namespace OpenBve {
 	internal static class XObjectParser {
 
 		// read object
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32) {
 				// not an x object
@@ -199,7 +199,7 @@ namespace OpenBve {
 		// ================================
 
 		// load textual x
-		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
@@ -292,7 +292,7 @@ namespace OpenBve {
 				return null;
 			}
 			// process structure
-			ObjectManager.StaticObject Object;
+			StaticObject Object;
 			if (!ProcessStructure(FileName, Structure, out Object, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY)) {
 				return null;
 			}
@@ -873,7 +873,7 @@ namespace OpenBve {
 		// ================================
 
 		// load binary x
-		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			// parse file
 			AlternateStructure = false;
 			LoadedMaterials = new Structure[] {};
@@ -898,7 +898,7 @@ namespace OpenBve {
 				return null;
 			}
 			// process structure
-			ObjectManager.StaticObject Object;
+			StaticObject Object;
 			if (!ProcessStructure(FileName, Structure, out Object, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY)) {
 				return null;
 			} return Object;
@@ -1312,11 +1312,11 @@ namespace OpenBve {
 		}
 
 		// process structure
-		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		private static bool ProcessStructure(string FileName, Structure Structure, out StaticObject Object, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
+			Object = new StaticObject(Program.CurrentHost);
+			Object.Mesh.Faces = new MeshFace[] { };
+			Object.Mesh.Materials = new MeshMaterial[] { };
 			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// file
 			for (int i = 0; i < Structure.Data.Length; i++) {
@@ -2218,8 +2218,8 @@ namespace OpenBve {
 							int mf = Object.Mesh.Faces.Length;
 							int mm = Object.Mesh.Materials.Length;
 							int mv = Object.Mesh.Vertices.Length;
-							Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
-							Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+							Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
+							Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
 							Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 							for (int j = 0; j < Materials.Length; j++)
 							{
@@ -2261,30 +2261,31 @@ namespace OpenBve {
 											}
 										}
 									}
-									int tday = TextureManager.RegisterTexture(Materials[j].TextureFilename, new Color24(0, 0, 0), 1, TextureManager.TextureLoadMode.Normal, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal, 0, 0, 0, 0);
-									Object.Mesh.Materials[mm + j].DaytimeTextureIndex = tday;
+									Texture tday;
+									Textures.RegisterTexture(Materials[j].TextureFilename, out tday);
+									Object.Mesh.Materials[mm + j].DaytimeTexture = tday;
 									transparent = true;
 								}
 								else
 								{
-									Object.Mesh.Materials[mm + j].DaytimeTextureIndex = -1;
+									Object.Mesh.Materials[mm + j].DaytimeTexture = null;
 									transparent = false;
 								}
-								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
+								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? MeshMaterial.TransparentColorMask : 0) | (emissive ? MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
 								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
-								Object.Mesh.Materials[mm + j].NighttimeTextureIndex = -1;
-								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;
+								Object.Mesh.Materials[mm + j].NighttimeTexture = null;
+								Object.Mesh.Materials[mm + j].BlendMode = MeshMaterialBlendMode.Normal;
 								Object.Mesh.Materials[mm + j].GlowAttenuationData = 0;
 							}
 							for (int j = 0; j < nFaces; j++)
 							{
 								Object.Mesh.Faces[mf + j].Material = (ushort)FaceMaterials[j];
-								Object.Mesh.Faces[mf + j].Vertices = new World.MeshFaceVertex[Faces[j].Length];
+								Object.Mesh.Faces[mf + j].Vertices = new MeshFaceVertex[Faces[j].Length];
 								for (int k = 0; k < Faces[j].Length; k++)
 								{
-									Object.Mesh.Faces[mf + j].Vertices[k] = new World.MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
+									Object.Mesh.Faces[mf + j].Vertices[k] = new MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
 								}
 							}
 							for (int j = 0; j < Vertices.Length; j++)

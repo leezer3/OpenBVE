@@ -1,14 +1,17 @@
 using System;
 using OpenBve.BrakeSystems;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveShared;
+using TrackManager;
 
 namespace OpenBve
 {
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car
+		internal partial class Car : OpenBveApi.Car
 		{
 			/// <summary>Width in meters</summary>
 			internal double Width;
@@ -51,15 +54,15 @@ namespace OpenBve
 			internal bool Topples;
 			internal CarBrightness Brightness;
 			internal double BeaconReceiverPosition;
-			internal TrackManager.TrackFollower BeaconReceiver;
+			internal TrackFollower BeaconReceiver;
 			/// <summary>A reference to the base train</summary>
 			private readonly Train baseTrain;
 			/// <summary>The index of the car within the train</summary>
 			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
-			internal Camera.RestrictionMode CameraRestrictionMode = Camera.RestrictionMode.NotSpecified;
+			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
-			internal World.CameraAlignment InteriorCamera;
+			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
 			
@@ -80,17 +83,17 @@ namespace OpenBve
 			{
 				if (baseTrain.State != TrainState.Disposed)
 				{
-					FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + Delta, true, true);
-					FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-					FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					FrontAxle.Follower.Update(TrackManager.CurrentTrack, FrontAxle.Follower.TrackPosition + Delta, true, true);
+					FrontBogie.FrontAxle.Follower.Update(TrackManager.CurrentTrack, FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+					FrontBogie.RearAxle.Follower.Update(TrackManager.CurrentTrack, FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
 					if (baseTrain.State != TrainState.Disposed)
 					{
-						RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + Delta, true, true);
-						RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-						RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						RearAxle.Follower.Update(TrackManager.CurrentTrack, RearAxle.Follower.TrackPosition + Delta, true, true);
+						RearBogie.FrontAxle.Follower.Update(TrackManager.CurrentTrack, RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
+						RearBogie.RearAxle.Follower.Update(TrackManager.CurrentTrack, RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
 						if (baseTrain.State != TrainState.Disposed)
 						{
-							BeaconReceiver.Update(BeaconReceiver.TrackPosition + Delta, true, true);
+							BeaconReceiver.Update(TrackManager.CurrentTrack, BeaconReceiver.TrackPosition + Delta, true, true);
 						}
 					}
 				}
@@ -103,15 +106,15 @@ namespace OpenBve
 			internal void UpdateTrackFollowers(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary)
 			{
 				//Car axles
-				FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontAxle.Follower.Update(TrackManager.CurrentTrack, FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearAxle.Follower.Update(TrackManager.CurrentTrack, RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 				//Front bogie axles
-				FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontBogie.FrontAxle.Follower.Update(TrackManager.CurrentTrack, FrontBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontBogie.RearAxle.Follower.Update(TrackManager.CurrentTrack, FrontBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 				//Rear bogie axles
 
-				RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearBogie.FrontAxle.Follower.Update(TrackManager.CurrentTrack, RearBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearBogie.RearAxle.Follower.Update(TrackManager.CurrentTrack, RearBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 			}
 
 			/// <summary>Initializes the car</summary>
@@ -138,10 +141,10 @@ namespace OpenBve
 			{
 				double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
 				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
-				FrontAxle.Follower.Update(s + d, false, false);
-				RearAxle.Follower.Update(s - d, false, false);
+				FrontAxle.Follower.Update(TrackManager.CurrentTrack, s + d, false, false);
+				RearAxle.Follower.Update(TrackManager.CurrentTrack, s - d, false, false);
 				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
-				BeaconReceiver.Update(b, false, false);
+				BeaconReceiver.Update(TrackManager.CurrentTrack, b, false, false);
 			}
 
 			internal void CreateWorldCoordinates(double CarX, double CarY, double CarZ, out double PositionX, out double PositionY, out double PositionZ, out double DirectionX, out double DirectionY, out double DirectionZ)
@@ -374,21 +377,21 @@ namespace OpenBve
 
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
 			/// <param name="currentObject">The object to add to the car sections array</param>
-			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
 				CarSections[j] = new CarSection();
-				if (currentObject is ObjectManager.StaticObject)
+				if (currentObject is StaticObject)
 				{
-					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
+					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
-					CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
+					CarSections[j].Elements[0].States = new AnimatedObjectState[1];
 					CarSections[j].Elements[0].States[0].Position = Vector3.Zero;
 					CarSections[j].Elements[0].States[0].Object = s;
 					CarSections[j].Elements[0].CurrentState = 0;
-					CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
+					CarSections[j].Elements[0].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 				}
 				else if (currentObject is ObjectManager.AnimatedObjectCollection)
 				{
@@ -397,7 +400,7 @@ namespace OpenBve
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Elements[h] = a.Objects[h].Clone();
-						CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
+						CarSections[j].Elements[h].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 					}
 				}
 			}
@@ -411,7 +414,7 @@ namespace OpenBve
 					for (int j = 0; j < CarSections[i].Elements.Length; j++)
 					{
 						int o = CarSections[i].Elements[j].ObjectIndex;
-						Renderer.HideObject(o);
+						OpenBveShared.Renderer.HideObject(o);
 					}
 				}
 				switch (newCarSection)
@@ -429,11 +432,11 @@ namespace OpenBve
 								int o = CarSections[0].Elements[j].ObjectIndex;
 								if (CarSections[0].Overlay)
 								{
-									Renderer.ShowObject(o, ObjectType.Overlay);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
 								}
 								else
 								{
-									Renderer.ShowObject(o, ObjectType.Dynamic);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 								}
 							}
 							break;
@@ -450,11 +453,11 @@ namespace OpenBve
 								int o = CarSections[1].Elements[j].ObjectIndex;
 								if (CarSections[1].Overlay)
 								{
-									Renderer.ShowObject(o, ObjectType.Overlay);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
 								}
 								else
 								{
-									Renderer.ShowObject(o, ObjectType.Dynamic);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 								}
 							}
 							break;
@@ -468,11 +471,11 @@ namespace OpenBve
 								int o = CarSections[0].Elements[j].ObjectIndex;
 								if (CarSections[0].Overlay)
 								{
-									Renderer.ShowObject(o, ObjectType.Overlay);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
 								}
 								else
 								{
-									Renderer.ShowObject(o, ObjectType.Dynamic);
+									OpenBveShared.Renderer.ShowObject(o, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 								}
 							}
 							break;
@@ -521,9 +524,9 @@ namespace OpenBve
 				py -= dy * d;
 				pz -= dz * d;
 				// determine visibility
-				double cdx = px - World.AbsoluteCameraPosition.X;
-				double cdy = py - World.AbsoluteCameraPosition.Y;
-				double cdz = pz - World.AbsoluteCameraPosition.Z;
+				double cdx = px - Camera.AbsoluteCameraPosition.X;
+				double cdy = py - Camera.AbsoluteCameraPosition.Y;
+				double cdz = pz - Camera.AbsoluteCameraPosition.Z;
 				double dist = cdx * cdx + cdy * cdy + cdz * cdz;
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
@@ -549,7 +552,7 @@ namespace OpenBve
 					//Calculate the cab brightness
 					double ccb = Math.Round(255.0 * (double)(1.0 - b));
 					//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-					dnb = (byte)Math.Min(Renderer.DynamicCabBrightness, ccb);
+					dnb = (byte)Math.Min(OpenBveShared.Renderer.DynamicCabBrightness, ccb);
 				}
 				// update current section
 				int s = CurrentCarSection;
@@ -561,11 +564,11 @@ namespace OpenBve
 
 						// brightness change
 						int o = CarSections[s].Elements[i].ObjectIndex;
-						if (ObjectManager.Objects[o] != null)
+						if (GameObjectManager.Objects[o] != null)
 						{
-							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+							for (int j = 0; j < GameObjectManager.Objects[o].Mesh.Materials.Length; j++)
 							{
-								ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+								GameObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}
@@ -586,7 +589,7 @@ namespace OpenBve
 			internal void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Overlay & Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -721,7 +724,7 @@ namespace OpenBve
 				}
 				// roll due to cant (incorporates shaking)
 				{
-					double cantAngle = Math.Atan(c / Game.RouteRailGauge);
+					double cantAngle = Math.Atan(c / TrackManager.CurrentTrack.RailGauge);
 					Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
 				}
 				// pitch due to acceleration
@@ -804,7 +807,7 @@ namespace OpenBve
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(Specs.CurrentSpeed);
-					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * Game.RouteRailGauge);
+					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * TrackManager.CurrentTrack.RailGauge);
 					double ta;
 					Topples = false;
 					if (Derailed)
@@ -818,7 +821,7 @@ namespace OpenBve
 						{
 							if (r < rmax)
 							{
-								double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * Game.RouteRailGauge / (2.0 * h));
+								double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * TrackManager.CurrentTrack.RailGauge / (2.0 * h));
 								const double fac = 0.25; // arbitrary coefficient
 								ta = -fac * (sr - s0) * rs;
 								baseTrain.Topple(Index, TimeElapsed);
@@ -864,8 +867,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * TrackManager.CurrentTrack.RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * TrackManager.CurrentTrack.RailGauge * Math.Sin(a));
 					Vector3 cc = new Vector3(s.X * x + u.X * y, s.Y * x + u.Y * y, s.Z * x + u.Z * y);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
@@ -1054,7 +1057,7 @@ namespace OpenBve
 				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
-				World.CameraTrackFollower.Update(tp, false, false);
+				World.CameraTrackFollower.Update(TrackManager.CurrentTrack, tp, false, false);
 			}
 		}
 	}

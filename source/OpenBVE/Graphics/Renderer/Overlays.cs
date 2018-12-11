@@ -4,6 +4,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -19,11 +20,11 @@ namespace OpenBve
 		{
 			//Initialize openGL
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Enable(EnableCap.Blend); BlendEnabled = true;
+			GL.Enable(EnableCap.Blend); OpenBveShared.Renderer.BlendEnabled = true;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
+			GL.Ortho(0.0, (double)OpenBveShared.Renderer.Width, (double)OpenBveShared.Renderer.Height, 0.0, -1.0, 1.0);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.PushMatrix();
 			GL.LoadIdentity();
@@ -73,7 +74,7 @@ namespace OpenBve
 									double w = (double)Game.MarkerTextures[i].Width;
 									double h = (double)Game.MarkerTextures[i].Height;
 									GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-									RenderOverlayTexture(Game.MarkerTextures[i], (double)Screen.Width - w - 8.0, y, (double)Screen.Width - 8.0, y + h);
+									OpenBveShared.Renderer.RenderOverlayTexture(Game.MarkerTextures[i], (double)OpenBveShared.Renderer.Width - w - 8.0, y, (double)OpenBveShared.Renderer.Width - 8.0, y + h);
 									y += h + 8.0;
 								}
 							}
@@ -88,7 +89,7 @@ namespace OpenBve
 								int w = Timetable.DefaultTimetableTexture.Width;
 								int h = Timetable.DefaultTimetableTexture.Height;
 								GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-								RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(Screen.Width - w), Timetable.DefaultTimetablePosition, (double)Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
+								OpenBveShared.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(OpenBveShared.Renderer.Width - w), Timetable.DefaultTimetablePosition, (double)OpenBveShared.Renderer.Width, (double)h + Timetable.DefaultTimetablePosition);
 							}
 						}
 						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
@@ -99,7 +100,7 @@ namespace OpenBve
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							OpenBveShared.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (OpenBveShared.Renderer.Width - w), Timetable.CustomTimetablePosition, (double) OpenBveShared.Renderer.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 
 						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -118,7 +119,7 @@ namespace OpenBve
 							}
 
 							GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							OpenBveShared.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (OpenBveShared.Renderer.Width - w), Timetable.CustomTimetablePosition, (double) OpenBveShared.Renderer.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 					}
 					break;
@@ -139,9 +140,9 @@ namespace OpenBve
 			{
 				// pause
 				GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				OpenBveShared.Renderer.RenderOverlaySolid(0.0, 0.0, (double)OpenBveShared.Renderer.Width, (double)OpenBveShared.Renderer.Height);
 				GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-				DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(Screen.Width / 2, Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+				OpenBveShared.Renderer.DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(OpenBveShared.Renderer.Width / 2, OpenBveShared.Renderer.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
@@ -170,10 +171,10 @@ namespace OpenBve
 					FadeToBlackDueToChangeEnds = 0.0;
 				}
 			}
-			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead))
+			if (FadeToBlackDueToChangeEnds > 0.0 & (Camera.CameraView == CameraViewMode.Interior | Camera.CameraView == CameraViewMode.InteriorLookAhead))
 			{
 				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				OpenBveShared.Renderer.RenderOverlaySolid(0.0, 0.0, (double)OpenBveShared.Renderer.Width, (double)OpenBveShared.Renderer.Height);
 			}
 			// finalize
 			GL.PopMatrix();

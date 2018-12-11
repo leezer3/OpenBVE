@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -43,7 +44,7 @@ namespace OpenBve
 				if (Value < 0)
 				{
 					// previous poi
-					t = double.NegativeInfinity;
+					t = Double.NegativeInfinity;
 					for (int i = 0; i < PointsOfInterest.Length; i++)
 					{
 						if (PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
@@ -59,7 +60,7 @@ namespace OpenBve
 				else if (Value > 0)
 				{
 					// next poi
-					t = double.PositiveInfinity;
+					t = Double.PositiveInfinity;
 					for (int i = 0; i < PointsOfInterest.Length; i++)
 					{
 						if (PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
@@ -80,12 +81,12 @@ namespace OpenBve
 			}
 			// process poi
 			if (j < 0) return false;
-			World.CameraTrackFollower.Update(t, true, false);
-			World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-			World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-			World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-			World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
-			World.CameraCurrentAlignment.TrackPosition = t;
+			World.CameraTrackFollower.Update(TrackManager.CurrentTrack, t, true, false);
+			Camera.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
+			Camera.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
+			Camera.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
+			Camera.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+			Camera.CameraCurrentAlignment.TrackPosition = t;
 			World.UpdateAbsoluteCamera(0.0);
 			if (PointsOfInterest[j].Text != null)
 			{

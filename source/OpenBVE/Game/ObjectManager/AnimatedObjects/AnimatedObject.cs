@@ -2,84 +2,19 @@
 using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
+using OpenBveShared;
 
 namespace OpenBve
 {
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static partial class ObjectManager
 	{
-		internal struct AnimatedObjectState
-		{
-			internal Vector3 Position;
-			internal StaticObject Object;
-		}
-		internal class AnimatedObject
-		{
-			// states
-			internal AnimatedObjectState[] States;
-			internal FunctionScript StateFunction;
-			internal int CurrentState;
-			internal Vector3 TranslateXDirection;
-			internal Vector3 TranslateYDirection;
-			internal Vector3 TranslateZDirection;
-			internal FunctionScript TranslateXFunction;
-			internal FunctionScript TranslateYFunction;
-			internal FunctionScript TranslateZFunction;
-
-			internal Vector3 RotateXDirection;
-			internal Vector3 RotateYDirection;
-			internal Vector3 RotateZDirection;
-			internal FunctionScript RotateXFunction;
-			internal FunctionScript RotateYFunction;
-			internal FunctionScript RotateZFunction;
-			internal Damping RotateXDamping;
-			internal Damping RotateYDamping;
-			internal Damping RotateZDamping;
-			internal Vector2 TextureShiftXDirection;
-			internal Vector2 TextureShiftYDirection;
-			internal FunctionScript TextureShiftXFunction;
-			internal FunctionScript TextureShiftYFunction;
-			internal bool LEDClockwiseWinding;
-			internal double LEDInitialAngle;
-			internal double LEDLastAngle;
-			/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
-			internal Vector3[] LEDVectors;
-			internal FunctionScript LEDFunction;
-			internal double RefreshRate;
-			internal double SecondsSinceLastUpdate;
-			internal int ObjectIndex;
-
-			//This section holds script files executed by CS-Script
-			/// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
-			internal string TranslateXScriptFile;
-			internal AnimationScript TranslateXAnimationScript;
-			/// <summary>The absolute path to the script file to be evaluated when TranslateYScript is called</summary>
-			internal AnimationScript TranslateYAnimationScript;
-			internal string TranslateYScriptFile;
-			/// <summary>The absolute path to the script file to be evaluated when TranslateZScript is called</summary>
-			internal AnimationScript TranslateZAnimationScript;
-			internal string TranslateZScriptFile;
-
-			internal FunctionScript TrackFollowerFunction;
-			//This section holds parameters used by the track following function
-			internal double FrontAxlePosition = 1;
-			internal double RearAxlePosition = -1;
-
-			/// <summary>Checks whether this object contains any functions</summary>
-			internal bool IsFreeOfFunctions()
-			{
-				if (this.StateFunction != null) return false;
-				if (this.TrackFollowerFunction != null) return false;
-				if (this.TranslateXFunction != null | this.TranslateYFunction != null | this.TranslateZFunction != null) return false;
-				if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
-				if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
-				if (this.LEDFunction != null) return false;
-				if (this.TranslateXScriptFile != null | this.TranslateYScriptFile != null | this.TranslateZScriptFile != null) return false;
-				return true;
-			}
+		internal class AnimatedObject : AbstractAnimatedObject
+		{			
 			/// <summary>Clones this object</summary>
 			/// <returns>The new object</returns>
 			internal AnimatedObject Clone()
@@ -143,48 +78,48 @@ namespace OpenBve
 			internal void Initialize(int StateIndex, bool Overlay, bool Show)
 			{
 				int i = ObjectIndex;
-				Renderer.HideObject(i);
+				OpenBveShared.Renderer.HideObject(i);
 				int t = StateIndex;
 				if (t >= 0 && States[t].Object != null)
 				{
 					int m = States[t].Object.Mesh.Vertices.Length;
-					ObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
+					GameObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
 					for (int k = 0; k < m; k++)
 					{
 						if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
 						{
-							ObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
+							GameObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
 						}
 						else
 						{
-							ObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
+							GameObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
 						}
 						
 					}
 					m = States[t].Object.Mesh.Faces.Length;
-					ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[m];
+					GameObjectManager.Objects[i].Mesh.Faces = new MeshFace[m];
 					for (int k = 0; k < m; k++)
 					{
-						ObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
-						ObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
+						GameObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
+						GameObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
 						int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-						ObjectManager.Objects[i].Mesh.Faces[k].Vertices = new World.MeshFaceVertex[o];
+						GameObjectManager.Objects[i].Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
 						for (int h = 0; h < o; h++)
 						{
-							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
+							GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
 						}
 					}
-					ObjectManager.Objects[i].Mesh.Materials = States[t].Object.Mesh.Materials;
+					GameObjectManager.Objects[i].Mesh.Materials = States[t].Object.Mesh.Materials;
 				}
 				else
 				{
-					ObjectManager.Objects[i] = null;
-					ObjectManager.Objects[i] = new StaticObject
+					GameObjectManager.Objects[i] = null;
+					GameObjectManager.Objects[i] = new StaticObject(Program.CurrentHost)
 					{
 						Mesh =
 						{
-							Faces = new World.MeshFace[] {},
-							Materials = new World.MeshMaterial[] {},
+							Faces = new MeshFace[] {},
+							Materials = new MeshMaterial[] {},
 							Vertices = new VertexTemplate[] {}
 						}
 					};
@@ -194,11 +129,11 @@ namespace OpenBve
 				{
 					if (Overlay)
 					{
-						Renderer.ShowObject(i, ObjectType.Overlay);
+						OpenBveShared.Renderer.ShowObject(i, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
 					}
 					else
 					{
-						Renderer.ShowObject(i, ObjectType.Dynamic);
+						OpenBveShared.Renderer.ShowObject(i, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 					}
 				}
 			}
@@ -218,7 +153,7 @@ namespace OpenBve
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
+			internal void Update(bool IsPartOfTrain, Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -450,28 +385,28 @@ namespace OpenBve
 				bool shifty = TextureShiftYFunction != null;
 				if ((shiftx | shifty) & UpdateFunctions)
 				{
-					for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
+					for (int k = 0; k < GameObjectManager.Objects[i].Mesh.Vertices.Length; k++)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates = States[s].Object.Mesh.Vertices[k].TextureCoordinates;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates = States[s].Object.Mesh.Vertices[k].TextureCoordinates;
 					}
 					if (shiftx)
 					{
 						double x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 						x -= Math.Floor(x);
-						for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
+						for (int k = 0; k < GameObjectManager.Objects[i].Mesh.Vertices.Length; k++)
 						{
-							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(x * TextureShiftXDirection.X);
-							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(x * TextureShiftXDirection.Y);
+							GameObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(x * TextureShiftXDirection.X);
+							GameObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(x * TextureShiftXDirection.Y);
 						}
 					}
 					if (shifty)
 					{
 						double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 						y -= Math.Floor(y);
-						for (int k = 0; k < ObjectManager.Objects[i].Mesh.Vertices.Length; k++)
+						for (int k = 0; k < GameObjectManager.Objects[i].Mesh.Vertices.Length; k++)
 						{
-							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(y * TextureShiftYDirection.X);
-							ObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(y * TextureShiftYDirection.Y);
+							GameObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.X += (float)(y * TextureShiftYDirection.X);
+							GameObjectManager.Objects[i].Mesh.Vertices[k].TextureCoordinates.Y += (float)(y * TextureShiftYDirection.Y);
 						}
 					}
 				}
@@ -501,7 +436,7 @@ namespace OpenBve
 				// initialize vertices
 				for (int k = 0; k < States[s].Object.Mesh.Vertices.Length; k++)
 				{
-					ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates = States[s].Object.Mesh.Vertices[k].Coordinates;
+					GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates = States[s].Object.Mesh.Vertices[k].Coordinates;
 				}
 				// led
 				if (led)
@@ -737,39 +672,39 @@ namespace OpenBve
 					// rotate
 					if (rotateX)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateXDirection, cosX, sinX);
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateXDirection, cosX, sinX);
 					}
 					if (rotateY)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateYDirection, cosY, sinY);
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateYDirection, cosY, sinY);
 					}
 					if (rotateZ)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+					if (Overlay & Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
-						double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
-						double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
-						double dz = -World.CameraCurrentAlignment.Position.Z;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += World.AbsoluteCameraPosition.X + dx * World.AbsoluteCameraSide.X + dy * World.AbsoluteCameraUp.X + dz * World.AbsoluteCameraDirection.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += World.AbsoluteCameraPosition.Y + dx * World.AbsoluteCameraSide.Y + dy * World.AbsoluteCameraUp.Y + dz * World.AbsoluteCameraDirection.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += World.AbsoluteCameraPosition.Z + dx * World.AbsoluteCameraSide.Z + dy * World.AbsoluteCameraUp.Z + dz * World.AbsoluteCameraDirection.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraUp, Camera.AbsoluteCameraSide);
+						double dx = -Math.Tan(Camera.CameraCurrentAlignment.Yaw) - Camera.CameraCurrentAlignment.Position.X;
+						double dy = -Math.Tan(Camera.CameraCurrentAlignment.Pitch) - Camera.CameraCurrentAlignment.Position.Y;
+						double dz = -Camera.CameraCurrentAlignment.Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Camera.AbsoluteCameraPosition.X + dx * Camera.AbsoluteCameraSide.X + dy * Camera.AbsoluteCameraUp.X + dz * Camera.AbsoluteCameraDirection.X;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Camera.AbsoluteCameraPosition.Y + dx * Camera.AbsoluteCameraSide.Y + dy * Camera.AbsoluteCameraUp.Y + dz * Camera.AbsoluteCameraDirection.Y;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Camera.AbsoluteCameraPosition.Z + dx * Camera.AbsoluteCameraSide.Z + dy * Camera.AbsoluteCameraUp.Z + dz * Camera.AbsoluteCameraDirection.Z;
 					}
 					else
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
 					}
 				}
 				// update normals
@@ -777,7 +712,7 @@ namespace OpenBve
 				{
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
-						ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
+						GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
 					}
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
@@ -785,17 +720,17 @@ namespace OpenBve
 						{
 							if (rotateX)
 							{
-								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateXDirection, cosX, sinX);
+								GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateXDirection, cosX, sinX);
 							}
 							if (rotateY)
 							{
-								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateYDirection, cosY, sinY);
+								GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateYDirection, cosY, sinY);
 							}
 							if (rotateZ)
 							{
-								ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateZDirection, cosZ, sinZ);
+								GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateZDirection, cosZ, sinZ);
 							}
-							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
+							GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
 						}
 					}
 					// visibility changed
@@ -803,26 +738,26 @@ namespace OpenBve
 					{
 						if (Overlay)
 						{
-							Renderer.ShowObject(i, ObjectType.Overlay);
+							OpenBveShared.Renderer.ShowObject(i, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
 						}
 						else
 						{
-							Renderer.ShowObject(i, ObjectType.Dynamic);
+							OpenBveShared.Renderer.ShowObject(i, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 						}
 					}
 					else
 					{
-						Renderer.HideObject(i);
+						OpenBveShared.Renderer.HideObject(i);
 					}
 				}
 			}
 
 			internal void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 			{
-				int a = AnimatedWorldObjectsUsed;
-				if (a >= AnimatedWorldObjects.Length)
+				int a = GameObjectManager.AnimatedWorldObjectsUsed;
+				if (a >= GameObjectManager.AnimatedWorldObjects.Length)
 				{
-					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize<WorldObject>(ref GameObjectManager.AnimatedWorldObjects, GameObjectManager.AnimatedWorldObjects.Length << 1);
 				}
 				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 				
@@ -830,7 +765,7 @@ namespace OpenBve
 				if (TrackFollowerFunction != null)
 				{
 					var o = this.Clone();
-					o.ObjectIndex = CreateDynamicObject();
+					o.ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 					TrackFollowingObject currentObject = new TrackFollowingObject
 					{
 						Position = Position,
@@ -846,18 +781,18 @@ namespace OpenBve
 					currentObject.RearAxleFollower.TrackPosition = TrackPosition + RearAxlePosition;
 					currentObject.FrontAxlePosition = FrontAxlePosition;
 					currentObject.RearAxlePosition = RearAxlePosition;
-					currentObject.FrontAxleFollower.UpdateWorldCoordinates(false);
-					currentObject.RearAxleFollower.UpdateWorldCoordinates(false);
+					currentObject.FrontAxleFollower.UpdateWorldCoordinates(TrackManager.CurrentTrack, false);
+					currentObject.RearAxleFollower.UpdateWorldCoordinates(TrackManager.CurrentTrack, false);
 					for (int i = 0; i < currentObject.Object.States.Length; i++)
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject
+							currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost)
 							{
 								Mesh =
 								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
+									Faces = new MeshFace[] {},
+									Materials = new MeshMaterial[] {},
 									Vertices = new VertexTemplate[] {}
 								},
 								RendererIndex = -1
@@ -885,12 +820,12 @@ namespace OpenBve
 					currentObject.Radius = Math.Sqrt(r);
 					currentObject.Visible = false;
 					currentObject.Object.Initialize(0, false, false);
-					AnimatedWorldObjects[a] = currentObject;
+					GameObjectManager.AnimatedWorldObjects[a] = currentObject;
 				}
 				else
 				{
 					var o = this.Clone();
-					o.ObjectIndex = CreateDynamicObject();
+					o.ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 					AnimatedWorldObject currentObject = new AnimatedWorldObject
 					{
 						Position = Position,
@@ -905,12 +840,12 @@ namespace OpenBve
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject
+							currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost)
 							{
 								Mesh =
 								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
+									Faces = new MeshFace[] {},
+									Materials = new MeshMaterial[] {},
 									Vertices = new VertexTemplate[] {}
 								},
 								RendererIndex = -1
@@ -938,9 +873,10 @@ namespace OpenBve
 					currentObject.Radius = Math.Sqrt(r);
 					currentObject.Visible = false;
 					currentObject.Object.Initialize(0, false, false);
-					AnimatedWorldObjects[a] = currentObject;
+					GameObjectManager.AnimatedWorldObjects[a] = currentObject;
 				}
-				AnimatedWorldObjectsUsed++;
+
+				GameObjectManager.AnimatedWorldObjectsUsed++;
 			}
 		}
 

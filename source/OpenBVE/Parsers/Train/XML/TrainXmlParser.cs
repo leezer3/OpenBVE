@@ -2,7 +2,9 @@
 using System.Xml;
 using System.Drawing;
 using System.Linq;
+using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve.Parsers.Train
 {
@@ -12,7 +14,7 @@ namespace OpenBve.Parsers.Train
 		private static bool[] CarObjectsReversed;
 		private static bool[] BogieObjectsReversed;
 		private static TrainManager.BveAccelerationCurve[] AccelerationCurves;
-		internal static void Parse(string fileName, TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
+		internal static void Parse(string fileName, TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects)
 		{
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -83,9 +85,9 @@ namespace OpenBve.Parsers.Train
 						Interface.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
 					}
 				}
-				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)
+				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
-					World.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
+					Camera.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
@@ -104,7 +106,7 @@ namespace OpenBve.Parsers.Train
 										Train.PowerNotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.PowerNotchDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.PowerNotchDescriptions[j]);
+											Size s = OpenBveShared.Renderer.MeasureString(Fonts.NormalFont, Train.PowerNotchDescriptions[j]);
 											if (s.Width > Train.MaxPowerNotchWidth)
 											{
 												Train.MaxPowerNotchWidth = s.Width;
@@ -115,7 +117,7 @@ namespace OpenBve.Parsers.Train
 										Train.BrakeNotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.BrakeNotchDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.BrakeNotchDescriptions[j]);
+											Size s = OpenBveShared.Renderer.MeasureString(Fonts.NormalFont, Train.BrakeNotchDescriptions[j]);
 											if (s.Width > Train.MaxBrakeNotchWidth)
 											{
 												Train.MaxBrakeNotchWidth = s.Width;
@@ -126,7 +128,7 @@ namespace OpenBve.Parsers.Train
 										Train.ReverserDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.ReverserDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.ReverserDescriptions[j]);
+											Size s = OpenBveShared.Renderer.MeasureString(Fonts.NormalFont, Train.ReverserDescriptions[j]);
 											if (s.Width > Train.MaxReverserWidth)
 											{
 												Train.MaxReverserWidth = s.Width;
@@ -151,9 +153,9 @@ namespace OpenBve.Parsers.Train
 								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
 								Train.Cars[i].RearAxle.Position = -temp;
 							}
-							if (CarObjects[i] is ObjectManager.StaticObject)
+							if (CarObjects[i] is StaticObject)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
+								StaticObject obj = (StaticObject)CarObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
 							else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection)
@@ -209,9 +211,9 @@ namespace OpenBve.Parsers.Train
 									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
-							if (BogieObjects[i] is ObjectManager.StaticObject)
+							if (BogieObjects[i] is StaticObject)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
+								StaticObject obj = (StaticObject)BogieObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
 							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)

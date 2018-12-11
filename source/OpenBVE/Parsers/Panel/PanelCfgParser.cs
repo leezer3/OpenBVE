@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -34,11 +35,11 @@ namespace OpenBve {
 			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 			double AspectRatio = FullWidth / FullHeight;
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
+			if (OpenBveShared.Renderer.Width >= OpenBveShared.Renderer.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * OpenBveShared.World.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance;
+				WorldHeight = 2.0 * Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * EyeDistance;
 				WorldWidth = WorldHeight * AspectRatio;
 			}
 			World.CameraRestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
@@ -409,7 +410,7 @@ namespace OpenBve {
 												new int[] { 0, 7, 8 },
 												new int[] { 0, 9, 10 }
 											};
-											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].States[0].Object.Mesh = new World.Mesh(vertices, faces, NeedleColor[1]);
+											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
 											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDClockwiseWinding = true;
 											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 											Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
@@ -677,7 +678,7 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].States[0].Object.Mesh = new World.Mesh(vertices, faces, Needle);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Needle);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDClockwiseWinding = true;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
@@ -1157,7 +1158,7 @@ namespace OpenBve {
 		// create element
 		private static int CreateElement(TrainManager.Train Train, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Vector3 Driver, Texture Texture, Color32 Color, bool AddStateToLastElement) {
 			// create object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Vector3[] v = new Vector3[4];
 			double sx = 0.5 * WorldWidth * Width / FullWidth;
 			double sy = 0.5 * WorldHeight * Height / FullHeight;
@@ -1170,9 +1171,9 @@ namespace OpenBve {
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };
-			Object.Mesh.Materials = new World.MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = Texture != null ? (byte)World.MeshMaterial.TransparentColorMask : (byte)0;
+			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Materials = new MeshMaterial[1];
+			Object.Mesh.Materials[0].Flags = Texture != null ? (byte)MeshMaterial.TransparentColorMask : (byte)0;
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = Texture;
@@ -1187,7 +1188,7 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Elements.Length - 1;
 				int j = Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States, j + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States[j].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States[j].Object = Object;
 				return n;
@@ -1195,12 +1196,12 @@ namespace OpenBve {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Train.Cars[Train.DriverCar].CarSections[0].Elements, n + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n] = new ObjectManager.AnimatedObject();
-				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States = new AnimatedObjectState[1];
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States[0].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].CurrentState = 0;
-				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex] = Object.Clone();
+				Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
+				GameObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Elements[n].ObjectIndex] = Object.Clone();
 				return n;
 			}
 		}

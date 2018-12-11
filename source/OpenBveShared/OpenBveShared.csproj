@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82D0FD53-3145-47A4-845E-58A197DB3650}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenBveShared</RootNamespace>
+    <AssemblyName>OpenBveShared</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Renderer\Objects.cs" />
+    <Compile Include="World\Camera\CameraAlignment.cs" />
+    <Compile Include="World\Camera\Camera.cs" />
+    <Compile Include="World\Camera\CameraRestrictionMode.cs" />
+    <Compile Include="World\World.cs" />
+    <None Include="ObjectManager\AnimatedObjects\AnimatedObject.cs" />
+    <None Include="ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
+    <None Include="ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
+    <Compile Include="ObjectManager\ObjectManager.cs" />
+    <Compile Include="Renderer\Backgrounds\Backgrounds.Renderer.cs" />
+    <Compile Include="Renderer\Faces\RenderFace.cs" />
+    <Compile Include="Renderer\Fog\Fog.cs" />
+    <Compile Include="Renderer\Functions.cs" />
+    <Compile Include="Renderer\Information.cs" />
+    <Compile Include="Renderer\Lighting\LightDefinition.cs" />
+    <Compile Include="Renderer\Lighting\Lighting.cs" />
+    <Compile Include="Renderer\Objects\Objects.cs" />
+    <Compile Include="Renderer\Structures\BoundingBox.cs" />
+    <Compile Include="Renderer\Structures\ObjectGroup.cs" />
+    <Compile Include="Renderer\Structures\ObjectList.cs" />
+    <Compile Include="Renderer\Structures\RendererObject.cs" />
+    <Compile Include="Renderer\Structures\ObjectFace.cs" />
+    <Compile Include="Renderer\Structures\ObjectList.Types.cs" />
+    <Compile Include="Renderer\Structures\ObjectListReference.cs" />
+    <Compile Include="Renderer\Overlays\Functions.cs" />
+    <Compile Include="Renderer\Overlays\Keys.cs" />
+    <Compile Include="Renderer\Primitives\Primitives.cs" />
+    <Compile Include="Renderer\Renderer.cs" />
+    <Compile Include="Renderer\Renderer.LoadingScreen.cs" />
+    <Compile Include="Renderer\Text\Colors.cs" />
+    <Compile Include="Renderer\Text\Fonts.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer\Text\String.cs" />
+    <Compile Include="Renderer\ViewportModes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BackgroundManager\BackgroundManager.csproj">
+      <Project>{4172403e-61b2-491e-8d9a-d8aef1a93cab}</Project>
+      <Name>BackgroundManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -60,6 +60,7 @@ namespace OpenBve {
 			internal bool LoadingProgressBar;
 			internal bool LoadingLogo;
 			internal bool LoadingBackground;
+			internal string LanguageCode;
 		}
 		internal static Options CurrentOptions;
 #pragma warning restore 0649

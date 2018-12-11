@@ -1,4 +1,7 @@
-﻿namespace OpenBve
+﻿using OpenBveApi;
+using TrackManager;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -38,8 +41,9 @@
 				this.SectionIndex = sectionIndex;
 				this.ClipToFirstRedSection = clipToFirstRedSection;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
 			{
+				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.TrainFront)
 				{
 					int s = this.SectionIndex;

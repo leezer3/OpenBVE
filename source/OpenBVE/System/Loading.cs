@@ -4,9 +4,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using OpenBve.Parsers.Train;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
+using OpenBveShared;
+using TrackManager;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -177,8 +180,8 @@ namespace OpenBve {
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
-			World.CameraMode = CameraViewMode.Interior;
+			World.CameraTrackFollower = new TrackFollower{ Train = null, CarIndex = -1 };
+			Camera.CameraView = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
@@ -221,25 +224,25 @@ namespace OpenBve {
 			{
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Bogus);
+					TrainManager.Trains[k] = new TrainManager.Train(k, TrainState.Bogus);
 				}
 				else
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Pending);
+					TrainManager.Trains[k] = new TrainManager.Train(k, TrainState.Pending);
 				}
 				
 			}
 			TrainManager.PlayerTrain = TrainManager.Trains[Game.PrecedingTrainTimeDeltas.Length];
 
-			ObjectManager.UnifiedObject[] CarObjects = null;
-			ObjectManager.UnifiedObject[] BogieObjects = null;
+			UnifiedObject[] CarObjects = null;
+			UnifiedObject[] BogieObjects = null;
 
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
 				//Sleep for 20ms to allow route loading locks to release
 				Thread.Sleep(20);
-				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
+				if (TrainManager.Trains[k].State == TrainState.Bogus) {
 					// bogus train
 					string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
 					TrainDatParser.ParseTrainData(TrainData, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
@@ -331,13 +334,13 @@ namespace OpenBve {
 					Program.FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 				}
 				// add exterior section
-				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus)
+				if (TrainManager.Trains[k].State != TrainState.Bogus)
 				{
 					bool LoadObjects = false;
 					if (CarObjects == null)
 					{
-						CarObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length];
-						BogieObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
+						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
+						BogieObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
 						LoadObjects = true;
 					}
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");
@@ -359,7 +362,7 @@ namespace OpenBve {
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+							StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
 							if (so == null) {
 								CarObjects[i] = null;
 							} else {
@@ -394,7 +397,7 @@ namespace OpenBve {
 				// configure ai / timetable
 				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {
 					TrainManager.Trains[k].TimetableDelta = 0.0;
-				} else if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus) {
+				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
 					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k]);
 					TrainManager.Trains[k].TimetableDelta = Game.PrecedingTrainTimeDeltas[k];
 					TrainManager.Trains[k].Specs.DoorOpenMode = TrainManager.DoorMode.Manual;
@@ -404,15 +407,15 @@ namespace OpenBve {
 			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Array.Resize(ref ObjectManager.Objects, ObjectManager.ObjectsUsed);
-			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
+			Array.Resize(ref GameObjectManager.Objects, GameObjectManager.ObjectsUsed);
+			Array.Resize(ref GameObjectManager.AnimatedWorldObjects, GameObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
 			if (Game.Sections.Length > 0) {
 				Game.UpdateSection(Game.Sections.Length - 1);
 			}
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {
-				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus) {
+				if (TrainManager.Trains[i].State != TrainState.Bogus) {
 					if (TrainManager.Trains[i] == TrainManager.PlayerTrain) {
 						if (!PluginManager.LoadCustomPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
 							PluginManager.LoadDefaultPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder);

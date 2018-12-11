@@ -141,6 +141,7 @@ namespace OpenBve {
 
 			// --- load options and controls ---
 			Interface.LoadOptions();
+			//LibRender.Renderer.Initialize(CurrentHost);
 			//Switch between SDL2 and native backends; use native backend by default
 			var options = new ToolkitOptions();
 			if (Interface.CurrentOptions.PreferNativeBackend)
@@ -301,13 +302,13 @@ namespace OpenBve {
 			
 			//One degree in radians
 			const double degrees = 0.0174532925199433;
-			World.VerticalViewingAngle = 45.0 * degrees;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
-			World.ExtraViewingDistance = 50.0;
-			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
-			World.BackwardViewingDistance = 0.0;
-			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			OpenBveShared.World.VerticalViewingAngle = 45.0 * degrees;
+			OpenBveShared.World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * OpenBveShared.World.AspectRatio);
+			OpenBveShared.World.OriginalVerticalViewingAngle = OpenBveShared.World.VerticalViewingAngle;
+			OpenBveShared.World.ExtraViewingDistance = 50.0;
+			OpenBveShared.World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			OpenBveShared.World.BackwardViewingDistance = 0.0;
+			OpenBveShared.Renderer.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();
 			return true;

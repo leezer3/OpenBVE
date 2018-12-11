@@ -115,11 +115,7 @@
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\Events.cs" />
-    <Compile Include="Game\Events\Events.TriggerType.cs" />
-    <Compile Include="Game\Events\EventTypes\BackgroundChange.cs" />
     <Compile Include="Game\Events\EventTypes\BrightnessChange.cs" />
-    <Compile Include="Game\Events\EventTypes\FogChange.cs" />
     <Compile Include="Game\Events\EventTypes\Markers.cs" />
     <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
     <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
@@ -148,14 +144,9 @@
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.StateSound.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimationScript.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
     <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.UnifiedObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
-    <Compile Include="Game\ObjectManager\WorldObject.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
@@ -170,9 +161,6 @@
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\TrackManager\TrackManager.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
-    <Compile Include="Graphics\Camera.CameraRestriction.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
@@ -183,13 +171,10 @@
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Background.cs" />
-    <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Events.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Glow.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
-    <Compile Include="Graphics\Renderer\Lighting.cs" />
     <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
@@ -212,11 +197,10 @@
     </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
-    <Compile Include="Graphics\Renderer\ViewportModes.cs" />
+    <Compile Include="Parsers\Object\Generic\AssimpObjParser.cs" />
     <Compile Include="Parsers\Object\Generic\AssimpXParser.cs" />
     <Compile Include="Parsers\Object\Generic\NewXParser.cs" />
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
-    <Compile Include="Parsers\Object\MeshBuilder.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
@@ -377,17 +361,7 @@
     <Compile Include="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Fonts.cs" />
     <Compile Include="Graphics\Renderer.cs" />
-    <Compile Include="Graphics\Renderer.Loading.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphics\Renderer.Primitives.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphics\Renderer.Strings.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="UserInterface\formImage.cs">
@@ -494,9 +468,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssimpXParser\AssimpXParser.csproj">
-      <Project>{572cd7ff-a0c9-4a48-81b7-79b65e37d3c7}</Project>
-      <Name>AssimpXParser</Name>
+    <ProjectReference Include="..\..\TrackManager\TrackManager.csproj">
+      <Project>{44c8713a-8650-488a-b5aa-e7eb38784a68}</Project>
+      <Name>TrackManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
+      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
+      <Name>AssimpParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BackgroundManager\BackgroundManager.csproj">
+      <Project>{4172403E-61B2-491E-8D9A-D8AEF1A93CAB}</Project>
+      <Name>BackgroundManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
@@ -506,13 +488,17 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenBveShared\OpenBveShared.csproj">
+      <Project>{82d0fd53-3145-47a4-845e-58a197db3650}</Project>
+      <Name>OpenBveShared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
       <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
       <Name>Formats.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
-      <Name>OpenBve.Formats.Msts</Name>
+      <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

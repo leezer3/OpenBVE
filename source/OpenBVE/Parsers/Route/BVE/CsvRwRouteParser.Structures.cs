@@ -1,4 +1,8 @@
-﻿namespace OpenBve
+﻿using OpenBveShared;
+using OpenBveApi.Objects;
+using TrackManager;
+
+namespace OpenBve
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile
@@ -192,7 +196,7 @@
 		{
 			internal int Background;
 			internal Brightness[] BrightnessChanges;
-			internal Game.Fog Fog;
+			internal Fog Fog;
 			internal bool FogDefined;
 			internal int[] Cycle;
 			internal RailCycle[] RailCycles;
@@ -214,7 +218,7 @@
 			internal Transponder[] Transponders;
 			internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
-			internal TrackManager.TrackElement CurrentTrackState;
+			internal TrackElement CurrentTrackState;
 			internal double Pitch;
 			internal double Turn;
 			internal int Station;
@@ -229,7 +233,7 @@
 			/// <summary>All currently defined Structure.Rail objects</summary>
 			internal ObjectDictionary RailObjects;
 			/// <summary>All currently defined Structure.Pole objects</summary>
-			internal ObjectManager.UnifiedObject[][] Poles;
+			internal UnifiedObject[][] Poles;
 			/// <summary>All currently defined Structure.Ground objects</summary>
 			internal ObjectDictionary Ground;
 			/// <summary>All currently defined Structure.WallL objects</summary>

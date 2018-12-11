@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Objects;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -10,39 +11,39 @@ namespace OpenBve
 		internal static void InitializeVisibility()
 		{
 			// sort objects
-			ObjectsSortedByStart = new int[ObjectsUsed];
-			ObjectsSortedByEnd = new int[ObjectsUsed];
-			double[] a = new double[ObjectsUsed];
-			double[] b = new double[ObjectsUsed];
+			GameObjectManager.ObjectsSortedByStart = new int[GameObjectManager.ObjectsUsed];
+			GameObjectManager.ObjectsSortedByEnd = new int[GameObjectManager.ObjectsUsed];
+			double[] a = new double[GameObjectManager.ObjectsUsed];
+			double[] b = new double[GameObjectManager.ObjectsUsed];
 			int n = 0;
-			for (int i = 0; i < ObjectsUsed; i++)
+			for (int i = 0; i < GameObjectManager.ObjectsUsed; i++)
 			{
-				if (!Objects[i].Dynamic)
+				if (!GameObjectManager.Objects[i].Dynamic)
 				{
-					ObjectsSortedByStart[n] = i;
-					ObjectsSortedByEnd[n] = i;
-					a[n] = Objects[i].StartingDistance;
-					b[n] = Objects[i].EndingDistance;
+					GameObjectManager.ObjectsSortedByStart[n] = i;
+					GameObjectManager.ObjectsSortedByEnd[n] = i;
+					a[n] = GameObjectManager.Objects[i].StartingDistance;
+					b[n] = GameObjectManager.Objects[i].EndingDistance;
 					n++;
 				}
 			}
-			Array.Resize<int>(ref ObjectsSortedByStart, n);
-			Array.Resize<int>(ref ObjectsSortedByEnd, n);
+			Array.Resize<int>(ref GameObjectManager.ObjectsSortedByStart, n);
+			Array.Resize<int>(ref GameObjectManager.ObjectsSortedByEnd, n);
 			Array.Resize<double>(ref a, n);
 			Array.Resize<double>(ref b, n);
-			Array.Sort<double, int>(a, ObjectsSortedByStart);
-			Array.Sort<double, int>(b, ObjectsSortedByEnd);
-			ObjectsSortedByStartPointer = 0;
-			ObjectsSortedByEndPointer = 0;
+			Array.Sort<double, int>(a, GameObjectManager.ObjectsSortedByStart);
+			Array.Sort<double, int>(b, GameObjectManager.ObjectsSortedByEnd);
+			GameObjectManager.ObjectsSortedByStartPointer = 0;
+			GameObjectManager.ObjectsSortedByEndPointer = 0;
 			// initial visiblity
-			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
-			for (int i = 0; i < ObjectsUsed; i++)
+			double p = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z;
+			for (int i = 0; i < GameObjectManager.ObjectsUsed; i++)
 			{
-				if (!Objects[i].Dynamic)
+				if (!GameObjectManager.Objects[i].Dynamic)
 				{
-					if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
+					if (GameObjectManager.Objects[i].StartingDistance <= p + OpenBveShared.World.ForwardViewingDistance & GameObjectManager.Objects[i].EndingDistance >= p - OpenBveShared.World.BackwardViewingDistance)
 					{
-						Renderer.ShowObject(i, ObjectType.Static);
+						OpenBveShared.Renderer.ShowObject(i, ObjectType.Static, Interface.CurrentOptions.TransparencyMode);
 					}
 				}
 			}
@@ -69,21 +70,21 @@ namespace OpenBve
 		/// <param name="TrackPosition">The camera's track position</param>
 		internal static void UpdateVisibility(double TrackPosition)
 		{
-			double d = TrackPosition - LastUpdatedTrackPosition;
-			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
+			double d = TrackPosition - GameObjectManager.LastUpdatedTrackPosition;
+			int n = GameObjectManager.ObjectsSortedByStart.Length;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z;
 			if (d < 0.0)
 			{
-				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
-				if (ObjectsSortedByEndPointer >= n) ObjectsSortedByEndPointer = n - 1;
+				if (GameObjectManager.ObjectsSortedByStartPointer >= n) GameObjectManager.ObjectsSortedByStartPointer = n - 1;
+				if (GameObjectManager.ObjectsSortedByEndPointer >= n) GameObjectManager.ObjectsSortedByEndPointer = n - 1;
 				// dispose
-				while (ObjectsSortedByStartPointer >= 0)
+				while (GameObjectManager.ObjectsSortedByStartPointer >= 0)
 				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance > p + World.ForwardViewingDistance)
+					int o = GameObjectManager.ObjectsSortedByStart[GameObjectManager.ObjectsSortedByStartPointer];
+					if (GameObjectManager.Objects[o].StartingDistance > p + OpenBveShared.World.ForwardViewingDistance)
 					{
-						Renderer.HideObject(o);
-						ObjectsSortedByStartPointer--;
+						OpenBveShared.Renderer.HideObject(o);
+						GameObjectManager.ObjectsSortedByStartPointer--;
 					}
 					else
 					{
@@ -91,16 +92,17 @@ namespace OpenBve
 					}
 				}
 				// introduce
-				while (ObjectsSortedByEndPointer >= 0)
+				while (GameObjectManager.ObjectsSortedByEndPointer >= 0)
 				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+					int o = GameObjectManager.ObjectsSortedByEnd[GameObjectManager.ObjectsSortedByEndPointer];
+					if (GameObjectManager.Objects[o].EndingDistance >= p - OpenBveShared.World.BackwardViewingDistance)
 					{
-						if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+						if (GameObjectManager.Objects[o].StartingDistance <= p + OpenBveShared.World.ForwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							OpenBveShared.Renderer.ShowObject(o, ObjectType.Static, Interface.CurrentOptions.TransparencyMode);
 						}
-						ObjectsSortedByEndPointer--;
+
+						GameObjectManager.ObjectsSortedByEndPointer--;
 					}
 					else
 					{
@@ -110,16 +112,16 @@ namespace OpenBve
 			}
 			else if (d > 0.0)
 			{
-				if (ObjectsSortedByStartPointer < 0) ObjectsSortedByStartPointer = 0;
-				if (ObjectsSortedByEndPointer < 0) ObjectsSortedByEndPointer = 0;
+				if (GameObjectManager.ObjectsSortedByStartPointer < 0) GameObjectManager.ObjectsSortedByStartPointer = 0;
+				if (GameObjectManager.ObjectsSortedByEndPointer < 0) GameObjectManager.ObjectsSortedByEndPointer = 0;
 				// dispose
-				while (ObjectsSortedByEndPointer < n)
+				while (GameObjectManager.ObjectsSortedByEndPointer < n)
 				{
-					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance < p - World.BackwardViewingDistance)
+					int o = GameObjectManager.ObjectsSortedByEnd[GameObjectManager.ObjectsSortedByEndPointer];
+					if (GameObjectManager.Objects[o].EndingDistance < p - OpenBveShared.World.BackwardViewingDistance)
 					{
-						Renderer.HideObject(o);
-						ObjectsSortedByEndPointer++;
+						OpenBveShared.Renderer.HideObject(o);
+						GameObjectManager.ObjectsSortedByEndPointer++;
 					}
 					else
 					{
@@ -127,16 +129,17 @@ namespace OpenBve
 					}
 				}
 				// introduce
-				while (ObjectsSortedByStartPointer < n)
+				while (GameObjectManager.ObjectsSortedByStartPointer < n)
 				{
-					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+					int o = GameObjectManager.ObjectsSortedByStart[GameObjectManager.ObjectsSortedByStartPointer];
+					if (GameObjectManager.Objects[o].StartingDistance <= p + OpenBveShared.World.ForwardViewingDistance)
 					{
-						if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+						if (GameObjectManager.Objects[o].EndingDistance >= p - OpenBveShared.World.BackwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							OpenBveShared.Renderer.ShowObject(o, ObjectType.Static, Interface.CurrentOptions.TransparencyMode);
 						}
-						ObjectsSortedByStartPointer++;
+
+						GameObjectManager.ObjectsSortedByStartPointer++;
 					}
 					else
 					{
@@ -144,7 +147,8 @@ namespace OpenBve
 					}
 				}
 			}
-			LastUpdatedTrackPosition = TrackPosition;
+
+			GameObjectManager.LastUpdatedTrackPosition = TrackPosition;
 		}
 	}
 }

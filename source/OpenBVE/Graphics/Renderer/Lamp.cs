@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -87,7 +88,7 @@ namespace OpenBve
                         break;
                     }
                 }
-                System.Drawing.Size size = MeasureString(font, this.Text);
+                System.Drawing.Size size = OpenBveShared.Renderer.MeasureString(font, this.Text);
                 this.Width = size.Width;
                 this.Height = size.Height;
             }

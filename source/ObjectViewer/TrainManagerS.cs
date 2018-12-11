@@ -390,19 +390,13 @@ namespace OpenBve {
 			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainState {
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
-		}
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
 		internal class Train : OpenBveApi.Train {
-			internal TrainState State;
 			internal Car[] Cars;
-			internal int Destination;
 			internal int DriverCar;
 			internal TrainSpecs Specs;
-			internal int CurrentSectionIndex;
 		}
 
 #pragma warning restore 0649

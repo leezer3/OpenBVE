@@ -17,10 +17,10 @@ using OpenBveApi.Textures;
 
 namespace Plugin
 {
-    public class DDSImage
+    internal class DDSImage
     {
 	    internal Texture myTexture;
-        public DDSImage(byte[] ddsImage)
+        internal DDSImage(byte[] ddsImage)
         {
             if (ddsImage == null) return;
             if (ddsImage.Length == 0) return;

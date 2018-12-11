@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
+using OpenBveApi;
 using OpenBveApi.Math;
+using TrackManager;
 
 namespace OpenBve
 {
@@ -45,8 +48,9 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
 			{
+				TrainManager.Train Train = (TrainManager.Train) train;
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
 				{
@@ -95,8 +99,9 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
 			{
+				TrainManager.Train Train = (TrainManager.Train) train;
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
 				{
@@ -167,8 +172,9 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
 			{
+				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{
 					if (Direction < 0)

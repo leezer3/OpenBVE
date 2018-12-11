@@ -7,10 +7,11 @@
 
 using System;
 using System.Windows.Forms;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
-using OpenBveApi.Objects;
+using OpenBveShared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -107,11 +108,13 @@ namespace OpenBve {
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        Interface.CurrentOptions.AntialiasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
-		    Interface.CurrentOptions.UseNewXParser = 1; //TODO: Either save in options or remove when the new parser is fully functional
 	        // initialize camera
-
-	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
+			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
+	        currentGameWindow = new ObjectViewer(OpenBveShared.Renderer.Width, OpenBveShared.Renderer.Height, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
+		    OpenBveShared.World.ForwardViewingDistance = 10000.0;
+		    OpenBveShared.World.BackwardViewingDistance = 10000.0;
+		    OpenBveShared.World.ExtraViewingDistance = 1000.0;
+		    OpenBveShared.Renderer.BackgroundImageDistance = 600.0;
 	        currentGameWindow.Visible = true;
 	        currentGameWindow.TargetUpdateFrequency = 0;
 	        currentGameWindow.TargetRenderFrequency = 0;
@@ -124,28 +127,15 @@ namespace OpenBve {
 
 	    // reset camera
 	    internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
-			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
-			World.AbsoluteCameraDirection.Normalize();
-			World.AbsoluteCameraSide.Normalize();
-			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
-			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
-		}
-
-		// update viewport
-		internal static void UpdateViewport() {
-            GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
-            World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
-            World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-            GL.MatrixMode(MatrixMode.Projection);
-            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
-            GL.LoadMatrix(ref perspective);
-            GL.Scale(-1, 1, 1);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+			Camera.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
+			Camera.AbsoluteCameraDirection = new Vector3(-Camera.AbsoluteCameraPosition.X, -Camera.AbsoluteCameraPosition.Y, -Camera.AbsoluteCameraPosition.Z);
+			Camera.AbsoluteCameraSide = new Vector3(-Camera.AbsoluteCameraPosition.Z, 0.0, Camera.AbsoluteCameraPosition.X);
+			Camera.AbsoluteCameraDirection.Normalize();
+			Camera.AbsoluteCameraSide.Normalize();
+			Camera.AbsoluteCameraUp = Vector3.Cross(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraSide);
+		    OpenBveShared.World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
+		    OpenBveShared.World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * OpenBveShared.World.AspectRatio);
+		    OpenBveShared.World.OriginalVerticalViewingAngle = OpenBveShared.World.VerticalViewingAngle;
 		}
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
@@ -153,19 +143,19 @@ namespace OpenBve {
 			if(e.Delta != 0)
 			{
 				double dx = -0.025 * e.Delta;
-				World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraDirection.X;
-				World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraDirection.Y;
-				World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraDirection.Z;
+				Camera.AbsoluteCameraPosition.X += dx * Camera.AbsoluteCameraDirection.X;
+				Camera.AbsoluteCameraPosition.Y += dx * Camera.AbsoluteCameraDirection.Y;
+				Camera.AbsoluteCameraPosition.Z += dx * Camera.AbsoluteCameraDirection.Z;
 				ReducedMode = false;
 			}
 		}
 
 	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-            MouseCameraPosition = World.AbsoluteCameraPosition;
-            MouseCameraDirection = World.AbsoluteCameraDirection;
-            MouseCameraUp = World.AbsoluteCameraUp;
-            MouseCameraSide = World.AbsoluteCameraSide;
+            MouseCameraPosition = Camera.AbsoluteCameraPosition;
+            MouseCameraDirection = Camera.AbsoluteCameraDirection;
+            MouseCameraUp = Camera.AbsoluteCameraUp;
+            MouseCameraSide = Camera.AbsoluteCameraSide;
 	        if (e.Button == OpenTK.Input.MouseButton.Left)
 	        {
 	            MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
@@ -199,9 +189,9 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
+				UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 					ObjectLoadMode.Normal, false, false, false);
-				ObjectManager.CreateObject(o, Vector3.Zero,
+				o.CreateObject(Vector3.Zero,
 					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
 #if !DEBUG
@@ -231,50 +221,50 @@ namespace OpenBve {
 	        {
 	            if (MouseButton == 1)
 	            {
-                    World.AbsoluteCameraDirection = MouseCameraDirection;
-                    World.AbsoluteCameraUp = MouseCameraUp;
-                    World.AbsoluteCameraSide = MouseCameraSide;
+                    Camera.AbsoluteCameraDirection = MouseCameraDirection;
+                    Camera.AbsoluteCameraUp = MouseCameraUp;
+                    Camera.AbsoluteCameraSide = MouseCameraSide;
                     {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
                         double cosa = Math.Cos(dx);
                         double sina = Math.Sin(dx);
-						World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
+						Camera.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
                         double cosa = Math.Cos(dy);
                         double sina = Math.Sin(dy);
-						World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
+						Camera.AbsoluteCameraDirection.Rotate(Camera.AbsoluteCameraSide, cosa, sina);
+	                    Camera.AbsoluteCameraUp.Rotate(Camera.AbsoluteCameraSide, cosa, sina);
                     }
                     ReducedMode = false;
 	            }
 	            else if(MouseButton == 2)
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsoluteCameraPosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
-                    World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraSide.Y;
-                    World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraSide.Z;
+                    Camera.AbsoluteCameraPosition.X += dx * Camera.AbsoluteCameraSide.X;
+                    Camera.AbsoluteCameraPosition.Y += dx * Camera.AbsoluteCameraSide.Y;
+                    Camera.AbsoluteCameraPosition.Z += dx * Camera.AbsoluteCameraSide.Z;
                     double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition.X += dy * World.AbsoluteCameraUp.X;
-                    World.AbsoluteCameraPosition.Y += dy * World.AbsoluteCameraUp.Y;
-                    World.AbsoluteCameraPosition.Z += dy * World.AbsoluteCameraUp.Z;
+                    Camera.AbsoluteCameraPosition.X += dy * Camera.AbsoluteCameraUp.X;
+                    Camera.AbsoluteCameraPosition.Y += dy * Camera.AbsoluteCameraUp.Y;
+                    Camera.AbsoluteCameraPosition.Z += dy * Camera.AbsoluteCameraUp.Z;
                     ReducedMode = false;
 	            }
 	            else
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsoluteCameraPosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
-                    World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraSide.Y;
-                    World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraSide.Z;
+                    Camera.AbsoluteCameraPosition.X += dx * Camera.AbsoluteCameraSide.X;
+                    Camera.AbsoluteCameraPosition.Y += dx * Camera.AbsoluteCameraSide.Y;
+                    Camera.AbsoluteCameraPosition.Z += dx * Camera.AbsoluteCameraSide.Z;
                     double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition.X += dz * World.AbsoluteCameraDirection.X;
-                    World.AbsoluteCameraPosition.Y += dz * World.AbsoluteCameraDirection.Y;
-                    World.AbsoluteCameraPosition.Z += dz * World.AbsoluteCameraDirection.Z;
+                    Camera.AbsoluteCameraPosition.X += dz * Camera.AbsoluteCameraDirection.X;
+                    Camera.AbsoluteCameraPosition.Y += dz * Camera.AbsoluteCameraDirection.Y;
+                    Camera.AbsoluteCameraPosition.Z += dz * Camera.AbsoluteCameraDirection.Z;
                     ReducedMode = false;
 	            }
 	        }
@@ -303,9 +293,9 @@ namespace OpenBve {
 #if !DEBUG
 									try {
 										#endif
-	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
+	                    UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 	                        ObjectLoadMode.Normal, false, false, false);
-	                    ObjectManager.CreateObject(o, Vector3.Zero,
+	                    o.CreateObject(Vector3.Zero,
 	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
 #if !DEBUG
@@ -348,9 +338,9 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
+					            UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
 						            ObjectLoadMode.Normal, false, false, false);
-					            ObjectManager.CreateObject(o, Vector3.Zero,
+					            o.CreateObject(Vector3.Zero,
 						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);
 #if !DEBUG
@@ -445,8 +435,8 @@ namespace OpenBve {
 	                break;
 	            case Key.F:
 	            case Key.F1:
-	                Renderer.OptionWireframe = !Renderer.OptionWireframe;
-	                if (Renderer.OptionWireframe)
+	                OpenBveShared.Renderer.OptionWireframe = !OpenBveShared.Renderer.OptionWireframe;
+	                if (OpenBveShared.Renderer.OptionWireframe)
 	                {
 	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 	                }
@@ -457,7 +447,7 @@ namespace OpenBve {
 	                break;
 	            case Key.N:
 	            case Key.F2:
-	                Renderer.OptionNormals = !Renderer.OptionNormals;
+		            OpenBveShared.Renderer.OptionNormals = !OpenBveShared.Renderer.OptionNormals;
 	                break;
 	            case Key.L:
 	            case Key.F3:

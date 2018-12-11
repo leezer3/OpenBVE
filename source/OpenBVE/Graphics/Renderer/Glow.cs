@@ -12,27 +12,27 @@ namespace OpenBve
 		/// <param name="CameraY">The Y-position of the camera</param>
 		/// <param name="CameraZ">The Z-position of the camera</param>
 		/// <returns></returns>
-		private static double GetDistanceFactor(VertexTemplate[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
+		public static double GetDistanceFactor(VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
 		{
 			if (Face.Vertices.Length == 0)
 			{
 				return 1.0;
 			}
-			GlowAttenuationMode mode;
+			Glow.AttenuationMode mode;
 			double halfdistance;
-			World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
+			Glow.SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
 			int i = (int)Face.Vertices[0].Index;
 			double dx = Vertices[i].Coordinates.X - CameraX;
 			double dy = Vertices[i].Coordinates.Y - CameraY;
 			double dz = Vertices[i].Coordinates.Z - CameraZ;
 			switch (mode)
 			{
-				case GlowAttenuationMode.DivisionExponent2:
+				case Glow.AttenuationMode.DivisionExponent2:
 					{
 						double t = dx * dx + dy * dy + dz * dz;
 						return t / (t + halfdistance * halfdistance);
 					}
-				case GlowAttenuationMode.DivisionExponent4:
+				case Glow.AttenuationMode.DivisionExponent4:
 					{
 						double t = dx * dx + dy * dy + dz * dz;
 						t *= t;

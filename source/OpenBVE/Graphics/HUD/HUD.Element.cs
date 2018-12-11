@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveShared;
 
 namespace OpenBve
 {

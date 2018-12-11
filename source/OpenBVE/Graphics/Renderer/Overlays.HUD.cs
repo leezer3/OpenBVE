@@ -36,8 +36,8 @@ namespace OpenBve
 			{
 				w = 0.0; h = 0.0;
 			}
-			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (Screen.Width - w) : Screen.Width - w;
-			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (Screen.Height - h) : Screen.Height - h;
+			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (OpenBveShared.Renderer.Width - w) : OpenBveShared.Renderer.Width - w;
+			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (OpenBveShared.Renderer.Height - h) : OpenBveShared.Renderer.Height - h;
 			x += Element.Position.X;
 			y += Element.Position.Y;
 			// command
@@ -678,7 +678,7 @@ namespace OpenBve
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "fps":
-					int fps = (int)Math.Round(Game.InfoFrameRate);
+					int fps = (int)Math.Round(OpenBveShared.Renderer.Statistics.FrameRate);
 					t = fps.ToString(Culture) + " fps";
 					if (OptionFrameRates)
 					{
@@ -787,13 +787,13 @@ namespace OpenBve
 					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						float r, g, b, a;
-						CreateBackColor(Element.BackgroundColor, sc, out r, out g, out b, out a);
+						OpenBveShared.Renderer.CreateBackColor(Element.BackgroundColor, sc, out r, out g, out b, out a);
 						GL.Color4(r, g, b, a * alpha);
-						RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
+						OpenBveShared.Renderer.RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
 					}
 				}
 				{ // text
-					System.Drawing.Size size = MeasureString(Element.Font, t);
+					System.Drawing.Size size = OpenBveShared.Renderer.MeasureString(Element.Font, t);
 					float u = size.Width;
 					float v = size.Height;
 					double p = Math.Round(Element.TextAlignment.X < 0 ? x : Element.TextAlignment.X == 0 ? x + 0.5 * (w - u) : x + w - u);
@@ -801,8 +801,8 @@ namespace OpenBve
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
 					float r, g, b, a;
-					CreateTextColor(Element.TextColor, sc, out r, out g, out b, out a);
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, new Color128(r, g, b, a * alpha), Element.TextShadow);
+					OpenBveShared.Renderer.CreateTextColor(Element.TextColor, sc, out r, out g, out b, out a);
+					OpenBveShared.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, new Color128(r, g, b, a * alpha), Element.TextShadow);
 				}
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)
@@ -810,9 +810,9 @@ namespace OpenBve
 					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						float r, g, b, a;
-						CreateBackColor(Element.OverlayColor, sc, out r, out g, out b, out a);
+						OpenBveShared.Renderer.CreateBackColor(Element.OverlayColor, sc, out r, out g, out b, out a);
 						GL.Color4(r, g, b, a * alpha);
-						RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
+						OpenBveShared.Renderer.RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
 					}
 				}
 			}

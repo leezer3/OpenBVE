@@ -7,7 +7,7 @@ using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 namespace OpenBve
 {
-	internal static partial class Textures
+	internal static class Textures
 	{
 		/// <summary>Holds all currently registered textures.</summary>
 		internal static Texture[] RegisteredTextures = new Texture[16];

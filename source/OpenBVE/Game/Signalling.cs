@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Runtime;
 
 namespace OpenBve
@@ -40,7 +41,7 @@ namespace OpenBve
 			/// <summary>The index of the next section</summary>
 			internal int NextSection;
 			/// <summary>Holds a reference to all trains currently within this section</summary>
-			internal TrainManager.Train[] Trains;
+			internal Train[] Trains;
 			/// <summary>Whether the primary train within the section has reached the station stop point (For departure signals)</summary>
 			internal bool TrainReachedStopPoint;
 			/// <summary>The index of the station (if applicable)</summary>
@@ -62,20 +63,20 @@ namespace OpenBve
 
 			/// <summary>Called when a train enters the section</summary>
 			/// <param name="Train">The train</param>
-			internal void Enter(TrainManager.Train Train)
+			internal void Enter(Train Train)
 			{
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++)
 				{
 					if (this.Trains[i] == Train) return;
 				}
-				Array.Resize<TrainManager.Train>(ref this.Trains, n + 1);
+				Array.Resize<Train>(ref this.Trains, n + 1);
 				this.Trains[n] = Train;
 			}
 
 			/// <summary>Called when a train leaves the section</summary>
 			/// <param name="Train">The train</param>
-			internal void Leave(TrainManager.Train Train)
+			internal void Leave(Train Train)
 			{
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++)
@@ -86,7 +87,7 @@ namespace OpenBve
 						{
 							this.Trains[j] = this.Trains[j + 1];
 						}
-						Array.Resize<TrainManager.Train>(ref this.Trains, n - 1);
+						Array.Resize<Train>(ref this.Trains, n - 1);
 						return;
 					}
 				}
@@ -95,7 +96,7 @@ namespace OpenBve
 			/// <summary>Checks whether a train is currently within the section</summary>
 			/// <param name="Train">The train</param>
 			/// <returns>True if the train is within the section, false otherwise</returns>
-			internal bool Exists(TrainManager.Train Train)
+			internal bool Exists(Train Train)
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
@@ -111,7 +112,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i] != train & (this.Trains[i].State == TrainManager.TrainState.Available | this.Trains[i].State == TrainManager.TrainState.Bogus))
+					if (this.Trains[i] != train & (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus))
 					{
 						return false;
 					}
@@ -125,7 +126,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i].State == TrainManager.TrainState.Available | this.Trains[i].State == TrainManager.TrainState.Bogus)
+					if (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus)
 					{
 						return false;
 					}
@@ -136,15 +137,15 @@ namespace OpenBve
 			/// <summary>Gets the first train within the section</summary>
 			/// <param name="AllowBogusTrain">Whether bogus trains are to be allowed</param>
 			/// <returns>The first train within the section, or null if no trains are found</returns>
-			internal TrainManager.Train GetFirstTrain(bool AllowBogusTrain)
+			internal Train GetFirstTrain(bool AllowBogusTrain)
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i].State == TrainManager.TrainState.Available)
+					if (this.Trains[i].State == TrainState.Available)
 					{
 						return this.Trains[i];
 					}
-					if (AllowBogusTrain & this.Trains[i].State == TrainManager.TrainState.Bogus)
+					if (AllowBogusTrain & this.Trains[i].State == TrainState.Bogus)
 					{
 						return this.Trains[i];
 					}
@@ -204,7 +205,7 @@ namespace OpenBve
 				{
 					if (l >= 0)
 					{
-						train = Sections[l].GetFirstTrain(false);
+						train = (TrainManager.Train)Sections[l].GetFirstTrain(false);
 						if (train != null)
 						{
 							break;
@@ -218,10 +219,10 @@ namespace OpenBve
 				}
 				if (train == null)
 				{
-					double b = -double.MaxValue;
+					double b = -Double.MaxValue;
 					for (int i = 0; i < TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i].State == TrainManager.TrainState.Available)
+						if (TrainManager.Trains[i].State == TrainState.Available)
 						{
 							if (TrainManager.Trains[i].TimetableDelta > b)
 							{
@@ -363,7 +364,7 @@ namespace OpenBve
 		/// <param name="train">The train.</param>
 		/// <param name="section">The absolute section index, referencing Game.Sections[].</param>
 		/// <returns>The signal data.</returns>
-		internal static OpenBveApi.Runtime.SignalData GetPluginSignal(TrainManager.Train train, int section)
+		internal static SignalData GetPluginSignal(TrainManager.Train train, int section)
 		{
 			if (Sections[section].Exists(train))
 			{
@@ -421,14 +422,14 @@ namespace OpenBve
 				}
 				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
-				return new OpenBveApi.Runtime.SignalData(aspect, distance);
+				return new SignalData(aspect, distance);
 			}
 			else
 			{
 				int aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
 				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
 				double distance = Sections[section].TrackPosition - position;
-				return new OpenBveApi.Runtime.SignalData(aspect, distance);
+				return new SignalData(aspect, distance);
 			}
 		}
 
@@ -439,15 +440,15 @@ namespace OpenBve
 		{
 			if (train.Plugin != null)
 			{
-				OpenBveApi.Runtime.SignalData[] data = new OpenBveApi.Runtime.SignalData[16];
+				SignalData[] data = new SignalData[16];
 				int count = 0;
 				int start = train.CurrentSectionIndex >= 0 ? train.CurrentSectionIndex : 0;
 				for (int i = start; i < Sections.Length; i++)
 				{
-					OpenBveApi.Runtime.SignalData signal = GetPluginSignal(train, i);
+					SignalData signal = GetPluginSignal(train, i);
 					if (data.Length == count)
 					{
-						Array.Resize<OpenBveApi.Runtime.SignalData>(ref data, data.Length << 1);
+						Array.Resize<SignalData>(ref data, data.Length << 1);
 					}
 					data[count] = signal;
 					count++;
@@ -456,7 +457,7 @@ namespace OpenBve
 						break;
 					}
 				}
-				Array.Resize<OpenBveApi.Runtime.SignalData>(ref data, count);
+				Array.Resize<SignalData>(ref data, count);
 				train.Plugin.UpdateSignals(data);
 			}
 		}

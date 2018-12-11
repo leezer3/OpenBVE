@@ -1,4 +1,7 @@
-﻿namespace OpenBve
+﻿using OpenBveApi;
+using TrackManager;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -10,8 +13,9 @@
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
 			{
+				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.RearCarRearAxle & Train != TrainManager.PlayerTrain)
 				{
 					Train.Dispose();

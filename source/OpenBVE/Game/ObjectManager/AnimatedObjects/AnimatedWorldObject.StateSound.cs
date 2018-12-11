@@ -1,7 +1,9 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -33,14 +35,14 @@ namespace OpenBve
 
 			private int lastState;
 
-			internal override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
 				double pa = TrackPosition + z - Radius - extraRadius;
 				double pb = TrackPosition + z + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z - OpenBveShared.Renderer.BackgroundImageDistance - OpenBveShared.World.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z + OpenBveShared.Renderer.BackgroundImageDistance + OpenBveShared.World.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{
@@ -52,7 +54,7 @@ namespace OpenBve
 						double trainDistance = double.MaxValue;
 						for (int j = 0; j < TrainManager.Trains.Length; j++)
 						{
-							if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
+							if (TrainManager.Trains[j].State == TrainState.Available)
 							{
 								double distance;
 								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
@@ -132,7 +134,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
+						OpenBveShared.Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 						Visible = true;
 					}
 				}
@@ -141,7 +143,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(Object.ObjectIndex);
+						OpenBveShared.Renderer.HideObject(Object.ObjectIndex);
 						Visible = false;
 					}
 				}
@@ -150,15 +152,15 @@ namespace OpenBve
 
 			internal void Create(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 			{
-				int a = AnimatedWorldObjectsUsed;
-				if (a >= AnimatedWorldObjects.Length)
+				int a = GameObjectManager.AnimatedWorldObjectsUsed;
+				if (a >= GameObjectManager.AnimatedWorldObjects.Length)
 				{
-					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize<WorldObject>(ref GameObjectManager.AnimatedWorldObjects, GameObjectManager.AnimatedWorldObjects.Length << 1);
 				}
 				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 				var o = this.Object.Clone();
-				o.ObjectIndex = CreateDynamicObject();
+				o.ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 				AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
 				{
 					Position = Position,
@@ -177,12 +179,12 @@ namespace OpenBve
 				{
 					if (currentObject.Object.States[i].Object == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject
+						currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost)
 						{
 							Mesh =
 								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
+									Faces = new MeshFace[] {},
+									Materials = new MeshMaterial[] {},
 									Vertices = new VertexTemplate[] {}
 								},
 							RendererIndex = -1
@@ -210,8 +212,8 @@ namespace OpenBve
 				currentObject.Radius = Math.Sqrt(r);
 				currentObject.Visible = false;
 				currentObject.Object.Initialize(0, false, false);
-				AnimatedWorldObjects[a] = currentObject;
-				AnimatedWorldObjectsUsed++;
+				GameObjectManager.AnimatedWorldObjects[a] = currentObject;
+				GameObjectManager.AnimatedWorldObjectsUsed++;
 			}
 		}
 	}

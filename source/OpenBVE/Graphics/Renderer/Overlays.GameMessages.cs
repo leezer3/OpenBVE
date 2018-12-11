@@ -20,7 +20,7 @@ namespace OpenBve
 			for (int j = 0; j < n; j++)
 			{
 				//Update font size for the renderer
-				System.Drawing.Size size = Renderer.MeasureString(Element.Font, (string)MessageManager.TextualMessages[j].MessageToDisplay);
+				System.Drawing.Size size = OpenBveShared.Renderer.MeasureString(Element.Font, (string)MessageManager.TextualMessages[j].MessageToDisplay);
 				MessageManager.TextualMessages[j].Width = size.Width;
 				MessageManager.TextualMessages[j].Height = size.Height;
 				//Run through the list of current messages
@@ -38,8 +38,8 @@ namespace OpenBve
 			// start
 			double w = totalwidth + lw + rw;
 			double h = Element.Value2 * n;
-			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X > 0 ? Screen.Width - w : 0.5 * (Screen.Width - w);
-			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y > 0 ? Screen.Height - h : 0.5 * (Screen.Height - h);
+			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X > 0 ? OpenBveShared.Renderer.Width - w : 0.5 * (OpenBveShared.Renderer.Width - w);
+			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y > 0 ? OpenBveShared.Renderer.Height - h : 0.5 * (OpenBveShared.Renderer.Height - h);
 			x += Element.Position.X;
 			y += Element.Position.Y;
 			int m = 0;
@@ -47,11 +47,11 @@ namespace OpenBve
 			{
 				var mm = MessageManager.TextualMessages[j];
 				float br, bg, bb, ba;
-				CreateBackColor(Element.BackgroundColor, mm.Color, out br, out bg, out bb, out ba);
+				OpenBveShared.Renderer.CreateBackColor(Element.BackgroundColor, mm.Color, out br, out bg, out bb, out ba);
 				float tr, tg, tb, ta;
-				CreateTextColor(Element.TextColor, mm.Color, out tr, out tg, out tb, out ta);
+				OpenBveShared.Renderer.CreateTextColor(Element.TextColor, mm.Color, out tr, out tg, out tb, out ta);
 				float or, og, ob, oa;
-				CreateBackColor(Element.OverlayColor, mm.Color, out or, out og, out ob, out oa);
+				OpenBveShared.Renderer.CreateBackColor(Element.OverlayColor, mm.Color, out or, out og, out ob, out oa);
 				double tx, ty;
 				bool preserve = false;
 				if ((Element.Transition & HUD.Transition.Move) != 0)
@@ -164,7 +164,7 @@ namespace OpenBve
 						double u = (double)Left.BackgroundTexture.Width;
 						double v = (double)Left.BackgroundTexture.Height;
 						GL.Color4(br, bg, bb, ba * alpha);
-						RenderOverlayTexture(Left.BackgroundTexture, px, py, px + u, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Left.BackgroundTexture, px, py, px + u, py + v);
 					}
 				}
 				// right background
@@ -175,7 +175,7 @@ namespace OpenBve
 						double u = (double)Right.BackgroundTexture.Width;
 						double v = (double)Right.BackgroundTexture.Height;
 						GL.Color4(br, bg, bb, ba * alpha);
-						RenderOverlayTexture(Right.BackgroundTexture, px + w - u, py, px + w, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Right.BackgroundTexture, px + w - u, py, px + w, py + v);
 					}
 				}
 				// middle background
@@ -185,7 +185,7 @@ namespace OpenBve
 					{
 						double v = (double)Middle.BackgroundTexture.Height;
 						GL.Color4(br, bg, bb, ba * alpha);
-						RenderOverlayTexture(Middle.BackgroundTexture, px + lw, py, px + w - rw, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Middle.BackgroundTexture, px + lw, py, px + w - rw, py + v);
 					}
 				}
 				{
@@ -207,7 +207,7 @@ namespace OpenBve
 							: py + 0.5 * (lcrh - v));
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q),
+					OpenBveShared.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q),
 						TextAlignment.TopLeft, new Color128(tr, tg, tb, ta * alpha), Element.TextShadow);
 				}
 				// left overlay
@@ -218,7 +218,7 @@ namespace OpenBve
 						double u = (double)Left.OverlayTexture.Width;
 						double v = (double)Left.OverlayTexture.Height;
 						GL.Color4(or, og, ob, oa * alpha);
-						RenderOverlayTexture(Left.OverlayTexture, px, py, px + u, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Left.OverlayTexture, px, py, px + u, py + v);
 					}
 				}
 				// right overlay
@@ -229,7 +229,7 @@ namespace OpenBve
 						double u = (double)Right.OverlayTexture.Width;
 						double v = (double)Right.OverlayTexture.Height;
 						GL.Color4(or, og, ob, oa * alpha);
-						RenderOverlayTexture(Right.OverlayTexture, px + w - u, py, px + w, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Right.OverlayTexture, px + w - u, py, px + w, py + v);
 					}
 				}
 				// middle overlay
@@ -239,7 +239,7 @@ namespace OpenBve
 					{
 						double v = (double)Middle.OverlayTexture.Height;
 						GL.Color4(or, og, ob, oa * alpha);
-						RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
+						OpenBveShared.Renderer.RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
 					}
 				}
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveShared;
+
 // ReSharper disable UnusedMember.Global
 
 namespace OpenBve
@@ -697,9 +699,9 @@ namespace OpenBve
             /// <returns>The distance in meters</returns>
             public static double CameraDistance(Vector3 Position)
             {
-                double dx = World.AbsoluteCameraPosition.X - Position.X;
-                double dy = World.AbsoluteCameraPosition.Y - Position.Y;
-                double dz = World.AbsoluteCameraPosition.Z - Position.Z;
+                double dx = Camera.AbsoluteCameraPosition.X - Position.X;
+                double dy = Camera.AbsoluteCameraPosition.Y - Position.Y;
+                double dz = Camera.AbsoluteCameraPosition.Z - Position.Z;
                 return Math.Sqrt(dx * dx + dy * dy + dz * dz);
             }
         }

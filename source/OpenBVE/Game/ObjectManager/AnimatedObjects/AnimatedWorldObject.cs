@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBveApi;
+using OpenBveApi.Objects;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -14,14 +16,14 @@ namespace OpenBve
 			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
 
-			internal override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
 				double pa = TrackPosition + z - Radius - extraRadius;
 				double pb = TrackPosition + z + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z - OpenBveShared.Renderer.BackgroundImageDistance - OpenBveShared.World.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.CameraCurrentAlignment.Position.Z + OpenBveShared.Renderer.BackgroundImageDistance + OpenBveShared.World.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{
@@ -33,7 +35,7 @@ namespace OpenBve
 						double trainDistance = double.MaxValue;
 						for (int j = 0; j < TrainManager.Trains.Length; j++)
 						{
-							if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
+							if (TrainManager.Trains[j].State == TrainState.Available)
 							{
 								double distance;
 								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
@@ -63,7 +65,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
+						OpenBveShared.Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
 						Visible = true;
 					}
 				}
@@ -72,7 +74,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(Object.ObjectIndex);
+						OpenBveShared.Renderer.HideObject(Object.ObjectIndex);
 						Visible = false;
 					}
 				}

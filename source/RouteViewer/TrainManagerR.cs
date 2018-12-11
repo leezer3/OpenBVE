@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using TrackManager;
 
 namespace OpenBve {
 	using System;
@@ -17,7 +18,7 @@ namespace OpenBve {
 
 		// structures
 		internal struct Axle {
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 		}
 		internal struct Coupler { }
 		internal struct Section { }
@@ -429,19 +430,14 @@ namespace OpenBve {
 //			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainState {
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
-		}
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
 		internal class Train : OpenBveApi.Train {
 			//internal int TrainIndex;
-			internal TrainState State;
 			//internal bool Disposed;
 			//internal bool IsBogusTrain;
 			internal Car[] Cars;
-			internal int Destination;
 			//internal Coupler[] Couplers;
 			internal int DriverCar;
 			internal TrainSpecs Specs;
@@ -458,7 +454,6 @@ namespace OpenBve {
 			//internal double[] RouteLimits;
 			//internal double CurrentRouteLimit;
 			//internal double CurrentSectionLimit;
-			internal int CurrentSectionIndex;
 			//internal double PretrainAheadTimetable;
 			//internal double InternalTimerTimeElapsed;
 		}

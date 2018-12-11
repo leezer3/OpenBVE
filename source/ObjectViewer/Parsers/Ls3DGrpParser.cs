@@ -121,7 +121,7 @@ namespace OpenBve
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
-				ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[0];
+				UnifiedObject[] obj = new UnifiedObject[0];
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/GRUPPENOBJECT");
 				if (DocumentNodes != null)
 				{
@@ -213,14 +213,14 @@ namespace OpenBve
 
 					//Single mesh object, containing all static components of the LS3D object
 					//If we use multiples, the Z-sorting throws a wobbly
-					ObjectManager.StaticObject staticObject = null;
+					StaticObject staticObject = null;
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
-						ObjectManager.StaticObject Object = null;
+						StaticObject Object = null;
 						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
 						try
 						{
@@ -230,7 +230,7 @@ namespace OpenBve
 							}
 							else if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+								Object = (StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
 							}
 							else
 							{
@@ -245,17 +245,17 @@ namespace OpenBve
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
 								//If the function script is not empty, this is a new animated object bit
-								Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
+								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
 								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+								AnimatedObjectState aos = new AnimatedObjectState
 								{
 									Object = Object,
 									Position = CurrentObjects[i].Position,
 								};
-								a.States = new ObjectManager.AnimatedObjectState[] { aos };
+								a.States = new AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
 								Result.Objects[aL].StateFunction =
 									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
@@ -267,7 +267,7 @@ namespace OpenBve
 								{
 									Object.Mesh.Vertices[j].Coordinates += CurrentObjects[i].Position;
 								}
-								ObjectManager.JoinObjects(ref staticObject, Object);
+								staticObject.JoinObjects(Object);
 							}
 						}
 						else if (AnimatedObject != null)
@@ -288,7 +288,7 @@ namespace OpenBve
 								else
 								{
 									Result.Objects[o] = new ObjectManager.AnimatedObject();
-									Result.Objects[o].States = new ObjectManager.AnimatedObjectState[0];
+									Result.Objects[o].States = new AnimatedObjectState[0];
 								}
 							}
 						}
@@ -297,11 +297,11 @@ namespace OpenBve
 					{
 						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
 						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
+						AnimatedObjectState aos = new AnimatedObjectState
 						{
 							Object = staticObject,
 						};
-						a.States = new ObjectManager.AnimatedObjectState[] { aos };
+						a.States = new AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length -1] = a;
 					}
 				}

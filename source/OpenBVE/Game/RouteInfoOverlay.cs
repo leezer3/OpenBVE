@@ -79,7 +79,7 @@ namespace OpenBve
 			switch (currentState)
 			{
 			case state.map:
-				Renderer.DrawRectangle(mapImage, origin, mapSize, null);
+				OpenBveShared.Renderer.DrawRectangle(mapImage, origin, mapSize, null);
 				// get current train position
 				int n = TrainManager.Trains.Length;
 				for (int i = 0; i < n; i++)
@@ -92,13 +92,13 @@ namespace OpenBve
 					zPos = mapSize.Height - mapSize.Height * (trainZ - Game.RouteInformation.RouteMinZ) /
 							(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
 					// draw a dot at current train position
-					Renderer.DrawRectangle(null, new Point(xPos, zPos),
+					OpenBveShared.Renderer.DrawRectangle(null, new Point(xPos, zPos),
 							new Size(trainDotDiameter, trainDotDiameter),
 							TrainManager.Trains[i] == TrainManager.PlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
 			case state.gradient:
-				Renderer.DrawRectangle(gradientImage, origin, gradientSize, null);
+				OpenBveShared.Renderer.DrawRectangle(gradientImage, origin, gradientSize, null);
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition
 						- TrainManager.PlayerTrain.Cars[0].FrontAxle.Position
@@ -107,7 +107,7 @@ namespace OpenBve
 				xPos = gradientSize.Width * (trackPos - Game.RouteInformation.GradientMinTrack) /
 						(Game.RouteInformation.GradientMaxTrack - Game.RouteInformation.GradientMinTrack);
 				// draw a vertical bar at the current train position
-				Renderer.DrawRectangle(null, new Point(xPos, gradientSize.Height / 2),
+				OpenBveShared.Renderer.DrawRectangle(null, new Point(xPos, gradientSize.Height / 2),
 					new Size(gradientPosWidth, gradientSize.Height / 2), gradientPosBar);
 				break;
 			}

@@ -12,7 +12,7 @@ namespace OpenBve
 {
 	class NewXParser
 	{
-		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, ObjectLoadMode LoadMode)
+		internal static StaticObject ReadObject(string FileName, Encoding Encoding, ObjectLoadMode LoadMode)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
@@ -110,14 +110,14 @@ namespace OpenBve
 			return null;
 		}
 		
-		private static ObjectManager.StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
+		private static StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
-			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-			obj.Mesh.Faces = new World.MeshFace[] { };
-			obj.Mesh.Materials = new World.MeshMaterial[] { };
+			StaticObject obj = new StaticObject(Program.CurrentHost);
+			obj.Mesh.Faces = new MeshFace[] { };
+			obj.Mesh.Materials = new MeshMaterial[] { };
 			obj.Mesh.Vertices = new VertexTemplate[] { };
-			MeshBuilder builder = new MeshBuilder();
+			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
 			while (block.Position() < block.Length() - 5)
@@ -143,7 +143,7 @@ namespace OpenBve
 		private static Matrix4D rootMatrix;
 		private static int currentLevel = 0;
 
-		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
+		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
 			switch (block.Token)
@@ -199,7 +199,7 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder();
+						builder = new MeshBuilder(Program.CurrentHost);
 					}
 					while (block.Position() < block.Length() - 5)
 					{
@@ -235,7 +235,7 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder();
+						builder = new MeshBuilder(Program.CurrentHost);
 					}
 					int nVerts = block.ReadUInt16();
 					if (nVerts == 0)
@@ -287,8 +287,8 @@ namespace OpenBve
 						{
 							throw new Exception("fVerts must be greater than zero");
 						}
-						builder.Faces[f + i] = new World.MeshFace();
-						builder.Faces[f + i].Vertices = new World.MeshFaceVertex[fVerts];
+						builder.Faces[f + i] = new MeshFace();
+						builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
 						for (int j = 0; j < fVerts; j++)
 						{
 							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();
@@ -407,15 +407,15 @@ namespace OpenBve
 			}
 		}
 
-		private static ObjectManager.StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize, ObjectLoadMode LoadMode)
+		private static StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize, ObjectLoadMode LoadMode)
 		{
 			Block block = new BinaryBlock(Data, FloatingPointSize);
 			block.FloatingPointSize = FloatingPointSize;
-			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-			obj.Mesh.Faces = new World.MeshFace[] { };
-			obj.Mesh.Materials = new World.MeshMaterial[] { };
+			StaticObject obj = new StaticObject(Program.CurrentHost);
+			obj.Mesh.Faces = new MeshFace[] { };
+			obj.Mesh.Materials = new MeshMaterial[] { };
 			obj.Mesh.Vertices = new VertexTemplate[] { };
-			MeshBuilder builder = new MeshBuilder();
+			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 			Material material = new Material();
 			while (block.Position() < block.Length())
 			{

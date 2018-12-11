@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveShared;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -77,9 +78,9 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateXSpeed * timeElapsed);
                 double sina = Math.Sin(RotateXSpeed * timeElapsed);
-				World.AbsoluteCameraDirection.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
-	            World.AbsoluteCameraUp.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
-	            World.AbsoluteCameraSide.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+				Camera.AbsoluteCameraDirection.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+	            Camera.AbsoluteCameraUp.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
+	            Camera.AbsoluteCameraSide.Rotate(new Vector3(0,1.0,0.0), cosa, sina);
                 keep = true;
             }
             // rotate y
@@ -113,8 +114,8 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateYSpeed * timeElapsed);
                 double sina = Math.Sin(RotateYSpeed * timeElapsed);
-				World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
-	            World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
+				Camera.AbsoluteCameraDirection.Rotate(Camera.AbsoluteCameraSide, cosa, sina);
+	            Camera.AbsoluteCameraUp.Rotate(Camera.AbsoluteCameraSide, cosa, sina);
                 keep = true;
             }
             // move x
@@ -146,9 +147,9 @@ namespace OpenBve
             }
             if (MoveXSpeed != 0.0)
             {
-                World.AbsoluteCameraPosition.X += MoveXSpeed * timeElapsed * World.AbsoluteCameraSide.X;
-                World.AbsoluteCameraPosition.Y += MoveXSpeed * timeElapsed * World.AbsoluteCameraSide.Y;
-                World.AbsoluteCameraPosition.Z += MoveXSpeed * timeElapsed * World.AbsoluteCameraSide.Z;
+                Camera.AbsoluteCameraPosition.X += MoveXSpeed * timeElapsed * Camera.AbsoluteCameraSide.X;
+                Camera.AbsoluteCameraPosition.Y += MoveXSpeed * timeElapsed * Camera.AbsoluteCameraSide.Y;
+                Camera.AbsoluteCameraPosition.Z += MoveXSpeed * timeElapsed * Camera.AbsoluteCameraSide.Z;
                 keep = true;
             }
             // move y
@@ -180,9 +181,9 @@ namespace OpenBve
             }
             if (MoveYSpeed != 0.0)
             {
-                World.AbsoluteCameraPosition.X += MoveYSpeed * timeElapsed * World.AbsoluteCameraUp.X;
-                World.AbsoluteCameraPosition.Y += MoveYSpeed * timeElapsed * World.AbsoluteCameraUp.Y;
-                World.AbsoluteCameraPosition.Z += MoveYSpeed * timeElapsed * World.AbsoluteCameraUp.Z;
+                Camera.AbsoluteCameraPosition.X += MoveYSpeed * timeElapsed * Camera.AbsoluteCameraUp.X;
+                Camera.AbsoluteCameraPosition.Y += MoveYSpeed * timeElapsed * Camera.AbsoluteCameraUp.Y;
+                Camera.AbsoluteCameraPosition.Z += MoveYSpeed * timeElapsed * Camera.AbsoluteCameraUp.Z;
                 keep = true;
             }
             // move z
@@ -214,9 +215,9 @@ namespace OpenBve
             }
             if (MoveZSpeed != 0.0)
             {
-                World.AbsoluteCameraPosition.X += MoveZSpeed * timeElapsed * World.AbsoluteCameraDirection.X;
-                World.AbsoluteCameraPosition.Y += MoveZSpeed * timeElapsed * World.AbsoluteCameraDirection.Y;
-                World.AbsoluteCameraPosition.Z += MoveZSpeed * timeElapsed * World.AbsoluteCameraDirection.Z;
+                Camera.AbsoluteCameraPosition.X += MoveZSpeed * timeElapsed * Camera.AbsoluteCameraDirection.X;
+                Camera.AbsoluteCameraPosition.Y += MoveZSpeed * timeElapsed * Camera.AbsoluteCameraDirection.Y;
+                Camera.AbsoluteCameraPosition.Z += MoveZSpeed * timeElapsed * Camera.AbsoluteCameraDirection.Z;
                 keep = true;
             }
             // lighting
@@ -259,10 +260,10 @@ namespace OpenBve
                 else if (ReducedModeEnteringTime <= 0)
                 {
                     Program.ReducedMode = true;
-                    World.AbsoluteCameraSide.Y = 0.0;
-                    World.AbsoluteCameraSide.Normalize();
-                    World.AbsoluteCameraDirection.Normalize();
-                    World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
+                    Camera.AbsoluteCameraSide.Y = 0.0;
+                    Camera.AbsoluteCameraSide.Normalize();
+                    Camera.AbsoluteCameraDirection.Normalize();
+                    Camera.AbsoluteCameraUp = Vector3.Cross(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraSide);
                 }
                 else
                 {
@@ -271,13 +272,13 @@ namespace OpenBve
             }
             if (updatelight)
             {
-               Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
-               Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
-                Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
-                Renderer.InitializeLighting();
+				OpenBveShared.Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
+	            OpenBveShared.Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
+	            OpenBveShared.Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+	            OpenBveShared.Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+	            OpenBveShared.Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+	            OpenBveShared.Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
+	            OpenBveShared.Renderer.InitializeLighting();
             }
             Renderer.RenderScene();
             SwapBuffers();
@@ -285,9 +286,9 @@ namespace OpenBve
 
         protected override void OnResize(EventArgs e)
         {
-            Renderer.ScreenWidth = Width;
-            Renderer.ScreenHeight = Height;
-            Program.UpdateViewport();
+            OpenBveShared.Renderer.Width = Width;
+            OpenBveShared.Renderer.Height = Height;
+            OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -299,11 +300,11 @@ namespace OpenBve
 			MouseWheel += Program.MouseWheelEvent;
 	        FileDrop += Program.DragFile;
             Program.ResetCamera();
-            Renderer.Initialize();
-            Renderer.InitializeLighting();
+            OpenBveShared.Renderer.Initialize(Program.CurrentHost);
+	        OpenBveShared.Renderer.InitializeLighting();
             //SwapBuffers();
             //Fonts.Initialize();
-            Program.UpdateViewport();
+            OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
             // command line arguments
             // if (commandLineArgs != null)
             // {
@@ -332,6 +333,7 @@ namespace OpenBve
             ObjectManager.FinishCreatingObjects();
             ObjectManager.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+	        Renderer.ApplyBackgroundColor();
         }
     }
 }

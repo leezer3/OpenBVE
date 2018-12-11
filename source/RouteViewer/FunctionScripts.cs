@@ -1,14 +1,15 @@
 using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.FunctionScripting;
 using OpenBveApi.Runtime;
+using OpenBveShared;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 
 		// execute function script
-		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.Instructions.Length; i++) {
 				switch (Function.Instructions[i]) {
@@ -220,15 +221,15 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.CameraDistance:
 						{
-							double dx = World.AbsoluteCameraPosition.X - Position.X;
-							double dy = World.AbsoluteCameraPosition.Y - Position.Y;
-							double dz = World.AbsoluteCameraPosition.Z - Position.Z;
+							double dx = Camera.AbsoluteCameraPosition.X - Position.X;
+							double dy = Camera.AbsoluteCameraPosition.Y - Position.Y;
+							double dz = Camera.AbsoluteCameraPosition.Z - Position.Z;
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
-						if (World.CameraMode == CameraViewMode.Interior)
+						if (Camera.CameraView == CameraViewMode.Interior)
 						{
 							Function.Stack[s] = 0;
 						}

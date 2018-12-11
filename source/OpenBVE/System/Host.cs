@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using OpenBveApi;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenBveApi.World;
+using OpenBveShared;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -96,6 +100,11 @@ namespace OpenBve {
 			texture = null;
 			return false;
 		}
+
+		public override bool LoadTexture(Texture texture, OpenGlTextureWrapMode wrap)
+		{
+			return Textures.LoadTexture(texture, wrap);
+		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
@@ -124,6 +133,17 @@ namespace OpenBve {
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
 			handle = Textures.RegisterTexture(texture);
+			return true;
+		}
+
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
+		/// <param name="bitmap">The texture data in bitmap format.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <returns>Whether loading the texture was successful.</returns>
+		public override bool RegisterTexture(Bitmap bitmap, TextureParameters parameters, out Texture handle)
+		{
+			handle = Textures.RegisterTexture(bitmap, parameters);
 			return true;
 		}
 		
@@ -184,6 +204,11 @@ namespace OpenBve {
 		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle) {
 			handle = Sounds.RegisterBuffer(sound, 0.0); // TODO
 			return true;
+		}
+
+		public override void CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+		{
+			GameObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials, Program.CurrentHost, Interface.CurrentOptions.ViewingDistance);
 		}
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, Train train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)

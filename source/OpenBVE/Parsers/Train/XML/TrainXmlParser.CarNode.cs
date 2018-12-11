@@ -6,12 +6,13 @@ using System.Text;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve.Parsers.Train
 {
 	partial class TrainXmlParser
 	{
-		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
+		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects)
 		{
 			double driverZ = 0.0;
 			string interiorFile = string.Empty;
@@ -279,7 +280,7 @@ namespace OpenBve.Parsers.Train
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
-					Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+					Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
@@ -288,10 +289,10 @@ namespace OpenBve.Parsers.Train
 					{
 						for (int i = 0; i < a.Objects.Length; i++)
 						{
-							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							a.Objects[i].ObjectIndex = GameObjectManager.CreateDynamicObject(Program.CurrentHost);
 						}
 						Train.Cars[Car].CarSections[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 					}
 					catch
 					{

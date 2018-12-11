@@ -1,5 +1,7 @@
-﻿using OpenBveApi.Colors;
+﻿using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using TrackManager;
 
 namespace OpenBve
 {
@@ -20,7 +22,7 @@ namespace OpenBve
 				this.PreviousSectionIndex = PreviousSectionIndex;
 				this.NextSectionIndex = NextSectionIndex;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
 			{
 				if (Train != null)
 				{
@@ -56,7 +58,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateFrontBackward(TrainManager.Train Train, bool UpdateTrain)
+			private void UpdateFrontBackward(Train Train, bool UpdateTrain)
 			{
 				// update sections
 				if (this.PreviousSectionIndex >= 0)
@@ -86,9 +88,10 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateFrontForward(TrainManager.Train Train, bool UpdateTrain, bool UpdateSection)
+			private void UpdateFrontForward(Train train, bool UpdateTrain, bool UpdateSection)
 			{
-				if (UpdateTrain)
+				TrainManager.Train Train = (TrainManager.Train) train;
+ 				if (UpdateTrain)
 				{
 					// update train
 					if (this.NextSectionIndex >= 0)
@@ -134,7 +137,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateRearBackward(TrainManager.Train Train, bool UpdateSection)
+			private void UpdateRearBackward(Train Train, bool UpdateSection)
 			{
 				if (UpdateSection)
 				{
@@ -146,7 +149,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateRearForward(TrainManager.Train Train, bool UpdateSection)
+			private void UpdateRearForward(Train Train, bool UpdateSection)
 			{
 				if (UpdateSection)
 				{

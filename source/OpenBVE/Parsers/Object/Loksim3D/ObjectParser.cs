@@ -22,16 +22,16 @@ namespace OpenBve
 		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="Rotation">The rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static StaticObject ReadObject(string FileName, ObjectLoadMode LoadMode, Vector3 Rotation)
 		{
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
+			StaticObject Object = new StaticObject(Program.CurrentHost);
+			Object.Mesh.Faces = new MeshFace[] { };
+			Object.Mesh.Materials = new MeshMaterial[] { };
 			Object.Mesh.Vertices = new VertexTemplate[] { };
-			MeshBuilder Builder = new MeshBuilder();
+			MeshBuilder Builder = new MeshBuilder(Program.CurrentHost);
 			Vector3[] Normals = new Vector3[4];
 			bool PropertiesFound = false;
 
@@ -284,10 +284,10 @@ namespace OpenBve
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												int f = Builder.Faces.Length;
 												//Add 1 to the length of the face array
-												Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-												Builder.Faces[f] = new World.MeshFace();
+												Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+												Builder.Faces[f] = new MeshFace();
 												//Create the vertex array for the face
-												Builder.Faces[f].Vertices = new World.MeshFaceVertex[Verticies.Length];
+												Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
 												while (Builder.Vertices.Length > Normals.Length)
 												{
 													Array.Resize<Vector3>(ref Normals,
@@ -360,7 +360,7 @@ namespace OpenBve
 												if (Face2)
 												{
 													//Add face2 flag if required
-													Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+													Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 												}
 											}
 
@@ -386,7 +386,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Z *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(1,0,0), Rotation.Z);
+					ApplyRotation(Builder, Vector3.Right, Rotation.Z);
 				}
 
 
@@ -396,7 +396,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.X *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(0,1,0), Rotation.X);
+					ApplyRotation(Builder, Vector3.Down, Rotation.X);
 				}
 				if (Rotation.Y != 0.0)
 				{
@@ -404,7 +404,7 @@ namespace OpenBve
 					//Convert to radians
 					Rotation.Y *= 0.0174532925199433;
 					//Apply rotation
-					ApplyRotation(Builder,new Vector3(0,0,1), Rotation.Y);
+					ApplyRotation(Builder, Vector3.Forward, Rotation.Y);
 				}
 
 

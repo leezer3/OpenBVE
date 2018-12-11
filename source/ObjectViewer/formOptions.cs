@@ -18,9 +18,10 @@ namespace OpenBve
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
-	        comboBoxNewXParser.SelectedIndex = Interface.CurrentOptions.UseNewXParser;
+            width.Value = OpenBveShared.Renderer.Width;
+            height.Value = OpenBveShared.Renderer.Height;
+            comboBoxNewXParser.SelectedIndex = Interface.CurrentOptions.CurrentXParser;
+            comboBoxNewObjParser.SelectedIndex = Interface.CurrentOptions.CurrentObjParser;
         }
 
         internal static DialogResult ShowOptions()
@@ -77,13 +78,13 @@ namespace OpenBve
                     break;
             }
             //Set width and height
-            if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+            if (OpenBveShared.Renderer.Width != width.Value || OpenBveShared.Renderer.Height != height.Value)
             {
-                Renderer.ScreenWidth = (int) width.Value;
-                Renderer.ScreenHeight = (int) height.Value;
+                OpenBveShared.Renderer.Width = (int) width.Value;
+                OpenBveShared.Renderer.Height = (int) height.Value;
                 Program.currentGameWindow.Width = (int) width.Value;
                 Program.currentGameWindow.Height = (int) height.Value;
-                Program.UpdateViewport();
+                OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
             }
             //Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
             if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
@@ -98,8 +99,8 @@ namespace OpenBve
 #if !DEBUG
 									try {
 #endif
-                        ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
-                        ObjectManager.CreateObject(o, Vector3.Zero,
+                        UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+                        o.CreateObject(Vector3.Zero,
                             new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
                             0.0, 25.0, 0.0);
 #if !DEBUG
@@ -113,8 +114,8 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
-	        Interface.CurrentOptions.UseNewXParser = comboBoxNewXParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentXParser = comboBoxNewXParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentObjParser = comboBoxNewObjParser.SelectedIndex;
             Options.SaveOptions();
             this.Close();
         }

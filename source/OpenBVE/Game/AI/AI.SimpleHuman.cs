@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Runtime;
 
 namespace OpenBve
@@ -76,15 +77,15 @@ namespace OpenBve
 								time -= Stations[Train.Station].StopTime;
 								if (time > SecondsSinceMidnight)
 								{
-									time = double.MinValue;
+									time = Double.MinValue;
 								}
 							}
 						}
 						else
 						{
-							time = double.MinValue;
+							time = Double.MinValue;
 						}
-						if (time != double.MinValue)
+						if (time != Double.MinValue)
 						{
 							const double largeThreshold = 30.0;
 							const double largeChangeFactor = 0.0025;
@@ -284,7 +285,7 @@ namespace OpenBve
 						lim = Train.CurrentSectionLimit;
 					}
 					double powerstart, powerend, brakestart;
-					if (double.IsPositiveInfinity(lim))
+					if (Double.IsPositiveInfinity(lim))
 					{
 						powerstart = lim;
 						powerend = lim;
@@ -361,7 +362,7 @@ namespace OpenBve
 					// look ahead
 					double lookahead = (Train.Station >= 0 ? 150.0 : 50.0) + (spd * spd) / (2.0 * decelerationCruise);
 					double tp = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxle.Position + 0.5 * Train.Cars[0].Length;
-					double stopDistance = double.MaxValue;
+					double stopDistance = Double.MaxValue;
 					{
 						// next station stop
 						int te = Train.Cars[0].FrontAxle.Follower.LastTrackElement;
@@ -620,7 +621,7 @@ namespace OpenBve
 					// trains ahead
 					for (int i = 0; i < TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i] != Train && TrainManager.Trains[i].State == TrainManager.TrainState.Available)
+						if (TrainManager.Trains[i] != Train && TrainManager.Trains[i].State == TrainState.Available)
 						{
 							double pos =
 								TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
@@ -760,7 +761,7 @@ namespace OpenBve
 						// power
 						BrakeMode = false;
 						double acclim;
-						if (!double.IsInfinity(lim))
+						if (!Double.IsInfinity(lim))
 						{
 							double d = lim - spd;
 							if (d > 0.0)
@@ -791,7 +792,7 @@ namespace OpenBve
 								Train.ApplyNotch(0, true, -1, true);
 							}
 							Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Release);
-							if (double.IsPositiveInfinity(powerstart))
+							if (Double.IsPositiveInfinity(powerstart))
 							{
 								CurrentInterval = 0.3 + 0.1 * Train.Handles.Power.Driver;
 							}

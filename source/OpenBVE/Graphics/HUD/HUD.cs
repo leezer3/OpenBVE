@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
+using OpenBveShared;
 
 namespace OpenBve
 {

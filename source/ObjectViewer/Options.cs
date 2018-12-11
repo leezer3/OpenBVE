@@ -72,7 +72,7 @@ namespace OpenBve
                                                 {
                                                     a = 960;
                                                 }
-                                                Renderer.ScreenWidth = a;
+                                                OpenBveShared.Renderer.Width = a;
                                             } break;
                                         case "windowheight":
                                             {
@@ -81,7 +81,7 @@ namespace OpenBve
                                                 {
                                                     a = 600;
                                                 }
-                                                Renderer.ScreenHeight = a;
+                                                OpenBveShared.Renderer.Height = a;
                                             } break;
                                     } break;
                                 case "quality":
@@ -130,6 +130,36 @@ namespace OpenBve
                                                     }
                                             } break;
                                     } break;
+								case "parsers":
+									switch (Key)
+									{
+										case "xobject":
+                                            {
+											    int p;
+											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+											    {
+												    Interface.CurrentOptions.CurrentXParser = 0;
+											    }
+											    else
+											    {
+												    Interface.CurrentOptions.CurrentXParser = p;
+											    }
+											    break;
+                                            }
+										case "objobject":
+                                            {
+											    int p;
+											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
+											    {
+												    Interface.CurrentOptions.CurrentObjParser = 0;
+											    }
+											    else
+											    {
+												    Interface.CurrentOptions.CurrentObjParser = p;
+											    }
+											    break;
+                                            }
+									} break;
                             }
                         }
                     }
@@ -149,8 +179,8 @@ namespace OpenBve
                 Builder.AppendLine("; Object Viewer specific options file");
                 Builder.AppendLine();
                 Builder.AppendLine("[display]");
-                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + OpenBveShared.Renderer.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + OpenBveShared.Renderer.Height.ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {
@@ -169,6 +199,10 @@ namespace OpenBve
                 Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
                 Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
                 Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
+                Builder.AppendLine();
+                Builder.AppendLine("[Parsers]");
+                Builder.AppendLine("xObject = " + Interface.CurrentOptions.CurrentXParser);
+                Builder.AppendLine("objObject = " + Interface.CurrentOptions.CurrentObjParser);
                 string configFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options_ov.cfg");
                 System.IO.File.WriteAllText(configFile, Builder.ToString(), new System.Text.UTF8Encoding(true));
             }

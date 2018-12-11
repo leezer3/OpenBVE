@@ -223,14 +223,14 @@ namespace OpenBve
 				}
 			}
 
-			internal void Apply(out ObjectManager.StaticObject Object)
+			internal void Apply(out StaticObject Object)
 			{
-				Object = new ObjectManager.StaticObject
+				Object = new StaticObject(Program.CurrentHost)
 				{
 					Mesh =
 					{
-						Faces = new World.MeshFace[] { },
-						Materials = new World.MeshMaterial[] { },
+						Faces = new MeshFace[] { },
+						Materials = new MeshMaterial[] { },
 						Vertices = new VertexTemplate[] { }
 					}
 				};
@@ -249,7 +249,7 @@ namespace OpenBve
 
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new World.MeshFace(faces[i].Vertices);
+						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices);
 						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
 						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
@@ -269,7 +269,7 @@ namespace OpenBve
 						Object.Mesh.Materials[mm + i].Flags = 0;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
 						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
-						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
+						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;
@@ -407,8 +407,8 @@ namespace OpenBve
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
 					Result.Objects[idx] = new ObjectManager.AnimatedObject();
-					Result.Objects[idx].States = new ObjectManager.AnimatedObjectState[1];
-					ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
+					Result.Objects[idx].States = new AnimatedObjectState[1];
+					AnimatedObjectState aos = new AnimatedObjectState();
 					shape.LODs[i].subObjects[j].Apply(out aos.Object);
 					aos.Position = new Vector3(0, 0, 0);
 					Result.Objects[idx].States[0] = aos;

@@ -3,6 +3,7 @@ using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenTK.Graphics.OpenGL;
+using OpenBveShared;
 
 namespace OpenBve
 {
@@ -14,7 +15,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			OpenBveShared.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)OpenBveShared.Renderer.Width, (double)OpenBveShared.Renderer.Height);
 			// actual handles
 			{
 				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
@@ -43,7 +44,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
+				OpenBveShared.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, OpenBveShared.Renderer.Height - 46), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// safety handles
 			{
@@ -74,7 +75,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
+				OpenBveShared.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, OpenBveShared.Renderer.Height - 32), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// driver handles
 			{
@@ -104,7 +105,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
+				OpenBveShared.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, OpenBveShared.Renderer.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
 			int texturesLoaded = Textures.GetNumberOfLoadedTextures();
@@ -133,7 +134,7 @@ namespace OpenBve
 				seconds = remainder % 60;
 			string[] Lines = new string[] {
 				"=system",
-				"fps: " + Game.InfoFrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
+				"fps: " + OpenBveShared.Renderer.Statistics.FrameRate.ToString("0.0", Culture) + (MainLoop.LimitFramerate ? " (low cpu)" : ""),
 				"time:" + hours.ToString("00") +  ":" + minutes.ToString("00") + ":" + seconds.ToString("00"),
 				"score: " + Game.CurrentScore.CurrentValue.ToString(Culture),
 				"",
@@ -153,20 +154,20 @@ namespace OpenBve
 				"=route",
 				"track limit: " + (TrainManager.PlayerTrain.CurrentRouteLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentRouteLimit * 3.6).ToString("0.0", Culture) + " km/h")),
 				"signal limit: " + (TrainManager.PlayerTrain.CurrentSectionLimit == double.PositiveInfinity ? "unlimited" : ((TrainManager.PlayerTrain.CurrentSectionLimit * 3.6).ToString("0.0", Culture) + " km/h")),
-				"total static objects: " + ObjectManager.ObjectsUsed.ToString(Culture),
-				"total static GL_TRIANGLES: " + Game.InfoTotalTriangles.ToString(Culture),
-				"total static GL_TRIANGLE_STRIP: " + Game.InfoTotalTriangleStrip.ToString(Culture),
-				"total static GL_QUADS: " + Game.InfoTotalQuads.ToString(Culture),
-				"total static GL_QUAD_STRIP: " + Game.InfoTotalQuadStrip.ToString(Culture),
-				"total static GL_POLYGON: " + Game.InfoTotalPolygon.ToString(Culture),
-				"total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed.ToString(Culture),
+				"total static objects: " + GameObjectManager.ObjectsUsed.ToString(Culture),
+				"total static GL_TRIANGLES: " + OpenBveShared.Renderer.Statistics.TotalTriangles.ToString(Culture),
+				"total static GL_TRIANGLE_STRIP: " + OpenBveShared.Renderer.Statistics.TotalTriangleStrip.ToString(Culture),
+				"total static GL_QUADS: " + OpenBveShared.Renderer.Statistics.TotalQuads.ToString(Culture),
+				"total static GL_QUAD_STRIP: " + OpenBveShared.Renderer.Statistics.TotalQuadStrip.ToString(Culture),
+				"total static GL_POLYGON: " + OpenBveShared.Renderer.Statistics.TotalPolygon.ToString(Culture),
+				"total animated objects: " + GameObjectManager.AnimatedWorldObjectsUsed.ToString(Culture),
 				"",
 				"=renderer",
-				"static opaque faces: " + Game.InfoStaticOpaqueFaceCount.ToString(Culture),
-				"dynamic opaque faces: " + DynamicOpaque.FaceCount.ToString(Culture),
-				"dynamic alpha faces: " + DynamicAlpha.FaceCount.ToString(Culture),
-				"overlay opaque faces: " + OverlayOpaque.FaceCount.ToString(Culture),
-				"overlay alpha faces: " + OverlayAlpha.FaceCount.ToString(Culture),
+				"static opaque faces: " + OpenBveShared.Renderer.Statistics.StaticOpaqueFaceCount.ToString(Culture),
+				"dynamic opaque faces: " + OpenBveShared.Renderer.DynamicOpaque.FaceCount.ToString(Culture),
+				"dynamic alpha faces: " + OpenBveShared.Renderer.DynamicAlpha.FaceCount.ToString(Culture),
+				"overlay opaque faces: " + OpenBveShared.Renderer.OverlayOpaque.FaceCount.ToString(Culture),
+				"overlay alpha faces: " + OpenBveShared.Renderer.OverlayAlpha.FaceCount.ToString(Culture),
 				"textures loaded: " + texturesLoaded.ToString(Culture) + " / " + texturesRegistered.ToString(Culture),
 				"",
 				"=camera",
@@ -194,18 +195,18 @@ namespace OpenBve
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						System.Drawing.Size size = MeasureString(Fonts.SmallFont, text);
+						System.Drawing.Size size = OpenBveShared.Renderer.MeasureString(Fonts.SmallFont, text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
-						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
-						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
 				}
-				else if (y >= (double)Screen.Height - 240.0)
+				else if (y >= (double)OpenBveShared.Renderer.Height - 240.0)
 				{
 					x += 280.0;
 					y = 4.0;
@@ -222,7 +223,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			OpenBveShared.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)OpenBveShared.Renderer.Width, (double)OpenBveShared.Renderer.Height);
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
@@ -250,17 +251,17 @@ namespace OpenBve
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						System.Drawing.Size size = MeasureString(Fonts.SmallFont, text);
+						System.Drawing.Size size = OpenBveShared.Renderer.MeasureString(Fonts.SmallFont, text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
-						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
-						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
-					if (y > Screen.Height - 20.0)
+					if (y > OpenBveShared.Renderer.Height - 20.0)
 					{
 						y = 32.0;
 						x += 80.0;
@@ -286,89 +287,89 @@ namespace OpenBve
 				{
 					if (!heading[0])
 					{
-						DrawString(Fonts.SmallFont, "Brake pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Brake pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[0] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.NormalPressure;
 					GL.Color3(1.0f, 1.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// auxillary reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
 				{
 					if (!heading[1])
 					{
-						DrawString(Fonts.SmallFont, "Auxillary reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Auxillary reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.MaximumPressure;
 					GL.Color3(0.5f, 0.5f, 0.5f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// brake cylinder
 				{
 					if (!heading[2])
 					{
-						DrawString(Fonts.SmallFont, "Brake cylinder", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Brake cylinder", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[2] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 					GL.Color3(0.75f, 0.5f, 0.25f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// main reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
 					if (!heading[3])
 					{
-						DrawString(Fonts.SmallFont, "Main reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Main reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[3] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.MaximumPressure;
 					GL.Color3(1.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// equalizing reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
 					if (!heading[4])
 					{
-						DrawString(Fonts.SmallFont, "Equalizing reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Equalizing reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[4] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
 					GL.Color3(0.0f, 0.75f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// straight air pipe
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
 					if (!heading[5])
 					{
-						DrawString(Fonts.SmallFont, "Straight air pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						OpenBveShared.Renderer.DrawString(Fonts.SmallFont, "Straight air pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[5] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.straightAirPipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 					GL.Color3(0.0f, 0.75f, 1.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					OpenBveShared.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} //x += w + 8.0;
 				GL.Color3(0.0f, 0.0f, 0.0f);
 				y += h + 8.0;
