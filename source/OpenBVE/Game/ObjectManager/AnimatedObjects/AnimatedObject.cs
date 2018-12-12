@@ -750,9 +750,7 @@ namespace OpenBve
 					// translate
 					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position - Position;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
 						double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
 						double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
@@ -763,13 +761,9 @@ namespace OpenBve
 					}
 					else
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Position;
 					}
 				}
 				// update normals
