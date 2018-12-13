@@ -1256,25 +1256,22 @@ namespace OpenBve
                 for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
                 {
                     ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-                }
-                for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-                {
-                    if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
-                    {
-                        if (rotateX)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateXDirection, cosX, sinX);
-                        }
-                        if (rotateY)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateYDirection, cosY, sinY);
-                        }
-                        if (rotateZ)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateZDirection, cosZ, sinZ);
-                        }
-	                    ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
-                    }
+	                if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
+	                {
+		                if (rotateX)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateXDirection, cosX, sinX);
+		                }
+		                if (rotateY)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateYDirection, cosY, sinY);
+		                }
+		                if (rotateZ)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateZDirection, cosZ, sinZ);
+		                }
+		                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
+	                }
                 }
                 // visibility changed
                 if (Show)

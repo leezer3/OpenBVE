@@ -772,9 +772,6 @@ namespace OpenBve
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
 						ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-					}
-					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-					{
 						if (!Vector3.IsZero(States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
 						{
 							if (rotateX)

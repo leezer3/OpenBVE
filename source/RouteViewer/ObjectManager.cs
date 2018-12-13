@@ -549,16 +549,20 @@ namespace OpenBve {
 			for (int k = 0; k < Object.States[s].Object.Mesh.Faces.Length; k++) {
 				for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++) {
 					ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-				}
-				for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++) {
-					if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal)) {
-						if (rotateX) {
+					if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
+					{
+						if (rotateX)
+						{
 							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateXDirection, cosX, sinX);
 						}
-						if (rotateY) {
+
+						if (rotateY)
+						{
 							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateYDirection, cosY, sinY);
 						}
-						if (rotateZ) {
+
+						if (rotateZ)
+						{
 							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateZDirection, cosZ, sinZ);
 						}
 						ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
