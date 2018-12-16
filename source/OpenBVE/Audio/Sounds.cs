@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using OpenTK;
+using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenBveApi.Interface;
 
@@ -34,6 +36,24 @@ namespace OpenBve
 
 		/// <summary>Whether all sounds are mute.</summary>
 		internal static bool GlobalMute = false;
+
+		/// <summary>Whether to play microphone sound or not.</summary>
+		internal static bool IsPlayingMicSounds = false;
+
+		/// <summary>Sampling rate of a microphone</summary>
+		private const int SamplingRate = 44100;
+
+		/// <summary>Buffer size of a microphone</summary>
+		private const int BufferSize = 4410;
+
+		/// <summary>The current OpenAL AudioCapture device.</summary>
+		private static AudioCapture OpenAlMic = null;
+
+		/// <summary>A list of all microphone sources.</summary>
+		private static List<MicSource> MicSources = new List<MicSource>();
+
+		/// <summary>Buffer for storing recorded data.</summary>
+		private static byte[] MicStore = new byte[BufferSize * 2];
 
 
 		// --- linear distance clamp model ---
@@ -81,6 +101,7 @@ namespace OpenBve
 			OuterRadiusFactor = Math.Sqrt(OuterRadiusFactorMinimum * OuterRadiusFactorMaximum);
 			OuterRadiusFactorSpeed = 0.0;
 			OpenAlDevice = Alc.OpenDevice(null);
+			OpenAlMic = new AudioCapture(AudioCapture.DefaultDevice, SamplingRate, ALFormat.Mono16, BufferSize);
 			if (OpenAlDevice != IntPtr.Zero)
 			{
 				OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
@@ -100,6 +121,8 @@ namespace OpenBve
 				}
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
+				OpenAlMic.Dispose();
+				OpenAlMic = null;
 				MessageBox.Show(Translations.GetInterfaceString("errors_sound_openal_context"), Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
@@ -112,6 +135,7 @@ namespace OpenBve
 		{
 			StopAllSounds();
 			UnloadAllBuffers();
+			UnloadAllMicBuffers();
 			if (OpenAlContext != ContextHandle.Zero)
 			{
 				Alc.MakeContextCurrent(ContextHandle.Zero);
@@ -122,6 +146,11 @@ namespace OpenBve
 			{
 				Alc.CloseDevice(OpenAlDevice);
 				OpenAlDevice = IntPtr.Zero;
+			}
+			if (OpenAlMic != null)
+			{
+				OpenAlMic.Dispose();
+				OpenAlMic = null;
 			}
 		}
 
@@ -233,6 +262,29 @@ namespace OpenBve
 			}
 		}
 
+		/// <summary>Unloads the specified microphone buffer.</summary>
+		/// <param name="source"></param>
+		/// <param name="number"></param>
+		private static void UnloadMicBuffers(int source, int number)
+		{
+			if (number > 0)
+			{
+				int[] buffers = AL.SourceUnqueueBuffers(source, number);
+				AL.DeleteBuffers(buffers);
+			}
+		}
+
+		/// <summary>Unloads all microphone buffers immediately.</summary>
+		private static void UnloadAllMicBuffers()
+		{
+			foreach (var source in MicSources)
+			{
+				int state;
+				AL.GetSource(source.OpenAlSourceName, ALGetSourcei.BuffersProcessed, out state);
+				UnloadMicBuffers(source.OpenAlSourceName, state);
+			}
+		}
+
 
 		// --- play or stop sounds ---
 
@@ -312,6 +364,15 @@ namespace OpenBve
 				throw new InvalidDataException("A train and car must be specified");
 			}
 			sound.Source = PlaySound(sound.Buffer, pitch, volume, sound.Position, train, car, looped);
+		}
+
+		/// <summary>Register the position to play microphone input.</summary>
+		/// <param name="position">The position.</param>
+		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+		internal static void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+			MicSources.Add(new MicSource(position, backwardTolerance, forwardTolerance));
 		}
 
 		/// <summary>Stops the specified sound source.</summary>
