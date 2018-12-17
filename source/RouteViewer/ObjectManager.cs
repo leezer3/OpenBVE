@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveShared;
 using OpenBveApi;
-using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;

@@ -5,10 +5,6 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using System;
-using BackgroundManager;
-using OpenBveShared;
-using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;

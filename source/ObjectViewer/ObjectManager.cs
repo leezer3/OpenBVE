@@ -183,36 +183,7 @@ namespace OpenBve
 					translationVector *= x;
 					Position += translationVector;
 				}
-				else if (TranslateXScriptFile != null)
-				{
-					//Translate X Script
-					if (TranslateXAnimationScript == null)
-					{
-						//Load the script if required
-						try
-						{
-							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateXAnimationScript = CSScript.LoadCodeFrom(TranslateXScriptFile)
-								.CreateObject("OpenBVEScript")
-								.AlignToInterface<AnimationScript>(true);
-						}
-						catch
-						{
-							Interface.AddMessage(MessageType.Error, false,
-								"An error occcured whilst parsing script " + TranslateXScriptFile);
-							TranslateXScriptFile = null;
-							return;
-						}
-					}
-					double x = TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-						IsPartOfTrain, TimeElapsed);
-					Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
-					translationVector.Rotate(Direction, Up, Side);
-					translationVector *= x;
-					Position += translationVector;
-				}
-
-
+				
 				if (TranslateYFunction != null)
 				{
 					double y;
@@ -229,35 +200,7 @@ namespace OpenBve
 					translationVector *= y;
 					Position += translationVector;
 				}
-				else if (TranslateYScriptFile != null)
-				{
-					//Translate X Script
-					if (TranslateYAnimationScript == null)
-					{
-						//Load the script if required
-						try
-						{
-							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateYAnimationScript = CSScript.LoadCodeFrom(TranslateYScriptFile)
-								.CreateObject("OpenBVEScript")
-								.AlignToInterface<AnimationScript>(true);
-						}
-						catch
-						{
-							Interface.AddMessage(MessageType.Error, false,
-								"An error occcured whilst parsing script " + TranslateYScriptFile);
-							TranslateYScriptFile = null;
-							return;
-						}
-					}
-					double y = TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-						IsPartOfTrain, TimeElapsed);
-					Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
-					translationVector.Rotate(Direction, Up, Side);
-					translationVector *= y;
-					Position += translationVector;
-				}
-
+				
 				if (TranslateZFunction != null)
 				{
 					double z;
@@ -274,34 +217,7 @@ namespace OpenBve
 					translationVector *= z;
 					Position += translationVector;
 				}
-				else if (TranslateZScriptFile != null)
-				{
-					//Translate X Script
-					if (TranslateZAnimationScript == null)
-					{
-						//Load the script if required
-						try
-						{
-							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateZAnimationScript = CSScript.LoadCodeFrom(TranslateZScriptFile)
-								.CreateObject("OpenBVEScript")
-								.AlignToInterface<AnimationScript>(true);
-						}
-						catch
-						{
-							Interface.AddMessage(MessageType.Error, false,
-								"An error occcured whilst parsing script " + TranslateZScriptFile);
-							TranslateZScriptFile = null;
-							return;
-						}
-					}
-					double z = TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
-						IsPartOfTrain, TimeElapsed);
-					Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
-					translationVector.Rotate(Direction, Up, Side);
-					translationVector *= z;
-					Position += translationVector;
-				}
+				
 				// rotation
 				bool rotateX = RotateXFunction != null;
 				bool rotateY = RotateYFunction != null;

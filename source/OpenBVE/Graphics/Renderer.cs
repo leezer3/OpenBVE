@@ -234,7 +234,7 @@ namespace OpenBve
 			}
 			// dynamic alpha
 			OpenBveShared.Renderer.ResetOpenGlState();
-			SortPolygons(OpenBveShared.Renderer.DynamicAlpha);
+			OpenBveShared.Renderer.DynamicAlpha.SortPolygons();
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
 				GL.Enable(EnableCap.Blend); OpenBveShared.Renderer.BlendEnabled = true;
@@ -334,7 +334,7 @@ namespace OpenBve
 					OpenBveShared.Renderer.RenderFace(ref OpenBveShared.Renderer.OverlayOpaque.Faces[i], Camera.AbsoluteCameraPosition);
 				}
 				// overlay alpha
-				SortPolygons(OpenBveShared.Renderer.OverlayAlpha);
+				OpenBveShared.Renderer.OverlayAlpha.SortPolygons();
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
 					GL.Enable(EnableCap.Blend); OpenBveShared.Renderer.BlendEnabled = true;
@@ -409,7 +409,7 @@ namespace OpenBve
 				GL.DepthMask(false);
 				GL.Disable(EnableCap.DepthTest);
 				OpenBveShared.Renderer.UnsetAlphaFunc();
-				SortPolygons(OpenBveShared.Renderer.OverlayAlpha);
+				OpenBveShared.Renderer.OverlayAlpha.SortPolygons();
 				for (int i = 0; i < OpenBveShared.Renderer.OverlayAlpha.FaceCount; i++)
 				{
 					OpenBveShared.Renderer.RenderFace(ref OpenBveShared.Renderer.OverlayAlpha.Faces[i], Camera.AbsoluteCameraPosition);
