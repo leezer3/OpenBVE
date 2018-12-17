@@ -1,4 +1,4 @@
-﻿using OpenBveApi;
+﻿using OpenBveApi.Trains;
 
 namespace TrackManager
 {
@@ -17,7 +17,7 @@ namespace TrackManager
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="CarIndex">The car index, or a null reference</param>
-		public abstract void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex);
+		public abstract void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex);
 
 		/// <summary>This method is called to attempt to trigger an event</summary>
 		/// <param name="Direction">The direction:
@@ -26,7 +26,7 @@ namespace TrackManager
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="CarIndex">The car index, or a null reference</param>
-		public void TryTrigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+		public void TryTrigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 		{
 			if (!DontTriggerAnymore)
 			{

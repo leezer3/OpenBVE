@@ -1,4 +1,4 @@
-﻿using OpenBveApi;
+﻿using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -26,7 +26,7 @@ namespace OpenBve
 				this.TriggerOnce = triggerOnce;
 				this.Type = type;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (this.Type == -1 && Train == TrainManager.PlayerTrain || this.Type == 1 && Train != TrainManager.PlayerTrain)
 				{

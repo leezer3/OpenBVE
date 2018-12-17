@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using OpenBveApi;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -18,7 +18,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.Message = message;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
@@ -56,7 +56,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.Message = message;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{

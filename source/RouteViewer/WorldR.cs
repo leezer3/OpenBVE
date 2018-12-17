@@ -143,15 +143,6 @@ namespace OpenBve {
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + OpenBveShared.Camera.CameraCurrentAlignment.Position.Z, true);
 		}
 
-		// ================================
-
-		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Z * sina;
-			double v = Vector.X * sina + Vector.Z * cosa;
-			Vector.X = u;
-			Vector.Z = v;
-		}
-
 		// normalize
 		internal static void Normalize(ref double x, ref double y) {
 			double t = x * x + y * y;

@@ -1,4 +1,4 @@
-﻿using OpenBveApi;
+﻿using OpenBveApi.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using TrackManager;
@@ -15,7 +15,7 @@ namespace OpenBve
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
@@ -54,7 +54,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.TrainFront)
@@ -111,7 +111,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)

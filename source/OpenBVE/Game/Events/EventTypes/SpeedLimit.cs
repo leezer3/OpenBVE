@@ -1,5 +1,5 @@
 ﻿using System;
-using OpenBveApi;
+using OpenBveApi.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using TrackManager;
@@ -20,7 +20,7 @@ namespace OpenBve
 				this.PreviousSpeedLimit = PreviousSpeedLimit;
 				this.NextSpeedLimit = NextSpeedLimit;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (Train == null)

@@ -12,6 +12,6 @@ namespace OpenBveApi.FunctionScripting
 		/// <param name="SectionIndex"></param>
 		/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
-		double ExecuteScript(Train Train, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed);
+		double ExecuteScript(Trains.AbstractTrain Train, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed);
 	}
 }

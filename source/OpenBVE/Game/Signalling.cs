@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -41,7 +42,7 @@ namespace OpenBve
 			/// <summary>The index of the next section</summary>
 			internal int NextSection;
 			/// <summary>Holds a reference to all trains currently within this section</summary>
-			internal Train[] Trains;
+			internal AbstractTrain[] Trains;
 			/// <summary>Whether the primary train within the section has reached the station stop point (For departure signals)</summary>
 			internal bool TrainReachedStopPoint;
 			/// <summary>The index of the station (if applicable)</summary>
@@ -63,20 +64,20 @@ namespace OpenBve
 
 			/// <summary>Called when a train enters the section</summary>
 			/// <param name="Train">The train</param>
-			internal void Enter(Train Train)
+			internal void Enter(AbstractTrain Train)
 			{
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++)
 				{
 					if (this.Trains[i] == Train) return;
 				}
-				Array.Resize<Train>(ref this.Trains, n + 1);
+				Array.Resize<AbstractTrain>(ref this.Trains, n + 1);
 				this.Trains[n] = Train;
 			}
 
 			/// <summary>Called when a train leaves the section</summary>
 			/// <param name="Train">The train</param>
-			internal void Leave(Train Train)
+			internal void Leave(AbstractTrain Train)
 			{
 				int n = this.Trains.Length;
 				for (int i = 0; i < n; i++)
@@ -87,7 +88,7 @@ namespace OpenBve
 						{
 							this.Trains[j] = this.Trains[j + 1];
 						}
-						Array.Resize<Train>(ref this.Trains, n - 1);
+						Array.Resize<AbstractTrain>(ref this.Trains, n - 1);
 						return;
 					}
 				}
@@ -96,7 +97,7 @@ namespace OpenBve
 			/// <summary>Checks whether a train is currently within the section</summary>
 			/// <param name="Train">The train</param>
 			/// <returns>True if the train is within the section, false otherwise</returns>
-			internal bool Exists(Train Train)
+			internal bool Exists(AbstractTrain Train)
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
@@ -137,7 +138,7 @@ namespace OpenBve
 			/// <summary>Gets the first train within the section</summary>
 			/// <param name="AllowBogusTrain">Whether bogus trains are to be allowed</param>
 			/// <returns>The first train within the section, or null if no trains are found</returns>
-			internal Train GetFirstTrain(bool AllowBogusTrain)
+			internal AbstractTrain GetFirstTrain(bool AllowBogusTrain)
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{

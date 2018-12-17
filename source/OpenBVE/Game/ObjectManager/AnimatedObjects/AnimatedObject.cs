@@ -2,7 +2,7 @@
 using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
-using OpenBveApi;
+using OpenBveApi.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
@@ -153,7 +153,7 @@ namespace OpenBve
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-			internal void Update(bool IsPartOfTrain, Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
+			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -685,12 +685,10 @@ namespace OpenBve
 					// translate
 					if (Overlay & Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position - Position;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraUp, Camera.AbsoluteCameraSide);
 						double dx = -Math.Tan(Camera.CameraCurrentAlignment.Yaw) - Camera.CameraCurrentAlignment.Position.X;
-						double dy = -Math.Tan(Camera.CameraCurrentAlignment.Pitch) - Camera.CameraCurrentAlignment.Position.Y;
+						double dy = -Math.Tan(Camera.CameraCurrentAlignment.Pitch) -Camera.CameraCurrentAlignment.Position.Y;
 						double dz = -Camera.CameraCurrentAlignment.Position.Z;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Camera.AbsoluteCameraPosition.X + dx * Camera.AbsoluteCameraSide.X + dy * Camera.AbsoluteCameraUp.X + dz * Camera.AbsoluteCameraDirection.X;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Camera.AbsoluteCameraPosition.Y + dx * Camera.AbsoluteCameraSide.Y + dy * Camera.AbsoluteCameraUp.Y + dz * Camera.AbsoluteCameraDirection.Y;
@@ -698,13 +696,9 @@ namespace OpenBve
 					}
 					else
 					{
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Position;
 					}
 				}
 				// update normals
@@ -713,9 +707,6 @@ namespace OpenBve
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
 						GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-					}
-					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-					{
 						if (!Vector3.IsZero(States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
 						{
 							if (rotateX)

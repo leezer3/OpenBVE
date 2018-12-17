@@ -1,6 +1,6 @@
 ﻿using System;
-using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace TrackManager
 {
@@ -19,7 +19,7 @@ namespace TrackManager
 		public double CantDueToInaccuracy;
 		public double AdhesionMultiplier;
 		public EventTriggerType TriggerType;
-		public Train Train;
+		public AbstractTrain Train;
 		public int CarIndex;
 
 		public void UpdateWorldCoordinates(Track CurrentTrack, bool AddTrackInaccuracy)

@@ -491,8 +491,8 @@ namespace OpenBve
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
 					Direction.Rotate(cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldDirection.RotatePlane(cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				}
 				//Pitch
@@ -779,18 +779,26 @@ namespace OpenBve
 							{
 								if (Data.Blocks[i].SoundEvents[k].Type == SoundType.World)
 								{
-									if (Data.Blocks[i].SoundEvents[k].SoundBuffer != null)
+									if (Data.Blocks[i].SoundEvents[k].SoundBuffer != null || Data.Blocks[i].SoundEvents[k].IsMicSound)
 									{
-										double d = Data.Blocks[i].SoundEvents[k].TrackPosition - StartingDistance;
-										double dx = Data.Blocks[i].SoundEvents[k].X;
-										double dy = Data.Blocks[i].SoundEvents[k].Y;
+										var SoundEvent = Data.Blocks[i].SoundEvents[k];
+										double d = SoundEvent.TrackPosition - StartingDistance;
+										double dx = SoundEvent.X;
+										double dy = SoundEvent.Y;
 										double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
 										Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
 										w.Normalize();
 										Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
 										Vector3 u = Vector3.Cross(w, s);
 										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-										Sounds.PlaySound(Data.Blocks[i].SoundEvents[k].SoundBuffer, 1.0, 1.0, wpos, true);
+										if (SoundEvent.IsMicSound)
+										{
+											Sounds.PlayMicSound(wpos, SoundEvent.BackwardTolerance, SoundEvent.ForwardTolerance);
+										}
+										else
+										{
+											Sounds.PlaySound(SoundEvent.SoundBuffer, 1.0, 1.0, wpos, true);
+										}
 									}
 								}
 							}

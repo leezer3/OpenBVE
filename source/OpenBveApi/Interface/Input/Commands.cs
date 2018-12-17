@@ -68,6 +68,8 @@ namespace OpenBveApi.Interface {
 			LocoBrakeIncrease,
 			/// <summary>Decreases the locomotive brake notch</summary>
 			LocoBrakeDecrease,
+			/// <summary>Activate microphone audio playback</summary>
+			PlayMicSounds,
 
 			//Simulation controls
 			/// <summary>Change to the interior (Cab) camera mode</summary>

@@ -1,5 +1,5 @@
 ﻿using OpenBveShared;
-using OpenBveApi;
+using OpenBveApi.Trains;
 
 namespace TrackManager
 {
@@ -21,7 +21,7 @@ namespace TrackManager
 			this.CurrentFog = CurrentFog;
 			this.NextFog = NextFog;
 		}
-		public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 		{
 			if (TriggerType == EventTriggerType.Camera)
 			{

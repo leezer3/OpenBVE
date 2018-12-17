@@ -1,4 +1,4 @@
-﻿using OpenBveApi;
+﻿using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -41,7 +41,7 @@ namespace OpenBve
 				this.SectionIndex = sectionIndex;
 				this.ClipToFirstRedSection = clipToFirstRedSection;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.TrainFront)

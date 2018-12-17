@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve {
@@ -1058,7 +1059,7 @@ namespace OpenBve {
 			switch (Game.TrainStart)
 			{
 				// starting mode
-				case Game.TrainStartMode.ServiceBrakesAts:
+				case TrainStartMode.ServiceBrakesAts:
 					for (int i = 0; i < Cars; i++) {
 						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.ServiceMaximumPressure;
 						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = Train.Cars[i].CarBrake.brakePipe.NormalPressure;
@@ -1085,7 +1086,7 @@ namespace OpenBve {
 					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
 					Train.Handles.Reverser.Actual = TrainManager.ReverserPosition.Forwards;
 					break;
-				case Game.TrainStartMode.EmergencyBrakesAts:
+				case TrainStartMode.EmergencyBrakesAts:
 					for (int i = 0; i < Cars; i++) {
 						Train.Cars[i].CarBrake.brakeCylinder.CurrentPressure = Train.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 						Train.Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;

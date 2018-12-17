@@ -1373,6 +1373,9 @@ namespace OpenBve
 										}
 										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = true;
 										break;
+									case Translations.Command.PlayMicSounds:
+										Sounds.IsPlayingMicSounds = !Sounds.IsPlayingMicSounds;
+										break;
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
 									case Translations.Command.SecurityS:

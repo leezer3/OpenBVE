@@ -109,6 +109,7 @@
     <Compile Include="Objects\ObjectTypes\WorldObject.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
+    <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainStates.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />

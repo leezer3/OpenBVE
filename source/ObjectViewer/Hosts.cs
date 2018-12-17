@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 using OpenBveShared;
 
@@ -212,7 +213,7 @@ namespace OpenBve {
 			GameObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials, Program.CurrentHost, 600);
 		}
 
-		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, Train train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}

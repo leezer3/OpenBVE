@@ -1,6 +1,6 @@
-﻿using OpenBveApi;
-using OpenBveApi.Colors;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -22,7 +22,7 @@ namespace OpenBve
 				this.PreviousSectionIndex = PreviousSectionIndex;
 				this.NextSectionIndex = NextSectionIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train != null)
 				{
@@ -58,7 +58,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateFrontBackward(Train Train, bool UpdateTrain)
+			private void UpdateFrontBackward(AbstractTrain Train, bool UpdateTrain)
 			{
 				// update sections
 				if (this.PreviousSectionIndex >= 0)
@@ -88,7 +88,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateFrontForward(Train train, bool UpdateTrain, bool UpdateSection)
+			private void UpdateFrontForward(AbstractTrain train, bool UpdateTrain, bool UpdateSection)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
  				if (UpdateTrain)
@@ -137,7 +137,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateRearBackward(Train Train, bool UpdateSection)
+			private void UpdateRearBackward(AbstractTrain Train, bool UpdateSection)
 			{
 				if (UpdateSection)
 				{
@@ -149,7 +149,7 @@ namespace OpenBve
 					}
 				}
 			}
-			private void UpdateRearForward(Train Train, bool UpdateSection)
+			private void UpdateRearForward(AbstractTrain Train, bool UpdateSection)
 			{
 				if (UpdateSection)
 				{

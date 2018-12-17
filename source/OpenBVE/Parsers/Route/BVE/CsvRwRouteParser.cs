@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve {
@@ -1268,7 +1269,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "Mode is expected to be -1, 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											change = 0;
 										}
-										Game.TrainStart = (Game.TrainStartMode)change;
+										Game.TrainStart = (TrainStartMode)change;
 									} break;
 								case "route.gauge":
 								case "train.gauge":
@@ -4955,6 +4956,43 @@ namespace OpenBve {
 													}
 												}
 											}
+										}
+									} break;
+								case "track.micsound":
+									{
+										if (!PreviewOnly) {
+											double x = 0.0, y = 0.0, back = 0.0, front = 0.0;
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x)) {
+												Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												x = 0.0;
+											}
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y)) {
+												Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												y = 0.0;
+											}
+											if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out back)) {
+												Interface.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												back = 0.0;
+											} else if (back < 0.0) {
+												Interface.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												back = 0.0;
+											}
+											if (Arguments.Length >= 4 && Arguments[3].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out front)) {
+												Interface.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												front = 0.0;
+											} else if (front < 0.0) {
+												Interface.AddMessage(MessageType.Error, false, "ForwardTolerance is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												front = 0.0;
+											}
+											int n = Data.Blocks[BlockIndex].SoundEvents.Length;
+											Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+											Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
+											Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
+											Data.Blocks[BlockIndex].SoundEvents[n].X = x;
+											Data.Blocks[BlockIndex].SoundEvents[n].Y = y;
+											Data.Blocks[BlockIndex].SoundEvents[n].IsMicSound = true;
+											Data.Blocks[BlockIndex].SoundEvents[n].BackwardTolerance = back;
+											Data.Blocks[BlockIndex].SoundEvents[n].ForwardTolerance = front;
 										}
 									} break;
 								case "track.pretrain":

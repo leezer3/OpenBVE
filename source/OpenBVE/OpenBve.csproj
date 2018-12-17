@@ -293,7 +293,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
-    <Compile Include="Simulation\World\Transformations.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
     <Compile Include="System\Functions\TextEncoding.cs" />
@@ -467,6 +466,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
+      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
+      <Name>AssimpParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TrackManager\TrackManager.csproj">
       <Project>{44c8713a-8650-488a-b5aa-e7eb38784a68}</Project>
       <Name>TrackManager</Name>

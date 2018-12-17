@@ -9,6 +9,7 @@ using System;
 using OpenBveShared;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using TrackManager;
@@ -84,12 +85,6 @@ namespace OpenBve {
 		internal static double[] PrecedingTrainTimeDeltas;
 		internal static double PrecedingTrainSpeedLimit;
 
-		// startup
-		internal enum TrainStartMode {
-			ServiceBrakesAts = -1,
-			EmergencyBrakesAts = 0,
-			EmergencyBrakesNoAts = 1
-		}
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 		internal static string TrainName = "";
 

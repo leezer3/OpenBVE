@@ -3,131 +3,137 @@ using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 using OpenBveShared;
 
 namespace OpenBve
 {
     internal static class ObjectManager
-    {      
-        internal class AnimatedObject : AbstractAnimatedObject
-        {
-            internal AnimatedObject Clone()
-            {
-                AnimatedObject Result = new AnimatedObject();
-                Result.States = new AnimatedObjectState[this.States.Length];
-                for (int i = 0; i < this.States.Length; i++)
-                {
-                    Result.States[i].Position = this.States[i].Position;
-                    Result.States[i].Object = this.States[i].Object.Clone();
-                }
-                Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
-                Result.CurrentState = this.CurrentState;
-                Result.TranslateZDirection = this.TranslateZDirection;
-                Result.TranslateYDirection = this.TranslateYDirection;
-                Result.TranslateXDirection = this.TranslateXDirection;
-                Result.TranslateXFunction = this.TranslateXFunction == null ? null : this.TranslateXFunction.Clone();
-                Result.TranslateYFunction = this.TranslateYFunction == null ? null : this.TranslateYFunction.Clone();
-                Result.TranslateZFunction = this.TranslateZFunction == null ? null : this.TranslateZFunction.Clone();
-                Result.RotateXDirection = this.RotateXDirection;
-                Result.RotateYDirection = this.RotateYDirection;
-                Result.RotateZDirection = this.RotateZDirection;
-                Result.RotateXFunction = this.RotateXFunction == null ? null : this.RotateXFunction.Clone();
-                Result.RotateXDamping = this.RotateXDamping == null ? null : this.RotateXDamping.Clone();
-                Result.RotateYFunction = this.RotateYFunction == null ? null : this.RotateYFunction.Clone();
-                Result.RotateYDamping = this.RotateYDamping == null ? null : this.RotateYDamping.Clone();
-                Result.RotateZFunction = this.RotateZFunction == null ? null : this.RotateZFunction.Clone();
-                Result.RotateZDamping = this.RotateZDamping == null ? null : this.RotateZDamping.Clone();
-                Result.TextureShiftXDirection = this.TextureShiftXDirection;
-                Result.TextureShiftYDirection = this.TextureShiftYDirection;
-                Result.TextureShiftXFunction = this.TextureShiftXFunction == null ? null : this.TextureShiftXFunction.Clone();
-                Result.TextureShiftYFunction = this.TextureShiftYFunction == null ? null : this.TextureShiftYFunction.Clone();
-                Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
-                Result.LEDInitialAngle = this.LEDInitialAngle;
-                Result.LEDLastAngle = this.LEDLastAngle;
-                if (this.LEDVectors != null)
-                {
-                    Result.LEDVectors = new Vector3[this.LEDVectors.Length];
-                    for (int i = 0; i < this.LEDVectors.Length; i++)
-                    {
-                        Result.LEDVectors[i] = this.LEDVectors[i];
-                    }
-                }
-                else
-                {
-                    Result.LEDVectors = null;
-                }
-                Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
-                Result.RefreshRate = this.RefreshRate;
-                Result.SecondsSinceLastUpdate = 0.0;
-                Result.ObjectIndex = -1;
-                return Result;
-            }
+    {
+	    internal class AnimatedObject : AbstractAnimatedObject
+	    {
+		    internal AnimatedObject Clone()
+		    {
+			    AnimatedObject Result = new AnimatedObject();
+			    Result.States = new AnimatedObjectState[this.States.Length];
+			    for (int i = 0; i < this.States.Length; i++)
+			    {
+				    Result.States[i].Position = this.States[i].Position;
+				    Result.States[i].Object = this.States[i].Object.Clone();
+			    }
 
-			internal void Initialize(int StateIndex, bool Overlay, bool Show)
-			{
-				int i = ObjectIndex;
-				OpenBveShared.Renderer.HideObject(i);
-				int t = StateIndex;
-				if (t >= 0 && States[t].Object != null)
-				{
-					int m = States[t].Object.Mesh.Vertices.Length;
-					GameObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
-					for (int k = 0; k < m; k++)
-					{
-						if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
-						{
-							GameObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
-						}
-						else
-						{
-							GameObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
-						}
-						
-					}
-					m = States[t].Object.Mesh.Faces.Length;
-					GameObjectManager.Objects[i].Mesh.Faces = new MeshFace[m];
-					for (int k = 0; k < m; k++)
-					{
-						GameObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
-						GameObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
-						int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-						GameObjectManager.Objects[i].Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
-						for (int h = 0; h < o; h++)
-						{
-							GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
-						}
-					}
-					GameObjectManager.Objects[i].Mesh.Materials = States[t].Object.Mesh.Materials;
-				}
-				else
-				{
-					GameObjectManager.Objects[i] = null;
-					GameObjectManager.Objects[i] = new StaticObject(Program.CurrentHost)
-					{
-						Mesh =
-						{
-							Faces = new MeshFace[] {},
-							Materials = new MeshMaterial[] {},
-							Vertices = new VertexTemplate[] {}
-						}
-					};
-				}
-				CurrentState = StateIndex;
-				if (Show)
-				{
-					if (Overlay)
-					{
-						OpenBveShared.Renderer.ShowObject(i, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
-					}
-					else
-					{
-						OpenBveShared.Renderer.ShowObject(i, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
-					}
-				}
-			}
+			    Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
+			    Result.CurrentState = this.CurrentState;
+			    Result.TranslateZDirection = this.TranslateZDirection;
+			    Result.TranslateYDirection = this.TranslateYDirection;
+			    Result.TranslateXDirection = this.TranslateXDirection;
+			    Result.TranslateXFunction = this.TranslateXFunction == null ? null : this.TranslateXFunction.Clone();
+			    Result.TranslateYFunction = this.TranslateYFunction == null ? null : this.TranslateYFunction.Clone();
+			    Result.TranslateZFunction = this.TranslateZFunction == null ? null : this.TranslateZFunction.Clone();
+			    Result.RotateXDirection = this.RotateXDirection;
+			    Result.RotateYDirection = this.RotateYDirection;
+			    Result.RotateZDirection = this.RotateZDirection;
+			    Result.RotateXFunction = this.RotateXFunction == null ? null : this.RotateXFunction.Clone();
+			    Result.RotateXDamping = this.RotateXDamping == null ? null : this.RotateXDamping.Clone();
+			    Result.RotateYFunction = this.RotateYFunction == null ? null : this.RotateYFunction.Clone();
+			    Result.RotateYDamping = this.RotateYDamping == null ? null : this.RotateYDamping.Clone();
+			    Result.RotateZFunction = this.RotateZFunction == null ? null : this.RotateZFunction.Clone();
+			    Result.RotateZDamping = this.RotateZDamping == null ? null : this.RotateZDamping.Clone();
+			    Result.TextureShiftXDirection = this.TextureShiftXDirection;
+			    Result.TextureShiftYDirection = this.TextureShiftYDirection;
+			    Result.TextureShiftXFunction = this.TextureShiftXFunction == null ? null : this.TextureShiftXFunction.Clone();
+			    Result.TextureShiftYFunction = this.TextureShiftYFunction == null ? null : this.TextureShiftYFunction.Clone();
+			    Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
+			    Result.LEDInitialAngle = this.LEDInitialAngle;
+			    Result.LEDLastAngle = this.LEDLastAngle;
+			    if (this.LEDVectors != null)
+			    {
+				    Result.LEDVectors = new Vector3[this.LEDVectors.Length];
+				    for (int i = 0; i < this.LEDVectors.Length; i++)
+				    {
+					    Result.LEDVectors[i] = this.LEDVectors[i];
+				    }
+			    }
+			    else
+			    {
+				    Result.LEDVectors = null;
+			    }
 
-	        /// <summary> Updates the position and state of the animated object</summary>
+			    Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
+			    Result.RefreshRate = this.RefreshRate;
+			    Result.SecondsSinceLastUpdate = 0.0;
+			    Result.ObjectIndex = -1;
+			    return Result;
+		    }
+
+		    internal void Initialize(int StateIndex, bool Overlay, bool Show)
+		    {
+			    int i = ObjectIndex;
+			    OpenBveShared.Renderer.HideObject(i);
+			    int t = StateIndex;
+			    if (t >= 0 && States[t].Object != null)
+			    {
+				    int m = States[t].Object.Mesh.Vertices.Length;
+				    GameObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[m];
+				    for (int k = 0; k < m; k++)
+				    {
+					    if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
+					    {
+						    GameObjectManager.Objects[i].Mesh.Vertices[k] = new ColoredVertex((ColoredVertex) States[t].Object.Mesh.Vertices[k]);
+					    }
+					    else
+					    {
+						    GameObjectManager.Objects[i].Mesh.Vertices[k] = new Vertex((Vertex) States[t].Object.Mesh.Vertices[k]);
+					    }
+
+				    }
+
+				    m = States[t].Object.Mesh.Faces.Length;
+				    GameObjectManager.Objects[i].Mesh.Faces = new MeshFace[m];
+				    for (int k = 0; k < m; k++)
+				    {
+					    GameObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
+					    GameObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
+					    int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
+					    GameObjectManager.Objects[i].Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
+					    for (int h = 0; h < o; h++)
+					    {
+						    GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
+					    }
+				    }
+
+				    GameObjectManager.Objects[i].Mesh.Materials = States[t].Object.Mesh.Materials;
+			    }
+			    else
+			    {
+				    GameObjectManager.Objects[i] = null;
+				    GameObjectManager.Objects[i] = new StaticObject(Program.CurrentHost)
+				    {
+					    Mesh =
+					    {
+						    Faces = new MeshFace[] { },
+						    Materials = new MeshMaterial[] { },
+						    Vertices = new VertexTemplate[] { }
+					    }
+				    };
+			    }
+
+			    CurrentState = StateIndex;
+			    if (Show)
+			    {
+				    if (Overlay)
+				    {
+					    OpenBveShared.Renderer.ShowObject(i, ObjectType.Overlay, Interface.CurrentOptions.TransparencyMode);
+				    }
+				    else
+				    {
+					    OpenBveShared.Renderer.ShowObject(i, ObjectType.Dynamic, Interface.CurrentOptions.TransparencyMode);
+				    }
+			    }
+		    }
+
+		    /// <summary> Updates the position and state of the animated object</summary>
 			/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 			/// <param name="Train">The train, or a null reference otherwise</param>
 			/// <param name="CarIndex">If this object forms part of a train, the car index it refers to</param>
@@ -142,7 +148,7 @@ namespace OpenBve
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-			internal void Update(bool IsPartOfTrain, Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
+			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -177,7 +183,35 @@ namespace OpenBve
 					translationVector *= x;
 					Position += translationVector;
 				}
-				
+				else if (TranslateXScriptFile != null)
+				{
+					//Translate X Script
+					if (TranslateXAnimationScript == null)
+					{
+						//Load the script if required
+						try
+						{
+							CSScript.GlobalSettings.TargetFramework = "v4.0";
+							TranslateXAnimationScript = CSScript.LoadCodeFrom(TranslateXScriptFile)
+								.CreateObject("OpenBVEScript")
+								.AlignToInterface<AnimationScript>(true);
+						}
+						catch
+						{
+							Interface.AddMessage(MessageType.Error, false,
+								"An error occcured whilst parsing script " + TranslateXScriptFile);
+							TranslateXScriptFile = null;
+							return;
+						}
+					}
+					double x = TranslateXAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+						IsPartOfTrain, TimeElapsed);
+					Vector3 translationVector = new Vector3(TranslateXDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= x;
+					Position += translationVector;
+				}
+
 
 				if (TranslateYFunction != null)
 				{
@@ -195,7 +229,35 @@ namespace OpenBve
 					translationVector *= y;
 					Position += translationVector;
 				}
-				
+				else if (TranslateYScriptFile != null)
+				{
+					//Translate X Script
+					if (TranslateYAnimationScript == null)
+					{
+						//Load the script if required
+						try
+						{
+							CSScript.GlobalSettings.TargetFramework = "v4.0";
+							TranslateYAnimationScript = CSScript.LoadCodeFrom(TranslateYScriptFile)
+								.CreateObject("OpenBVEScript")
+								.AlignToInterface<AnimationScript>(true);
+						}
+						catch
+						{
+							Interface.AddMessage(MessageType.Error, false,
+								"An error occcured whilst parsing script " + TranslateYScriptFile);
+							TranslateYScriptFile = null;
+							return;
+						}
+					}
+					double y = TranslateYAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+						IsPartOfTrain, TimeElapsed);
+					Vector3 translationVector = new Vector3(TranslateYDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= y;
+					Position += translationVector;
+				}
+
 				if (TranslateZFunction != null)
 				{
 					double z;
@@ -212,7 +274,34 @@ namespace OpenBve
 					translationVector *= z;
 					Position += translationVector;
 				}
-				
+				else if (TranslateZScriptFile != null)
+				{
+					//Translate X Script
+					if (TranslateZAnimationScript == null)
+					{
+						//Load the script if required
+						try
+						{
+							CSScript.GlobalSettings.TargetFramework = "v4.0";
+							TranslateZAnimationScript = CSScript.LoadCodeFrom(TranslateZScriptFile)
+								.CreateObject("OpenBVEScript")
+								.AlignToInterface<AnimationScript>(true);
+						}
+						catch
+						{
+							Interface.AddMessage(MessageType.Error, false,
+								"An error occcured whilst parsing script " + TranslateZScriptFile);
+							TranslateZScriptFile = null;
+							return;
+						}
+					}
+					double z = TranslateZAnimationScript.ExecuteScript(Train, Position, TrackPosition, SectionIndex,
+						IsPartOfTrain, TimeElapsed);
+					Vector3 translationVector = new Vector3(TranslateZDirection); //Must clone
+					translationVector.Rotate(Direction, Up, Side);
+					translationVector *= z;
+					Position += translationVector;
+				}
 				// rotation
 				bool rotateX = RotateXFunction != null;
 				bool rotateY = RotateYFunction != null;
@@ -589,28 +678,22 @@ namespace OpenBve
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & OpenBveShared.Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
+					if (Overlay & Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position - Position;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraUp, Camera.AbsoluteCameraSide);
-						double dx = -Math.Tan(OpenBveShared.Camera.CameraCurrentAlignment.Yaw) - OpenBveShared.Camera.CameraCurrentAlignment.Position.X;
-						double dy = -Math.Tan(OpenBveShared.Camera.CameraCurrentAlignment.Pitch) - OpenBveShared.Camera.CameraCurrentAlignment.Position.Y;
-						double dz = -OpenBveShared.Camera.CameraCurrentAlignment.Position.Z;
+						double dx = -Math.Tan(Camera.CameraCurrentAlignment.Yaw) - Camera.CameraCurrentAlignment.Position.X;
+						double dy = -Math.Tan(Camera.CameraCurrentAlignment.Pitch) -Camera.CameraCurrentAlignment.Position.Y;
+						double dz = -Camera.CameraCurrentAlignment.Position.Z;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Camera.AbsoluteCameraPosition.X + dx * Camera.AbsoluteCameraSide.X + dy * Camera.AbsoluteCameraUp.X + dz * Camera.AbsoluteCameraDirection.X;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Camera.AbsoluteCameraPosition.Y + dx * Camera.AbsoluteCameraSide.Y + dy * Camera.AbsoluteCameraUp.Y + dz * Camera.AbsoluteCameraDirection.Y;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Camera.AbsoluteCameraPosition.Z + dx * Camera.AbsoluteCameraSide.Z + dy * Camera.AbsoluteCameraUp.Z + dz * Camera.AbsoluteCameraDirection.Z;
 					}
 					else
 					{
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position;
 						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+						GameObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Position;
 					}
 				}
 				// update normals
@@ -619,9 +702,6 @@ namespace OpenBve
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
 						GameObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-					}
-					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-					{
 						if (!Vector3.IsZero(States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
 						{
 							if (rotateX)
@@ -657,8 +737,9 @@ namespace OpenBve
 					}
 				}
 			}
-        }
-        internal class AnimatedObjectCollection : UnifiedObject
+	    }
+
+	    internal class AnimatedObjectCollection : UnifiedObject
         {
             internal AnimatedObject[] Objects;
 	        public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)

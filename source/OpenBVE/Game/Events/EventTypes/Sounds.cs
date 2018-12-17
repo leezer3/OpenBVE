@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -46,9 +45,9 @@ namespace OpenBve
 			/// <summary>Triggers the playback of a sound</summary>
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
+			/// <param name="train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (SuppressSoundEvents) return;
@@ -97,9 +96,9 @@ namespace OpenBve
 			/// <summary>Triggers the playback of a sound</summary>
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
+			/// <param name="train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (SuppressSoundEvents) return;
@@ -170,9 +169,9 @@ namespace OpenBve
 			/// <summary>Triggers a change in run and flange sounds</summary>
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
+			/// <param name="train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train) train;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)

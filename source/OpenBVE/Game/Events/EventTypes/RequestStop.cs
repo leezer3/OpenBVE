@@ -1,6 +1,6 @@
-﻿using OpenBveApi;
-using OpenBveApi.Colors;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 using TrackManager;
 
 namespace OpenBve
@@ -41,7 +41,7 @@ namespace OpenBve
 				this.Late = late;
 				this.MaxCars = maxCars;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, Train train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain train, int CarIndex)
 			{
 				TrainManager.Train Train = (TrainManager.Train)train;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)

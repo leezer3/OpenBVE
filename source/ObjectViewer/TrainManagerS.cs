@@ -5,7 +5,9 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
+using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -390,10 +392,7 @@ namespace OpenBve {
 			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainStopState {
-			Pending = 0, Boarding = 1, Completed = 2
-		}
-		internal class Train : OpenBveApi.Train {
+		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal int DriverCar;
 			internal TrainSpecs Specs;

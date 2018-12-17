@@ -9,6 +9,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.World;
 using OpenBveApi.Textures;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveShared;
 using TrackManager;
 
@@ -1743,7 +1744,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "Mode is expected to be -1, 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											change = 0;
 										}
-										Game.TrainStart = (Game.TrainStartMode)change;
+										Game.TrainStart = (TrainStartMode)change;
 									} break;
 								case "route.gauge":
 								case "train.gauge":
@@ -5668,8 +5669,8 @@ namespace OpenBve {
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
 					Direction.Rotate(cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldDirection, cosag, sinag);
-					World.RotatePlane(ref TrackManager.CurrentTrack.Elements[n].WorldSide, cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldDirection.RotatePlane(cosag, sinag);
+					TrackManager.CurrentTrack.Elements[n].WorldSide.RotatePlane(cosag, sinag);
 					TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				}
 				if (Data.Blocks[i].Pitch != 0.0)

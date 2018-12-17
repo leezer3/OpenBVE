@@ -1,5 +1,5 @@
 ﻿using BackgroundManager;
-using OpenBveApi;
+using OpenBveApi.Trains;
 using OpenBveShared;
 
 namespace TrackManager
@@ -20,7 +20,7 @@ namespace TrackManager
 			this.NextBackground = NextBackground;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, Train Train, int CarIndex)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 		{
 			if (TriggerType == EventTriggerType.Camera)
 			{
