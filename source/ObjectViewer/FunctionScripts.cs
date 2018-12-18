@@ -1098,7 +1098,7 @@ namespace OpenBve {
 						} break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						Function.Stack[s] = OpenBveShared.Timetable.CurrentTimetable == TimetableState.Custom & OpenBveShared.Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
 						s++; break;
 						// sections
 					case Instructions.SectionAspectNumber:

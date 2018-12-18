@@ -81,7 +81,7 @@ namespace OpenBve
 						}
 						//Timetable overlay
 						//NOTE: Only affects auto-generated timetable, possibly change this inconsistant behaviour
-						if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
+						if (OpenBveShared.Timetable.CurrentTimetable == TimetableState.Default)
 						{
 							// default
 							if (Textures.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -92,7 +92,7 @@ namespace OpenBve
 								OpenBveShared.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(OpenBveShared.Renderer.Width - w), Timetable.DefaultTimetablePosition, (double)OpenBveShared.Renderer.Width, (double)h + Timetable.DefaultTimetablePosition);
 							}
 						}
-						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
+						else if (OpenBveShared.Timetable.CurrentTimetable == TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
 						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))

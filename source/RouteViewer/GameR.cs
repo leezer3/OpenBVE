@@ -109,9 +109,8 @@ namespace OpenBve {
 		// ================================
 
 		internal static void Reset() {
-			// track manager
-			
-			// train manager
+			OpenBveShared.Timetable.CustomObjects = new AbstractAnimatedObject[16];
+			OpenBveShared.Timetable.CustomObjectsUsed = 0;
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
 			Interface.ClearMessages();

@@ -731,7 +731,7 @@ namespace OpenBve
 														case "timetable":
 															if (!timetableUsed)
 															{
-																Timetable.AddObjectForCustomTimetable(Result.Objects[ObjectCount]);
+																OpenBveShared.Timetable.AddObjectForCustomTimetable(Result.Objects[ObjectCount]);
 																timetableUsed = true;
 															}
 															break;

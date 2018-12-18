@@ -1112,7 +1112,7 @@ namespace OpenBve {
 									if (Width > 0.0 & Height > 0.0) {
 										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, new Color32(255, 255, 255, 255), false);
 										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("timetable");
-										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Elements[j]);
+										OpenBveShared.Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Elements[j]);
 									}
 								} break;
 						}

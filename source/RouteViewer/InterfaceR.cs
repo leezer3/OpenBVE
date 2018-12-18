@@ -10,19 +10,12 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveShared;
 
 namespace OpenBve {
 
 	// --- TimeTable.cs ---
 	internal static class Timetable {
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) { }
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		internal static TimetableState CurrentTimetable = TimetableState.None;
-		internal static bool CustomTimetableAvailable = false;
 		internal static string DefaultTimetableDescription = null;
 		internal static int[] CustomTextureIndices = null;
 	}

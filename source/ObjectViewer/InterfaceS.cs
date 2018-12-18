@@ -14,19 +14,6 @@ using OpenBveApi.Objects;
 using OpenBveShared;
 
 namespace OpenBve {
-
-	// --- TimeTable.cs ---
-	internal static class Timetable {
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) { }
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		internal static TimetableState CurrentTimetable = TimetableState.None;
-		internal static bool CustomTimetableAvailable = false;
-	}
-
 	// --- PluginManager.cs ---
 	internal static class PluginManager {
 		internal static class CurrentPlugin {
@@ -64,6 +51,8 @@ namespace OpenBve {
 		internal static int InfoTotalQuadStrip = 0;
 		internal static int InfoTotalPolygon = 0;
 		internal static void Reset() {
+			Timetable.CustomObjects = new AbstractAnimatedObject[16];
+			Timetable.CustomObjectsUsed = 0;
 			for (int i = 0; i < GameObjectManager.ObjectsUsed; i++)
 			{
 				OpenBveShared.Renderer.HideObject(i);

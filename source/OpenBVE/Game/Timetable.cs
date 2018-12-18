@@ -11,25 +11,11 @@ namespace OpenBve {
 		// members (built-in timetable)
 		internal static string DefaultTimetableDescription = "";
 		internal static Texture DefaultTimetableTexture;
-		internal static double DefaultTimetablePosition = 0.0;
-		
-		// members (custom timetable)
-		internal static ObjectManager.AnimatedObject[] CustomObjects = new ObjectManager.AnimatedObject[16];
-		internal static int CustomObjectsUsed;
-		internal static bool CustomTimetableAvailable;
+		internal static double DefaultTimetablePosition = 0.0;	
 		internal static Texture CurrentCustomTimetableDaytimeTexture;
 		internal static Texture CurrentCustomTimetableNighttimeTexture;
 		internal static double CustomTimetablePosition = 0.0;
-		
-		// members (interface)
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		internal static TimetableState CurrentTimetable = TimetableState.None;
 
-		// data
 		internal struct Time {
 			internal string Hour;
 			internal string Minute;
@@ -408,14 +394,14 @@ namespace OpenBve {
 
 		// update custom timetable
 		internal static void UpdateCustomTimetable(Texture daytime, Texture nighttime) {
-			for (int i = 0; i < CustomObjectsUsed; i++) {
-				for (int j = 0; j < CustomObjects[i].States.Length; j++) {
-					for (int k = 0; k < CustomObjects[i].States[j].Object.Mesh.Materials.Length; k++) {
+			for (int i = 0; i < OpenBveShared.Timetable.CustomObjectsUsed; i++) {
+				for (int j = 0; j < OpenBveShared.Timetable.CustomObjects[i].States.Length; j++) {
+					for (int k = 0; k < OpenBveShared.Timetable.CustomObjects[i].States[j].Object.Mesh.Materials.Length; k++) {
 						if (daytime != null) {
-							CustomObjects[i].States[j].Object.Mesh.Materials[k].DaytimeTexture = daytime;
+							OpenBveShared.Timetable.CustomObjects[i].States[j].Object.Mesh.Materials[k].DaytimeTexture = daytime;
 						}
 						if (nighttime != null) {
-							CustomObjects[i].States[j].Object.Mesh.Materials[k].NighttimeTexture = nighttime;
+							OpenBveShared.Timetable.CustomObjects[i].States[j].Object.Mesh.Materials[k].NighttimeTexture = nighttime;
 						}
 					}
 				}
@@ -427,20 +413,14 @@ namespace OpenBve {
 				CurrentCustomTimetableNighttimeTexture = nighttime;
 			}
 			if (CurrentCustomTimetableDaytimeTexture != null | CurrentCustomTimetableNighttimeTexture != null) {
-				CustomTimetableAvailable = true;
+				OpenBveShared.Timetable.CustomTimetableAvailable = true;
 			} else {
-				CustomTimetableAvailable = false;
+				OpenBveShared.Timetable.CustomTimetableAvailable = false;
 			}
 		}
 		
 		// add object for custom timetable
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) {
-			if (CustomObjectsUsed >= CustomObjects.Length) {
-				Array.Resize<ObjectManager.AnimatedObject>(ref CustomObjects, CustomObjects.Length << 1);
-			}
-			CustomObjects[CustomObjectsUsed] = obj;
-			CustomObjectsUsed++;
-		}
+		
 
 	}
 }

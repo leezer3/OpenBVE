@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Renderer\Objects.cs" />
     <Compile Include="System\Functions\Timers.cs" />
+    <Compile Include="Timetable\Timetable.cs" />
+    <Compile Include="Timetable\TimetableStates.cs" />
     <Compile Include="World\Camera\CameraAlignment.cs" />
     <Compile Include="World\Camera\Camera.cs" />
     <Compile Include="World\Camera\CameraRestrictionMode.cs" />
