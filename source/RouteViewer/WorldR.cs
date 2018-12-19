@@ -101,12 +101,6 @@ namespace OpenBve {
 				Source += Speed * TimeElapsed;
 			}
 		}
-		private static void ApplyZoom() {
-			OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle * Math.Exp(OpenBveShared.Camera.CameraCurrentAlignment.Zoom);
-			if (OpenBveShared.World.VerticalViewingAngle < 0.001) OpenBveShared.World.VerticalViewingAngle = 0.001;
-			if (OpenBveShared.World.VerticalViewingAngle > 1.5) OpenBveShared.World.VerticalViewingAngle = 1.5;
-			OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
-		}
 
 		// update viewing distance
 		internal static void UpdateViewingDistances() {

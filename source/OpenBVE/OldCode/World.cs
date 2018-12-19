@@ -215,7 +215,7 @@ namespace OpenBve {
 			double a = Source;
 			double b = Target;
 			Source = Target;
-			if (Zoom) ApplyZoom();
+			if (Zoom) Camera.ApplyZoom();
 			if (PerformCameraRestrictionTest()) {
 				return true;
 			}
@@ -224,7 +224,7 @@ namespace OpenBve {
 			for (int i = 0; i < Precision; i++) {
 				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
 				Source = x;
-				if (Zoom) ApplyZoom();
+				if (Zoom) Camera.ApplyZoom();
 				q = PerformCameraRestrictionTest();
 				if (q) {
 					a = x;
@@ -235,7 +235,7 @@ namespace OpenBve {
 				x = 0.5 * (a + b);
 			}
 			Source = best;
-			if (Zoom) ApplyZoom();
+			if (Zoom) Camera.ApplyZoom();
 			return q;
 		}
 		/// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
@@ -285,7 +285,7 @@ namespace OpenBve {
 			double zm = Camera.CameraCurrentAlignment.Zoom;
 			AdjustAlignment(ref Camera.CameraCurrentAlignment.Zoom, Camera.CameraAlignmentDirection.Zoom, ref Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, true);
 			if (zm != Camera.CameraCurrentAlignment.Zoom) {
-				ApplyZoom();
+				Camera.ApplyZoom();
 			}
 			if (Camera.CameraView == CameraViewMode.FlyBy | Camera.CameraView == CameraViewMode.FlyByZooming) {
 				// fly-by
@@ -654,12 +654,6 @@ namespace OpenBve {
 					}
 				}
 			}
-		}
-		private static void ApplyZoom() {
-			OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle * Math.Exp(Camera.CameraCurrentAlignment.Zoom);
-			if (OpenBveShared.World.VerticalViewingAngle < 0.001) OpenBveShared.World.VerticalViewingAngle = 0.001;
-			if (OpenBveShared.World.VerticalViewingAngle > 1.5) OpenBveShared.World.VerticalViewingAngle = 1.5;
-			OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
 		}
 
 		// update viewing distance

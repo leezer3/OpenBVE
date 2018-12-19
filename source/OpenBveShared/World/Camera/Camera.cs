@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 
 namespace OpenBveShared
@@ -49,5 +50,14 @@ namespace OpenBveShared
 
 		/// <summary>The top camera zoom speed</summary>
 		public const double CameraZoomTopSpeed = 2.0;
+
+		/// <summary>Applies the current camera zoom, taking account of the vertical viewing angle</summary>
+		public static void ApplyZoom()
+		{
+			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle * Math.Exp(CameraCurrentAlignment.Zoom);
+			if (World.VerticalViewingAngle < 0.001) World.VerticalViewingAngle = 0.001;
+			if (World.VerticalViewingAngle > 1.5) World.VerticalViewingAngle = 1.5;
+			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+		}
 	}
 }

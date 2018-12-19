@@ -29,8 +29,8 @@ namespace OpenBve {
 			// zoom
 			double zm = OpenBveShared.Camera.CameraCurrentAlignment.Zoom;
 			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Zoom, OpenBveShared.Camera.CameraAlignmentDirection.Zoom, ref OpenBveShared.Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, OpenBveShared.Camera.CameraAlignmentSpeed.Zoom != 0.0);
-			if (zm != OpenBveShared.Camera.CameraCurrentAlignment.Zoom) {
-				ApplyZoom();
+			if (zm != Camera.CameraCurrentAlignment.Zoom) {
+				Camera.ApplyZoom();
 			}
 			// current alignment
 			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Position.X, OpenBveShared.Camera.CameraAlignmentDirection.Position.X, ref OpenBveShared.Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
@@ -106,13 +106,7 @@ namespace OpenBve {
 				Source += Speed * TimeElapsed;
 			}
 		}
-		private static void ApplyZoom() {
-			OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle * Math.Exp(OpenBveShared.Camera.CameraCurrentAlignment.Zoom);
-			if (OpenBveShared.World.VerticalViewingAngle < 0.001) OpenBveShared.World.VerticalViewingAngle = 0.001;
-			if (OpenBveShared.World.VerticalViewingAngle > 1.5) OpenBveShared.World.VerticalViewingAngle = 1.5;
-			OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
-		}
-
+		
 		// update viewing distance
 		internal static void UpdateViewingDistances() {
 			double f = Math.Atan2(World.CameraTrackFollower.WorldDirection.Z, World.CameraTrackFollower.WorldDirection.X);
