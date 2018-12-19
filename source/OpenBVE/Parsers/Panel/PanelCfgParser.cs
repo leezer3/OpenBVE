@@ -42,8 +42,8 @@ namespace OpenBve {
 				WorldHeight = 2.0 * Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle) * EyeDistance;
 				WorldWidth = WorldHeight * AspectRatio;
 			}
-			World.CameraRestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
-			World.CameraRestrictionTopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
+			Camera.CameraRestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
+			Camera.CameraRestrictionTopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
 			double WorldLeft = Train.Cars[Train.DriverCar].Driver.X - 0.5 * WorldWidth;
 			double WorldTop = Train.Cars[Train.DriverCar].Driver.Y + 0.5 * WorldHeight;
 			double WorldZ = Train.Cars[Train.DriverCar].Driver.Z;

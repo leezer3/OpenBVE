@@ -162,8 +162,7 @@ namespace OpenBve {
 		internal static CameraAlignment CameraSavedTrack;
 
 		// camera restriction
-		internal static Vector3 CameraRestrictionBottomLeft = new Vector3(-1.0, -1.0, 1.0);
-		internal static Vector3 CameraRestrictionTopRight = new Vector3(1.0, 1.0, 1.0);
+		
 
 		// absolute camera
 		
@@ -173,29 +172,29 @@ namespace OpenBve {
 			if ((Camera.CameraView == CameraViewMode.Interior | Camera.CameraView == CameraViewMode.InteriorLookAhead) & Camera.CameraRestriction == CameraRestrictionMode.On) {
 				Camera.CameraAlignmentSpeed = new CameraAlignment();
 				UpdateAbsoluteCamera(0.0);
-				if (!PerformCameraRestrictionTest()) {
+				if (!Camera.PerformCameraRestrictionTest()) {
 					Camera.CameraCurrentAlignment = new CameraAlignment();
 					OpenBveShared.World.VerticalViewingAngle = OpenBveShared.World.OriginalVerticalViewingAngle;
 					OpenBveShared.Renderer.UpdateViewport(OpenBveShared.Renderer.ViewPortChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
-					if (!PerformCameraRestrictionTest()) {
+					if (!Camera.PerformCameraRestrictionTest()) {
 						Camera.CameraCurrentAlignment.Position.Z = 0.8;
 						UpdateAbsoluteCamera(0.0);
-						PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Z, 0.0, true);
-						if (!PerformCameraRestrictionTest()) {
-							Camera.CameraCurrentAlignment.Position.X = 0.5 * (CameraRestrictionBottomLeft.X + CameraRestrictionTopRight.X);
-							Camera.CameraCurrentAlignment.Position.Y = 0.5 * (CameraRestrictionBottomLeft.Y + CameraRestrictionTopRight.Y);
+						Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Z, 0.0, true);
+						if (!Camera.PerformCameraRestrictionTest()) {
+							Camera.CameraCurrentAlignment.Position.X = 0.5 * (Camera.CameraRestrictionBottomLeft.X + Camera.CameraRestrictionTopRight.X);
+							Camera.CameraCurrentAlignment.Position.Y = 0.5 * (Camera.CameraRestrictionBottomLeft.Y + Camera.CameraRestrictionTopRight.Y);
 							Camera.CameraCurrentAlignment.Position.Z = 0.0;
 							UpdateAbsoluteCamera(0.0);
-							if (PerformCameraRestrictionTest()) {
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.X, 0.0, true);
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Y, 0.0, true);
+							if (Camera.PerformCameraRestrictionTest()) {
+								Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.X, 0.0, true);
+								Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Y, 0.0, true);
 							} else {
 								Camera.CameraCurrentAlignment.Position.Z = 0.8;
 								UpdateAbsoluteCamera(0.0);
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Z, 0.0, true);
-								if (!PerformCameraRestrictionTest()) {
+								Camera.PerformProgressiveAdjustmentForCameraRestriction(ref Camera.CameraCurrentAlignment.Position.Z, 0.0, true);
+								if (!Camera.PerformCameraRestrictionTest()) {
 									Camera.CameraCurrentAlignment = new CameraAlignment();
 								}
 							}
@@ -205,39 +204,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static bool PerformProgressiveAdjustmentForCameraRestriction(ref double Source, double Target, bool Zoom) {
-			if ((Camera.CameraView != CameraViewMode.Interior & Camera.CameraView != CameraViewMode.InteriorLookAhead) | Camera.CameraRestriction != CameraRestrictionMode.On) {
-				Source = Target;
-				return true;
-			}
-			double best = Source;
-			const int Precision = 8;
-			double a = Source;
-			double b = Target;
-			Source = Target;
-			if (Zoom) Camera.ApplyZoom();
-			if (PerformCameraRestrictionTest()) {
-				return true;
-			}
-			double x = 0.5 * (a + b);
-			bool q = true;
-			for (int i = 0; i < Precision; i++) {
-				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
-				Source = x;
-				if (Zoom) Camera.ApplyZoom();
-				q = PerformCameraRestrictionTest();
-				if (q) {
-					a = x;
-					best = x;
-				} else {
-					b = x;
-				}
-				x = 0.5 * (a + b);
-			}
-			Source = best;
-			if (Zoom) Camera.ApplyZoom();
-			return q;
-		}
+		
 		/// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
 		/// <returns>True if we are able to move the camera, false otherwise</returns>
 		internal static bool PerformBoundingBoxTest(ref StaticObject bounding, ref Vector3 cameraLocation)
@@ -252,47 +219,22 @@ namespace OpenBve {
 			return false;
 		}
 
-		internal static bool PerformCameraRestrictionTest()
-		{
-			if (Camera.CameraRestriction == CameraRestrictionMode.On) {
-				Vector3[] p = new Vector3[] { CameraRestrictionBottomLeft, CameraRestrictionTopRight };
-				Vector2[] r = new Vector2[2];
-				for (int j = 0; j < 2; j++) {
-					// determine relative world coordinates
-					p[j].Rotate(Camera.AbsoluteCameraDirection, Camera.AbsoluteCameraUp, Camera.AbsoluteCameraSide);
-					double rx = -Math.Tan(Camera.CameraCurrentAlignment.Yaw) - Camera.CameraCurrentAlignment.Position.X;
-					double ry = -Math.Tan(Camera.CameraCurrentAlignment.Pitch) - Camera.CameraCurrentAlignment.Position.Y;
-					double rz = -Camera.CameraCurrentAlignment.Position.Z;
-					p[j].X += rx * Camera.AbsoluteCameraSide.X + ry * Camera.AbsoluteCameraUp.X + rz * Camera.AbsoluteCameraDirection.X;
-					p[j].Y += rx * Camera.AbsoluteCameraSide.Y + ry * Camera.AbsoluteCameraUp.Y + rz * Camera.AbsoluteCameraDirection.Y;
-					p[j].Z += rx * Camera.AbsoluteCameraSide.Z + ry * Camera.AbsoluteCameraUp.Z + rz * Camera.AbsoluteCameraDirection.Z;
-					// determine screen coordinates
-					double ez = Camera.AbsoluteCameraDirection.X * p[j].X + Camera.AbsoluteCameraDirection.Y * p[j].Y + Camera.AbsoluteCameraDirection.Z * p[j].Z;
-					if (ez == 0.0) return false;
-					double ex = Camera.AbsoluteCameraSide.X * p[j].X + Camera.AbsoluteCameraSide.Y * p[j].Y + Camera.AbsoluteCameraSide.Z * p[j].Z;
-					double ey = Camera.AbsoluteCameraUp.X * p[j].X + Camera.AbsoluteCameraUp.Y * p[j].Y + Camera.AbsoluteCameraUp.Z * p[j].Z;
-					r[j].X = ex / (ez * Math.Tan(0.5 * OpenBveShared.World.HorizontalViewingAngle));
-					r[j].Y = ey / (ez * Math.Tan(0.5 * OpenBveShared.World.VerticalViewingAngle));
-				}
-				return r[0].X <= -1.0025 & r[1].X >= 1.0025 & r[0].Y <= -1.0025 & r[1].Y >= 1.0025;
-			}
-			return true;
-		}
+		
 
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
 			double zm = Camera.CameraCurrentAlignment.Zoom;
-			AdjustAlignment(ref Camera.CameraCurrentAlignment.Zoom, Camera.CameraAlignmentDirection.Zoom, ref Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, true);
+			Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Zoom, Camera.CameraAlignmentDirection.Zoom, ref Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, true);
 			if (zm != Camera.CameraCurrentAlignment.Zoom) {
 				Camera.ApplyZoom();
 			}
 			if (Camera.CameraView == CameraViewMode.FlyBy | Camera.CameraView == CameraViewMode.FlyByZooming) {
 				// fly-by
-				AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.X, Camera.CameraAlignmentDirection.Position.X, ref Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
-				AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Y, Camera.CameraAlignmentDirection.Position.Y, ref Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
+				Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.X, Camera.CameraAlignmentDirection.Position.X, ref Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
+				Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Y, Camera.CameraAlignmentDirection.Position.Y, ref Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
 				double tr = Camera.CameraCurrentAlignment.TrackPosition;
-				AdjustAlignment(ref Camera.CameraCurrentAlignment.TrackPosition, Camera.CameraAlignmentDirection.TrackPosition, ref Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
+				Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.TrackPosition, Camera.CameraAlignmentDirection.TrackPosition, ref Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
 				if (tr != Camera.CameraCurrentAlignment.TrackPosition) {
 					World.CameraTrackFollower.Update(TrackManager.CurrentTrack, Camera.CameraCurrentAlignment.TrackPosition, true, false);
 					UpdateViewingDistances();
@@ -413,20 +355,20 @@ namespace OpenBve {
 				// non-fly-by
 				{
 					// current alignment
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.X, Camera.CameraAlignmentDirection.Position.X, ref Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Y, Camera.CameraAlignmentDirection.Position.Y, ref Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Z, Camera.CameraAlignmentDirection.Position.Z, ref Camera.CameraAlignmentSpeed.Position.Z, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.X, Camera.CameraAlignmentDirection.Position.X, ref Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Y, Camera.CameraAlignmentDirection.Position.Y, ref Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Position.Z, Camera.CameraAlignmentDirection.Position.Z, ref Camera.CameraAlignmentSpeed.Position.Z, TimeElapsed);
 					if ((Camera.CameraView == CameraViewMode.Interior | Camera.CameraView == CameraViewMode.InteriorLookAhead) & Camera.CameraRestriction == CameraRestrictionMode.On) {
 						if (Camera.CameraCurrentAlignment.Position.Z > 0.75) {
 							Camera.CameraCurrentAlignment.Position.Z = 0.75;
 						}
 					}
 					bool q = Camera.CameraAlignmentSpeed.Yaw != 0.0 | Camera.CameraAlignmentSpeed.Pitch != 0.0 | Camera.CameraAlignmentSpeed.Roll != 0.0;
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Yaw, Camera.CameraAlignmentDirection.Yaw, ref Camera.CameraAlignmentSpeed.Yaw, TimeElapsed);
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Pitch, Camera.CameraAlignmentDirection.Pitch, ref Camera.CameraAlignmentSpeed.Pitch, TimeElapsed);
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.Roll, Camera.CameraAlignmentDirection.Roll, ref Camera.CameraAlignmentSpeed.Roll, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Yaw, Camera.CameraAlignmentDirection.Yaw, ref Camera.CameraAlignmentSpeed.Yaw, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Pitch, Camera.CameraAlignmentDirection.Pitch, ref Camera.CameraAlignmentSpeed.Pitch, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.Roll, Camera.CameraAlignmentDirection.Roll, ref Camera.CameraAlignmentSpeed.Roll, TimeElapsed);
 					double tr = Camera.CameraCurrentAlignment.TrackPosition;
-					AdjustAlignment(ref Camera.CameraCurrentAlignment.TrackPosition, Camera.CameraAlignmentDirection.TrackPosition, ref Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
+					Camera.AdjustAlignment(ref Camera.CameraCurrentAlignment.TrackPosition, Camera.CameraAlignmentDirection.TrackPosition, ref Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
 					if (tr != Camera.CameraCurrentAlignment.TrackPosition) {
 						World.CameraTrackFollower.Update(TrackManager.CurrentTrack, Camera.CameraCurrentAlignment.TrackPosition, true, false);
 						q = true;
@@ -625,36 +567,7 @@ namespace OpenBve {
 				Camera.AbsoluteCameraSide = sF;
 			}
 		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
-			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);
-		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom) {
-			if (Direction != 0.0 | Speed != 0.0) {
-				if (TimeElapsed > 0.0) {
-					if (Direction == 0.0) {
-						double d = (0.025 + 5.0 * Math.Abs(Speed)) * TimeElapsed;
-						if (Speed >= -d & Speed <= d) {
-							Speed = 0.0;
-						} else {
-							Speed -= (double)Math.Sign(Speed) * d;
-						}
-					} else {
-						double t = Math.Abs(Direction);
-						double d = ((1.15 - 1.0 / (1.0 + 0.025 * Math.Abs(Speed)))) * TimeElapsed;
-						Speed += Direction * d;
-						if (Speed < -t) {
-							Speed = -t;
-						} else if (Speed > t) {
-							Speed = t;
-						}
-					}
-					double x = Source + Speed * TimeElapsed;
-					if (!PerformProgressiveAdjustmentForCameraRestriction(ref Source, x, Zoom)) {
-						Speed = 0.0;
-					}
-				}
-			}
-		}
+		
 
 		// update viewing distance
 		internal static void UpdateViewingDistances() {

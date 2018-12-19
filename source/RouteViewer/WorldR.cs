@@ -22,19 +22,19 @@ namespace OpenBve {
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
 			double zm = OpenBveShared.Camera.CameraCurrentAlignment.Zoom;
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Zoom, OpenBveShared.Camera.CameraAlignmentDirection.Zoom, ref OpenBveShared.Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, OpenBveShared.Camera.CameraAlignmentSpeed.Zoom != 0.0);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Zoom, OpenBveShared.Camera.CameraAlignmentDirection.Zoom, ref OpenBveShared.Camera.CameraAlignmentSpeed.Zoom, TimeElapsed, OpenBveShared.Camera.CameraAlignmentSpeed.Zoom != 0.0);
 			if (zm != OpenBveShared.Camera.CameraCurrentAlignment.Zoom) {
-				ApplyZoom();
+				Camera.ApplyZoom();
 			}
 			// current alignment
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Position.X, OpenBveShared.Camera.CameraAlignmentDirection.Position.X, ref OpenBveShared.Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Position.Y, OpenBveShared.Camera.CameraAlignmentDirection.Position.Y, ref OpenBveShared.Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Position.X, OpenBveShared.Camera.CameraAlignmentDirection.Position.X, ref OpenBveShared.Camera.CameraAlignmentSpeed.Position.X, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Position.Y, OpenBveShared.Camera.CameraAlignmentDirection.Position.Y, ref OpenBveShared.Camera.CameraAlignmentSpeed.Position.Y, TimeElapsed);
 			bool q = OpenBveShared.Camera.CameraAlignmentSpeed.Yaw != 0.0 | OpenBveShared.Camera.CameraAlignmentSpeed.Pitch != 0.0 | OpenBveShared.Camera.CameraAlignmentSpeed.Roll != 0.0;
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Yaw, OpenBveShared.Camera.CameraAlignmentDirection.Yaw, ref OpenBveShared.Camera.CameraAlignmentSpeed.Yaw, TimeElapsed);
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Pitch, OpenBveShared.Camera.CameraAlignmentDirection.Pitch, ref OpenBveShared.Camera.CameraAlignmentSpeed.Pitch, TimeElapsed);
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Roll, OpenBveShared.Camera.CameraAlignmentDirection.Roll, ref OpenBveShared.Camera.CameraAlignmentSpeed.Roll, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Yaw, OpenBveShared.Camera.CameraAlignmentDirection.Yaw, ref OpenBveShared.Camera.CameraAlignmentSpeed.Yaw, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Pitch, OpenBveShared.Camera.CameraAlignmentDirection.Pitch, ref OpenBveShared.Camera.CameraAlignmentSpeed.Pitch, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.Roll, OpenBveShared.Camera.CameraAlignmentDirection.Roll, ref OpenBveShared.Camera.CameraAlignmentSpeed.Roll, TimeElapsed);
 			double tr = OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition;
-			AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition, OpenBveShared.Camera.CameraAlignmentDirection.TrackPosition, ref OpenBveShared.Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
+			Camera.AdjustAlignment(ref OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition, OpenBveShared.Camera.CameraAlignmentDirection.TrackPosition, ref OpenBveShared.Camera.CameraAlignmentSpeed.TrackPosition, TimeElapsed);
 			if (tr != OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition) {
 				World.CameraTrackFollower.Update(TrackManager.CurrentTrack, OpenBveShared.Camera.CameraCurrentAlignment.TrackPosition, true, false);
 				q = true;
@@ -76,32 +76,7 @@ namespace OpenBve {
 			Camera.AbsoluteCameraUp = new Vector3(uF.X, uF.Y, uF.Z);
 			Camera.AbsoluteCameraSide = new Vector3(sF.X, sF.Y, sF.Z);
 		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
-			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);
-		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom) {
-			if (TimeElapsed > 0.0) {
-				if (Direction == 0.0) {
-					double d = (0.025 + 5.0 * Math.Abs(Speed)) * TimeElapsed;
-					if (Speed >= -d & Speed <= d) {
-						Speed = 0.0;
-					} else {
-						Speed -= (double)Math.Sign(Speed) * d;
-					}
-				} else {
-					double t = Math.Abs(Direction);
-					double d = ((1.15 - 1.0 / (1.0 + 0.025 * Math.Abs(Speed)))) * TimeElapsed;
-					Speed += Direction * d;
-					if (Speed < -t) {
-						Speed = -t;
-					} else if (Speed > t) {
-						Speed = t;
-					}
-				}
-				Source += Speed * TimeElapsed;
-			}
-		}
-
+		
 		// update viewing distance
 		internal static void UpdateViewingDistances() {
 			double f = Math.Atan2(World.CameraTrackFollower.WorldDirection.Z, World.CameraTrackFollower.WorldDirection.X);

@@ -255,8 +255,8 @@ namespace OpenBve {
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
 				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * OpenBveShared.World.AspectRatio;
 				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * OpenBveShared.World.AspectRatio;
-				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+				Camera.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+				Camera.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 				Train.Cars[Car].DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 			}

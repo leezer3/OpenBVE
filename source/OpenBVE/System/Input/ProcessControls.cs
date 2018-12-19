@@ -89,7 +89,7 @@ namespace OpenBve
 					World.UpdateViewingDistances();
 					if (Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						if (!World.PerformCameraRestrictionTest())
+						if (!Camera.PerformCameraRestrictionTest())
 						{
 							World.InitializeCameraRestriction();
 						}
@@ -695,7 +695,7 @@ namespace OpenBve
 										World.UpdateViewingDistances();
 										if (Camera.CameraRestriction != CameraRestrictionMode.NotAvailable)
 										{
-											if (!World.PerformCameraRestrictionTest())
+											if (!Camera.PerformCameraRestrictionTest())
 											{
 												World.InitializeCameraRestriction();
 											}
@@ -926,7 +926,7 @@ namespace OpenBve
 											 Camera.CameraView == CameraViewMode.InteriorLookAhead) &
 											Camera.CameraRestriction == CameraRestrictionMode.On)
 										{
-											if (!World.PerformCameraRestrictionTest())
+											if (!Camera.PerformCameraRestrictionTest())
 											{
 												World.InitializeCameraRestriction();
 											}
