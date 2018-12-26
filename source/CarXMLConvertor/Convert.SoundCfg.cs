@@ -589,6 +589,13 @@ namespace CarXmlConvertor
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Apply>");
                                         break;
+                                    case "applyfast":
+	                                    newLines.Add("<ApplyFast>");
+	                                    newLines.Add("<FileName>" + b + "</FileName>");
+	                                    newLines.Add("<Position>" + panel + "</Position>");
+	                                    newLines.Add("<Radius>2.0</Radius>");
+	                                    newLines.Add("</ApplyFast>");
+	                                    break;
                                     case "release":
                                         newLines.Add("<Release>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
@@ -596,6 +603,13 @@ namespace CarXmlConvertor
                                         newLines.Add("<Radius>2.0</Radius>");
                                         newLines.Add("</Release>");
                                         break;
+                                    case "releasefast":
+	                                    newLines.Add("<ReleaseFast>");
+	                                    newLines.Add("<FileName>" + b + "</FileName>");
+	                                    newLines.Add("<Position>" + panel + "</Position>");
+	                                    newLines.Add("<Radius>2.0</Radius>");
+	                                    newLines.Add("</ReleaseFast>");
+	                                    break;
                                     case "min":
                                         newLines.Add("<Minimum>");
                                         newLines.Add("<FileName>" + b + "</FileName>");
@@ -641,6 +655,13 @@ namespace CarXmlConvertor
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Increase>");
                                             break;
+                                        case "upfast":
+	                                        newLines.Add("<IncreaseFast>");
+	                                        newLines.Add("<FileName>" + b + "</FileName>");
+	                                        newLines.Add("<Position>" + panel + "</Position>");
+	                                        newLines.Add("<Radius>2.0</Radius>");
+	                                        newLines.Add("</IncreaseFast>");
+	                                        break;
                                         case "down":
                                             newLines.Add("<Decrease>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
@@ -648,6 +669,13 @@ namespace CarXmlConvertor
                                             newLines.Add("<Radius>2.0</Radius>");
                                             newLines.Add("</Decrease>");
                                             break;
+                                        case "downfast":
+	                                        newLines.Add("<DecreaseFast>");
+	                                        newLines.Add("<FileName>" + b + "</FileName>");
+	                                        newLines.Add("<Position>" + panel + "</Position>");
+	                                        newLines.Add("<Radius>2.0</Radius>");
+	                                        newLines.Add("</DecreaseFast>");
+	                                        break;
                                         case "min":
                                             newLines.Add("<Minimum>");
                                             newLines.Add("<FileName>" + b + "</FileName>");
