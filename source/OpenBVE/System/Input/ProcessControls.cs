@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -991,6 +991,7 @@ namespace OpenBve
 												}
 											}
 										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
 										break;
 									case Translations.Command.SingleNeutral:
 										// single neutral
@@ -1000,6 +1001,7 @@ namespace OpenBve
 											if (p > 0)
 											{
 												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
 											}
 											else
 											{
@@ -1021,6 +1023,7 @@ namespace OpenBve
 												{
 													TrainManager.PlayerTrain.ApplyNotch(0, true, -1, true);
 												}
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
 											}
 										}
 										break;
@@ -1048,6 +1051,8 @@ namespace OpenBve
 												}
 											}
 										}
+										//Set the brake handle fast movement bool at the end of the call in order to not catch it on the first movement
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
 										break;
 									case Translations.Command.SingleEmergency:
 										// single emergency
@@ -1066,6 +1071,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.ApplyNotch(1, true, 0, true);
 											}
 										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
 										break;
 									case Translations.Command.PowerDecrease:
 										// power decrease
@@ -1077,6 +1083,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
 											}
 										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
 										break;
 									case Translations.Command.BrakeIncrease:
 										// brake increase
@@ -1122,6 +1129,7 @@ namespace OpenBve
 												}
 											}
 										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
 										break;
 									case Translations.Command.BrakeDecrease:
 										// brake decrease
@@ -1178,6 +1186,7 @@ namespace OpenBve
 												}
 											}
 										}
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
 										break;
 									case Translations.Command.LocoBrakeIncrease:
 										if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
@@ -1734,6 +1743,25 @@ namespace OpenBve
 									Interface.DigitalControlState.ReleasedAcknowledged;
 								switch (Interface.CurrentControls[i].Command)
 								{
+									case Translations.Command.SingleBrake:
+									case Translations.Command.BrakeIncrease:
+									case Translations.Command.BrakeDecrease:
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = false;
+										break;
+									case Translations.Command.SinglePower:
+									case Translations.Command.PowerIncrease:
+									case Translations.Command.PowerDecrease:
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = false;
+										break;
+									case Translations.Command.SingleNeutral:
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = false;
+										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = false;
+										break;
+
+									/*
+									 * Keys after this point are used by the plugin API
+									 *
+									 */
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
 									case Translations.Command.SecurityS:

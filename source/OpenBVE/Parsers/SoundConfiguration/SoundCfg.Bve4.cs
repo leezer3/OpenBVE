@@ -618,8 +618,14 @@ namespace OpenBve
 										case "apply":
 											train.Cars[train.DriverCar].Sounds.BrakeHandleApply = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
 											break;
+										case "applyfast":
+											train.Cars[train.DriverCar].Sounds.BrakeHandleApplyFast = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
+											break;
 										case "release":
 											train.Cars[train.DriverCar].Sounds.BrakeHandleRelease = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
+											break;
+										case "releasefast":
+											train.Cars[train.DriverCar].Sounds.BrakeHandleReleaseFast = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
 											break;
 										case "min":
 											train.Cars[train.DriverCar].Sounds.BrakeHandleMin = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
@@ -655,8 +661,14 @@ namespace OpenBve
 										case "up":
 											train.Cars[train.DriverCar].Sounds.MasterControllerUp = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
 											break;
+										case "upfast":
+											train.Cars[train.DriverCar].Sounds.MasterControllerUpFast = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
+											break;
 										case "down":
 											train.Cars[train.DriverCar].Sounds.MasterControllerDown = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
+											break;
+										case "downfast":
+											train.Cars[train.DriverCar].Sounds.MasterControllerDownFast = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
 											break;
 										case "min":
 											train.Cars[train.DriverCar].Sounds.MasterControllerMin = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), panel, SoundCfgParser.tinyRadius);
