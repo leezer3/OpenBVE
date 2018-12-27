@@ -129,8 +129,14 @@ namespace OpenBve
 											case "apply":
 												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
 												break;
+											case "applyfast":
+												ParseNode(cc, out car.Sounds.BrakeHandleApplyFast, panel, SoundCfgParser.tinyRadius);
+												break;
 											case "release":
 												ParseNode(cc, out car.Sounds.BrakeHandleRelease, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "releasefast":
+												ParseNode(cc, out car.Sounds.BrakeHandleReleaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
@@ -309,9 +315,17 @@ namespace OpenBve
 											case "increase":
 												ParseNode(cc, out car.Sounds.MasterControllerUp, panel, SoundCfgParser.tinyRadius);
 												break;
+											case "upfast":
+											case "increasefast":
+												ParseNode(cc, out car.Sounds.MasterControllerUpFast, panel, SoundCfgParser.tinyRadius);
+												break;
 											case "down":
 											case "decrease":
 												ParseNode(cc, out car.Sounds.MasterControllerDown, panel, SoundCfgParser.tinyRadius);
+												break;
+											case "downfast":
+											case "decreasefast":
+												ParseNode(cc, out car.Sounds.MasterControllerDownFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
