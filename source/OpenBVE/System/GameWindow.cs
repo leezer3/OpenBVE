@@ -238,7 +238,7 @@ namespace OpenBve
 					TimeElapsed = 0.0;
 				}
 #endif
-				TotalTimeElapsedForInfo += TimeElapsed;
+				TotalTimeElapsedForInfo += RealTimeElapsed;
 				TotalTimeElapsedForSectionUpdate += TimeElapsed;
 
 
