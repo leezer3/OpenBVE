@@ -68,6 +68,7 @@ namespace OpenBve
 				TrainIndex = trainIndex;
 				Destination = Game.InitialDestination;
 				Station = -1;
+				RouteLimits = new double[] { double.PositiveInfinity };
 				CurrentRouteLimit = double.PositiveInfinity;
 				CurrentSectionLimit = double.PositiveInfinity;
 				Cars = new TrainManager.Car[] { };
