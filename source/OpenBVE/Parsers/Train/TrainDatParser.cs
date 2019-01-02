@@ -643,7 +643,7 @@ namespace OpenBve {
 										if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "UnexposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
-											CarExposedFrontalArea = a;
+											CarUnexposedFrontalArea = a;
 										} break;
 								}
 							} i++; n++;
@@ -676,7 +676,7 @@ namespace OpenBve {
 										Train.Handles.HasHoldBrake = a == 1.0; break;
 									case 5:
 										int dt = (int) Math.Round(a);
-										if (dt < 3 && dt > -1)
+										if (dt < 4 && dt > -1)
 										{
 											ReAdhesionDevice = (TrainManager.ReadhesionDeviceType)dt;
 										}
