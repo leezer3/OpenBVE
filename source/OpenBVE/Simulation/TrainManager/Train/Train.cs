@@ -32,8 +32,6 @@ namespace OpenBve
 
 			internal int Destination = -1;
 
-			internal bool StationFrontCar;
-			internal bool StationRearCar;
 			internal TrainStopState StationState;
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;

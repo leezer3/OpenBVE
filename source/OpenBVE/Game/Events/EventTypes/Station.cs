@@ -57,7 +57,6 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						Train.StationFrontCar = false;
 						if (Train.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards && Train.Handles.Power.Driver != 0 && !Game.MinimalisticSimulation && StationIndex == Train.Station)
 						{
 							//Our reverser and power are in F, but we are rolling backwards
@@ -73,23 +72,11 @@ namespace OpenBve
 							return;
 						}
 						Train.Station = StationIndex;
-						Train.StationFrontCar = true;
 						if (Train.StationState != TrainManager.TrainStopState.Jumping)
 						{
 							Train.StationState = TrainManager.TrainStopState.Pending;
 						}
 						Train.LastStation = this.StationIndex;
-					}
-				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle)
-				{
-					if (Direction < 0)
-					{
-						Train.StationRearCar = false;
-					}
-					else
-					{
-						Train.StationRearCar = true;
 					}
 				}
 			}
@@ -111,13 +98,8 @@ namespace OpenBve
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
-					if (Direction < 0)
+					if (Direction > 0)
 					{
-						Train.StationFrontCar = true;
-					}
-					else if (Direction > 0)
-					{
-						Train.StationFrontCar = false;
 						if (Train == TrainManager.PlayerTrain)
 						{
 							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
@@ -129,7 +111,6 @@ namespace OpenBve
 					if (Direction < 0)
 					{
 						Train.Station = this.StationIndex;
-						Train.StationRearCar = true;
 						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
 							Train.LastStation = this.StationIndex;
@@ -156,7 +137,6 @@ namespace OpenBve
 								}
 							}
 							Train.Station = -1;
-							Train.StationRearCar = false;
 							if (Train.StationState != TrainManager.TrainStopState.Jumping)
 							{
 								Train.StationState = TrainManager.TrainStopState.Pending;
