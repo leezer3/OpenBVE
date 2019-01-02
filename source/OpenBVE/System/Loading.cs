@@ -221,11 +221,11 @@ namespace OpenBve {
 			{
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Bogus);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Bogus);
 				}
 				else
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Pending);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Pending);
 				}
 				
 			}
@@ -323,7 +323,7 @@ namespace OpenBve {
 					}
 				}
 				// add panel section
-				if (k == TrainManager.PlayerTrain.TrainIndex) {	
+				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {	
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
 					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;

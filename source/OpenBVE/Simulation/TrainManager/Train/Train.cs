@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -20,7 +20,6 @@ namespace OpenBve
 			internal PluginManager.Plugin Plugin;
 
 			internal Handles Handles;
-			internal int TrainIndex;
 			internal TrainState State;
 			internal Car[] Cars;
 			internal Coupler[] Couplers;
@@ -60,10 +59,9 @@ namespace OpenBve
 			/// <summary>The absolute on-disk path to the train's folder</summary>
 			internal string TrainFolder;
 
-			internal Train(int trainIndex, TrainState state)
+			internal Train(TrainState state)
 			{
 				State = state;
-				TrainIndex = trainIndex;
 				Destination = Game.InitialDestination;
 				Station = -1;
 				RouteLimits = new double[] { double.PositiveInfinity };
@@ -920,7 +918,7 @@ namespace OpenBve
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
@@ -932,7 +930,7 @@ namespace OpenBve
 				this.Cars[CarIndex].Topples = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + TrainIndex + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 

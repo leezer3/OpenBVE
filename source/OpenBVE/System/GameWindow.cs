@@ -460,9 +460,9 @@ namespace OpenBve
 					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
 
 					double TrainLength = 0.0;
-					for (int c = 0; c < TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars.Length; c++)
+					for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
 					{
-						TrainLength += TrainManager.Trains[TrainManager.PlayerTrain.TrainIndex].Cars[c].Length;
+						TrainLength += TrainManager.PlayerTrain.Cars[c].Length;
 					}
 
 					for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
@@ -569,7 +569,7 @@ namespace OpenBve
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				TrainManager.Trains[i].Initialize();
-				int s = i == TrainManager.PlayerTrain.TrainIndex ? PlayerFirstStationIndex : OtherFirstStationIndex;
+				int s = TrainManager.Trains[i] == TrainManager.PlayerTrain ? PlayerFirstStationIndex : OtherFirstStationIndex;
 				if (s >= 0)
 				{
 					if (Game.Stations[s].OpenLeftDoors)
@@ -625,7 +625,7 @@ namespace OpenBve
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				double p;
-				if (i == TrainManager.PlayerTrain.TrainIndex)
+				if (TrainManager.Trains[i] == TrainManager.PlayerTrain)
 				{
 					p = PlayerFirstStationPosition;
 				}
