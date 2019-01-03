@@ -345,6 +345,17 @@ namespace OpenBveApi.Math {
 			Z = z;
 		}
 
+		/// <summary>Rotates the vector on the perpendicular world plane (Used by the .Turn command)</summary>
+		/// <param name="cosa">The cosine of the angle.</param>
+		/// <param name="sina">The sine of the angle.</param>
+		public void RotatePlane(double cosa, double sina)
+		{
+			double u = X * cosa - Z * sina;
+			double v = X * sina + Z * cosa;
+			X = u;
+			Z = v;
+		}
+
 		/// <summary>Rotates the vector based upon three other vectors</summary>
 		/// <param name="firstVector">The first vector</param>
 		/// <param name="secondVector">The second vector</param>
@@ -504,6 +515,8 @@ namespace OpenBveApi.Math {
 			double z = orientation.X.Z * vector.X + orientation.Y.Z * vector.Y + orientation.Z.Z * vector.Z;
 			return new Vector3(x, y, z);
 		}
+
+
 		
 		/// <summary>Creates a unit vector perpendicular to the plane described by three spatial coordinates, suitable for being a surface normal.</summary>
 		/// <param name="a">The first spatial coordinate.</param>
@@ -561,6 +574,19 @@ namespace OpenBveApi.Math {
 			double t = 1.0 / System.Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Y * Y);
 			return new Vector3(t * Vector.X, t * Y, t * Vector.Y);
 		}
+
+		/// <summary>Transforms the Vector based upon the given transform matrix</summary>
+		/// <param name="transformMatrix">The matrix by which to transform the Vector</param>
+		public void Transform(Matrix4D transformMatrix)
+		{
+			double x = (X * transformMatrix.Row0.X) + (Y * transformMatrix.Row1.X) + (Z * transformMatrix.Row2.X) + (1 * transformMatrix.Row3.X);
+			double y = (X * transformMatrix.Row0.Y) + (Y * transformMatrix.Row1.Y) + (Z * transformMatrix.Row2.Y) + (1 * transformMatrix.Row3.Y);
+			double z = (X * transformMatrix.Row0.Z) + (Y * transformMatrix.Row1.Z) + (Z * transformMatrix.Row2.Z) + (1 * transformMatrix.Row3.Z);
+			X = x;
+			Y = y;
+			Z = z;
+		}
+
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>
 		/// <param name="Vector"></param>
 		/// <returns>True if this is a zero vector, false otherwise</returns>

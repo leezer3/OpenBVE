@@ -29,10 +29,10 @@ namespace OpenBve {
 			internal Vector2 TextPadding;
 			internal string Text;
 			internal Material() {
-				this.Color = new Color32(255, 255, 255, 255);
-				this.EmissiveColor = new Color24(0, 0, 0);
+				this.Color = Color32.White;
+				this.EmissiveColor = Color24.Black;
 				this.EmissiveColorUsed = false;
-				this.TransparentColor = new Color24(0, 0, 0);
+				this.TransparentColor = Color24.Black;
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Audio.OpenAL;
+using OpenBveApi.Runtime;
 
 
 namespace OpenBve {
@@ -32,7 +33,7 @@ namespace OpenBve {
 			Vector3 listenerPosition = World.AbsoluteCameraPosition;
 			Orientation3 listenerOrientation = new Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
 			Vector3 listenerVelocity;
-			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior) {
+			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff) + World.CameraAlignmentSpeed.Position;
@@ -110,7 +111,7 @@ namespace OpenBve {
 					{
 						case SoundType.TrainCar:
 							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							velocity = Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
@@ -131,7 +132,7 @@ namespace OpenBve {
 					} else {
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) {
+						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
 							if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
 								innerRadius *= 0.5;
 							}
@@ -265,6 +266,8 @@ namespace OpenBve {
 				OuterRadiusFactor = OuterRadiusFactorMaximum;
 				OuterRadiusFactorSpeed = 0.0;
 			}
+
+			RecAndPlay(listenerPosition, true, 0.0);
 		}
 		
 		private class SoundSourceAttenuation : IComparable<SoundSourceAttenuation> {
@@ -290,7 +293,7 @@ namespace OpenBve {
 			Vector3 listenerPosition = World.AbsoluteCameraPosition;
 			Orientation3 listenerOrientation = new Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
 			Vector3 listenerVelocity;
-			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior) {
+			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				if (diff.IsNullVector()) {
@@ -391,7 +394,7 @@ namespace OpenBve {
 						case SoundType.TrainCar:
 							Vector3 direction;
 							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
@@ -404,7 +407,7 @@ namespace OpenBve {
 					Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead) {
+					if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
 						if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
 							radius *= 0.5;
 						}
@@ -532,7 +535,7 @@ namespace OpenBve {
 						case SoundType.TrainCar:
 							Vector3 direction;
 							var Train = (TrainManager.Train)source.Parent;
-							Train.Cars[source.Car].CreateWorldCoordinates(source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
 							velocity = Train.Cars[source.Car].Specs.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
@@ -554,6 +557,109 @@ namespace OpenBve {
 						AL.Source(source.OpenAlSourceName, ALSourceb.Looping, source.Looped);
 						AL.SourcePlay(source.OpenAlSourceName);
 						source.State = SoundSourceState.Playing;
+					}
+				}
+			}
+
+			RecAndPlay(listenerPosition, false, clampFactor);
+		}
+
+		private static void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
+			if (OpenAlMic == null) {
+				return;
+			}
+
+			// If the microphone sound playback is invalid, stop recording.
+			if (!IsPlayingMicSounds) {
+				if (OpenAlMic.IsRunning) {
+					OpenAlMic.Stop();
+				}
+				return;
+			}
+
+			// Start recording.
+			if (!OpenAlMic.IsRunning) {
+				OpenAlMic.Start();
+			}
+
+			// Make sure that the source is playing.
+			int sample;
+			int[] states = new int[MicSources.Count];
+
+			for (int i = 0; i < MicSources.Count; i++) {
+				AL.GetSource(MicSources[i].OpenAlSourceName, ALGetSourcei.BuffersProcessed, out states[i]);
+			}
+
+			// Get the number of buffers that can be recorded.
+			sample = OpenAlMic.AvailableSamples;
+
+			for (int i = 0; i < MicSources.Count; i++) {
+				if (listenerPosition.Z < MicSources[i].Position.Z - MicSources[i].BackwardTolerance || listenerPosition.Z > MicSources[i].Position.Z + MicSources[i].ForwardTolerance) {
+					continue;
+				}
+
+				// When playback is completed and recording is possible.
+				if (sample > 0 && states[i] == 1) {
+					// Store the recorded data in the buffer.
+					OpenAlMic.ReadSamples(MicStore, sample);
+
+					// Apply the recording data to the buffer.
+					int buffer = AL.GenBuffer();
+					AL.BufferData(buffer, OpenAlMic.SampleFormat, MicStore, MicStore.Length, OpenAlMic.SampleFrequency);
+
+					// Apply buffer to source.
+					AL.SourceQueueBuffer(MicSources[i].OpenAlSourceName, buffer);
+
+					// Delete the buffer where playback has ended.
+					UnloadMicBuffers(MicSources[i].OpenAlSourceName, states[i]);
+
+					Vector3 positionDifference = MicSources[i].Position - listenerPosition;
+					double distance = positionDifference.Norm();
+					double innerRadius = 15.0;
+					double gain = 1.0;
+
+					if (GlobalMute) {
+						gain = 0.0;
+					} else {
+						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
+							innerRadius *= 0.5;
+						}
+						if (IsLinear) {
+							double outerRadius = OuterRadiusFactor * innerRadius;
+							if (distance < outerRadius) {
+								if (distance > innerRadius) {
+									gain = (distance - outerRadius) / (innerRadius - outerRadius);
+								}
+								gain = 3.0 * gain * gain - 2.0 * gain * gain * gain;
+							} else {
+								gain = 0.0;
+							}
+							if (gain <= GainThreshold) {
+								gain = 0.0;
+							} else {
+								gain = (gain - GainThreshold) / (1.0 - GainThreshold);
+							}
+						} else {
+							if (distance < 2.0 * innerRadius) {
+								gain = 1.0 - distance * distance * (4.0 * innerRadius - distance) / (16.0 * innerRadius * innerRadius * innerRadius);
+							} else {
+								gain = innerRadius / distance;
+							}
+							if (gain <= 0.0) {
+								gain = 0.0;
+							}
+							gain -= clampFactor * distance * distance;
+							if (gain <= 0.0) {
+								gain = 0.0;
+							}
+						}
+					}
+
+					AL.Source(MicSources[i].OpenAlSourceName, ALSource3f.Position, (float)positionDifference.X, (float)positionDifference.Y, (float)positionDifference.Z);
+					AL.Source(MicSources[i].OpenAlSourceName, ALSourcef.Gain, (float)gain);
+
+					if (AL.GetSourceState(MicSources[i].OpenAlSourceName) != ALSourceState.Playing) {
+						AL.SourcePlay(MicSources[i].OpenAlSourceName);
 					}
 				}
 			}

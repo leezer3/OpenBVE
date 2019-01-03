@@ -1,6 +1,9 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -183,6 +186,11 @@ namespace OpenBve {
 			//handle = Sounds.RegisterBuffer(sound, 0.0); // TODO
 			handle = null;
 			return true;
+		}
+
+		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
+		{
+			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 		
 	}

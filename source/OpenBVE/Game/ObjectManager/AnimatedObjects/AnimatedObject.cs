@@ -1,5 +1,6 @@
 ﻿using System;
 using CSScriptLibrary;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -19,34 +20,34 @@ namespace OpenBve
 		{
 			// states
 			internal AnimatedObjectState[] States;
-			internal FunctionScripts.FunctionScript StateFunction;
+			internal FunctionScript StateFunction;
 			internal int CurrentState;
 			internal Vector3 TranslateXDirection;
 			internal Vector3 TranslateYDirection;
 			internal Vector3 TranslateZDirection;
-			internal FunctionScripts.FunctionScript TranslateXFunction;
-			internal FunctionScripts.FunctionScript TranslateYFunction;
-			internal FunctionScripts.FunctionScript TranslateZFunction;
+			internal FunctionScript TranslateXFunction;
+			internal FunctionScript TranslateYFunction;
+			internal FunctionScript TranslateZFunction;
 
 			internal Vector3 RotateXDirection;
 			internal Vector3 RotateYDirection;
 			internal Vector3 RotateZDirection;
-			internal FunctionScripts.FunctionScript RotateXFunction;
-			internal FunctionScripts.FunctionScript RotateYFunction;
-			internal FunctionScripts.FunctionScript RotateZFunction;
+			internal FunctionScript RotateXFunction;
+			internal FunctionScript RotateYFunction;
+			internal FunctionScript RotateZFunction;
 			internal Damping RotateXDamping;
 			internal Damping RotateYDamping;
 			internal Damping RotateZDamping;
 			internal Vector2 TextureShiftXDirection;
 			internal Vector2 TextureShiftYDirection;
-			internal FunctionScripts.FunctionScript TextureShiftXFunction;
-			internal FunctionScripts.FunctionScript TextureShiftYFunction;
+			internal FunctionScript TextureShiftXFunction;
+			internal FunctionScript TextureShiftYFunction;
 			internal bool LEDClockwiseWinding;
 			internal double LEDInitialAngle;
 			internal double LEDLastAngle;
 			/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
 			internal Vector3[] LEDVectors;
-			internal FunctionScripts.FunctionScript LEDFunction;
+			internal FunctionScript LEDFunction;
 			internal double RefreshRate;
 			internal double SecondsSinceLastUpdate;
 			internal int ObjectIndex;
@@ -62,7 +63,7 @@ namespace OpenBve
 			internal AnimationScript TranslateZAnimationScript;
 			internal string TranslateZScriptFile;
 
-			internal FunctionScripts.FunctionScript TrackFollowerFunction;
+			internal FunctionScript TrackFollowerFunction;
 			//This section holds parameters used by the track following function
 			internal double FrontAxlePosition = 1;
 			internal double RearAxlePosition = -1;
@@ -749,9 +750,7 @@ namespace OpenBve
 					// translate
 					if (Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X - Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y - Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z - Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position - Position;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
 						double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
 						double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
@@ -762,13 +761,9 @@ namespace OpenBve
 					}
 					else
 					{
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += States[s].Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += States[s].Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += States[s].Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position;
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Position;
 					}
 				}
 				// update normals
@@ -777,9 +772,6 @@ namespace OpenBve
 					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
 					{
 						ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-					}
-					for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-					{
 						if (!Vector3.IsZero(States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
 						{
 							if (rotateX)

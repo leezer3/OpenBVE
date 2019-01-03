@@ -13,11 +13,17 @@
 			internal CarSound AirZero;
 			internal CarSound Brake;
 			internal CarSound BrakeHandleApply;
+			internal CarSound BrakeHandleApplyFast;
 			internal CarSound BrakeHandleRelease;
+			internal CarSound BrakeHandleReleaseFast;
 			internal CarSound BrakeHandleMin;
 			internal CarSound BrakeHandleMax;
 			internal CarSound BreakerResume;
 			internal CarSound BreakerResumeOrInterrupt;
+			/// <summary>Whether the brake handle is being moved continuously</summary>
+			internal bool BrakeHandleFast;
+			/// <summary>Whether the power handle is being moved continuously</summary>
+			internal bool PowerHandleFast;
 			internal bool BreakerResumed;
 			internal CarSound CpEnd;
 			internal CarSound CpLoop;
@@ -31,7 +37,9 @@
 			
 			internal CarSound Loop;
 			internal CarSound MasterControllerUp;
+			internal CarSound MasterControllerUpFast;
 			internal CarSound MasterControllerDown;
+			internal CarSound MasterControllerDownFast;
 			internal CarSound MasterControllerMin;
 			internal CarSound MasterControllerMax;
 			/// <summary>Played once when all doors are closed</summary>

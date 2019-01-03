@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class TrainManager {
@@ -396,7 +397,7 @@ namespace OpenBve {
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
-		internal class Train {
+		internal class Train : AbstractTrain {
 			internal TrainState State;
 			internal Car[] Cars;
 			internal int Destination;
@@ -410,14 +411,6 @@ namespace OpenBve {
 		// trains
 		internal static Train[] Trains = new Train[] { };
 		internal static Train PlayerTrain = new Train();
-
-		// ================================
-
-		// create world coordinates
-		internal static void CreateWorldCoordinates(Train Train, int CarIndex, double relx, double rely, double relz, out double posx, out double posy, out double posz, out double dirx, out double diry, out double dirz) {
-			posx = 0.0; posy = 0.0; posz = 0.0;
-			dirx = 0.0; diry = 0.0; dirz = 1.0;
-		}
 
 	}
 }

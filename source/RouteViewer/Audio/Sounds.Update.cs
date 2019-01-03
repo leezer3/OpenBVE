@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Runtime;
 using OpenTK.Audio.OpenAL;
 
 
@@ -120,7 +121,7 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							OpenBveApi.Math.Vector3 direction;
-							Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+							Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							velocity = Sources[i].Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
 							break;
 						default:
@@ -138,7 +139,7 @@ namespace OpenBve
 					{
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
 						{
 							if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 							{
@@ -340,7 +341,7 @@ namespace OpenBve
 			OpenBveApi.Math.Vector3 listenerPosition = World.AbsoluteCameraPosition;
 			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
 			OpenBveApi.Math.Vector3 listenerVelocity;
-			if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead | World.CameraMode == World.CameraViewMode.Exterior)
+			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior)
 			{
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				OpenBveApi.Math.Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
@@ -459,7 +460,7 @@ namespace OpenBve
 					if (Sources[i].Train != null)
 					{
 						OpenBveApi.Math.Vector3 direction;
-						Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position.X, Sources[i].Position.Y, Sources[i].Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						Sources[i].Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 					}
 					else
 					{
@@ -468,7 +469,7 @@ namespace OpenBve
 					OpenBveApi.Math.Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead)
+					if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
 					{
 						if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 						{
@@ -631,7 +632,7 @@ namespace OpenBve
 					if (source.Train != null)
 					{
 						OpenBveApi.Math.Vector3 direction;
-						source.Train.Cars[source.Car].CreateWorldCoordinates(source.Position.X, source.Position.Y, source.Position.Z, out position.X, out position.Y, out position.Z, out direction.X, out direction.Y, out direction.Z);
+						source.Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
 						velocity = source.Train.Cars[source.Car].Specs.CurrentSpeed * direction;
 					}
 					else

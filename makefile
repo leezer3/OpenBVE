@@ -76,6 +76,9 @@ OPEN_BVE_FILE         :=OpenBve.exe
 OPEN_BVE_API_ROOT     :=source/OpenBveApi
 OPEN_BVE_API_FILE     :=OpenBveApi.dll
 
+ASSIMP_ROOT         :=source/AssimpParser
+ASSIMP_FILE         :=AssimpParser.dll
+
 DEFAULT_DISPLAY_ROOT     :=source/InputDevicePlugins/DefaultDisplayPlugin
 DEFAULT_DISPLAY_FILE     :=Data/InputDevicePlugins/DefaultDisplayPlugin.dll
 
@@ -84,6 +87,9 @@ SAN_YING_INPUT_FILE     :=Data/InputDevicePlugins/SanYingInput.dll
 
 FORMATS_MSTS_ROOT     :=source/Plugins/Formats.Msts
 FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
+
+FORMATS_DIRECTX_ROOT     :=source/Plugins/Formats.DirectX
+FORMATS_DIRECTX_FILE     :=Data/Formats/Formats.DirectX.dll
 
 OPEN_BVE_ATS_ROOT     :=source/Plugins/OpenBveAts
 OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
@@ -105,6 +111,9 @@ TEXTURE_BGJPT_FILE    :=Data/Plugins/Texture.BmpGifJpegPngTiff.dll
 
 TEXTURE_DDS_ROOT      :=source/Plugins/Texture.Dds
 TEXTURE_DDS_FILE      :=Data/Plugins/Texture.Dds.dll
+
+TEXTURE_TGA_ROOT      :=source/Plugins/Texture.Tga
+TEXTURE_TGA_FILE      :=Data/Plugins/Texture.Tga.dll
 
 ROUTE_VIEWER_ROOT     :=source/RouteViewer
 ROUTE_VIEWER_FILE     :=RouteViewer.exe
@@ -167,6 +176,7 @@ all: all-debug
 
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
+all-debug: $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
@@ -180,6 +190,7 @@ all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
+all-release: $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
@@ -246,7 +257,9 @@ clean:
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
+	rm -f bin*/AssimpParser.dll* bin*/AssimpParser.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
+	rm -f bin*/Data/Formats/Formats.DirectX.dll* bin*/Data/Formats/Formats.DirectX.pdb
 	rm -f bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.dll* bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.pdb
 	rm -f bin*/Data/InputDevicePlugins/SanYingInput.dll* bin*/Data/InputDevicePlugins/SanYingInput.pdb
 	rm -f bin*/Data/Plugins/OpenBveAts.dll* bin*/Data/Plugins/OpenBveAts.pdb
@@ -256,6 +269,7 @@ clean:
 	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
+	rm -f bin*/Data/Plugins/Texture.Tga.dll* bin*/Data/Plugins/Texture.Tga.pdb
 
 	# Release Files
 	rm -f $(MAC_BUILD_RESULT) $(LINUX_BUILD_RESULT)
@@ -344,6 +358,7 @@ $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs: $(OPEN_BVE_ROOT)/Properties/Assembl
 $(call create_resource, $(OPEN_BVE_RESOURCE), $(OPEN_BVE_RESX))
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(ASSIMP_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SAN_YING_INPUT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
@@ -352,11 +367,14 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
-$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(ASSIMP_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
@@ -366,14 +384,16 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
@@ -404,6 +424,29 @@ $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BV
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
 
+
+################
+# AssimpParser #
+################
+
+ASSIMP_FOLDERS  := $(shell find $(ASSIMP_ROOT) -type d)
+ASSIMP_SRC      := $(foreach sdir, $(ASSIMP_FOLDERS), $(wildcard $(sdir)/*.cs))
+ASSIMP_DOC      := $(addprefix /doc:, $(foreach sdir, $(ASSIMP_FOLDERS), $(wildcard $(sdir)/*.xml)))
+ASSIMP_RESX     := $(foreach sdir, $(ASSIMP_FOLDERS), $(wildcard $(sdir)/*.resx))
+ASSIMP_RESOURCE := $(addprefix $(ASSIMP_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(ASSIMP_ROOT))%.resx, %.resources, $(ASSIMP_RESX)))))
+ASSIMP_OUT       =$(OUTPUT_DIR)/$(ASSIMP_FILE)
+
+$(call create_resource, $(ASSIMP_RESOURCE), $(ASSIMP_RESX))
+
+$(DEBUG_DIR)/$(ASSIMP_FILE): $(DEBUG_DEPEND)
+$(RELEASE_DIR)/$(ASSIMP_FILE): $(RELEASE_DEPEND)
+
+$(DEBUG_DIR)/$(ASSIMP_FILE) $(RELEASE_DIR)/$(ASSIMP_FILE): $(ASSIMP_SRC) $(ASSIMP_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ASSIMP_OUT)$(COLOR_END)
+	@$(CSC) /out:$(ASSIMP_OUT) /target:library $(ASSIMP_SRC) $(ARGS) $(ASSIMP_DOC) \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OUTPUT_DIR)/OpenTK.dll \
+	/reference:System.Core.dll /reference:System.dll \
+	$(addprefix /resource:, $(ASSIMP_RESOURCE))
 
 ########################
 # DefaultDisplayPlugin #
@@ -489,6 +532,28 @@ $(DEBUG_DIR)/$(FORMATS_MSTS_FILE) $(RELEASE_DIR)/$(FORMATS_MSTS_FILE): $(FORMATS
 	@$(CSC) /out:$(FORMATS_MSTS_OUT) /target:library $(FORMATS_MSTS_SRC) $(ARGS) $(FORMATS_MSTS_DOC) \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(FORMATS_MSTS_RESOURCE))
+	
+###################
+# Formats.DirectX #
+###################
+
+FORMATS_DIRECTX_FOLDERS  := $(shell find $(FORMATS_DIRECTX_ROOT) -type d)
+FORMATS_DIRECTX_SRC      := $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.cs))
+FORMATS_DIRECTX_DOC      := $(addprefix /doc:, $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.xml)))
+FORMATS_DIRECTX_RESX     := $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.resx))
+FORMATS_DIRECTX_RESOURCE := $(addprefix $(FORMATS_DIRECTX_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(FORMATS_DIRECTX_ROOT))%.resx, %.resources, $(FORMATS_DIRECTX_RESX)))))
+FORMATS_DIRECTX_OUT       =$(OUTPUT_DIR)/$(FORMATS_DIRECTX_FILE)
+
+$(call create_resource, $(FORMATS_DIRECTX_RESOURCE), $(FORMATS_DIRECTX_RESX))
+
+$(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE) $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(FORMATS_DIRECTX_SRC) $(FORMATS_DIRECTX_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(FORMATS_DIRECTX_OUT)$(COLOR_END)
+	@$(CSC) /out:$(FORMATS_DIRECTX_OUT) /target:library $(FORMATS_DIRECTX_SRC) $(ARGS) $(FORMATS_DIRECTX_DOC) \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:System.Core.dll /reference:System.dll \
+	$(addprefix /resource:, $(FORMATS_DIRECTX_RESOURCE))
 
 ##############
 # Sound.Flac #
@@ -615,6 +680,27 @@ $(DEBUG_DIR)/$(TEXTURE_DDS_FILE) $(RELEASE_DIR)/$(TEXTURE_DDS_FILE): $(TEXTURE_D
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_DDS_OUT)$(COLOR_END)
 	@$(CSC) /out:$(TEXTURE_DDS_OUT) /target:library $(TEXTURE_DDS_SRC) $(ARGS) $(TEXTURE_DDS_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll $(addprefix /resource:, $(TEXTURE_DDS_RESOURCE))
+	
+###############
+# Texture.Tga #
+###############
+
+TEXTURE_TGA_FOLDERS  := $(shell find $(TEXTURE_TGA_ROOT) -type d)
+TEXTURE_TGA_SRC      := $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.cs))
+TEXTURE_TGA_DOC      := $(addprefix /doc:, $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.xml)))
+TEXTURE_TGA_RESX     := $(foreach sdir, $(TEXTURE_TGA_FOLDERS), $(wildcard $(sdir)/*.resx))
+TEXTURE_TGA_RESOURCE := $(addprefix $(TEXTURE_TGA_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(TEXTURE_TGA_ROOT))%.resx, %.resources, $(TEXTURE_TGA_RESX)))))
+TEXTURE_TGA_OUT       =$(OUTPUT_DIR)/$(TEXTURE_TGA_FILE)
+
+$(call create_resource, $(TEXTURE_TGA_RESOURCE), $(TEXTURE_TGA_RESX))
+
+$(DEBUG_DIR)/$(TEXTURE_TGA_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(TEXTURE_TGA_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(TEXTURE_TGA_FILE) $(RELEASE_DIR)/$(TEXTURE_TGA_FILE): $(TEXTURE_TGA_SRC) $(TEXTURE_TGA_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(TEXTURE_TGA_OUT)$(COLOR_END)
+	@$(CSC) /out:$(TEXTURE_TGA_OUT) /target:library $(TEXTURE_TGA_SRC) $(ARGS) $(TEXTURE_TGA_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll $(addprefix /resource:, $(TEXTURE_TGA_RESOURCE))
 
 ###############
 # RouteViewer #
@@ -694,7 +780,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############

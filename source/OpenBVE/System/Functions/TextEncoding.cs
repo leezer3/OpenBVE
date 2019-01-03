@@ -140,7 +140,27 @@ namespace OpenBve
 		{
 			return GetEncodingFromFile(OpenBveApi.Path.CombineFile(Folder, File));
 		}
+		
+		/// <summary>Gets the encoding corresponding to a textual name string</summary>
+		/// <param name="EncodingName">The textual name of the encoding</param>
+		/// <returns>The System.Text.Encoding</returns>
+		internal static System.Text.Encoding ParseEncoding(string EncodingName)
+		{
+			switch (EncodingName.ToLowerInvariant())
+			{
+				case "shift_jis":
+					return System.Text.Encoding.GetEncoding(932);
+				case "utf-8":
+					return System.Text.Encoding.UTF8;
+				case "utf-32":
+					return System.Text.Encoding.UTF32;
+				default:
+					return System.Text.Encoding.Default;
+			}
+		}
 
+		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
+		/// <param name="Encoding">The Encoding</param>
 		internal static bool IsUtf(System.Text.Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)

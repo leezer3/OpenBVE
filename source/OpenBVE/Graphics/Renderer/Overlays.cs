@@ -170,7 +170,7 @@ namespace OpenBve
 					FadeToBlackDueToChangeEnds = 0.0;
 				}
 			}
-			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == World.CameraViewMode.Interior | World.CameraMode == World.CameraViewMode.InteriorLookAhead))
+			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead))
 			{
 				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
 				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);

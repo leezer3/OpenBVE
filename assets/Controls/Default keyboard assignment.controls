@@ -34,6 +34,7 @@ MAIN_BREAKER, keyboard, B, 0
 ENGINE_START, keyboard, E, 0
 ENGINE_STOP, keyboard, E, 2
 DEVICE_CONSTSPEED, keyboard, BackSpace, 0
+PLAY_MIC_SOUNDS, keyboard, W, 0
 SECURITY_S, keyboard, Space, 0
 SECURITY_A1, keyboard, Insert, 0
 SECURITY_A2, keyboard, Delete, 0

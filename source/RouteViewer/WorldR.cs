@@ -9,6 +9,7 @@ using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Runtime;
 using OpenBveApi.World;
 
 namespace OpenBve {
@@ -317,7 +318,6 @@ namespace OpenBve {
 		internal const double CameraExteriorTopSpeed = 50.0;
 		internal const double CameraExteriorTopAngularSpeed = 5.0;
 		internal const double CameraZoomTopSpeed = 2.0;
-		internal enum CameraViewMode { Interior, InteriorLookAhead, Exterior, Track, FlyBy, FlyByZooming }
 		internal static CameraViewMode CameraMode;
 
 		// camera restriction
@@ -456,15 +456,6 @@ namespace OpenBve {
 			World.ForwardViewingDistance = d * max;
 			World.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z, true);
-		}
-
-		// ================================
-
-		internal static void RotatePlane(ref Vector3 Vector, double cosa, double sina) {
-			double u = Vector.X * cosa - Vector.Z * sina;
-			double v = Vector.X * sina + Vector.Z * cosa;
-			Vector.X = u;
-			Vector.Z = v;
 		}
 
 		// normalize

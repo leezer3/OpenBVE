@@ -6,6 +6,7 @@ using System.Threading;
 using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -177,7 +178,7 @@ namespace OpenBve {
 			Game.MinimalisticSimulation = true;
 			// screen
 			World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
-			World.CameraMode = World.CameraViewMode.Interior;
+			World.CameraMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
@@ -220,11 +221,11 @@ namespace OpenBve {
 			{
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Bogus);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Bogus);
 				}
 				else
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(k, TrainManager.TrainState.Pending);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Pending);
 				}
 				
 			}
@@ -322,7 +323,7 @@ namespace OpenBve {
 					}
 				}
 				// add panel section
-				if (k == TrainManager.PlayerTrain.TrainIndex) {	
+				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {	
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
 					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;

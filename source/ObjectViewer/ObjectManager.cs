@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -617,33 +618,33 @@ namespace OpenBve
         {
             // states
             internal AnimatedObjectState[] States;
-            internal FunctionScripts.FunctionScript StateFunction;
+            internal FunctionScript StateFunction;
             internal int CurrentState;
             internal Vector3 TranslateXDirection;
             internal Vector3 TranslateYDirection;
             internal Vector3 TranslateZDirection;
-            internal FunctionScripts.FunctionScript TranslateXFunction;
-            internal FunctionScripts.FunctionScript TranslateYFunction;
-            internal FunctionScripts.FunctionScript TranslateZFunction;
+            internal FunctionScript TranslateXFunction;
+            internal FunctionScript TranslateYFunction;
+            internal FunctionScript TranslateZFunction;
             internal Vector3 RotateXDirection;
             internal Vector3 RotateYDirection;
             internal Vector3 RotateZDirection;
-            internal FunctionScripts.FunctionScript RotateXFunction;
-            internal FunctionScripts.FunctionScript RotateYFunction;
-            internal FunctionScripts.FunctionScript RotateZFunction;
+            internal FunctionScript RotateXFunction;
+            internal FunctionScript RotateYFunction;
+            internal FunctionScript RotateZFunction;
             internal Damping RotateXDamping;
             internal Damping RotateYDamping;
             internal Damping RotateZDamping;
             internal Vector2 TextureShiftXDirection;
             internal Vector2 TextureShiftYDirection;
-            internal FunctionScripts.FunctionScript TextureShiftXFunction;
-            internal FunctionScripts.FunctionScript TextureShiftYFunction;
+            internal FunctionScript TextureShiftXFunction;
+            internal FunctionScript TextureShiftYFunction;
             internal bool LEDClockwiseWinding;
             internal double LEDInitialAngle;
             internal double LEDLastAngle;
             /// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
             internal Vector3[] LEDVectors;
-            internal FunctionScripts.FunctionScript LEDFunction;
+            internal FunctionScript LEDFunction;
             internal double RefreshRate;
             internal double SecondsSinceLastUpdate;
             internal int ObjectIndex;
@@ -1231,28 +1232,22 @@ namespace OpenBve
 	                ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Object.RotateZDirection, cosZ, sinZ);
                 }
                 // translate
-                if (Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
-                {
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Object.States[s].Position.X - Position.X;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Object.States[s].Position.Y - Position.Y;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Object.States[s].Position.Z - Position.Z;
-	                ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
-                    double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
-                    double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
-                    double dz = -World.CameraCurrentAlignment.Position.Z;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += World.AbsoluteCameraPosition.X + dx * World.AbsoluteCameraSide.X + dy * World.AbsoluteCameraUp.X + dz * World.AbsoluteCameraDirection.X;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += World.AbsoluteCameraPosition.Y + dx * World.AbsoluteCameraSide.Y + dy * World.AbsoluteCameraUp.Y + dz * World.AbsoluteCameraDirection.Y;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += World.AbsoluteCameraPosition.Z + dx * World.AbsoluteCameraSide.Z + dy * World.AbsoluteCameraUp.Z + dz * World.AbsoluteCameraDirection.Z;
-                }
-                else
-                {
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Object.States[s].Position.X;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Object.States[s].Position.Y;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Object.States[s].Position.Z;
-	                ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Position.X;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Position.Y;
-                    ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Position.Z;
+	            if (Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+	            {
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Object.States[s].Position - Position;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
+		            double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
+		            double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
+		            double dz = -World.CameraCurrentAlignment.Position.Z;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += World.AbsoluteCameraPosition.X + dx * World.AbsoluteCameraSide.X + dy * World.AbsoluteCameraUp.X + dz * World.AbsoluteCameraDirection.X;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += World.AbsoluteCameraPosition.Y + dx * World.AbsoluteCameraSide.Y + dy * World.AbsoluteCameraUp.Y + dz * World.AbsoluteCameraDirection.Y;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += World.AbsoluteCameraPosition.Z + dx * World.AbsoluteCameraSide.Z + dy * World.AbsoluteCameraUp.Z + dz * World.AbsoluteCameraDirection.Z;
+	            }
+	            else
+	            {
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Object.States[s].Position;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Position;
                 }
             }
             // update normals
@@ -1261,25 +1256,22 @@ namespace OpenBve
                 for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
                 {
                     ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-                }
-                for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
-                {
-                    if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
-                    {
-                        if (rotateX)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateXDirection, cosX, sinX);
-                        }
-                        if (rotateY)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateYDirection, cosY, sinY);
-                        }
-                        if (rotateZ)
-                        {
-	                        ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateZDirection, cosZ, sinZ);
-                        }
-	                    ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
-                    }
+	                if (!Vector3.IsZero(Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
+	                {
+		                if (rotateX)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateXDirection, cosX, sinX);
+		                }
+		                if (rotateY)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateYDirection, cosY, sinY);
+		                }
+		                if (rotateZ)
+		                {
+			                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Object.RotateZDirection, cosZ, sinZ);
+		                }
+		                ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
+	                }
                 }
                 // visibility changed
                 if (Show)
@@ -1540,7 +1532,30 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-                    Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+	                if (Interface.CurrentOptions.CurrentXParser > 0)
+	                {
+		                try
+		                {
+                            if (Interface.CurrentOptions.CurrentXParser == 1)
+                            {
+                                Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+                            }
+                            else
+                            {
+                                Result = AssimpXParser.ReadObject(FileName);
+                            }
+		                }
+		                catch (Exception e)
+		                {
+			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + e);
+			                Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+		                }
+	                }
+	                else
+	                {
+		                Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+	                }
+                    
                     break;
                 case ".animated":
                     Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
@@ -1552,7 +1567,22 @@ namespace OpenBve
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, Rotation);
                     break;
 	            case ".obj":
-		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    if (Interface.CurrentOptions.CurrentObjParser == 1)
+                    {
+                        try
+                        {
+                            Result = AssimpObjParser.ReadObject(FileName);
+                        }
+                        catch (Exception e)
+                        {
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        }
+                    }
+                    else
+                    {
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    }
 		            break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -1613,7 +1643,29 @@ namespace OpenBve
                     Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
                     break;
                 case ".x":
-                    Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+	                if (Interface.CurrentOptions.CurrentXParser > 0)
+	                {
+		                try
+		                {
+                            if (Interface.CurrentOptions.CurrentXParser == 1)
+                            {
+                                Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+                            }
+                            else
+                            {
+                                Result = AssimpXParser.ReadObject(FileName);
+                            }
+		                }
+		                catch (Exception e)
+		                {
+			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + e);
+			                Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+		                }
+	                }
+	                else
+	                {
+		                Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+	                }
                     break;
                 case ".l3dobj":
                     Result = Ls3DObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY, new Vector3());
@@ -1626,7 +1678,22 @@ namespace OpenBve
                     Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
                     return null;
 	            case ".obj":
-		            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    if (Interface.CurrentOptions.CurrentObjParser == 1)
+                    {
+                        try
+                        {
+                            Result = AssimpObjParser.ReadObject(FileName);
+                        }
+                        catch (Exception e)
+                        {
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                        }
+                    }
+                    else
+                    {
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+                    }
 		            break;
 				default:
                     Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);

@@ -5,8 +5,9 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
-using OpenBveApi.Interface;
+using System.Text;
 using OpenBveApi.Textures;
+using OpenBveApi.Interface;
 
 namespace OpenBve {
 	internal static class XObjectParser {
@@ -142,7 +143,7 @@ namespace OpenBve {
 			//Presumably appears around each Mesh (??), Blender exported models
 			new Template("Frame", new string[] { "[...]" }),
 			//Transforms the mesh, UNSUPPORTED
-			new Template("FrameTransformMatrix", new string[] { "[...]" }),
+			new Template("FrameTransformMatrix", new string[] { "[???]" }),
 		};
 
 		// data
@@ -254,11 +255,36 @@ namespace OpenBve {
 			}
 			Lines[0] = Lines[0].Substring(16);
 			// join lines
-			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
+			StringBuilder Builder = new StringBuilder();
 			for (int i = 0; i < Lines.Length; i++) {
 				Builder.Append(Lines[i]);
 			}
 			string Content = Builder.ToString();
+			//Horrible hack to make Blender generated materials work
+			int idx = Content.IndexOf("Material ", StringComparison.InvariantCultureIgnoreCase);
+			while(idx != -1)
+			{
+				int idx2 = idx + 9;
+				if (Content[idx2] != '{')
+				{
+					int idx3 = idx2;
+					while (idx3 < Content.Length)
+					{
+						idx3++;
+						if (Content[idx3] == '{')
+						{
+							break;
+						}
+
+						
+					}
+					StringBuilder sb = new StringBuilder(Content);
+					sb.Remove(idx2, idx3 - idx2);
+					Content = sb.ToString();
+				}
+
+				idx = Content.IndexOf("Material ", idx + 9, StringComparison.InvariantCultureIgnoreCase);
+			}
 			// parse file
 			int Position = 0;
 			Structure Structure;
@@ -1599,9 +1625,9 @@ namespace OpenBve {
 												Array.Resize<Material>(ref Materials, mn + nMaterials);
 												for (int k = 0; k < nMaterials; k++)
 												{
-													Materials[mn + k].faceColor = new Color32(255, 255, 255, 255);
-													Materials[mn + k].specularColor = new Color24(0, 0, 0);
-													Materials[mn + k].emissiveColor = new Color24(0, 0, 0);
+													Materials[mn + k].faceColor = Color32.White;
+													Materials[mn + k].specularColor = Color24.Black;
+													Materials[mn + k].emissiveColor = Color24.Black;
 													Materials[mn + k].TextureFilename = null;
 												}
 												int MaterialIndex = mn;
@@ -2179,9 +2205,9 @@ namespace OpenBve {
 							if (Materials.Length == 0)
 							{
 								Materials = new Material[1];
-								Materials[0].faceColor = new Color32(255, 255, 255, 255);
-								Materials[0].emissiveColor = new Color24(0, 0, 0);
-								Materials[0].specularColor = new Color24(0, 0, 0);
+								Materials[0].faceColor = Color32.White;
+								Materials[0].emissiveColor = Color24.Black;
+								Materials[0].specularColor = Color24.Black;
 								Materials[0].TextureFilename = null;
 								for (int j = 0; j < nFaces; j++)
 								{
@@ -2212,7 +2238,7 @@ namespace OpenBve {
 								}
 								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
-								Object.Mesh.Materials[mm + j].TransparentColor = new Color24(0, 0, 0);
+								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
 								Object.Mesh.Materials[mm + j].NighttimeTexture = null;
 								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;

@@ -1,54 +1,14 @@
 ﻿using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
 
-		// instruction set
-		internal enum Instructions {
-			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
-			StackCopy, StackSwap,
-			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower, MathRandom, MathRandomInt,
-			MathIncrement, MathDecrement, MathFusedMultiplyAdd,
-			MathQuotient, MathMod, MathFloor, MathCeiling, MathRound, MathMin, MathMax, MathAbs, MathSign,
-			MathExp, MathLog, MathSqrt, MathSin, MathCos, MathTan, MathArcTan,
-			CompareEqual, CompareUnequal, CompareLess, CompareGreater, CompareLessEqual, CompareGreaterEqual, CompareConditional,
-			LogicalNot, LogicalAnd, LogicalOr, LogicalNand, LogicalNor, LogicalXor,
-			TimeSecondsSinceMidnight, CameraDistance,CameraView,
-			TrainCars, TrainDestination,
-			TrainSpeed, TrainSpeedometer, TrainAcceleration, TrainAccelerationMotor,
-			TrainSpeedOfCar, TrainSpeedometerOfCar, TrainAccelerationOfCar, TrainAccelerationMotorOfCar,
-			TrainDistance, TrainDistanceToCar, TrainTrackDistance, TrainTrackDistanceToCar, CurveRadius, CurveRadiusOfCar, FrontAxleCurveRadius, FrontAxleCurveRadiusOfCar, RearAxleCurveRadius, RearAxleCurveRadiusOfCar, CurveCant, CurveCantOfCar, Pitch, PitchOfCar, Odometer, OdometerOfCar,
-			Doors, DoorsIndex,
-			LeftDoors, LeftDoorsIndex, RightDoors, RightDoorsIndex,
-			LeftDoorsTarget, LeftDoorsTargetIndex, RightDoorsTarget, RightDoorsTargetIndex,
-			ReverserNotch, PowerNotch, PowerNotches, BrakeNotch, BrakeNotches, BrakeNotchLinear, BrakeNotchesLinear, EmergencyBrake, Klaxon,
-			HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
-			BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
-			BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
-			SafetyPluginAvailable, SafetyPluginState,
-			TimetableVisible,
-			SectionAspectNumber, CurrentObjectState
-		}
-
-		// function script
-		internal class FunctionScript {
-			internal Instructions[] Instructions;
-			internal double[] Stack;
-			internal double[] Constants;
-			internal double LastResult;
-			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
-				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
-				return this.LastResult;
-			}
-			internal FunctionScript Clone() {
-				return (FunctionScript)this.MemberwiseClone();
-			}
-		}
-
 		// execute function script
-		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
+		internal static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.Instructions.Length; i++) {
 				switch (Function.Instructions[i]) {
@@ -268,7 +228,7 @@ namespace OpenBve {
 						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
-						if (World.CameraMode == World.CameraViewMode.Interior)
+						if (World.CameraMode == CameraViewMode.Interior)
 						{
 							Function.Stack[s] = 0;
 						}
@@ -2187,7 +2147,7 @@ namespace OpenBve {
 		internal static FunctionScript GetFunctionScriptFromPostfixNotation(string Expression) {
 			Expression = GetOptimizedPostfixNotation(Expression);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			FunctionScript Result = new FunctionScript();
+			FunctionScript Result = new FunctionScript(Program.CurrentHost);
 			string[] Arguments = Expression.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			Result.Instructions = new Instructions[16]; int n = 0;
 			Result.Stack = new double[16]; int m = 0, s = 0;

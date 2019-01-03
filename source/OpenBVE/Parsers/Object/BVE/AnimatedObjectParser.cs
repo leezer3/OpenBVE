@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using OpenBveApi;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -912,9 +913,9 @@ namespace OpenBve
 						case "[sound]":
 							{
 								double pitch = 1.0, volume = 1.0, radius = 30.0;
-								FunctionScripts.FunctionScript TrackFollowerFunction = null;
-								FunctionScripts.FunctionScript PitchFunction = null;
-								FunctionScripts.FunctionScript VolumeFunction = null;
+								FunctionScript TrackFollowerFunction = null;
+								FunctionScript PitchFunction = null;
+								FunctionScript VolumeFunction = null;
 								i++;
 								if (Result.Sounds.Length >= SoundCount)
 								{

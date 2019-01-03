@@ -250,7 +250,7 @@ namespace OpenBve
 		// register texture
 		internal static int RegisterTexture(string FileName, OpenGlTextureWrapMode WrapModeX, OpenGlTextureWrapMode WrapModeY, bool DontAllowUnload)
 		{
-			return RegisterTexture(FileName, new Color24(0, 0, 0), 0, TextureLoadMode.Normal, WrapModeX, WrapModeY, DontAllowUnload, 0, 0, 0, 0);
+			return RegisterTexture(FileName, Color24.Black, 0, TextureLoadMode.Normal, WrapModeX, WrapModeY, DontAllowUnload, 0, 0, 0, 0);
 		}
 		internal static int RegisterTexture(string FileName, Color24 TransparentColor, byte TransparentColorUsed, OpenGlTextureWrapMode WrapModeX, OpenGlTextureWrapMode WrapModeY, bool DontAllowUnload)
 		{
@@ -325,7 +325,7 @@ namespace OpenBve
 				Queried = false,
 				OpenGlTextureIndex = a[0],
 				Transparency = TextureTransparencyType.Opaque,
-				TransparentColor = new Color24(0, 0, 0),
+				TransparentColor = Color24.Black,
 				TransparentColorUsed = 0,
 				FileName = null,
 				Loaded = true,
@@ -336,7 +336,7 @@ namespace OpenBve
 			if (Alpha)
 			{
 				Textures[i].Transparency = TextureTransparencyType.Alpha;
-				LoadTextureRGBAforData(Bitmap, new Color24(0, 0, 0), 0, i);
+				LoadTextureRGBAforData(Bitmap, Color24.Black, 0, i);
 				LoadTextureRGBAforOpenGl(i);
 			}
 			else

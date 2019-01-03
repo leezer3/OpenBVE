@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -124,7 +125,7 @@ namespace OpenBve {
 			World.CameraTrackFollower = new TrackManager.TrackFollower();
 			World.CameraTrackFollower.Train = null;
 			World.CameraTrackFollower.CarIndex = -1;
-			World.CameraMode = World.CameraViewMode.Interior;
+			World.CameraMode = CameraViewMode.Interior;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
