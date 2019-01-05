@@ -101,7 +101,14 @@ namespace OpenBve
 			OuterRadiusFactor = Math.Sqrt(OuterRadiusFactorMinimum * OuterRadiusFactorMaximum);
 			OuterRadiusFactorSpeed = 0.0;
 			OpenAlDevice = Alc.OpenDevice(null);
-			OpenAlMic = new AudioCapture(AudioCapture.DefaultDevice, SamplingRate, ALFormat.Mono16, BufferSize);
+			try
+			{
+				OpenAlMic = new AudioCapture(AudioCapture.DefaultDevice, SamplingRate, ALFormat.Mono16, BufferSize);
+			}
+			catch
+			{
+			}
+
 			if (OpenAlDevice != IntPtr.Zero)
 			{
 				OpenAlContext = Alc.CreateContext(OpenAlDevice, (int[])null);
