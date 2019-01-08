@@ -4,7 +4,6 @@ using System.Globalization;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK.Input;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
 

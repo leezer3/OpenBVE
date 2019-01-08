@@ -13,7 +13,6 @@ namespace OpenBve.Parsers.Train
 	{
 		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
 		{
-			double driverZ = 0.0;
 			string interiorFile = string.Empty;
 			foreach (XmlNode c in Node.ChildNodes)
 			{
@@ -233,6 +232,7 @@ namespace OpenBve.Parsers.Train
 							break;
 						}
 						Train.Cars[Car].Driver = new Vector3();
+						double driverZ;
 						if (!NumberFormats.TryParseDoubleVb6(splitText[0], out Train.Cars[Car].Driver.X))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Driver position X was invalid for Car " + Car + " in XML file " + fileName);

@@ -13,6 +13,7 @@ namespace OpenBve
 			/// <param name="PowerRelative">Whether this is relative to the current notch</param>
 			/// <param name="BrakeValue">The brake notch value</param>
 			/// <param name="BrakeRelative">Whether this is relative to the current notch</param>
+			/// <param name="IsOverMaxDriverNotch"></param>
 			internal void ApplyNotch(int PowerValue, bool PowerRelative, int BrakeValue, bool BrakeRelative, bool IsOverMaxDriverNotch = false)
 			{
 				// determine notch
