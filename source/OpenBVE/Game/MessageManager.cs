@@ -109,7 +109,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Updates all current messages</summary>
-		internal static void Update()
+		internal static void UpdateMessages()
 		{
 			for (int i = TextualMessages.Count -1; i >= 0; i--)
 			{
