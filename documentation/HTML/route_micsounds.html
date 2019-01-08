@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="../Images/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Routefiles: Playing Microphone Sounds</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<font size="+2" color="#0080FF">Routefiles: Playing Microphone Sounds</font><br />
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font size="-1" color="#808080">
+
+</font></td></tr></table>
+<br />openBVE 1.5.4.0 introduces the ability to play sounds from the microphone or line-in input to a specified position within the game world.
+<br><br>
+These may be placed in-world using the following routefile command:
+<br /><table border="0">
+<tr style="height:16"><td></td></tr>
+<tr><td bgcolor="#F0F0F0" style="font-family: monospace;border:1px dotted;color:#808080"><font color="#C00000"><b>Track.MicSound</b> <em>X</em> , <em>Y</em> , <em>BackwardsTolerance</em> , <em>ForwardsTolerance</em></font></td></tr>
+</table>
+<table style="border:0px none;margin-left:10pt;margin-right:10pt;">
+<tr><td><font color="#808080">
+<b><em>X</em></b>: The X position of the sound.
+</font></td></tr>
+<tr><td><font color="#808080">
+<b><em>Y</em></b>: The Y position of the sound.
+</font></td></tr>
+<tr><td><font color="#808080">
+<b><em>BackwardsTolerance</em></b>: The distance in meters at which the sound becomes audible as the train approaches it's position.
+</font></td></tr>
+<tr><td><font color="#808080">
+<b><em>ForwardsTolerance</em></b>: The distance in meters at which the sound is inaudible after the train passes it's position.
+</font></td></tr>
+</table>
+
+<br><em>Implementation Notes: </em> 
+<ul>
+<li> Microphone input must be activated using the <b><em>PLAY_MIC_SOUNDS</b></em> key, which is assigned to <b>W</b> by default.
+<li> The microphone input will be routed to all <em>Track.MicSound</em> sound sources within the camera range.
+<li> Only the first available openAL microphone input is supported at present.
+</ul>
+</body>
+
+</html>
