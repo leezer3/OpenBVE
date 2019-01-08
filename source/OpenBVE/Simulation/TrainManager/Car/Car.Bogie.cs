@@ -48,39 +48,28 @@ namespace OpenBve
 					return;
 				}
 				// calculate positions and directions for section element update
-				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = dx * dx + dy * dy + dz * dz;
-				double ux, uy, uz, sx, sy, sz;
+				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				Vector3 u, s;
+				double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
-					dx *= t; dy *= t; dz *= t;
-					ux = Up.X;
-					uy = Up.Y;
-					uz = Up.Z;
-					sx = dz * uy - dy * uz;
-					sy = dx * uz - dz * ux;
-					sz = dy * ux - dx * uy;
+					d *= t;
+					u = new Vector3(Up);
+					s.X = d.Z * u.Y - d.Y * u.Z;
+					s.Y = d.X * u.Z - d.Z * u.X;
+					s.Z = d.Y * u.X - d.X * u.Y;
 				}
 				else
 				{
-					ux = 0.0; uy = 1.0; uz = 0.0;
-					sx = 1.0; sy = 0.0; sz = 0.0;
+					u = Vector3.Down;
+					s = Vector3.Right;
 				}
-				double px = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
-				double py = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
-				double pz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-				double d = 0.5 * (FrontAxle.Position + RearAxle.Position);
-				px -= dx * d;
-				py -= dy * d;
-				pz -= dz * d;
+				Vector3 p = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
+				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
-				double cdx = px - World.AbsoluteCameraPosition.X;
-				double cdy = py - World.AbsoluteCameraPosition.Y;
-				double cdz = pz - World.AbsoluteCameraPosition.Z;
-				double dist = cdx * cdx + cdy * cdy + cdz * cdz;
+				Vector3 cd = new Vector3(p - World.AbsoluteCameraPosition);
+				double dist = cd.X * cd.X + cd.Y * cd.Y + cd.Z * cd.Z;
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
 				// brightness
@@ -101,15 +90,15 @@ namespace OpenBve
 					dnb = (byte)Math.Round(255.0 * (double)(1.0 - Brightness));
 				}
 				// update current section
-				int s = CurrentCarSection;
-				if (s >= 0)
+				int cs = CurrentCarSection;
+				if (cs >= 0)
 				{
-					for (int i = 0; i < CarSections[s].Elements.Length; i++)
+					for (int i = 0; i < CarSections[cs].Elements.Length; i++)
 					{
-						UpdateSectionElement(s, i, new Vector3(px, py, pz), new Vector3(dx, dy, dz), new Vector3(ux, uy, uz), new Vector3(sx, sy, sz), CurrentlyVisible, TimeElapsed, ForceUpdate);
+						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
 
 						// brightness change
-						int o = CarSections[s].Elements[i].ObjectIndex;
+						int o = CarSections[cs].Elements[i].ObjectIndex;
 						if (ObjectManager.Objects[o] != null)
 						{
 							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
