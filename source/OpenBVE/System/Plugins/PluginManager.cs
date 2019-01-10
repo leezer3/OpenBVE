@@ -336,7 +336,7 @@ namespace OpenBve {
 			/// <summary>Called every frame to update the plugin.</summary>
 			/// <param name="data">The data passed to the plugin on Elapse.</param>
 			/// <remarks>This function should not be called directly. Call UpdatePlugin instead.</remarks>
-			internal abstract void Elapse(ElapseData data);
+			protected abstract void Elapse(ElapseData data);
 			/// <summary>Called to update the reverser. This invokes a call to SetReverser only if a change actually occured.</summary>
 			internal void UpdateReverser() {
 				int reverser = (int)this.Train.Handles.Reverser.Driver;
@@ -348,7 +348,7 @@ namespace OpenBve {
 			/// <summary>Called to indicate a change of the reverser.</summary>
 			/// <param name="reverser">The reverser.</param>
 			/// <remarks>This function should not be called directly. Call UpdateReverser instead.</remarks>
-			internal abstract void SetReverser(int reverser);
+			protected abstract void SetReverser(int reverser);
 			/// <summary>Called to update the power notch. This invokes a call to SetPower only if a change actually occured.</summary>
 			internal void UpdatePower() {
 				int powerNotch = this.Train.Handles.Power.Driver;
@@ -360,7 +360,7 @@ namespace OpenBve {
 			/// <summary>Called to indicate a change of the power notch.</summary>
 			/// <param name="powerNotch">The power notch.</param>
 			/// <remarks>This function should not be called directly. Call UpdatePower instead.</remarks>
-			internal abstract void SetPower(int powerNotch);
+			protected abstract void SetPower(int powerNotch);
 			/// <summary>Called to update the brake notch. This invokes a call to SetBrake only if a change actually occured.</summary>
 			internal void UpdateBrake() {
 				int brakeNotch;
@@ -385,7 +385,7 @@ namespace OpenBve {
 			/// <summary>Called to indicate a change of the brake notch.</summary>
 			/// <param name="brakeNotch">The brake notch.</param>
 			/// <remarks>This function should not be called directly. Call UpdateBrake instead.</remarks>
-			internal abstract void SetBrake(int brakeNotch);
+			protected abstract void SetBrake(int brakeNotch);
 			/// <summary>Called when a virtual key is pressed.</summary>
 			internal abstract void KeyDown(VirtualKeys key);
 			/// <summary>Called when a virtual key is released.</summary>
@@ -424,7 +424,7 @@ namespace OpenBve {
 			/// <summary>Is called when the aspect in the current or any of the upcoming sections changes.</summary>
 			/// <param name="signal">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
 			/// <remarks>This function should not be called directly. Call UpdateSignal instead.</remarks>
-			internal abstract void SetSignal(SignalData[] signal);
+			protected abstract void SetSignal(SignalData[] signal);
 			/// <summary>Called when the train passes a beacon.</summary>
 			/// <param name="type">The beacon type.</param>
 			/// <param name="sectionIndex">The section the beacon is attached to, or -1 for the next red signal.</param>
@@ -459,7 +459,7 @@ namespace OpenBve {
 			/// <summary>Called when the train passes a beacon.</summary>
 			/// <param name="beacon">The beacon data.</param>
 			/// <remarks>This function should not be called directly. Call UpdateBeacon instead.</remarks>
-			internal abstract void SetBeacon(BeaconData beacon);
+			protected abstract void SetBeacon(BeaconData beacon);
 			/// <summary>Updates the AI.</summary>
 			/// <returns>The AI response.</returns>
 			internal AIResponse UpdateAI() {
@@ -477,7 +477,7 @@ namespace OpenBve {
 			/// <summary>Called when the AI should be performed.</summary>
 			/// <param name="data">The AI data.</param>
 			/// <remarks>This function should not be called directly. Call UpdateAI instead.</remarks>
-			internal abstract void PerformAI(AIData data);
+			protected abstract void PerformAI(AIData data);
 			
 		}
 		

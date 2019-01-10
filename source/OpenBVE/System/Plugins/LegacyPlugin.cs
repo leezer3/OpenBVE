@@ -238,7 +238,8 @@ namespace OpenBve {
 			}
 		}
 		internal override void EndJump() { }
-		internal override void Elapse(ElapseData data) {
+
+		protected override void Elapse(ElapseData data) {
 			try {
 				double time = data.TotalTime.Milliseconds;
 				Win32VehicleState win32State;
@@ -311,7 +312,8 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void SetReverser(int reverser) {
+
+		protected override void SetReverser(int reverser) {
 			try {
 				Win32SetReverser(reverser);
 			} catch (Exception ex) {
@@ -319,7 +321,8 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void SetPower(int powerNotch) {
+
+		protected override void SetPower(int powerNotch) {
 			try {
 				Win32SetPower(powerNotch);
 			} catch (Exception ex) {
@@ -327,7 +330,8 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void SetBrake(int brakeNotch) {
+
+		protected override void SetBrake(int brakeNotch) {
 			try {
 				Win32SetBrake(brakeNotch);
 			} catch (Exception ex) {
@@ -376,7 +380,8 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal override void SetSignal(SignalData[] signal) {
+
+		protected override void SetSignal(SignalData[] signal) {
 			if (base.LastAspects.Length == 0 || signal[0].Aspect != base.LastAspects[0]) {
 				try {
 					Win32SetSignal(signal[0].Aspect);
@@ -386,7 +391,8 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal override void SetBeacon(BeaconData beacon) {
+
+		protected override void SetBeacon(BeaconData beacon) {
 			try {
 				Win32BeaconData win32Beacon;
 				win32Beacon.Type = beacon.Type;
@@ -399,7 +405,8 @@ namespace OpenBve {
 				throw;
 			}
 		}
-		internal override void PerformAI(AIData data) { }
+
+		protected override void PerformAI(AIData data) { }
 		
 	}
 }

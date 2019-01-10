@@ -737,17 +737,15 @@ namespace OpenBve {
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
 					f.TriggerType = TrackManager.EventTriggerType.None;
 					f.Update(f.TrackPosition + d, true, false);
-					double rx = f.WorldPosition.X - cF.X + World.CameraTrackFollower.WorldSide.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double ry = f.WorldPosition.Y - cF.Y + World.CameraTrackFollower.WorldSide.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double rz = f.WorldPosition.Z - cF.Z + World.CameraTrackFollower.WorldSide.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					World.Normalize(ref rx, ref ry, ref rz);
+					Vector3 r = new Vector3(f.WorldPosition - cF + World.CameraTrackFollower.WorldSide * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z);
+					r.Normalize();
 					double t = dF.Z * (sF.Y * uF.X - sF.X * uF.Y) + dF.Y * (-sF.Z * uF.X + sF.X * uF.Z) + dF.X * (sF.Z * uF.Y - sF.Y * uF.Z);
 					if (t != 0.0) {
 						t = 1.0 / t;
 
-						double tx = (rz * (-dF.Y * uF.X + dF.X * uF.Y) + ry * (dF.Z * uF.X - dF.X * uF.Z) + rx * (-dF.Z * uF.Y + dF.Y * uF.Z)) * t;
-						double ty = (rz * (dF.Y * sF.X - dF.X * sF.Y) + ry * (-dF.Z * sF.X + dF.X * sF.Z) + rx * (dF.Z * sF.Y - dF.Y * sF.Z)) * t;
-						double tz = (rz * (sF.Y * uF.X - sF.X * uF.Y) + ry * (-sF.Z * uF.X + sF.X * uF.Z) + rx * (sF.Z * uF.Y - sF.Y * uF.Z)) * t;
+						double tx = (r.Z * (-dF.Y * uF.X + dF.X * uF.Y) + r.Y * (dF.Z * uF.X - dF.X * uF.Z) + r.X * (-dF.Z * uF.Y + dF.Y * uF.Z)) * t;
+						double ty = (r.Z * (dF.Y * sF.X - dF.X * sF.Y) + r.Y * (-dF.Z * sF.X + dF.X * sF.Z) + r.X * (dF.Z * sF.Y - dF.Y * sF.Z)) * t;
+						double tz = (r.Z * (sF.Y * uF.X - sF.X * uF.Y) + r.Y * (-sF.Z * uF.X + sF.X * uF.Z) + r.X * (sF.Z * uF.Y - sF.Y * uF.Z)) * t;
 						lookaheadYaw = tx * tz != 0.0 ? Math.Atan2(tx, tz) : 0.0;
 						if (ty < -1.0) {
 							lookaheadPitch = -0.5 * Math.PI;
@@ -993,15 +991,6 @@ namespace OpenBve {
 				t = 1.0 / Math.Sqrt(t);
 				x *= t;
 				y *= t;
-			}
-		}
-		internal static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t;
-				y *= t;
-				z *= t;
 			}
 		}
 	}

@@ -5,9 +5,9 @@ namespace OpenBve
 	partial class MessageManager
 	{
 		/// <summary>Contains the current textual messages</summary>
-		internal static List<Message> TextualMessages = new List<Message>();
+		internal static readonly List<Message> TextualMessages = new List<Message>();
 		/// <summary>Contains the current image based messages</summary>
-		internal static List<Message> ImageMessages = new List<Message>();
+		internal static readonly List<Message> ImageMessages = new List<Message>();
 
 		/// <summary>Defines the directions in which a message may trigger</summary>
 		internal enum MessageDirection

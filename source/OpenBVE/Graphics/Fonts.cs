@@ -120,7 +120,7 @@ namespace OpenBve {
 			/// <summary>The underlying font.</summary>
 			private readonly Font Font;
 			/// <summary>The size of the underlying font in pixels.</summary>
-			internal float FontSize;
+			internal readonly float FontSize;
 			/// <summary>The 4352 tables containing 256 character each to make up 1114112 codepoints.</summary>
 			private readonly OpenGlFontTable[] Tables;
 			// --- constructors ---
