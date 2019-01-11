@@ -648,34 +648,24 @@ namespace OpenBve {
 				}
 				// camera
 				{
-					double dx = World.CameraTrackFollower.WorldDirection.X;
-					double dy = World.CameraTrackFollower.WorldDirection.Y;
-					double dz = World.CameraTrackFollower.WorldDirection.Z;
-					double ux = World.CameraTrackFollower.WorldUp.X;
-					double uy = World.CameraTrackFollower.WorldUp.Y;
-					double uz = World.CameraTrackFollower.WorldUp.Z;
-					double sx = World.CameraTrackFollower.WorldSide.X;
-					double sy = World.CameraTrackFollower.WorldSide.Y;
-					double sz = World.CameraTrackFollower.WorldSide.Z;
+					AbsoluteCameraDirection = new Vector3(CameraTrackFollower.WorldDirection);
 					double ox = World.CameraCurrentAlignment.Position.X;
 					double oy = World.CameraCurrentAlignment.Position.Y;
 					double oz = World.CameraCurrentAlignment.Position.Z;
-					double cx = px + sx * ox + ux * oy + dx * oz;
-					double cy = py + sy * ox + uy * oy + dy * oz;
-					double cz = pz + sz * ox + uz * oy + dz * oz;
+					double cx = px + CameraTrackFollower.WorldSide.X * ox + CameraTrackFollower.WorldUp.X * oy + AbsoluteCameraDirection.X * oz;
+					double cy = py + CameraTrackFollower.WorldSide.Y * ox + CameraTrackFollower.WorldUp.Y * oy + AbsoluteCameraDirection.Y * oz;
+					double cz = pz + CameraTrackFollower.WorldSide.Z * ox + CameraTrackFollower.WorldUp.Z * oy + AbsoluteCameraDirection.Z * oz;
 					AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-					dx = tx - cx;
-					dy = ty - cy;
-					dz = tz - cz;
-					double t = Math.Sqrt(dx * dx + dy * dy + dz * dz);
+					AbsoluteCameraDirection.X = tx - cx;
+					AbsoluteCameraDirection.Y = ty - cy;
+					AbsoluteCameraDirection.Z = tz - cz;
+					double t = Math.Sqrt(AbsoluteCameraDirection.NormSquared());
 					double ti = 1.0 / t;
-					dx *= ti;
-					dy *= ti;
-					dz *= ti;
-					AbsoluteCameraDirection = new Vector3(dx, dy, dz);
-					AbsoluteCameraSide = new Vector3(dz, 0.0, -dx);
+					AbsoluteCameraDirection *= ti;
+					
+					AbsoluteCameraSide = new Vector3(AbsoluteCameraDirection.X, 0.0, -AbsoluteCameraDirection.X);
 					AbsoluteCameraSide.Normalize();
-					AbsoluteCameraUp = Vector3.Cross(new Vector3(dx, dy, dz), AbsoluteCameraSide);
+					AbsoluteCameraUp = Vector3.Cross(AbsoluteCameraDirection, AbsoluteCameraSide);
 					UpdateViewingDistances();
 					if (CameraMode == CameraViewMode.FlyByZooming) {
 						// zoom
@@ -811,9 +801,7 @@ namespace OpenBve {
 						// body pitch
 						double ry = (Math.Cos(-bodyPitch) - 1.0) * bodyHeight;
 						double rz = Math.Sin(-bodyPitch) * bodyHeight;
-						cF.X += dF.X * rz + uF.X * ry;
-						cF.Y += dF.Y * rz + uF.Y * ry;
-						cF.Z += dF.Z * rz + uF.Z * ry;
+						cF += dF * rz + uF * ry;
 						if (bodyPitch != 0.0) {
 							double cosa = Math.Cos(-bodyPitch);
 							double sina = Math.Sin(-bodyPitch);
@@ -825,9 +813,7 @@ namespace OpenBve {
 						// body roll
 						double rx = Math.Sin(bodyRoll) * bodyHeight;
 						double ry = (Math.Cos(bodyRoll) - 1.0) * bodyHeight;
-						cF.X += sF.X * rx + uF.X * ry;
-						cF.Y += sF.Y * rx + uF.Y * ry;
-						cF.Z += sF.Z * rx + uF.Z * ry;
+						cF += sF * rx + uF * ry;
 						if (bodyRoll != 0.0) {
 							double cosa = Math.Cos(-bodyRoll);
 							double sina = Math.Sin(-bodyRoll);
@@ -839,9 +825,7 @@ namespace OpenBve {
 						// head yaw
 						double rx = Math.Sin(headYaw) * headHeight;
 						double rz = (Math.Cos(headYaw) - 1.0) * headHeight;
-						cF.X += sF.X * rx + dF.X * rz;
-						cF.Y += sF.Y * rx + dF.Y * rz;
-						cF.Z += sF.Z * rx + dF.Z * rz;
+						cF += sF * rx + dF * rz;
 						if (headYaw != 0.0) {
 							double cosa = Math.Cos(headYaw);
 							double sina = Math.Sin(headYaw);
@@ -853,9 +837,7 @@ namespace OpenBve {
 						// head pitch
 						double ry = (Math.Cos(-headPitch) - 1.0) * headHeight;
 						double rz = Math.Sin(-headPitch) * headHeight;
-						cF.X += dF.X * rz + uF.X * ry;
-						cF.Y += dF.Y * rz + uF.Y * ry;
-						cF.Z += dF.Z * rz + uF.Z * ry;
+						cF += dF * rz + uF * ry;
 						if (headPitch != 0.0) {
 							double cosa = Math.Cos(-headPitch);
 							double sina = Math.Sin(-headPitch);
@@ -867,9 +849,7 @@ namespace OpenBve {
 						// head roll
 						double rx = Math.Sin(headRoll) * headHeight;
 						double ry = (Math.Cos(headRoll) - 1.0) * headHeight;
-						cF.X += sF.X * rx + uF.X * ry;
-						cF.Y += sF.Y * rx + uF.Y * ry;
-						cF.Z += sF.Z * rx + uF.Z * ry;
+						cF += sF * rx + uF * ry;
 						if (headRoll != 0.0) {
 							double cosa = Math.Cos(-headRoll);
 							double sina = Math.Sin(-headRoll);

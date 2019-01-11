@@ -146,10 +146,8 @@ namespace OpenBve
 
 			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
-				Direction.X = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				Direction.Y = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				Direction.Z = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = Direction.X * Direction.X + Direction.Y * Direction.Y + Direction.Z * Direction.Z;
+				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
+				double t = Direction.NormSquared();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
@@ -166,9 +164,7 @@ namespace OpenBve
 				}
 				else
 				{
-					Position.X = FrontAxle.Follower.WorldPosition.X;
-					Position.Y = FrontAxle.Follower.WorldPosition.Y;
-					Position.Z = FrontAxle.Follower.WorldPosition.Z;
+					Position = FrontAxle.Follower.WorldPosition;
 					Direction.X = 0.0;
 					Direction.Y = 1.0;
 					Direction.Z = 0.0;
@@ -495,7 +491,7 @@ namespace OpenBve
 
 				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
 				Vector3 u, s;
-				double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+				double t = d.NormSquared();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
@@ -621,7 +617,7 @@ namespace OpenBve
 				Vector3 u;
 				Vector3 s;
 				{
-					double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
+					double t = 1.0 / d.Norm();
 					d *= t;
 					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
 					double ex = d.X * t;
@@ -874,23 +870,13 @@ namespace OpenBve
 					double sina = Math.Sin(a);
 					d.Rotate(s, cosa, sina);
 					u.Rotate(s, cosa, sina);
-					double cx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
-					double cy = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
-					double cz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-					FrontAxle.Follower.WorldPosition.X -= cx;
-					FrontAxle.Follower.WorldPosition.Y -= cy;
-					FrontAxle.Follower.WorldPosition.Z -= cz;
-					RearAxle.Follower.WorldPosition.X -= cx;
-					RearAxle.Follower.WorldPosition.Y -= cy;
-					RearAxle.Follower.WorldPosition.Z -= cz;
+					Vector3 cc = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
+					FrontAxle.Follower.WorldPosition -= cc;
+					RearAxle.Follower.WorldPosition -= cc;
 					FrontAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
 					RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
-					FrontAxle.Follower.WorldPosition.X += cx;
-					FrontAxle.Follower.WorldPosition.Y += cy;
-					FrontAxle.Follower.WorldPosition.Z += cz;
-					RearAxle.Follower.WorldPosition.X += cx;
-					RearAxle.Follower.WorldPosition.Y += cy;
-					RearAxle.Follower.WorldPosition.Z += cz;
+					FrontAxle.Follower.WorldPosition += cc;
+					RearAxle.Follower.WorldPosition += cc;
 					Up = u;
 				}
 				// spring sound

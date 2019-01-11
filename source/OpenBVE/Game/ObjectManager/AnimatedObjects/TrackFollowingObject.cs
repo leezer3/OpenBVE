@@ -111,10 +111,8 @@ namespace OpenBve
 				Vector3 u;
 				Vector3 s;
 				{
-					d.X = FrontAxleFollower.WorldPosition.X - RearAxleFollower.WorldPosition.X;
-					d.Y = FrontAxleFollower.WorldPosition.Y - RearAxleFollower.WorldPosition.Y;
-					d.Z = FrontAxleFollower.WorldPosition.Z - RearAxleFollower.WorldPosition.Z;
-					double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
+					d = FrontAxleFollower.WorldPosition - RearAxleFollower.WorldPosition;
+					double t = 1.0 / d.Norm();
 					d *= t;
 					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
 					double ex = d.X * t;
