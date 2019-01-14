@@ -52,6 +52,14 @@ namespace OpenBve
 		internal static bool OptionWireframe = false;
 		internal static bool OptionBackfaceCulling = true;
 
+		/*
+		 * These default positions are used every frame by openGL
+		 * Keep them here as opposed to re-creating the new array
+		 * each time for a minor speedup
+		 */
+		private static readonly float[] defaultEmissiveState = {0.0f, 0.0f, 0.0f, 1.0f};
+		private static readonly float[] defaultLightPosition = {0.7f, 0.7f, 0.7f, 1.0f};
+
 		// interface options
 		/// <summary>Whether the clock overlay is currently displayed</summary>
 		internal static bool OptionClock = false;
@@ -117,9 +125,9 @@ namespace OpenBve
 				LoadTexturesImmediately = LoadTextureImmediatelyMode.Yes;
 			}
 			// set up camera
-			double cx = World.AbsoluteCameraPosition.X;
-			double cy = World.AbsoluteCameraPosition.Y;
-			double cz = World.AbsoluteCameraPosition.Z;
+			//double cx = World.AbsoluteCameraPosition.X;
+			//double cy = World.AbsoluteCameraPosition.Y;
+			//double cz = World.AbsoluteCameraPosition.Z;
 			double dx = World.AbsoluteCameraDirection.X;
 			double dy = World.AbsoluteCameraDirection.Y;
 			double dz = World.AbsoluteCameraDirection.Z;
@@ -208,7 +216,7 @@ namespace OpenBve
 							{
 								if (StaticOpaque[i].List.Faces[j] != null)
 								{
-									RenderFace(ref StaticOpaque[i].List.Faces[j], cx, cy, cz);
+									RenderFace(ref StaticOpaque[i].List.Faces[j], World.AbsoluteCameraPosition);
 								}
 							}
 						}
@@ -239,7 +247,7 @@ namespace OpenBve
 								{
 									if (StaticOpaque[i].List.Faces[j] != null)
 									{
-										RenderFace(ref StaticOpaque[i].List.Faces[j], cx, cy, cz);
+										RenderFace(ref StaticOpaque[i].List.Faces[j], World.AbsoluteCameraPosition);
 									}
 								}
 								GL.EndList();
@@ -275,7 +283,7 @@ namespace OpenBve
 			ResetOpenGlState();
 			for (int i = 0; i < DynamicOpaque.FaceCount; i++)
 			{
-				RenderFace(ref DynamicOpaque.Faces[i], cx, cy, cz);
+				RenderFace(ref DynamicOpaque.Faces[i], World.AbsoluteCameraPosition);
 			}
 			// dynamic alpha
 			ResetOpenGlState();
@@ -287,7 +295,7 @@ namespace OpenBve
 				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					RenderFace(ref DynamicAlpha.Faces[i], cx, cy, cz);
+					RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
 				}
 			}
 			else
@@ -302,7 +310,7 @@ namespace OpenBve
 					{
 						if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
-							RenderFace(ref DynamicAlpha.Faces[i], cx, cy, cz);
+							RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
 						}
 					}
 				}
@@ -320,7 +328,7 @@ namespace OpenBve
 							UnsetAlphaFunc();
 							additive = true;
 						}
-						RenderFace(ref DynamicAlpha.Faces[i], cx, cy, cz);
+						RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
 					}
 					else
 					{
@@ -329,7 +337,7 @@ namespace OpenBve
 							SetAlphaFunc(AlphaFunction.Less, 1.0f);
 							additive = false;
 						}
-						RenderFace(ref DynamicAlpha.Faces[i], cx, cy, cz);
+						RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
 					}
 				}
 			}
@@ -368,13 +376,13 @@ namespace OpenBve
 					GL.Enable(EnableCap.Lighting); LightingEnabled = true;
 				}
 				OptionLighting = true;
-				GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.7f, 0.7f, 0.7f, 1.0f });
-				GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 0.7f, 0.7f, 0.7f, 1.0f });
+				GL.Light(LightName.Light0, LightParameter.Ambient, defaultLightPosition);
+				GL.Light(LightName.Light0, LightParameter.Diffuse, defaultLightPosition);
 				// overlay opaque
 				SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 				for (int i = 0; i < OverlayOpaque.FaceCount; i++)
 				{
-					RenderFace(ref OverlayOpaque.Faces[i], cx, cy, cz);
+					RenderFace(ref OverlayOpaque.Faces[i], World.AbsoluteCameraPosition);
 				}
 				// overlay alpha
 				OverlayAlpha.SortPolygons();
@@ -385,7 +393,7 @@ namespace OpenBve
 					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
-						RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
+						RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
 					}
 				}
 				else
@@ -400,7 +408,7 @@ namespace OpenBve
 						{
 							if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 							{
-								RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
+								RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
 							}
 						}
 					}
@@ -418,7 +426,7 @@ namespace OpenBve
 								UnsetAlphaFunc();
 								additive = true;
 							}
-							RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
+							RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
 						}
 						else
 						{
@@ -427,7 +435,7 @@ namespace OpenBve
 								SetAlphaFunc(AlphaFunction.Less, 1.0f);
 								additive = false;
 							}
-							RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
+							RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
 						}
 					}
 				}
@@ -453,7 +461,7 @@ namespace OpenBve
 				OverlayAlpha.SortPolygons();
 				for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 				{
-					RenderFace(ref OverlayAlpha.Faces[i], cx, cy, cz);
+					RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
 				}
 
 			}
@@ -484,7 +492,7 @@ namespace OpenBve
 		/// <summary> Stores the last bound OpenGL texture</summary>
 		internal static OpenGlTexture LastBoundTexture = null;
 
-		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref ObjectFace Face, Vector3 Camera)
 		{
 			if (CullEnabled)
 			{
@@ -503,9 +511,9 @@ namespace OpenBve
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
-			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
+			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], Camera);
 		}
-		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref World.MeshFace Face, Vector3 Camera)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)
@@ -602,7 +610,7 @@ namespace OpenBve
 			}
 			if (Material.GlowAttenuationData != 0)
 			{
-				float alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
+				float alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, Camera);
 				if (OptionWireframe)
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, 1.0f);
@@ -630,7 +638,7 @@ namespace OpenBve
 			}
 			else
 			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, defaultEmissiveState);
 			}
 			if (Material.DaytimeTexture != null)
 			{
@@ -638,27 +646,27 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Face.Vertices.Length; j++)
 					{
-						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
-						GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
+						GL.Normal3((float)Face.Vertices[j].Normal.X, (float)Face.Vertices[j].Normal.Y, (float)Face.Vertices[j].Normal.Z);
+						GL.TexCoord2((float)Vertices[Face.Vertices[j].Index].TextureCoordinates.X, (float)Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 				else
 				{
 					for (int j = 0; j < Face.Vertices.Length; j++)
 					{
-						GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
+						GL.TexCoord2((float)Vertices[Face.Vertices[j].Index].TextureCoordinates.X, (float)Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 			}
@@ -668,13 +676,13 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Face.Vertices.Length; j++)
 					{
-						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
+						GL.Normal3((float)Face.Vertices[j].Normal.X, (float)Face.Vertices[j].Normal.Y, (float)Face.Vertices[j].Normal.Z);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 				else
@@ -686,7 +694,7 @@ namespace OpenBve
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 			}
@@ -728,7 +736,7 @@ namespace OpenBve
 				float alphafactor;
 				if (Material.GlowAttenuationData != 0)
 				{
-					alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
+					alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, Camera);
 					float blend = inv255 * (float)Material.DaytimeNighttimeBlend + 1.0f - OptionLightingResultingAmount;
 					if (blend > 1.0f) blend = 1.0f;
 					alphafactor *= blend;
@@ -753,17 +761,17 @@ namespace OpenBve
 				}
 				else
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, defaultEmissiveState);
 				}
 				for (int j = 0; j < Face.Vertices.Length; j++)
 				{
-					GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
+					GL.TexCoord2((float)Vertices[Face.Vertices[j].Index].TextureCoordinates.X, (float)Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
 					if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 					{
 						ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 					}
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 				}
 				GL.End();
 				RestoreAlphaFunc();
@@ -784,8 +792,8 @@ namespace OpenBve
 				{
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - CameraZ));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - Camera.Z));
 					GL.End();
 				}
 			}

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -8,11 +9,9 @@ namespace OpenBve
 		/// <param name="Vertices">The verticies to which the glow is to be applied</param>
 		/// <param name="Face">The face which these vertices make up</param>
 		/// <param name="GlowAttenuationData">The current glow attenuation</param>
-		/// <param name="CameraX">The X-position of the camera</param>
-		/// <param name="CameraY">The Y-position of the camera</param>
-		/// <param name="CameraZ">The Z-position of the camera</param>
+		/// <param name="Camera">The camera position</param>
 		/// <returns></returns>
-		private static double GetDistanceFactor(VertexTemplate[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ)
+		private static double GetDistanceFactor(VertexTemplate[] Vertices, ref World.MeshFace Face, ushort GlowAttenuationData, Vector3 Camera)
 		{
 			if (Face.Vertices.Length == 0)
 			{
@@ -22,19 +21,17 @@ namespace OpenBve
 			double halfdistance;
 			World.SplitGlowAttenuationData(GlowAttenuationData, out mode, out halfdistance);
 			int i = (int)Face.Vertices[0].Index;
-			double dx = Vertices[i].Coordinates.X - CameraX;
-			double dy = Vertices[i].Coordinates.Y - CameraY;
-			double dz = Vertices[i].Coordinates.Z - CameraZ;
+			Vector3 d = new Vector3(Vertices[i].Coordinates - Camera);
 			switch (mode)
 			{
 				case GlowAttenuationMode.DivisionExponent2:
 					{
-						double t = dx * dx + dy * dy + dz * dz;
+						double t = d.NormSquared();
 						return t / (t + halfdistance * halfdistance);
 					}
 				case GlowAttenuationMode.DivisionExponent4:
 					{
-						double t = dx * dx + dy * dy + dz * dz;
+						double t = d.NormSquared();
 						t *= t;
 						halfdistance *= halfdistance;
 						return t / (t + halfdistance * halfdistance);
