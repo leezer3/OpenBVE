@@ -125,16 +125,7 @@ namespace OpenBve
 				LoadTexturesImmediately = LoadTextureImmediatelyMode.Yes;
 			}
 			// set up camera
-			//double cx = World.AbsoluteCameraPosition.X;
-			//double cy = World.AbsoluteCameraPosition.Y;
-			//double cz = World.AbsoluteCameraPosition.Z;
-			double dx = World.AbsoluteCameraDirection.X;
-			double dy = World.AbsoluteCameraDirection.Y;
-			double dz = World.AbsoluteCameraDirection.Z;
-			double ux = World.AbsoluteCameraUp.X;
-			double uy = World.AbsoluteCameraUp.Y;
-			double uz = World.AbsoluteCameraUp.Z;
-			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
 			GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
@@ -146,9 +137,7 @@ namespace OpenBve
 				float frc = 1.0f - fr;
 				Game.CurrentFog.Start = Game.PreviousFog.Start * frc + Game.NextFog.Start * fr;
 				Game.CurrentFog.End = Game.PreviousFog.End * frc + Game.NextFog.End * fr;
-				Game.CurrentFog.Color.R = (byte)((float)Game.PreviousFog.Color.R * frc + (float)Game.NextFog.Color.R * fr);
-				Game.CurrentFog.Color.G = (byte)((float)Game.PreviousFog.Color.G * frc + (float)Game.NextFog.Color.G * fr);
-				Game.CurrentFog.Color.B = (byte)((float)Game.PreviousFog.Color.B * frc + (float)Game.NextFog.Color.B * fr);
+				Game.CurrentFog.Color = Game.PreviousFog.Color * frc + Game.NextFog.Color * fr;
 			}
 			else
 			{
@@ -361,7 +350,7 @@ namespace OpenBve
 			}
 			GL.LoadIdentity();
 			UpdateViewport(ViewPortChangeMode.ChangeToCab);
-			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
 			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)

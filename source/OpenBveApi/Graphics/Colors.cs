@@ -56,6 +56,30 @@ namespace OpenBveApi.Colors {
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
 
+		/// <summary>Multiplies a color and a factor.</summary>
+		/// <param name="a">The color.</param>
+		/// <param name="b">The factor.</param>
+		/// <returns>The product of the color and the factor.</returns>
+		public static Color24 operator *(Color24 a, double b)
+		{
+			a.R *= (byte)b;
+			a.G *= (byte)b;
+			a.B *= (byte)b;
+			return a;
+		}
+
+		/// <summary>Adds two colors.</summary>
+		/// <param name="a">The first color.</param>
+		/// <param name="b">The second color.</param>
+		/// <returns>The resulting color.</returns>
+		public static Color24 operator +(Color24 a, Color24 b)
+		{
+			a.R += b.R;
+			a.G += b.G;
+			a.B += b.B;
+			return a;
+		}
+
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
