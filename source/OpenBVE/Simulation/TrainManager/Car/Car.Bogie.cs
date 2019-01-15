@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -216,18 +217,16 @@ namespace OpenBve
 					//FRONT BOGIE
 
 					// get direction, up and side vectors
-					Vector3 d = new Vector3();
-					Vector3 u;
+					Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
 					Vector3 s;
 					{
-						d = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
 						double t = 1.0 / d.Norm();
 						d *= t;
 						t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
 						double ex = d.X * t;
 						double ez = d.Z * t;
 						s = new Vector3(ez, 0.0, -ex);
-						u = Vector3.Cross(d, s);
+						Up = Vector3.Cross(d, s);
 					}
 					// cant and radius
 					
@@ -238,7 +237,7 @@ namespace OpenBve
 						           baseCar.Specs.CurrentRollDueToCantAngle;
 						double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 						double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-						Vector3 c = new Vector3(s.X * x + u.X * y, s.Y * x + u.Y * y, s.Z * x + u.Z * y);
+						Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 						FrontAxle.Follower.WorldPosition += c;
 						RearAxle.Follower.WorldPosition += c;
 					}
@@ -249,8 +248,7 @@ namespace OpenBve
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						s.Rotate(d, cosa, sina);
-						u.Rotate(d, cosa, sina);
-						Up = u;
+						Up.Rotate(d, cosa, sina);
 					}
 					// apply pitching
 					if (CurrentCarSection >= 0 &&
@@ -260,31 +258,14 @@ namespace OpenBve
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						d.Rotate(s, cosa, sina);
-						u.Rotate(s, cosa, sina);
-						double cx = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.X +
-						             RearAxle.Follower.WorldPosition.X);
-						double cy = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.Y +
-						             RearAxle.Follower.WorldPosition.Y);
-						double cz = 0.5 *
-						            (FrontAxle.Follower.WorldPosition.Z +
-						             RearAxle.Follower.WorldPosition.Z);
-						FrontAxle.Follower.WorldPosition.X -= cx;
-						FrontAxle.Follower.WorldPosition.Y -= cy;
-						FrontAxle.Follower.WorldPosition.Z -= cz;
-						RearAxle.Follower.WorldPosition.X -= cx;
-						RearAxle.Follower.WorldPosition.Y -= cy;
-						RearAxle.Follower.WorldPosition.Z -= cz;
+						Up.Rotate(s, cosa, sina);
+						Vector3 cc = 0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition);
+						FrontAxle.Follower.WorldPosition -= cc;
+						RearAxle.Follower.WorldPosition -= cc;
 						FrontAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
 						RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
-						FrontAxle.Follower.WorldPosition.X += cx;
-						FrontAxle.Follower.WorldPosition.Y += cy;
-						FrontAxle.Follower.WorldPosition.Z += cz;
-						RearAxle.Follower.WorldPosition.X += cx;
-						RearAxle.Follower.WorldPosition.Y += cy;
-						RearAxle.Follower.WorldPosition.Z += cz;
-						Up = u;
+						FrontAxle.Follower.WorldPosition += cc;
+						RearAxle.Follower.WorldPosition += cc;
 					}
 				}
 			}

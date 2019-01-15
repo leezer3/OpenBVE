@@ -107,18 +107,15 @@ namespace OpenBve
 			private void UpdateObjectPosition()
 			{
 				//Get vectors
-				Vector3 d = new Vector3();
-				Vector3 u;
-				Vector3 s;
+				Direction = new Vector3(FrontAxleFollower.WorldPosition - RearAxleFollower.WorldPosition);
 				{
-					d = FrontAxleFollower.WorldPosition - RearAxleFollower.WorldPosition;
-					double t = 1.0 / d.Norm();
-					d *= t;
-					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
-					double ex = d.X * t;
-					double ez = d.Z * t;
-					s = new Vector3(ez, 0.0, -ex);
-					u = Vector3.Cross(d, s);
+					double t = 1.0 / Direction.Norm();
+					Direction *= t;
+					t = 1.0 / Math.Sqrt(Direction.X * Direction.X + Direction.Z * Direction.Z);
+					double ex = Direction.X * t;
+					double ez = Direction.Z * t;
+					Side = new Vector3(ez, 0.0, -ex);
+					Up = Vector3.Cross(Direction, Side);
 				}
 
 				// apply position due to cant/toppling
@@ -126,27 +123,19 @@ namespace OpenBve
 					double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-					double cx = s.X * x + u.X * y;
-					double cy = s.Y * x + u.Y * y;
-					double cz = s.Z * x + u.Z * y;
-					FrontAxleFollower.WorldPosition.X += cx;
-					FrontAxleFollower.WorldPosition.Y += cy;
-					FrontAxleFollower.WorldPosition.Z += cz;
-					RearAxleFollower.WorldPosition.X += cx;
-					RearAxleFollower.WorldPosition.Y += cy;
-					RearAxleFollower.WorldPosition.Z += cz;
+					Vector3 c = Side * x + Up * y;
+
+					FrontAxleFollower.WorldPosition += c;
+					RearAxleFollower.WorldPosition += c;
 				}
 				// apply rolling
 				{
 					double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
-					s.Rotate(d, cosa, sina);
-					u.Rotate(d, cosa, sina);
-					Up = u;
+					Side.Rotate(Direction, cosa, sina);
+					Up.Rotate(Direction, cosa, sina);
 				}
-				Direction = d;
-				Side = s;
 			}
 
 			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 WorldPosition, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)

@@ -110,7 +110,6 @@
 						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
 						if (n < 8)
 						{
-							m = 8;
 							break;
 						}
 					}
@@ -121,7 +120,6 @@
 					else if (m == 5)
 					{
 						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						m = 8;
 						break;
 					}
 					m++;

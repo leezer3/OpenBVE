@@ -151,7 +151,7 @@ namespace OpenBve
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
-					Direction.X *= t; Direction.Y *= t; Direction.Z *= t;
+					Direction *= t;
 					double sx = Direction.Z * Up.Y - Direction.Y * Up.Z;
 					double sy = Direction.X * Up.Z - Direction.Z * Up.X;
 					double sz = Direction.Y * Up.X - Direction.X * Up.Y;
@@ -165,9 +165,7 @@ namespace OpenBve
 				else
 				{
 					Position = FrontAxle.Follower.WorldPosition;
-					Direction.X = 0.0;
-					Direction.Y = 1.0;
-					Direction.Z = 0.0;
+					Direction = Vector3.Down;
 				}
 			}
 
@@ -510,7 +508,7 @@ namespace OpenBve
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
 				Vector3 cd = new Vector3(p - World.AbsoluteCameraPosition);
-				double dist = cd.X * cd.X + cd.Y * cd.Y + cd.Z * cd.Z;
+				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
 				// Updates the brightness value
@@ -614,7 +612,6 @@ namespace OpenBve
 			{
 				// get direction, up and side vectors
 				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
-				Vector3 u;
 				Vector3 s;
 				{
 					double t = 1.0 / d.Norm();
@@ -623,7 +620,7 @@ namespace OpenBve
 					double ex = d.X * t;
 					double ez = d.Z * t;
 					s = new Vector3(ez, 0.0, -ex);
-					u = Vector3.Cross(d, s);
+					Up = Vector3.Cross(d, s);
 				}
 				// cant and radius
 				double c;
@@ -849,7 +846,7 @@ namespace OpenBve
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-					Vector3 cc = new Vector3(s.X * x + u.X * y, s.Y * x + u.Y * y, s.Z * x + u.Z * y);
+					Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
 				}
@@ -859,8 +856,7 @@ namespace OpenBve
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
 					s.Rotate(d, cosa, sina);
-					u.Rotate(d, cosa, sina);
-					Up = u;
+					Up.Rotate(d, cosa, sina);
 				}
 				// apply pitching
 				if (CurrentCarSection >= 0 && CarSections[CurrentCarSection].Overlay)
@@ -869,7 +865,7 @@ namespace OpenBve
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
 					d.Rotate(s, cosa, sina);
-					u.Rotate(s, cosa, sina);
+					Up.Rotate(s, cosa, sina);
 					Vector3 cc = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 					FrontAxle.Follower.WorldPosition -= cc;
 					RearAxle.Follower.WorldPosition -= cc;
@@ -877,7 +873,6 @@ namespace OpenBve
 					RearAxle.Follower.WorldPosition.Rotate(s, cosa, sina);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
-					Up = u;
 				}
 				// spring sound
 				{
