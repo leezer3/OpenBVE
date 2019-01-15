@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Colors;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -271,12 +272,8 @@ namespace OpenBve
             }
             if (updatelight)
             {
-               Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
-               Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
-                Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
+	            Renderer.OptionAmbientColor = new Color24((byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative)), (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative))), (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative));
+				Renderer.OptionDiffuseColor = new Color24((byte)Math.Round(32.0 + 128.0 * Program.LightingRelative), (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative), (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative)));
                 Renderer.InitializeLighting();
             }
             Renderer.RenderScene();

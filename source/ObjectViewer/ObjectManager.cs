@@ -1397,9 +1397,7 @@ namespace OpenBve
             {
                 for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials.Length; j++)
                 {
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.R * Brightness);
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.G * Brightness);
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+	                AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color = Prototype.States[i].Object.Mesh.Materials[j].Color * Brightness;
                 }
                 for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++)
                 {
@@ -1877,9 +1875,7 @@ namespace OpenBve
             for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
             {
                 Object.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-                Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
-                Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.G * Brightness);
-                Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.B * Brightness);
+                Object.Mesh.Materials[j].Color = Prototype.Mesh.Materials[j].Color * Brightness;
             }
             const double minBlockLength = 20.0;
             if (BlockLength < minBlockLength)

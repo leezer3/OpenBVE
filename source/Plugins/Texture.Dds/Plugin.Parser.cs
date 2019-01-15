@@ -12,7 +12,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.IO;
-using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 
 namespace Plugin
@@ -1638,6 +1637,14 @@ namespace Plugin
             public ushort blue; //: 5;
             public ushort green; //: 6;
             public ushort red; //: 5;
+        }
+
+        private struct Color32
+        {
+	        internal byte R;
+	        internal byte G;
+	        internal byte B;
+	        internal byte A;
         }
 
         private struct DdsHeader

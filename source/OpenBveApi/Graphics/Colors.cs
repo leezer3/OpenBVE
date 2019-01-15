@@ -14,11 +14,11 @@ namespace OpenBveApi.Colors {
 	public struct Color24 {
 		// --- members ---
 		/// <summary>The red component.</summary>
-		public byte R;
+		public readonly byte R;
 		/// <summary>The green component.</summary>
-		public byte G;
+		public readonly byte G;
 		/// <summary>The blue component.</summary>
-		public byte B;
+		public readonly byte B;
 		// --- constructors ---
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
@@ -62,10 +62,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>The product of the color and the factor.</returns>
 		public static Color24 operator *(Color24 a, double b)
 		{
-			a.R *= (byte)b;
-			a.G *= (byte)b;
-			a.B *= (byte)b;
-			return a;
+			return new Color24((byte)((float)a.R * b), (byte)((float)a.G * b), (byte)((float)a.B * b));
 		}
 
 		/// <summary>Adds two colors.</summary>
@@ -74,10 +71,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>The resulting color.</returns>
 		public static Color24 operator +(Color24 a, Color24 b)
 		{
-			a.R += b.R;
-			a.G += b.G;
-			a.B += b.B;
-			return a;
+			return new Color24((byte)(a.R + b.R), (byte)(a.G + b.G), (byte)(a.B + b.B));
 		}
 
 		/// <summary>Checks whether two colors are equal.</summary>
@@ -175,13 +169,13 @@ namespace OpenBveApi.Colors {
 	public struct Color32 {
 		// --- members ---
 		/// <summary>The red component.</summary>
-		public byte R;
+		public readonly byte R;
 		/// <summary>The green component.</summary>
-		public byte G;
+		public readonly byte G;
 		/// <summary>The blue component.</summary>
-		public byte B;
+		public readonly byte B;
 		/// <summary>The alpha component.</summary>
-		public byte A;
+		public readonly byte A;
 		// --- constructors ---
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
@@ -223,6 +217,16 @@ namespace OpenBveApi.Colors {
 			this.B = color.B;
 			this.A = 255;
 		}
+
+		/// <summary>Multiplies a color by a factor</summary>
+		/// <param name="a">The color</param>
+		/// <param name="b">The new factor</param>
+		/// <returns>The new color</returns>
+		public static Color32 operator *(Color32 a, double b)
+		{
+			return new Color32((byte)System.Math.Round((double)a.R * b), (byte)System.Math.Round((double)a.G * b), (byte)System.Math.Round((double)a.B * b));
+		}
+
 		// --- operators ---
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
@@ -361,11 +365,11 @@ namespace OpenBveApi.Colors {
 	public struct Color96 {
 		// --- members ---
 		/// <summary>The red component.</summary>
-		public float R;
+		public readonly float R;
 		/// <summary>The green component.</summary>
-		public float G;
+		public readonly float G;
 		/// <summary>The blue component.</summary>
-		public float B;
+		public readonly float B;
 		// --- constructors ---
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>
@@ -452,13 +456,13 @@ namespace OpenBveApi.Colors {
 	public struct Color128 {
 		// --- members ---
 		/// <summary>The red component.</summary>
-		public float R;
+		public readonly float R;
 		/// <summary>The green component.</summary>
-		public float G;
+		public readonly float G;
 		/// <summary>The blue component.</summary>
-		public float B;
+		public readonly float B;
 		/// <summary>The alpha component.</summary>
-		public float A;
+		public readonly float A;
 		// --- constructors ---
 		/// <summary>Creates a new color.</summary>
 		/// <param name="r">The red component.</param>

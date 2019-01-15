@@ -390,9 +390,7 @@ namespace OpenBve
 				for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
 				{
 					Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-					Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
-					Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.G * Brightness);
-					Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.B * Brightness);
+					Mesh.Materials[j].Color = Prototype.Mesh.Materials[j].Color * Brightness;
 				}
 				const double minBlockLength = 20.0;
 				if (BlockLength < minBlockLength)

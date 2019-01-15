@@ -243,9 +243,7 @@ namespace OpenBve {
 				float frc = 1.0f - fr;
 				Game.CurrentFog.Start = Game.PreviousFog.Start * frc + Game.NextFog.Start * fr;
 				Game.CurrentFog.End = Game.PreviousFog.End * frc + Game.NextFog.End * fr;
-				Game.CurrentFog.Color.R = (byte)((float)Game.PreviousFog.Color.R * frc + (float)Game.NextFog.Color.R * fr);
-				Game.CurrentFog.Color.G = (byte)((float)Game.PreviousFog.Color.G * frc + (float)Game.NextFog.Color.G * fr);
-				Game.CurrentFog.Color.B = (byte)((float)Game.PreviousFog.Color.B * frc + (float)Game.NextFog.Color.B * fr);
+				Game.CurrentFog.Color = Game.PreviousFog.Color * frc + Game.NextFog.Color * fr;
 			} else {
 				Game.CurrentFog = Game.PreviousFog;
 				
