@@ -566,7 +566,7 @@ namespace OpenBve
 									double sinag = Math.Sin(ag);
 									Direction2.Rotate(cosag, sinag);
 								}
-								double a2 = 0.0;
+								double a2;
 								// double c2 = Data.BlockInterval;
 								// double h2 = 0.0;
 								if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0 & Data.Blocks[i + 1].Pitch != 0.0)

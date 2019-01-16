@@ -177,16 +177,7 @@ namespace OpenBve
 				{
 					if (currentObject.Object.States[i].Object == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject
-						{
-							Mesh =
-								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
-									Vertices = new VertexTemplate[] {}
-								},
-							RendererIndex = -1
-						};
+						currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
 					}
 				}
 				double r = 0.0;

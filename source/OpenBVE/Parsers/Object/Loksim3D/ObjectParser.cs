@@ -27,9 +27,6 @@ namespace OpenBve
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new VertexTemplate[] { };
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
 			bool PropertiesFound = false;

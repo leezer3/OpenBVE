@@ -84,16 +84,8 @@ namespace OpenBve
 			{
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
-			Objects[a] = new StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] {},
-					Materials = new World.MeshMaterial[] {},
-					Vertices = new VertexTemplate[] {}
-				},
-				Dynamic = true
-			};
+
+			Objects[a] = new StaticObject { Dynamic = true };
 			ObjectsUsed++;
 			return a;
 		}

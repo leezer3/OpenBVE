@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0660 // Defines == or != but does not override Object.Equals
+#pragma warning disable 0660 // Defines == or != but does not override Object.Equals
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;

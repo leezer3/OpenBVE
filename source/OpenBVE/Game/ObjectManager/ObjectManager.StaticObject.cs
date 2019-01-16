@@ -29,6 +29,17 @@ namespace OpenBve
 			/// <summary> Stores the copyright information for this object.</summary>
 			internal string Copyright;
 
+			/// <summary>Creates a new empty object</summary>
+			internal StaticObject() 
+			{
+				Mesh = new World.Mesh
+				{
+					Faces = new World.MeshFace[] {},
+					Materials =  new World.MeshMaterial[] {},
+					Vertices =  new VertexTemplate[] {}
+				};
+			}
+
 			/// <summary>Creates a clone of this object.</summary>
 			/// <param name="DaytimeTexture">The replacement daytime texture</param>
 			/// <param name="NighttimeTexture">The replacement nighttime texture</param>

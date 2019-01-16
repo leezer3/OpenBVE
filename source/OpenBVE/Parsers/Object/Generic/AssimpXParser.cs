@@ -27,9 +27,6 @@ namespace OpenBve
 				Scene scene = parser.GetImportedData();
 
 				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-				obj.Mesh.Faces = new World.MeshFace[] { };
-				obj.Mesh.Materials = new World.MeshMaterial[] { };
-				obj.Mesh.Vertices = new VertexTemplate[] { };
 				MeshBuilder builder = new MeshBuilder();
 
 				// Global

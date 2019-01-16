@@ -114,9 +114,6 @@ namespace OpenBve
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-			obj.Mesh.Faces = new World.MeshFace[] { };
-			obj.Mesh.Materials = new World.MeshMaterial[] { };
-			obj.Mesh.Vertices = new VertexTemplate[] { };
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
