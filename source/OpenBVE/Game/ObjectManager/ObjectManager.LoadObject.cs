@@ -122,7 +122,7 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
@@ -141,19 +141,19 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+							Result = XObjectParser.ReadObject(FileName, Encoding);
 						}
 					}
 					else
 					{
-						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+						Result = XObjectParser.ReadObject(FileName, Encoding);
 					}
 					break;
 				case ".animated":
 					Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
 					break;
 				case ".xml":
-					Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = XMLParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".l3dgrp":
 					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, new Vector3());
@@ -242,7 +242,7 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
@@ -261,12 +261,12 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+							Result = XObjectParser.ReadObject(FileName, Encoding);
 						}
 					}
 					else
 					{
-						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode);
+						Result = XObjectParser.ReadObject(FileName, Encoding);
 					}
 					break;
 				case ".animated":

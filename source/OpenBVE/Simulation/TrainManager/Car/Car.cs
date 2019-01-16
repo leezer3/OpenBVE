@@ -75,8 +75,7 @@ namespace OpenBve
 
 			/// <summary>Moves the car</summary>
 			/// <param name="Delta">The delta to move</param>
-			/// <param name="TimeElapsed">The time elapsed</param>
-			internal void Move(double Delta, double TimeElapsed)
+			internal void Move(double Delta)
 			{
 				if (baseTrain.State != TrainState.Disposed)
 				{

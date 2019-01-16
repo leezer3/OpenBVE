@@ -73,19 +73,12 @@ namespace OpenBve {
 		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
 		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] {},
-					Materials = new World.MeshMaterial[] {},
-					Vertices = new VertexTemplate[] {}
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			if (!IsB3D && Interface.CurrentOptions.EnableBveTsHacks)
@@ -1094,7 +1087,7 @@ namespace OpenBve {
 									//so re-read with the default ANSI charset
 									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1)
 									{
-										Object = ReadObject(FileName, Encoding.Default, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+										Object = ReadObject(FileName, Encoding.Default, ForceTextureRepeatX, ForceTextureRepeatY);
 										return Object;
 									}
 									else

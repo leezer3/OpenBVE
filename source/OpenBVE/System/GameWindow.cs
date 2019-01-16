@@ -594,8 +594,8 @@ namespace OpenBve
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
 					double length = TrainManager.Trains[i].Cars[0].Length;
-					TrainManager.Trains[i].Cars[j].Move(-length, 0.01);
-					TrainManager.Trains[i].Cars[j].Move(length, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(-length);
+					TrainManager.Trains[i].Cars[j].Move(length);
 				}
 			}
 			// score
@@ -640,7 +640,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
-					TrainManager.Trains[i].Cars[j].Move(p, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(p);
 				}
 			}
 			// timetable

@@ -244,7 +244,7 @@ namespace OpenBve
 				// move cars
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
+					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed);
 					if (State == TrainState.Disposed)
 					{
 						return;
