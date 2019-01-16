@@ -32,7 +32,7 @@ namespace OpenBve
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectLoadMode.DontAllowUnloadOfTextures);
+				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
 				if (a != null)
 				{
 					//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg

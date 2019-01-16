@@ -149,7 +149,7 @@ namespace OpenBve.Parsers.Train
 						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
-							CarObjects[Car] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, ObjectLoadMode.Normal, false, false, false);
+							CarObjects[Car] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false, false, false);
 						}
 						break;
 					case "reversed":
@@ -181,7 +181,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, ObjectLoadMode.Normal, false, false, false);
+											BogieObjects[Car * 2] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false, false, false);
 										}
 										break;
 									case "reversed":
@@ -214,7 +214,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2 + 1] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, ObjectLoadMode.Normal, false, false, false);
+											BogieObjects[Car * 2 + 1] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false, false, false);
 										}
 										break;
 									case "reversed":
@@ -283,7 +283,7 @@ namespace OpenBve.Parsers.Train
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8, ObjectLoadMode.DontAllowUnloadOfTextures);
+					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
 					try
 					{
 						for (int i = 0; i < a.Objects.Length; i++)

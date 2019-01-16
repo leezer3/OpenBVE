@@ -78,7 +78,7 @@ namespace OpenBve {
 														if (System.IO.File.Exists(File)) {
 															if (LoadObjects)
 															{
-																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 															}
 														} else {
 															Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -133,7 +133,7 @@ namespace OpenBve {
 																	if (System.IO.File.Exists(File)) {
 																		if (LoadObjects)
 																		{
-																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -303,7 +303,7 @@ namespace OpenBve {
 																	{
 																		if (LoadObjects)
 																		{
-																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 																		}
 																	}
 																	else

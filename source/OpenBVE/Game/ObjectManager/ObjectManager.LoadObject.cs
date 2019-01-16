@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -11,7 +11,6 @@ namespace OpenBve
 		/// <summary>Loads an object</summary>
 		/// <param name="FileName">The file to load</param>
 		/// <param name="Encoding">The text endcoding of the base file (Used if the encoding cannot be auto-detected)</param>
-		/// <param name="LoadMode"></param>
 		/// <param name="PreserveVertices">Whether object should be optimized to remove duplicate vertices</param>
 		/// <param name="ForceTextureRepeatX">Whether texture repeat is forced on the X-axis</param>
 		/// <param name="ForceTextureRepeatY">Whether texture repeat is forced on the Y-axis</param>
@@ -23,7 +22,7 @@ namespace OpenBve
 		 *   * TODO / BUG: ForceTextureRepeat is only supported by the B3D / CSV parser
 		 *   * TODO / BUG: No detection of actual file contents, which will make all parsers barf
 		 */
-		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
@@ -150,16 +149,16 @@ namespace OpenBve
 					}
 					break;
 				case ".animated":
-					Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
+					Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
 					break;
 				case ".xml":
 					Result = XMLParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					break;
 				case ".l3dgrp":
-					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode, new Vector3());
+					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
 					break;
 				case ".l3dobj":
-					Result = Ls3DObjectParser.ReadObject(FileName, LoadMode, new Vector3());
+					Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
 					break;
 				case ".obj":
 					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
@@ -171,12 +170,12 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 						}
 					}
 					else
 					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					}
 					break;
 				case ".s":
@@ -198,7 +197,7 @@ namespace OpenBve
 			}
 #endif
 		}
-		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
@@ -283,19 +282,19 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 						}
 					}
 					else
 					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 					}
 					break;
 				/*
 				 * This will require implementing a specific static object load function- Leave alone for the moment
 				 * 
 			case ".xml":
-				Result = XMLParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+				Result = XMLParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 				break;
 				 */
 				default:

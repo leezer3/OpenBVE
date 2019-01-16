@@ -86,23 +86,19 @@ namespace OpenBve {
 				{
 					new ObjectManager.UnifiedObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false, false, false)
 					},
 					new ObjectManager.UnifiedObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false, false, false)
 					},
 					new ObjectManager.UnifiedObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false, false, false)
 					},
 					new ObjectManager.UnifiedObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					}
 				};
 				Data.Structure.RailObjects = new ObjectDictionary();
@@ -136,151 +132,108 @@ namespace OpenBve {
 				Data.Signals = new SignalData[7];
 				Data.Signals[3] = new CompatibilitySignalData(new int[] {0, 2, 4}, new ObjectManager.StaticObject[]
 				{
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false)
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 				});
 				Data.Signals[4] = new CompatibilitySignalData(new int[] {0, 1, 2, 4}, new ObjectManager.StaticObject[]
 				{
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false)
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 				});
 				Data.Signals[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4}, new ObjectManager.StaticObject[]
 				{
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false),
-					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8,
-						ObjectLoadMode.Normal, false, false, false)
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false, false, false),
+					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 				});
 				Data.Signals[6] = new CompatibilitySignalData(new int[] {0, 3, 4}, new ObjectManager.StaticObject[]
 				{
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-						Encoding, ObjectLoadMode.Normal, false, false, false),
+						Encoding, false, false, false),
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-						Encoding, ObjectLoadMode.Normal, false, false, false),
+						Encoding, false, false, false),
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-						Encoding, ObjectLoadMode.Normal, false, false, false)
+						Encoding, false, false, false)
 				});
 				// compatibility signals
 				Data.CompatibilitySignals = new CompatibilitySignalData[9];
 				Data.CompatibilitySignals[0] = new CompatibilitySignalData(new int[] {0, 2},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2a_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2a_2.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[1] = new CompatibilitySignalData(new int[] {0, 4},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2b_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2b_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[2] = new CompatibilitySignalData(new int[] {0, 2, 4},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[3] = new CompatibilitySignalData(new int[] {0, 1, 2, 4},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[4] = new CompatibilitySignalData(new int[] {0, 2, 3, 4},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_3.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_3.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[6] = new CompatibilitySignalData(new int[] {0, 2, 3, 4, 5},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5b_5.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5b_5.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[7] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4, 5},
 					new ObjectManager.StaticObject[]
 					{
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_0.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_1.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_2.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_3.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_4.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false),
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_5.csv"), System.Text.Encoding.UTF8,
-							ObjectLoadMode.Normal, false, false, false)
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_0.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_1.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_2.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_3.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_4.csv"), System.Text.Encoding.UTF8, false, false, false),
+						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_5.csv"), System.Text.Encoding.UTF8, false, false, false)
 					});
 				Data.CompatibilitySignals[8] = new CompatibilitySignalData(new int[] {0, 3, 4},
 					new ObjectManager.StaticObject[]
 					{
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-							Encoding, ObjectLoadMode.Normal, false, false, false),
+							Encoding, false, false, false),
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-							Encoding, ObjectLoadMode.Normal, false, false, false),
+							Encoding, false, false, false),
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-							Encoding, ObjectLoadMode.Normal, false, false, false)
+							Encoding, false, false, false)
 					});
 				// game data
 				Game.Sections = new Game.Section[1];
@@ -1777,7 +1730,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.RailObjects.Add(CommandIndex1, obj, "RailStructure");
@@ -1802,7 +1755,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.Beacon.Add(CommandIndex1, obj, "BeaconStructure");
@@ -1838,7 +1791,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Data.Structure.Poles[CommandIndex1][CommandIndex2] = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														Data.Structure.Poles[CommandIndex1][CommandIndex2] = ObjectManager.LoadObject(f, Encoding, false, false, false);
 													}
 												}
 											}
@@ -1860,7 +1813,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.Ground.Add(CommandIndex1, obj, "GroundStructure");
@@ -1886,7 +1839,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.WallL.Add(CommandIndex1, obj, "Left WallStructure");
@@ -1912,7 +1865,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.WallR.Add(CommandIndex1, obj, "Right WallStructure");
@@ -1938,7 +1891,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.DikeL.Add(CommandIndex1, obj, "Left DikeStructure");
@@ -1964,7 +1917,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.DikeR.Add(CommandIndex1, obj, "Right DikeStructure");
@@ -1990,7 +1943,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.FormL.Add(CommandIndex1, obj, "Left FormStructure");
@@ -2016,7 +1969,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.FormR.Add(CommandIndex1, obj, "Right FormStructure");
@@ -2042,7 +1995,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadStaticObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.FormCL.Add(CommandIndex1, obj, "Left FormCStructure");
@@ -2068,7 +2021,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadStaticObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.FormCR.Add(CommandIndex1, obj, "Right FormCStructure");
@@ -2104,7 +2057,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+															var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofL.Add(CommandIndex1, obj, "Left RoofStructure");
@@ -2141,7 +2094,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+															var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofR.Add(CommandIndex1, obj, "Right RoofStructure");
@@ -2178,7 +2131,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+															var obj = ObjectManager.LoadStaticObject(f, Encoding, false, false, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofCL.Add(CommandIndex1, obj, "Left RoofCStructure");
@@ -2215,7 +2168,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+															var obj = ObjectManager.LoadStaticObject(f, Encoding, false, false, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofCR.Add(CommandIndex1, obj, "Right RoofCStructure");
@@ -2242,7 +2195,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, true, false, false);
+														var obj = ObjectManager.LoadStaticObject(f, Encoding, true, false, false);
 														if (obj != null)
 														{
 															Data.Structure.CrackL.Add(CommandIndex1, obj, "Left CrackStructure");
@@ -2268,7 +2221,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, true, false, false);
+														var obj = ObjectManager.LoadStaticObject(f, Encoding, true, false, false);
 														if (obj != null)
 														{
 															Data.Structure.CrackR.Add(CommandIndex1, obj, "Right CrackStructure");
@@ -2294,7 +2247,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " could not be found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
 														if (obj != null)
 														{
 															Data.Structure.FreeObjects.Add(CommandIndex1, obj, "FreeObject");
@@ -2329,7 +2282,7 @@ namespace OpenBve {
 														if (!System.IO.File.Exists(f)) {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															ObjectManager.UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+															ObjectManager.UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false, false, false);
 															if (Object is ObjectManager.AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
 																Signal.Objects = (ObjectManager.AnimatedObjectCollection)Object;
@@ -2394,7 +2347,7 @@ namespace OpenBve {
 														}
 														Bve4SignalData Signal = new Bve4SignalData
 														{
-															BaseObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false),
+															BaseObject = ObjectManager.LoadStaticObject(f, Encoding, false, false, false),
 															GlowObject = null
 														};
 														string Folder = System.IO.Path.GetDirectoryName(f);
@@ -2464,7 +2417,7 @@ namespace OpenBve {
 																	}
 																	if (glowFileFound)
 																	{
-																		Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, ObjectLoadMode.Normal, false, false, false);
+																		Signal.GlowObject = ObjectManager.LoadStaticObject(f, Encoding, false, false, false);
 																		if (Signal.GlowObject != null)
 																		{
 																			Signal.GlowTextures = LoadAllTextures(f, true);

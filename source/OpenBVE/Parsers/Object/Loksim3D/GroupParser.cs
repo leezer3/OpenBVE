@@ -27,7 +27,7 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
@@ -207,11 +207,11 @@ namespace OpenBve
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
-								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, CurrentObjects[i].Rotation);
 							}
 							else if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, CurrentObjects[i].Rotation);
 							}
 							else
 							{

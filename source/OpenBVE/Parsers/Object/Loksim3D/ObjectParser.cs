@@ -18,10 +18,9 @@ namespace OpenBve
 	{
 		/// <summary>Loads a Loksim3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
 		/// <param name="Rotation">The rotation to be applied</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Vector3 Rotation)
 		{
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
