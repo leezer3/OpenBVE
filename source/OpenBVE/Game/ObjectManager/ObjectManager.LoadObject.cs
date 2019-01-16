@@ -131,7 +131,7 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
 							{
-								Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+								Result = NewXParser.ReadObject(FileName, Encoding);
 							}
 							else
 							{
@@ -251,7 +251,7 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
 							{
-								Result = NewXParser.ReadObject(FileName, Encoding, LoadMode);
+								Result = NewXParser.ReadObject(FileName, Encoding);
 							}
 							else
 							{

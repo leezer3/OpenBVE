@@ -72,16 +72,16 @@ namespace OpenBve
 				case BackgroundManager.BackgroundTransitionMode.FadeIn:
 					BackgroundManager.CurrentBackground.RenderBackground(1.0f, scale);
 					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.Alpha, scale);
+					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
 					break;
 				case BackgroundManager.BackgroundTransitionMode.FadeOut:
 					BackgroundManager.TargetBackground.RenderBackground(1.0f, scale);
 					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.Alpha, scale);
+					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
 					break;
 			}
 			//If our target alpha is greater than or equal to 1.0f, the background is fully displayed
-			if (BackgroundManager.TargetBackground.Alpha >= 1.0f)
+			if (BackgroundManager.TargetBackground.CurrentAlpha >= 1.0f)
 			{
 				//Set the current background to the target & reset target to null
 				BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
@@ -238,11 +238,11 @@ namespace OpenBve
 			{
 				case BackgroundManager.BackgroundTransitionMode.FadeIn:
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], 1.0f, scale);
-					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], Data.Alpha, scale);
+					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], Data.CurrentAlpha, scale);
 					break;
 				case BackgroundManager.BackgroundTransitionMode.FadeOut:
 					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
-					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], Data.Alpha, scale);
+					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], Data.CurrentAlpha, scale);
 					break;
 			}
 		}

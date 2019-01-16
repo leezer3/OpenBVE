@@ -10,7 +10,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
-	internal static partial class World {
+	internal static class World {
 		// mesh material
 		/// <summary>Represents material properties.</summary>
 		internal struct MeshMaterial {

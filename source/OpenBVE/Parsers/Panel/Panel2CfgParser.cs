@@ -1056,7 +1056,7 @@ namespace OpenBve {
 									double Width = 0.0, Height = 0.0;
 									//We read the transparent color for the timetable from the config file, but it is never used
 									//TODO: Fix or depreciate??
-									Color24 TransparentColor = new Color24(0, 0, 255);
+									Color24 TransparentColor = Color24.Blue;
 									double Layer = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');

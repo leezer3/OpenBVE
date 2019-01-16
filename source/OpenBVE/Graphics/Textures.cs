@@ -9,7 +9,7 @@ using InterpolationMode = OpenBveApi.Graphics.InterpolationMode;
 namespace OpenBve
 {
 	/// <summary>Provides functions for dealing with textures.</summary>
-	internal static partial class Textures
+	internal static class Textures
 	{
 
 		// --- members ---
