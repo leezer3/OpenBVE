@@ -198,8 +198,7 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-					ObjectLoadMode.Normal, false, false, false);
+				ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
 				ObjectManager.CreateObject(o, Vector3.Zero,
 					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 					0.0);
@@ -302,8 +301,7 @@ namespace OpenBve {
 #if !DEBUG
 									try {
 										#endif
-	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-	                        ObjectLoadMode.Normal, false, false, false);
+	                    ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
 	                    ObjectManager.CreateObject(o, Vector3.Zero,
 	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
 	                        0.0, 25.0, 0.0);
@@ -347,8 +345,7 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8,
-						            ObjectLoadMode.Normal, false, false, false);
+					            ObjectManager.UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
 					            ObjectManager.CreateObject(o, Vector3.Zero,
 						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
 						            0.0);

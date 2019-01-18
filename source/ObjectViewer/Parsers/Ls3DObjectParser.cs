@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
@@ -18,15 +19,12 @@ namespace OpenBve
 	/// <summary>Parses a Loksim3D xml format object</summary>
     internal static class Ls3DObjectParser
     {
-        /// <summary>Loads a Loksim3D object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
-		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
-		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
+	    /// <summary>Loads a Loksim3D object from a file.</summary>
+	    /// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+	    /// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
+	    /// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
+	    /// <returns>The object loaded.</returns>
+	    internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();

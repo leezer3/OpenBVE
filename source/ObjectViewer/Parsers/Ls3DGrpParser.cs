@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -36,10 +37,9 @@ namespace OpenBve
 		/// <summary>Loads a Loksim3D GruppenObject</summary>
 		/// <param name="FileName">The filename to load</param>
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
-		/// <param name="LoadMode">The object load mode</param>
-		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
 		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, Vector3 Rotation)
+		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
@@ -226,11 +226,11 @@ namespace OpenBve
 						{
 							if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
-								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, CurrentObjects[i].Rotation);
 							}
 							else if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, LoadMode, false, false, false, CurrentObjects[i].Rotation);
+								Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, false, false, false, CurrentObjects[i].Rotation);
 							}
 							else
 							{
