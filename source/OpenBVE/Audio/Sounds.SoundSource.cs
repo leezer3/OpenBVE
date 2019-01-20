@@ -139,7 +139,7 @@ namespace OpenBve {
 			/// <summary>The OpenAL source name. Only valid if the sound is playing.</summary>
 			internal int OpenAlSourceName;
 			/// <summary>The position.</summary>
-			internal OpenBveApi.Math.Vector3 Position { get; private set; }
+			internal readonly OpenBveApi.Math.Vector3 Position;
 			/// <summary>Backward tolerance of position</summary>
 			internal double BackwardTolerance;
 			/// <summary>Forward tolerance of position</summary>

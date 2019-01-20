@@ -1597,6 +1597,7 @@ namespace OpenBve {
 			try
 			{
 				hwResponse = (HttpWebResponse)hwRequest.GetResponse();
+				// ReSharper disable once AssignNullToNotNullAttribute
 				reader = new XmlTextReader(hwResponse.GetResponseStream());
 				reader.MoveToContent();
 				string elementName = "";

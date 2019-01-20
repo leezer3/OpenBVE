@@ -97,6 +97,10 @@ namespace OpenBve {
 						Type[] types = assembly.GetTypes();
 						bool iruntime = false;
 						foreach (Type type in types) {
+							if (type.FullName == null)
+							{
+								continue;
+							}
 							if (type.IsSubclassOf(typeof(TextureInterface))) {
 								plugin.Texture = (TextureInterface)assembly.CreateInstance(type.FullName);
 							}

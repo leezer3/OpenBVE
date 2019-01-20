@@ -332,9 +332,7 @@ namespace OpenBve
 					{
 						dx = 0.0;
 					}
-					Game.Stations[s].SoundOrigin.X = Position.X + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.X + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.X;
-					Game.Stations[s].SoundOrigin.Y = Position.Y + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.Y + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.Y;
-					Game.Stations[s].SoundOrigin.Z = Position.Z + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.Z + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.Z;
+					Game.Stations[s].SoundOrigin = Position + dx * TrackManager.CurrentTrack.Elements[n].WorldSide + dy * TrackManager.CurrentTrack.Elements[n].WorldUp;
 					// passalarm
 					if (!PreviewOnly)
 					{
@@ -377,9 +375,8 @@ namespace OpenBve
 					{
 						dx = 0.0;
 					}
-					Game.Stations[s].SoundOrigin.X = Position.X + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.X + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.X;
-					Game.Stations[s].SoundOrigin.Y = Position.Y + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.Y + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.Y;
-					Game.Stations[s].SoundOrigin.Z = Position.Z + dx * TrackManager.CurrentTrack.Elements[n].WorldSide.Z + dy * TrackManager.CurrentTrack.Elements[n].WorldUp.Z;
+
+					Game.Stations[s].SoundOrigin = Position + dx * TrackManager.CurrentTrack.Elements[n].WorldSide + dy * TrackManager.CurrentTrack.Elements[n].WorldUp;
 				}
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
@@ -1071,9 +1068,7 @@ namespace OpenBve
 								double dy = Data.Blocks[i].RailFreeObj[j][k].Y;
 								double dz = Data.Blocks[i].RailFreeObj[j][k].TrackPosition - StartingDistance;
 								Vector3 wpos = pos;
-								wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
-								wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
-								wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+								wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 								double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
 								ObjectManager.UnifiedObject obj;
 								Data.Structure.FreeObjects.TryGetValue(sttype, out obj);
@@ -1111,9 +1106,7 @@ namespace OpenBve
 									double dy = Data.Blocks[i].Transponders[k].Y;
 									double dz = Data.Blocks[i].Transponders[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Transponders[k].TrackPosition;
 									if (Data.Blocks[i].Transponders[k].ShowDefaultObject)
 									{
@@ -1140,9 +1133,7 @@ namespace OpenBve
 									double dy = Data.Blocks[i].DestinationChanges[k].Y;
 									double dz = Data.Blocks[i].DestinationChanges[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].DestinationChanges[k].TrackPosition;
 									obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].DestinationChanges[k].Yaw, Data.Blocks[i].DestinationChanges[k].Pitch, Data.Blocks[i].DestinationChanges[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
 								}
@@ -1170,9 +1161,7 @@ namespace OpenBve
 									// post
 									double dx = Data.Blocks[i].Signals[k].X;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									ObjectManager.CreateStaticObject(CompatibilityObjects.SignalPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
@@ -1183,9 +1172,7 @@ namespace OpenBve
 									double dx = Data.Blocks[i].Signals[k].X;
 									double dy = Data.Blocks[i].Signals[k].Y;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dy * RailTransformation.Y.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dy * RailTransformation.Y.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
 									if (sd is AnimatedObjectSignalData)
 									{
@@ -1369,9 +1356,7 @@ namespace OpenBve
 									double dx = 2.2 * (double)Data.Blocks[i].Limits[k].Direction;
 									double dz = Data.Blocks[i].Limits[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Limits[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									if (Data.Blocks[i].Limits[k].Speed <= 0.0 | Data.Blocks[i].Limits[k].Speed >= 1000.0)
@@ -1451,9 +1436,7 @@ namespace OpenBve
 									double dx = 1.8 * (double)Data.Blocks[i].StopPositions[k].Direction;
 									double dz = Data.Blocks[i].StopPositions[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
-									wpos.X += dx * RailTransformation.X.X + dz * RailTransformation.Z.X;
-									wpos.Y += dx * RailTransformation.X.Y + dz * RailTransformation.Z.Y;
-									wpos.Z += dx * RailTransformation.X.Z + dz * RailTransformation.Z.Z;
+									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].StopPositions[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									ObjectManager.CreateStaticObject(CompatibilityObjects.StopPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
@@ -1843,10 +1826,8 @@ namespace OpenBve
 				{
 					// estimate radius
 					Vector3 AP = TrackManager.CurrentTrack.Elements[i - 1].WorldPosition;
-					Vector3 AS = TrackManager.CurrentTrack.Elements[i - 1].WorldSide;
 					Vector3 BP = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition;
-					Vector3 BS = TrackManager.CurrentTrack.Elements[i + 1].WorldSide;
-					Vector3 S = AS - BS;
+					Vector3 S = TrackManager.CurrentTrack.Elements[i - 1].WorldSide - TrackManager.CurrentTrack.Elements[i + 1].WorldSide;
 					double rx;
 					if (S.X * S.X > 0.000001)
 					{

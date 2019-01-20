@@ -277,20 +277,7 @@ namespace OpenBve {
 		internal static double BackwardViewingDistance = 100000.0;
 		internal static double ExtraViewingDistance = 1000.0;
 		internal static double BackgroundImageDistance = 100000.0;
-		internal struct Background {
-			internal int Texture;
-			internal int Repetition;
-			internal bool KeepAspectRatio;
-			internal Background(int Texture, int Repetition, bool KeepAspectRatio) {
-				this.Texture = Texture;
-				this.Repetition = Repetition;
-				this.KeepAspectRatio = KeepAspectRatio;
-			}
-		}
-		internal static Background CurrentBackground = new Background(-1, 6, false);
-		internal static Background TargetBackground = new Background(-1, 6, false);
-		internal const double TargetBackgroundDefaultCountdown = 0.8;
-		internal const double TargetBackgroundCountdown = 0.0; // static
+		
 
 		// relative camera
 		internal struct CameraAlignment {

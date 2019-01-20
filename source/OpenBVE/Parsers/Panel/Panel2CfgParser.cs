@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;

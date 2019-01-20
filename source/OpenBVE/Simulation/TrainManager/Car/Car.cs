@@ -566,7 +566,7 @@ namespace OpenBve
 			/// <param name="TimeElapsed"></param>
 			/// <param name="ForceUpdate"></param>
 			/// <param name="EnableDamping"></param>
-			internal void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
+			private void UpdateCarSectionElement(int SectionIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
 				if (CarSections[SectionIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)

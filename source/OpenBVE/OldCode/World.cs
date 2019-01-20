@@ -768,9 +768,9 @@ namespace OpenBve {
 							}
 						}
 					}
-					cF.X += sF.X * CameraCurrentAlignment.Position.X + u2.X * CameraCurrentAlignment.Position.Y + d2.X * CameraCurrentAlignment.Position.Z;
-					cF.Y += sF.Y * CameraCurrentAlignment.Position.X + u2.Y * CameraCurrentAlignment.Position.Y + d2.Y * CameraCurrentAlignment.Position.Z;
-					cF.Z += sF.Z * CameraCurrentAlignment.Position.X + u2.Z * CameraCurrentAlignment.Position.Y + d2.Z * CameraCurrentAlignment.Position.Z;
+
+					cF += sF * CameraCurrentAlignment.Position.X + u2 * CameraCurrentAlignment.Position + d2 * CameraCurrentAlignment.Position.Z;
+
 				}
 				// yaw, pitch, roll
 				double headYaw = World.CameraCurrentAlignment.Yaw + lookaheadYaw;

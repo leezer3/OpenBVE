@@ -1526,7 +1526,13 @@ namespace OpenBve
                 }
             }
             UnifiedObject Result;
-            switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant())
+            string e = System.IO.Path.GetExtension(FileName);
+            if (e == null)
+            {
+	            Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
+	            return null;
+            }
+            switch (e)
             {
                 case ".csv":
                 case ".b3d":
@@ -1546,9 +1552,9 @@ namespace OpenBve
                                 Result = AssimpXParser.ReadObject(FileName);
                             }
 		                }
-		                catch (Exception e)
+		                catch (Exception ex)
 		                {
-			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + e);
+			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
 			                Result = XObjectParser.ReadObject(FileName, Encoding);
 		                }
 	                }
@@ -1574,9 +1580,9 @@ namespace OpenBve
                         {
                             Result = AssimpObjParser.ReadObject(FileName);
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
                             Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
                         }
                     }
@@ -1631,13 +1637,18 @@ namespace OpenBve
                     if (System.IO.File.Exists(f))
                     {
                         FileName = f;
-                        break;
                     }
                     break;
                 }
             }
             StaticObject Result;
-            switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant())
+            string e = System.IO.Path.GetExtension(FileName);
+            if (e == null)
+            {
+	            Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
+	            return null;
+            }
+            switch (e)
             {
                 case ".csv":
                 case ".b3d":
@@ -1657,9 +1668,9 @@ namespace OpenBve
                                 Result = AssimpXParser.ReadObject(FileName);
                             }
 		                }
-		                catch (Exception e)
+		                catch (Exception ex)
 		                {
-			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + e);
+			                Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
 			                Result = XObjectParser.ReadObject(FileName, Encoding);
 		                }
 	                }
@@ -1685,9 +1696,9 @@ namespace OpenBve
                         {
                             Result = AssimpObjParser.ReadObject(FileName);
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + e);
+			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
                             Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
                         }
                     }
@@ -1718,7 +1729,7 @@ namespace OpenBve
             {
                 return;
             }
-            else if (Base == null)
+            if (Base == null)
             {
                 Base = CloneObject(Add);
             }

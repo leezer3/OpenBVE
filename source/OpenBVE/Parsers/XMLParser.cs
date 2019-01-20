@@ -32,7 +32,7 @@ namespace OpenBve
                         try
                         {
                             var fn = System.IO.Path.GetDirectoryName(fileName);
-                            var InnerNode = node.SelectSingleNode("filename").InnerText;
+							var InnerNode = node.SelectSingleNode("filename").InnerText;
                             InnerNode = InnerNode.Trim();
                             objectPath = OpenBveApi.Path.CombineFile(fn, InnerNode);
                         }
