@@ -659,11 +659,11 @@ namespace OpenBve {
 					AbsoluteCameraDirection.X = tx - cx;
 					AbsoluteCameraDirection.Y = ty - cy;
 					AbsoluteCameraDirection.Z = tz - cz;
-					double t = Math.Sqrt(AbsoluteCameraDirection.NormSquared());
+					double t = AbsoluteCameraDirection.Norm();
 					double ti = 1.0 / t;
 					AbsoluteCameraDirection *= ti;
 					
-					AbsoluteCameraSide = new Vector3(AbsoluteCameraDirection.X, 0.0, -AbsoluteCameraDirection.X);
+					AbsoluteCameraSide = new Vector3(AbsoluteCameraDirection.Z, 0.0, -AbsoluteCameraDirection.X);
 					AbsoluteCameraSide.Normalize();
 					AbsoluteCameraUp = Vector3.Cross(AbsoluteCameraDirection, AbsoluteCameraSide);
 					UpdateViewingDistances();

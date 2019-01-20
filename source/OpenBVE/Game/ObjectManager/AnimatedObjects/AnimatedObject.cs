@@ -178,7 +178,7 @@ namespace OpenBve
 				}
 				else
 				{
-					ObjectManager.Objects[i] = new StaticObject { RendererIndex =  -1 };
+					ObjectManager.Objects[i] = new StaticObject();
 				}
 				CurrentState = StateIndex;
 				if (Show)
