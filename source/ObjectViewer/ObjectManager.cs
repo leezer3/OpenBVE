@@ -27,6 +27,17 @@ namespace OpenBve
             /// <summary>Whether the object is dynamic, i.e. not static.</summary>
             internal bool Dynamic;
 
+            /// <summary>Creates a new empty object</summary>
+            internal StaticObject() 
+            {
+	            Mesh = new World.Mesh
+	            {
+		            Faces = new World.MeshFace[] {},
+		            Materials =  new World.MeshMaterial[] {},
+		            Vertices =  new VertexTemplate[] {}
+	            };
+            }
+
             public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
             {
 	            throw new NotImplementedException();
@@ -769,15 +780,7 @@ namespace OpenBve
             }
             else
             {
-	            ObjectManager.Objects[i] = new StaticObject
-		        {
-					Mesh =
-				    {
-						Faces = new World.MeshFace[] { },
-						Materials = new World.MeshMaterial[] { },
-						Vertices = new VertexTemplate[] { }
-					}
-		        };
+	            ObjectManager.Objects[i] = new StaticObject();
             }
             Object.CurrentState = StateIndex;
             if (Show)
@@ -1391,9 +1394,6 @@ namespace OpenBve
                 if (AnimatedWorldObjects[a].Object.States[i].Object == null)
                 {
                     AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject();
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Faces = new World.MeshFace[] { };
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials = new World.MeshMaterial[] { };
-                    AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices = new VertexTemplate[] { };
                     AnimatedWorldObjects[a].Object.States[i].Object.RendererIndex = -1;
                 }
             }
@@ -1940,9 +1940,6 @@ namespace OpenBve
                 Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
             }
             Objects[a] = new StaticObject();
-            Objects[a].Mesh.Faces = new World.MeshFace[] { };
-            Objects[a].Mesh.Materials = new World.MeshMaterial[] { };
-            Objects[a].Mesh.Vertices = new VertexTemplate[] { };
             Objects[a].Dynamic = true;
             ObjectsUsed++;
             return a;

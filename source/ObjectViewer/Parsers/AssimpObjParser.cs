@@ -26,9 +26,6 @@ namespace OpenBve
 				Model model = parser.GetModel();
 
 				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-				obj.Mesh.Faces = new World.MeshFace[] { };
-				obj.Mesh.Materials = new World.MeshMaterial[] { };
-				obj.Mesh.Vertices = new VertexTemplate[] { };
 				MeshBuilder builder = new MeshBuilder();
 
 				List<Vertex> allVertices = new List<Vertex>();

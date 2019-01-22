@@ -226,15 +226,7 @@ namespace OpenBve
 
 			internal void Apply(out ObjectManager.StaticObject Object)
 			{
-				Object = new ObjectManager.StaticObject
-				{
-					Mesh =
-					{
-						Faces = new World.MeshFace[] { },
-						Materials = new World.MeshMaterial[] { },
-						Vertices = new VertexTemplate[] { }
-					}
-				};
+				Object = new ObjectManager.StaticObject();
 				if (faces.Count != 0)
 				{
 					int mf = Object.Mesh.Faces.Length;

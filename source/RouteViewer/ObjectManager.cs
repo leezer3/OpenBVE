@@ -21,6 +21,18 @@ namespace OpenBve {
 			internal short GroupIndex;
 			/// <summary>Whether the object is dynamic, i.e. not static.</summary>
 			internal bool Dynamic;
+
+			/// <summary>Creates a new empty object</summary>
+			internal StaticObject() 
+			{
+				Mesh = new World.Mesh
+				{
+					Faces = new World.MeshFace[] {},
+					Materials =  new World.MeshMaterial[] {},
+					Vertices =  new VertexTemplate[] {}
+				};
+			}
+
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
 				throw new NotImplementedException();
@@ -746,9 +758,6 @@ namespace OpenBve {
 			} else {
 				ObjectManager.Objects[i] = null;
 				ObjectManager.Objects[i] = new StaticObject();
-				ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[] { };
-				ObjectManager.Objects[i].Mesh.Materials = new World.MeshMaterial[] { };
-				ObjectManager.Objects[i].Mesh.Vertices = new VertexTemplate[] { };
 			}
 			Object.CurrentState = StateIndex;
 			if (Show) {
@@ -1230,9 +1239,6 @@ namespace OpenBve {
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				if (AnimatedWorldObjects[a].Object.States[i].Object == null) {
 					AnimatedWorldObjects[a].Object.States[i].Object = new StaticObject();
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Faces = new World.MeshFace[] { };
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials = new World.MeshMaterial[] { };
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices = new VertexTemplate[] { };
 					AnimatedWorldObjects[a].Object.States[i].Object.RendererIndex = -1;
 				}
 			}
@@ -1590,9 +1596,6 @@ namespace OpenBve {
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
 			Objects[a] = new StaticObject();
-			Objects[a].Mesh.Faces = new World.MeshFace[] { };
-			Objects[a].Mesh.Materials = new World.MeshMaterial[] { };
-			Objects[a].Mesh.Vertices = new VertexTemplate[] { };
 			Objects[a].Dynamic = true;
 			ObjectsUsed++;
 			return a;

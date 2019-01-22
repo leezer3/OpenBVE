@@ -61,16 +61,7 @@ namespace OpenBve
 		/// <returns>The object loaded.</returns>
 		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
 		{
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] { },
-					Materials = new World.MeshMaterial[] { },
-					Vertices = new VertexTemplate[] { }
-				}
-			};
-
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			MeshBuilder Builder = new MeshBuilder();
 
 			/*

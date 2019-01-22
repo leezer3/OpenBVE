@@ -1315,9 +1315,6 @@ namespace OpenBve {
 		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// file
 			for (int i = 0; i < Structure.Data.Length; i++) {
 				Structure f = Structure.Data[i] as Structure;

@@ -79,15 +79,7 @@ namespace OpenBve
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] { },
-					Materials = new World.MeshMaterial[] { },
-					Vertices = new VertexTemplate[] { }
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
 			bool PropertiesFound = false;
