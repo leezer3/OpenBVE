@@ -12,12 +12,6 @@ namespace OpenBve
     internal static class ObjectManager
     {
 
-        // unified objects
-	    internal abstract class UnifiedObject
-	    {
-		    internal abstract void OptimizeObject(bool PreserveVerticies);
-	    }
-
         // static objects
         internal class StaticObject : UnifiedObject
         {
@@ -33,7 +27,12 @@ namespace OpenBve
             /// <summary>Whether the object is dynamic, i.e. not static.</summary>
             internal bool Dynamic;
 
-	        internal override void OptimizeObject(bool PreserveVertices)
+            public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+            {
+	            throw new NotImplementedException();
+            }
+
+            public override void OptimizeObject(bool PreserveVertices)
 	        {
 		        int v = Mesh.Vertices.Length;
 		        int m = Mesh.Materials.Length;
@@ -714,7 +713,12 @@ namespace OpenBve
         internal class AnimatedObjectCollection : UnifiedObject
         {
             internal AnimatedObject[] Objects;
-	        internal override void OptimizeObject(bool PreserveVerticies)
+            public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+            {
+	            throw new NotImplementedException();
+            }
+
+            public override void OptimizeObject(bool PreserveVerticies)
 	        {
 		        for (int i = 0; i < Objects.Length; i++)
 		        {

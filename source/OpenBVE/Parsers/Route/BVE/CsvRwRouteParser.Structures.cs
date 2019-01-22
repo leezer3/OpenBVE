@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Objects;
+
+namespace OpenBve
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile
@@ -232,7 +234,7 @@
 			/// <summary>All currently defined Structure.Rail objects</summary>
 			internal ObjectDictionary RailObjects;
 			/// <summary>All currently defined Structure.Pole objects</summary>
-			internal ObjectManager.UnifiedObject[][] Poles;
+			internal UnifiedObject[][] Poles;
 			/// <summary>All currently defined Structure.Ground objects</summary>
 			internal ObjectDictionary Ground;
 			/// <summary>All currently defined Structure.WallL objects</summary>

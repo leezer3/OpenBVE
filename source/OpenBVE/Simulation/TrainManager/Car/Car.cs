@@ -367,7 +367,7 @@ namespace OpenBve
 
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>
 			/// <param name="currentObject">The object to add to the car sections array</param>
-			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);

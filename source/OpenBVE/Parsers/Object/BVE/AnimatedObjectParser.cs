@@ -52,7 +52,7 @@ namespace OpenBve
 							{
 								i++;
 								Vector3 position = Vector3.Zero;
-								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
+								UnifiedObject[] obj = new UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -112,7 +112,7 @@ namespace OpenBve
 												{
 													if (obj.Length == objCount)
 													{
-														Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length << 1);
+														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
 													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false, false, false);
 													objCount++;

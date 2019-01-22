@@ -11,7 +11,7 @@ namespace OpenBve.Parsers.Train
 {
 	partial class TrainXmlParser
 	{
-		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects)
+		private static void ParseCarNode(XmlNode Node, string fileName, int Car, ref TrainManager.Train Train, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects)
 		{
 			string interiorFile = string.Empty;
 			foreach (XmlNode c in Node.ChildNodes)

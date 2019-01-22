@@ -434,14 +434,14 @@ namespace OpenBve
 				}
 			}
 
-			internal override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
+			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
 				CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 			}
 
-			internal override void OptimizeObject(bool PreserveVerticies)
+			public override void OptimizeObject(bool PreserveVerticies)
 			{
 				int v = Mesh.Vertices.Length;
 				int m = Mesh.Materials.Length;

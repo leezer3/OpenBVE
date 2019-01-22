@@ -111,7 +111,7 @@ namespace OpenBve
 				}
 			}
 
-			internal void LoadCarSections(ObjectManager.UnifiedObject currentObject)
+			internal void LoadCarSections(UnifiedObject currentObject)
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);

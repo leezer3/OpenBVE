@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -680,7 +681,7 @@ namespace OpenBve
 									}
 									else
 									{
-										ObjectManager.UnifiedObject Pole = GetMirroredObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type]);
+										UnifiedObject Pole = GetMirroredObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type]);
 										Pole.CreateObject(pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 								}
@@ -1070,7 +1071,7 @@ namespace OpenBve
 								Vector3 wpos = pos;
 								wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 								double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
-								ObjectManager.UnifiedObject obj;
+								UnifiedObject obj;
 								Data.Structure.FreeObjects.TryGetValue(sttype, out obj);
 								obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch, Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 							}
@@ -1080,7 +1081,7 @@ namespace OpenBve
 						{
 							for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 							{
-								ObjectManager.UnifiedObject obj = null;
+								UnifiedObject obj = null;
 								if (Data.Blocks[i].Transponders[k].ShowDefaultObject)
 								{
 									switch (Data.Blocks[i].Transponders[k].Type)
@@ -1121,7 +1122,7 @@ namespace OpenBve
 							}
 							for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
 							{
-								ObjectManager.UnifiedObject obj = null;
+								UnifiedObject obj = null;
 								int b = Data.Blocks[i].DestinationChanges[k].BeaconStructureIndex;
 								if (b >= 0 & Data.Structure.Beacon.ContainsKey(b))
 								{

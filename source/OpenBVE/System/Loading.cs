@@ -231,8 +231,8 @@ namespace OpenBve {
 			}
 			TrainManager.PlayerTrain = TrainManager.Trains[Game.PrecedingTrainTimeDeltas.Length];
 
-			ObjectManager.UnifiedObject[] CarObjects = null;
-			ObjectManager.UnifiedObject[] BogieObjects = null;
+			UnifiedObject[] CarObjects = null;
+			UnifiedObject[] BogieObjects = null;
 
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
@@ -336,8 +336,8 @@ namespace OpenBve {
 					bool LoadObjects = false;
 					if (CarObjects == null)
 					{
-						CarObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length];
-						BogieObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
+						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
+						BogieObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
 						LoadObjects = true;
 					}
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");

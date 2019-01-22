@@ -13,7 +13,7 @@ namespace OpenBve
         //properties than are currently available with the CSV and B3D formats, whilst
         //not requiring backwards incompatible changes
 
-        public static ObjectManager.UnifiedObject ReadObject(string fileName, Encoding encoding, bool ForceTextureRepeatX,bool ForceTextureRepeatY)
+        public static UnifiedObject ReadObject(string fileName, Encoding encoding, bool ForceTextureRepeatX,bool ForceTextureRepeatY)
         {
             //The current XML file to load
             XmlDocument currentXML = new XmlDocument();

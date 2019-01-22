@@ -118,7 +118,7 @@ namespace OpenBve
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
-				ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[0];
+				UnifiedObject[] obj = new UnifiedObject[0];
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/GRUPPENOBJECT");
 				if (DocumentNodes != null)
 				{
@@ -196,7 +196,7 @@ namespace OpenBve
 						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
 						if (Object != null)
 						{
-							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
+							Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
 							obj[obj.Length - 1] = Object;
 
 							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
