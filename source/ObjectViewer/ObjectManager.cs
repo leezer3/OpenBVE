@@ -38,6 +38,150 @@ namespace OpenBve
 	            };
             }
 
+			/// <summary>Creates a clone of this object.</summary>
+			/// <param name="DaytimeTexture">The replacement daytime texture</param>
+			/// <param name="NighttimeTexture">The replacement nighttime texture</param>
+			/// <returns></returns>
+			internal StaticObject Clone(Texture DaytimeTexture, Texture NighttimeTexture)
+			{
+				StaticObject Result = new StaticObject
+				{
+					StartingDistance = StartingDistance,
+					EndingDistance = EndingDistance,
+					Dynamic = Dynamic,
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
+				};
+				// vertices
+				for (int j = 0; j < Mesh.Vertices.Length; j++)
+				{
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
+				}
+				// faces
+				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
+				for (int j = 0; j < Mesh.Faces.Length; j++)
+				{
+					Result.Mesh.Faces[j].Flags = Mesh.Faces[j].Flags;
+					Result.Mesh.Faces[j].Material = Mesh.Faces[j].Material;
+					Result.Mesh.Faces[j].Vertices = new World.MeshFaceVertex[Mesh.Faces[j].Vertices.Length];
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+					{
+						Result.Mesh.Faces[j].Vertices[k] = Mesh.Faces[j].Vertices[k];
+					}
+				}
+				// materials
+				Result.Mesh.Materials = new World.MeshMaterial[Mesh.Materials.Length];
+				for (int j = 0; j < Mesh.Materials.Length; j++)
+				{
+					Result.Mesh.Materials[j] = Mesh.Materials[j];
+					if (DaytimeTexture != null)
+					{
+						Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
+					}
+					else
+					{
+						Result.Mesh.Materials[j].DaytimeTexture = Mesh.Materials[j].DaytimeTexture;
+					}
+					if (NighttimeTexture != null)
+					{
+						Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
+					}
+					else
+					{
+						Result.Mesh.Materials[j].NighttimeTexture = Mesh.Materials[j].NighttimeTexture;
+					}
+				}
+				return Result;
+			}
+
+			/// <summary>Creates a clone of this object.</summary>
+			internal StaticObject Clone()
+			{
+				StaticObject Result = new StaticObject
+				{
+					StartingDistance = StartingDistance,
+					EndingDistance = EndingDistance,
+					Dynamic = Dynamic,
+					Mesh = { Vertices = new VertexTemplate[Mesh.Vertices.Length] }
+				};
+				// vertices
+				for (int j = 0; j < Mesh.Vertices.Length; j++)
+				{
+					if (Mesh.Vertices[j] is ColoredVertex)
+					{
+						Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Mesh.Vertices[j]);
+					}
+					else
+					{
+						Result.Mesh.Vertices[j] = new Vertex((Vertex)Mesh.Vertices[j]);
+					}
+				}
+				// faces
+				Result.Mesh.Faces = new World.MeshFace[Mesh.Faces.Length];
+				for (int j = 0; j < Mesh.Faces.Length; j++)
+				{
+					Result.Mesh.Faces[j].Flags = Mesh.Faces[j].Flags;
+					Result.Mesh.Faces[j].Material = Mesh.Faces[j].Material;
+					Result.Mesh.Faces[j].Vertices = new World.MeshFaceVertex[Mesh.Faces[j].Vertices.Length];
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+					{
+						Result.Mesh.Faces[j].Vertices[k] = Mesh.Faces[j].Vertices[k];
+					}
+				}
+				// materials
+				Result.Mesh.Materials = new World.MeshMaterial[Mesh.Materials.Length];
+				for (int j = 0; j < Mesh.Materials.Length; j++)
+				{
+					Result.Mesh.Materials[j] = Mesh.Materials[j];
+				}
+				return Result;
+			}
+
+            internal void JoinObjects(StaticObject Add)
+            {
+	            if (Add == null)
+	            {
+		            return;
+	            }
+	            int mf = Mesh.Faces.Length;
+	            int mm = Mesh.Materials.Length;
+	            int mv = Mesh.Vertices.Length;
+	            Array.Resize<World.MeshFace>(ref Mesh.Faces, mf + Add.Mesh.Faces.Length);
+	            Array.Resize<World.MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
+	            Array.Resize<VertexTemplate>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+	            for (int i = 0; i < Add.Mesh.Faces.Length; i++)
+	            {
+		            Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
+		            for (int j = 0; j < Mesh.Faces[mf + i].Vertices.Length; j++)
+		            {
+			            Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+		            }
+		            Mesh.Faces[mf + i].Material += (ushort) mm;
+	            }
+	            for (int i = 0; i < Add.Mesh.Materials.Length; i++)
+	            {
+		            Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
+	            }
+	            for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
+	            {
+		            if (Add.Mesh.Vertices[i] is ColoredVertex)
+		            {
+			            Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex)Add.Mesh.Vertices[i]);
+		            }
+		            else
+		            {
+			            Mesh.Vertices[mv + i] = new Vertex((Vertex)Add.Mesh.Vertices[i]);
+		            }
+					
+	            }
+            }
+
             public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
             {
 	            throw new NotImplementedException();
@@ -676,7 +820,7 @@ namespace OpenBve
                 for (int i = 0; i < this.States.Length; i++)
                 {
                     Result.States[i].Position = this.States[i].Position;
-                    Result.States[i].Object = CloneObject(this.States[i].Object);
+                    Result.States[i].Object = this.States[i].Object.Clone();
                 }
                 Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
                 Result.CurrentState = this.CurrentState;
@@ -1725,46 +1869,6 @@ namespace OpenBve
 #endif
         }
         
-
-        // join objects
-        internal static void JoinObjects(ref StaticObject Base, StaticObject Add)
-        {
-            if (Base == null & Add == null)
-            {
-                return;
-            }
-            if (Base == null)
-            {
-                Base = CloneObject(Add);
-            }
-            else if (Add != null)
-            {
-                int mf = Base.Mesh.Faces.Length;
-                int mm = Base.Mesh.Materials.Length;
-                int mv = Base.Mesh.Vertices.Length;
-                Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
-                Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
-                Array.Resize<VertexTemplate>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
-                for (int i = 0; i < Add.Mesh.Faces.Length; i++)
-                {
-                    Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
-                    for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++)
-                    {
-                        Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-                    }
-                    Base.Mesh.Faces[mf + i].Material += (ushort)mm;
-                }
-                for (int i = 0; i < Add.Mesh.Materials.Length; i++)
-                {
-                    Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
-                }
-                for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
-                {
-                    Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
-                }
-            }
-        }
-
         // create object
         internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
         {
@@ -1943,54 +2047,6 @@ namespace OpenBve
             Objects[a].Dynamic = true;
             ObjectsUsed++;
             return a;
-        }
-
-        // clone object
-        internal static StaticObject CloneObject(StaticObject Prototype)
-        {
-            if (Prototype == null) return null;
-            return CloneObject(Prototype, null, null);
-        }
-        internal static StaticObject CloneObject(StaticObject Prototype, Texture DaytimeTexture, Texture NighttimeTexture)
-        {
-            if (Prototype == null) return null;
-            StaticObject Result = new StaticObject();
-            Result.StartingDistance = Prototype.StartingDistance;
-            Result.EndingDistance = Prototype.EndingDistance;
-            Result.Dynamic = Prototype.Dynamic;
-            // vertices
-            Result.Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
-            for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
-            {
-                Result.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
-            }
-            // faces
-            Result.Mesh.Faces = new World.MeshFace[Prototype.Mesh.Faces.Length];
-            for (int j = 0; j < Prototype.Mesh.Faces.Length; j++)
-            {
-                Result.Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
-                Result.Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
-                Result.Mesh.Faces[j].Vertices = new World.MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
-                for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
-                {
-                    Result.Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-                }
-            }
-            // materials
-            Result.Mesh.Materials = new World.MeshMaterial[Prototype.Mesh.Materials.Length];
-            for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
-            {
-                Result.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-                if (DaytimeTexture != null)
-                {
-                    Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
-                }
-                if (NighttimeTexture != null)
-                {
-                    Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
-                }
-            }
-            return Result;
         }
 
         // finish creating objects

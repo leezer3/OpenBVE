@@ -32,6 +32,45 @@ namespace OpenBve {
 					Vertices =  new VertexTemplate[] {}
 				};
 			}
+			
+			internal void JoinObjects(StaticObject Add)
+			{
+				if (Add == null)
+				{
+					return;
+				}
+				int mf = Mesh.Faces.Length;
+				int mm = Mesh.Materials.Length;
+				int mv = Mesh.Vertices.Length;
+				Array.Resize<World.MeshFace>(ref Mesh.Faces, mf + Add.Mesh.Faces.Length);
+				Array.Resize<World.MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
+				Array.Resize<VertexTemplate>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
+				for (int i = 0; i < Add.Mesh.Faces.Length; i++)
+				{
+					Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
+					for (int j = 0; j < Mesh.Faces[mf + i].Vertices.Length; j++)
+					{
+						Mesh.Faces[mf + i].Vertices[j].Index += (ushort) mv;
+					}
+					Mesh.Faces[mf + i].Material += (ushort) mm;
+				}
+				for (int i = 0; i < Add.Mesh.Materials.Length; i++)
+				{
+					Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
+				}
+				for (int i = 0; i < Add.Mesh.Vertices.Length; i++)
+				{
+					if (Add.Mesh.Vertices[i] is ColoredVertex)
+					{
+						Mesh.Vertices[mv + i] = new ColoredVertex((ColoredVertex)Add.Mesh.Vertices[i]);
+					}
+					else
+					{
+						Mesh.Vertices[mv + i] = new Vertex((Vertex)Add.Mesh.Vertices[i]);
+					}
+					
+				}
+			}
 
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
@@ -1424,35 +1463,6 @@ namespace OpenBve {
 				return null;
 			}
 			#endif
-		}
-
-		// join objects
-		internal static void JoinObjects(ref StaticObject Base, StaticObject Add) {
-			if (Base == null & Add == null) {
-				return;
-			} else if (Base == null) {
-				Base = CloneObject(Add);
-			} else if (Add != null) {
-				int mf = Base.Mesh.Faces.Length;
-				int mm = Base.Mesh.Materials.Length;
-				int mv = Base.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Base.Mesh.Faces, mf + Add.Mesh.Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Base.Mesh.Materials, mm + Add.Mesh.Materials.Length);
-				Array.Resize<VertexTemplate>(ref Base.Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
-				for (int i = 0; i < Add.Mesh.Faces.Length; i++) {
-					Base.Mesh.Faces[mf + i] = Add.Mesh.Faces[i];
-					for (int j = 0; j < Base.Mesh.Faces[mf + i].Vertices.Length; j++) {
-						Base.Mesh.Faces[mf + i].Vertices[j].Index += (ushort)mv;
-					}
-					Base.Mesh.Faces[mf + i].Material += (ushort)mm;
-				}
-				for (int i = 0; i < Add.Mesh.Materials.Length; i++) {
-					Base.Mesh.Materials[mm + i] = Add.Mesh.Materials[i];
-				}
-				for (int i = 0; i < Add.Mesh.Vertices.Length; i++) {
-					Base.Mesh.Vertices[mv + i] = Add.Mesh.Vertices[i];
-				}
-			}
 		}
 
 		// create object

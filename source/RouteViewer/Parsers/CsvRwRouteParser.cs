@@ -6143,7 +6143,7 @@ namespace OpenBve {
 												if (qs & qg) {
 													ObjectManager.StaticObject so = ObjectManager.CloneObject(b4sd.BaseObject, b4sd.SignalTextures[l], -1);
 													ObjectManager.StaticObject go = ObjectManager.CloneObject(b4sd.GlowObject, b4sd.GlowTextures[l], -1);
-													ObjectManager.JoinObjects(ref so, go);
+													so.JoinObjects(go);
 													aoc.Objects[0].States[zi].Object = so;
 												} else if (qs) {
 													ObjectManager.StaticObject so = ObjectManager.CloneObject(b4sd.BaseObject, b4sd.SignalTextures[l], -1);

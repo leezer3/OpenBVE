@@ -267,7 +267,7 @@ namespace OpenBve
 								{
 									Object.Mesh.Vertices[j].Coordinates += CurrentObjects[i].Position;
 								}
-								ObjectManager.JoinObjects(ref staticObject, Object);
+								staticObject.JoinObjects(Object);
 							}
 						}
 						else if (AnimatedObject != null)
