@@ -182,9 +182,254 @@ namespace OpenBve
 	            }
             }
 
+            internal void ApplyScale(double x, double y, double z)
+            {
+	            float rx = (float)(1.0 / x);
+	            float ry = (float)(1.0 / y);
+	            float rz = (float)(1.0 / z);
+	            float rx2 = rx * rx;
+	            float ry2 = ry * ry;
+	            float rz2 = rz * rz;
+	            bool reverse = x * y * z < 0.0;
+	            for (int j = 0; j < Mesh.Vertices.Length; j++) {
+		            Mesh.Vertices[j].Coordinates.X *= x;
+		            Mesh.Vertices[j].Coordinates.Y *= y;
+		            Mesh.Vertices[j].Coordinates.Z *= z;
+	            }
+	            for (int j = 0; j < Mesh.Faces.Length; j++) {
+		            for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++) {
+			            double nx2 = Mesh.Faces[j].Vertices[k].Normal.X * Mesh.Faces[j].Vertices[k].Normal.X;
+			            double ny2 = Mesh.Faces[j].Vertices[k].Normal.Y * Mesh.Faces[j].Vertices[k].Normal.Y;
+			            double nz2 = Mesh.Faces[j].Vertices[k].Normal.Z * Mesh.Faces[j].Vertices[k].Normal.Z;
+			            double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
+			            if (u != 0.0) {
+				            u = (float)Math.Sqrt((double)((nx2 + ny2 + nz2) / u));
+				            Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
+				            Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
+				            Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
+			            }
+		            }
+	            }
+	            if (reverse) {
+		            for (int j = 0; j < Mesh.Faces.Length; j++) {
+			            Mesh.Faces[j].Flip();
+		            }
+	            }
+            }
+
+            internal void ApplyRotation(Vector3 Rotation, double Angle)
+            {
+	            double cosa = Math.Cos(Angle);
+	            double sina = Math.Sin(Angle);
+	            for (int j = 0; j < Mesh.Vertices.Length; j++)
+	            {
+		            Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
+
+	            }
+	            for (int j = 0; j < Mesh.Faces.Length; j++)
+	            {
+		            for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+		            {
+			            Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
+		            }
+	            }
+            }
+
+            internal void ApplyTranslation(double x, double y, double z)
+            {
+	            for (int i = 0; i < Mesh.Vertices.Length; i++)
+	            {
+		            Mesh.Vertices[i].Coordinates.X += x;
+		            Mesh.Vertices[i].Coordinates.Y += y;
+		            Mesh.Vertices[i].Coordinates.Z += z;
+	            }
+            }
+
+			internal void ApplyMirror(bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+			{
+				for (int i = 0; i < Mesh.Vertices.Length; i++)
+				{
+					if (vX)
+					{
+						Mesh.Vertices[i].Coordinates.X *= -1;
+					}
+
+					if (vY)
+					{
+						Mesh.Vertices[i].Coordinates.Y *= -1;
+					}
+
+					if (vZ)
+					{
+						Mesh.Vertices[i].Coordinates.Z *= -1;
+					}
+				}
+
+				for (int i = 0; i < Mesh.Faces.Length; i++)
+				{
+					for (int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
+					{
+						if (nX)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+						}
+
+						if (nY)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.Y *= -1;
+						}
+
+						if (nZ)
+						{
+							Mesh.Faces[i].Vertices[j].Normal.X *= -1;
+						}
+					}
+				}
+
+				int numFlips = 0;
+				if (vX)
+				{
+					numFlips++;
+				}
+
+				if (vY)
+				{
+					numFlips++;
+				}
+
+				if (vZ)
+				{
+					numFlips++;
+				}
+
+				if (numFlips % 2 != 0)
+				{
+					for (int i = 0; i < Mesh.Faces.Length; i++)
+					{
+						Array.Reverse(Mesh.Faces[i].Vertices);
+					}
+				}
+			}
+
+			internal void ApplyShear(Vector3 d, Vector3 s, double r)
+			{
+				for (int j = 0; j < Mesh.Vertices.Length; j++)
+				{
+					double n = r * (d.X * Mesh.Vertices[j].Coordinates.X + d.Y * Mesh.Vertices[j].Coordinates.Y + d.Z * Mesh.Vertices[j].Coordinates.Z);
+					Mesh.Vertices[j].Coordinates.X += s.X * n;
+					Mesh.Vertices[j].Coordinates.Y += s.Y * n;
+					Mesh.Vertices[j].Coordinates.Z += s.Z * n;
+				}
+				for (int j = 0; j < Mesh.Faces.Length; j++)
+				{
+					for (int k = 0; k < Mesh.Faces[j].Vertices.Length; k++)
+					{
+						if (Mesh.Faces[j].Vertices[k].Normal.X != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Y != 0.0f | Mesh.Faces[j].Vertices[k].Normal.Z != 0.0f)
+						{
+							double n = r * (s.X * Mesh.Faces[j].Vertices[k].Normal.X + s.Y * Mesh.Faces[j].Vertices[k].Normal.Y + s.Z * Mesh.Faces[j].Vertices[k].Normal.Z);
+							Mesh.Faces[j].Vertices[k].Normal -= d * n;
+							Mesh.Faces[j].Vertices[k].Normal.Normalize();
+						}
+					}
+				}
+			}
+
+			internal void ApplyData(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness)
+			{
+				StartingDistance = float.MaxValue;
+				EndingDistance = float.MinValue;
+				Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
+				// vertices
+				for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
+				{
+					if (Prototype.Mesh.Vertices[j] is ColoredVertex)
+					{
+						Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Prototype.Mesh.Vertices[j]);
+					}
+					else
+					{
+						Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
+					}
+					if (AccurateObjectDisposal)
+					{
+						Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
+						if (Mesh.Vertices[j].Coordinates.Z < StartingDistance)
+						{
+							StartingDistance = (float)Mesh.Vertices[j].Coordinates.Z;
+						}
+						if (Mesh.Vertices[j].Coordinates.Z > EndingDistance)
+						{
+							EndingDistance = (float)Mesh.Vertices[j].Coordinates.Z;
+						}
+						Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
+					}
+					Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
+					Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
+					Mesh.Vertices[j].Coordinates += Position;
+				}
+				if (AccurateObjectDisposal)
+				{
+					StartingDistance += (float)AccurateObjectDisposalZOffset;
+					EndingDistance += (float)AccurateObjectDisposalZOffset;
+				}
+				// faces
+				Mesh.Faces = new MeshFace[Prototype.Mesh.Faces.Length];
+				for (int j = 0; j < Prototype.Mesh.Faces.Length; j++)
+				{
+					Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
+					Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
+					Mesh.Faces[j].Vertices = new MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
+					for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
+					{
+						Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
+						if (Mesh.Faces[j].Vertices[k].Normal.NormSquared() != 0.0)
+						{
+							Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
+							Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
+						}
+					}
+				}
+				// materials
+				Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
+				for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
+				{
+					Mesh.Materials[j] = Prototype.Mesh.Materials[j];
+					Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
+					Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.G * Brightness);
+					Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.B * Brightness);
+				}
+				const double minBlockLength = 20.0;
+				if (BlockLength < minBlockLength)
+				{
+					BlockLength = BlockLength * Math.Ceiling(minBlockLength / BlockLength);
+				}
+				if (AccurateObjectDisposal)
+				{
+					StartingDistance += (float)TrackPosition;
+					EndingDistance += (float)TrackPosition;
+					double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
+					startingDistance = Math.Min(z - BlockLength, (double)StartingDistance);
+					endingDistance = Math.Max(z + 2.0 * BlockLength, (double)EndingDistance);
+					StartingDistance = (float)(BlockLength * Math.Floor(startingDistance / BlockLength));
+					EndingDistance = (float)(BlockLength * Math.Ceiling(endingDistance / BlockLength));
+				}
+				else
+				{
+					StartingDistance = (float)startingDistance;
+					EndingDistance = (float)endingDistance;
+				}
+				if (BlockLength != 0.0)
+				{
+					checked
+					{
+						GroupIndex = (short)Mod(Math.Floor(StartingDistance / BlockLength), Math.Ceiling(600 / BlockLength));
+					}
+				}
+			}
+
             public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
             {
-	            throw new NotImplementedException();
+	            CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
             }
 
             public override void OptimizeObject(bool PreserveVertices)
@@ -1496,7 +1741,7 @@ namespace OpenBve
                             p.Y += Prototypes[i].States[0].Position.X * s.Y + Prototypes[i].States[0].Position.Y * u.Y + Prototypes[i].States[0].Position.Z * d.Y;
                             p.Z += Prototypes[i].States[0].Position.X * s.Z + Prototypes[i].States[0].Position.Y * u.Z + Prototypes[i].States[0].Position.Z * d.Z;
                             double zOffset = Prototypes[i].States[0].Position.Z;
-                            CreateStaticObject(Prototypes[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
+                            CreateStaticObject(Prototypes[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
                         }
                         else
                         {
@@ -1891,7 +2136,7 @@ namespace OpenBve
             if (Prototype is StaticObject)
             {
                 StaticObject s = (StaticObject)Prototype;
-                CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
+                CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
             }
             else if (Prototype is AnimatedObjectCollection)
             {
@@ -1900,19 +2145,14 @@ namespace OpenBve
             }
         }
 
-        // create static object
-        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-        {
-            return CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
-        }
-        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
         {
             int a = ObjectsUsed;
             if (a >= Objects.Length)
             {
                 Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
             }
-            ApplyStaticObjectData(ref Objects[a], Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
+            Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
             for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
             {
                 switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
@@ -1937,99 +2177,7 @@ namespace OpenBve
             ObjectsUsed++;
             return a;
         }
-        internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
-        {
-            Object = new StaticObject();
-            Object.StartingDistance = float.MaxValue;
-            Object.EndingDistance = float.MinValue;
-            // bool brightnesschange = Brightness != 1.0;
-            // vertices
-            Object.Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
-            for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++)
-            {
-                Object.Mesh.Vertices[j] = Prototype.Mesh.Vertices[j];
-                if (AccurateObjectDisposal)
-                {
-	                Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-                    if (Object.Mesh.Vertices[j].Coordinates.Z < Object.StartingDistance)
-                    {
-                        Object.StartingDistance = (float)Object.Mesh.Vertices[j].Coordinates.Z;
-                    }
-                    if (Object.Mesh.Vertices[j].Coordinates.Z > Object.EndingDistance)
-                    {
-                        Object.EndingDistance = (float)Object.Mesh.Vertices[j].Coordinates.Z;
-                    }
-                    Object.Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
-                }
-	            Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-	            Object.Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
-                Object.Mesh.Vertices[j].Coordinates.X += Position.X;
-                Object.Mesh.Vertices[j].Coordinates.Y += Position.Y;
-                Object.Mesh.Vertices[j].Coordinates.Z += Position.Z;
-            }
-            if (AccurateObjectDisposal)
-            {
-                Object.StartingDistance += (float)AccurateObjectDisposalZOffset;
-                Object.EndingDistance += (float)AccurateObjectDisposalZOffset;
-            }
-            // faces
-            Object.Mesh.Faces = new MeshFace[Prototype.Mesh.Faces.Length];
-            for (int j = 0; j < Prototype.Mesh.Faces.Length; j++)
-            {
-                Object.Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
-                Object.Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
-                Object.Mesh.Faces[j].Vertices = new MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
-                for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
-                {
-                    Object.Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-                    double nx = Object.Mesh.Faces[j].Vertices[k].Normal.X;
-                    double ny = Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-                    double nz = Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-                    if (nx * nx + ny * ny + nz * nz != 0.0)
-                    {
-	                    Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
-	                    Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
-                    }
-                }
-            }
-            // materials
-            Object.Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
-            for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
-            {
-                Object.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-                Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
-                Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.G * Brightness);
-                Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.B * Brightness);
-            }
-            const double minBlockLength = 20.0;
-            if (BlockLength < minBlockLength)
-            {
-                BlockLength = BlockLength * Math.Ceiling(minBlockLength / BlockLength);
-            }
-            if (AccurateObjectDisposal)
-            {
-                Object.StartingDistance += (float)TrackPosition;
-                Object.EndingDistance += (float)TrackPosition;
-                double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
-                StartingDistance = Math.Min(z - BlockLength, (double)Object.StartingDistance);
-                EndingDistance = Math.Max(z + 2.0 * BlockLength, (double)Object.EndingDistance);
-                Object.StartingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
-                Object.EndingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
-            }
-            else
-            {
-                Object.StartingDistance = (float)StartingDistance;
-                Object.EndingDistance = (float)EndingDistance;
-            }
-            if (BlockLength != 0.0)
-            {
-                checked
-                {
-                    Object.GroupIndex = (short)Mod(Math.Floor(Object.StartingDistance / BlockLength), Math.Ceiling(World.BackgroundImageDistance / BlockLength));
-                }
-            }
-        }
-
+        
         private static double Mod(double a, double b)
         {
             return a - b * Math.Floor(a / b);

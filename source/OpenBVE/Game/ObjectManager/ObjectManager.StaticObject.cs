@@ -367,9 +367,7 @@ namespace OpenBve
 					}
 					Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
 					Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
-					Mesh.Vertices[j].Coordinates.X += Position.X;
-					Mesh.Vertices[j].Coordinates.Y += Position.Y;
-					Mesh.Vertices[j].Coordinates.Z += Position.Z;
+					Mesh.Vertices[j].Coordinates += Position;
 				}
 				if (AccurateObjectDisposal)
 				{
@@ -386,10 +384,7 @@ namespace OpenBve
 					for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++)
 					{
 						Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-						double nx = Mesh.Faces[j].Vertices[k].Normal.X;
-						double ny = Mesh.Faces[j].Vertices[k].Normal.Y;
-						double nz = Mesh.Faces[j].Vertices[k].Normal.Z;
-						if (nx * nx + ny * ny + nz * nz != 0.0)
+						if (Mesh.Faces[j].Vertices[k].Normal.NormSquared() != 0.0)
 						{
 							Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
 							Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);

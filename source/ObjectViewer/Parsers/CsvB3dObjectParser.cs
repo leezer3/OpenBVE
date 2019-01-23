@@ -548,7 +548,7 @@ namespace OpenBve {
 								}
 								ApplyTranslation(Builder, x, y, z);
 								if (cmd == "translateall") {
-									ApplyTranslation(Object, x, y, z);
+									Object.ApplyTranslation(x, y, z);
 								}
 							} break;
 						case "scale":
@@ -581,51 +581,49 @@ namespace OpenBve {
 								}
 								ApplyScale(Builder, x, y, z);
 								if (cmd == "scaleall") {
-									ApplyScale(Object, x, y, z);
+									Object.ApplyScale(x, y, z);
 								}
 							} break;
 						case "rotate":
 						case "rotateall":
-							{
-								if (Arguments.Length > 4) {
-									Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+						{
+							if (Arguments.Length > 4) {
+								Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							}
+							Vector3 r = new Vector3();
+							double a = 0;
+							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r.X)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.X = 0.0;
+							}
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out r.Y)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.Y = 0.0;
+							}
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out r.Z)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.Z = 0.0;
+							}
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								a = 0.0;
+							}
+
+							double t = r.NormSquared();
+							if (t == 0.0) {
+								r = Vector3.Right;
+								t = 1.0;
+							}
+							if (a != 0.0) {
+								t = 1.0 / Math.Sqrt(t);
+								r *= t;
+								a *= 0.0174532925199433;
+								ApplyRotation(Builder, r, a);
+								if (cmd == "rotateall") {
+									Object.ApplyRotation(r, a);
 								}
-								double x = 0.0, y = 0.0, z = 0.0, a = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 0.0;
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									a = 0.0;
-								}
-								double t = x * x + y * y + z * z;
-								if (t == 0.0) {
-									x = 1.0;
-									y = 0.0;
-									z = 0.0;
-									t = 1.0;
-								}
-								if (a != 0.0) {
-									t = 1.0 / Math.Sqrt(t);
-									x *= t;
-									y *= t;
-									z *= t;
-									a *= 0.0174532925199433;
-									ApplyRotation(Builder,new Vector3(x,y,z), a);
-									if (cmd == "rotateall") {
-										ApplyRotation(Object, new Vector3(x,y,z), a);
-									}
-								}
-							} break;
+							}
+						} break;
 						case "shear":
 						case "shearall":
 							{
@@ -1329,13 +1327,6 @@ namespace OpenBve {
 				Builder.Vertices[i].Coordinates.Z += z;
 			}
 		}
-		private static void ApplyTranslation(ObjectManager.StaticObject Object, double x, double y, double z) {
-			for (int i = 0; i < Object.Mesh.Vertices.Length; i++) {
-				Object.Mesh.Vertices[i].Coordinates.X += x;
-				Object.Mesh.Vertices[i].Coordinates.Y += y;
-				Object.Mesh.Vertices[i].Coordinates.Z += z;
-			}
-		}
 
 		// apply scale
 		private static void ApplyScale(MeshBuilder Builder, double x, double y, double z) {
@@ -1370,40 +1361,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static void ApplyScale(ObjectManager.StaticObject Object, double x, double y, double z) {
-			float rx = (float)(1.0 / x);
-			float ry = (float)(1.0 / y);
-			float rz = (float)(1.0 / z);
-			float rx2 = rx * rx;
-			float ry2 = ry * ry;
-			float rz2 = rz * rz;
-			bool reverse = x * y * z < 0.0;
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				Object.Mesh.Vertices[j].Coordinates.X *= x;
-				Object.Mesh.Vertices[j].Coordinates.Y *= y;
-				Object.Mesh.Vertices[j].Coordinates.Z *= z;
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					double nx2 = Object.Mesh.Faces[j].Vertices[k].Normal.X * Object.Mesh.Faces[j].Vertices[k].Normal.X;
-					double ny2 = Object.Mesh.Faces[j].Vertices[k].Normal.Y * Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-					double nz2 = Object.Mesh.Faces[j].Vertices[k].Normal.Z * Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
-					if (u != 0.0) {
-						u = (float)Math.Sqrt((double)((nx2 + ny2 + nz2) / u));
-						Object.Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
-					}
-				}
-			}
-			if (reverse) {
-				for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-					Object.Mesh.Faces[j].Flip();
-				}
-			}
-		}
-
+		
 		// apply rotation
 		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double Angle) {
 			double cosa = Math.Cos(Angle);
@@ -1417,19 +1375,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void ApplyRotation(ObjectManager.StaticObject Object, Vector3 Rotation, double Angle) {
-			double cosa = Math.Cos(Angle);
-			double sina = Math.Sin(Angle);
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				Object.Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
-				}
-			}
-		}
-
+		
 		private static void ApplyMirror(MeshBuilder Builder, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
 		{
 			for (int i = 0; i < Builder.Vertices.Length; i++)

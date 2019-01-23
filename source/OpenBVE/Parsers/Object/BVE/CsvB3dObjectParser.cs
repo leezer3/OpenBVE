@@ -461,39 +461,37 @@ namespace OpenBve {
 								if (Arguments.Length > 4) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 0.0, y = 0.0, z = 0.0, a = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
+								Vector3 r = new Vector3();
+								double a = 0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0;
+									r.X = 0.0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out r.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0;
+									r.Y = 0.0;
 								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out r.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 0.0;
+									r.Z = 0.0;
 								}
 								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									a = 0.0;
 								}
-								double t = x * x + y * y + z * z;
+
+								double t = r.NormSquared();
 								if (t == 0.0) {
-									x = 1.0;
-									y = 0.0;
-									z = 0.0;
+									r = Vector3.Right;
 									t = 1.0;
 								}
 								if (a != 0.0) {
 									t = 1.0 / Math.Sqrt(t);
-									x *= t;
-									y *= t;
-									z *= t;
+									r *= t;
 									a *= 0.0174532925199433;
-									ApplyRotation(Builder, new Vector3(x,y,z), a);
+									ApplyRotation(Builder, r, a);
 									if (cmd == "rotateall") {
-										Object.ApplyRotation(new Vector3(x,y,z), a);
+										Object.ApplyRotation(r, a);
 									}
 								}
 							} break;
