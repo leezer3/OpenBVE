@@ -1393,7 +1393,7 @@ namespace OpenBve
 			return Result;
 		}
 
-		private static void ApplyStaticRotation(ref World.Mesh Mesh, Vector3 RotationDirection, double Angle)
+		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
 		{
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)

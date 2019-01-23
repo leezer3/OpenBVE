@@ -1022,7 +1022,7 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Car].CarSections[0].Elements[j].States[0].Object.Mesh = new World.Mesh(vertices, faces, Color);
+										Train.Cars[Car].CarSections[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Color);
 										Train.Cars[Car].CarSections[0].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 										Train.Cars[Car].CarSections[0].Elements[j].LEDInitialAngle = InitialAngle;
 										Train.Cars[Car].CarSections[0].Elements[j].LEDLastAngle = LastAngle;
@@ -1446,9 +1446,9 @@ namespace OpenBve {
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
-			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };
-			Object.Mesh.Materials = new World.MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? World.MeshMaterial.TransparentColorMask : 0);
+			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
+			Object.Mesh.Materials = new MeshMaterial[1];
+			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? MeshMaterial.TransparentColorMask : 0);
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;

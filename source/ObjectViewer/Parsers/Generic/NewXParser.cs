@@ -284,8 +284,8 @@ namespace OpenBve
 						{
 							throw new Exception("fVerts must be greater than zero");
 						}
-						builder.Faces[f + i] = new World.MeshFace();
-						builder.Faces[f + i].Vertices = new World.MeshFaceVertex[fVerts];
+						builder.Faces[f + i] = new MeshFace();
+						builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
 						for (int j = 0; j < fVerts; j++)
 						{
 							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();

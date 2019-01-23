@@ -242,7 +242,7 @@ namespace OpenBve
 
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new World.MeshFace(faces[i].Vertices);
+						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices);
 						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
 						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
@@ -262,7 +262,7 @@ namespace OpenBve
 						Object.Mesh.Materials[mm + i].Flags = 0;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
 						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
-						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
+						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;

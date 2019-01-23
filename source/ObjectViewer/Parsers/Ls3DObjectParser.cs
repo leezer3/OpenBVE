@@ -283,10 +283,10 @@ namespace OpenBve
                                                 string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
                                                 int f = Builder.Faces.Length;
                                                 //Add 1 to the length of the face array
-                                                Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-                                                Builder.Faces[f] = new World.MeshFace();
+                                                Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+                                                Builder.Faces[f] = new MeshFace();
                                                 //Create the vertex array for the face
-                                                Builder.Faces[f].Vertices = new World.MeshFaceVertex[Verticies.Length];
+                                                Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
                                                 while (Builder.Vertices.Length > Normals.Length)
                                                 {
                                                     Array.Resize<Vector3>(ref Normals,
@@ -359,7 +359,7 @@ namespace OpenBve
 	                                            if (Face2)
 	                                            {
 													//Add face2 flag if required
-		                                            Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+		                                            Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 	                                            }
 											}
 

@@ -54,21 +54,21 @@ namespace OpenBve
 			Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 			for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
 			{
-				switch (Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask)
+				switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
 				{
-					case World.MeshFace.FaceTypeTriangles:
+					case MeshFace.FaceTypeTriangles:
 						Game.InfoTotalTriangles++;
 						break;
-					case World.MeshFace.FaceTypeTriangleStrip:
+					case MeshFace.FaceTypeTriangleStrip:
 						Game.InfoTotalTriangleStrip++;
 						break;
-					case World.MeshFace.FaceTypeQuads:
+					case MeshFace.FaceTypeQuads:
 						Game.InfoTotalQuads++;
 						break;
-					case World.MeshFace.FaceTypeQuadStrip:
+					case MeshFace.FaceTypeQuadStrip:
 						Game.InfoTotalQuadStrip++;
 						break;
-					case World.MeshFace.FaceTypePolygon:
+					case MeshFace.FaceTypePolygon:
 						Game.InfoTotalPolygon++;
 						break;
 				}

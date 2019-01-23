@@ -75,7 +75,7 @@ namespace OpenBve
 #endif
 		}
 
-		private static void  MeshBuilder(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Mesh mesh)
+		private static void  MeshBuilder(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
 			if (builder.Vertices.Length != 0)
 			{
@@ -106,8 +106,8 @@ namespace OpenBve
 				{
 					throw new Exception("fVerts must be greater than zero");
 				}
-				builder.Faces[f + i] = new World.MeshFace();
-				builder.Faces[f + i].Vertices = new World.MeshFaceVertex[fVerts];
+				builder.Faces[f + i] = new MeshFace();
+				builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
 				for (int j = 0; j < fVerts; j++)
 				{
 					builder.Faces[f + i].Vertices[j].Index = (ushort)mesh.PosFaces[i].Indices[j];

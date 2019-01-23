@@ -279,19 +279,19 @@ namespace OpenBve
 						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int) wrap].Name);
 					}
 				}
-				int FaceType = Object.ObjectBackground.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
+				int FaceType = Object.ObjectBackground.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask;
 				switch (FaceType)
 				{
-					case World.MeshFace.FaceTypeTriangles:
+					case MeshFace.FaceTypeTriangles:
 						GL.Begin(PrimitiveType.Triangles);
 						break;
-					case World.MeshFace.FaceTypeTriangleStrip:
+					case MeshFace.FaceTypeTriangleStrip:
 						GL.Begin(PrimitiveType.TriangleStrip);
 						break;
-					case World.MeshFace.FaceTypeQuads:
+					case MeshFace.FaceTypeQuads:
 						GL.Begin(PrimitiveType.Quads);
 						break;
-					case World.MeshFace.FaceTypeQuadStrip:
+					case MeshFace.FaceTypeQuadStrip:
 						GL.Begin(PrimitiveType.QuadStrip);
 						break;
 					default:

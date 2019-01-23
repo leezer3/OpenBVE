@@ -7,6 +7,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("openBVE")]
 [assembly: AssemblyCopyright("The openBVE Project")]
 [assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
 
 [assembly: AssemblyVersion("0.0.0.1")]

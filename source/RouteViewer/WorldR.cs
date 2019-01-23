@@ -10,7 +10,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
-using OpenBveApi.World;
 
 namespace OpenBve {
 	public static class World {
@@ -213,21 +212,16 @@ namespace OpenBve {
 					double bx = Vertices[i2].Coordinates.X - Vertices[i0].Coordinates.X;
 					double by = Vertices[i2].Coordinates.Y - Vertices[i0].Coordinates.Y;
 					double bz = Vertices[i2].Coordinates.Z - Vertices[i0].Coordinates.Z;
-					double nx = ay * bz - az * by;
-					double ny = az * bx - ax * bz;
-					double nz = ax * by - ay * bx;
-					double t = nx * nx + ny * ny + nz * nz;
+					Vector3 Normal = new Vector3(ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx);
+					double t = Normal.NormSquared();
 					if (t != 0.0)
 					{
 						t = 1.0 / Math.Sqrt(t);
-						float mx = (float)(nx * t);
-						float my = (float)(ny * t);
-						float mz = (float)(nz * t);
 						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
 						{
 							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
 							{
-								Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
+								Faces[FaceIndex].Vertices[j].Normal = Normal * t;
 							}
 						}
 					}
@@ -237,7 +231,7 @@ namespace OpenBve {
 						{
 							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
 							{
-								Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
+								Faces[FaceIndex].Vertices[j].Normal = Vector3.Down;
 							}
 						}
 					}

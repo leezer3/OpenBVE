@@ -298,7 +298,7 @@ namespace OpenBve
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
 					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
-					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == World.MeshMaterialBlendMode.Normal & ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
 					{
 						if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
@@ -313,7 +313,7 @@ namespace OpenBve
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
 					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
-					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == World.MeshMaterialBlendMode.Additive)
+					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
 						{
@@ -396,7 +396,7 @@ namespace OpenBve
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
 						int r = (int)ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
-						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == World.MeshMaterialBlendMode.Normal & ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
 						{
 							if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 							{
@@ -411,7 +411,7 @@ namespace OpenBve
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
 						int r = (int)ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
-						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == World.MeshMaterialBlendMode.Additive)
+						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
 						{
 							if (!additive)
 							{
@@ -488,7 +488,7 @@ namespace OpenBve
 		{
 			if (CullEnabled)
 			{
-				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & World.MeshFace.Face2Mask) != 0)
+				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 				{
 					GL.Disable(EnableCap.CullFace);
 					CullEnabled = false;
@@ -496,7 +496,7 @@ namespace OpenBve
 			}
 			else if (OptionBackfaceCulling)
 			{
-				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & World.MeshFace.Face2Mask) == 0)
+				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 					CullEnabled = true;
@@ -505,7 +505,7 @@ namespace OpenBve
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
 			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
 		}
-		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref World.MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, double CameraX, double CameraY, double CameraZ)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)
@@ -544,7 +544,7 @@ namespace OpenBve
 			}
 			// blend mode
 			float factor;
-			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive)
+			if (Material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				factor = 1.0f;
 				if (!BlendEnabled) GL.Enable(EnableCap.Blend);
@@ -581,19 +581,19 @@ namespace OpenBve
 				}
 			}
 			// render daytime polygon
-			int FaceType = Face.Flags & World.MeshFace.FaceTypeMask;
+			int FaceType = Face.Flags & MeshFace.FaceTypeMask;
 			switch (FaceType)
 			{
-				case World.MeshFace.FaceTypeTriangles:
+				case MeshFace.FaceTypeTriangles:
 					GL.Begin(PrimitiveType.Triangles);
 					break;
-				case World.MeshFace.FaceTypeTriangleStrip:
+				case MeshFace.FaceTypeTriangleStrip:
 					GL.Begin(PrimitiveType.TriangleStrip);
 					break;
-				case World.MeshFace.FaceTypeQuads:
+				case MeshFace.FaceTypeQuads:
 					GL.Begin(PrimitiveType.Quads);
 					break;
-				case World.MeshFace.FaceTypeQuadStrip:
+				case MeshFace.FaceTypeQuadStrip:
 					GL.Begin(PrimitiveType.QuadStrip);
 					break;
 				default:
@@ -624,7 +624,7 @@ namespace OpenBve
 				}
 				
 			}
-			if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0)
+			if ((Material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 			{
 				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
 			}
@@ -709,16 +709,16 @@ namespace OpenBve
 				GL.Enable(EnableCap.AlphaTest);
 				switch (FaceType)
 				{
-					case World.MeshFace.FaceTypeTriangles:
+					case MeshFace.FaceTypeTriangles:
 						GL.Begin(PrimitiveType.Triangles);
 						break;
-					case World.MeshFace.FaceTypeTriangleStrip:
+					case MeshFace.FaceTypeTriangleStrip:
 						GL.Begin(PrimitiveType.TriangleStrip);
 						break;
-					case World.MeshFace.FaceTypeQuads:
+					case MeshFace.FaceTypeQuads:
 						GL.Begin(PrimitiveType.Quads);
 						break;
-					case World.MeshFace.FaceTypeQuadStrip:
+					case MeshFace.FaceTypeQuadStrip:
 						GL.Begin(PrimitiveType.QuadStrip);
 						break;
 					default:
@@ -747,7 +747,7 @@ namespace OpenBve
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, inv255 * (float)Material.Color.A * alphafactor);
 				}
 				
-				if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0)
+				if ((Material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
 					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
 				}
@@ -790,7 +790,7 @@ namespace OpenBve
 				}
 			}
 			// finalize
-			if (Material.BlendMode == World.MeshMaterialBlendMode.Additive)
+			if (Material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				if (!BlendEnabled) GL.Disable(EnableCap.Blend);

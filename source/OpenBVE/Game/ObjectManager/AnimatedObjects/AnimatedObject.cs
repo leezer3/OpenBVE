@@ -162,13 +162,13 @@ namespace OpenBve
 						
 					}
 					m = States[t].Object.Mesh.Faces.Length;
-					ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[m];
+					ObjectManager.Objects[i].Mesh.Faces = new MeshFace[m];
 					for (int k = 0; k < m; k++)
 					{
 						ObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
 						ObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
 						int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-						ObjectManager.Objects[i].Mesh.Faces[k].Vertices = new World.MeshFaceVertex[o];
+						ObjectManager.Objects[i].Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
 						for (int h = 0; h < o; h++)
 						{
 							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];

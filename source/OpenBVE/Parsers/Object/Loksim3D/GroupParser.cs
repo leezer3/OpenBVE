@@ -189,11 +189,11 @@ namespace OpenBve
 					//If we use multiples, the Z-sorting throws a wobbly
 					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject
 					{
-						Mesh = new World.Mesh
+						Mesh = new Mesh
 						{
 							Vertices = new VertexTemplate[0],
-							Faces = new World.MeshFace[0],
-							Materials = new World.MeshMaterial[0]
+							Faces = new MeshFace[0],
+							Materials = new MeshMaterial[0]
 						}
 					};
 					for (int i = 0; i < CurrentObjects.Length; i++)
