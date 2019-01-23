@@ -2215,7 +2215,7 @@ namespace OpenBve {
 							int mf = Object.Mesh.Faces.Length;
 							int mm = Object.Mesh.Materials.Length;
 							int mv = Object.Mesh.Vertices.Length;
-							Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
+							Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
 							Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
 							Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 							for (int j = 0; j < Materials.Length; j++)
@@ -2272,16 +2272,16 @@ namespace OpenBve {
 								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
 								Object.Mesh.Materials[mm + j].NighttimeTextureIndex = -1;
-								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;
+								Object.Mesh.Materials[mm + j].BlendMode = MeshMaterialBlendMode.Normal;
 								Object.Mesh.Materials[mm + j].GlowAttenuationData = 0;
 							}
 							for (int j = 0; j < nFaces; j++)
 							{
 								Object.Mesh.Faces[mf + j].Material = (ushort)FaceMaterials[j];
-								Object.Mesh.Faces[mf + j].Vertices = new World.MeshFaceVertex[Faces[j].Length];
+								Object.Mesh.Faces[mf + j].Vertices = new MeshFaceVertex[Faces[j].Length];
 								for (int k = 0; k < Faces[j].Length; k++)
 								{
-									Object.Mesh.Faces[mf + j].Vertices[k] = new World.MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
+									Object.Mesh.Faces[mf + j].Vertices[k] = new MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
 								}
 							}
 							for (int j = 0; j < Vertices.Length; j++)

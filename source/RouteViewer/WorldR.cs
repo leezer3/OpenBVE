@@ -61,95 +61,6 @@ namespace OpenBve {
 				return base.Equals(obj);
 			}
 		}
-		internal enum MeshMaterialBlendMode : byte {
-			Normal = 0,
-			Additive = 1
-		}
-		
-		// mesh face vertex
-		/// <summary>Represents a reference to a vertex and the normal to be used for that vertex.</summary>
-		internal struct MeshFaceVertex {
-			/// <summary>A reference to an element in the Vertex array of the contained Mesh structure.</summary>
-			internal ushort Index;
-			/// <summary>The normal to be used at the vertex.</summary>
-			internal Vector3 Normal;
-			internal MeshFaceVertex(int Index) {
-				this.Index = (ushort)Index;
-				this.Normal = new Vector3(0.0f, 0.0f, 0.0f);
-			}
-			internal MeshFaceVertex(int Index, Vector3 Normal) {
-				this.Index = (ushort)Index;
-				this.Normal = Normal;
-			}
-			// operators
-			public static bool operator ==(MeshFaceVertex A, MeshFaceVertex B) {
-				if (A.Index != B.Index) return false;
-				if (A.Normal.X != B.Normal.X) return false;
-				if (A.Normal.Y != B.Normal.Y) return false;
-				if (A.Normal.Z != B.Normal.Z) return false;
-				return true;
-			}
-			public static bool operator !=(MeshFaceVertex A, MeshFaceVertex B) {
-				if (A.Index != B.Index) return true;
-				if (A.Normal.X != B.Normal.X) return true;
-				if (A.Normal.Y != B.Normal.Y) return true;
-				if (A.Normal.Z != B.Normal.Z) return true;
-				return false;
-			}
-			public override int GetHashCode() {
-				return base.GetHashCode();
-			}
-			public override bool Equals(object obj) {
-				return base.Equals(obj);
-			}
-		}
-		
-		// mesh face
-		/// <summary>Represents a face consisting of vertices and material attributes.</summary>
-		internal struct MeshFace {
-			internal MeshFaceVertex[] Vertices;
-			/// <summary>A reference to an element in the Material array of the containing Mesh structure.</summary>
-			internal ushort Material;
-			/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
-			internal byte Flags;
-			internal MeshFace(int[] Vertices) {
-				this.Vertices = new MeshFaceVertex[Vertices.Length];
-				for (int i = 0; i < Vertices.Length; i++) {
-					this.Vertices[i] = new MeshFaceVertex(Vertices[i]);
-				}
-				this.Material = 0;
-				this.Flags = 0;
-			}
-			internal MeshFace(MeshFaceVertex[] verticies, ushort material)
-			{
-				this.Vertices = verticies;
-				this.Material = material;
-				this.Flags = 0;
-			}
-			internal void Flip() {
-				if ((this.Flags & FaceTypeMask) == FaceTypeQuadStrip) {
-					for (int i = 0; i < this.Vertices.Length; i += 2) {
-						MeshFaceVertex x = this.Vertices[i];
-						this.Vertices[i] = this.Vertices[i + 1];
-						this.Vertices[i + 1] = x;
-					}
-				} else {
-					int n = this.Vertices.Length;
-					for (int i = 0; i < (n >> 1); i++) {
-						MeshFaceVertex x = this.Vertices[i];
-						this.Vertices[i] = this.Vertices[n - i - 1];
-						this.Vertices[n - i - 1] = x;
-					}
-				}
-			}
-			internal const int FaceTypeMask = 7;
-			internal const int FaceTypePolygon = 0;
-			internal const int FaceTypeTriangles = 1;
-			internal const int FaceTypeTriangleStrip = 2;
-			internal const int FaceTypeQuads = 3;
-			internal const int FaceTypeQuadStrip = 4;
-			internal const int Face2Mask = 8;
-		}
 		
 		// mesh
 		/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
@@ -237,28 +148,6 @@ namespace OpenBve {
 					}
 				}
 			}
-		}
-
-		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
-		/// <param name="HalfDistance">The distance at which the glow is at 50% of its full intensity. The value is clamped to the integer range from 1 to 4096. Values less than or equal to 0 disable glow attenuation.</param>
-		/// <param name="Mode">The glow attenuation mode.</param>
-		/// <returns>A System.UInt16 packed with the information about the half distance and glow attenuation mode.</returns>
-		internal static ushort GetGlowAttenuationData(double HalfDistance, GlowAttenuationMode Mode) {
-			if (HalfDistance <= 0.0 | Mode == GlowAttenuationMode.None) return 0;
-			if (HalfDistance < 1.0) {
-				HalfDistance = 1.0;
-			} else if (HalfDistance > 4095.0) {
-				HalfDistance = 4095.0;
-			}
-			return (ushort)((int)Math.Round(HalfDistance) | ((int)Mode << 12));
-		}
-		/// <summary>Recreates the half distance and the glow attenuation mode from a packed System.UInt16 that was created by GetGlowAttenuationData.</summary>
-		/// <param name="Data">The data returned by GetGlowAttenuationData.</param>
-		/// <param name="Mode">The mode of glow attenuation.</param>
-		/// <param name="HalfDistance">The half distance of glow attenuation.</param>
-		internal static void SplitGlowAttenuationData(ushort Data, out GlowAttenuationMode Mode, out double HalfDistance) {
-			Mode = (GlowAttenuationMode)(Data >> 12);
-			HalfDistance = (double)(Data & 4095);
 		}
 
 		// display

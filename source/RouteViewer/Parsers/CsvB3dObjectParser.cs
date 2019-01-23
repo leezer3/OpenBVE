@@ -21,7 +21,7 @@ namespace OpenBve {
 			internal bool TransparentColorUsed;
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
+			internal MeshMaterialBlendMode BlendMode;
 			internal ushort GlowAttenuationData;
 			internal Color TextColor;
 			internal Color BackgroundColor;
@@ -36,7 +36,7 @@ namespace OpenBve {
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
+				this.BlendMode = MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.TextColor = System.Drawing.Color.Black;
 				this.BackgroundColor = System.Drawing.Color.White;
@@ -61,11 +61,11 @@ namespace OpenBve {
 		}
 		private class MeshBuilder {
 			internal VertexTemplate[] Vertices;
-			internal World.MeshFace[] Faces;
+			internal MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder() {
 				this.Vertices = new VertexTemplate[] { };
-				this.Faces = new World.MeshFace[] { };
+				this.Faces = new MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
 		}
@@ -336,9 +336,9 @@ namespace OpenBve {
 									}
 									if (q) {
 										int f = Builder.Faces.Length;
-										Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new World.MeshFace();
-										Builder.Faces[f].Vertices = new World.MeshFaceVertex[Arguments.Length];
+										Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+										Builder.Faces[f] = new MeshFace();
+										Builder.Faces[f].Vertices = new MeshFaceVertex[Arguments.Length];
 										while (Builder.Vertices.Length > Normals.Length) {
 											Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 										}
@@ -347,7 +347,7 @@ namespace OpenBve {
 											Builder.Faces[f].Vertices[j].Normal = Normals[a[j]];
 										}
 										if (cmd == "addface2" | cmd == "face2") {
-											Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+											Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 										}
 									}
 								}
@@ -759,19 +759,19 @@ namespace OpenBve {
 								if (Arguments.Length > 3) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								World.MeshMaterialBlendMode blendmode = World.MeshMaterialBlendMode.Normal;
+								MeshMaterialBlendMode blendmode = MeshMaterialBlendMode.Normal;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 									switch (Arguments[0].ToLowerInvariant()) {
 										case "normal":
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 										case "additive":
 										case "glow":
-											blendmode = World.MeshMaterialBlendMode.Additive;
+											blendmode = MeshMaterialBlendMode.Additive;
 											break;
 										default:
 											Interface.AddMessage(MessageType.Error, false, "The given BlendMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 									}
 								}
@@ -792,7 +792,7 @@ namespace OpenBve {
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].BlendMode = blendmode;
-									Builder.Materials[j].GlowAttenuationData = World.GetGlowAttenuationData(glowhalfdistance, glowmode);
+									Builder.Materials[j].GlowAttenuationData = Glow.GetAttenuationData(glowhalfdistance, glowmode);
 								}
 							} break;
 						case "loadtexture":
@@ -1050,13 +1050,13 @@ namespace OpenBve {
 			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
 			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 1].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 2].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 3].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 4].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 5].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 5) };
+			Array.Resize<MeshFace>(ref Builder.Faces, f + 6);
+			Builder.Faces[f + 0].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
+			Builder.Faces[f + 1].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
+			Builder.Faces[f + 2].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
+			Builder.Faces[f + 3].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
+			Builder.Faces[f + 4].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
+			Builder.Faces[f + 5].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 5) };
 		}
 
 		// create cylinder
@@ -1097,24 +1097,24 @@ namespace OpenBve {
 			}
 			// faces
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + n + m);
+			Array.Resize<MeshFace>(ref Builder.Faces, f + n + m);
 			for (int i = 0; i < n; i++) {
 				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + i0, Normals[i0]), new World.MeshFaceVertex(v + i1, Normals[i1]), new World.MeshFaceVertex(v + i2, Normals[i2]), new World.MeshFaceVertex(v + i3, Normals[i3]) };
+				Builder.Faces[f + i].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
 			}
 			for (int i = 0; i < m; i++) {
-				Builder.Faces[f + n + i].Vertices = new World.MeshFaceVertex[n];
+				Builder.Faces[f + n + i].Vertices = new MeshFaceVertex[n];
 				for (int j = 0; j < n; j++) {
 					if (i == 0 & lowercap) {
 						// lower cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * j + 1);
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * j + 1);
 					} else {
 						// upper cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * (n - j - 1));
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * (n - j - 1));
 					}
 				}
 			}
@@ -1388,7 +1388,7 @@ namespace OpenBve {
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
 				for (int i = 0; i < Builder.Vertices.Length; i++) {

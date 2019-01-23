@@ -29,7 +29,7 @@ namespace OpenBve
 			internal string DaytimeTexture;
 			internal string TransparencyTexture;
 			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
+			internal MeshMaterialBlendMode BlendMode;
 			internal ushort GlowAttenuationData;
 			internal Material()
 			{
@@ -40,7 +40,7 @@ namespace OpenBve
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
+				this.BlendMode = MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 			}
 			internal Material(Material Prototype)
@@ -59,12 +59,12 @@ namespace OpenBve
 		private class MeshBuilder
 		{
 			internal VertexTemplate[] Vertices;
-			internal World.MeshFace[] Faces;
+			internal MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
 				this.Vertices = new VertexTemplate[] { };
-				this.Faces = new World.MeshFace[] { };
+				this.Faces = new MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
 		}
@@ -329,10 +329,10 @@ namespace OpenBve
 												string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
 												int f = Builder.Faces.Length;
 												//Add 1 to the length of the face array
-												Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-												Builder.Faces[f] = new World.MeshFace();
+												Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+												Builder.Faces[f] = new MeshFace();
 												//Create the vertex array for the face
-												Builder.Faces[f].Vertices = new World.MeshFaceVertex[Verticies.Length];
+												Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
 												while (Builder.Vertices.Length > Normals.Length)
 												{
 													Array.Resize<Vector3>(ref Normals,
@@ -405,7 +405,7 @@ namespace OpenBve
 												if (Face2)
 												{
 													//Add face2 flag if required
-													Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+													Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 												}
 											}
 
@@ -485,7 +485,7 @@ namespace OpenBve
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Length);
 				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Length);
 				for (int i = 0; i < Builder.Vertices.Length; i++)

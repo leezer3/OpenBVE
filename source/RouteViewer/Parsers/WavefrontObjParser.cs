@@ -22,7 +22,7 @@ namespace OpenBve
 			internal bool TransparentColorUsed;
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
+			internal MeshMaterialBlendMode BlendMode;
 			internal ushort GlowAttenuationData;
 			internal string Key;
 			internal Material()
@@ -34,7 +34,7 @@ namespace OpenBve
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
+				this.BlendMode = MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.Key = string.Empty;
 			}
@@ -42,12 +42,12 @@ namespace OpenBve
 		private class MeshBuilder
 		{
 			internal List<VertexTemplate> Vertices;
-			internal List<World.MeshFace> Faces;
+			internal List<MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
 				this.Vertices = new List<VertexTemplate>();
-				this.Faces = new List<World.MeshFace>();
+				this.Faces = new List<MeshFace>();
 				this.Materials = new Material[] { new Material() };
 			}
 		}
@@ -264,14 +264,14 @@ namespace OpenBve
 							}
 							vertices.Add(newVertex);
 						}
-						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
+						MeshFaceVertex[] Vertices = new MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
 							Builder.Vertices.Add(vertices[k]);
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));
+						Builder.Faces.Add(currentMaterial == -1 ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)currentMaterial));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
@@ -451,7 +451,7 @@ namespace OpenBve
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
 				if (mm == 0)
 				{
 					if (Object.Mesh.Materials.Length == 0)

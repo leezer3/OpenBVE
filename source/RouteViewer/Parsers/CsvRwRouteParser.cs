@@ -2622,8 +2622,8 @@ namespace OpenBve {
 																	Signal.GlowTextures = LoadAllTextures(f, Color24.Black, 1, TextureManager.TextureLoadMode.Bve4SignalGlow);
 																	if (Signal.GlowObject != null) {
 																		for (int p = 0; p < Signal.GlowObject.Mesh.Materials.Length; p++) {
-																			Signal.GlowObject.Mesh.Materials[p].BlendMode = World.MeshMaterialBlendMode.Additive;
-																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = World.GetGlowAttenuationData(200.0, GlowAttenuationMode.DivisionExponent4);
+																			Signal.GlowObject.Mesh.Materials[p].BlendMode = MeshMaterialBlendMode.Additive;
+																			Signal.GlowObject.Mesh.Materials[p].GlowAttenuationData = Glow.GetAttenuationData(200.0, GlowAttenuationMode.DivisionExponent4);
 																		}
 																	}
 																}
