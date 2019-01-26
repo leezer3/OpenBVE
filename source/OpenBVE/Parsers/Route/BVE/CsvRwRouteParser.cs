@@ -61,7 +61,7 @@ namespace OpenBve {
 				Data.Blocks[0].BrightnessChanges = new Brightness[] {};
 				Data.Blocks[0].Fog.Start = Game.NoFogStart;
 				Data.Blocks[0].Fog.End = Game.NoFogEnd;
-				Data.Blocks[0].Fog.Color = new Color24(128, 128, 128);
+				Data.Blocks[0].Fog.Color = Color24.Grey;
 				Data.Blocks[0].Cycle = new int[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
 				Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;

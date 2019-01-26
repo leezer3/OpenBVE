@@ -119,8 +119,8 @@ namespace OpenBve
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Game.Fog PreviousFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, new Color24(128, 128, 128), -Data.BlockInterval);
-			Game.Fog CurrentFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, new Color24(128, 128, 128), 0.0);
+			Game.Fog PreviousFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, Color24.Grey, -Data.BlockInterval);
+			Game.Fog CurrentFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, Color24.Grey, 0.0);
 			// process blocks
 			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (double)(Data.Blocks.Length - Data.FirstUsedBlock);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
@@ -1895,7 +1895,7 @@ namespace OpenBve
 							follower.Update(p - 1.0, true, false);
 							follower.Update(p, true, false);
 							Vector3 d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
-							double bestT = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+							double bestT = d.NormSquared();
 							int bestJ = 0;
 							int n = 1000;
 							double a = 1.0 / (double)n * (TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - TrackManager.CurrentTrack.Elements[i].StartingTrackPosition);
@@ -1903,7 +1903,7 @@ namespace OpenBve
 							{
 								follower.Update(TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 								d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
-								double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+								double t = d.NormSquared();
 								if (t < bestT)
 								{
 									bestT = t;
@@ -1965,7 +1965,7 @@ namespace OpenBve
 									follower.Update(p - 1.0, true, false);
 									follower.Update(p, true, false);
 									d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
-									double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+									double t = d.NormSquared();
 									if (t < bestT)
 									{
 										bestT = t;
@@ -1986,7 +1986,7 @@ namespace OpenBve
 								follower.Update(p - 1.0, true, false);
 								follower.Update(p, true, false);
 								d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
-								bestT = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+								bestT = d.NormSquared();
 								bestJ = 0;
 								n = 1000;
 								a = 1.0 / (double)n * (TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - TrackManager.CurrentTrack.Elements[i].StartingTrackPosition);
@@ -1994,7 +1994,7 @@ namespace OpenBve
 								{
 									follower.Update(TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 									d = TrackManager.CurrentTrack.Elements[i + 1].WorldPosition - follower.WorldPosition;
-									double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+									double t = d.NormSquared();
 									if (t < bestT)
 									{
 										bestT = t;

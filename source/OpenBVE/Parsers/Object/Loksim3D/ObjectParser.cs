@@ -124,7 +124,7 @@ namespace OpenBve
 													if (attribute.Value == "TRUE")
 													{
 														TransparencyUsed = true;
-														transparentColor = new Color24(0, 0, 0);
+														transparentColor = Color24.Black;
 													}
 													break;
 												case "TransTexture":

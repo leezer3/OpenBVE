@@ -51,7 +51,7 @@ namespace OpenBve
 				// calculate positions and directions for section element update
 				Vector3 d = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
 				Vector3 u, s;
-				double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+				double t = d.NormSquared();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
@@ -70,7 +70,7 @@ namespace OpenBve
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
 				Vector3 cd = new Vector3(p - World.AbsoluteCameraPosition);
-				double dist = cd.X * cd.X + cd.Y * cd.Y + cd.Z * cd.Z;
+				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
 				// brightness
