@@ -304,23 +304,14 @@ namespace OpenBveApi.Colors {
 						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
 						return true;
 					}
-					else
-					{
-						Color = new Color32(0, 0, 255, 255);
-						return false;
-					}
-				}
-				else
-				{
-					Color = new Color32(0, 0, 255, 255);
+					Color = Blue;
 					return false;
 				}
-			}
-			else
-			{
-				Color = new Color32(0, 0, 255, 255);
+				Color = Blue;
 				return false;
 			}
+			Color = Blue;
+			return false;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color32</summary>

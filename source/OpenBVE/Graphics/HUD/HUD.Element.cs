@@ -37,9 +37,9 @@ namespace OpenBve
 				this.Subject = null;
 				this.Position = new Vector2();
 				this.Alignment = new Vector2(-1, -1);
-				this.BackgroundColor = new Color32(255, 255, 255, 255);
-				this.OverlayColor = new Color32(255, 255, 255, 255);
-				this.TextColor = new Color32(255, 255, 255, 255);
+				this.BackgroundColor = Color32.White;
+				this.OverlayColor = Color32.White;
+				this.TextColor = Color32.White;
 				this.TextPosition = new Vector2();
 				this.TextAlignment = new Vector2(-1, 0);
 				this.Font = Fonts.VerySmallFont;
