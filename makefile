@@ -399,6 +399,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@mono $(LBAHEADER_OUT) ${OPEN_BVE_OUT} > /dev/null
+	@mono $(LBAHEADER_OUT) ${ROUTE_VIEWER_OUT} > /dev/null
 
 
 ##############
