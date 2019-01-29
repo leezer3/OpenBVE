@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenTK.Graphics.ES11;
 
 namespace OpenBve
 {
@@ -153,6 +154,10 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
 		internal static void UpdateTrains(double TimeElapsed)
 		{
+			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Developer)
+			{
+				return;
+			}
 			for (int i = 0; i < Trains.Length; i++) {
 				Trains[i].Update(TimeElapsed);
 			}

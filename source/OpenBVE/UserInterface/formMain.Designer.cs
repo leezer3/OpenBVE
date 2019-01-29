@@ -103,10 +103,10 @@
 			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
 			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
 			this.groupBoxObjectParser = new System.Windows.Forms.GroupBox();
-			this.labelXparser = new System.Windows.Forms.Label();
-			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
 			this.labelObjparser = new System.Windows.Forms.Label();
 			this.comboBoxObjparser = new System.Windows.Forms.ComboBox();
+			this.labelXparser = new System.Windows.Forms.Label();
+			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
 			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
 			this.labelKioskTimeout = new System.Windows.Forms.Label();
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
@@ -473,6 +473,7 @@
 			this.panelOptions.SuspendLayout();
 			this.panelOptionsPage2.SuspendLayout();
 			this.groupBoxInputDevice.SuspendLayout();
+			this.groupBoxObjectParser.SuspendLayout();
 			this.groupBoxKioskMode.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
@@ -622,6 +623,7 @@
 			this.comboboxMode.Name = "comboboxMode";
 			this.comboboxMode.Size = new System.Drawing.Size(144, 21);
 			this.comboboxMode.TabIndex = 11;
+			this.comboboxMode.SelectedIndexChanged += new System.EventHandler(this.comboboxMode_SelectedIndexChanged);
 			// 
 			// labelMode
 			// 
@@ -1540,6 +1542,27 @@
 			this.groupBoxObjectParser.TabStop = false;
 			this.groupBoxObjectParser.Text = "Object Parser";
 			// 
+			// labelObjparser
+			// 
+			this.labelObjparser.AutoSize = true;
+			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
+			this.labelObjparser.Name = "labelObjparser";
+			this.labelObjparser.Size = new System.Drawing.Size(93, 13);
+			this.labelObjparser.TabIndex = 0;
+			this.labelObjparser.Text = "Obj Object Parser:";
+			// 
+			// comboBoxObjparser
+			// 
+			this.comboBoxObjparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxObjparser.FormattingEnabled = true;
+			this.comboBoxObjparser.Items.AddRange(new object[] {
+            "Original",
+            "Assimp"});
+			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
+			this.comboBoxObjparser.Name = "comboBoxObjparser";
+			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxObjparser.TabIndex = 1;
+			// 
 			// labelXparser
 			// 
 			this.labelXparser.AutoSize = true;
@@ -1561,27 +1584,6 @@
 			this.comboBoxXparser.Name = "comboBoxXparser";
 			this.comboBoxXparser.Size = new System.Drawing.Size(190, 21);
 			this.comboBoxXparser.TabIndex = 1;
-			// 
-			// labelObjparser
-			// 
-			this.labelObjparser.AutoSize = true;
-			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
-			this.labelObjparser.Name = "labelObjparser";
-			this.labelObjparser.Size = new System.Drawing.Size(84, 13);
-			this.labelObjparser.TabIndex = 0;
-			this.labelObjparser.Text = "Obj Object Parser:";
-			// 
-			// comboBoxObjparser
-			// 
-			this.comboBoxObjparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxObjparser.FormattingEnabled = true;
-			this.comboBoxObjparser.Items.AddRange(new object[] {
-            "Original",
-            "Assimp"});
-			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
-			this.comboBoxObjparser.Name = "comboBoxObjparser";
-			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
-			this.comboBoxObjparser.TabIndex = 1;
 			// 
 			// groupBoxKioskMode
 			// 
@@ -5632,6 +5634,8 @@
 			this.panelOptionsPage2.ResumeLayout(false);
 			this.groupBoxInputDevice.ResumeLayout(false);
 			this.groupBoxInputDevice.PerformLayout();
+			this.groupBoxObjectParser.ResumeLayout(false);
+			this.groupBoxObjectParser.PerformLayout();
 			this.groupBoxKioskMode.ResumeLayout(false);
 			this.groupBoxKioskMode.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();

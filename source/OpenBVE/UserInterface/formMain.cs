@@ -265,7 +265,7 @@ namespace OpenBve {
 			}
 			// modes
 			comboboxMode.Items.Clear();
-			comboboxMode.Items.AddRange(new object[] { "", "", "" });
+			comboboxMode.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == Interface.GameMode.Expert ? 2 : 1;
 			// review last game
 			{
@@ -639,6 +639,7 @@ namespace OpenBve {
 			comboboxMode.Items[0] = Translations.GetInterfaceString("mode_arcade");
 			comboboxMode.Items[1] = Translations.GetInterfaceString("mode_normal");
 			comboboxMode.Items[2] = Translations.GetInterfaceString("mode_expert");
+			comboboxMode.Items[3] = "Route Viewer";
 			/*
 			 * Localisation for strings in the game review pane
 			 */
@@ -1761,6 +1762,18 @@ namespace OpenBve {
 			using (formRaildriverCalibration f = new formRaildriverCalibration())
 			{
 				f.ShowDialog();
+			}
+		}
+
+		private void comboboxMode_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (comboboxMode.SelectedIndex == 3)
+			{
+				groupboxTrainSelection.Visible = false;
+			}
+			else
+			{
+				groupboxTrainSelection.Visible = true;
 			}
 		}
 	}

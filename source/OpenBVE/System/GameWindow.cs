@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -656,14 +656,23 @@ namespace OpenBve
 			// initialize camera
 			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 			{
-				World.CameraMode = CameraViewMode.InteriorLookAhead;
+				World.CameraMode = Interface.CurrentOptions.GameMode != Interface.GameMode.Developer ? CameraViewMode.InteriorLookAhead : CameraViewMode.Track;
 			}
-			//Place the initial camera in the driver car
-			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
-			World.CameraTrackFollower.Update(-1.0, true, false);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
-			World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
-			World.CameraSavedTrack = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - 10.0, 1.0);
+			if (Interface.CurrentOptions.GameMode != Interface.GameMode.Developer)
+			{
+				//Place the initial camera in the driver car
+				TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
+				World.CameraTrackFollower.Update(-1.0, true, false);
+				ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
+				World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+				World.CameraSavedTrack = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - 10.0, 1.0);
+			}
+			else
+			{
+				World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(0, 2.5, -5.0), 0.0, 0.0, 0.0, World.CameraTrackFollower.TrackPosition, 1.0);
+				World.CameraCurrentAlignment = World.CameraSavedExterior;
+			}
+			
 			// signalling sections
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
