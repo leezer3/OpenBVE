@@ -116,7 +116,7 @@ namespace OpenBve
 	            {
 		            outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
 	            }
-	            if (TrainManager.PlayerTrain != null)
+	            if (TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
 	            {
 		            outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
 	            }

@@ -170,6 +170,10 @@ namespace OpenBve
 
 			internal void UpdateRunSounds(double TimeElapsed)
 			{
+				if (Sounds.Run == null || Sounds.Run.Length == 0)
+				{
+					return;
+				}
 				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
 				double speed = Math.Abs(Specs.CurrentSpeed);
 				if (Derailed)
@@ -906,6 +910,7 @@ namespace OpenBve
 					}
 				}
 				// flange sound
+				if(Sounds.Flange != null && Sounds.Flange.Length != 0)
 				{
 					/*
 					 * This determines the amount of flange noise as a result of the angle at which the
