@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -394,7 +394,11 @@ namespace OpenBve
 			{
 				Close();
 			}
-			Timetable.CreateTimetable();
+
+			lock (Illustrations.Locker)
+			{
+				Timetable.CreateTimetable();
+			}
 			//Check if any critical errors have occured during the route or train loading
 			for (int i = 0; i < Interface.MessageCount; i++)
 			{

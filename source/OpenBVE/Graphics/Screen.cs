@@ -199,7 +199,10 @@ namespace OpenBve
 			Renderer.InitializeLighting();
 			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
-			Timetable.CreateTimetable();
+			lock (Illustrations.Locker)
+			{
+				Timetable.CreateTimetable();
+			}
 			Timetable.UpdateCustomTimetable(null, null);
 			
 			World.InitializeCameraRestriction();
