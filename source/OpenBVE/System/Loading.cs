@@ -168,7 +168,34 @@ namespace OpenBve {
 			}
 			Complete = true;
 		}
-		private static void LoadEverythingThreaded() {
+
+		private static void LoadEverythingThreaded()
+		{
+			LoadRouteFile();
+			if (Interface.CurrentOptions.GameMode != Interface.GameMode.Developer)
+			{
+				LoadTrains();
+			}
+			else
+			{
+
+				TrainManager.Trains = new TrainManager.Train[1];
+				TrainManager.Trains[0] = new TrainManager.Train(TrainManager.TrainState.Pending)
+				{
+					Cars = new TrainManager.Car[1]
+				};
+				TrainManager.Trains[0].Cars[0] = new TrainManager.Car(TrainManager.Trains[0], 0);
+				TrainManager.PlayerTrain = TrainManager.Trains[0];
+				//TrainDatParser.ParseTrainData(String.Empty, Encoding.UTF8, TrainManager.Trains[0]);
+				//TrainManager.PlayerTrain = TrainManager.Trains[0];
+				//TrainManager.PlayerTrain.PlaceCars(0.0);
+				//CurrentTrainFolder = String.Empty;
+				//LoadTrains();
+			}
+		}
+
+		private static void LoadRouteFile()
+		{
 			Program.FileSystem.AppendToLogFile("Loading route file: " + CurrentRouteFile);
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
@@ -177,7 +204,7 @@ namespace OpenBve {
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
+			World.CameraTrackFollower = new TrackManager.TrackFollower {Train = null, CarIndex = -1};
 			World.CameraMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
@@ -186,21 +213,31 @@ namespace OpenBve {
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
 			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			System.Threading.Thread.Sleep(1);
+			if (Cancel) return;
 			Game.CalculateSeaLevelConstants();
-			if (Game.BogusPretrainInstructions.Length != 0) {
+			if (Game.BogusPretrainInstructions.Length != 0)
+			{
 				double t = Game.BogusPretrainInstructions[0].Time;
 				double p = Game.BogusPretrainInstructions[0].TrackPosition;
-				for (int i = 1; i < Game.BogusPretrainInstructions.Length; i++) {
-					if (Game.BogusPretrainInstructions[i].Time > t) {
+				for (int i = 1; i < Game.BogusPretrainInstructions.Length; i++)
+				{
+					if (Game.BogusPretrainInstructions[i].Time > t)
+					{
 						t = Game.BogusPretrainInstructions[i].Time;
-					} else {
+					}
+					else
+					{
 						t += 1.0;
 						Game.BogusPretrainInstructions[i].Time = t;
 					}
-					if (Game.BogusPretrainInstructions[i].TrackPosition > p) {
+
+					if (Game.BogusPretrainInstructions[i].TrackPosition > p)
+					{
 						p = Game.BogusPretrainInstructions[i].TrackPosition;
-					} else {
+					}
+					else
+					{
 						p += 1.0;
 						Game.BogusPretrainInstructions[i].TrackPosition = p;
 					}
@@ -212,9 +249,14 @@ namespace OpenBve {
 				//Log the fact that only a single station is present, as this is probably not right
 				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
 			}
+
 			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
 			RouteProgress = 1.0;
-			// initialize trains
+		}
+
+		private static void LoadTrains()
+		{
+		// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++)
