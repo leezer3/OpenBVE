@@ -71,6 +71,9 @@ namespace OpenBve
 				FrontAxle.Follower.Train = train;
 				RearAxle.Follower.Train = train;
 				BeaconReceiver.Train = train;
+				FrontBogie = new Bogie(train, this);
+				RearBogie = new Bogie(train, this);
+				Doors = new Door[2];
 			}
 
 			/// <summary>Moves the car</summary>
@@ -540,7 +543,7 @@ namespace OpenBve
 				}
 				// update current section
 				int cs = CurrentCarSection;
-				if (cs >= 0)
+				if (cs >= 0 && CarSections.Length > 0 && CarSections.Length >= cs)
 				{
 					for (int i = 0; i < CarSections[cs].Elements.Length; i++)
 					{
