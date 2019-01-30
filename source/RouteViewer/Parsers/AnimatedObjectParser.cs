@@ -11,9 +11,8 @@ namespace OpenBve {
 		/// <summary>Loads a collection of animated objects from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
@@ -85,7 +84,7 @@ namespace OpenBve {
 													if (obj.Length == objCount) {
 														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false);
+													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false);
 													objCount++;
 												} else {
 													Interface.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -504,7 +503,7 @@ namespace OpenBve {
 									for (int k = 0; k < StateFiles.Length; k++) {
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null) {
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
+											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false, false, false);
 											if (Result.Objects[ObjectCount].States[k].Object != null) {
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
 											}

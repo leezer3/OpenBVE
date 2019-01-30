@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Program.cs for the Route Viewer                             ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -110,7 +111,6 @@ namespace OpenBve {
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
-			TextureManager.UnuseAllTextures();
 			Sounds.Deinitialize();
 		}
 
@@ -142,10 +142,10 @@ namespace OpenBve {
 
 		// load route
 		internal static bool LoadRoute() {
+			
 			CurrentStation = -1;
 			Game.Reset();
 			Renderer.Initialize();
-			Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
 			UpdateViewport();
 			bool result;
 			try {
@@ -159,6 +159,7 @@ namespace OpenBve {
 			}
 			Renderer.InitializeLighting();
 			ObjectManager.InitializeVisibility();
+			Textures.UnloadAllTextures();
 			return result;
 		}
 
@@ -199,8 +200,7 @@ namespace OpenBve {
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
 				World.CameraAlignment a = World.CameraCurrentAlignment;
-				TextureManager.ClearTextures();
-				Fonts.SmallFont = new Fonts.OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
+				Textures.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
 					World.CameraCurrentAlignment = a;
@@ -310,7 +310,7 @@ namespace OpenBve {
 							GL.ReadPixels(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, false);
+							Renderer.TextureLoadingBkg = Textures.RegisterTexture(bitmap, new TextureParameters(null, null));
 							bitmap.Dispose();
 						}
 						World.CameraAlignment a = World.CameraCurrentAlignment;
@@ -327,7 +327,7 @@ namespace OpenBve {
 						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						TextureManager.UnregisterTexture(ref Renderer.TextureLoadingBkg);
+						Textures.UnloadTexture(Renderer.TextureLoadingBkg);
 					}
 					break;
 				case Key.F7:

@@ -41,6 +41,7 @@ namespace OpenBve {
 			internal int ObjectListIndex;
 			internal int ObjectIndex;
 			internal int FaceIndex;
+			internal OpenGlTextureWrapMode Wrap;
 		}
 		// opaque
 		private static ObjectFace[] OpaqueList = new ObjectFace[256];
@@ -74,16 +75,17 @@ namespace OpenBve {
 		internal static bool TransparentColorDepthSorting = false;
 
 		// textures
-		private static int BackgroundChangeTexture = -1;
-		private static int BrightnessChangeTexture = -1;
-		private static int TransponderTexture = -1;
-		private static int SectionTexture = -1;
-		private static int LimitTexture = -1;
-		private static int StationStartTexture = -1;
-		private static int StationEndTexture = -1;
-		private static int StopTexture = -1;
-		private static int BufferTexture = -1;
-		private static int SoundTexture = -1;
+		private static Texture BackgroundChangeTexture = null;
+		private static Texture BrightnessChangeTexture = null;
+		private static Texture TransponderTexture = null;
+		private static Texture SectionTexture = null;
+		private static Texture LimitTexture = null;
+		private static Texture StationStartTexture = null;
+		private static Texture StationEndTexture = null;
+		private static Texture StopTexture = null;
+		private static Texture BufferTexture = null;
+		private static Texture SoundTexture = null;
+		private static Texture PointSoundTexture = null;
 
 		// options
 		internal static bool OptionLighting = true;
@@ -142,26 +144,17 @@ namespace OpenBve {
 			GL.Disable(EnableCap.Dither);
 			// textures
 			string Folder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
-			BackgroundChangeTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "background.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			BrightnessChangeTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "brightness.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			TransponderTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "transponder.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			SectionTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "section.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			LimitTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "limit.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			StationStartTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_start.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			StationEndTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_end.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			StopTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "stop.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			BufferTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "buffer.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			SoundTexture = TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "sound.png"), OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, true);
-			TextureManager.ValidateTexture(ref BackgroundChangeTexture);
-			TextureManager.ValidateTexture(ref BrightnessChangeTexture);
-			TextureManager.ValidateTexture(ref TransponderTexture);
-			TextureManager.ValidateTexture(ref SectionTexture);
-			TextureManager.ValidateTexture(ref LimitTexture);
-			TextureManager.ValidateTexture(ref StationStartTexture);
-			TextureManager.ValidateTexture(ref StationEndTexture);
-			TextureManager.ValidateTexture(ref StopTexture);
-			TextureManager.ValidateTexture(ref BufferTexture);
-			TextureManager.ValidateTexture(ref SoundTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "section.png"), out SectionTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "limit.png"), out LimitTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_start.png"), out StationStartTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_end.png"), out StationEndTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "stop.png"), out StopTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "sound.png"), out SoundTexture);
+			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
 			// opengl
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.PushMatrix();
@@ -199,17 +192,32 @@ namespace OpenBve {
 			GL.DepthFunc(DepthFunction.Lequal);
 		}
 
+		internal static void ResetOpenGlState()
+		{
+			GL.Enable(EnableCap.CullFace); CullEnabled = true;
+			GL.Disable(EnableCap.Lighting); LightingEnabled = false;
+			GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			GL.Disable(EnableCap.Blend); BlendEnabled = false;
+			GL.Enable(EnableCap.DepthTest);
+			GL.DepthMask(true);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
+		}
+
 		internal static void RenderScene(double TimeElapsed) {
 			// initialize
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			if (OptionWireframe | World.CurrentBackground.Texture == -1) {
+			if (OptionWireframe | World.CurrentBackground.Texture == null) {
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			} else {
-				int OpenGlTextureIndex = TextureManager.UseTexture(World.CurrentBackground.Texture, TextureManager.UseMode.Normal);
-				if (OpenGlTextureIndex > 0) {
+				if (Textures.LoadTexture(World.CurrentBackground.Texture, OpenGlTextureWrapMode.RepeatRepeat))
+				{
 					GL.Clear(ClearBufferMask.DepthBufferBit);
-				} else {
+				}
+				else
+				{
 					GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 				}
 			}
@@ -288,68 +296,129 @@ namespace OpenBve {
 			BlendEnabled = false; GL.Disable(EnableCap.Blend);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			LastBoundTexture = 0;
-			// opaque list
-			for (int i = 0; i < OpaqueListCount; i++) {
-				RenderFace(ref OpaqueList[i], cx, cy, cz);
-			}
-			// events
-			if (OptionEvents) RenderEvents(cx, cy, cz);
-			// transparent color list
-			if (TransparentColorDepthSorting) {
-				SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, TimeElapsed);
-				BlendEnabled = true; GL.Enable(EnableCap.Blend);
-				for (int i = 0; i < TransparentColorListCount; i++) {
-					GL.DepthMask(false);
-					SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					RenderFace(ref TransparentColorList[i], cx, cy, cz);
-					GL.DepthMask(true);
-					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-					RenderFace(ref TransparentColorList[i], cx, cy, cz);
-				}
-			} else {
-				for (int i = 0; i < TransparentColorListCount; i++) {
-					RenderFace(ref TransparentColorList[i], cx, cy, cz);
-				}
-			}
-			// alpha list
-			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, TimeElapsed);
+			LastBoundTexture = null;
+			ResetOpenGlState();
+            for (int i = 0; i < OpaqueListCount; i++)
+            {
+                RenderFace(ref OpaqueList[i], cx, cy, cz);
+            }
+	        ResetOpenGlState();
+			if(OptionEvents) RenderEvents(cx, cy, cz);
+			ResetOpenGlState();
+            // transparent color list
+			SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
-				BlendEnabled = true; GL.Enable(EnableCap.Blend);
-				bool depthMask = true;
-				for (int i = 0; i < AlphaListCount; i++) {
-					int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
-					if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive) {
-						if (depthMask) {
-							GL.DepthMask(false);
-							depthMask = false;
+				
+				GL.Disable(EnableCap.Blend); BlendEnabled = false;
+				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+				GL.DepthMask(true);
+				for (int i = 0; i < TransparentColorListCount; i++)
+				{
+					int r = (int)ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Faces[TransparentColorList[i].FaceIndex].Material;
+					if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+					{
+						if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
+						{
+							RenderFace(ref TransparentColorList[i], cx, cy, cz);
 						}
-						SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-						RenderFace(ref AlphaList[i], cx, cy, cz);
-					} else {
-						if (depthMask) {
-							GL.DepthMask(false);
-							depthMask = false;
+					}
+				}
+				GL.Enable(EnableCap.Blend); BlendEnabled = true;
+				SetAlphaFunc(AlphaFunction.Less, 1.0f);
+				GL.DepthMask(false);
+				bool additive = false;
+				for (int i = 0; i < TransparentColorListCount; i++)
+				{
+					int r = (int)ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Faces[TransparentColorList[i].FaceIndex].Material;
+					if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
+					{
+						if (!additive)
+						{
+							AlphaTestEnabled = false;
+							GL.Disable(EnableCap.AlphaTest);
+							additive = true;
 						}
-						SetAlphaFunc(AlphaFunction.Less, 1.0f);
-						RenderFace(ref AlphaList[i], cx, cy, cz);
-						GL.DepthMask(true);
-						depthMask = true;
-						SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-						RenderFace(ref AlphaList[i], cx, cy, cz);
+						RenderFace(ref TransparentColorList[i], cx, cy, cz);
+					}
+					else
+					{
+						if (additive)
+						{
+							SetAlphaFunc(AlphaFunction.Less, 1.0f);
+							additive = false;
+						}
+						RenderFace(ref TransparentColorList[i], cx, cy, cz);
 					}
 				}
 			} else {
-				BlendEnabled = true; GL.Enable(EnableCap.Blend);
-				GL.DepthMask(false);
-				SetAlphaFunc(AlphaFunction.Greater,  0.0f);
-				for (int i = 0; i < AlphaListCount; i++) {
-					RenderFace(ref AlphaList[i], cx, cy, cz);
+				for (int i = 0; i < TransparentColorListCount; i++) {
+					RenderFace(ref TransparentColorList[i], cx, cy, cz);
 				}
 			}
+	        ResetOpenGlState();
+	        GL.Enable(EnableCap.DepthTest);
+	        GL.DepthMask(true);
+			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
+	        if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
+	        {
+		        GL.Enable(EnableCap.Blend); BlendEnabled = true;
+		        GL.DepthMask(false);
+		        SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+		        for (int i = 0; i < AlphaListCount; i++)
+		        {
+			        RenderFace(ref AlphaList[i], cx, cy, cz);
+		        }
+	        }
+	        else
+	        {
+		        GL.Disable(EnableCap.Blend); BlendEnabled = false;
+		        SetAlphaFunc(AlphaFunction.Equal, 1.0f);
+		        GL.DepthMask(true);
+		        for (int i = 0; i < AlphaListCount; i++)
+		        {
+			        int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
+			        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+			        {
+				        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
+				        {
+					        RenderFace(ref AlphaList[i], cx, cy, cz);
+				        }
+			        }
+		        }
+		        GL.Enable(EnableCap.Blend); BlendEnabled = true;
+		        SetAlphaFunc(AlphaFunction.Less, 1.0f);
+		        GL.DepthMask(false);
+		        bool additive = false;
+		        for (int i = 0; i < AlphaListCount; i++)
+		        {
+			        int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
+			        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
+			        {
+				        if (!additive)
+				        {
+					        AlphaTestEnabled = false;
+					        GL.Disable(EnableCap.AlphaTest);
+					        additive = true;
+				        }
+				        RenderFace(ref AlphaList[i], cx, cy, cz);
+			        }
+			        else
+			        {
+				        if (additive)
+				        {
+					        SetAlphaFunc(AlphaFunction.Less, 1.0f);
+					        additive = false;
+				        }
+				        RenderFace(ref AlphaList[i], cx, cy, cz);
+			        }
+		        }
+	        }
 			// overlay list
+			
+			
 			GL.Disable(EnableCap.DepthTest);
 			GL.DepthMask(false);
+			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			if (FogEnabled) {
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
@@ -372,14 +441,40 @@ namespace OpenBve {
 		}
 		
 		// set alpha func
-		private static void SetAlphaFunc(AlphaFunction Comparison, float Value) {
+		private static void SetAlphaFunc(AlphaFunction Comparison, float Value)
+		{
+			AlphaTestEnabled = true;
 			AlphaFuncComparison = Comparison;
 			AlphaFuncValue = Value;
 			GL.AlphaFunc(Comparison, Value);
+			GL.Enable(EnableCap.AlphaTest);
+		}
+
+		/// <summary>Disables OpenGL alpha testing</summary>
+		private static void UnsetAlphaFunc()
+		{
+			AlphaTestEnabled = false;
+			GL.Disable(EnableCap.AlphaTest);
+		}
+
+		/// <summary>
+		/// Restores the OpenGL alpha function to it's previous state
+		/// </summary>
+		private static void RestoreAlphaFunc()
+		{
+			if (AlphaTestEnabled)
+			{
+				GL.AlphaFunc(AlphaFuncComparison, AlphaFuncValue);
+				GL.Enable(EnableCap.AlphaTest);
+			}
+			else
+			{
+				GL.Disable(EnableCap.AlphaTest);
+			}
 		}
 
 		// render face
-		private static int LastBoundTexture = 0;
+		private static OpenGlTexture LastBoundTexture = null;
 		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ) {
 			if (CullEnabled) {
 				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0) {
@@ -393,71 +488,88 @@ namespace OpenBve {
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
-			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
+			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
 		}
-		private static void RenderFace(ref World.MeshMaterial Material, VertexTemplate[] Vertices, ref MeshFace Face, double CameraX, double CameraY, double CameraZ) {
+
+		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		{
 			// texture
-			int OpenGlNighttimeTextureIndex = Material.NighttimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.NighttimeTextureIndex, TextureManager.UseMode.Normal) : 0;
-			int OpenGlDaytimeTextureIndex = Material.DaytimeTextureIndex >= 0 ? TextureManager.UseTexture(Material.DaytimeTextureIndex, TextureManager.UseMode.Normal) : 0;
-			if (OpenGlDaytimeTextureIndex != 0) {
-				if (!TexturingEnabled) {
-					GL.Enable(EnableCap.Texture2D);
-					TexturingEnabled = true;
-				}
-				if (OpenGlDaytimeTextureIndex != LastBoundTexture) {
-					GL.BindTexture(TextureTarget.Texture2D, OpenGlDaytimeTextureIndex);
-					LastBoundTexture = OpenGlDaytimeTextureIndex;
-				}
-				if (TextureManager.Textures[Material.DaytimeTextureIndex].Transparency != TextureTransparencyType.Opaque) {
-					if (!AlphaTestEnabled) {
-						GL.Enable(EnableCap.AlphaTest);
-						AlphaTestEnabled = true;
+			if (Material.DaytimeTexture != null)
+			{
+				if (Textures.LoadTexture(Material.DaytimeTexture, wrap))
+				{
+					if (!TexturingEnabled)
+					{
+						GL.Enable(EnableCap.Texture2D);
+						TexturingEnabled = true;
 					}
-				} else if (AlphaTestEnabled) {
-					GL.Disable(EnableCap.AlphaTest);
-					AlphaTestEnabled = false;
+					if (Material.DaytimeTexture.OpenGlTextures[(int)wrap] != LastBoundTexture)
+					{
+						GL.BindTexture(TextureTarget.Texture2D, Material.DaytimeTexture.OpenGlTextures[(int)wrap].Name);
+						LastBoundTexture = Material.DaytimeTexture.OpenGlTextures[(int)wrap];
+					}
 				}
-			} else {
-				if (TexturingEnabled) {
+				else
+				{
+					if (TexturingEnabled)
+					{
+						GL.Disable(EnableCap.Texture2D);
+						TexturingEnabled = false;
+						LastBoundTexture = null;
+					}
+				}
+			}
+			else
+			{
+				if (TexturingEnabled)
+				{
 					GL.Disable(EnableCap.Texture2D);
 					TexturingEnabled = false;
-					LastBoundTexture = 0;
-				}
-				if (AlphaTestEnabled) {
-					GL.Disable(EnableCap.AlphaTest);
-					AlphaTestEnabled = false;
+					LastBoundTexture = null;
 				}
 			}
 			// blend mode
 			float factor;
-			if (Material.BlendMode == MeshMaterialBlendMode.Additive) {
+			if (Material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
 				factor = 1.0f;
 				if (!BlendEnabled) GL.Enable(EnableCap.Blend);
 				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
-				if (FogEnabled) {
+				if (FogEnabled)
+				{
 					GL.Disable(EnableCap.Fog);
 				}
-			} else if (OpenGlNighttimeTextureIndex == 0) {
+			}
+			else if (Material.NighttimeTexture == null)
+			{
 				float blend = inv255 * (float)Material.DaytimeNighttimeBlend + 1.0f - OptionLightingResultingAmount;
 				if (blend > 1.0f) blend = 1.0f;
-				factor = 1.0f - 0.8f * blend;
-			} else {
+				factor = 1.0f - 0.7f * blend;
+			}
+			else
+			{
 				factor = 1.0f;
 			}
-			if (OpenGlNighttimeTextureIndex != 0) {
-				if (LightingEnabled) {
+			if (Material.NighttimeTexture != null)
+			{
+				if (LightingEnabled)
+				{
 					GL.Disable(EnableCap.Lighting);
 					LightingEnabled = false;
 				}
-			} else {
-				if (OptionLighting & !LightingEnabled) {
+			}
+			else
+			{
+				if (OptionLighting & !LightingEnabled)
+				{
 					GL.Enable(EnableCap.Lighting);
 					LightingEnabled = true;
 				}
 			}
 			// render daytime polygon
 			int FaceType = Face.Flags & MeshFace.FaceTypeMask;
-			switch (FaceType) {
+			switch (FaceType)
+			{
 				case MeshFace.FaceTypeTriangles:
 					GL.Begin(PrimitiveType.Triangles);
 					break;
@@ -474,7 +586,8 @@ namespace OpenBve {
 					GL.Begin(PrimitiveType.Polygon);
 					break;
 			}
-			if (Material.GlowAttenuationData != 0) {
+			if (Material.GlowAttenuationData != 0)
+			{
 				float alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
 				if (OptionWireframe)
 				{
@@ -484,7 +597,9 @@ namespace OpenBve {
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, inv255 * (float)Material.Color.A * alphafactor);
 				}
-			} else {
+			}
+			else
+			{
 				if (OptionWireframe)
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, 1.0f);
@@ -495,52 +610,66 @@ namespace OpenBve {
 				}
 				
 			}
-			if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0) {
+			if ((Material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+			{
 				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
-				EmissiveEnabled = true;
-			} else if (EmissiveEnabled) {
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-				EmissiveEnabled = false;
 			}
-			if (OpenGlDaytimeTextureIndex != 0) {
-				if (LightingEnabled) {
-					for (int j = 0; j < Face.Vertices.Length; j++) {
+			else
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+			}
+			if (Material.DaytimeTexture != null)
+			{
+				if (LightingEnabled)
+				{
+					for (int j = 0; j < Face.Vertices.Length; j++)
+					{
 						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
 						GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
-							ColoredVertex v = (ColoredVertex)Vertices[Face.Vertices[j].Index];
-							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
-						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
-					}
-				} else {
-					for (int j = 0; j < Face.Vertices.Length; j++) {
-						GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
-						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
-						{
-							ColoredVertex v = (ColoredVertex)Vertices[Face.Vertices[j].Index];
+							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
 						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
 					}
 				}
-			} else {
-				if (LightingEnabled) {
-					for (int j = 0; j < Face.Vertices.Length; j++) {
-						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
+				else
+				{
+					for (int j = 0; j < Face.Vertices.Length; j++)
+					{
+						GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
-							ColoredVertex v = (ColoredVertex)Vertices[Face.Vertices[j].Index];
+							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
 						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
 					}
-				} else {
-					for (int j = 0; j < Face.Vertices.Length; j++) {
+				}
+			}
+			else
+			{
+				if (LightingEnabled)
+				{
+					for (int j = 0; j < Face.Vertices.Length; j++)
+					{
+						GL.Normal3(Face.Vertices[j].Normal.X, Face.Vertices[j].Normal.Y, Face.Vertices[j].Normal.Z);
 						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
 						{
-							ColoredVertex v = (ColoredVertex)Vertices[Face.Vertices[j].Index];
+							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
+							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+						}
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+					}
+				}
+				else
+				{
+					for (int j = 0; j < Face.Vertices.Length; j++)
+					{
+						if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
+						{
+							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
 						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
@@ -549,18 +678,23 @@ namespace OpenBve {
 			}
 			GL.End();
 			// render nighttime polygon
-			if (OpenGlNighttimeTextureIndex != 0) {
-				if (!TexturingEnabled) {
+			if (Material.NighttimeTexture != null && Textures.LoadTexture(Material.NighttimeTexture, wrap))
+			{
+				if (!TexturingEnabled)
+				{
 					GL.Enable(EnableCap.Texture2D);
 					TexturingEnabled = true;
 				}
-				if (!BlendEnabled) {
+				if (!BlendEnabled)
+				{
 					GL.Enable(EnableCap.Blend);
 				}
-				GL.BindTexture(TextureTarget.Texture2D, OpenGlNighttimeTextureIndex);
-				LastBoundTexture = 0;
-				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-				switch (FaceType) {
+				GL.BindTexture(TextureTarget.Texture2D, Material.NighttimeTexture.OpenGlTextures[(int)wrap].Name);
+				LastBoundTexture = null;
+				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+				GL.Enable(EnableCap.AlphaTest);
+				switch (FaceType)
+				{
 					case MeshFace.FaceTypeTriangles:
 						GL.Begin(PrimitiveType.Triangles);
 						break;
@@ -578,16 +712,18 @@ namespace OpenBve {
 						break;
 				}
 				float alphafactor;
-				if (Material.GlowAttenuationData != 0) {
+				if (Material.GlowAttenuationData != 0)
+				{
 					alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
 					float blend = inv255 * (float)Material.DaytimeNighttimeBlend + 1.0f - OptionLightingResultingAmount;
 					if (blend > 1.0f) blend = 1.0f;
 					alphafactor *= blend;
-				} else {
+				}
+				else
+				{
 					alphafactor = inv255 * (float)Material.DaytimeNighttimeBlend + 1.0f - OptionLightingResultingAmount;
 					if (alphafactor > 1.0f) alphafactor = 1.0f;
 				}
-
 				if (OptionWireframe)
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, 1.0f);
@@ -596,36 +732,42 @@ namespace OpenBve {
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, inv255 * (float)Material.Color.A * alphafactor);
 				}
-				if ((Material.Flags & World.MeshMaterial.EmissiveColorMask) != 0) {
+				
+				if ((Material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				{
 					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { inv255 * (float)Material.EmissiveColor.R, inv255 * (float)Material.EmissiveColor.G, inv255 * (float)Material.EmissiveColor.B, 1.0f });
-					EmissiveEnabled = true;
-				} else if (EmissiveEnabled) {
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-					EmissiveEnabled = false;
 				}
-				for (int j = 0; j < Face.Vertices.Length; j++) {
+				else
+				{
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+				}
+				for (int j = 0; j < Face.Vertices.Length; j++)
+				{
 					GL.TexCoord2(Vertices[Face.Vertices[j].Index].TextureCoordinates.X, Vertices[Face.Vertices[j].Index].TextureCoordinates.Y);
+					if (Vertices[Face.Vertices[j].Index] is ColoredVertex)
+					{
+						ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
+						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+					}
 					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
 				}
 				GL.End();
-				if (AlphaFuncValue != 0.0) {
-					GL.AlphaFunc(AlphaFuncComparison, AlphaFuncValue);
-				}
-				if (!BlendEnabled) {
+				RestoreAlphaFunc();
+				if (!BlendEnabled)
+				{
 					GL.Disable(EnableCap.Blend);
 				}
 			}
 			// normals
-			if (OptionNormals) {
-				if (TexturingEnabled) {
+			if (OptionNormals)
+			{
+				if (TexturingEnabled)
+				{
 					GL.Disable(EnableCap.Texture2D);
 					TexturingEnabled = false;
 				}
-				if (AlphaTestEnabled) {
-					GL.Disable(EnableCap.AlphaTest);
-					AlphaTestEnabled = false;
-				}
-				for (int j = 0; j < Face.Vertices.Length; j++) {
+				for (int j = 0; j < Face.Vertices.Length; j++)
+				{
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
 					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
@@ -634,10 +776,12 @@ namespace OpenBve {
 				}
 			}
 			// finalize
-			if (Material.BlendMode == MeshMaterialBlendMode.Additive) {
+			if (Material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
 				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 				if (!BlendEnabled) GL.Disable(EnableCap.Blend);
-				if (FogEnabled) {
+				if (FogEnabled)
+				{
 					GL.Enable(EnableCap.Fog);
 				}
 			}
@@ -683,9 +827,8 @@ namespace OpenBve {
 			}
 		}
 		private static void RenderBackground(World.Background Data, double dx, double dy, double dz, float Alpha) {
-			if (Data.Texture >= 0) {
-				int OpenGlTextureIndex = TextureManager.UseTexture(Data.Texture, TextureManager.UseMode.LoadImmediately);
-				if (OpenGlTextureIndex > 0) {
+			if (Data.Texture != null) {
+				if (Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatRepeat)) {
 					if (LightingEnabled) {
 						GL.Disable(EnableCap.Lighting);
 						LightingEnabled = false;
@@ -703,12 +846,12 @@ namespace OpenBve {
 						GL.Enable(EnableCap.Blend);
 						BlendEnabled = true;
 					}
-					GL.BindTexture(TextureTarget.Texture2D, OpenGlTextureIndex);
+					GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatRepeat].Name);
 					GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
 					float y0, y1;
 					if (Data.KeepAspectRatio) {
-						int tw = TextureManager.Textures[Data.Texture].Width;
-						int th = TextureManager.Textures[Data.Texture].Height;
+						int tw = Data.Texture.Width;
+						int th = Data.Texture.Height;
 						double hh = Math.PI * World.BackgroundImageDistance * (double)th / ((double)tw * (double)Data.Repetition);
 						y0 = (float)(-0.5 * hh);
 						y1 = (float)(1.5 * hh);
@@ -778,7 +921,7 @@ namespace OpenBve {
 			if (TrackManager.CurrentTrack.Elements == null) {
 				return;
 			}
-			LastBoundTexture = 0;
+			LastBoundTexture = null;
 			if (LightingEnabled) {
 				GL.Disable(EnableCap.Lighting);
 				LightingEnabled = false;
@@ -798,7 +941,7 @@ namespace OpenBve {
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++) {
 						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
-						double s; int t;
+						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent) {
 							s = 0.15;
 							dy = 4.0;
@@ -841,9 +984,9 @@ namespace OpenBve {
 						} else {
 							s = 0.2;
 							dy = 1.0;
-							t = -1;
+							t = null;
 						}
-						if (t >= 0) {
+						if (t != null) {
 							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 							f.TriggerType = TrackManager.EventTriggerType.None;
 							f.TrackPosition = p;
@@ -892,20 +1035,9 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, int TextureIndex) {
-			int OpenGlTextureIndex = TextureManager.UseTexture(TextureIndex, TextureManager.UseMode.LoadImmediately);
-			if (OpenGlTextureIndex > 0) {
-				if (!TexturingEnabled) {
-					GL.Enable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-				}
-				GL.BindTexture(TextureTarget.Texture2D, OpenGlTextureIndex);
-			} else {
-				if (TexturingEnabled) {
-					GL.Disable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-				}
-			}
+		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Texture TextureIndex)
+		{
+			
 			Vector3[] v = new Vector3[8];
 			v[0] = new Vector3(Size, Size, -Size);
 			v[1] = new Vector3(Size, -Size, -Size);
@@ -915,7 +1047,8 @@ namespace OpenBve {
 			v[5] = new Vector3(Size, -Size, Size);
 			v[6] = new Vector3(-Size, -Size, Size);
 			v[7] = new Vector3(-Size, Size, Size);
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 8; i++)
+			{
 				v[i].Rotate(Direction, Up, Side);
 				v[i].X += Position.X - CameraX;
 				v[i].Y += Position.Y - CameraY;
@@ -928,32 +1061,48 @@ namespace OpenBve {
 			Faces[3] = new int[] { 6, 5, 4, 7 };
 			Faces[4] = new int[] { 6, 7, 3, 2 };
 			Faces[5] = new int[] { 6, 2, 1, 5 };
-			if (OpenGlTextureIndex != 0) {
-				Vector2[][] t = new Vector2[6][];
+			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
+			{
+				if (TexturingEnabled)
+				{
+					GL.Disable(EnableCap.Texture2D);
+					TexturingEnabled = false;
+				}
+				for (int i = 0; i < 6; i++)
+				{
+					GL.Begin(PrimitiveType.Quads);
+					GL.Color3(1.0, 1.0, 1.0);
+					for (int j = 0; j < 4; j++)
+					{
+						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
+					}
+					GL.End();
+				}
+				return;
+			}
+			else
+			{
+				TexturingEnabled = true;
+				GL.Enable(EnableCap.Texture2D);
+			}
+			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
+			Vector2[][] t = new Vector2[6][];
 				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
 				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
 				t[2] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
 				t[3] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
 				t[4] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
 				t[5] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-				for (int i = 0; i < 6; i++) {
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color3(1.0, 1.0, 1.0);
-					for (int j = 0; j < 4; j++) {
-						GL.TexCoord2(t[i][j].X, t[i][j].Y);
-						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-					}
-					GL.End();
+			for (int i = 0; i < 6; i++)
+			{
+				GL.Begin(PrimitiveType.Quads);
+				GL.Color3(1.0, 1.0, 1.0);
+				for (int j = 0; j < 4; j++)
+				{
+					GL.TexCoord2(t[i][j].X, t[i][j].Y);
+					GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
 				}
-			} else {
-				for (int i = 0; i < 6; i++) {
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color3(1.0, 1.0, 1.0);
-					for (int j = 0; j < 4; j++) {
-						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-					}
-					GL.End();
-				}
+				GL.End();
 			}
 		}
 
@@ -977,11 +1126,11 @@ namespace OpenBve {
 			if (OptionInterface)
 			{
 				int y = 150;
-				for (int i = 0; i < Game.MarkerTextures.Length; i++) {
-					int t = TextureManager.UseTexture(Game.MarkerTextures[i], TextureManager.UseMode.LoadImmediately);
-					if (t >= 0) {
-						int w = TextureManager.Textures[Game.MarkerTextures[i]].ClipWidth;
-						int h = TextureManager.Textures[Game.MarkerTextures[i]].ClipHeight;
+				for (int i = 0; i < Game.MarkerTextures.Length; i++)
+				{
+					if (Textures.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp)) {
+						int w = Game.MarkerTextures[i].Width;
+						int h = Game.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
 						DrawRectangle(Game.MarkerTextures[i], new Point(ScreenWidth - w - 8, y), new Size(w,h), null);
 						y += h + 8;
@@ -1179,9 +1328,9 @@ namespace OpenBve {
 				int px = Left;
 				for (int x = 0; x < Keys[y].Length; x++) {
 					if (Keys[y][x] != null) {
-						DrawRectangle(-1, new Point(px -1, py -1), new Size(Width + 1, 17),  new Color128(0.25f,0.25f, 0.25f,0.5f));
-						DrawRectangle(-1, new Point(px - 1, py - 1), new Size(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
-						DrawRectangle(-1, new Point(px, py), new Size(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
+						DrawRectangle(null, new Point(px -1, py -1), new Size(Width + 1, 17),  new Color128(0.25f,0.25f, 0.25f,0.5f));
+						DrawRectangle(null, new Point(px - 1, py - 1), new Size(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
+						DrawRectangle(null, new Point(px, py), new Size(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 						DrawString(Fonts.SmallFont, Keys[y][x], new Point(px -1 + Width /2, py + 7), TextAlignment.CenterMiddle, Color128.White);
 					}
 					px += Width + 4;
@@ -1205,167 +1354,230 @@ namespace OpenBve {
 		}
 
 		// show object
-		internal static void ShowObject(int ObjectIndex, ObjectType Type) {
-			bool Overlay = Type == ObjectType.Overlay;
-			if (ObjectManager.Objects[ObjectIndex] == null) return;
-			if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0) {
-				if (ObjectListCount >= ObjectList.Length) {
-					Array.Resize<Object>(ref ObjectList, ObjectList.Length << 1);
-				}
-				ObjectList[ObjectListCount].ObjectIndex = ObjectIndex;
-				ObjectList[ObjectListCount].Type = Type;
+		internal static void ShowObject(int ObjectIndex, ObjectType Type)
+        {
+            bool Overlay = Type == ObjectType.Overlay;
+            if (ObjectManager.Objects[ObjectIndex] == null) return;
+            if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0)
+            {
+                if (ObjectListCount >= ObjectList.Length)
+                {
+                    Array.Resize<Object>(ref ObjectList, ObjectList.Length << 1);
+                }
+                ObjectList[ObjectListCount].ObjectIndex = ObjectIndex;
+                ObjectList[ObjectListCount].Type = Type;
+                int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
+                ObjectList[ObjectListCount].FaceListIndices = new int[f];
+                for (int i = 0; i < f; i++)
+                {
+                    if (Overlay)
+                    {
+                        // overlay
+                        if (OverlayListCount >= OverlayList.Length)
+                        {
+                            Array.Resize(ref OverlayList, OverlayList.Length << 1);
+                            Array.Resize(ref OverlayListDistance, OverlayList.Length);
+                        }
+                        OverlayList[OverlayListCount].ObjectIndex = ObjectIndex;
+                        OverlayList[OverlayListCount].FaceIndex = i;
+                        OverlayList[OverlayListCount].ObjectListIndex = ObjectListCount;
+                        ObjectList[ObjectListCount].FaceListIndices[i] = (OverlayListCount << 2) + 3;
+                        OverlayListCount++;
+                    }
+                    else
+                    {
+                        int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
+	                    OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+                        bool transparentcolor = false, alpha = false;
+                        if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].Color.A != 255)
+                        {
+                            alpha = true;
+                        }
+                        else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
+                        {
+                            alpha = true;
+                        }
+                        else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].GlowAttenuationData != 0)
+                        {
+                            alpha = true;
+                        }
+                        else
+                        {
+                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture != null)
+                            {
+	                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode == null)
+	                            {
+		                            
+		                            // If the object does not have a stored wrapping mode, determine it now
+		                            for (int v = 0; v < ObjectManager.Objects[ObjectIndex].Mesh.Vertices.Length; v++)
+		                            {
+			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
+			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+			                            {
+				                            wrap |= OpenGlTextureWrapMode.RepeatClamp;
+			                            }
+			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
+			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+			                            {
+				                            wrap |= OpenGlTextureWrapMode.ClampRepeat;
+			                            }
+		                            }
 
-				int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
-				ObjectList[ObjectListCount].FaceListIndices = new int[f];
-				for (int i = 0; i < f; i++) {
-					if (Overlay) {
-						// overlay
-						if (OverlayListCount >= OverlayList.Length) {
-							Array.Resize(ref OverlayList, OverlayList.Length << 1);
-							Array.Resize(ref OverlayListDistance, OverlayList.Length);
-						}
-						OverlayList[OverlayListCount].ObjectIndex = ObjectIndex;
-						OverlayList[OverlayListCount].FaceIndex = i;
-						OverlayList[OverlayListCount].ObjectListIndex = ObjectListCount;
-						ObjectList[ObjectListCount].FaceListIndices[i] = (OverlayListCount << 2) + 3;
-						OverlayListCount++;
-					} else {
-						int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
-						bool transparentcolor = false, alpha = false;
-						if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].Color.A != 255) {
-							alpha = true;
-						} else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive) {
-							alpha = true;
-						} else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].GlowAttenuationData != 0) {
-							alpha = true;
-						} else {
-							int tday = ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTextureIndex;
-							if (tday >= 0) {
-								TextureManager.UseTexture(tday, TextureManager.UseMode.Normal);
-								if (TextureManager.Textures[tday].Transparency == TextureTransparencyType.Alpha) {
-									alpha = true;
-								} else if (TextureManager.Textures[tday].Transparency == TextureTransparencyType.Partial) {
+		                            ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode = wrap;
+	                            }
+	                            else
+	                            {
+		                            //Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
+		                            wrap = (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
+	                            }
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+                                if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
+                                {
+                                    alpha = true;
+                                }
+                                else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Partial)
+                                {
 									transparentcolor = true;
-								}
-							}
-							int tnight = ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTextureIndex;
-							if (tnight >= 0) {
-								TextureManager.UseTexture(tnight, TextureManager.UseMode.Normal);
-								if (TextureManager.Textures[tnight].Transparency == TextureTransparencyType.Alpha) {
-									alpha = true;
-								} else if (TextureManager.Textures[tnight].Transparency == TextureTransparencyType.Partial) {
-									transparentcolor = true;
-								}
-							}
-						}
-						if (alpha) {
-							// alpha
-							if (AlphaListCount >= AlphaList.Length) {
-								Array.Resize(ref AlphaList, AlphaList.Length << 1);
-								Array.Resize(ref AlphaListDistance, AlphaList.Length);
-							}
-							AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
-							AlphaList[AlphaListCount].FaceIndex = i;
-							AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
-							ObjectList[ObjectListCount].FaceListIndices[i] = (AlphaListCount << 2) + 2;
-							AlphaListCount++;
-							//Game.
-						} else if (transparentcolor) {
-							// transparent color
-							if (TransparentColorListCount >= TransparentColorList.Length) {
-								Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
-								Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
-							}
-							TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
-							TransparentColorList[TransparentColorListCount].FaceIndex = i;
-							TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
-							ObjectList[ObjectListCount].FaceListIndices[i] = (TransparentColorListCount << 2) + 1;
-							TransparentColorListCount++;
-						} else {
-							// opaque
-							if (OpaqueListCount >= OpaqueList.Length) {
-								Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
-							}
-							OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
-							OpaqueList[OpaqueListCount].FaceIndex = i;
-							OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
-							ObjectList[ObjectListCount].FaceListIndices[i] = OpaqueListCount << 2;
-							OpaqueListCount++;
-							Game.InfoStaticOpaqueFaceCount++;
-						}
-					}
-				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = ObjectListCount + 1;
-				ObjectListCount++;
-			}
-		}
+                                }
+                            }
+                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
+                            {
+	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+                                if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
+                                {
+                                    alpha = true;
+                                }
+                                else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Partial)
+                                {
+                                    transparentcolor = true;
+                                }
+                            }
+                        }
+                        if (alpha)
+                        {
+                            // alpha
+                            if (AlphaListCount >= AlphaList.Length)
+                            {
+                                Array.Resize(ref AlphaList, AlphaList.Length << 1);
+                                Array.Resize(ref AlphaListDistance, AlphaList.Length);
+                            }
+                            AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
+                            AlphaList[AlphaListCount].FaceIndex = i;
+                            AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
+	                        AlphaList[AlphaListCount].Wrap = wrap;
+                            ObjectList[ObjectListCount].FaceListIndices[i] = (AlphaListCount << 2) + 2;
+                            AlphaListCount++;
+                        }
+                        else if (transparentcolor)
+                        {
+                            // transparent color
+                            if (TransparentColorListCount >= TransparentColorList.Length)
+                            {
+                                Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
+                                Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
+                            }
+                            TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
+                            TransparentColorList[TransparentColorListCount].FaceIndex = i;
+                            TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
+	                        TransparentColorList[TransparentColorListCount].Wrap = wrap;
+                            ObjectList[ObjectListCount].FaceListIndices[i] = (TransparentColorListCount << 2) + 1;
+                            TransparentColorListCount++;
+                        }
+                        else
+                        {
+                            // opaque
+                            if (OpaqueListCount >= OpaqueList.Length)
+                            {
+                                Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
+                            }
+                            OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
+                            OpaqueList[OpaqueListCount].FaceIndex = i;
+                            OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
+	                        OpaqueList[OpaqueListCount].Wrap = wrap;
+                            ObjectList[ObjectListCount].FaceListIndices[i] = OpaqueListCount << 2;
+                            OpaqueListCount++;
+                        }
+                    }
+                }
+                ObjectManager.Objects[ObjectIndex].RendererIndex = ObjectListCount + 1;
+                ObjectListCount++;
+            }
+        }
 
-		// hide object
-		internal static void HideObject(int ObjectIndex) {
-			if (ObjectManager.Objects[ObjectIndex] == null) return;
-			int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
-			if (k >= 0) {
-				// remove faces
-				for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++) {
-					int h = ObjectList[k].FaceListIndices[i];
-					int hi = h >> 2;
-					switch (h & 3) {
-						case 0:
-							// opaque
-							OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
-							OpaqueListCount--;
-							Game.InfoStaticOpaqueFaceCount--;
-							ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
-							break;
-						case 1:
-							// transparent color
-							TransparentColorList[hi] = TransparentColorList[TransparentColorListCount - 1];
-							TransparentColorListCount--;
-							ObjectList[TransparentColorList[hi].ObjectListIndex].FaceListIndices[TransparentColorList[hi].FaceIndex] = h;
-							break;
-						case 2:
-							// alpha
-							AlphaList[hi] = AlphaList[AlphaListCount - 1];
-							AlphaListCount--;
-							ObjectList[AlphaList[hi].ObjectListIndex].FaceListIndices[AlphaList[hi].FaceIndex] = h;
-							break;
-						case 3:
-							// overlay
-							OverlayList[hi] = OverlayList[OverlayListCount - 1];
-							OverlayListCount--;
-							ObjectList[OverlayList[hi].ObjectListIndex].FaceListIndices[OverlayList[hi].FaceIndex] = h;
-							break;
-					}
-				}
-				// remove object
-				if (k == ObjectListCount - 1) {
-					ObjectListCount--;
-				} else {
-					ObjectList[k] = ObjectList[ObjectListCount - 1];
-					ObjectListCount--;
-					for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++) {
-						int h = ObjectList[k].FaceListIndices[i];
-						int hi = h >> 2;
-						switch (h & 3) {
-							case 0:
-								OpaqueList[hi].ObjectListIndex = k;
-								break;
-							case 1:
-								TransparentColorList[hi].ObjectListIndex = k;
-								break;
-							case 2:
-								AlphaList[hi].ObjectListIndex = k;
-								break;
-							case 3:
-								OverlayList[hi].ObjectListIndex = k;
-								break;
-						}
-					}
-					ObjectManager.Objects[ObjectList[k].ObjectIndex].RendererIndex = k + 1;
-				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = 0;
-			}
-		}
+        // hide object
+        internal static void HideObject(int ObjectIndex)
+        {
+            if (ObjectManager.Objects[ObjectIndex] == null) return;
+            int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
+            if (k >= 0)
+            {
+                // remove faces
+                for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++)
+                {
+                    int h = ObjectList[k].FaceListIndices[i];
+                    int hi = h >> 2;
+                    switch (h & 3)
+                    {
+                        case 0:
+                            // opaque
+                            OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
+                            OpaqueListCount--;
+                            ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
+                            break;
+                        case 1:
+                            // transparent color
+                            TransparentColorList[hi] = TransparentColorList[TransparentColorListCount - 1];
+                            TransparentColorListCount--;
+                            ObjectList[TransparentColorList[hi].ObjectListIndex].FaceListIndices[TransparentColorList[hi].FaceIndex] = h;
+                            break;
+                        case 2:
+                            // alpha
+                            AlphaList[hi] = AlphaList[AlphaListCount - 1];
+                            AlphaListCount--;
+                            ObjectList[AlphaList[hi].ObjectListIndex].FaceListIndices[AlphaList[hi].FaceIndex] = h;
+                            break;
+                        case 3:
+                            // overlay
+                            OverlayList[hi] = OverlayList[OverlayListCount - 1];
+                            OverlayListCount--;
+                            ObjectList[OverlayList[hi].ObjectListIndex].FaceListIndices[OverlayList[hi].FaceIndex] = h;
+                            break;
+                    }
+                }
+                // remove object
+                if (k == ObjectListCount - 1)
+                {
+                    ObjectListCount--;
+                }
+                else
+                {
+                    ObjectList[k] = ObjectList[ObjectListCount - 1];
+                    ObjectListCount--;
+                    for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++)
+                    {
+                        int h = ObjectList[k].FaceListIndices[i];
+                        int hi = h >> 2;
+                        switch (h & 3)
+                        {
+                            case 0:
+                                OpaqueList[hi].ObjectListIndex = k;
+                                break;
+                            case 1:
+                                TransparentColorList[hi].ObjectListIndex = k;
+                                break;
+                            case 2:
+                                AlphaList[hi].ObjectListIndex = k;
+                                break;
+                            case 3:
+                                OverlayList[hi].ObjectListIndex = k;
+                                break;
+                        }
+                    }
+                    ObjectManager.Objects[ObjectList[k].ObjectIndex].RendererIndex = k + 1;
+                }
+                ObjectManager.Objects[ObjectIndex].RendererIndex = 0;
+            }
+        }
 
 		// sort polygons
 		private static void SortPolygons(ObjectFace[] List, int ListCount, double[] ListDistance, int ListOffset, double TimeElapsed) {

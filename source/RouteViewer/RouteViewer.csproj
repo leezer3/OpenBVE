@@ -90,6 +90,7 @@
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
+    <Compile Include="Parsers\MeshBuilder.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Parsers\XObjectParser.cs" />
     <Compile Include="Renderer.Loading.cs" />
@@ -147,6 +148,19 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+    <PropertyGroup>
+    <!-- Copy in dependancies and child projects -->
+    <!-- Finally, set LBA flag & cleanup -->
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
+"$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
+	</PostBuildEvent>
+    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
+mono "$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
+	</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

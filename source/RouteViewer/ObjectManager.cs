@@ -1,8 +1,10 @@
 using System;
+using System.Text;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.World;
 
 namespace OpenBve {
@@ -28,7 +30,7 @@ namespace OpenBve {
 				Mesh = new World.Mesh
 				{
 					Faces = new MeshFace[] {},
-					Materials =  new World.MeshMaterial[] {},
+					Materials =  new MeshMaterial[] {},
 					Vertices =  new VertexTemplate[] {}
 				};
 			}
@@ -68,7 +70,7 @@ namespace OpenBve {
 					}
 				}
 				// materials
-				Result.Mesh.Materials = new World.MeshMaterial[Mesh.Materials.Length];
+				Result.Mesh.Materials = new MeshMaterial[Mesh.Materials.Length];
 				for (int j = 0; j < Mesh.Materials.Length; j++)
 				{
 					Result.Mesh.Materials[j] = Mesh.Materials[j];
@@ -86,7 +88,7 @@ namespace OpenBve {
 				int mm = Mesh.Materials.Length;
 				int mv = Mesh.Vertices.Length;
 				Array.Resize<MeshFace>(ref Mesh.Faces, mf + Add.Mesh.Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
+				Array.Resize<MeshMaterial>(ref Mesh.Materials, mm + Add.Mesh.Materials.Length);
 				Array.Resize<VertexTemplate>(ref Mesh.Vertices, mv + Add.Mesh.Vertices.Length);
 				for (int i = 0; i < Add.Mesh.Faces.Length; i++)
 				{
@@ -323,7 +325,7 @@ namespace OpenBve {
 					}
 				}
 				// materials
-				Mesh.Materials = new World.MeshMaterial[Prototype.Mesh.Materials.Length];
+				Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
 				for (int j = 0; j < Prototype.Mesh.Materials.Length; j++)
 				{
 					Mesh.Materials[j] = Prototype.Mesh.Materials[j];
@@ -926,7 +928,7 @@ namespace OpenBve {
 		        }
 		        if (m != Mesh.Materials.Length)
 		        {
-			        Array.Resize<World.MeshMaterial>(ref Mesh.Materials, m);
+			        Array.Resize<MeshMaterial>(ref Mesh.Materials, m);
 		        }
 		        if (f != Mesh.Faces.Length)
 		        {
@@ -1640,7 +1642,7 @@ namespace OpenBve {
 		}
 
 		// load object
-		internal static UnifiedObject LoadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices) {
 			#if !DEBUG
 			try {
 				#endif
@@ -1669,22 +1671,22 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, false, false);
 						break;
 					case ".x":
-						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = XObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".animated":
-						Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
+						Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".l3dobj":
-						Result = Ls3DObjectParser.ReadObject(FileName, LoadMode, new Vector3());
+						Result = Ls3DObjectParser.ReadObject(FileName, Encoding, new Vector3());
 						break;
 					case ".l3dgrp":
-						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, LoadMode);
+						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
 						break;
 					case ".obj":
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, false, false);
 						break;
 				default:
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
@@ -1699,7 +1701,7 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
 			#if !DEBUG
 			try {
 				#endif
@@ -1728,16 +1730,16 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 						break;
 					case ".x":
-						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = XObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".animated":
 						Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 						return null;
 					case ".obj":
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
 						break;
 				default:
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
@@ -1853,7 +1855,7 @@ namespace OpenBve {
 				}
 			}
 			// materials
-			Object.Mesh.Materials = new World.MeshMaterial[Prototype.Mesh.Materials.Length];
+			Object.Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
 			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++) {
 				Object.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
 				Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
@@ -1900,7 +1902,7 @@ namespace OpenBve {
 		}
 
 		// clone object
-		internal static StaticObject CloneObject(StaticObject Prototype, int DaytimeTextureIndex, int NighttimeTextureIndex) {
+		internal static StaticObject CloneObject(StaticObject Prototype, Texture DaytimeTexture, Texture NighttimeTexture) {
 			if (Prototype == null) return null;
 			StaticObject Result = new StaticObject();
 			Result.StartingDistance = Prototype.StartingDistance;
@@ -1930,14 +1932,14 @@ namespace OpenBve {
 				}
 			}
 			// materials
-			Result.Mesh.Materials = new World.MeshMaterial[Prototype.Mesh.Materials.Length];
+			Result.Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
 			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++) {
 				Result.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-				if (DaytimeTextureIndex >= 0) {
-					Result.Mesh.Materials[j].DaytimeTextureIndex = DaytimeTextureIndex;
+				if (DaytimeTexture != null) {
+					Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
 				}
-				if (NighttimeTextureIndex >= 0) {
-					Result.Mesh.Materials[j].NighttimeTextureIndex = NighttimeTextureIndex;
+				if (NighttimeTexture != null) {
+					Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
 				}
 			}
 			return Result;

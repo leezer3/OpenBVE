@@ -28,8 +28,8 @@ namespace OpenBve
 		private const int numOfLoadingBkgs = 7;
 
 		private static bool customLoadScreen = false;
-		internal static int TextureLoadingBkg = -1;
-		private static int TextureLogo = -1;
+		internal static Texture TextureLoadingBkg = null;
+		private static Texture TextureLogo = null;
 		private static string[] LogoFileName = { "logo_256.png", "logo_512.png", "logo_1024.png" };
 
 		//
@@ -41,13 +41,12 @@ namespace OpenBve
 			customLoadScreen = false;
 			string Path = Program.FileSystem.GetDataFolder("In-game");
 			int bkgNo = Game.Generator.Next(numOfLoadingBkgs);
-			if(TextureLoadingBkg == -1)
+			if(TextureLoadingBkg == null)
 			{
 				string file = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
 				if (System.IO.File.Exists(file))
 				{
-					TextureLoadingBkg = TextureManager.RegisterTexture(file, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
-					TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+					Textures.RegisterTexture(file, out TextureLoadingBkg);
 				}
 			}
 			
@@ -59,8 +58,10 @@ namespace OpenBve
 			fName = OpenBveApi.Path.CombineFile(Path, fName);
 			if (System.IO.File.Exists(fName))
 			{
-				TextureLogo = TextureManager.RegisterTexture(fName, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
-				TextureManager.UseTexture(TextureLogo, TextureManager.UseMode.LoadImmediately);
+				if (System.IO.File.Exists(fName))
+				{
+					Textures.RegisterTexture(fName, out TextureLogo);
+				}
 			}
 
 		}
@@ -69,10 +70,10 @@ namespace OpenBve
 		// SET CUSTOM LOADING SCREEN BACKGROUND
 		//
 		/// <summary>Sets the loading screen background to a custom image</summary>
+		/// <summary>Sets the loading screen background to a custom image</summary>
 		internal static void SetLoadingBkg(string fileName)
 		{
-			TextureLoadingBkg = TextureManager.RegisterTexture(fileName, OpenGlTextureWrapMode.ClampClamp, OpenGlTextureWrapMode.ClampClamp, false);
-			TextureManager.UseTexture(TextureLoadingBkg, TextureManager.UseMode.LoadImmediately);
+			Textures.RegisterTexture(fileName, out TextureLoadingBkg);
 			customLoadScreen = true;
 		}
 
@@ -100,7 +101,7 @@ namespace OpenBve
 
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			DrawRectangle(-1, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
+			DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
 			int bkgHeight, bkgWidth;
@@ -108,11 +109,11 @@ namespace OpenBve
 			int logoBottom;
 			//			int		versionTop;
 			int halfWidth = Renderer.ScreenWidth / 2;
-			bool bkgLoaded = TextureLoadingBkg != -1;
-			if (TextureLoadingBkg != -1)
+			bool bkgLoaded = TextureLoadingBkg != null;
+			if (TextureLoadingBkg != null)
 			{
 				// stretch the background image to fit at least one screen dimension
-				double ratio = (double) TextureManager.Textures[TextureLoadingBkg].Width/ (double) TextureManager.Textures[TextureLoadingBkg].Height;
+				double ratio = (double) TextureLoadingBkg.Width/ (double) TextureLoadingBkg.Height;
 				if ((double) Renderer.ScreenWidth/ratio > Renderer.ScreenHeight) // if screen ratio is shorter than bkg...
 				{
 					bkgHeight = Renderer.ScreenHeight; // set height to screen height
@@ -128,11 +129,11 @@ namespace OpenBve
 			}
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
-			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo && TextureLogo != -1)
+			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo && TextureLogo != null)
 			{
 				// place the centre of the logo at from the screen top
-				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureManager.Textures[TextureLogo].Height / 2.0);
-				DrawRectangle(TextureLogo,new Point((Renderer.ScreenWidth - TextureManager.Textures[TextureLogo].Width) / 2, logoTop),new Size(TextureManager.Textures[TextureLogo].Width, TextureManager.Textures[TextureLogo].Height), Color128.White);
+				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureLogo.Height / 2.0);
+				DrawRectangle(TextureLogo,new Point((Renderer.ScreenWidth - TextureLogo.Width) / 2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 			}
 			else
 			{
@@ -163,9 +164,9 @@ namespace OpenBve
 				double percent = 100.0 * routeProgress;
 				string percStr = percent.ToString("0") + "%";
 				// progress frame
-				DrawRectangle(-1, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
+				DrawRectangle(null, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
 				// progress bar
-				DrawRectangle(-1, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
+				DrawRectangle(null, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
 
 				DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
 			}

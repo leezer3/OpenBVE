@@ -8,6 +8,7 @@
 using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -143,7 +144,7 @@ namespace OpenBve {
 			Stations = new Station[] { };
 			Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			MarkerTextures = new int[] { };
+			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
@@ -375,20 +376,20 @@ namespace OpenBve {
 		// ================================
 
 		// marker
-		internal static int[] MarkerTextures = new int[] { };
-		internal static void AddMarker(int TextureIndex) {
+		internal static Texture[] MarkerTextures = new Texture[] { };
+		internal static void AddMarker(Texture Texture) {
 			int n = MarkerTextures.Length;
-			Array.Resize<int>(ref MarkerTextures, n + 1);
-			MarkerTextures[n] = TextureIndex;
+			Array.Resize<Texture>(ref MarkerTextures, n + 1);
+			MarkerTextures[n] = Texture;
 		}
-		internal static void RemoveMarker(int TextureIndex) {
+		internal static void RemoveMarker(Texture Texture) {
 			int n = MarkerTextures.Length;
 			for (int i = 0; i < n; i++) {
-				if (MarkerTextures[i] == TextureIndex) {
+				if (MarkerTextures[i] == Texture) {
 					for (int j = i; j < n - 1; j++) {
 						MarkerTextures[j] = MarkerTextures[j + 1];
 					}
-					Array.Resize<int>(ref MarkerTextures, n - 1);
+					Array.Resize<Texture>(ref MarkerTextures, n - 1);
 					break;
 				}
 			}

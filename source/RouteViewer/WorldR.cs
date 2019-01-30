@@ -10,58 +10,10 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
-	public static class World {
-
-		// mesh material
-		/// <summary>Represents material properties.</summary>
-		internal struct MeshMaterial {
-			/// <summary>A bit mask combining constants of the MeshMaterial structure.</summary>
-			internal byte Flags;
-			internal Color32 Color;
-			internal Color24 TransparentColor;
-			internal Color24 EmissiveColor;
-			internal int DaytimeTextureIndex;
-			internal int NighttimeTextureIndex;
-			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
-			internal byte DaytimeNighttimeBlend;
-			internal MeshMaterialBlendMode BlendMode;
-			/// <summary>A bit mask specifying the glow properties. Use GetGlowAttenuationData to create valid data for this field.</summary>
-			internal ushort GlowAttenuationData;
-			internal const int EmissiveColorMask = 1;
-			internal const int TransparentColorMask = 2;
-			// operators
-			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
-				if (A.Flags != B.Flags) return false;
-				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return false;
-				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return false;
-				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return false;
-				if (A.DaytimeTextureIndex != B.DaytimeTextureIndex) return false;
-				if (A.NighttimeTextureIndex != B.NighttimeTextureIndex) return false;
-				if (A.BlendMode != B.BlendMode) return false;
-				if (A.GlowAttenuationData != B.GlowAttenuationData) return false;
-				return true;
-			}
-			public static bool operator !=(MeshMaterial A, MeshMaterial B) {
-				if (A.Flags != B.Flags) return true;
-				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return true;
-				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return true;
-				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return true;
-				if (A.DaytimeTextureIndex != B.DaytimeTextureIndex) return true;
-				if (A.NighttimeTextureIndex != B.NighttimeTextureIndex) return true;
-				if (A.BlendMode != B.BlendMode) return true;
-				if (A.GlowAttenuationData != B.GlowAttenuationData) return true;
-				return false;
-			}
-			public override int GetHashCode() {
-				return base.GetHashCode();
-			}
-			public override bool Equals(object obj) {
-				return base.Equals(obj);
-			}
-		}
-		
+	public static class World {	
 		// mesh
 		/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
 		internal struct Mesh {
@@ -75,8 +27,8 @@ namespace OpenBve {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTextureIndex = -1;
-				this.Materials[0].NighttimeTextureIndex = -1;
+				this.Materials[0].DaytimeTexture = null;
+				this.Materials[0].NighttimeTexture = null;
 				this.Faces = new MeshFace[1];
 				this.Faces[0].Material = 0;
 				this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
@@ -92,8 +44,8 @@ namespace OpenBve {
 				this.Vertices = Vertices;
 				this.Materials = new MeshMaterial[1];
 				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTextureIndex = -1;
-				this.Materials[0].NighttimeTextureIndex = -1;
+				this.Materials[0].DaytimeTexture = null;
+				this.Materials[0].NighttimeTexture = null;
 				this.Faces = new MeshFace[FaceVertices.Length];
 				for (int i = 0; i < FaceVertices.Length; i++) {
 					this.Faces[i] = new MeshFace(FaceVertices[i]);
@@ -160,17 +112,17 @@ namespace OpenBve {
 		internal static double ExtraViewingDistance;
 		internal static double BackgroundImageDistance;
 		internal struct Background {
-			internal int Texture;
+			internal Texture Texture;
 			internal int Repetition;
 			internal bool KeepAspectRatio;
-			internal Background(int Texture, int Repetition, bool KeepAspectRatio) {
-				this.Texture = Texture;
+			internal Background(Texture texture, int Repetition, bool KeepAspectRatio) {
+				this.Texture = texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
 			}
 		}
-		internal static Background CurrentBackground = new Background(-1, 6, false);
-		internal static Background TargetBackground = new Background(-1, 6, false);
+		internal static Background CurrentBackground = new Background(null, 6, false);
+		internal static Background TargetBackground = new Background(null, 6, false);
 		internal const double TargetBackgroundDefaultCountdown = 0.8;
 		internal static double TargetBackgroundCountdown;
 
