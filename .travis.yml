@@ -9,7 +9,7 @@ matrix:
       script: make publish
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install leezer3/sshpass/sshpass; fi;
+      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       script: make publish
 
 #Test builds
@@ -20,7 +20,7 @@ matrix:
       script: make all-release
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install leezer3/sshpass/sshpass; fi;
+      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       script: make all-release
     - os: linux
       dist: precise
@@ -37,7 +37,7 @@ matrix:
       solution: OpenBVE.sln
     - os: osx
       mono: latest
-      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew install leezer3/sshpass/sshpass; fi;
+      before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       solution: OpenBVE.sln
     - os: linux
       dist: precise
