@@ -12,7 +12,7 @@ namespace OpenBve {
 
 		// static objects
 		internal class StaticObject : UnifiedObject {
-			internal World.Mesh Mesh;
+			internal Mesh Mesh;
 			/// <summary>The index to the Renderer.Object array, plus 1. The value of zero represents that the object is not currently shown by the renderer.</summary>
 			internal int RendererIndex;
 			/// <summary>The starting track position, for static objects only.</summary>
@@ -27,7 +27,7 @@ namespace OpenBve {
 			/// <summary>Creates a new empty object</summary>
 			internal StaticObject() 
 			{
-				Mesh = new World.Mesh
+				Mesh = new Mesh
 				{
 					Faces = new MeshFace[] {},
 					Materials =  new MeshMaterial[] {},

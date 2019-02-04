@@ -6,6 +6,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenBveApi.FunctionScripting;
 
 namespace OpenBve
 {
@@ -1204,7 +1205,7 @@ namespace OpenBve
 											{
 												expr += " ?";
 											}
-											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
+											aoc.Objects[0].StateFunction = new FunctionScript(Program.CurrentHost, expr, false);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Program.RandomNumberGenerator.NextDouble();
 											aoc.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Signals[k].Yaw, Data.Blocks[i].Signals[k].Pitch, Data.Blocks[i].Signals[k].Roll), Data.Blocks[i].Signals[k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
 										}
@@ -1267,7 +1268,7 @@ namespace OpenBve
 											{
 												expr += " ?";
 											}
-											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
+											aoc.Objects[0].StateFunction = new FunctionScript(Program.CurrentHost, expr, false);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Program.RandomNumberGenerator.NextDouble();
 											aoc.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Signals[k].Yaw, Data.Blocks[i].Signals[k].Pitch, Data.Blocks[i].Signals[k].Roll), Data.Blocks[i].Signals[k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 										}

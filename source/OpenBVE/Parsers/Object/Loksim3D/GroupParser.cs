@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -164,11 +165,11 @@ namespace OpenBve
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
 														break;
 													case "HideOn":
 														//Defines when the object should be hidden
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
 														break;
 												}
 											}
@@ -239,8 +240,7 @@ namespace OpenBve
 								};
 								a.States = new ObjectManager.AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
-								Result.Objects[aL].StateFunction =
-									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+								Result.Objects[aL].StateFunction = new FunctionScript(Program.CurrentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
 							}
 							else
 							{

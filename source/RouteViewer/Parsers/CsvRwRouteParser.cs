@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.World;
 using OpenBveApi.Textures;
 using OpenBveApi.Objects;
@@ -6180,7 +6181,7 @@ namespace OpenBve {
 											for (int l = 0; l < csd.Numbers.Length - 1; l++) {
 												expr += " ?";
 											}
-											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
+											aoc.Objects[0].StateFunction = new FunctionScript(Program.CurrentHost, expr, false);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Game.Generator.NextDouble();
 											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness);
 										}
@@ -6227,7 +6228,7 @@ namespace OpenBve {
 											for (int l = 0; l < zn - 1; l++) {
 												expr += " ?";
 											}
-											aoc.Objects[0].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(expr);
+											aoc.Objects[0].StateFunction = new FunctionScript(Program.CurrentHost, expr, false);
 											aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Game.Generator.NextDouble();
 											ObjectManager.CreateObject(aoc, wpos, RailTransformation, new Transformation(Data.Blocks[i].Signal[k].Yaw, Data.Blocks[i].Signal[k].Pitch, Data.Blocks[i].Signal[k].Roll), Data.Blocks[i].Signal[k].Section, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0);
 										}

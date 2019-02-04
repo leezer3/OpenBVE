@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using OpenBveApi.FunctionScripting;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -381,7 +382,7 @@ namespace OpenBve {
 										int h = tday.Height;
 										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f + " 1 == --");
+										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 									}
 								} break;
 								// needle
@@ -590,7 +591,7 @@ namespace OpenBve {
 										if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0) {
 											Train.Cars[Car].CarSections[0].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 										}
-										Train.Cars[Car].CarSections[0].Elements[j].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
+										Train.Cars[Car].CarSections[0].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 										if (Backstop)
 										{
 											Train.Cars[Car].CarSections[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
@@ -734,7 +735,7 @@ namespace OpenBve {
 										if (tf != String.Empty)
 										{
 											Train.Cars[Car].CarSections[0].Elements[j].TextureShiftXDirection = Direction;
-											Train.Cars[Car].CarSections[0].Elements[j].TextureShiftXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(tf);
+											Train.Cars[Car].CarSections[0].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
 										}
 									}
 								} break;
@@ -900,7 +901,7 @@ namespace OpenBve {
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-											Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
+											Train.Cars[Car].CarSections[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f, false);
 										}
 									}
 								} break;
@@ -1044,7 +1045,7 @@ namespace OpenBve {
 											f += " " + s + " * floor " + t + " *";
 										}
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-										Train.Cars[Car].CarSections[0].Elements[j].LEDFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
+										Train.Cars[Car].CarSections[0].Elements[j].LEDFunction = new FunctionScript(Program.CurrentHost, f, false);
 									} else {
 										Interface.AddMessage(MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
 									}
@@ -1110,7 +1111,7 @@ namespace OpenBve {
 									}
 									if (Width > 0.0 & Height > 0.0) {
 										int j = CreateElement(Train.Cars[Car].CarSections[0], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color32.White, false);
-										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("timetable");
+										Train.Cars[Car].CarSections[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
 										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Elements[j]);
 									}
 								} break;

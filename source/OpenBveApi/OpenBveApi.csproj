@@ -70,12 +70,14 @@
   <ItemGroup>
     <Compile Include="FunctionScripts\AnimationScripts.cs" />
     <Compile Include="FunctionScripts\FunctionScript.cs" />
+    <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
+    <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Vector4.cs" />

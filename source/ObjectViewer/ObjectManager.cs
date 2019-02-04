@@ -316,9 +316,7 @@ namespace OpenBve
 				for (int j = 0; j < Mesh.Vertices.Length; j++)
 				{
 					double n = r * (d.X * Mesh.Vertices[j].Coordinates.X + d.Y * Mesh.Vertices[j].Coordinates.Y + d.Z * Mesh.Vertices[j].Coordinates.Z);
-					Mesh.Vertices[j].Coordinates.X += s.X * n;
-					Mesh.Vertices[j].Coordinates.Y += s.Y * n;
-					Mesh.Vertices[j].Coordinates.Z += s.Z * n;
+					Mesh.Vertices[j].Coordinates += s * n;
 				}
 				for (int j = 0; j < Mesh.Faces.Length; j++)
 				{
@@ -1636,9 +1634,7 @@ namespace OpenBve
 		            double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
 		            double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
 		            double dz = -World.CameraCurrentAlignment.Position.Z;
-		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += World.AbsoluteCameraPosition.X + dx * World.AbsoluteCameraSide.X + dy * World.AbsoluteCameraUp.X + dz * World.AbsoluteCameraDirection.X;
-		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += World.AbsoluteCameraPosition.Y + dx * World.AbsoluteCameraSide.Y + dy * World.AbsoluteCameraUp.Y + dz * World.AbsoluteCameraDirection.Y;
-		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += World.AbsoluteCameraPosition.Z + dx * World.AbsoluteCameraSide.Z + dy * World.AbsoluteCameraUp.Z + dz * World.AbsoluteCameraDirection.Z;
+		            ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += World.AbsoluteCameraPosition + dx * World.AbsoluteCameraSide + dy * World.AbsoluteCameraUp + dz * World.AbsoluteCameraDirection;
 	            }
 	            else
 	            {
@@ -1737,9 +1733,7 @@ namespace OpenBve
                             Vector3 s = t.X;
                             Vector3 u = t.Y;
                             Vector3 d = t.Z;
-                            p.X += Prototypes[i].States[0].Position.X * s.X + Prototypes[i].States[0].Position.Y * u.X + Prototypes[i].States[0].Position.Z * d.X;
-                            p.Y += Prototypes[i].States[0].Position.X * s.Y + Prototypes[i].States[0].Position.Y * u.Y + Prototypes[i].States[0].Position.Z * d.Y;
-                            p.Z += Prototypes[i].States[0].Position.X * s.Z + Prototypes[i].States[0].Position.Y * u.Z + Prototypes[i].States[0].Position.Z * d.Z;
+                            p += Prototypes[i].States[0].Position.X * s + Prototypes[i].States[0].Position.Y * u + Prototypes[i].States[0].Position.Z * d;
                             double zOffset = Prototypes[i].States[0].Position.Z;
                             CreateStaticObject(Prototypes[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
                         }
@@ -1797,10 +1791,7 @@ namespace OpenBve
                 }
                 for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++)
                 {
-                    double x = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.X;
-                    double y = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-                    double z = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-                    double t = x * x + y * y + z * z;
+                    double t = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
                     if (t > r) r = t;
                 }
             }

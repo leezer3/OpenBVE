@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
@@ -427,11 +428,11 @@ namespace OpenBve
 
 					if (k != 0)
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]");
+						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true);
 					}
 					else
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]");
+						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true);
 					}
 
 					idx++;

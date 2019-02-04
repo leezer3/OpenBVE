@@ -14,93 +14,6 @@ using OpenBveApi.Textures;
 
 namespace OpenBve {
 	public static class World {	
-		// mesh
-		/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
-		internal struct Mesh {
-			internal VertexTemplate[] Vertices;
-			internal MeshMaterial[] Materials;
-			internal MeshFace[] Faces;
-			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
-			/// <param name="Vertices">The vertices that make up one face.</param>
-			/// <param name="Color">The color to be applied on the face.</param>
-			internal Mesh(VertexTemplate[] Vertices, Color32 Color) {
-				this.Vertices = Vertices;
-				this.Materials = new MeshMaterial[1];
-				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTexture = null;
-				this.Materials[0].NighttimeTexture = null;
-				this.Faces = new MeshFace[1];
-				this.Faces[0].Material = 0;
-				this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
-				for (int i = 0; i < Vertices.Length; i++) {
-					this.Faces[0].Vertices[i].Index = (ushort)i;
-				}
-			}
-			/// <summary>Creates a mesh consisting of the specified vertices, faces and color.</summary>
-			/// <param name="Vertices">The vertices used.</param>
-			/// <param name="FaceVertices">A list of faces represented by a list of references to vertices.</param>
-			/// <param name="Color">The color to be applied on all of the faces.</param>
-			internal Mesh(VertexTemplate[] Vertices, int[][] FaceVertices, Color32 Color) {
-				this.Vertices = Vertices;
-				this.Materials = new MeshMaterial[1];
-				this.Materials[0].Color = Color;
-				this.Materials[0].DaytimeTexture = null;
-				this.Materials[0].NighttimeTexture = null;
-				this.Faces = new MeshFace[FaceVertices.Length];
-				for (int i = 0; i < FaceVertices.Length; i++) {
-					this.Faces[i] = new MeshFace(FaceVertices[i]);
-				}
-			}
-
-			/// <summary>Creates the normals for all faces within this mesh</summary>
-			internal void CreateNormals()
-			{
-				for (int i = 0; i < Faces.Length; i++)
-				{
-					CreateNormals(i);
-				}
-			}
-
-			/// <summary>Creates the normals for the specified face index</summary>
-			private void CreateNormals(int FaceIndex)
-			{
-				if (Faces[FaceIndex].Vertices.Length >= 3)
-				{
-					int i0 = (int)Faces[FaceIndex].Vertices[0].Index;
-					int i1 = (int)Faces[FaceIndex].Vertices[1].Index;
-					int i2 = (int)Faces[FaceIndex].Vertices[2].Index;
-					double ax = Vertices[i1].Coordinates.X - Vertices[i0].Coordinates.X;
-					double ay = Vertices[i1].Coordinates.Y - Vertices[i0].Coordinates.Y;
-					double az = Vertices[i1].Coordinates.Z - Vertices[i0].Coordinates.Z;
-					double bx = Vertices[i2].Coordinates.X - Vertices[i0].Coordinates.X;
-					double by = Vertices[i2].Coordinates.Y - Vertices[i0].Coordinates.Y;
-					double bz = Vertices[i2].Coordinates.Z - Vertices[i0].Coordinates.Z;
-					Vector3 Normal = new Vector3(ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx);
-					double t = Normal.NormSquared();
-					if (t != 0.0)
-					{
-						t = 1.0 / Math.Sqrt(t);
-						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
-						{
-							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
-							{
-								Faces[FaceIndex].Vertices[j].Normal = Normal * t;
-							}
-						}
-					}
-					else
-					{
-						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
-						{
-							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
-							{
-								Faces[FaceIndex].Vertices[j].Normal = Vector3.Down;
-							}
-						}
-					}
-				}
-			}
-		}
 
 		// display
 		internal static double HorizontalViewingAngle;
@@ -222,9 +135,9 @@ namespace OpenBve {
 				sF.Rotate(dF, cosa, sina);
 			}
 			AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-			AbsoluteCameraDirection = new Vector3(dF.X, dF.Y, dF.Z);
-			AbsoluteCameraUp = new Vector3(uF.X, uF.Y, uF.Z);
-			AbsoluteCameraSide = new Vector3(sF.X, sF.Y, sF.Z);
+			AbsoluteCameraDirection = dF;
+			AbsoluteCameraUp = uF;
+			AbsoluteCameraSide = sF;
 		}
 		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
 			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);

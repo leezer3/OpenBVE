@@ -4,6 +4,7 @@ using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
 using System.Text;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -174,11 +175,11 @@ namespace OpenBve
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
 														break;
 													case "HideOn":
 														//Defines when the object should be hidden
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
 														break;
 													case "FixedDynamicVisibility":
 														if (attribute.Value.ToLowerInvariant() == "true")
@@ -193,7 +194,7 @@ namespace OpenBve
 													case "DynamicVisibility":
 														if (Object.FixedDynamicVisibility)
 														{
-															Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetDynamicFunction(attribute.Value));
+															Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetDynamicFunction(attribute.Value));
 														}
 														break;
 												}
@@ -257,8 +258,7 @@ namespace OpenBve
 								};
 								a.States = new ObjectManager.AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
-								Result.Objects[aL].StateFunction =
-									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+								Result.Objects[aL].StateFunction = new FunctionScript(Program.CurrentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
 							}
 							else
 							{
