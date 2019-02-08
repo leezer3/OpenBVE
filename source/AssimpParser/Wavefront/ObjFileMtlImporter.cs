@@ -260,8 +260,20 @@ namespace AssimpNET.Obj
 			// we have to check if color is default 0 with only one token
 			if (!IsLineEnd(DataIt))
 			{
-				GetFloat(out g);
-				GetFloat(out b);
+				/*
+				 * HACK:
+				 * Using a try/ catch block here so that we don't blow up
+				 * if our color is missing a component or ends with whitespace
+				 * unexpectedly
+				 */
+				try
+				{
+					GetFloat(out g);
+					GetFloat(out b);
+				}
+				catch
+				{
+				}
 			}
 			color.G = g;
 			color.B = b;

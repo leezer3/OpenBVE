@@ -387,15 +387,15 @@ namespace OpenBve
 					case "kd":
 						//Equivilant to SetColor
 						double r = 1, g = 1, b = 1;
-						if (!double.TryParse(Arguments[1], out r))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[2], out g))
+						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[3], out b))
+						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
 						}
@@ -413,7 +413,7 @@ namespace OpenBve
 					case "d":
 						//Sets the alpha value for the face
 						double a = 1;
-						if (!double.TryParse(Arguments[1], out a))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
 						}
