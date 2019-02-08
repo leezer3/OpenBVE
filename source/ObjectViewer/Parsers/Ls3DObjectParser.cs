@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace OpenBve
 {

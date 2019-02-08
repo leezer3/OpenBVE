@@ -2,12 +2,10 @@
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;
-using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
-using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class World {

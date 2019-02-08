@@ -1,4 +1,5 @@
 ﻿#pragma warning disable 169, 414 //We don't use a bunch of fields, but keep them in case required later
+// ReSharper disable NotAccessedField.Local
 using System;
 using System.Collections.Generic;
 using System.IO;

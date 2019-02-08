@@ -9,6 +9,9 @@
  * Also some minor enum conversion & cleanup
  */
 
+// ReSharper disable UnusedMember.Local
+// ReSharper disable NotAccessedField.Local
+
 using System;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -40,16 +43,14 @@ namespace Plugin
         private void Parse(BinaryReader reader)
         {
             DdsHeader header = new DdsHeader();
-            PixelFormat pixelFormat;
-            byte[] data = null;
 
             if (this.ReadHeader(reader, ref header))
             {
                 if (header.depth == 0) header.depth = 1;
 
                 int blocksize;
-                pixelFormat = this.GetFormat(header, out blocksize);
-                data = this.ReadData(reader, header);
+                PixelFormat pixelFormat = this.GetFormat(header, out blocksize);
+                byte[] data = this.ReadData(reader, header);
                 if (data != null)
                 {
                     byte[] rawData = this.DecompressData(header, data, pixelFormat);
@@ -60,38 +61,34 @@ namespace Plugin
 
         private byte[] ReadData(BinaryReader reader, DdsHeader header)
         {
-            byte[] compdata = null;
-            int compsize = 0;
+            byte[] data;
 
             if ((header.flags & DDSD_LINEARSIZE) > 1)
             {
-                compdata = reader.ReadBytes((int)header.sizeorpitch);
-                compsize = compdata.Length;
+                data = reader.ReadBytes((int)header.sizeorpitch);
             }
             else
             {
                 int bps = header.width * header.pixelFormat.rgbbitcount / 8;
-                compsize = bps * header.height * header.depth;
-                compdata = new byte[compsize];
+                int uncompressedSize = bps * header.height * header.depth;
+                data = new byte[uncompressedSize];
 
-                MemoryStream mem = new MemoryStream((int)compsize);
+                MemoryStream mem = new MemoryStream(uncompressedSize);
 
-                byte[] temp;
                 for (int z = 0; z < header.depth; z++)
                 {
                     for (int y = 0; y < header.height; y++)
                     {
-                        temp = reader.ReadBytes((int)bps);
-                        mem.Write(temp, 0, temp.Length);
+                        mem.Write(reader.ReadBytes((int)bps), 0, bps);
                     }
                 }
                 mem.Seek(0, SeekOrigin.Begin);
 
-                mem.Read(compdata, 0, compdata.Length);
+                mem.Read(data, 0, data.Length);
                 mem.Close();
             }
 
-            return compdata;
+            return data;
         }
 
         private void CreateTexture(int width, int height, byte[] rawData)
@@ -342,7 +339,7 @@ namespace Plugin
             }
         }
 
-        private void ComputeMaskParams(uint mask, ref int shift1, ref int mul, ref int shift2)
+        private void ComputeMaskParams(uint mask, out int shift1, out int mul, out int shift2)
         {
             shift1 = 0; mul = 1; shift2 = 0;
             while ((mask & 1) == 0)
@@ -408,7 +405,7 @@ namespace Plugin
             color_0.red = (byte)((data[3] & 0xF8) >> 3);
         }
 
-        private void GetBitsFromMask(uint mask, ref uint shiftLeft, ref uint shiftRight)
+        private void GetBitsFromMask(uint mask, out uint shiftLeft, out uint shiftRight)
         {
             uint temp, i;
 
@@ -926,12 +923,12 @@ namespace Plugin
 		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
 	        }
             uint pixSize = (uint)(((int)header.pixelFormat.rgbbitcount + 7) / 8);
-            int rShift1 = 0; int rMul = 0; int rShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);
-            int gShift1 = 0; int gMul = 0; int gShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.gbitmask, ref gShift1, ref gMul, ref gShift2);
-            int bShift1 = 0; int bMul = 0; int bShift2= 0;
-            ComputeMaskParams(header.pixelFormat.bbitmask, ref bShift1, ref bMul, ref bShift2);
+            int rShift1; int rMul; int rShift2;
+            ComputeMaskParams(header.pixelFormat.rbitmask, out rShift1, out rMul, out rShift2);
+            int gShift1; int gMul; int gShift2;
+            ComputeMaskParams(header.pixelFormat.gbitmask, out gShift1, out gMul, out gShift2);
+            int bShift1; int bMul; int bShift2;
+            ComputeMaskParams(header.pixelFormat.bbitmask, out bShift1, out bMul, out bShift2);
 
             int offset = 0;
             int pixnum = width * height * depth;
@@ -972,14 +969,14 @@ namespace Plugin
 		        valMask = (uint)((header.pixelFormat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelFormat.rgbbitcount) - 1);
 	        }
             int pixSize = (header.pixelFormat.rgbbitcount + 7) / 8;
-            int rShift1 = 0; int rMul = 0; int rShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.rbitmask, ref rShift1, ref rMul, ref rShift2);
-            int gShift1 = 0; int gMul = 0; int gShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.gbitmask, ref gShift1, ref gMul, ref gShift2);
-            int bShift1 = 0; int bMul = 0; int bShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.bbitmask, ref bShift1, ref bMul, ref bShift2);
-            int aShift1 = 0; int aMul = 0; int aShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.alphabitmask, ref aShift1, ref aMul, ref aShift2);
+            int rShift1; int rMul; int rShift2;
+            ComputeMaskParams(header.pixelFormat.rbitmask, out rShift1, out rMul, out rShift2);
+            int gShift1; int gMul; int gShift2;
+            ComputeMaskParams(header.pixelFormat.gbitmask, out gShift1, out gMul, out gShift2);
+            int bShift1; int bMul; int bShift2;
+            ComputeMaskParams(header.pixelFormat.bbitmask, out bShift1, out bMul, out bShift2);
+            int aShift1; int aMul; int aShift2;
+            ComputeMaskParams(header.pixelFormat.alphabitmask, out aShift1, out aMul, out aShift2);
 
             int offset = 0;
             int pixnum = width * height * depth;
@@ -1197,8 +1194,8 @@ namespace Plugin
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
 
-            int lShift1 = 0; int lMul = 0; int lShift2 = 0;
-            ComputeMaskParams(header.pixelFormat.rbitmask, ref lShift1, ref lMul, ref lShift2);
+            int lShift1; int lMul; int lShift2;
+            ComputeMaskParams(header.pixelFormat.rbitmask, out lShift1, out lMul, out lShift2);
 
             int offset = 0;
             int pixnum = width * height * depth;
@@ -1375,9 +1372,10 @@ namespace Plugin
             int depth = (int)header.depth;
 
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
-            int size = 0;
+            
             fixed (byte* bytePtr = data)
             {
+	            int size;
                 byte* temp = bytePtr;
                 fixed (byte* destPtr = rawData)
                 {
@@ -1455,15 +1453,15 @@ namespace Plugin
             }
 
             uint readI = 0, tempBpp;
-            uint redL = 0, redR = 0;
-            uint greenL = 0, greenR = 0;
-            uint blueL = 0, blueR = 0;
-            uint alphaL = 0, alphaR = 0;
+            uint redL, redR;
+            uint greenL, greenR;
+            uint blueL, blueR;
+            uint alphaL, alphaR;
 
-            GetBitsFromMask(header.pixelFormat.rbitmask, ref redL, ref redR);
-            GetBitsFromMask(header.pixelFormat.gbitmask, ref greenL, ref greenR);
-            GetBitsFromMask(header.pixelFormat.bbitmask, ref blueL, ref blueR);
-            GetBitsFromMask(header.pixelFormat.alphabitmask, ref alphaL, ref alphaR);
+            GetBitsFromMask(header.pixelFormat.rbitmask, out redL, out redR);
+            GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
+            GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
+            GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
             tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
 
             fixed (byte* bytePtr = data)
@@ -1542,17 +1540,17 @@ namespace Plugin
             int sizeOfData = (int)((header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth);
             byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
 
-            uint readI = 0, tempBpp  = 0;
-            uint redL = 0, redR = 0;
-            uint greenL = 0, greenR = 0;
-            uint blueL = 0, blueR = 0;
-            uint alphaL = 0, alphaR = 0;
-            uint redPad = 0, greenPad = 0, bluePad = 0, alphaPad = 0;
+            uint readI = 0;
+            uint redL, redR;
+            uint greenL, greenR;
+            uint blueL, blueR;
+            uint alphaL, alphaR;
+            uint redPad, greenPad, bluePad, alphaPad;
 
-            GetBitsFromMask(header.pixelFormat.rbitmask, ref redL, ref redR);
-            GetBitsFromMask(header.pixelFormat.gbitmask, ref greenL, ref greenR);
-            GetBitsFromMask(header.pixelFormat.bbitmask, ref blueL, ref blueR);
-            GetBitsFromMask(header.pixelFormat.alphabitmask, ref alphaL, ref alphaR);
+            GetBitsFromMask(header.pixelFormat.rbitmask, out redL, out redR);
+            GetBitsFromMask(header.pixelFormat.gbitmask, out greenL, out greenR);
+            GetBitsFromMask(header.pixelFormat.bbitmask, out blueL, out blueR);
+            GetBitsFromMask(header.pixelFormat.alphabitmask, out alphaL, out alphaR);
             redPad = 16 - CountBitsFromMask(header.pixelFormat.rbitmask);
             greenPad = 16 - CountBitsFromMask(header.pixelFormat.gbitmask);
             bluePad = 16 - CountBitsFromMask(header.pixelFormat.bbitmask);
@@ -1563,7 +1561,7 @@ namespace Plugin
             blueL = blueL + bluePad;
             alphaL = alphaL + alphaPad;
 
-            tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
+            uint tempBpp = (uint)(header.pixelFormat.rgbbitcount / 8);
             fixed (byte* bytePtr = data)
             {
                 byte* temp = bytePtr;

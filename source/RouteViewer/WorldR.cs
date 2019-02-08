@@ -6,9 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 

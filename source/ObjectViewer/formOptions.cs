@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;

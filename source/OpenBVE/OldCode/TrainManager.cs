@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
-using OpenBveApi.Objects;
 
 namespace OpenBve
 {

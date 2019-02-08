@@ -9,7 +9,6 @@ using System;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
-using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;

@@ -203,7 +203,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ");
+							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);
@@ -221,7 +221,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ");
+							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);

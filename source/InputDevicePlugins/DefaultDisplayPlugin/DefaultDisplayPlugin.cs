@@ -230,9 +230,11 @@ namespace DefaultDisplayPlugin
 											break;
 										case "display_mode":
 											{
-												int a = 0;
-												int.TryParse(Value, out a);
-												SpeedDisplayMode = a;
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													SpeedDisplayMode = a;
+												}
 											}
 											break;
 									}
@@ -245,9 +247,11 @@ namespace DefaultDisplayPlugin
 											break;
 										case "display_mode":
 											{
-												int a = 0;
-												int.TryParse(Value, out a);
-												GradientDisplayMode = a;
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													GradientDisplayMode = a;
+												}
 											}
 											break;
 									}
@@ -260,9 +264,11 @@ namespace DefaultDisplayPlugin
 											break;
 										case "display_mode":
 											{
-												int a = 0;
-												int.TryParse(Value, out a);
-												DistNextStationDisplayMode = a;
+												int a;
+												if (int.TryParse(Value, out a))
+												{
+													DistNextStationDisplayMode = a;
+												}
 											}
 											break;
 									}

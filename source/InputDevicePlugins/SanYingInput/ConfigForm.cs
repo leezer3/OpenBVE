@@ -280,7 +280,7 @@ namespace SanYingInput
 
 		private int fromString(string s)
 		{
-			int n = 0;
+			int n;
 
 			try
 			{

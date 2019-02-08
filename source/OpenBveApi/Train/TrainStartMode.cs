@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OpenBveApi.Trains
+﻿namespace OpenBveApi.Trains
 {
 	/// <summary>The startup state of the train</summary>
 	public enum TrainStartMode
