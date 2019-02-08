@@ -8,13 +8,13 @@ namespace OpenBveApi.Textures
 	{
 		// --- members ---
 		/// <summary>The left coordinate.</summary>
-		private int MyLeft;
+		private readonly int MyLeft;
 		/// <summary>The top coordinate.</summary>
-		private int MyTop;
+		private readonly int MyTop;
 		/// <summary>The width.</summary>
-		private int MyWidth;
+		private readonly int MyWidth;
 		/// <summary>The height.</summary>
-		private int MyHeight;
+		private readonly int MyHeight;
 		// --- properties ---
 		/// <summary>Gets the left coordinate.</summary>
 		public int Left

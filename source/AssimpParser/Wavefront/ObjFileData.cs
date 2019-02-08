@@ -125,7 +125,9 @@ namespace AssimpNET.Obj
 		//! Object name
 		public string ObjName = string.Empty;
 		//! Transformation matrix, stored in OpenGL format
+#pragma warning disable 169
 		Matrix4 Transformation;
+#pragma warning restore 169
 		//! All sub-objects referenced by this object
 		List<Object> SubObjects = new List<Object>();
 		/// Assigned meshes
@@ -221,7 +223,9 @@ namespace AssimpNET.Obj
 		/// True, if normals are stored.
 		public bool HasNormals = false;
 		/// True, if vertex colors are stored.
+#pragma warning disable 169
 		bool HasVertexColors;
+#pragma warning restore 169
 
 		/// Constructor
 		public Mesh(string name)

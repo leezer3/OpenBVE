@@ -4,7 +4,7 @@
 	public static partial class TrainManager
 	{
 		/// <summary>Defines the differing types of readhesion device which may be fitted to a car</summary>
-		/// <remarks>See <see cref="http://openbve-project.net/documentation/HTML/train_train_dat.html"/> for further details</remarks>
+		/// <remarks>See <see href="http://openbve-project.net/documentation/HTML/train_train_dat.html"/> for further details</remarks>
 		internal enum ReadhesionDeviceType
 		{
 			/// <summary>No readhesion device is fitted</summary>

@@ -13,11 +13,11 @@ namespace Plugin {
 		private struct WaveFormat {
 			// members
 			/// <summary>The number of samples per second per channel.</summary>
-			internal int SampleRate;
+			internal readonly int SampleRate;
 			/// <summary>The number of bits per sample.</summary>
-			internal int BitsPerSample;
+			internal readonly int BitsPerSample;
 			/// <summary>The number of channels.</summary>
-			internal int Channels;
+			internal readonly int Channels;
 			// constructors
 			/// <summary>Creates a new instance of this structure.</summary>
 			/// <param name="sampleRate">The number of samples per second per channel.</param>
@@ -160,9 +160,7 @@ namespace Plugin {
 								if (wBlockAlign != ((wBitsPerSample + 7) / 8) * wChannels) {
 									throw new InvalidDataException("Unexpected wBlockAlign");
 								}
-								format.SampleRate = (int)dwSamplesPerSec;
-								format.BitsPerSample = (int)wBitsPerSample;
-								format.Channels = (int)wChannels;
+								format = new WaveFormat((int)dwSamplesPerSec, (int)wBitsPerSample, wChannels);
 								PcmData pcmData = new PcmData {BlockSize = (int) wBlockAlign};
 								data = pcmData;
 							} else if (wFormatTag == 2) {
@@ -193,9 +191,7 @@ namespace Plugin {
 									}
 								}
 								stream.Position += ckSize - (22 + 4 * wNumCoef);
-								format.SampleRate = (int)dwSamplesPerSec;
-								format.BitsPerSample = 16;
-								format.Channels = (int)wChannels;
+								format = new WaveFormat((int)dwSamplesPerSec, 16, (int)wChannels);
 								adpcmData.BlockSize = wBlockAlign;
 								data = adpcmData;
 							} else if (wFormatTag == 85) {

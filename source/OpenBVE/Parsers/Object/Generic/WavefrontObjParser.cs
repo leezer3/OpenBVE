@@ -11,34 +11,6 @@ namespace OpenBve
 {
 	internal static class WavefrontObjParser
 	{
-
-		// structures
-		private class Material
-		{
-			internal Color32 Color;
-			internal Color24 EmissiveColor;
-			internal bool EmissiveColorUsed;
-			internal Color24 TransparentColor;
-			internal bool TransparentColorUsed;
-			internal string DaytimeTexture;
-			internal string NighttimeTexture;
-			internal MeshMaterialBlendMode BlendMode;
-			internal ushort GlowAttenuationData;
-			internal string Key;
-			internal Material()
-			{
-				this.Color = Color32.White;
-				this.EmissiveColor = Color24.Black;
-				this.EmissiveColorUsed = false;
-				this.TransparentColor = Color24.Black;
-				this.TransparentColorUsed = false;
-				this.DaytimeTexture = null;
-				this.NighttimeTexture = null;
-				this.BlendMode = MeshMaterialBlendMode.Normal;
-				this.GlowAttenuationData = 0;
-				this.Key = string.Empty;
-			}
-		}
 		private class MeshBuilder
 		{
 			internal List<VertexTemplate> Vertices;

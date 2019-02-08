@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 

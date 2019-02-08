@@ -8,7 +8,7 @@ namespace OpenBveApi.FunctionScripting
 	/// <summary>The base abstract function script which consumers must implement</summary>
 	public class FunctionScript
 	{
-		private HostInterface currentHost;
+		private readonly HostInterface currentHost;
 		/// <summary>The instructions to perform</summary>
 		public Instructions[] InstructionSet;
 		/// <summary>The stack for the script</summary>

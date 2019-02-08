@@ -138,6 +138,7 @@ namespace OpenBve
 		internal OpenGlTextureWrapMode? WrapMode;
 		internal ushort GlowAttenuationData;
 		internal string Text;
+		internal string Key;
 		internal Color TextColor;
 		internal Color BackgroundColor;
 		internal string Font;
