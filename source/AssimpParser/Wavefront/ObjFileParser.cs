@@ -155,20 +155,22 @@ namespace AssimpNET.Obj
 							if (Buffer[DataIt] == ' ' || Buffer[DataIt] == '\t')
 							{
 								int numComponents = GetNumComponentsInDataDefinition();
-								if (numComponents == 3)
+								switch (numComponents)
 								{
-									// read in vertex definition
-									GetVector3(Model.Vertices);
-								}
-								else if (numComponents == 4)
-								{
-									// read in vertex definition (homogeneous coords)
-									GetHomogeneousVector3(Model.Vertices);
-								}
-								else if (numComponents == 6)
-								{
-									// read vertex and vertex-color
-									GetTwoVectors3(Model.Vertices, Model.VertexColors);
+									case 3:
+										// read in vertex definition
+										GetVector3(Model.Vertices);
+										break;
+									case 4:
+										// read in vertex definition (homogeneous coords)
+										GetHomogeneousVector3(Model.Vertices);
+										break;
+									case 6:
+										// read vertex and vertex-color
+										GetTwoVectors3(Model.Vertices, Model.VertexColors);
+										break;
+									default:
+										throw new Exception(numComponents + " arguments were supplied. A vertex must supply either 3, 4 or 6 arguments.");
 								}
 							}
 							else if (Buffer[DataIt] == 't')
@@ -268,30 +270,29 @@ namespace AssimpNET.Obj
 			int numComponents = GetNumComponentsInDataDefinition();
 			float x, y, z;
 			string tmp;
-			if (numComponents == 2)
+			switch (numComponents)
 			{
-				CopyNextWord(out tmp);
-				x = float.Parse(tmp);
+				case 2:
+					CopyNextWord(out tmp);
+					x = float.Parse(tmp);
 
-				CopyNextWord(out tmp);
-				y = float.Parse(tmp);
+					CopyNextWord(out tmp);
+					y = float.Parse(tmp);
 
-				z = 0.0f;
-			}
-			else if (numComponents == 3)
-			{
-				CopyNextWord(out tmp);
-				x = float.Parse(tmp);
+					z = 0.0f;
+					break;
+				case 3:
+					CopyNextWord(out tmp);
+					x = float.Parse(tmp);
 
-				CopyNextWord(out tmp);
-				y = float.Parse(tmp);
+					CopyNextWord(out tmp);
+					y = float.Parse(tmp);
 
-				CopyNextWord(out tmp);
-				z = float.Parse(tmp);
-			}
-			else
-			{
-				throw new Exception("OBJ: Invalid number of components");
+					CopyNextWord(out tmp);
+					z = float.Parse(tmp);
+					break;
+				default:
+					throw new Exception(numComponents + " arguments were supplied. A vector must supply either 2 or 3 arguments.");
 			}
 			point3dArray.Add(new Vector3(x, y, z));
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
@@ -382,10 +383,10 @@ namespace AssimpNET.Obj
 
 			bool vt = vtSize != 0;
 			bool vn = vnSize != 0;
-			int iStep = 0, iPos = 0;
+			int iPos = 0;
 			while (DataIt != DataEnd)
 			{
-				iStep = 1;
+				int iStep = 1;
 
 				if (IsLineEnd(DataIt))
 				{
