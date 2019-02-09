@@ -45,8 +45,6 @@ namespace OpenBve {
 		internal static CameraAlignment CameraAlignmentDirection;
 		internal static CameraAlignment CameraAlignmentSpeed;
 		internal static double CameraSpeed;
-		internal const double CameraInteriorTopSpeed = 1.0;
-		internal const double CameraInteriorTopAngularSpeed = 2.0;
 		internal const double CameraExteriorTopSpeed = 50.0;
 		internal const double CameraExteriorTopAngularSpeed = 5.0;
 		internal const double CameraZoomTopSpeed = 2.0;

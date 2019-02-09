@@ -42,7 +42,6 @@ namespace OpenBve {
 			double PanelTop = 0.0, PanelBottom = 1024.0;
 			Vector2 PanelCenter = new Vector2(0, 512);
 			Vector2 PanelOrigin = new Vector2(0, 512);
-			double PanelBitmapWidth = 1024.0, PanelBitmapHeight = 1024.0;
 			string PanelDaytimeImage = null;
 			string PanelNighttimeImage = null;
 			Color24 PanelTransparentColor = Color24.Blue;
@@ -280,9 +279,7 @@ namespace OpenBve {
 						Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 						//Textures.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 					});
-					PanelBitmapWidth = (double)tday.Width;
-					PanelBitmapHeight = (double)tday.Height;
-					CreateElement(Train.Cars[Car].CarSections[0], 0.0, 0.0, PanelBitmapWidth, PanelBitmapHeight, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+					CreateElement(Train.Cars[Car].CarSections[0], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 				}
 			}
 			// parse lines for rest

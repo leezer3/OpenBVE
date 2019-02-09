@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using OpenBveApi;
@@ -5162,6 +5162,7 @@ namespace OpenBve {
 												if (texture.BitsPerPixel == 32)
 												{
 													byte[] bytes = texture.Bytes;
+													InvertLightness(bytes);
 													texture = new Texture(texture.Width, texture.Height, 32, bytes, texture.Palette);
 												}
 												Textures[j] = OpenBve.Textures.RegisterTexture(texture);

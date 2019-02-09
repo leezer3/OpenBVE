@@ -45,7 +45,6 @@ namespace OpenBve
         {
             internal int ObjectListIndex;
             internal int ObjectIndex;
-            internal const int MeshIndex = 0;
             internal int FaceIndex;
 	        internal OpenGlTextureWrapMode Wrap;
         }

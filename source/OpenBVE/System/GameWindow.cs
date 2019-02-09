@@ -749,7 +749,7 @@ namespace OpenBve
 					}
 				}
 				string NotFound = null;
-				string Messages = null;
+				string Messages;
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";

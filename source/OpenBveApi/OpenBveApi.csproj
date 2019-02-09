@@ -101,7 +101,6 @@
     <Compile Include="Math\Math.cs" />
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
-    <Compile Include="Objects\LoadMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
