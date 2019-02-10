@@ -1011,6 +1011,12 @@ namespace OpenBve
         {
             internal Vector3 Position;
             internal ObjectManager.StaticObject Object;
+
+            internal AnimatedObjectState(StaticObject stateObject, Vector3 position)
+            {
+	            Object = stateObject;
+	            Position = position;
+            }
         }
         internal class AnimatedObject
         {

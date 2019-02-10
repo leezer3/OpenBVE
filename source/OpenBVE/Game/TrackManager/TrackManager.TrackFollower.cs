@@ -23,6 +23,7 @@ namespace OpenBve
 			internal EventTriggerType TriggerType;
 			internal TrainManager.Train Train;
 			internal int CarIndex;
+
 			internal void UpdateWorldCoordinates(bool AddTrackInaccuracy)
 			{
 				Update(this.TrackPosition, true, AddTrackInaccuracy);

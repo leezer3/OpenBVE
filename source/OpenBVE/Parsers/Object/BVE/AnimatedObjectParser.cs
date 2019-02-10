@@ -140,11 +140,7 @@ namespace OpenBve
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-											{
-												Object = s,
-												Position = position
-											};
+											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(s, position);
 											a.States = new ObjectManager.AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;

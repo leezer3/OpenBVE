@@ -233,11 +233,7 @@ namespace OpenBve
 								int aL = Result.Objects.Length;
 								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
 								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-								{
-									Object = Object,
-									Position = CurrentObjects[i].Position,
-								};
+								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(Object, CurrentObjects[i].Position);
 								a.States = new ObjectManager.AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
 								Result.Objects[aL].StateFunction = new FunctionScript(Program.CurrentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
@@ -279,10 +275,7 @@ namespace OpenBve
 					{
 						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
 						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-						{
-							Object = staticObject,
-						};
+						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(staticObject, Vector3.Zero);
 						a.States = new ObjectManager.AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
 					}

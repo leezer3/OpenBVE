@@ -409,7 +409,7 @@ namespace OpenBve
 				{
 					Result.Objects[idx] = new ObjectManager.AnimatedObject();
 					Result.Objects[idx].States = new ObjectManager.AnimatedObjectState[1];
-					ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
+					ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(null, Vector3.Zero);
 					shape.LODs[i].subObjects[j].Apply(out aos.Object);
 					aos.Position = new Vector3(0, 0, 0);
 					Result.Objects[idx].States[0] = aos;
